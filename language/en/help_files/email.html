@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Interactive help for Hesk settings</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="help_style.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+
+<!-- next: 65 -->
+
+<h2>Interactive help for Hesk settings</h2>
+
+<p>&nbsp;</p>
+
+<a name="55"></a><h3>Email sender</h3>
+<p>Select wether HESK should send emails usign PHP mail() function or using a manually setup SMTP server.</p>
+
+<p>PHP mail() should work on most setups, if it doesn't you may try setting up a SMTP server instead.</p>
+
+<p>Available SMTP variables:</p>
+
+<p>
+<b>SMTP Host</b> - hostname of your SMTP server, usually <i>localhost</i> or <i>mail.yourdomain.com</i><br />
+<b>SMTP Port</b> - your SMTP port, usually 25<br />
+<b>SMTP Timeout</b> - SMTP timeout in seconds<br />
+<b>SSL Protocol</b> - enable if your SMTP server requires SSL protocol<br />
+<b>TLS Protocol</b> - enable if your SMTP server requires TLS protocol<br />
+<b>SMTP Username</b> - your SMTP username (if used)<br />
+<b>SMTP Password</b> - your SMTP password (if used)<br />
+</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<a name="54"></a><h3>Email Piping</h3>
+
+<p>Enables email piping (creating tickets from emails).</p>
+
+<p>This option just enables piping functionality in HESK, for complete email piping setup please refer to the readme.html file.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<a name="59"></a><h3>POP3 Fetching</h3>
+
+<p>This setting enables or disables POP3 Fetching - creating tickets from emails by connecting to an email account using POP3 connection.
+
+<p>For instructions on how to setup POP3 Fetching please see the readme.html file.</p>
+
+<p>Available variables are:</p>
+
+<p>
+<b>POP3 Host</b> - hostname of your POP3 server, usually <i>mail.yourdomain.com</i><br />
+<b>POP3 Port</b> - your POP3 port, usually 110. Gmail for example uses 995<br />
+<b>TLS Protocol</b> - enable if your POP3 server requires TLS protocol<br />
+<b>Keep a copy</b> - if enabled HESK will <b>not</b> delete mail from POP3 server<br />
+<b>POP3 Username</b> - your POP3 username<br />
+<b>POP3 Password</b> - your POP3 password<br />
+</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<a name="60"></a><h3>Email Loops</h3>
+
+<p>Settings to help detect email loops created from autoresponders or undeliverable email.</p>
+
+<p>Any number of emails higher than <b>Max Hits</b> from an email address within <b>Timeframe</b> seconds
+will be ignored by email piping.</p>
+
+<p>Set <b>Max Hits</b> to <b>0</b> to disable loop detection.</p>
+
+<p>Note that this feature will only be used if Email piping or POP3 Fetching is enabled.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<a name="62"></a><h3>Detect email typos</h3>
+
+<p>This function will try to detect common email domain name misspelling and suggest a corrected version.</p>
+
+<p>For example if customer enters user@<span style="color:red"><b>gmial.com</b></span> HESK will detect it and suggest
+user@<span style="color:green"><b>gmail.com</b></span> instead.</p>
+
+<p>HESK will compare email domains to the domains listed in <i>Email providers</i> list.</p>
+
+<p>&nbsp;</p>
+
+<a name="63"></a><h3>Email providers</h3>
+
+<p>A list of common email providers your customers use. HESK will use this list to try to detect mistyped email addresses.</p>
+
+<p>Enter one domain per line, <u>without</u> the @ sign.</p>
+
+<p>You can enter any number of common domain names, but try not to overdo it - enter just the most common ones.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<a name="61"></a><h3>Strip quoted reply</h3>
+
+<p>This function deletes quoted replies from all customer emails before they are converted into a ticket using Email piping or POP3 Fetching.</p>
+
+<p>All emails sent to customers will start with this line:</p>
+
+<p>------ Reply above this line ------</p>
+
+<p>Any text below this line will be removed when and email is imported into ticket reply.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<a name="64"></a><h3>Embedded files</h3>
+
+<p>Enable if you wish HESK to save embedded email files (for example embedded images) as attachments when importing tickets over Email piping or POP3 Fetching.</p>
+
+<p>Files over maximum allowed attachments limit will be ignored.</p>
+
+<p>Note that with HESK file attachments have priority over embedded files. For example if you allow 2 file attachments and receive an email with 1 file attachment
+and 3 embedded images, HESK will save the file attachment and first embedded image, the rest will be ignored.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<a name="57"></a><h3>Multiple emails</h3>
+<p>If a customer tries to enter several emails (separated by comma) into the Email field when submitting a ticket HESK
+will only use the first email by default and ignore any other emails.</p>
+
+<p>To allow customers to enter multiple emails enable this feature by checking the box.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<a name="50"></a><h3>Confirm email</h3>
+<p>If selected, the &quot;Submit a ticket&quot; form will show a &quot;Confirm email&quot;
+field forcing the customer to type the email address twice. This helps avoid typos
+in email addresses.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<a name="58"></a><h3>Open only</h3>
+<p>If checked then the &quot;Forgot ticket ID&quot; email (email sent to remind customers of their ticket tracking ID number)
+will only list open tickets and ignore resolved ones.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p
+
+</body>
+
+</html>

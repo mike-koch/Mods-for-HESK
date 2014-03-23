@@ -1,0 +1,45 @@
+body {
+        margin:5px 5px;
+        padding:0;
+        background:#fff;
+        color: black;
+        font : 68.8%/1.5 Verdana, Geneva, Arial, Helvetica, sans-serif;
+        text-align:left;
+}
+
+p {
+        color : black;
+        font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+        font-size: 1.0em;
+}
+
+h2 {
+    text-align: center;
+
+}
+
+h3 {
+        color : #000;
+        font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 1.0em;
+        text-align:center;
+}
+
+h4 {
+    color: #428bca;
+}
+
+.section {
+        color: #74804e;
+        font-weight: bold;
+}
+
+.title {
+        color : black;
+        font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 1.0em;
+}
+.wrong   {color : red;}
+.correct {color : green;}

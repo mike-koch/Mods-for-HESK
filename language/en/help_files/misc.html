@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Interactive help for Hesk settings</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="help_style.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+
+<!-- next: 60 -->
+
+<h2>Interactive help for Hesk settings</h2>
+
+<p>&nbsp;</p>
+
+<a name="18"></a><h4>Server time offset</h4>
+<p>If your server time differs from your local time you can set the time difference here. Examples:<br />
+server time: 12:30, local time: 13:30, set hours to <b>1</b> and minutes to <b>0</b><br />
+server time: 12:30, local time: 14:45, set hours to <b>2</b> and minutes to <b>15</b><br />
+server time: 12:30, local time: 09:30, set hours to <b>-3</b> and minutes to <b>0</b><br />
+server time: 12:30, local time: 11:00, set hours to <b>-1</b> and minutes to <b>-30</b></p>
+
+<a name="19"></a><h4>Daylight saving</h4>
+<p>ON if your country uses daylight saving time. Set to OFF to disable daylight saving time.</p>
+
+<p>Do NOT turn this on if your server already adjusts for daylight saving time!</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+
+<a name="20"></a><h4>Time format</h4>
+<p>This is PHP date syntax for timestamps displayed by Hesk.</p>
+
+<p><span class="wrong">Use only one space in the syntax (separating date and time), Hesk will use the space to break date and time into two lines!</span></p>
+
+<p>For full syntax to use see <a href="http://www.php.net/date" target="_blank">PHP date manual</a>. Few examples you can use:</p>
+
+<table border="1" cellspacing="0" cellpadding="4">
+<tr>
+<td><b><i>Setting</i></b></td>
+<td><b><i>Result</i></b></td>
+</tr>
+<tr>
+<td><b>Y-m-d H:i:s</b></td>
+<td>2012-12-31 14:35:53</td>
+</tr>
+<tr>
+<td><b>d/m/Y H:i:s</b></td>
+<td>31/12/2012 14:35:53</td>
+</tr>
+<tr>
+<td><b>m-d-Y H:i:s</b></td>
+<td>12-31-2012 14:35:53</td>
+</tr>
+<tr>
+<td><b>j-M-Y H:i:s</b></td>
+<td>31-Dec-2012 14:35:53</td>
+</tr>
+<tr>
+<td><b>j-M-Y g:ia</b></td>
+<td>31-Dec-2012 2:35pm</td>
+</tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+
+<a name="21"></a><h4>Admin link</h4>
+<p>If selected a link to admin panel will be displayed on the bottom of your <a href="../" target="_blank">help desk index page</a>.</p>
+
+<a name="48"></a><h4>Submit notice</h4>
+<p>If checked, the <i>Submit a ticket</i> form will show a note (at the bottom)
+saying the customer should double-check all the information entered and
+that their IP address is being logged for security purposes.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+<p>&nbsp;</p>
+
+<a name="56"></a><h4>Online Users</h4>
+<p>If checked HESK will show a list of users online in the last X minutes at the bottom of the help desk (in staff interface only).</p>
+
+<a name="59"></a><h4>Updates</h4>
+<p>If checked HESK will automatically check for updates whenever you open the settings page.</p>
+<p>For automatic update check to work your server must be connected to the Internet and have either cURL or allow_url_fopen enabled.</p>
+<p>If disabled or required functions are missing, a manual &quot;Check for updates&quot; links will appear.</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><a href="#" onclick="Javascript:window.close()">Close window</a></p>
+
+</body>
+
+</html>
