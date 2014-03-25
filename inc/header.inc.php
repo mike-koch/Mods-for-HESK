@@ -41,9 +41,9 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 	<title><?php echo (isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>" />
 	<link href="<?php echo HESK_PATH; ?>css/hesk_style_v25.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.min.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.min.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css" type="text/css" rel="stylesheet" />
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript_v25.js"></script>

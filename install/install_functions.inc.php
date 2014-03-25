@@ -776,10 +776,10 @@ function hesk_iHeader()
 	<head>
 	<title>HESK <?php echo HESK_NEW_VERSION; ?> Setup</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
-	<link href="../css/hesk_style_v25.min.css" type="text/css" rel="stylesheet" />
-	<link href="../css/hesk_newStyle.min.css" type="text/css" rel="stylesheet" />
+	<link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap-theme.css">
+	<link href="../css/hesk_style_v25.css" type="text/css" rel="stylesheet" />
+	<link href="../css/hesk_newStyle.css" type="text/css" rel="stylesheet" />
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="../js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="../hesk_javascript_v25.js"></script>
