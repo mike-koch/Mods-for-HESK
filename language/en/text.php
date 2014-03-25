@@ -21,7 +21,7 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
-// ADDED IN HESK UI
+// ADDED OR MODIFIED IN HESK UI
 $hesklang['search_the_knowledgebase'] = 'Search the Knowledgebase';
 $hesklang['view_ticket_nav']='View Ticket';
 $hesklang['quick_help']='Quick Help';
@@ -35,6 +35,7 @@ $hesklang['statusChange']=' - - Change Status - - ';
 $hesklang['ownerChange']=' - - Change Owner - - ';
 $hesklang['categoryChange']=' - - Change Category - - ';
 $hesklang['navigation']='Navigation';
+$hesklang['nti']='<span class="glyphicon glyphicon-plus-sign"></span> New ticket';
 
 // EMAIL SUBJECTS
 $hesklang['new_ticket_staff']       = '[#%%TRACK_ID%%] New ticket: %%SUBJECT%%';
@@ -787,7 +788,6 @@ $hesklang['tislock']='This ticket has been locked, the customer will not be able
 $hesklang['tislock2']='This ticket has been locked, you cannot post a reply.';
 $hesklang['nsfo']='No relevant articles found.';
 $hesklang['elocked']='This ticket has been locked or deleted.';
-$hesklang['nti']='<span class="glyphicon glyphicon-plus-sign"></span> New ticket';
 $hesklang['nti2']='Insert a new ticket';
 $hesklang['nti3']='Use this form to create a new ticket in a customer\'s name. Enter <i>customer</i> information in the form (customer name, customer email, ...) and NOT your name! Ticket will be created as if the customer submitted it.';
 $hesklang['addop']='Options';
