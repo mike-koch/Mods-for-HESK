@@ -767,16 +767,45 @@ function print_start()
 				{
 					echo '&nbsp;';
 				}
-				?>	
-				<a href="index.php?a=add" class="block" style="background-image: URL('img/newTicket.png');"><?php echo $hesklang['sub_support']; ?></a>
-				<a href="ticket.php" class="block" style="background-image: URL('img/viewTicket.png');"><?php echo $hesklang['view_existing']; ?></a>
-				
-				<?php
-				if ($hesk_settings['kb_enable'])
-				{ ?>
-				<a href="knowledgebase.php" class="block" style="background-image: URL('img/knowledgebase.png');"><?php echo $hesklang['kb_text']; ?></a>
-				<?php
-				} ?>
+				?>
+            <div class="blockRow">
+                <a href="index.php?a=add">
+                    <div class="block">
+                        <div class="upper">
+                            <img src="img/newTicket.png" alt="<?php echo $hesklang['sub_support']; ?>" />
+                        </div>
+                        <div class="lower">
+                            <p><?php echo $hesklang['sub_support']; ?></p>
+                        </div>
+                    </div>
+                </a>
+                <a href="ticket.php">
+                    <div class="block">
+                        <div class="upper">
+                            <img src="img/viewTicket.png" alt="<?php echo $hesklang['view_existing']; ?>" />
+                        </div>
+                        <div class="lower">
+                            <p><?php echo $hesklang['view_existing']; ?></p>
+                        </div>
+                    </div>
+                </a>
+                <?php
+                if ($hesk_settings['kb_enable'])
+                {
+                ?>
+                <a href="knowledgebase.php">
+                    <div class="block">
+                        <div class="upper">
+                            <img src="img/knowledgebase.png" alt="<?php echo $hesklang['kb_text']; ?>" />
+                        </div>
+                        <div class="lower">
+                            <p><?php echo $hesklang['kb_text']; ?></p>
+                        </div>
+                    </div>
+                </a>
+                <?php
+                } ?>
+            </div>
 		</div>
 	</div>
 	<div class="blankSpace"></div>

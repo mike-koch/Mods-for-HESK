@@ -131,25 +131,43 @@ div.blankSpace {
 div.footerWithBorder {
     border-top: 1px solid #cfd4d6;
 }
-a.block {
-    background-repeat: no-repeat;
-    height: 115px;
-    background-position: 50% 12px;
-    padding: 55px 2px 10px;
-    font-weight: 400;
-    text-align: center;
-    width: 115px;
-    cursor: pointer;
-    clear: none;
+
+.blockRow > a:hover {
+    text-decoration: none;
+}
+
+.block {
+    height: 114px;
+    width: 114px;
     display: inline-block;
     border: 1px solid #c9cfd7;
     background-color: #fff;
     border-radius: 4px;
-    line-height: 14px;
-    margin: 0 6px 6px 0;
     font-size: .83em;
+    margin-right: 5px;
 }
-a.block:hover {
+
+.block > .upper {
+    height:57px;
+    padding-top:10px;
+}
+
+.block > .upper > img {
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-left:41px;
+}
+
+.block > .lower {
+    height:57px;
+    text-align:center;
+}
+
+.block > .lower > p:hover {
+    text-decoration: underline;
+}
+
+div.block:hover {
     background-color: #e9ecef;
 }
 div.rightSideDash {
