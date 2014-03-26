@@ -145,6 +145,7 @@ div.footerWithBorder {
     border-radius: 4px;
     font-size: .83em;
     margin-right: 5px;
+    vertical-align: top;
 }
 
 .block > .upper {
