@@ -335,11 +335,14 @@ function hesk_kbSearchSmall()
     ?>
 
 	<td style="text-align:right" valign="top" width="300">
-		<div style="display:inline;">
-			<form action="knowledgebase.php" method="get" style="display: inline; margin: 0;">
-			<input type="text" name="search" class="searchfield sfsmall" />
-			<input type="submit" value="<?php echo $hesklang['search']; ?>" title="<?php echo $hesklang['search']; ?>" class="searchbutton sbsmall" />
+		<div style="display:inline;margin-left:auto;margin-right:auto">
+			<form action="knowledgebase.php" method="get" class="form-inline" style="display: inline; margin: 0;">
+			     <input type="text" name="search" class="form-control" />
+			     <button class="btn btn-default" type="submit" value="<?php echo $hesklang['search_the_knowledgebase']; ?>" title="<?php echo $hesklang['search_the_knowledgebase']; ?>">
+                     <?php echo $hesklang['search_the_knowledgebase']; ?>
+                 </button>
 			</form>
+            <br><br>
 		</div>
 	</td>
 
