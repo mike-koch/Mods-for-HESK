@@ -10,13 +10,15 @@
 
 
 <!-- Use this block of code for a single link (such as the "Home" link) -->
-<li><a href="link_here">Text to Display</a></li>
+<!-- <li><a href="link_here">Text to Display</a></li> -->
 
 <!-- Use this block of code for a dropdown menu (such as the "ticket" dropdown) -->
-<li class="dropdown">
+<!-- <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown Text<b class="caret"></b></a>
     <ul class="dropdown-menu">
         <li><a href="#">Text to Display</a></li>
         <li><a href="#">Text to Display</a></li>
     </ul>
-</li>
+</li> -->
+
+<!-- Your custom nav elements should begin down here -->
