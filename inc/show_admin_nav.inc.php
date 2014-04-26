@@ -70,8 +70,8 @@ $num_mail = hesk_checkNewMail();
                     echo '</span>';
                 } ?>
               </a></li>
+          <?php include('custom/show_admin_nav-custom.inc.php'); ?>
           <li><a href="index.php?a=logout&amp;token=<?php echo hesk_token_echo(); ?>"><?php echo $hesklang['logout']; ?></a></li>
-
         </ul>
       </div><!-- /.navbar-collapse -->
     </nav>
