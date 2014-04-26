@@ -144,6 +144,7 @@ include(HESK_PATH . 'header.txt');
           <?php if ($hesk_settings['kb_enable'])
            { ?>
 	      <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><?php echo $hesklang['kb_text'] ?></a></li> <?php       } ?>
+          <?php include ('custom/header-custom.inc.php'); ?>
         </ul>
       </div><!-- /.navbar-collapse -->
     </nav>
