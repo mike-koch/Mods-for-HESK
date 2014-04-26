@@ -804,7 +804,9 @@ function print_start()
                     </div>
                 </a>
                 <?php
-                } ?>
+                }
+                include('custom/custom-blocks.php');
+                ?>
             </div>
 		</div>
 	</div>
