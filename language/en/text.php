@@ -36,6 +36,7 @@ $hesklang['ownerChange']=' - - Change Owner - - ';
 $hesklang['categoryChange']=' - - Change Category - - ';
 $hesklang['navigation']='Navigation';
 $hesklang['nti']='<span class="glyphicon glyphicon-plus-sign"></span> New ticket';
+$hesklang['savedResponses']='Saved Responses';
 
 // EMAIL SUBJECTS
 $hesklang['new_ticket_staff']       = '[#%%TRACK_ID%%] New ticket: %%SUBJECT%%';

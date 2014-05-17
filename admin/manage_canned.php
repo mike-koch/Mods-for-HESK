@@ -113,7 +113,7 @@ myField.value += myValue;
         <div class="col-md-5">
             <div class="moreToLeft">
                 <ul class="nav nav-tabs">
-				    <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['quick_help']; ?></a></li>
+				    <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['savedResponses']; ?></a></li>
 			    </ul>
                 <div class="summaryList">
                     <div class="viewTicketSidebar">
