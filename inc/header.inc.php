@@ -40,7 +40,7 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 <head>
 	<title><?php echo (isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>" />
-	<link href="<?php echo HESK_PATH; ?>css/hesk_style_v25.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>hesk_style_v25.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css" type="text/css" rel="stylesheet" />
