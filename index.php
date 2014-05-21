@@ -820,7 +820,7 @@ function print_start()
 	if ($hesk_settings['alink'])
 	{
 		?>
-		<p style="text-align:center"><a href="<?php echo $hesk_settings['admin_dir']; ?>/" class="smaller"><?php echo $hesklang['ap']; ?></a></p>
+		<p style="text-align:center"><a href="<?php echo $hesk_settings['admin_dir']; ?>/" ><?php echo $hesklang['ap']; ?></a></p>
 		<?php
 	}
 
@@ -905,54 +905,14 @@ $hesk_settings[hesk_url]/ticket.php?track={$my_ticket['trackid']}{$email_param}
 	$hesk_settings['tmp_title'] = $hesk_settings['hesk_title'] . ' - ' . $hesklang['tid_sent'];
 	require_once(HESK_PATH . 'inc/header.inc.php');
 	?>
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="3"><img src="img/headerleftsm.jpg" width="3" height="25" alt="" /></td>
-<td class="headersm"><?php hesk_showTopBar($hesklang['tid_sent']); ?></td>
-<td width="3"><img src="img/headerrightsm.jpg" width="3" height="25" alt="" /></td>
-</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="0" cellpadding="3">
-<tr>
-<td><span class="smaller"><a href="<?php echo $hesk_settings['site_url']; ?>" class="smaller"><?php echo $hesk_settings['site_title']; ?></a> &gt;
-<a href="<?php echo $hesk_settings['hesk_url']; ?>" class="smaller"><?php echo $hesk_settings['hesk_title']; ?></a>
-&gt; <?php echo $hesklang['tid_sent']; ?></span></td>
-</tr>
-</table>
-
-</td>
-</tr>
+            
+<ol class="breadcrumb">
+  <li><a href="<?php echo $hesk_settings['site_url']; ?>"><?php echo $hesk_settings['site_title']; ?></a></li>
+  <li><a href="<?php echo $hesk_settings['hesk_url']; ?>"><?php echo $hesk_settings['hesk_title']; ?></a></li>
+  <li class="active"><?php echo $hesklang['tid_sent']; ?></li>
+</ol>
 <tr>
 <td>
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="7" height="7"><img src="img/roundcornerslt.jpg" width="7" height="7" alt="" /></td>
-	<td class="roundcornerstop"></td>
-	<td><img src="img/roundcornersrt.jpg" width="7" height="7" alt="" /></td>
-</tr>
-<tr>
-	<td class="roundcornersleft">&nbsp;</td>
-	<td>
-
-	<p>&nbsp;</p>
-	<p align="center"><?php echo $hesklang['tid_sent2']; ?></p>
-	<p align="center"><b><?php echo $hesklang['check_spambox']; ?></b></p>
-	<p>&nbsp;</p>
-	<p align="center"><a href="<?php echo $hesk_settings['hesk_url']; ?>"><?php echo $hesk_settings['hesk_title']; ?></a></p>
-	<p>&nbsp;</p>
-
-	</td>
-	<td class="roundcornersright">&nbsp;</td>
-</tr>
-<tr>
-	<td><img src="img/roundcornerslb.jpg" width="7" height="7" alt="" /></td>
-	<td class="roundcornersbottom"></td>
-	<td width="7" height="7"><img src="img/roundcornersrb.jpg" width="7" height="7" alt="" /></td>
-</tr>
-</table>
 
 	<?php
 
