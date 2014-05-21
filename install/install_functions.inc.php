@@ -841,7 +841,7 @@ function hesk_iFooter()
 	global $hesk_settings;
 	?>
 
-	<p style="text-align:center"><span class="smaller">&nbsp;<br />Powered by <a href="http://www.hesk.com" class="smaller" title="Free PHP Help Desk Software">Help Desk Software</a> <b>HESK</b> - brought to you by <a href="http://www.ilient.com">Help Desk Software</a> SysAid</span></p>
+	<p style="text-align:center"><span class="smaller">&nbsp;<br />Powered by <a href="http://www.hesk.com" title="Free PHP Help Desk Software">Help Desk Software</a> <b>HESK</b> - brought to you by <a href="http://www.ilient.com">Help Desk Software</a> SysAid</span></p>
 	
 	</div>
 	</body>
