@@ -380,7 +380,7 @@ function print_add_ticket()
                 <div class="form-group">
                     
 	                <div class="col-sm-12">
-                        <textarea placeholder="Message" name="message" id="message" class="form-control" rows="12" cols="60" <?php if (in_array('message',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> ><?php if (isset($_SESSION['c_message'])) {echo stripslashes(hesk_input($_SESSION['c_message']));} ?></textarea>
+                        <textarea placeholder="<?php echo $hesklang['message']; ?>" name="message" id="message" class="form-control" rows="12" cols="60" <?php if (in_array('message',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> ><?php if (isset($_SESSION['c_message'])) {echo stripslashes(hesk_input($_SESSION['c_message']));} ?></textarea>
                     </div>
                 </div>
 
