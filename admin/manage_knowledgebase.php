@@ -365,10 +365,6 @@ if (!isset($_SESSION['hide']['new_article']))
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['kb_subject']; ?>" name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> />
-                        </div>
-                        <div class="form-group">
                             <label for="sticky" class="control-label"><?php echo $hesklang['opt']; ?></label>
                             <div class="checkbox">
                                 <label><input type="checkbox" name="sticky" value="Y" <?php if ( ! empty($_SESSION['new_article']['sticky'])) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?></label>
@@ -388,7 +384,10 @@ if (!isset($_SESSION['hide']['new_article']))
                     <label><input type="radio" name="html" value="1" <?php $display = 'none'; if (isset($_SESSION['new_article']['html']) && $_SESSION['new_article']['html'] == 1) {echo 'checked="checked"'; $displayWarn = 'block';} ?> onclick="javascript:document.getElementById('kblinks').style.display = 'block'" /> <?php echo $hesklang['kb_ehtml']; ?></label><br />
                     <span id="kblinks" style="display:<?php echo $displayWarn; ?>"><i><?php echo $hesklang['kb_links']; ?></i></span>
                 </span>
-
+                <div class="form-group">
+                    <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
+                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['kb_subject']; ?>" name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> />
+                </div>
                 <p><textarea class="form-control" name="content" rows="25" cols="70" id="content"><?php if (isset($_SESSION['new_article']['content'])) {echo $_SESSION['new_article']['content'];} ?></textarea></p>
             </div>
             <div class="col-md-3">
@@ -1322,10 +1321,6 @@ function edit_article()
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['kb_subject']; ?>" name="subject" size="70" maxlength="255" value="<?php echo $article['subject']; ?>" />
-                        </div>
-                        <div class="form-group">
                             <label for="options" class="control-label"><?php echo $hesklang['opt']; ?></label>
                             <div class="checkbox">
                                 <label><input type="checkbox" name="sticky" value="Y" <?php if ($article['sticky']) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?></label>
@@ -1378,7 +1373,10 @@ function edit_article()
                     <label><input type="radio" name="html" value="1" <?php if ($article['html']) {echo 'checked="checked"';} ?> onclick="javascript:document.getElementById('kblinks').style.display = 'block'" /> <?php echo $hesklang['kb_ehtml']; ?></label>
                     <span id="kblinks" style="display:<?php echo $displayWarn; ?>"><i><?php echo $hesklang['kb_links']; ?></i></span>
                 </span>
-
+                <div class="form-group">
+                    <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
+                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['kb_subject']; ?>" name="subject" size="70" maxlength="255" value="<?php echo $article['subject']; ?>" />
+                </div>
                 <textarea name="content" class="form-control" placeholder="<?php echo $hesklang['kb_content']; ?>" rows="25" cols="70" id="content"><?php echo $article['content']; ?></textarea>
             </div>
             <div class="col-md-3">
