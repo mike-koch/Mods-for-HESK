@@ -1,6 +1,6 @@
 [![Analytics](https://ga-beacon.appspot.com/UA-49251479-1/hesk/README)](https://github.com/mkoch227/Hesk)
 
-<h2>HESK UI v1.0.3</h2>
+<h2>HESK UI v1.1.3</h2>
 
 This branch contains all files modified from the base version of HESK to become HESK UI, a clean user interface for HESK v2.5.3
 
@@ -52,4 +52,9 @@ You can download this tweak via two ways:
 <li>Bug fixes and misc minor changes bumps the patch</li>
 </ul>
 
-For more information on SemVer, please visit http://semver.org.
+<p>For more information on SemVer, please visit http://semver.org.</p>
+
+<h2>Credits</h2>
+<p>Mike Koch - Creator of Hesk UI</p>
+<p>Klemen Stirn - Creator of Hesk</p>
+<p>lupolo from PHPJunkyard Scripts - diligent bug reporting on the PHPJunkyard Scripts Forum</p>
