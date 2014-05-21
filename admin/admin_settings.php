@@ -42,6 +42,7 @@ if (is_dir(HESK_PATH . 'install')) {die('Please delete the <b>install</b> folder
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'hesk_ui_settings.inc.php');
 
 // Save the default language for the settings page before choosing user's preferred one
 $hesk_settings['language_default'] = $hesk_settings['language'];
@@ -141,8 +142,16 @@ if ( defined('HESK_DEMO') )
 	                        {
 		                        ?> - <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
 	                        }
-	                        ?> 
+	                        ?>
                         </td></tr>
+                        <tr>
+                            <td style="text-align: right">
+                                <?php echo $hesklang['heskUiVersion']; ?>:
+                            </td>
+                            <td style="padding-left: 10px">
+                                <?php echo $hesk_ui_settings['version']; ?>
+                            </td>
+                        </tr>
                         <tr><td style="text-align: right">
                             <?php echo $hesklang['phpv']; ?>:
                             </td><td style="padding-left: 10px">

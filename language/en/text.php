@@ -37,6 +37,7 @@ $hesklang['categoryChange']=' - - Change Category - - ';
 $hesklang['navigation']='Navigation';
 $hesklang['nti']='<span class="glyphicon glyphicon-plus-sign"></span> New ticket';
 $hesklang['savedResponses']='Saved Responses';
+$hesklang['heskUiVersion']='Hesk UI Version';
 
 // EMAIL SUBJECTS
 $hesklang['new_ticket_staff']       = '[#%%TRACK_ID%%] New ticket: %%SUBJECT%%';
