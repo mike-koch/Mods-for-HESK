@@ -38,6 +38,8 @@ $hesklang['navigation']='Navigation';
 $hesklang['nti']='<span class="glyphicon glyphicon-plus-sign"></span> New ticket';
 $hesklang['savedResponses']='Saved Responses';
 $hesklang['heskUiVersion']='Hesk UI Version';
+$hesklang['add_ticket_general_information']='General Information';
+$hesklang['add_ticket_your_message']='Your Message';
 
 // EMAIL SUBJECTS
 $hesklang['new_ticket_staff']       = '[#%%TRACK_ID%%] New ticket: %%SUBJECT%%';

@@ -126,7 +126,7 @@ function print_add_ticket()
 	            <small><?php echo $hesklang['use_form_below']; ?></small>
                 <div class="blankSpace"></div>
 	
-            <div align="left" class="h3">General Information</div>
+            <div align="left" class="h3"><?php echo $hesklang['add_ticket_general_information']; ?></div>
             <div class="footerWithBorder"></div>
             <div class="blankSpace"></div>
 	            <form class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1" enctype="multipart/form-data">
@@ -367,7 +367,7 @@ function print_add_ticket()
 	            <!-- END CUSTOM BEFORE -->
 
 	           <div class="blankSpace"></div>   
-               <div align="left" class="h3">Your Message</div>
+               <div align="left" class="h3"><?php echo $hesklang['add_ticket_your_message']; ?></div>
                <div class="footerWithBorder"></div>
                <div class="blankSpace"></div>    
                 <!-- ticket info -->
@@ -724,7 +724,7 @@ function print_start()
 		<div align="left" class="col-md-4">
 		<div class="moreToLeft">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#" onclick="return false;">View Ticket</a></li>
+				<li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['view_ticket']; ?></a></li>
 			</ul>
 			<div class="summaryList">
 				<form role="form" class="viewTicketSidebar" action="ticket.php" method="get" name="form2">
