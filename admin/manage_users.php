@@ -376,22 +376,22 @@ while ($myuser = hesk_dbFetchAssoc($res))
 	{
     	if (isset($hesk_settings['users_online'][$myuser['id']]))
         {
-			$myuser['name'] = '<i style="color: green" class="fa fa-circle"></i> ' . $myuser['name'];
+			$myuser['name'] = '<i style="color: green" class="fa fa-circle" data-toggle="tooltip" data-placement="top" title="'.$hesklang['online'].'"></i> ' . $myuser['name'];
         }
         else
         {
-			$myuser['name'] = '<i style="color: gray" class="fa fa-circle"></i> ' . $myuser['name'];
+			$myuser['name'] = '<i style="color: gray" class="fa fa-circle" data-toggle="tooltip" data-placement="top" title="'.$hesklang['offline'].'"></i> ' . $myuser['name'];
         }
 	}
 
 	/* To edit yourself go to "Profile" page, not here. */
     if ($myuser['id'] == $_SESSION['id'])
     {
-    	$edit_code = '<a href="profile.php"><i style="font-size: 16px" class="fa fa-pencil"></i></a>';
+    	$edit_code = '<a href="profile.php"><i style="font-size: 16px" class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="'.$hesklang['edit'].'"></i></a>';
     }
     else
     {
-    	$edit_code = '<a href="manage_users.php?a=edit&amp;id='.$myuser['id'].'"><i style="font-size: 16px" class="fa fa-pencil"></i></a>';
+    	$edit_code = '<a href="manage_users.php?a=edit&amp;id='.$myuser['id'].'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['edit'].'"><i style="font-size: 16px" class="fa fa-pencil"></i></a>';
     }
 
     if ($myuser['isadmin'])
@@ -410,7 +410,7 @@ while ($myuser = hesk_dbFetchAssoc($res))
     }
     else
     {
-        $remove_code = ' <a href="manage_users.php?a=remove&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i style="font-size: 16px; color: red" class="fa fa-times"></i></a>';
+        $remove_code = ' <a href="manage_users.php?a=remove&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"><i style="font-size: 16px; color: red" class="fa fa-times"></i></a>';
     }
 
 	/* Is auto assign enabled? */
@@ -418,11 +418,11 @@ while ($myuser = hesk_dbFetchAssoc($res))
     {
     	if ($myuser['autoassign'])
         {
-			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'"><i style="color: orange; font-size: 16px" class="fa fa-bolt"></i></a>';
+			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaon'].'"><i style="color: orange; font-size: 16px" class="fa fa-bolt"></i></a>';
         }
         else
         {
-			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=1&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'"><i style="color: gray; font-size: 16px" class="fa fa-bolt"></i></a>';
+			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=1&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaoff'].'"><i style="color: gray; font-size: 16px" class="fa fa-bolt"></i></a>';
         }
     }
     else
@@ -442,7 +442,7 @@ EOC;
 if ($hesk_settings['rating'])
 {
 	$alt = $myuser['rating'] ? sprintf($hesklang['rated'], sprintf("%01.1f", $myuser['rating']), ($myuser['ratingneg']+$myuser['ratingpos'])) : $hesklang['not_rated'];
-	echo '<td><img src="../img/star_'.(hesk_round_to_half($myuser['rating'])*10).'.png" width="85" height="16" alt="'.$alt.'" title="'.$alt.'" border="0" style="vertical-align:text-bottom" />&nbsp;</td>';
+	echo '<td><img src="../img/star_'.(hesk_round_to_half($myuser['rating'])*10).'.png" width="85" height="16" alt="'.$alt.'" data-toggle="tooltip" data-placement="top" title="'.$alt.'" border="0" style="vertical-align:text-bottom" />&nbsp;</td>';
 }
 
 echo <<<EOC
@@ -455,7 +455,7 @@ EOC;
 </table>
 <?php if ($hesk_settings['online'])
 {
-    echo '&nbsp;&nbsp;&nbsp;<i style="color: green" class="fa fa-circle"></i> Online &nbsp;&nbsp;&nbsp; <i style="color: gray" class="fa fa-circle"></i> Offline';
+    echo '&nbsp;&nbsp;&nbsp;<i style="color: green" class="fa fa-circle"></i> '.$hesklang['online'].' &nbsp;&nbsp;&nbsp; <i style="color: gray" class="fa fa-circle"></i> '.$hesklang['offline'];
 }?>
     </div>     
 </div>

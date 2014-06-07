@@ -48,6 +48,7 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript_v25.js"></script>
+    <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/hesk-ui-javascript.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
 
     <?php

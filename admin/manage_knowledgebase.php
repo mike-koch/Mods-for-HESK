@@ -1729,21 +1729,21 @@ function manage_category() {
                         {
                         ?>
                             <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />
-                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-arrow-down" style="color:green;font-size:16px"></i></a>
+                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_dn']; ?>"><i class="fa fa-arrow-down" style="color:green;font-size:16px"></i></a>
                         <?php
                         }
                         elseif ($k == $num)
                         {
                         ?>
-                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-arrow-up" style="font-size:16px;color:green"></i></a>
+                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_up']; ?>"><i class="fa fa-arrow-up" style="font-size:16px;color:green"></i></a>
                             <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />
                         <?php
                         }
                         else
                         {
                         ?>
-                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-arrow-up" style="font-size:16px;color:green"></i></a>
-                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-arrow-down" style="color:green;font-size:16px"></i></a>
+                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_up']; ?>"><i class="fa fa-arrow-up" style="font-size:16px;color:green"></i></a>
+                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_dn'] ?>"><i class="fa fa-arrow-down" style="color:green;font-size:16px"></i></a>
                         <?php
                         }
                     }
@@ -1752,10 +1752,10 @@ function manage_category() {
                         echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;vertical-align:text-bottom;" /> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;vertical-align:text-bottom;" />';
                     }
                     ?>
-                    <a href="manage_knowledgebase.php?a=sticky&amp;s=<?php echo $article['sticky'] ? 0 : 1 ?>&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-exclamation-triangle" style="font-size:16px;color:<?php if ( ! $article['sticky']) {echo 'gray';} else {echo 'orange';} ?>"></i></a>
-                    <a href="knowledgebase_private.php?article=<?php echo $article['id']; ?>&amp;back=1<?php if ($article['type'] == 2) {echo '&amp;draft=1';} ?>" target="_blank"><i class="fa fa-file-o" style="font-size:16px"></i></a>
-                    <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>"><i class="fa fa-pencil" style="color:orange;font-size:16px"></i></a>
-                    <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times" style="font-size:16px;color:red"></i></a>&nbsp;</td>
+                    <a href="manage_knowledgebase.php?a=sticky&amp;s=<?php echo $article['sticky'] ? 0 : 1 ?>&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php if (!$article['sticky']) {echo $hesklang['stickyon'];} else {echo $hesklang['stickyoff'];} ?>"><i class="fa fa-exclamation-triangle" style="font-size:16px;color:<?php if ( ! $article['sticky']) {echo 'gray';} else {echo 'orange';} ?>"></i></a>
+                    <a href="knowledgebase_private.php?article=<?php echo $article['id']; ?>&amp;back=1<?php if ($article['type'] == 2) {echo '&amp;draft=1';} ?>" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['viewart'] ?>"><i class="fa fa-file-o" style="font-size:16px"></i></a>
+                    <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['edit'] ?>"><i class="fa fa-pencil" style="color:orange;font-size:16px"></i></a>
+                    <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['delete'] ?>"><i class="fa fa-times" style="font-size:16px;color:red"></i></a>&nbsp;</td>
                     </tr>
                     <?php
                     $j++;

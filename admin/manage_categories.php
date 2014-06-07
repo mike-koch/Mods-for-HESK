@@ -241,17 +241,17 @@ else {return false;}
                     }
                     else
                     {
-                        $remove_code=' <a href="manage_categories.php?a=remove&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i class="fa fa-times" style="color: #FF0000; font-size: 14px;"></i></a>';
+                        $remove_code=' <a href="manage_categories.php?a=remove&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"><i class="fa fa-times" style="color: #FF0000; font-size: 14px;"></i></a>';
                     }
 
 	                /* Is category private or public? */
 	                if ($mycat['type'])
 	                {
-		                $type_code = '<a href="manage_categories.php?a=type&amp;s=0&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'"><span class="glyphicon glyphicon-user" style="color: gray"></span></a>';
+		                $type_code = '<a href="manage_categories.php?a=type&amp;s=0&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['cat_private'].'"><span class="glyphicon glyphicon-user" style="color: gray"></span></a>';
 	                }
 	                else
 	                {
-		                $type_code = '<a href="manage_categories.php?a=type&amp;s=1&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'"><span class="glyphicon glyphicon-user" style="color: #0000FF"></span></a>';
+		                $type_code = '<a href="manage_categories.php?a=type&amp;s=1&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['cat_public'].'"><span class="glyphicon glyphicon-user" style="color: #0000FF"></span></a>';
 	                }
 
 	                /* Is auto assign enabled? */
@@ -259,11 +259,11 @@ else {return false;}
                     {
     	                if ($mycat['autoassign'])
                         {
-			                $autoassign_code = '<a href="manage_categories.php?a=autoassign&amp;s=0&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'"><i class="fa fa-bolt" style="font-size: 14px; color: orange"></i></a>';
+			                $autoassign_code = '<a href="manage_categories.php?a=autoassign&amp;s=0&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaon'].'"><i class="fa fa-bolt" style="font-size: 14px; color: orange"></i></a>';
                         }
                         else
                         {
-			                $autoassign_code = '<a href="manage_categories.php?a=autoassign&amp;s=1&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'"><i class="fa fa-bolt" style="font-size: 14px; color: gray"></i></a>';
+			                $autoassign_code = '<a href="manage_categories.php?a=autoassign&amp;s=1&amp;catid='.$mycat['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaoff'].'"><i class="fa fa-bolt" style="font-size: 14px; color: gray"></i></a>';
                         }
                     }
                     else
@@ -282,7 +282,7 @@ else {return false;}
 	                </div>
 	                </td>
 	                <td>
-	                <a href="Javascript:void(0)" onclick="Javascript:hesk_window(\'manage_categories.php?a=linkcode&amp;catid='.$mycat['id'].'&amp;p='.$mycat['type'].'\',\'200\',\'500\')"><i class="fa fa-code" style="font-size: 14px; color: '. ($mycat['type'] ? 'gray' : 'green') . '"></i></a>
+	                <a href="Javascript:void(0)" onclick="Javascript:hesk_window(\'manage_categories.php?a=linkcode&amp;catid='.$mycat['id'].'&amp;p='.$mycat['type'].'\',\'200\',\'500\')" id="tooltip" data-toggle="tooltip" data-placement="top" title="'.$hesklang['geco'].'"><i class="fa fa-code" style="font-size: 14px; color: '. ($mycat['type'] ? 'gray' : 'green') . '"></i></a>
 	                ' . $autoassign_code . '
                     ' . $type_code . ' ';
 
@@ -290,17 +290,17 @@ else {return false;}
 	                {
 		                if ($j == 1)
 		                {
-			                echo'<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_categories.php?a=order&amp;catid='.$mycat['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green"></i></a>';
+			                echo'<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_categories.php?a=order&amp;catid='.$mycat['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"></i></a>';
 		                }
 		                elseif ($j == $num)
 		                {
-			                echo'<a href="manage_categories.php?a=order&amp;catid='.$mycat['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
+			                echo'<a href="manage_categories.php?a=order&amp;catid='.$mycat['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
 		                }
 		                else
 		                {
 			                echo'
-			                <a href="manage_categories.php?a=order&amp;catid='.$mycat['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green"></i></a>
-			                <a href="manage_categories.php?a=order&amp;catid='.$mycat['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green"></i></a>&nbsp;
+			                <a href="manage_categories.php?a=order&amp;catid='.$mycat['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"></i></a>
+			                <a href="manage_categories.php?a=order&amp;catid='.$mycat['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green"></i></a>&nbsp;
 			                ';
 		                }
 	                }

@@ -313,18 +313,18 @@ if ($total > 0)
 		switch ($ticket['priority'])
 		{
 			case 0:
-				$ticket['priority']='<span style="color: red; font-size:1.3em" class="glyphicon glyphicon-flag"></span>';
+				$ticket['priority']='<span style="color: red; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['critical'].'"></span>';
                 $color = 'danger';
 				break;
 			case 1:
-				$ticket['priority']='<span style="color: orange; font-size:1.3em" class="glyphicon glyphicon-flag"></span>';
+				$ticket['priority']='<span style="color: orange; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['high'].'"></span>';
 				$color = 'warning';
                 break;
 			case 2:
-				$ticket['priority']='<span style="color: green; font-size:1.3em" class="glyphicon glyphicon-flag"></span>';
+				$ticket['priority']='<span style="color: green; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['medium '].'"></span>';
 				break;
 			default:
-				$ticket['priority']='<span style="color: blue; font-size:1.3em" class="glyphicon glyphicon-flag"></span>';
+				$ticket['priority']='<span style="color: blue; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['low'].'"></span>';
 		}
 
         $ticket['lastchange']=hesk_time_since(strtotime($ticket['lastchange']));
