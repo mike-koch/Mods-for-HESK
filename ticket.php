@@ -704,7 +704,7 @@ function hesk_getCustomerButtons($white=1)
     $style = 'class="option'.$tmp.'OFF" onmouseover="this.className=\'option'.$tmp.'ON\'" onmouseout="this.className=\'option'.$tmp.'OFF\'"';
 
 	/* Print ticket button */
-    $options .= '<a href="print.php?track='.$trackingID.$hesk_settings['e_query'].'" title="'.$hesklang['printer_friendly'].'" '.$style.'><span class="glyphicon glyphicon-print"></span> '.$hesklang['printer_friendly'].' </a> ';
+    $options .= '<a href="print.php?track='.$trackingID.$hesk_settings['e_query'].'" title="'.$hesklang['printer_friendly'].'"><span class="glyphicon glyphicon-print"></span> '.$hesklang['printer_friendly'].' </a> ';
 
     /* Return generated HTML */
     return $options;
