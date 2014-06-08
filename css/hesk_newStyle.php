@@ -1,46 +1,66 @@
+<?php
+    header("Content-type: text/css; charset: UTF-8");
+    require_once('../hesk_ui_settings.inc.php');
+
+    $navbarBackgroundColor = $hesk_ui_settings['navbarBackgroundColor'];
+    $navbarBrandColor = $hesk_ui_settings['navbarBrandColor'];
+    $navbarBrandHoverColor = $hesk_ui_settings['navbarBrandHoverColor'];
+
+    $navbarItemTextColor = $hesk_ui_settings['navbarItemTextColor'];
+    $navbarItemTextHoverColor = $hesk_ui_settings['navbarItemTextHoverColor'];
+    $navbarItemTextSelectedColor = $hesk_ui_settings['navbarItemTextSelectedColor'];
+    $navbarItemSelectedBackgroundColor = $hesk_ui_settings['navbarItemSelectedBackgroundColor'];
+
+    $dropdownItemTextColor = $hesk_ui_settings['dropdownItemTextColor'];
+    $dropdownItemTextHoverColor = $hesk_ui_settings['dropdownItemTextHoverColor'];
+    $dropdownItemTextHoverBackgroundColor = $hesk_ui_settings['dropdownItemTextHoverBackgroundColor'];
+
+    $questionMarkColor = $hesk_ui_settings['questionMarkColor'];
+?>
+
 .navbar {
     margin-bottom: 0;
 }
 .navbar-default {
-    background-color: #414a5c;
+    background-color: <?php echo $navbarBackgroundColor; ?>;
     background-image: none;
     filter: none;
 }
 .navbar-default .navbar-brand {
-    color: #d4dee7;
+    color: <?php echo $navbarBrandColor; ?>;
 }
 .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
-    color: #fff;
+    color: <?php echo $navbarBrandHoverColor; ?>;
     background-color: transparent;
 }
 .navbar-default .navbar-nav>li>a {
-    color: #d4dee7;
+    color: <?php echo $navbarItemTextColor; ?>;
 }
 .navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
-    color: #fff;
+    color: <?php echo $navbarItemTextHoverColor; ?>;
     background-color: transparent;
 }
 .dropdown-menu>li>a {
-    color: #333;
+    color: <?php echo $dropdownItemTextColor; ?>;
 }
 .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
-    color: #262626;
+    color: <?php echo $dropdownItemTextHoverColor; ?>;
     text-decoration: none;
-    background-color: #f5f5f5;
+    background-color: <?php echo $dropdownItemTextHoverBackgroundColor; ?>;
 }
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
-    color: #fff;
-    background-color: #2d3646;
+    color: <?php echo $navbarItemTextSelectedColor; ?>;
+    background-color: <?php echo $navbarItemSelectedBackgroundColor; ?>;
 }
 .settingsquestionmark {
-    color: #000;
+    color: <?php echo $questionMarkColor; ?>;
     font-size: 14px;
 }
 .settingsquestionmark:hover {
     text-decoration: underline;
 }
 .h3questionmark {
-    color: #000;
+    color: <?php echo $questionMarkColor; ?>;
     font-size: 14px;
 }
 .h3questionmark:hover {
