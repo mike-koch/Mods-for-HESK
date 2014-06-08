@@ -14,6 +14,6 @@ $hesk_ui_settings['dropdownItemTextHoverBackgroundColor'] = '#f5f5f5';
 $hesk_ui_settings['questionMarkColor'] = '#000000';
 
 /* DO NOT EDIT ANYTHING BELOW THIS LINE */
-$hesk_ui_settings['version']='1.1.4';
+$hesk_ui_settings['version']='1.1.5';
 
 ?>
