@@ -42,7 +42,7 @@ There are currently no releases available, however you will eventually be able t
 <p>Browser compatibility: any browser / application capable of reading a JSON response.</p>
 
 <h2>Versioning</h2>
-<p>HESK UI will be maintained under the Semantic Versioning guidelines as much as possible. Releases will be numbered with the following format:</p>
+<p>HESK Web Services will be maintained under the Semantic Versioning guidelines as much as possible. Releases will be numbered with the following format:</p>
 
 <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code>
 
