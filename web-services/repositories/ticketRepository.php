@@ -94,8 +94,8 @@ class TicketRepository {
         $ticket->timeWorked = $result['time_worked'];
         $ticket->lastReplier = self::getWhoLastRepliedForId($result['lastreplier']);
         $ticket->replierId = $result['LastReplierName'];
-        $ticket->isArchived = $result['archive'];
-        $ticket->isLocked = $result['locked'];
+        $ticket->isArchived = ($result['archive'] ? true : false);
+        $ticket->isLocked = ($result['locked'] ? true : false);
         $ticket->attachments = $result['attachments'];
         $ticket->merged = $result['merged'];
 
