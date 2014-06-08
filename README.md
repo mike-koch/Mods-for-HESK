@@ -1,12 +1,12 @@
 [![Analytics](https://ga-beacon.appspot.com/UA-49251479-1/hesk/README)](https://github.com/mkoch227/Hesk)
 
-<h2>HESK UI v1.1.5</h2>
+<h2>HESK Web Services</h2>
 
-This branch contains all files modified from the base version of HESK to become HESK UI, a clean user interface for HESK v2.5.3
+This branch contains additional files on top of HESK UI that create the HESK Web Services, a REST API to retrieve / submit changes to support tickets.
 
 <h2>Download</h2>
 
-You can download this tweak via two ways:
+There are currently no releases available, however you will eventually be able to download this tweak via two ways:
 
 <ol>
 <li><strong>Stable Releases:</strong> Releases that have a release tag associated with a commit are considered releases.  You can click on "releases" on the top of the repo, and then click "zip" or "tar.gz" to download the repo at that stage.</li>
@@ -18,7 +18,7 @@ You can download this tweak via two ways:
 <ol>
 <li>Download HESK from <a href="http://www.hesk.com/download.php" target="_blank">http://www.hesk.com/download.php</a>.</li>
 <li>Extract the contents of HESK to a directory of your choice.</li>
-<li>Download HESK UI from one of the two methods described above.</li>
+<li>Download the HESK Web Services + HESK UI bundle from one of the two methods described above.</li>
 <li>Copy and paste the contents of the zip/tar.gz bundle and overwrite any files in the original HESK 2.5.3 folder.</li>
 <li>Upload the resulting folder to your webserver.</li>
 </ol>
@@ -27,8 +27,9 @@ You can download this tweak via two ways:
 <h2>Languages</h2>
 <p>As of current, only English is a supported language, as there have been several language items that have been edited/created. If you want to translate HESK UI to your own language, it is recommended to download the original HESK language file for your language, and then add/edit the lines listed under <code>//Added or modified in HESK UI</code> for your language.</p>
 <p>If you create a translation for HESK UI, please submit it via a pull request or via the PHP Junkyards forum, where it will be committed to this branch.</p>
+<p>There are currently some hard-coded strings in the <code>web-services</code> folder that will also need to be translated if you wish to have the string translated.</p>
 
-<h2>Browser Compability</h2>
+<h2>Browser Compability for HESK UI</h2>
 <p>This list may be incomplete. Please leave a note on the PHP Junkyard forums for additional browser compatibility information.
 <ul>
 <li><strong>Google Chrome 33+: </strong> Compatible</li>
@@ -38,6 +39,7 @@ You can download this tweak via two ways:
 <li><strong>Internet Explorer 9:</strong> Compatible</li>
 </ul>
 <p>There are no intentions of making HESK UI compatible with Internet Explorer 6 or 7, or any browser that is 2 or more major revisions older than its latest version.</p>
+<p>Browser compatibility: any browser / application capable of reading a JSON response.</p>
 
 <h2>Versioning</h2>
 <p>HESK UI will be maintained under the Semantic Versioning guidelines as much as possible. Releases will be numbered with the following format:</p>
