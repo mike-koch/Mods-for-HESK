@@ -1,6 +1,6 @@
 [![Analytics](https://ga-beacon.appspot.com/UA-49251479-1/hesk/README)](https://github.com/mkoch227/Hesk)
 
-<h2>HESK UI v1.1.3</h2>
+<h2>HESK UI v1.1.5</h2>
 
 This branch contains all files modified from the base version of HESK to become HESK UI, a clean user interface for HESK v2.5.3
 
