@@ -125,7 +125,7 @@ class TicketRepository {
         return $ticket;
     }
     
-    public function getPriorityForId($id) {
+    private function getPriorityForId($id) {
         if ($id == 0){
             return '* Critical *';
         } elseif ($id == 1){
