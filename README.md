@@ -39,7 +39,7 @@ There are currently no releases available, however you will eventually be able t
 <li><strong>Internet Explorer 9:</strong> Compatible</li>
 </ul>
 <p>There are no intentions of making HESK UI compatible with Internet Explorer 6 or 7, or any browser that is 2 or more major revisions older than its latest version.</p>
-<p>Browser compatibility: any browser / application capable of reading a JSON response.</p>
+<p>Browser compatibility for HESK Web Services: any browser / application capable of reading a JSON response.</p>
 
 <h2>Versioning</h2>
 <p>HESK Web Services will be maintained under the Semantic Versioning guidelines as much as possible. Releases will be numbered with the following format:</p>
