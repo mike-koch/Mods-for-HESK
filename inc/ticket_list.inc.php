@@ -120,7 +120,7 @@ if ($total > 0)
             <div align="center" style="float: left">
                 '.sprintf($hesklang['tickets_on_pages'],$total,$pages).' '.$hesklang['jump_page'].' <select name="myHpage" id="myHpage">
             </div>
-            <div align="right" style="float: right">
+            <div align="right" style="text-align: right">
                 <a href="new_ticket.php">'.$hesklang['nti'].'</a>
             </div>
         </div>';
@@ -183,7 +183,7 @@ if ($total > 0)
             <div align="center" style="float: left">
                 '.sprintf($hesklang['tickets_on_pages'],$total,$pages).'
             </div>
-            <div align="right" style="float: right">
+            <div align="right" style="text-align: right">
                 <a href="new_ticket.php">'.$hesklang['nti'].'</a>
             </div>
         </div>';
