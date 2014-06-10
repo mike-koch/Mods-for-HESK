@@ -1,8 +1,8 @@
 [![Analytics](https://ga-beacon.appspot.com/UA-49251479-1/hesk/README)](https://github.com/mkoch227/Hesk)
 
-<h2>HESK UI v1.1.5</h2>
+<h2>HESK UI v1.1.6</h2>
 
-This branch contains all files modified from the base version of HESK to become HESK UI, a clean user interface for HESK v2.5.3
+This branch contains all files modified from the base version of HESK to become HESK UI, a clean user interface for HESK v2.x
 
 <h2>Download</h2>
 
@@ -19,7 +19,7 @@ You can download this tweak via two ways:
 <li>Download HESK from <a href="http://www.hesk.com/download.php" target="_blank">http://www.hesk.com/download.php</a>.</li>
 <li>Extract the contents of HESK to a directory of your choice.</li>
 <li>Download HESK UI from one of the two methods described above.</li>
-<li>Copy and paste the contents of the zip/tar.gz bundle and overwrite any files in the original HESK 2.5.3 folder.</li>
+<li>Copy and paste the contents of the zip/tar.gz bundle and overwrite any files in the original HESK 2.x folder.</li>
 <li>Upload the resulting folder to your webserver.</li>
 </ol>
 <p>Please consult the official HESK Documentation on how to install HESK, as it is the same for both HESK and HESK UI.</p>
