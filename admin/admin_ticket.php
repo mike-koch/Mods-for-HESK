@@ -537,6 +537,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td colspan="10" style="border-width: 0px"><?php echo $hesklang['created_on'].': '.hesk_date($ticket['dt']); ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $hesklang['last_update'].': '.hesk_date($ticket['lastchange']); ?></td>
                     <td colspan="10" style="border-width: 0px; text-align: right">
                         <?php
+                            $random=rand(10000,99999);
                             if ($ticket['status'] != 3)
                             {
                                 echo '<a
@@ -630,8 +631,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                            </td>';
 
                         echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>'; 
-                        
-                            $random=rand(10000,99999);
 
                             $status_options = array(
         	                    0 => '<option value="0">'.$hesklang['open'].'</option>',
