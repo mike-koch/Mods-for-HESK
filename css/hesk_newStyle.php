@@ -18,6 +18,11 @@
     $questionMarkColor = $hesk_ui_settings['questionMarkColor'];
 ?>
 
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 .navbar {
     margin-bottom: 0;
 }

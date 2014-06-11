@@ -130,8 +130,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div class="col-sm-9">
                         <input type="text" class="form-control" name="email" size="40" maxlength="255" value="<?php if (isset($_SESSION['as_email'])) {echo stripslashes(hesk_input($_SESSION['as_email']));} ?>" <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(1)"'; } ?> placeholder="<?php echo $hesklang['email']; ?>"/>
                     </div>
-                <div id="email_suggestions"></div> 
+                
                 </div>
+                <div id="email_suggestions"></div>
                 <hr/>
                 <!-- Department and Priority -->
                 <?php if (in_array('category',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} elseif (in_array('category',$_SESSION['isnotice'])) {echo '<div class="form-group has-warning">';} else {echo '<div class="form-group">';} ?>

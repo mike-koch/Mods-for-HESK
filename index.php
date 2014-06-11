@@ -731,7 +731,7 @@ function print_start()
 					<div class="form-group">
 						<br/>
 						<label for="ticketID"><?php echo $hesklang['ticket_trackID']; ?>:</label>
-						<input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value="<?php echo $trackingID; ?>" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
+						<input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value="" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
 					</div>
 					<?php
 					$tmp = '';
