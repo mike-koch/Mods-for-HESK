@@ -289,26 +289,8 @@ if ($total > 0)
 			$tagged = '<i class="fa fa-tag"></i> ';
         }
 
-		switch ($ticket['status'])
-		{
-			case 0:
-				$ticket['status']='<span class="open">'.$hesklang['open'].'</span>';
-				break;
-			case 1:
-				$ticket['status']='<span class="waitingreply">'.$hesklang['wait_reply'].'</span>';
-				break;
-			case 2:
-				$ticket['status']='<span class="replied">'.$hesklang['replied'].'</span>';
-				break;
-			case 4:
-				$ticket['status']='<span class="inprogress">'.$hesklang['in_progress'].'</span>';
-				break;
-			case 5:
-				$ticket['status']='<span class="onhold">'.$hesklang['on_hold'].'</span>';
-				break;
-			default:
-				$ticket['status']='<span class="resolved">'.$hesklang['closed'].'</span>';
-		}
+        $status = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ShortNameContentKey`, `TextColor` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$ticket['status']));
+        $ticket['status']='<span style="color: '.$status['TextColor'].'">'.$hesklang[$status['ShortNameContentKey']].'</span>';
 
 		switch ($ticket['priority'])
 		{
