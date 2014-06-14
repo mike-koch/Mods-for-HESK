@@ -102,7 +102,7 @@ hesk_dbConnect();
 hesk_limitBfAttempts();
 
 /* Get ticket info */
-$res = hesk_dbQuery( "SELECT `t1`.* , `t2`.name AS `repliername` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1` LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS `t2` ON `t1`.`replierid` = `t2`.`id` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
+$res = hesk_dbQuery( "SELECT `t1`.* , `t2`.name AS `repliername`, `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`TicketViewContentKey` AS `statusKey`  FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1` INNER JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` AS `ticketStatus` ON `t1`.`status` = `ticketStatus`.`ID` LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS `t2` ON `t1`.`replierid` = `t2`.`id` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
 
 /* Ticket found? */
 if (hesk_dbNumRows($res) != 1)
@@ -263,7 +263,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                     </td>
                     <td colspan="10" style="border-width: 0px; text-align: right;">
                         <p><?php $random=rand(10000,99999);
-                                 if ($ticket['status'] == 3 && $ticket['locked'] != 1 && $hesk_settings['custopen']) {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=2&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['open_action'].'">'.$hesklang['open_action'].'</a>';}
+                                 if ($ticket['isClosed'] == true && $ticket['locked'] != 1 && $hesk_settings['custopen']) {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=2&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['open_action'].'">'.$hesklang['open_action'].'</a>';}
                                  else {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=3&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['close_action'].'">'.$hesklang['close_action'].'</a>';} ?></p>
                     </td>
                 </tr>
@@ -285,34 +285,16 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                             elseif ($ticket['priority']==1) {echo '<p class="ticketPropertyText">'.$hesklang['high'].'</p>';}
 			                elseif ($ticket['priority']==2) {echo '<p class="ticketPropertyText">'.$hesklang['medium'].'</p>';}
 			                else {echo '<p class="ticketPropertyText">'.$hesklang['low'].'</p>';}
-                           '</td>';
+                           echo '</td>';
                         }
                         else
                         {
                            $hesk_settings['ticketColumnWidth'] = 5; 
                         }
                         echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>'; 
-                        
-                            switch ($ticket['status'])
-		                    {
-			                    case 0:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['open'].'</p>';
-				                    break;
-			                    case 1:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['wait_staff_reply'].'</p>';
-				                    break;
-			                    case 2:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['wait_cust_reply'].'</p>';
-				                    break;
-			                    case 4:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['in_progress'].'</p>';
-				                    break;
-			                    case 5:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['on_hold'].'</p>';
-				                    break;
-			                    default:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['closed'].'</p>';
-		                    } echo '</td>';
+                            $ticketStatusKey = $ticket['statusKey'];
+                             echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatusKey].'</p>';
+		                    echo '</td>';
                         echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['last_replier'].'</p>
                                 <p class="ticketPropertyText">'.$ticket['repliername'].'</p></td>';
                         echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['category'].'</p>
