@@ -624,8 +624,8 @@ function print_add_ticket()
 					                play_again : "<?php echo hesk_slashJS($hesklang['play_again']); ?>",
 					                cant_hear_this : "<?php echo hesk_slashJS($hesklang['cant_hear_this']); ?>",
 					                incorrect_try_again : "<?php echo hesk_slashJS($hesklang['incorrect_try_again']); ?>",
-					                image_alt_text : "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>",
-				                     },
+					                image_alt_text : "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>"
+				                     }
 				                };
 				                </script>
 				                <?php
