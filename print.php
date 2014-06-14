@@ -55,8 +55,9 @@ if ( empty($_SESSION['id']) )
 }
 
 /* Get ticket info */
-$res = hesk_dbQuery("SELECT `t1`.* , `t2`.name AS `repliername`
+$res = hesk_dbQuery("SELECT `t1`.* , `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`TicketViewContentKey` AS `statusKey`, `t2`.name AS `repliername`
 					FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1` LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS `t2` ON `t1`.`replierid` = `t2`.`id`
+					INNER JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` AS `ticketStatus` ON `t1`.`status` = `ticketStatus`.`ID`
 					WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
 
 if (hesk_dbNumRows($res) != 1)
@@ -116,27 +117,6 @@ hr
 <body onload="window.print()">
 
 <?php
-/* Ticket status */
-switch ($ticket['status'])
-{
-	case 0:
-		$ticket['status']=$hesklang['open'];
-		break;
-	case 1:
-		$ticket['status']=$hesklang['wait_staff_reply'];
-		break;
-	case 2:
-		$ticket['status']=$hesklang['wait_cust_reply'];
-		break;
-	case 4:
-		$ticket['status']=$hesklang['in_progress'];
-		break;
-	case 5:
-		$ticket['status']=$hesklang['on_hold'];
-		break;
-	default:
-		$ticket['status']=$hesklang['closed'];
-}
 
 /* Ticket priority */
 switch ($ticket['priority'])
@@ -180,7 +160,7 @@ echo '
 
 <tr>
 	<td bgcolor="#EEE"><b>' . $hesklang['trackID'] . ':</b></td><td bgcolor="#DDD">' . $trackingID . '</td>
-	<td bgcolor="#EEE"><b>' . $hesklang['ticket_status'] . ':</b></td><td bgcolor="#DDD">' . $ticket['status'] . '</td>
+	<td bgcolor="#EEE"><b>' . $hesklang['ticket_status'] . ':</b></td><td bgcolor="#DDD">' . $hesklang[$ticket['statusKey']] . '</td>
 	<td bgcolor="#EEE"><b>' . $hesklang['created_on'] . ':</b></td><td bgcolor="#DDD">' . $ticket['dt'] . '</td>
 </tr>
 <tr>
