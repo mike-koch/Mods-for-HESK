@@ -53,9 +53,13 @@ $status = intval( hesk_GET('s', 0) );
 
 $locked = 0;
 
-$statusRow = hesk_dbFetchAssoc(hesk_dbQuery('SELECT `IsClosed` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE ID = '.$status));
-if ($statusRow['IsClosed']) // Closed
+
+if ($status == 3) // Closed
 {
+    //-- They want to close the ticket, so get the status that is the default for client-side closes
+    $statusRow = hesk_dbFetchAssoc(hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosedByClient` = 1'));
+
+    $status = $statusRow['ID'];
 	$action = $hesklang['closed'];
     $revision = sprintf($hesklang['thist3'],hesk_date(),$hesklang['customer']);
 
