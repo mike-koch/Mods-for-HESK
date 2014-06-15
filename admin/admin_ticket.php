@@ -631,36 +631,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                            </td>';
 
                         echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>'; 
+                            $status_options = array();
+                            $results = hesk_dbQuery("SELECT `ID`, `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+                            while ($row = $results->fetch_assoc())
+                            {
+                                $status_options[$row['ID']] = '<option value="'.$row['ID'].'">'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                            }
 
-                            $status_options = array(
-        	                    0 => '<option value="0">'.$hesklang['open'].'</option>',
-        	                    1 => '<option value="1">'.$hesklang['wait_reply'].'</option>',
-                                2 => '<option value="2">'.$hesklang['replied'].'</option>',
-                                4 => '<option value="4">'.$hesklang['in_progress'].'</option>',
-                                5 => '<option value="5">'.$hesklang['on_hold'].'</option>',
-                                3 => '<option value="3">'.$hesklang['closed'].'</option>',
-                            );
-                            
-                            switch ($ticket['status'])
-		                    {
-			                    case 0:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['open'].'</p>';
-				                    break;
-			                    case 1:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['wait_staff_reply'].'</p>';
-				                    break;
-			                    case 2:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['wait_cust_reply'].'</p>';
-				                    break;
-			                    case 4:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['in_progress'].'</p>';
-				                    break;
-			                    case 5:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['on_hold'].'</p>';
-				                    break;
-			                    default:
-				                    echo '<p class="ticketPropertyText">'.$hesklang['closed'].'</p>';
-		                    } echo '<br/>
+                            $ticketStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `TicketViewContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = " .$ticket['status']));
+                            echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatus['TicketViewContentKey']].'</p>';
+                            echo '<br/>
                             
                             <form role="form" id="changeStatusForm" style="margin-bottom:0;" action="change_status.php" method="post">
                                 <span style="white-space:nowrap;">
