@@ -95,7 +95,7 @@ foreach ($status as $k => $v)
     }
 }
 
-// How many statuses are we pulling out of the database?
+// How many statuses are we pulling out of the database?\
 $tmp = count($status);
 
 // Do we need to search by status?
@@ -105,11 +105,16 @@ if ( $tmp < $totalStatuses )
 	if ($tmp == 0)
 	{
 		$status = $possible_status;
-		unset($status[3]);
-	}
+        $resolvedSql = "SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1";
+        $resolvedRS = hesk_dbQuery($resolvedSql);
+        while ($row = $resolvedRS->fetch_assoc())
+        {
+            unset($status[$row['ID']]);
+        }
+    }
 
-	// Add to the SQL
-	$sql .= " AND `status` IN ('" . implode("','", array_keys($status) ) . "') ";
+    // Add to the SQL
+    $sql .= " AND `status` IN ('" . implode("','", array_keys($status) ) . "') ";
 }
 
 // --> TICKET PRIORITY

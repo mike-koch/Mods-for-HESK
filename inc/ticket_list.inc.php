@@ -289,8 +289,8 @@ if ($total > 0)
 			$tagged = '<i class="fa fa-tag"></i> ';
         }
 
-        $status = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ShortNameContentKey`, `TextColor` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$ticket['status']));
-        $ticket['status']='<span style="color: '.$status['TextColor'].'">'.$hesklang[$status['ShortNameContentKey']].'</span>';
+        $statusName = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ShortNameContentKey`, `TextColor` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$ticket['status']));
+        $ticket['status']='<span style="color: '.$statusName['TextColor'].'">'.$hesklang[$statusName['ShortNameContentKey']].'</span>';
 
 		switch ($ticket['priority'])
 		{

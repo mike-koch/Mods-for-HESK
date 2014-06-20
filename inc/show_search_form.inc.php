@@ -33,18 +33,16 @@
 *******************************************************************************/
 
 /* Check if this is a valid include */
-if (!defined('IN_SCRIPT')) {die('Invalid attempt');} 
-
+if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 if ( ! isset($status) )
 {
-	$status = array(
-	0 => 'NEW',
-	1 => 'WAITING REPLY',
-	2 => 'REPLIED',
-	#3 => 'RESOLVED (CLOSED)',
-	4 => 'IN PROGRESS',
-	5 => 'ON HOLD',
-	);
+    $status = array();
+    //-- We don't want to check statuses that are considered "closed"
+    $statusRS = hesk_dbQuery('SELECT `ID`, `ShortNameContentKey` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0');
+    while ($row = $statusRS->fetch_assoc())
+    {
+        $status[$row['ID']] = $row['ShortNameContentKey'];
+    }
 }
 
 if ( ! isset($priority) )
@@ -114,14 +112,31 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
-<td width="34%"><label><input type="checkbox" name="s0" value="1" <?php if (isset($status[0])) {echo 'checked="checked"';} ?> /> <span class="open"><?php echo $hesklang['open']; ?></span></label></td>
-<td width="33%"><label><input type="checkbox" name="s2" value="1" <?php if (isset($status[2])) {echo 'checked="checked"';} ?> /> <span class="replied"><?php echo $hesklang['replied']; ?></span></label></td>
-<td width="33%"><label><input type="checkbox" name="s4" value="1" <?php if (isset($status[4])) {echo 'checked="checked"';} ?> /> <span class="inprogress"><?php echo $hesklang['in_progress']; ?></span></label></td>
-</tr>
-<tr>
-<td width="34%"><label><input type="checkbox" name="s1" value="1" <?php if (isset($status[1])) {echo 'checked="checked"';} ?> /> <span class="waitingreply"><?php echo $hesklang['wait_reply']; ?></span></label></td>
-<td width="33%"><label><input type="checkbox" name="s3" value="1" <?php if (isset($status[3])) {echo 'checked="checked"';} ?> /> <span class="resolved"><?php echo $hesklang['closed']; ?></span></label></td>
-<td width="33%"><label><input type="checkbox" name="s5" value="1" <?php if (isset($status[5])) {echo 'checked="checked"';} ?>  /> <span class="onhold"><?php echo $hesklang['on_hold']; ?></span></td>
+    <?php
+    $rowCounter = 1;
+    $statusRS = hesk_dbQuery('SELECT `ID`, `ShortNameContentKey`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
+    while ($row = $statusRS->fetch_assoc())
+    {
+        if ($rowCounter > 3)
+        {
+            echo '</tr><tr>';
+            $rowCounter = 1;
+        }
+        echo '<td width=';
+        if ($rowCounter != 3)
+        {
+            echo '"33%"';
+        } else
+        {
+            echo '"34%"';
+        }
+        echo '<label><input type="checkbox" name="s'.$row['ID'].'" value="1"';
+        if (isset($status[$row['ID']])) {echo 'checked="checked"';}
+        echo '/> <span style="color: '.$row['TextColor'].';">'.$hesklang[$row['ShortNameContentKey']].'</span></label></td>';
+
+        $rowCounter++;
+    }
+    ?>
 </tr>
 </table>
 
