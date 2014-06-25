@@ -4,7 +4,6 @@ admin/archive.php
 admin/assign_owner.php
 admin/delete_tickets.php
 admin/generate_spam_question.php
-admin/lock.php
 admin/move_category.php
 admin/options.php
 admin/priority.php
