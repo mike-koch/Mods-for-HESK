@@ -53,6 +53,8 @@ $status = intval( hesk_GET('s', 0) );
 
 $locked = 0;
 
+// Connect to database
+hesk_dbConnect();
 
 if ($status == 3) // Closed
 {
