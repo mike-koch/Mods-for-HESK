@@ -538,15 +538,32 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td colspan="10" style="border-width: 0px; text-align: right">
                         <?php
                             $random=rand(10000,99999);
-                            if ($ticket['status'] != 3)
+
+                            $statusSql = 'SELECT `ID`, `TicketViewContentKey`, `IsStaffClosedOption`, `IsStaffReopenedStatus` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsStaffClosedOption` = 1 OR `IsStaffReopenedStatus` = 1';
+                            $statusRs = hesk_dbQuery($statusSql);
+                            $staffClosedOptionStatus = array();
+                            $staffReopenedStatus = array();
+                            while ($statusRow = $statusRs->fetch_assoc())
+                            {
+                                if ($statusRow['IsStaffReopenedStatus'] == 1)
+                                {
+                                    $staffReopenedStatus['ID'] = $statusRow['ID'];
+                                } else
+                                {
+                                    $staffClosedOptionStatus['ID'] = $statusRow['ID'];
+                                    $staffClosedOptionStatus['TicketViewContentKey'] = $statusRow['TicketViewContentKey'];
+                                }
+                            }
+
+                            if ($ticket['status'] != $staffClosedOptionStatus['ID'])
                             {
                                 echo '<a
-		                        href="change_status.php?track='.$trackingID.'&amp;s=3&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">'.$hesklang['close_action'].'</a>';
+		                        href="change_status.php?track='.$trackingID.'&amp;s='.$staffClosedOptionStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">'.$hesklang['close_action'].'</a>';
                             }
                             else
                             {
                                 echo '<a
-		                        href="change_status.php?track='.$trackingID.'&amp;s=1&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">'.$hesklang['open_action'].'</a>';
+		                        href="change_status.php?track='.$trackingID.'&amp;s='.$staffReopenedStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">'.$hesklang['open_action'].'</a>';
                             }
                         ?>
                     </td>
