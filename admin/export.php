@@ -242,14 +242,13 @@ $fid = 1;
 require(HESK_PATH . 'inc/assignment_search.inc.php');
 
 // --> TICKET STATUS
-$possible_status = array(
-0 => 'NEW',
-1 => 'WAITING REPLY',
-2 => 'REPLIED',
-3 => 'RESOLVED (CLOSED)',
-4 => 'IN PROGRESS',
-5 => 'ON HOLD',
-);
+$possibleStatusSql = 'SELECT `ID`, `ShortNameContentKey` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
+$possibleStatusRS = hesk_dbQuery($possibleStatusSql);
+$possible_status = array();
+while ($row = $possibleStatusRS->fetch_assoc())
+{
+    $possible_status[$row['ID']] = $hesklang[$row['ShortNameContentKey']];
+}
 
 $status = $possible_status;
 
@@ -262,10 +261,13 @@ foreach ($status as $k => $v)
 }
 
 // How many statuses are we pulling out of the database?
+$allStatusCountSql = 'SELECT COUNT(*) AS `Count` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
+$allStatusCountRow = hesk_dbQuery($allStatusCountSql)->fetch_assoc();
+$allStatusCount = $allStatusCountRow['Count'];
 $tmp = count($status);
 
 // Do we need to search by status?
-if ( $tmp < 6 )
+if ( $tmp < $allStatusCount )
 {
 	// If no statuses selected, show all
 	if ($tmp == 0)
@@ -498,27 +500,9 @@ if (isset($_GET['w']))
     $result = hesk_dbQuery($sql);
 	while ($ticket=hesk_dbFetchAssoc($result))
 	{
-
-		switch ($ticket['status'])
-		{
-			case 0:
-				$ticket['status']=$hesklang['open'];
-				break;
-			case 1:
-				$ticket['status']=$hesklang['wait_reply'];
-				break;
-			case 2:
-				$ticket['status']=$hesklang['replied'];
-				break;
-			case 4:
-				$ticket['status']=$hesklang['in_progress'];
-				break;
-			case 5:
-				$ticket['status']=$hesklang['on_hold'];
-				break;
-			default:
-				$ticket['status']=$hesklang['closed'];
-		}
+        $statusContentKeySql = 'SELECT `ShortNameContentKey` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.$ticket['status'];
+        $statusContentKeyRow = hesk_dbQuery($statusContentKeySql)->fetch_assoc();
+        $ticket['status'] = $hesklang[$statusContentKeyRow['ShortNameContentKey']];
 
 		switch ($ticket['priority'])
 		{
@@ -787,30 +771,20 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="form-group">
                 <label for="status" class="control-label col-sm-2"><?php echo $hesklang['status']; ?>:</label>
                 <div class="col-sm-10">
-                    <div class="col-xs-4">
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="s0" value="1" <?php if (isset($status[0])) {echo 'checked="checked"';} ?> /> <span class="open"><?php echo $hesklang['open']; ?></span></label>         
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="s2" value="1" <?php if (isset($status[2])) {echo 'checked="checked"';} ?> /> <span class="replied"><?php echo $hesklang['replied']; ?></span></label>         
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="s4" value="1" <?php if (isset($status[4])) {echo 'checked="checked"';} ?> /> <span class="inprogress"><?php echo $hesklang['in_progress']; ?></span></label>         
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="s1" value="1" <?php if (isset($status[1])) {echo 'checked="checked"';} ?> /> <span class="waitingreply"><?php echo $hesklang['wait_reply']; ?></span></label>         
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="s3" value="1" <?php if (isset($status[3])) {echo 'checked="checked"';} ?> /> <span class="resolved"><?php echo $hesklang['closed']; ?></span></label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="s5" value="1" <?php if (isset($status[5])) {echo 'checked="checked"';} ?>  /> <span class="onhold"><?php echo $hesklang['on_hold']; ?></span></label>     
-                        </div>
-                    </div>
+                    <?php
+                        $getStatusCheckboxSql = 'SELECT `ID`, `ShortNameContentKey`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
+                        $getStatusCheckboxRS = hesk_dbQuery($getStatusCheckboxSql);
+                        while ($row = $getStatusCheckboxRS->fetch_assoc())
+                        {
+                            ?>
+                            <div class="col-xs-4">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="s<?php echo $row['ID']; ?>" value="1" <?php if (isset($status[$row['ID']])) {echo 'checked="checked"';} ?> /> <span style="color: <?php echo $row['TextColor']; ?>"><?php echo $hesklang[$row['ShortNameContentKey']]; ?></span></label>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    ?>
                 </div>    
             </div>
             <div class="form-group">
