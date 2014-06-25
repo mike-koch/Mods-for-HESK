@@ -555,7 +555,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 }
                             }
 
-                            if ($ticket['status'] != $staffClosedOptionStatus['ID'])
+                            $isTicketClosedSql = 'SELECT `IsClosed` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.$ticket['status'];
+                            $isTicketClosedRow = hesk_dbQuery($isTicketClosedSql)->fetch_assoc();
+                            $isTicketClosed = $isTicketClosedRow['IsClosed'];
+
+                            if ($isTicketClosed == 0) // Ticket is still open
                             {
                                 echo '<a
 		                        href="change_status.php?track='.$trackingID.'&amp;s='.$staffClosedOptionStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">'.$hesklang['close_action'].'</a>';
