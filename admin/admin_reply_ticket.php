@@ -186,7 +186,7 @@ else
 
 /* Update the original ticket */
 $defaultStatusReplyStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID`, `IsClosed` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsDefaultStaffReplyStatus` = 1 LIMIT 1"));
-$staffClosedCheckboxStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID`, `IsClosed` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsStaffClosedCheckbox` = 1 LIMIT 1"));
+$staffClosedCheckboxStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID`, `IsClosed` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsStaffClosedOption` = 1 LIMIT 1"));
 $lockedTicketStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `LockedTicketStatus` = 1 LIMIT 1"));
 
 $new_status = empty($_POST['close']) ? $defaultStatusReplyStatus['ID'] : $staffClosedCheckboxStatus['ID'];

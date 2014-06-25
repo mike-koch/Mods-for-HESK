@@ -1242,7 +1242,13 @@ function hesk_printReplyForm() {
 			                echo '<label><input type="checkbox" name="assign_self" value="1" /> '.$hesklang['asss2'].'</label><br />';
 		                }
                     }
-	                if ($ticket['status'] != 3)
+
+                   $statusSql = 'SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsStaffClosedOption` = 1';
+                   $statusRow = hesk_dbQuery($statusSql)->fetch_assoc();
+                   $staffClosedOptionStatus = array();
+                   $staffClosedOptionStatus['ID'] = $statusRow['ID'];
+
+	                if ($ticket['status'] != $staffClosedOptionStatus['ID'])
 	                {
 		                echo '<label><input type="checkbox" name="close" value="1" /> '.$hesklang['close_this_ticket'].'</label><br />';
 	                }
