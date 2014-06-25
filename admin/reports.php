@@ -410,7 +410,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	            }
 
 	            // Get number of resolved tickets
-	            $res = hesk_dbQuery("SELECT COUNT(*) AS `num_tickets` , `category` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `status` = '3' " . ( $can_run_reports_full ? "" : " AND `owner` = '" . intval($_SESSION['id']) . "'" ) . " AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `category`");
+	            $res = hesk_dbQuery("SELECT COUNT(*) AS `num_tickets` , `category` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) " . ( $can_run_reports_full ? "" : " AND `owner` = '" . intval($_SESSION['id']) . "'" ) . " AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `category`");
 
 	            // Update number of open and resolved tickets
 	            while ($row = hesk_dbFetchAssoc($res))
@@ -539,7 +539,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		            }
 
                     // -> get list of resolved tickets
-		            $res = hesk_dbQuery("SELECT `owner`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('" . implode("','", array_keys($admins) ) . "') AND `status`='3' AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `owner`");
+		            $res = hesk_dbQuery("SELECT `owner`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('" . implode("','", array_keys($admins) ) . "') AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `owner`");
 
 		            // -> update resolved ticket list values
 		            while ($row = hesk_dbFetchAssoc($res))
@@ -786,7 +786,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	            }
 
 	            // SQL query for resolved
-	            $res = hesk_dbQuery("SELECT DATE(`dt`) AS `mydt`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND `status`='3' AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `mydt`");
+	            $res = hesk_dbQuery("SELECT DATE(`dt`) AS `mydt`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `mydt`");
 
 	            // Update ticket values
 	            while ($row = hesk_dbFetchAssoc($res))
