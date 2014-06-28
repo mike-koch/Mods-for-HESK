@@ -59,6 +59,22 @@ if ( defined('HESK_DEMO') )
 	hesk_process_messages($hesklang['sdemo'], 'admin_settings.php');
 }
 
+//-- Before we do anything, make sure the statuses are valid.
+$rows = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
+while ($row = $rows->fetch_assoc())
+{
+    if (!isset($_POST['s'.$row['ID'].'_delete']))
+    {
+        validateStatus($_POST['s'.$row['ID'].'_shortName'], $_POST['s'.$row['ID'].'_longName'], $_POST['s'.$row['ID'].'_textColor']);
+    }
+}
+
+//-- Validate the new one if at least one of the fields are used / checked
+if ($_POST['sN_shortName'] != null || $_POST['sN_longName'] != null || $_POST['sN_textColor'] != null || isset($_POST['sN_isClosed']))
+{
+    validateStatus($_POST['sN_shortName'], $_POST['sN_longName'], $_POST['sN_textColor']);
+}
+
 $set=array();
 
 /*** GENERAL ***/
@@ -386,17 +402,51 @@ for ($i=1;$i<=20;$i++)
 
 //-- Update the statuses
 hesk_dbConnect();
-
 //-- Get all the status IDs
 $statusesSql = 'SELECT * FROM `'.$hesk_settings['db_pfix'].'statuses`';
 $results = hesk_dbQuery($statusesSql);
-while ($row = $results->fetch_assoc());
+while ($row = $results->fetch_assoc())
 {
-    //-- Update the information in the database with what is on the page
-    $query = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `ShortNameContentKey` = ?, `TicketViewContentKey` = ?, `TextColor` = ?, `IsClosed` = ? WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($query);
-    $isStatusClosed = (isset($_POST['s'.$row['ID'].'_isClosed']) ? 1 : 0);
-    $stmt->bind_param('sssii', $_POST['s'.$row['ID'].'_shortName'], $_POST['s'.$row['ID'].'_longName'], $_POST['s'.$row['ID'].'_textColor'], $isStatusClosed, $row['ID']);
+    //-- If the status is marked for deletion, delete it and skip everything below.
+    if (isset($_POST['s'.$row['ID'].'_delete']))
+    {
+        $delete = "DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ?";
+        $stmt = hesk_dbConnect()->prepare($delete);
+        $stmt->bind_param('i', $row['ID']);
+        $stmt->execute();
+
+        //-- In case we deleted a status in the middle, we now need to re-index the other IDs.
+        $reIndexQuery = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` > '.$row['ID'];
+        $reIndexRS = hesk_dbQuery($reIndexQuery);
+        //-- Update each ID by subtracting 1
+        $reIndexQuery = 'UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` SET `ID` = ? WHERE `ID` = ?';
+        while ($row = $reIndexRS->fetch_assoc())
+        {
+            $stmt = hesk_dbConnect()->prepare($reIndexQuery);
+            $newID = $row['ID'] - 1;
+            $stmt->bind_param('ii', $newID, $row['ID']);
+            $stmt->execute();
+        }
+    } else
+    {
+        //-- Update the information in the database with what is on the page
+        $query = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `ShortNameContentKey` = ?, `TicketViewContentKey` = ?, `TextColor` = ?, `IsClosed` = ? WHERE `ID` = ?";
+        $stmt = hesk_dbConnect()->prepare($query);
+        $isStatusClosed = (isset($_POST['s'.$row['ID'].'_isClosed']) ? 1 : 0);
+        $stmt->bind_param('sssii', $_POST['s'.$row['ID'].'_shortName'], $_POST['s'.$row['ID'].'_longName'], $_POST['s'.$row['ID'].'_textColor'], $isStatusClosed, $row['ID']);
+        $stmt->execute();
+    }
+}
+
+//-- Insert the addition if there is anything to add
+if ($_POST['sN_shortName'] != null && $_POST['sN_longName'] != null && $_POST['sN_textColor'] != null)
+{
+    //-- The next ID is equal to the number of rows, since the IDs are zero-indexed.
+    $nextValue = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`')->num_rows;
+    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`ID`, `ShortNameContentKey`, `TicketViewContentKey`, `TextColor`, `IsClosed`) VALUES (?, ?, ?, ?, ?)";
+    $stmt = hesk_dbConnect()->prepare($insert);
+    $isClosed = isset($_POST['sN_isClosed']) ? 1 : 0;
+    $stmt->bind_param('isssi', $nextValue, $_POST['sN_shortName'], $_POST['sN_longName'], $_POST['sN_textColor'], $isClosed);
     $stmt->execute();
 }
 
@@ -781,4 +831,21 @@ function hesk_formatUnits($size)
 
     return false;
 } // End hesk_formatBytes()
+
+function validateStatus($shortName, $longName, $textColor)
+{
+    global $hesklang;
+
+    //-- Validation logic
+    if ($shortName == '')
+    {
+        hesk_process_messages($hesklang['shortNameRequired'], 'admin_settings.php');
+    } elseif ($longName == '')
+    {
+        hesk_process_messages($hesklang['longNameRequired'], 'admin_settings.php');
+    } elseif ($textColor == '')
+    {
+        hesk_process_messages($hesklang['textColorRequired'], 'admin_settings.php');
+    }
+}
 ?>

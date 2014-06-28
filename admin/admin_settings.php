@@ -332,6 +332,7 @@ if ( defined('HESK_DEMO') )
             if (d.s_custom19_use.checked && d.s_custom19_name.value == '') {alert('<?php echo addslashes($hesklang['err_custname']); ?>'); return false;}
             if (d.s_custom20_use.checked && d.s_custom20_name.value == '') {alert('<?php echo addslashes($hesklang['err_custname']); ?>'); return false;}
 
+
             // DISABLE SUBMIT BUTTON
             d.submitbutton.disabled=true;
             d.submitbutton.value='<?php echo addslashes($hesklang['saving']); ?>';
@@ -1786,33 +1787,47 @@ if ( defined('HESK_DEMO') )
                       $statusesRS = hesk_dbQuery($statusesSql);
                       //Print header
                       ?>
-                      <table class="table table-hover">
-                          <thead>
-                            <tr>
-                                <th><?php echo $hesklang['name']; ?></th>
-                                <th><?php echo $hesklang['shortNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['shortNameKey']; ?>" data-content="<?php echo $hesklang['shortNameKeyDescr']; ?>"></i></th>
-                                <th><?php echo $hesklang['longNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['longNameKey']; ?>" data-content="<?php echo $hesklang['longNameKeyDescr']; ?>"></i></th>
-                                <th><?php echo $hesklang['textColor']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['textColor']; ?>" data-content="<?php echo $hesklang['textColorDescr']; ?>"></i></th>
-                                <th><?php echo $hesklang['closedQuestionMark']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="top" title="<?php echo $hesklang['closedQuestionMark']; ?>" data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          <?php
-                          //Print each status
-                          while ($row = $statusesRS->fetch_assoc())
-                          {
-                              $checkedEcho = ($row['IsClosed'] == 1) ? 'checked="checked"' : '';
+                      <div class="table-responsive">
+                          <table class="table table-hover">
+                              <thead>
+                                <tr>
+                                    <th><?php echo $hesklang['name']; ?></th>
+                                    <th><?php echo $hesklang['shortNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['shortNameKey']; ?>" data-content="<?php echo $hesklang['shortNameKeyDescr']; ?>"></i></th>
+                                    <th><?php echo $hesklang['longNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['longNameKey']; ?>" data-content="<?php echo $hesklang['longNameKeyDescr']; ?>"></i></th>
+                                    <th><?php echo $hesklang['textColor']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['textColor']; ?>" data-content="<?php echo $hesklang['textColorDescr']; ?>"></i></th>
+                                    <th><?php echo $hesklang['closedQuestionMark']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="top" title="<?php echo $hesklang['closedQuestionMark']; ?>" data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i></th>
+                                    <th><?php echo $hesklang['delete']; ?></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              <?php
+                              //Print each status
+                              while ($row = $statusesRS->fetch_assoc())
+                              {
+                                  $checkedEcho = ($row['IsClosed'] == 1) ? 'checked="checked"' : '';
+                                  echo '<tr>';
+                                    echo '<td>'.$hesklang[$row['ShortNameContentKey']].'</td>'; //Name
+                                    echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_shortName" value="'.$row['ShortNameContentKey'].'" placeholder="'.$hesklang['shortNameKey'].'"></td>'; // Short Name Language File
+                                    echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_longName" value="'.$row['TicketViewContentKey'].'" placeholder="'.$hesklang['longNameKey'].'"></td>'; // Long Name Language File
+                                    echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_textColor" value="'.$row['TextColor'].'" placeholder="'.$hesklang['textColor'].'"></td>'; // Text Color
+                                    echo '<td><input type="checkbox" name="s'.$row['ID'].'_isClosed" value="1" '.$checkedEcho.'></td>'; // Resolved Status?
+                                    echo '<td><input type="checkbox" name="s'.$row['ID'].'_delete" value="1"></td>'; //Delete status?
+                                  echo '</tr>';
+                              }
+
+                              //Print out an additional blank space for adding a status
                               echo '<tr>';
-                                echo '<td>'.$hesklang[$row['ShortNameContentKey']].'</td>'; //Name
-                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_shortName" value="'.$row['ShortNameContentKey'].'"></td>'; // Short Name Language File
-                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_longName" value="'.$row['TicketViewContentKey'].'"></td>'; // Long Name Language File
-                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_textColor" value="'.$row['TextColor'].'"></td>'; // Text Color
-                                echo '<td><input type="checkbox" name="s'.$row['ID'].'_isClosed" value="1" '.$checkedEcho.'"></td>'; // Resolved Status?
+                              echo '<td><b>'.$hesklang['addNew'].'</b></td>';
+                              echo '<td><input type="text" class="form-control" name="sN_shortName" value="" placeholder="'.$hesklang['shortNameKey'].'"></td>'; // Short Name Language File
+                              echo '<td><input type="text" class="form-control" name="sN_longName" value="" placeholder="'.$hesklang['longNameKey'].'"></td>'; // Long Name Language File
+                              echo '<td><input type="text" class="form-control" name="sN_textColor" value="" placeholder="'.$hesklang['textColor'].'"></td>'; // Text Color
+                              echo '<td><input type="checkbox" name="sN_isClosed" value="1"></td>'; // Resolved Status?
+                              echo '<td></td>'; //Empty placeholder where the delete row is.
                               echo '</tr>';
-                          }
-                          ?>
-                          </tbody>
-                      </table>
+                              ?>
+                              </tbody>
+                          </table>
+                      </div>
                       <h6 style="font-weight: bold"><?php echo $hesklang['defaultStatusForAction']; ?></h6>
                       <div class="footerWithBorder blankSpace"></div>
                       <div class="form-group">

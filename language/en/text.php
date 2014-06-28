@@ -39,7 +39,11 @@ $hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close tic
 $hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to:';
 $hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to:';
 $hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to:';
-$hesklang['nuHeskVersion']='NuHesk Version';
+$hesklang['nuHeskVersion'] = 'NuHesk Version';
+$hesklang['shortNameRequired'] = 'Short Name Key is required.';
+$hesklang['longNameRequired'] = 'Long Name Key is required.';
+$hesklang['textColorRequired'] = 'Text Color is required.';
+$hesklang['addNew'] = 'Add New';
 
 
 // ADDED OR MODIFIED IN HESK UI
