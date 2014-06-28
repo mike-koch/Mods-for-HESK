@@ -475,6 +475,7 @@ if ( defined('HESK_DEMO') )
                   <li><a href="#customFields" data-toggle="tab"><?php echo $hesklang['tab_4']; ?></a></li>
                   <li><a href="#email" data-toggle="tab"><?php echo $hesklang['tab_6']; ?></a></li>
                   <li><a href="#misc" data-toggle="tab"><?php echo $hesklang['tab_5']; ?></a></li>
+                  <li><a href="#statuses" data-toggle="tab"><?php echo $hesklang['statuses']; ?></a></li>
                 </ul>
 
                 <!-- Tab panes -->
@@ -1775,6 +1776,120 @@ if ( defined('HESK_DEMO') )
                             </div>    
                         </div>
                     </div>
+                  </div>
+                  <div class="tab-pane fade in" id="statuses">
+                      <h6 style="font-weight: bold"><?php echo $hesklang['basicProperties']; ?></h6>
+                      <div class="footerWithBorder blankSpace"></div>
+                      <?php
+                      //-- We need to get all of the statuses and dump the information to the page.
+                      $statusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
+                      $statusesRS = hesk_dbQuery($statusesSql);
+                      //Print header
+                      ?>
+                      <table class="table table-hover">
+                          <thead>
+                            <tr>
+                                <th><?php echo $hesklang['name']; ?></th>
+                                <th><?php echo $hesklang['shortNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['shortNameKey']; ?>" data-content="<?php echo $hesklang['shortNameKeyDescr']; ?>"></i></th>
+                                <th><?php echo $hesklang['longNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['longNameKey']; ?>" data-content="<?php echo $hesklang['longNameKeyDescr']; ?>"></i></th>
+                                <th><?php echo $hesklang['textColor']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['textColor']; ?>" data-content="<?php echo $hesklang['textColorDescr']; ?>"></i></th>
+                                <th><?php echo $hesklang['closedQuestionMark']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="top" title="<?php echo $hesklang['closedQuestionMark']; ?>" data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          <?php
+                          //Print each status
+                          while ($row = $statusesRS->fetch_assoc())
+                          {
+                              $checkedEcho = ($row['IsClosed'] == 1) ? 'checked="checked"' : '';
+                              echo '<tr>';
+                                echo '<td>'.$hesklang[$row['ShortNameContentKey']].'</td>'; //Name
+                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_shortName" value="'.$row['ShortNameContentKey'].'"></td>'; // Short Name Language File
+                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_longName" value="'.$row['TicketViewContentKey'].'"></td>'; // Long Name Language File
+                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_textColor" value="'.$row['TextColor'].'"></td>'; // Text Color
+                                echo '<td><input type="checkbox" name="s'.$row['ID'].'_isClosed" value="1" '.$checkedEcho.'"></td>'; // Resolved Status?
+                              echo '</tr>';
+                          }
+                          ?>
+                          </tbody>
+                      </table>
+                      <h6 style="font-weight: bold"><?php echo $hesklang['defaultStatusForAction']; ?></h6>
+                      <div class="footerWithBorder blankSpace"></div>
+                      <div class="form-group">
+                          <label for="closedByClient" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['isClosedByClientMsg']; ?></label>
+                          <div class="col-sm-4 col-xs-12">
+                              <select name="closedByClient" class="form-control" id="closedByClient">
+                                  <?php
+                                  $statusesRS = hesk_dbQuery($statusesSql);
+                                  while ($row = $statusesRS->fetch_assoc())
+                                  {
+                                      $selectedEcho = ($row['IsClosedByClient'] == 1) ? 'selected="selected"' : '';
+                                      echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                                  }
+                                  ?>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="staffClosedOption" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['isStaffClosedOptionMsg']; ?></label>
+                          <div class="col-sm-4 col-xs-12">
+                              <select name="staffClosedOption" class="form-control" id="staffClosedOption">
+                                  <?php
+                                  $statusesRS = hesk_dbQuery($statusesSql);
+                                  while ($row = $statusesRS->fetch_assoc())
+                                  {
+                                      $selectedEcho = ($row['IsStaffClosedOption'] == 1) ? 'selected="selected"' : '';
+                                      echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                                  }
+                                  ?>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="staffReopenedStatus" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['isStaffReopenedStatusMsg']; ?></label>
+                          <div class="col-sm-4 col-xs-12">
+                              <select name="staffReopenedStatus" class="form-control" id="staffReopenedStatus">
+                                  <?php
+                                  $statusesRS = hesk_dbQuery($statusesSql);
+                                  while ($row = $statusesRS->fetch_assoc())
+                                  {
+                                      $selectedEcho = ($row['IsStaffReopenedStatus'] == 1) ? 'selected="selected"' : '';
+                                      echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                                  }
+                                  ?>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="defaultStaffReplyStatus" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['isDefaultStaffReplyStatusMsg']; ?></label>
+                          <div class="col-sm-4 col-xs-12">
+                              <select name="defaultStaffReplyStatus" class="form-control" id="defaultStaffReplyStatus">
+                                  <?php
+                                  $statusesRS = hesk_dbQuery($statusesSql);
+                                  while ($row = $statusesRS->fetch_assoc())
+                                  {
+                                      $selectedEcho = ($row['IsDefaultStaffReplyStatus'] == 1) ? 'selected="selected"' : '';
+                                      echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                                  }
+                                  ?>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="lockedTicketStatus" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['lockedTicketStatusMsg']; ?></label>
+                          <div class="col-sm-4 col-xs-12">
+                              <select name="lockedTicketStatus" class="form-control" id="lockedTicketStatus">
+                                  <?php
+                                  $statusesRS = hesk_dbQuery($statusesSql);
+                                  while ($row = $statusesRS->fetch_assoc())
+                                  {
+                                      $selectedEcho = ($row['LockedTicketStatus'] == 1) ? 'selected="selected"' : '';
+                                      echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                                  }
+                                  ?>
+                              </select>
+                          </div>
+                      </div>
                   </div>
                     <div class="form-group">
                         <div class="col-sm-9 col-sm-offset-3">

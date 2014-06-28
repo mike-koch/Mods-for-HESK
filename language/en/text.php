@@ -21,6 +21,26 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN NuHESK 1.2
+$hesklang['statuses'] = 'Statuses';
+$hesklang['basicProperties'] = 'Basic Properties';
+$hesklang['shortNameKey'] = 'Short Name Key';
+$hesklang['shortNameKeyDescr'] = "This is the language file 'key' that contains the text you want to display on all pages that have statuses, except for the ticket view pages (ticket.php, admin_ticket.php, and print.php)";
+$hesklang['longNameKey'] = 'Long Name Key';
+$hesklang['longNameKeyDescr'] = "This is the language file 'key' that contains the text you want to display on ticket.php, print.php, and admin_ticket.php";
+$hesklang['textColor'] = 'Text Color';
+$hesklang['textColorDescr'] = 'This is the hex color code for the status that will be used on the ticket search page and export search page';
+$hesklang['closedQuestionMark'] = 'Closed?';
+$hesklang['closedQuestionMarkDescr'] = 'If checked, tickets will be considered closed if they are set to this status.';
+$hesklang['basicProperties'] = 'Basic Properties';
+$hesklang['defaultStatusForAction'] = 'Default Status For Action';
+$hesklang['isClosedByClientMsg'] = 'When a client clicks the "Close ticket" link, change the status to:';
+$hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close ticket" link, change the status to:';
+$hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to:';
+$hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to:';
+$hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to:';
+
+
 // ADDED OR MODIFIED IN HESK UI
 $hesklang['search_the_knowledgebase'] = 'Search the Knowledgebase';
 $hesklang['view_ticket_nav']='View Ticket';
