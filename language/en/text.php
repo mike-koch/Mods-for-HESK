@@ -49,6 +49,7 @@ $hesklang['whyCantIDeleteThisStatus'] = "Why Can't I Delete This Status?";
 $hesklang['whyCantIDeleteThisStatusReason'] = 'This status cannot be deleted because it is being used as a default status for a particular action.';
 $hesklang['isNewTicketMsg'] = 'When a new ticket is created, set its status to';
 $hesklang['isRepliedByClientMsg'] = 'When a client replies to a ticket, set its status to';
+$hesklang['close_this_ticket']='Close ticket';
 
 
 // ADDED OR MODIFIED IN HESK UI
@@ -1178,8 +1179,6 @@ $hesklang['ask']='Search help:';
 $hesklang['beta']='(TEST VERSION)';
 $hesklang['maxpost']='You probably tried to submit more data than this server accepts.<br /><br />Please try submitting the form again with smaller or no attachments.';
 
-// Added or modified in version 2.5.3
-$hesklang['close_this_ticket']='Mark this ticket Resolved';
 
 // --> Ticket history log
 // Unless otherwise specified, first %s will be replaced with date and second with name/username
