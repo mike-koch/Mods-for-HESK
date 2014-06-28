@@ -1813,7 +1813,7 @@ if ( defined('HESK_DEMO') )
                                       $isDisabled = true;
                                   }
 
-                                  echo '<tr>';
+                                  echo '<tr id="s'.$row['ID'].'_row">';
                                     echo '<td>'.$hesklang[$row['ShortNameContentKey']].'</td>'; //Name
                                     echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_shortName" value="'.$row['ShortNameContentKey'].'" placeholder="'.$hesklang['shortNameKey'].'"></td>'; // Short Name Language File
                                     echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_longName" value="'.$row['TicketViewContentKey'].'" placeholder="'.$hesklang['longNameKey'].'"></td>'; // Long Name Language File
@@ -1825,7 +1825,7 @@ if ( defined('HESK_DEMO') )
                                         echo '<i class="fa fa-ban" style="color: red; font-size: 1.2em; font-weight: bold" data-toggle="popover" data-placement="left" title="'.$hesklang['whyCantIDeleteThisStatus'].'" data-content="'.$hesklang['whyCantIDeleteThisStatusReason'].'"></i>';
                                     } else
                                     {
-                                        echo '<input type="checkbox" name="s'.$row['ID'].'_delete" value="1">';
+                                        echo '<input type="checkbox" onclick="toggleRow(\'s'.$row['ID'].'_row\')" name="s'.$row['ID'].'_delete" value="1">';
                                     }
                                     echo '</td>'; //Delete status?
                                   echo '</tr>';

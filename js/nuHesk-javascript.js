@@ -10,5 +10,15 @@ var loadJquery = function()
     })
 };
 
+function toggleRow(id) {
+    if ($('#' + id).hasClass('danger'))
+    {
+        $('#' + id).removeClass('danger');
+    } else
+    {
+        $('#' + id).addClass('danger');
+    }
+}
+
 
 jQuery(document).ready(loadJquery);
