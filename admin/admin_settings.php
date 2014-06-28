@@ -580,7 +580,7 @@ if ( defined('HESK_DEMO') )
                             <div id="mysql_test" style="display:none">
                             </div>
 
-                            <script language="Javascript" type="text/javascript"><!--
+                            <script language="Javascript" type="text/javascript">
                             function hesk_testMySQL()
                             {
                                 var element = document.getElementById('mysql_test');
@@ -620,8 +620,7 @@ if ( defined('HESK_DEMO') )
                                 }
 
                                 xmlHttp.send(params);
-                            
-                            //-->
+                            }
                             </script>
                             <!-- END MYSQL TEST -->
                         </div>  
