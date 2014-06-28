@@ -53,6 +53,9 @@ hesk_iHeader();
 	<br/><br/>
 	<a class="btn btn-default btn-lg" href="update.php?" role="button">Upgrade</a>
 	<p><br/>Upgrade existing HESK installation to version <?php echo HESK_NEW_VERSION; ?></p>
+    <br/><br/>
+    <a class="btn btn-default btn-lg" href="updateNuHesk.php?update=0" role="button">Install / Upgrade NuHesk</a>
+    <p><br/>Install or upgrade existing NuHesk installation to version <?php echo NUHESK_NEW_VERSION; ?></p>
 </div>
 
 <?php

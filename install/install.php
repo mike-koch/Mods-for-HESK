@@ -168,7 +168,7 @@ function hesk_iFinish()
 		<div class="alert alert-success"><strong>Success!</strong> HESK Successfully installed</div>
 		<div class="h3">Next Steps:<br/><br/></div>
         <ol>
-            <li><span style="color:#ff0000">Delete the <b>/install</b> folder from your server!</span><br />&nbsp;</li>
+            <li><span style="color:#ff0000">Don't forget to run the <a href="<?php echo HESK_PATH . 'install/updateNuHesk.php?update=0'; ?>">NuHesk Installation</a>!</li>
             <li>Remember your login details:<br />
 
 <pre style="font-size: 1.17em">
