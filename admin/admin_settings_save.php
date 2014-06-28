@@ -467,7 +467,7 @@ $stmt->execute();
 hesk_dbConnect()->query($defaultQuery . "`IsStaffReopenedStatus` = 0");
 $updateQuery = $defaultQuery . "`IsStaffReopenedStatus` = 1 WHERE `ID` = ?";
 $stmt = hesk_dbConnect()->prepare($updateQuery);
-$stmt->bind_param('i', $_POST['StaffReopenedStatus']);
+$stmt->bind_param('i', $_POST['staffReopenedStatus']);
 $stmt->execute();
 
 hesk_dbConnect()->query($defaultQuery . "`IsDefaultStaffReplyStatus` = 0");
