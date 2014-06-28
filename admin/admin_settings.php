@@ -1847,6 +1847,21 @@ if ( defined('HESK_DEMO') )
                       <h6 style="font-weight: bold"><?php echo $hesklang['defaultStatusForAction']; ?></h6>
                       <div class="footerWithBorder blankSpace"></div>
                       <div class="form-group">
+                          <label for="newTicket" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['isNewTicketMsg']; ?></label>
+                          <div class="col-sm-4 col-xs-12">
+                              <select name="newTicket" class="form-control" id="newTicket">
+                                  <?php
+                                  $statusesRS = hesk_dbQuery($statusesSql);
+                                  while ($row = $statusesRS->fetch_assoc())
+                                  {
+                                      $selectedEcho = ($row['IsNewTicketStatus'] == 1) ? 'selected="selected"' : '';
+                                      echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                                  }
+                                  ?>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
                           <label for="closedByClient" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['isClosedByClientMsg']; ?></label>
                           <div class="col-sm-4 col-xs-12">
                               <select name="closedByClient" class="form-control" id="closedByClient">
@@ -1855,6 +1870,21 @@ if ( defined('HESK_DEMO') )
                                   while ($row = $statusesRS->fetch_assoc())
                                   {
                                       $selectedEcho = ($row['IsClosedByClient'] == 1) ? 'selected="selected"' : '';
+                                      echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                                  }
+                                  ?>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="replyFromClient" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['isRepliedByClientMsg']; ?></label>
+                          <div class="col-sm-4 col-xs-12">
+                              <select name="replyFromClient" class="form-control" id="replyFromClient">
+                                  <?php
+                                  $statusesRS = hesk_dbQuery($statusesSql);
+                                  while ($row = $statusesRS->fetch_assoc())
+                                  {
+                                      $selectedEcho = ($row['IsCustomerReplyStatus'] == 1) ? 'selected="selected"' : '';
                                       echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
                                   }
                                   ?>

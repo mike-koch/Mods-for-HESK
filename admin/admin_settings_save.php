@@ -452,10 +452,24 @@ if ($_POST['sN_shortName'] != null && $_POST['sN_longName'] != null && $_POST['s
 
 //-- Update default status for actions
 $defaultQuery = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET ";
+
+hesk_dbConnect()->query($defaultQuery . "`IsNewTicketStatus` = 0");
+$updateQuery = $defaultQuery . "`IsNewTicketStatus` = 1 WHERE `ID` = ?";
+$stmt = hesk_dbConnect()->prepare($updateQuery);
+$stmt->bind_param('i', $_POST['newTicket']);
+$stmt->execute();
+
+
 hesk_dbConnect()->query($defaultQuery . "`IsClosedByClient` = 0");
 $updateQuery = $defaultQuery . "`IsClosedByClient` = 1 WHERE `ID` = ?";
 $stmt = hesk_dbConnect()->prepare($updateQuery);
 $stmt->bind_param('i', $_POST['closedByClient']);
+$stmt->execute();
+
+hesk_dbConnect()->query($defaultQuery . "`IsCustomerReplyStatus` = 0");
+$updateQuery = $defaultQuery . "`IsCustomerReplyStatus` = 1 WHERE `ID` = ?";
+$stmt = hesk_dbConnect()->prepare($updateQuery);
+$stmt->bind_param('i', $_POST['replyFromClient']);
 $stmt->execute();
 
 hesk_dbConnect()->query($defaultQuery . "`IsStaffClosedOption` = 0");

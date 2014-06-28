@@ -34,11 +34,11 @@ $hesklang['closedQuestionMark'] = 'Closed?';
 $hesklang['closedQuestionMarkDescr'] = 'If checked, tickets will be considered closed if they are set to this status.';
 $hesklang['basicProperties'] = 'Basic Properties';
 $hesklang['defaultStatusForAction'] = 'Default Status For Action';
-$hesklang['isClosedByClientMsg'] = 'When a client clicks the "Close ticket" link, change the status to:';
-$hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close ticket" link, change the status to:';
-$hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to:';
-$hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to:';
-$hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to:';
+$hesklang['isClosedByClientMsg'] = 'When a client clicks the "Close ticket" link, change the status to';
+$hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close ticket" link, change the status to';
+$hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to';
+$hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to';
+$hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to';
 $hesklang['nuHeskVersion'] = 'NuHesk Version';
 $hesklang['shortNameRequired'] = 'Short Name Key is required.';
 $hesklang['longNameRequired'] = 'Long Name Key is required.';
@@ -47,6 +47,8 @@ $hesklang['addNew'] = 'Add New';
 $hesklang['close_action']='Close Ticket'; // Close ACTION
 $hesklang['whyCantIDeleteThisStatus'] = "Why Can't I Delete This Status?";
 $hesklang['whyCantIDeleteThisStatusReason'] = 'This status cannot be deleted because it is being used as a default status for a particular action.';
+$hesklang['isNewTicketMsg'] = 'When a new ticket is created, set its status to';
+$hesklang['isRepliedByClientMsg'] = 'When a client replies to a ticket, set its status to';
 
 
 // ADDED OR MODIFIED IN HESK UI
