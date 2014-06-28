@@ -50,6 +50,8 @@ $hesklang['whyCantIDeleteThisStatusReason'] = 'This status cannot be deleted bec
 $hesklang['isNewTicketMsg'] = 'When a new ticket is created, set its status to';
 $hesklang['isRepliedByClientMsg'] = 'When a client replies to a ticket, set its status to';
 $hesklang['close_this_ticket']='Close ticket';
+$hesklang['closed']='closed'; // Ticket has been RESOLVED
+$hesklang['quick_help_ticket']='Here is the information on your ticket. You can add a reply to this ticket, close it, or re-open the ticket if applicable.';
 
 
 // ADDED OR MODIFIED IN HESK UI
@@ -58,7 +60,6 @@ $hesklang['view_ticket_nav']='View Ticket';
 $hesklang['quick_help']='Quick Help';
 $hesklang['quick_help_submit_ticket']='Please fill out the form on the right to submit a ticket. Required fields are marked with a <font class="important">*</font>.';
 $hesklang['quick_help_view_ticket']='Please fill out the required information on the right to view your ticket. If you forgot your Ticket tracking ID, click "Forgot tracking ID".';
-$hesklang['quick_help_ticket']='Here is the information on your ticket. You can add a reply to this ticket, mark it as resolved, or re-open the ticket if applicable.';
 $hesklang['information']='Information';
 $hesklang['admin_sidebar_ticket_id']='TICKET ID';
 $hesklang['priorityChange']=' - - Change Priority - - ';
@@ -281,7 +282,6 @@ $hesklang['wait_reply']='Waiting reply';
 $hesklang['wait_staff_reply']='Waiting reply from staff';
 $hesklang['wait_cust_reply']='Waiting reply from customer';
 $hesklang['replied']='Replied';
-$hesklang['closed']='Resolved'; // Ticket has been RESOLVED
 $hesklang['last_replier']='Last replier';
 $hesklang['staff']='Staff';
 $hesklang['customer']='Customer';
