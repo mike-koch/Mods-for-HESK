@@ -1805,13 +1805,29 @@ if ( defined('HESK_DEMO') )
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $checkedEcho = ($row['IsClosed'] == 1) ? 'checked="checked"' : '';
+                                  $isDisabled = false;
+                                  if ($row['IsNewTicketStatus'] || $row['IsClosedByClient'] || $row['IsCustomerReplyStatus'] ||
+                                      $row['IsStaffClosedOption'] || $row['IsStaffReopenedStatus'] || $row['IsDefaultStaffReplyStatus']
+                                      || $row['LockedTicketStatus'])
+                                  {
+                                      $isDisabled = true;
+                                  }
+
                                   echo '<tr>';
                                     echo '<td>'.$hesklang[$row['ShortNameContentKey']].'</td>'; //Name
                                     echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_shortName" value="'.$row['ShortNameContentKey'].'" placeholder="'.$hesklang['shortNameKey'].'"></td>'; // Short Name Language File
                                     echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_longName" value="'.$row['TicketViewContentKey'].'" placeholder="'.$hesklang['longNameKey'].'"></td>'; // Long Name Language File
                                     echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_textColor" value="'.$row['TextColor'].'" placeholder="'.$hesklang['textColor'].'"></td>'; // Text Color
                                     echo '<td><input type="checkbox" name="s'.$row['ID'].'_isClosed" value="1" '.$checkedEcho.'></td>'; // Resolved Status?
-                                    echo '<td><input type="checkbox" name="s'.$row['ID'].'_delete" value="1"></td>'; //Delete status?
+                                    echo '<td>';
+                                    if ($isDisabled)
+                                    {
+                                        echo '<i class="fa fa-ban" style="color: red; font-size: 1.2em; font-weight: bold" data-toggle="popover" data-placement="left" title="'.$hesklang['whyCantIDeleteThisStatus'].'" data-content="'.$hesklang['whyCantIDeleteThisStatusReason'].'"></i>';
+                                    } else
+                                    {
+                                        echo '<input type="checkbox" name="s'.$row['ID'].'_delete" value="1">';
+                                    }
+                                    echo '</td>'; //Delete status?
                                   echo '</tr>';
                               }
 

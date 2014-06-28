@@ -45,6 +45,8 @@ $hesklang['longNameRequired'] = 'Long Name Key is required.';
 $hesklang['textColorRequired'] = 'Text Color is required.';
 $hesklang['addNew'] = 'Add New';
 $hesklang['close_action']='Close Ticket'; // Close ACTION
+$hesklang['whyCantIDeleteThisStatus'] = "Why Can't I Delete This Status?";
+$hesklang['whyCantIDeleteThisStatusReason'] = 'This status cannot be deleted because it is being used as a default status for a particular action (see the below section).';
 
 
 // ADDED OR MODIFIED IN HESK UI
