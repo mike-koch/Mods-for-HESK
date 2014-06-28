@@ -44,6 +44,7 @@ $hesklang['shortNameRequired'] = 'Short Name Key is required.';
 $hesklang['longNameRequired'] = 'Long Name Key is required.';
 $hesklang['textColorRequired'] = 'Text Color is required.';
 $hesklang['addNew'] = 'Add New';
+$hesklang['close_action']='Close Ticket'; // Close ACTION
 
 
 // ADDED OR MODIFIED IN HESK UI
@@ -837,7 +838,6 @@ $hesklang['auto']='(automatically)';
 $hesklang['unknown']='Unknown';
 $hesklang['pcer']='Please correct the following errors:';
 $hesklang['seqid']='Ticket number';
-$hesklang['close_action']='Mark ticket Resolved'; // Close ACTION
 $hesklang['archived']='Tagged';
 $hesklang['archived2']='Tagged Ticket';
 $hesklang['add_archive']='Tag this ticket';

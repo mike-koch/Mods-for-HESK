@@ -539,7 +539,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <?php
                             $random=rand(10000,99999);
 
-                            $statusSql = 'SELECT `ID`, `TicketViewContentKey`, `IsStaffClosedOption`, `IsStaffReopenedStatus` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsStaffClosedOption` = 1 OR `IsStaffReopenedStatus` = 1';
+                            $statusSql = 'SELECT `ID`, `ShortNameContentKey`, `IsStaffClosedOption`, `IsStaffReopenedStatus` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsStaffClosedOption` = 1 OR `IsStaffReopenedStatus` = 1';
                             $statusRs = hesk_dbQuery($statusSql);
                             $staffClosedOptionStatus = array();
                             $staffReopenedStatus = array();
@@ -551,7 +551,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 } else
                                 {
                                     $staffClosedOptionStatus['ID'] = $statusRow['ID'];
-                                    $staffClosedOptionStatus['TicketViewContentKey'] = $statusRow['TicketViewContentKey'];
                                 }
                             }
 
