@@ -1832,7 +1832,7 @@ if ( defined('HESK_DEMO') )
                               }
 
                               //Print out an additional blank space for adding a status
-                              echo '<tr>';
+                              echo '<tr class="info">';
                               echo '<td><b>'.$hesklang['addNew'].'</b></td>';
                               echo '<td><input type="text" class="form-control" name="sN_shortName" value="" placeholder="'.$hesklang['shortNameKey'].'"></td>'; // Short Name Language File
                               echo '<td><input type="text" class="form-control" name="sN_longName" value="" placeholder="'.$hesklang['longNameKey'].'"></td>'; // Long Name Language File
