@@ -1,21 +1,21 @@
 <?php
     header("Content-type: text/css; charset: UTF-8");
-    require_once('../hesk_ui_settings.inc.php');
+    require_once('../nuHesk_settings.inc.php');
 
-    $navbarBackgroundColor = $hesk_ui_settings['navbarBackgroundColor'];
-    $navbarBrandColor = $hesk_ui_settings['navbarBrandColor'];
-    $navbarBrandHoverColor = $hesk_ui_settings['navbarBrandHoverColor'];
+    $navbarBackgroundColor = $nuHesk_settings['navbarBackgroundColor'];
+    $navbarBrandColor = $nuHesk_settings['navbarBrandColor'];
+    $navbarBrandHoverColor = $nuHesk_settings['navbarBrandHoverColor'];
 
-    $navbarItemTextColor = $hesk_ui_settings['navbarItemTextColor'];
-    $navbarItemTextHoverColor = $hesk_ui_settings['navbarItemTextHoverColor'];
-    $navbarItemTextSelectedColor = $hesk_ui_settings['navbarItemTextSelectedColor'];
-    $navbarItemSelectedBackgroundColor = $hesk_ui_settings['navbarItemSelectedBackgroundColor'];
+    $navbarItemTextColor = $nuHesk_settings['navbarItemTextColor'];
+    $navbarItemTextHoverColor = $nuHesk_settings['navbarItemTextHoverColor'];
+    $navbarItemTextSelectedColor = $nuHesk_settings['navbarItemTextSelectedColor'];
+    $navbarItemSelectedBackgroundColor = $nuHesk_settings['navbarItemSelectedBackgroundColor'];
 
-    $dropdownItemTextColor = $hesk_ui_settings['dropdownItemTextColor'];
-    $dropdownItemTextHoverColor = $hesk_ui_settings['dropdownItemTextHoverColor'];
-    $dropdownItemTextHoverBackgroundColor = $hesk_ui_settings['dropdownItemTextHoverBackgroundColor'];
+    $dropdownItemTextColor = $nuHesk_settings['dropdownItemTextColor'];
+    $dropdownItemTextHoverColor = $nuHesk_settings['dropdownItemTextHoverColor'];
+    $dropdownItemTextHoverBackgroundColor = $nuHesk_settings['dropdownItemTextHoverBackgroundColor'];
 
-    $questionMarkColor = $hesk_ui_settings['questionMarkColor'];
+    $questionMarkColor = $nuHesk_settings['questionMarkColor'];
 ?>
 
 .row {

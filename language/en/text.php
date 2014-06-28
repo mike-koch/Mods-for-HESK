@@ -39,6 +39,7 @@ $hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close tic
 $hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to:';
 $hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to:';
 $hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to:';
+$hesklang['nuHeskVersion']='NuHesk Version';
 
 
 // ADDED OR MODIFIED IN HESK UI
@@ -57,7 +58,6 @@ $hesklang['categoryChange']=' - - Change Category - - ';
 $hesklang['navigation']='Navigation';
 $hesklang['nti']='<span class="glyphicon glyphicon-plus-sign"></span> New ticket';
 $hesklang['savedResponses']='Saved Responses';
-$hesklang['heskUiVersion']='Hesk UI Version';
 $hesklang['add_ticket_general_information']='General Information';
 $hesklang['add_ticket_your_message']='Your Message';
 
