@@ -48,7 +48,7 @@ if ($_GET['update'] == 1)
 	VALUES (2, 'replied', 'wait_cust_reply', '#0000FF', 0, 0, 0, 0, 0, 0, 1, 0);");
         hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (ID, ShortNameContentKey, TicketViewContentKey, TextColor, IsNewTicketStatus, IsClosed, IsClosedByClient, IsCustomerReplyStatus,
 		IsStaffClosedOption, IsStaffReopenedStatus, IsDefaultStaffReplyStatus, LockedTicketStatus)
-	VALUES (3, 'closed', 'closed', '#008000', 0, 1, 1, 0, 1, 0, 0, 1);");
+	VALUES (3, 'resolved', 'resolved', '#008000', 0, 1, 1, 0, 1, 0, 0, 1);");
         hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (ID, ShortNameContentKey, TicketViewContentKey, TextColor, IsNewTicketStatus, IsClosed, IsClosedByClient, IsCustomerReplyStatus,
 		IsStaffClosedOption, IsStaffReopenedStatus, IsDefaultStaffReplyStatus, LockedTicketStatus)
 	VALUES (4, 'in_progress', 'in_progress', '#000000', 0, 0, 0, 0, 0, 0, 0, 0);");
@@ -61,11 +61,11 @@ if ($_GET['update'] == 1)
 ?>
 <html>
     <head>
-        <title>NuHesk 1.2.0 Install / Upgrade</title>
+        <title>NuMods 1.2.0 Install / Upgrade</title>
     </head>
     <body>
         <div style="display: <?php echo $showInstructions; ?>">
-        <h1>Install / Upgrade NuHesk to 1.2.0</h1>
+        <h1>Install / Upgrade NuMods to 1.2.0</h1>
         <h4><i>If you have not yet installed/updated HESK, please do so first before continuing; otherwise installation will <b>fail</b>!</i></h4>
         <br/>
         <p>Please verify the database information below.  Addtionally, ensure that the database user has CREATE permissions.</p>
@@ -78,7 +78,7 @@ if ($_GET['update'] == 1)
         </div>
         <div style="display: <?php echo $showFinished; ?>">
             <h1>Installation / Upgrade Finished</h1>
-            <p>The installation / upgrade of NuHesk has finished. You can now delete the <b>install</b> directory and access the <a href="<?php echo HESK_PATH . 'admin'; ?>">admin area</a></p>
+            <p>The installation / upgrade of NuMods has finished. You can now delete the <b>install</b> directory and access the <a href="<?php echo HESK_PATH . 'admin'; ?>">admin area</a></p>
         </div>
     </body>
 </html>

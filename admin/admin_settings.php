@@ -42,7 +42,7 @@ if (is_dir(HESK_PATH . 'install')) {die('Please delete the <b>install</b> folder
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'nuHesk_settings.inc.php');
+require(HESK_PATH . 'nuMods_settings.inc.php');
 
 // Save the default language for the settings page before choosing user's preferred one
 $hesk_settings['language_default'] = $hesk_settings['language'];
@@ -146,10 +146,10 @@ if ( defined('HESK_DEMO') )
                         </td></tr>
                         <tr>
                             <td style="text-align: right">
-                                <?php echo $hesklang['nuHeskVersion']; ?>:
+                                <?php echo $hesklang['nuModsVersion']; ?>:
                             </td>
                             <td style="padding-left: 10px">
-                                <?php echo $nuHesk_settings['version']; ?>
+                                <?php echo $nuMods_settings['version']; ?>
                             </td>
                         </tr>
                         <tr><td style="text-align: right">

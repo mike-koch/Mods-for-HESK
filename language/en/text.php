@@ -21,7 +21,7 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
-// ADDED OR MODIFIED IN NuHESK 1.2
+// ADDED OR MODIFIED IN NuMods 1.2
 $hesklang['statuses'] = 'Statuses';
 $hesklang['basicProperties'] = 'Basic Properties';
 $hesklang['shortNameKey'] = 'Short Name Key';
@@ -39,7 +39,7 @@ $hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close tic
 $hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to';
 $hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to';
 $hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to';
-$hesklang['nuHeskVersion'] = 'NuHesk Version';
+$hesklang['nuModsVersion'] = 'NuMods Version';
 $hesklang['shortNameRequired'] = 'Short Name Key is required.';
 $hesklang['longNameRequired'] = 'Long Name Key is required.';
 $hesklang['textColorRequired'] = 'Text Color is required.';
@@ -50,7 +50,8 @@ $hesklang['whyCantIDeleteThisStatusReason'] = 'This status cannot be deleted bec
 $hesklang['isNewTicketMsg'] = 'When a new ticket is created, set its status to';
 $hesklang['isRepliedByClientMsg'] = 'When a client replies to a ticket, set its status to';
 $hesklang['close_this_ticket']='Close ticket';
-$hesklang['closed']='closed'; // Ticket has been RESOLVED
+$hesklang['closed']='closed';
+$hesklang['resolved']='Resolved'; // Ticket has been RESOLVED
 $hesklang['quick_help_ticket']='Here is the information on your ticket. You can add a reply to this ticket, close it, or re-open the ticket if applicable.';
 
 
