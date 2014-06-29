@@ -37,7 +37,7 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 // We will be installing this HESK version:
 define('HESK_NEW_VERSION','2.5.3');
-define('NUHESK_NEW_VERSION','1.2.0');
+define('NUMODS_NEW_VERSION','1.2.0');
 
 // Other required files and settings
 define('INSTALL',1);
