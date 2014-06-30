@@ -90,20 +90,10 @@
     border-bottom: 1px solid #ddd;
 }
 .ticketMessageContainer {
-    text-align: left;
-    vertical-align: top;
     background-color: #ededef;
-    margin: 0 0 20px;
-    background-position: 234px 0;
-    background-repeat: repeat-y;
     border: 1px solid #ddd;
-    position: relative;
+    margin-bottom: 20px;
 }
-.ticketHeader {
-    float: left;
-    width: 244px;
-    padding: 10px;
-    height: 100%}
 .ticketName {
     font-size: 20px;
     font-weight: 300;
@@ -117,14 +107,35 @@
     padding-top: 10px;
     padding-left: 10px;
     padding-right: 10px;
+    margin-right: -15px;
     color: #888;
+    background-color: #fff;
 }
+
+.pushMargin {
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
+.pushMarginLeft {
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-right: 0;
+}
+
 .ticketMessageBottom {
     padding-left: 10px;
     padding-right: 10px;
+    margin-right: -15px;
     word-wrap: break-word;
     font-size: 15px;
+    background-color: #fff;
 }
+.ticketMessageBottom > p.message {
+    margin-bottom: 0px;
+
+}
+
 .ticketMessage {
     margin-left: 238px;
     background: #fff;

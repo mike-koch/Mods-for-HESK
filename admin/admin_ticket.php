@@ -761,13 +761,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             /* Make sure original message is in correct color if newest are on top */
             $color = 'class="ticketMessageContainer"';
 		?>
-        <div <?php echo $color; ?>>
-            <div class="ticketHeader">
-			        <div class="ticketName"><?php echo $ticket['name']; ?></div>
-			        <div class="ticketEmail"><?php echo $ticket['email']; ?></div>
-                    <div class="ticketEmail"><?php echo $hesklang['ip']; ?>: <?php echo $ticket['ip']; ?></div>
-			</div>
-            <div class="ticketMessage">
+        <div class="row ticketMessageContainer">
+            <div class="col-md-3 col-xs-12">
+                <div class="ticketName"><?php echo $ticket['name']; ?></div>
+                <div class="ticketEmail"><?php echo $ticket['email']; ?></div>
+                <div class="ticketEmail"><?php echo $hesklang['ip']; ?>: <?php echo $ticket['ip']; ?></div>
+            </div>
+            <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
                     <!-- Action Buttons -->
                     <?php echo hesk_getAdminButtonsInTicket(0, $i); ?>
@@ -790,7 +790,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="ticketMessageBottom">
                      <!-- Message -->
                     <p><b><?php echo $hesklang['message']; ?>:</b></p>
-		            <p><?php echo $ticket['message']; ?><br />&nbsp;</p>
+		            <p class="message"><?php echo $ticket['message']; ?><br />&nbsp;</p>
                 </div>
                 <div class="ticketMessageTop">
                          <!-- Custom Fields after Message -->
@@ -1102,11 +1102,11 @@ function hesk_printTicketReplies() {
 
 		$reply['dt'] = hesk_date($reply['dt']);
 		?>
-        <div <?php echo $color; ?>>
-            <div class="ticketHeader">
-                <div class="ticketName"><?php echo $reply['name']; ?></div>     
+        <div class="row ticketMessageContainer">
+            <div class="col-md-3 col-xs-12">
+                <div class="ticketName"><?php echo $reply['name']; ?></div>
             </div>
-            <div class="ticketMessage">
+            <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
                     <?php echo hesk_getAdminButtonsInTicket(); ?>
                     <div class="blankSpace"></div>
@@ -1114,10 +1114,10 @@ function hesk_printTicketReplies() {
                 </div>
                 <div class="ticketMessageBottom">
                     <p><b><?php echo $hesklang['message']; ?>:</b></p>
-			        <p><?php echo $reply['message']; ?></p>      
+			        <p><?php echo $reply['message']; ?></p> 
                 </div>
-                <div class="ticketMessageTop">
-                    <?php hesk_listAttachments($reply['attachments'],$i);
+                <div class="ticketMessageTop pushMargin">
+                     <?php hesk_listAttachments($reply['attachments'],$i);
                         /* Staff rating */
 			            if ($hesk_settings['rating'] && $reply['staffid'])
 			            {
