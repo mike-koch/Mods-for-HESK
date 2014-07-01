@@ -319,51 +319,49 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             /* Make sure original message is in correct color if newest are on top */
             $color = 'class="ticketMessageContainer"';
 		    ?>
-		    <div <?php echo $color; ?>>
-                <div class="ticketHeader">
-			        <div class="ticketName"><?php echo $ticket['name']; ?></div>
-			        <div class="ticketEmail"><?php echo $ticket['email']; ?></div>
-			    </div>
-                <div class="ticketMessage">
+            <div class="row ticketMessageContainer">
+                <div class="col-md-3 col-xs-12">
+                    <div class="ticketName"><?php echo $ticket['name']; ?></div>
+                    <div class="ticketEmail"><?php echo $ticket['email']; ?></div>
+                </div>
+                <div class="col-md-9 col-xs-12 pushMarginLeft">
                     <div class="ticketMessageTop withBorder">
-                        <!-- Date and Action buttons -->
-                        <p><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt']); ?><span style="float: right"><?php echo hesk_getCustomerButtons($i); ?></span></p>
-                        <!-- Custom Fields Before Message -->
-                        <?php
-		                    foreach ($hesk_settings['custom_fields'] as $k=>$v)
-		                    {
-			                    if ($v['use'] && $v['place']==0)
-		                        {
-		                            echo '
-				                    <p>'.$v['name'].': '.$ticket[$k].'</p>';
-		                        }
-		                    }
-		                ?>
+                            <!-- Date and Action buttons -->
+                            <p><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt']); ?><span style="float: right"><?php echo hesk_getCustomerButtons($i); ?></span></p>
+                            <!-- Custom Fields Before Message -->
+                            <?php
+                                foreach ($hesk_settings['custom_fields'] as $k=>$v)
+                                {
+                                    if ($v['use'] && $v['place']==0)
+                                    {
+                                        echo '
+                                        <p>'.$v['name'].': '.$ticket[$k].'</p>';
+                                    }
+                                }
+                            ?>
                     </div>
-
                     <div class="ticketMessageBottom">
                          <!-- Message -->
                          <p><b><?php echo $hesklang['message']; ?>:</b></p>
-		                 <p><?php echo $ticket['message']; ?><br />&nbsp;</p>
+                         <p class="message"><?php echo $ticket['message']; ?><br />&nbsp;</p>
                     </div>
                     <div class="ticketMessageTop">
                          <!-- Custom Fields after Message -->
                          <?php
-		                    foreach ($hesk_settings['custom_fields'] as $k=>$v)
-		                    {
-			                    if ($v['use'] && $v['place'])
-		                        {
-		                            echo '
-				                    <p>'.$v['name'].': '.$ticket[$k].'</p>';
-		                        }
-		                    }
-	    	                /* Attachments */
-    		                hesk_listAttachments($ticket['attachments'], $i);
-		                ?>
+                            foreach ($hesk_settings['custom_fields'] as $k=>$v)
+                            {
+                                if ($v['use'] && $v['place'])
+                                {
+                                    echo '
+                                    <p>'.$v['name'].': '.$ticket[$k].'</p>';
+                                }
+                            }
+                            /* Attachments */
+                            hesk_listAttachments($ticket['attachments'], $i);
+                        ?>
                     </div>
                 </div>
             </div>
-
             <?php
 		    if ( ! $hesk_settings['new_top'])
             {
@@ -594,13 +592,14 @@ function hesk_printCustomerTicketReplies()
 
 		$reply['dt'] = hesk_date($reply['dt']);
 		?>
-		<div <?php echo $color; ?>>
-            <div class="ticketHeader">
+
+        <div class="row ticketMessageContainer">
+            <div class="col-md-3 col-xs-12">
                 <div class="ticketName"><?php echo $reply['name']; ?></div>
             </div>
-            <div class="ticketMessage">
+            <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
-                    <p><?php echo $hesklang['date']; ?>: <?php echo $reply['dt']; ?><span style="float:  right;"><?php echo hesk_getCustomerButtons($i); ?></span></p>
+                        <p><?php echo $hesklang['date']; ?>: <?php echo $reply['dt']; ?><span style="float:  right;"><?php echo hesk_getCustomerButtons($i); ?></span></p>
                     <?php
                         /* Staff rating */
 			            if ($hesk_settings['rating'] && $reply['staffid'])
@@ -627,12 +626,13 @@ function hesk_printCustomerTicketReplies()
 			        ?>
                 </div>
                 <div class="ticketMessageBottom">
-                    <p><b><?php echo $hesklang['message']; ?>:</b></p>
-			        <p><?php echo $reply['message']; ?></p> 
+                     <!-- Message -->
+                     <p><b><?php echo $hesklang['message']; ?>:</b></p>
+			         <p class="message"><?php echo $reply['message']; ?></p> 
                 </div>
                 <div class="ticketMessageTop">
-                    <?php hesk_listAttachments($reply['attachments'],$i);?>
-                </div> 
+                     <?php hesk_listAttachments($reply['attachments'],$i);?>
+                </div>
             </div>
         </div>
         <?php

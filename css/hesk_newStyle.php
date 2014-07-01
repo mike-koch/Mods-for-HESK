@@ -98,6 +98,7 @@
     font-size: 20px;
     font-weight: 300;
     color: #000;
+    margin-top: 5px;
 }
 .ticketEmail {
     font-size: 14px;
