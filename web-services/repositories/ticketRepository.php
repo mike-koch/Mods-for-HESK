@@ -19,7 +19,7 @@ class TicketRepository {
             'T.trackid, '.
             'T.name AS "ContactName", '.
             'T.email, '.
-            'C.name AS "CategoryName", '.
+            'T.category, '.
             'T.priority, '.
             'T.subject, '.
             'T.message, '.
@@ -28,10 +28,10 @@ class TicketRepository {
             'T.ip, '.
             'T.language, '.
             'T.status, '.
-            'U.name AS "Owner", '.
+            'T.owner, '.
             'T.time_worked, '.
             'T.lastreplier, '.
-            'U2.name AS "LastReplierName", '.
+            'T.replierid, '.
             'T.archive, '.
             'T.locked, '.
             'T.attachments, '.
@@ -57,9 +57,6 @@ class TicketRepository {
             'T.custom19, '.
             'T.custom20 '.
             'FROM '.$settings['db_pfix'].'tickets T '.
-            'INNER JOIN '.$settings['db_pfix'].'categories C ON C.id = T.category '.
-            'LEFT JOIN '.$settings['db_pfix'].'users U ON U.id = T.owner '.
-            'LEFT JOIN '.$settings['db_pfix'].'users U2 ON U2.id = T.replierid '.
             'WHERE T.id = '.$id;
         $results = $connection->query($sql);
 
@@ -68,85 +65,71 @@ class TicketRepository {
 
         $ticket = new Ticket();
 
+        settype($result['id'], 'int');
         $ticket->id = $result['id'];
+
         $ticket->trackingId = $result['trackid'];
         $ticket->name = $result['ContactName'];
         $ticket->email = $result['email'];
-        $ticket->category = $result['CategoryName'];
-        $ticket->priority = self::getPriorityForId($result['priority']);
+
+        settype($result['category'], 'int');
+        $ticket->category = $result['category'];
+
+        settype($result['priority'], 'int');
+        $ticket->priority = $result['priority'];
+
         $ticket->subject = $result['subject'];
         $ticket->message = $result['message'];
-        $ticket->dateCreated = $result['dt'];
-        $ticket->dateModified = $result['lastchange'];
+
+        //-- Convert these to times so the receiver can use whatever format they want to display the date/time without extra work.
+        $ticket->dateCreated = strtotime($result['dt']);
+        $ticket->dateModified = strtotime($result['lastchange']);
         $ticket->ip = $result['ip'];
         $ticket->language = $result['language'];
-        $ticket->status = self::getStatusForId($result['status']);
-        $ticket->owner = $result['Owner'];
+
+        settype($result['status'], 'int');
+        $ticket->status = $result['status'];
+
+        settype($result['owner'], 'int');
+        $ticket->owner = $result['owner'];
+
         $ticket->timeWorked = $result['time_worked'];
-        $ticket->lastReplier = self::getWhoLastRepliedForId($result['lastreplier']);
-        $ticket->replierId = $result['LastReplierName'];
+
+        settype($result['lastreplier'], 'int');
+        $ticket->lastReplier = $result['lastreplier'];
+
+        settype($result['replierid'], 'int');
+        $ticket->replierId = $result['replierid'];
         $ticket->isArchived = ($result['archive'] ? true : false);
         $ticket->isLocked = ($result['locked'] ? true : false);
         $ticket->attachments = $result['attachments'];
-        $ticket->merged = $result['merged'];
+
+        //-- explode handles splitting the list into an array, array_filter removes the empty string elements (""), and array_values resets the indicies.
+        $ticket->merged = array_values(array_filter(explode('#',$result['merged'])));
 
         //-- Not currently returning history, as it can contain a metric shit-ton of HTML code and will cludder up the JSON response.
         //$ticket->history = $result['history'];
-        $ticket->custom1 = $result['custom1'];
-        $ticket->custom2 = $result['custom2'];
-        $ticket->custom3 = $result['custom3'];
-        $ticket->custom4 = $result['custom4'];
-        $ticket->custom5 = $result['custom5'];
-        $ticket->custom6 = $result['custom6'];
-        $ticket->custom7 = $result['custom7'];
-        $ticket->custom8 = $result['custom8'];
-        $ticket->custom9 = $result['custom9'];
-        $ticket->custom10 = $result['custom10'];
-        $ticket->custom11 = $result['custom11'];
-        $ticket->custom12 = $result['custom12'];
-        $ticket->custom13 = $result['custom13'];
-        $ticket->custom14 = $result['custom14'];
-        $ticket->custom15 = $result['custom15'];
-        $ticket->custom16 = $result['custom16'];
-        $ticket->custom17 = $result['custom17'];
-        $ticket->custom18 = $result['custom18'];
-        $ticket->custom19 = $result['custom19'];
-        $ticket->custom20 = $result['custom20'];
+        $ticket->custom1 = $result['custom1'] == '' ? null : $result['custom1'];
+        $ticket->custom2 = $result['custom2'] == '' ? null : $result['custom2'];
+        $ticket->custom3 = $result['custom3'] == '' ? null : $result['custom3'];
+        $ticket->custom4 = $result['custom4'] == '' ? null : $result['custom4'];
+        $ticket->custom5 = $result['custom5'] == '' ? null : $result['custom5'];
+        $ticket->custom6 = $result['custom6'] == '' ? null : $result['custom6'];
+        $ticket->custom7 = $result['custom7'] == '' ? null : $result['custom7'];
+        $ticket->custom8 = $result['custom8'] == '' ? null : $result['custom8'];
+        $ticket->custom9 = $result['custom9'] == '' ? null : $result['custom9'];
+        $ticket->custom10 = $result['custom10'] == '' ? null : $result['custom10'];
+        $ticket->custom11 = $result['custom11'] == '' ? null : $result['custom11'];
+        $ticket->custom12 = $result['custom12'] == '' ? null : $result['custom12'];
+        $ticket->custom13 = $result['custom13'] == '' ? null : $result['custom13'];
+        $ticket->custom14 = $result['custom14'] == '' ? null : $result['custom14'];
+        $ticket->custom15 = $result['custom15'] == '' ? null : $result['custom15'];
+        $ticket->custom16 = $result['custom16'] == '' ? null : $result['custom16'];
+        $ticket->custom17 = $result['custom17'] == '' ? null : $result['custom17'];
+        $ticket->custom18 = $result['custom18'] == '' ? null : $result['custom18'];
+        $ticket->custom19 = $result['custom19'] == '' ? null : $result['custom19'];
+        $ticket->custom20 = $result['custom20'] == '' ? null : $result['custom20'];
 
         return $ticket;
     }
-    
-    private function getPriorityForId($id) {
-        if ($id == 0){
-            return '* Critical *';
-        } elseif ($id == 1){
-            return 'High';
-        } elseif ($id == 2){
-            return 'Medium';
-        } elseif ($id == 3){
-            return 'Low';
-        }
-    }
-    
-    private function getStatusForId($id) {
-        if ($id == 0) {
-            return 'New';
-        } elseif ($id == 1) {
-            return 'Waiting Reply';
-        } elseif ($id == 2) {
-            return 'Replied';
-        } elseif ($id == 3) {
-            return 'Resolved';
-        } elseif ($id == 4) {
-            return 'In Progress';
-        } elseif ($id == 5) {
-            return 'On Hold';
-        }
-    }
-    
-    private function getWhoLastRepliedForId($id) {
-        return ($id == 0 ? 'Contact' : 'Staff');
-    }
 }
-
-?>
