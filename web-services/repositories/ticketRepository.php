@@ -7,16 +7,7 @@ class TicketRepository {
     private function __construct() {
     }
 
-    public static function getInstance() {
-        static $instance = null;
-        if ($instance == null)
-        {
-            $instance = new TicketRepository();
-        }
-        return $instance;
-    }
-
-    public function getTicketForId($id, $settings) {
+    public static function getTicketForId($id, $settings) {
 
         $connection = new mysqli($settings['db_host'], $settings['db_user'], $settings['db_pass'], $settings['db_name']);
         if ($connection->connect_error)

@@ -12,7 +12,7 @@ if(isset($_GET['id']))
 {
 
     $ticketRepository = TicketRepository::getInstance();
-    $ticket = $ticketRepository->getTicketForId($_GET['id'], $hesk_settings);
+    $ticket = TicketRepository::getTicketForId($_GET['id'], $hesk_settings);
     //--A quick and dirty RESTful test using PHP.
     echo json_encode($ticket);
 }
