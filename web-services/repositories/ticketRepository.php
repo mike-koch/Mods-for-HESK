@@ -2,6 +2,7 @@
 
 require('/../models/ticket.php');
 
+
 class TicketRepository {
 
     private function __construct() {
@@ -12,57 +13,49 @@ class TicketRepository {
         $connection = new mysqli($settings['db_host'], $settings['db_user'], $settings['db_pass'], $settings['db_name']);
         if ($connection->connect_error)
         {
-            return ('An error occured when establishing a connection to the database.');
+            return ('An error occurred when establishing a connection to the database.');
         }
 
-        $sql = 'SELECT T.id, '.
-            'T.trackid, '.
-            'T.name AS "ContactName", '.
-            'T.email, '.
-            'T.category, '.
-            'T.priority, '.
-            'T.subject, '.
-            'T.message, '.
-            'T.dt, '.
-            'T.lastchange, '.
-            'T.ip, '.
-            'T.language, '.
-            'T.status, '.
-            'T.owner, '.
-            'T.time_worked, '.
-            'T.lastreplier, '.
-            'T.replierid, '.
-            'T.archive, '.
-            'T.locked, '.
-            'T.attachments, '.
-            'T.merged, '.
-            'T.custom1, '.
-            'T.custom2, '.
-            'T.custom3, '.
-            'T.custom4, '.
-            'T.custom5, '.
-            'T.custom6, '.
-            'T.custom7, '.
-            'T.custom8, '.
-            'T.custom9, '.
-            'T.custom10, '.
-            'T.custom11, '.
-            'T.custom12, '.
-            'T.custom13, '.
-            'T.custom14, '.
-            'T.custom15, '.
-            'T.custom16, '.
-            'T.custom17, '.
-            'T.custom18, '.
-            'T.custom19, '.
-            'T.custom20 '.
-            'FROM '.$settings['db_pfix'].'tickets T '.
+        $sql = self::getDefaultSql($settings).
             'WHERE T.id = '.$id;
         $results = $connection->query($sql);
 
         //-- There will only ever be one result, as ID is the primary key on the tickets table.
         $result = $results->fetch_assoc();
+        $connection->close();
+        return self::generateTicketModel($result);
+    }
 
+    public static function getTicketForTrackingId($id, $settings)
+    {
+        $connection = new mysqli($settings['db_host'], $settings['db_user'], $settings['db_pass'], $settings['db_name']);
+        if ($connection->connect_error)
+        {
+            return ('An error occurred when establishing a connection to the database.');
+        }
+
+        $sql = self::getDefaultSql($settings).
+            'WHERE T.trackid = '.$id;
+        $results = $connection->query($sql);
+
+        //-- There should only be one result as Tracking IDs should be unique. If there are two, return a 422 response.
+        if ($results->num_rows > 1)
+        {
+            header(http_response_code(422));
+            return;
+        } elseif ($results->num_rows == 0)
+        {
+            //-- No ticket found. Return a 404.
+            header(http_response_code(404));
+            return;
+        } else {
+            $result = $results->fetch_assoc();
+            $connection->close();
+            return self::generateTicketModel($result);
+        }
+    }
+
+    private static function generateTicketModel($result) {
         $ticket = new Ticket();
 
         settype($result['id'], 'int');
@@ -131,5 +124,50 @@ class TicketRepository {
         $ticket->custom20 = $result['custom20'] == '' ? null : $result['custom20'];
 
         return $ticket;
+    }
+
+    private function getDefaultSql($settings) {
+        return 'SELECT T.id, '.
+        'T.trackid, '.
+        'T.name AS "ContactName", '.
+        'T.email, '.
+        'T.category, '.
+        'T.priority, '.
+        'T.subject, '.
+        'T.message, '.
+        'T.dt, '.
+        'T.lastchange, '.
+        'T.ip, '.
+        'T.language, '.
+        'T.status, '.
+        'T.owner, '.
+        'T.time_worked, '.
+        'T.lastreplier, '.
+        'T.replierid, '.
+        'T.archive, '.
+        'T.locked, '.
+        'T.attachments, '.
+        'T.merged, '.
+        'T.custom1, '.
+        'T.custom2, '.
+        'T.custom3, '.
+        'T.custom4, '.
+        'T.custom5, '.
+        'T.custom6, '.
+        'T.custom7, '.
+        'T.custom8, '.
+        'T.custom9, '.
+        'T.custom10, '.
+        'T.custom11, '.
+        'T.custom12, '.
+        'T.custom13, '.
+        'T.custom14, '.
+        'T.custom15, '.
+        'T.custom16, '.
+        'T.custom17, '.
+        'T.custom18, '.
+        'T.custom19, '.
+        'T.custom20 '.
+        'FROM '.$settings['db_pfix'].'tickets T ';
     }
 }

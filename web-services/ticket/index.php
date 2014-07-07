@@ -11,12 +11,14 @@ include('/../repositories/ticketRepository.php');
 if(isset($_GET['id']))
 {
     $ticket = TicketRepository::getTicketForId($_GET['id'], $hesk_settings);
-    //--A quick and dirty RESTful test using PHP.
+    echo json_encode($ticket);
+}
+elseif (isset($_GET['trackingid']))
+{
+    $ticket = TicketRepository::getTicketForTrackingId($_GET['trackingid'], $hesk_settings);
     echo json_encode($ticket);
 }
 else
 {
     header(http_response_code(400));
 }
-
-?>
