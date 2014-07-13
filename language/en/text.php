@@ -21,6 +21,9 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN NuMods 1.2.2
+$hesklang['changeLanguage'] = 'Change language to';
+
 // ADDED OR MODIFIED IN NuMods 1.2
 $hesklang['statuses'] = 'Statuses';
 $hesklang['basicProperties'] = 'Basic Properties';

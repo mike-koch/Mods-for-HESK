@@ -903,54 +903,49 @@ function hesk_msgToPlain($msg, $specialchars=0, $strip=1)
 
 function hesk_showTopBar($page_title)
 {
-	global $hesk_settings, $hesklang;
+    echo $page_title;
+} // END hesk_showTopBar()
 
-	if ($hesk_settings['can_sel_lang'])
-	{
+function hesk_getLanguagesAsFormIfNecessary()
+{
 
-		$str = '<form method="get" action="" style="margin:0;padding:0;border:0;white-space:nowrap;">';
+    global $hesk_settings, $hesklang;
+
+    if ($hesk_settings['can_sel_lang'])
+    {
+
+        $str = '<form method="get" action="" role="form" style="margin:0;padding:0;border:0;white-space:nowrap;">';
 
         if ( ! isset($_GET) )
         {
-        	$_GET = array();
+            $_GET = array();
         }
 
-		foreach ($_GET as $k => $v)
-		{
-			if ($k == 'language')
-			{
-				continue;
-			}
-			$str .= '<input type="hidden" name="'.hesk_htmlentities($k).'" value="'.hesk_htmlentities($v).'" />';
-		}
+        foreach ($_GET as $k => $v)
+        {
+            if ($k == 'language')
+            {
+                continue;
+            }
+            $str .= '<input type="hidden" name="'.hesk_htmlentities($k).'" value="'.hesk_htmlentities($v).'" />';
+        }
 
-        $str .= '<select name="language" onchange="this.form.submit()">';
-		$str .= hesk_listLanguages(0);
-		$str .= '</select>';
+        $str .= '<select name="language" class="form-control" onchange="this.form.submit()">';
+        $str .= hesk_listLanguages(0);
+        $str .= '</select><br/>';
 
-	?>
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-		<td class="headersm" style="padding-left: 0px;"><?php echo $page_title; ?></td>
-		<td class="headersm" style="padding-left: 0px;text-align: right">
+        ?>
         <script language="javascript" type="text/javascript">
-		document.write('<?php echo str_replace(array('"','<','=','>'),array('\42','\74','\75','\76'),$str . '</form>'); ?>');
+            document.write('<?php echo str_replace(array('"','<','=','>'),array('\42','\74','\75','\76'),$str . '</form>'); ?>');
         </script>
         <noscript>
-        <?php
-        	echo $str . '<input type="submit" value="'.$hesklang['go'].'" /></form>';
-        ?>
+            <?php
+            echo $str . '<input type="submit" value="'.$hesklang['go'].'" /></form>';
+            ?>
         </noscript>
-        </td>
-		</tr>
-		</table>
-	<?php
-	}
-	else
-	{
-		echo $page_title;
-	}
-} // END hesk_showTopBar()
+    <?php
+    }
+}
 
 
 function hesk_listLanguages($doecho = 1) {
