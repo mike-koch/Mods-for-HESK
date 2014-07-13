@@ -15,5 +15,3 @@ $nuMods_settings['questionMarkColor'] = '#000000';
 
 /* DO NOT EDIT ANYTHING BELOW THIS LINE */
 $nuMods_settings['version']='1.2.2';
-
-?>
