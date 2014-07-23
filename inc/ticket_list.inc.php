@@ -174,6 +174,13 @@ if ($total > 0)
 		}
 
 		echo '</p>';
+        echo '
+        <div>
+            <div align="center" style="float: left"></div>
+            <div align="right" style="text-align: right">
+                <a href="new_ticket.php">'.$hesklang['nti'].'</a>
+            </div>
+        </div>';
 
 	} // end PAGES > 1
 	else
