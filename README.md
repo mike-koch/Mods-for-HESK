@@ -65,4 +65,3 @@ You can download this tweak via two ways:
 <h2>Credits</h2>
 <p>Mike Koch - Creator of NuMods</p>
 <p>Klemen Stirn - Creator of HESK</p>
-<p>lupolo from PHPJunkyard Scripts - diligent bug reporting on the PHPJunkyard Scripts Forum</p>
