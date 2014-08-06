@@ -2,7 +2,7 @@
 /*
 * Language file for Help Desk Software HESK (www.hesk.com)
 * Language: ENGLISH
-* Version: 2.5.3
+* Version: 2.5.5
 * Author: Klemen Stirn (http://www.hesk.com)
 *
 * !!! This file must be saved in UTF-8 encoding without byte order mark (BOM) !!!
