@@ -1,6 +1,4 @@
-[![Analytics](https://ga-beacon.appspot.com/UA-49251479-1/NuMods/README)](https://github.com/mkoch227/NuMods)
-
-<h2>NuMods v1.2.3</h2>
+<h2><a href="http://numods.mkochcs.com" target="_blank">NuMods</a> v1.2.4</h2>
 
 This branch contains all files modified from the base version of HESK to become NuMods, a set of modifications for HESK v2.x
 
