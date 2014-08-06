@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -148,8 +148,8 @@ else
 }
 
 /* Other variables that need processing */
-$ticket['dt'] = hesk_date($ticket['dt']);
-$ticket['lastchange'] = hesk_date($ticket['lastchange']);
+$ticket['dt'] = hesk_date($ticket['dt'], true);
+$ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
 $random=mt_rand(10000,99999);
 
 // Print ticket head
@@ -228,7 +228,7 @@ echo '<p>' . hesk_unhortenUrl($ticket['message']) . '</p>';
 // Print replies
 while ($reply = hesk_dbFetchAssoc($res))
 {
-	$reply['dt'] = hesk_date($reply['dt']);
+	$reply['dt'] = hesk_date($reply['dt'], true);
 
     echo '
     <hr />

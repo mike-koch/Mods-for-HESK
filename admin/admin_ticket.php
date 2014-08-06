@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -261,8 +261,8 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST'))
 				'lastreplier'	=> $ticket['lastreplier'],
 				'subject'		=> $ticket['subject'],
 				'message'		=> stripslashes($msg),
-                'dt'            => hesk_date($ticket['dt']),
-                'lastchange'    => hesk_date($ticket['lastchange']),
+                'dt'            => hesk_date($ticket['dt'], true),
+                'lastchange'    => hesk_date($ticket['lastchange'], true),
 				);
 
 				// 2. Add custom fields to the array
@@ -443,11 +443,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </li>
                 <li class="list-group-item">
                     <strong><?php echo $hesklang['created_on']; ?></strong><br/>
-                    <?php echo hesk_date($ticket['dt']); ?>
+                    <?php echo hesk_date($ticket['dt'], true); ?>
                 </li>
                 <li class="list-group-item">
                     <strong><?php echo $hesklang['last_update']; ?></strong><br/>
-                    <?php echo hesk_date($ticket['lastchange']); ?>    
+                    <?php echo hesk_date($ticket['lastchange'], true); ?>    
                 </li>
                 <li class="list-group-item">
                     <strong><?php echo $hesklang['last_replier']; ?></strong><br/>
@@ -773,7 +773,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <?php echo hesk_getAdminButtonsInTicket(0, $i); ?>
                     
                     <!-- Date -->
-                    <p><br/><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt']); ?>
+                    <p><br/><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt'], true); ?>
                     
                     <!-- Custom Fields Before Message -->
                         <?php
@@ -1100,7 +1100,7 @@ function hesk_printTicketReplies() {
 	{
 		$color = 'class="ticketMessageContainer"';
 
-		$reply['dt'] = hesk_date($reply['dt']);
+		$reply['dt'] = hesk_date($reply['dt'], true);
 		?>
         <div class="row ticketMessageContainer">
             <div class="col-md-3 col-xs-12">

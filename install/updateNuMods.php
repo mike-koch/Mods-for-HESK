@@ -61,11 +61,11 @@ if ($_GET['update'] == 1)
 ?>
 <html>
     <head>
-        <title>NuMods 1.2.0 Install / Upgrade</title>
+        <title>NuMods 1.2.4 Install / Upgrade</title>
     </head>
     <body>
         <div style="display: <?php echo $showInstructions; ?>">
-        <h1>Install / Upgrade NuMods to 1.2.0</h1>
+        <h1>Install / Upgrade NuMods to 1.2.4</h1>
         <h4><i>If you have not yet installed/updated HESK, please do so first before continuing; otherwise installation will <b>fail</b>!</i></h4>
         <br/>
         <p>Please verify the database information below.  Addtionally, ensure that the database user has CREATE permissions.</p>

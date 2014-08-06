@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -76,7 +76,7 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 	if (defined('WYSIWYG') && $hesk_settings['kb_wysiwyg'])
 	{
 		?>
-		<script type="text/javascript" src="<?php echo HESK_PATH; ?>inc/tiny_mce/3.5.10/tiny_mce.js"></script>
+		<script type="text/javascript" src="<?php echo HESK_PATH; ?>inc/tiny_mce/3.5.11/tiny_mce.js"></script>
 		<?php
 	}
 

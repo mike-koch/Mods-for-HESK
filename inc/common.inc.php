@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -936,7 +936,7 @@ function hesk_getLanguagesAsFormIfNecessary()
 
         ?>
         <script language="javascript" type="text/javascript">
-            document.write('<?php echo str_replace(array('"','<','=','>'),array('\42','\74','\75','\76'),$str . '</form>'); ?>');
+            document.write('<?php echo str_replace(array('"','<','=','>',"'"),array('\42','\74','\75','\76','\47'),$str . '</form>'); ?>');
         </script>
         <noscript>
             <?php
@@ -1076,7 +1076,7 @@ function hesk_returnLanguage()
 } // END hesk_returnLanguage()
 
 
-function hesk_date($dt='')
+function hesk_date($dt='', $from_database=false)
 {
 	global $hesk_settings;
 
@@ -1089,14 +1089,32 @@ function hesk_date($dt='')
     	$dt = strtotime($dt);
     }
 
+    // Adjust MySQL time if different from PHP time
+	if ($from_database)
+	{
+		if ( ! defined('MYSQL_TIME_DIFF') )
+		{
+			define('MYSQL_TIME_DIFF', time()-hesk_dbTime() );
+		}
+
+		if (MYSQL_TIME_DIFF != 0)
+		{
+			$dt += MYSQL_TIME_DIFF;
+		}
+	}
+
+	// Add HESK set time difference
 	$dt += 3600*$hesk_settings['diff_hours'] + 60*$hesk_settings['diff_minutes'];
 
+    // Daylight savings?
     if ($hesk_settings['daylight'] && date('I', $dt))
     {
 		$dt += 3600;
 	}
 
+    // Return formatted date
 	return date($hesk_settings['timeformat'], $dt);
+    
 } // End hesk_date()
 
 

@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -256,7 +256,7 @@ function hesk_kbLatestArticles($how_many, $index = 1)
 
 		if ($hesk_settings['kb_date'])
 		{
-			echo '<td valign="top" style="text-align:right" width="200">' . hesk_date($article['dt']) . '</td>';
+			echo '<td valign="top" style="text-align:right" width="200">' . hesk_date($article['dt'], true) . '</td>';
 		}
 
 		echo '

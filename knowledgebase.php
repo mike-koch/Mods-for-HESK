@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -323,7 +323,7 @@ function hesk_show_kb_article($artid)
         if ($hesk_settings['kb_date'])
         {
         ?>
-        <p><?php echo $hesklang['dta']; ?>: <?php echo hesk_date($article['dt']); ?></p>
+        <p><?php echo $hesklang['dta']; ?>: <?php echo hesk_date($article['dt'], true); ?></p>
         <?php
         }
 

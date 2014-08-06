@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -267,7 +267,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 </tr>
                 <tr>
                     <td colspan="10" style="border-width: 0px">
-                        <p><?php echo $hesklang['created_on']; ?>: <?php echo hesk_date($ticket['dt']); ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $hesklang['last_update']; ?>: <?php echo hesk_date($ticket['lastchange']); ?></p>
+                        <p><?php echo $hesklang['created_on']; ?>: <?php echo hesk_date($ticket['dt'], true); ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $hesklang['last_update']; ?>: <?php echo hesk_date($ticket['lastchange'], true); ?></p>
                     </td>
                     <td colspan="10" style="border-width: 0px; text-align: right;">
                         <p><?php $random=rand(10000,99999);
@@ -335,7 +335,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 <div class="col-md-9 col-xs-12 pushMarginLeft">
                     <div class="ticketMessageTop withBorder">
                             <!-- Date and Action buttons -->
-                            <p><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt']); ?><span style="float: right"><?php echo hesk_getCustomerButtons($i); ?></span></p>
+                            <p><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt'], true); ?><span style="float: right"><?php echo hesk_getCustomerButtons($i); ?></span></p>
                             <!-- Custom Fields Before Message -->
                             <?php
                                 foreach ($hesk_settings['custom_fields'] as $k=>$v)
@@ -598,7 +598,7 @@ function hesk_printCustomerTicketReplies()
 			$unread_replies[] = $reply['id'];
 		}
 
-		$reply['dt'] = hesk_date($reply['dt']);
+		$reply['dt'] = hesk_date($reply['dt'], true);
 		?>
 
         <div class="row ticketMessageContainer">

@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -523,16 +523,17 @@ if (isset($_GET['w']))
 		$ticket['message'] = hesk_msgToPlain($ticket['message'], 1);
         $ticket['subject'] = hesk_msgToPlain($ticket['subject'], 1);
         $ticket['owner'] = isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] : '';
-        $ticket['dt'] = date("Y-m-d\TH:i:s\.000", strtotime($ticket['dt']));
-        $ticket['lastchange'] = date("Y-m-d\TH:i:s\.000", strtotime($ticket['lastchange']));
+        
+        // Format for export dates
+        $hesk_settings['timeformat'] = "Y-m-d\TH:i:s\.000";
 
 		// Create row for the XML file
 		$tmp .= '
 <Row>
 <Cell><Data ss:Type="Number">'.$ticket['id'].'</Data></Cell>
 <Cell><Data ss:Type="String"><![CDATA['.$ticket['trackid'].']]></Data></Cell>
-<Cell ss:StyleID="s62"><Data ss:Type="DateTime">'.$ticket['dt'].'</Data></Cell>
-<Cell ss:StyleID="s62"><Data ss:Type="DateTime">'.$ticket['lastchange'].'</Data></Cell>
+<Cell ss:StyleID="s62"><Data ss:Type="DateTime">'.hesk_date($ticket['dt'], true).'</Data></Cell>
+<Cell ss:StyleID="s62"><Data ss:Type="DateTime">'.hesk_date($ticket['lastchange'], true).'</Data></Cell>
 <Cell><Data ss:Type="String"><![CDATA['.hesk_msgToPlain($ticket['name'], 1).']]></Data></Cell>
 <Cell><Data ss:Type="String"><![CDATA['.$ticket['email'].']]></Data></Cell>
 <Cell><Data ss:Type="String"><![CDATA['.$my_cat[$ticket['category']].']]></Data></Cell>
@@ -567,6 +568,9 @@ if (isset($_GET['w']))
         $tickets_exported++;
         $this_round++;
 	} // End of while loop
+    
+    // Go back to the HH:MM:SS format for hesk_date()
+    $hesk_settings['timeformat'] = 'H:i:s';
 
 	// Append any remaining rows into the file
 	if ($this_round > 0)

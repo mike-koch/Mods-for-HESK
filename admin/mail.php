@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -428,7 +428,10 @@ function show_message()
 	        }
 
 	        $pm['name'] = isset($admins[$pm[$hesk_settings['mailtmp']['other']]]) ? '<a href="mail.php?a=new&amp;id='.$pm[$hesk_settings['mailtmp']['other']].'">'.$admins[$pm[$hesk_settings['mailtmp']['other']]].'</a>' : (($pm['from'] == 9999) ? '<a href="http://www.hesk.com" target="_blank">HESK.com</a>' : $hesklang['e_udel']);
-	        $pm['dt'] = hesk_dateToString($pm['dt'],0,1);
+	        
+            echo $pm['dt'];
+            
+            $pm['dt'] = hesk_dateToString($pm['dt'],0,1,0,true);
 			?>
 
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -597,7 +600,7 @@ function mail_list_messages()
 		    	$pm['subject'] = '<b>'.$pm['subject'].'</b>';
 		    }
 			$pm['name'] = isset($admins[$pm[$hesk_settings['mailtmp']['other']]]) ? '<a href="mail.php?a=new&amp;id='.$pm[$hesk_settings['mailtmp']['other']].'">'.$admins[$pm[$hesk_settings['mailtmp']['other']]].'</a>' : (($pm['from'] == 9999) ? '<a href="http://www.hesk.com" target="_blank">HESK.com</a>' : $hesklang['e_udel']);
-		    $pm['dt'] = hesk_dateToString($pm['dt'],0);
+		    $pm['dt'] = hesk_dateToString($pm['dt'],0,0,0,true);
 
 			echo <<<EOC
 			<tr>
