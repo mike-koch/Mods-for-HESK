@@ -101,29 +101,24 @@ function print_add_ticket()
 </ol>	
 
 <!-- START MAIN LAYOUT -->
-<div class="enclosingDashboard">
     <div class="row">
         <div align="left" class="col-md-4">
-		    <div class="moreToLeft">
-			    <ul class="nav nav-tabs">
-				    <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['quick_help']; ?></a></li>
-			    </ul>
-			    <div class="summaryList">
-                    <div class="viewTicketSidebar">
-                        <div class="row">
-                            <div class="col-md-6 col-xs-12">
-                                <label class="control-label" style="margin-top:8px;"><?php echo $hesklang['changeLanguage']; ?></label>
-                            </div>
-                            <div class="col-md-6 col-xs-12">
-                                <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
-                            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><?php echo $hesklang['quick_help']; ?></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <label class="control-label" style="margin-top:8px;"><?php echo $hesklang['changeLanguage']; ?></label>
                         </div>
-				        <p><?php echo $hesklang['quick_help_submit_ticket']; ?></p>
-                    </div>				
-			    </div>
-		    </div>
+                        <div class="col-md-6 col-xs-12">
+                            <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
+                        </div>
+                    </div>
+                    <p><?php echo $hesklang['quick_help_submit_ticket']; ?></p>
+                </div>
+            </div>
 	    </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
             <?php
                 // This will handle error, success and notice messages
                 hesk_handle_messages();
@@ -727,43 +722,39 @@ function print_start()
   <li><a href="<?php echo $hesk_settings['site_url']; ?>"><?php echo $hesk_settings['site_title']; ?></a></li>
   <li class="active"><?php echo $hesk_settings['hesk_title']; ?></li>
 </ol>
-<div class="enclosingDashboard">
 	<div class="row">
-		<div align="left" class="col-md-4">
-		<div class="moreToLeft">
-			<ul class="nav nav-tabs">
-				<li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['view_ticket']; ?></a></li>
-			</ul>
-			<div class="summaryList">
-				<form role="form" class="viewTicketSidebar" action="ticket.php" method="get" name="form2">
-					<div class="form-group">
-						<br/>
-						<label for="ticketID"><?php echo $hesklang['ticket_trackID']; ?>:</label>
-						<input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value="" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
-					</div>
-					<?php
-					$tmp = '';
-					if ($hesk_settings['email_view_ticket'])
-					{
-						$tmp = 'document.form1.email.value=document.form2.e.value;';
-					?>
-					<div class="form-group">
-						<label for="emailAddress"><?php echo $hesklang['email']; ?>:</label>
-						<input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/>
-					</div>
-					<div class="checkbox">
-						<input type="checkbox" name="r" value="Y" <?php echo $do_remember; ?> /> <?php echo $hesklang['rem_email']; ?></label>
-					</div>
-					<?php
-					}
-					?>
-					<input type="submit" value="<?php echo $hesklang['view_ticket']; ?>" class="btn btn-default" /><input type="hidden" name="Refresh" value="<?php echo rand(10000,99999); ?>"><input type="hidden" name="f" value="1">
-				</form>
-				
-			</div>
+		<div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><?php echo $hesklang['view_ticket']; ?></div>
+                <div class="panel-body">
+                    <form role="form" class="viewTicketSidebar" action="ticket.php" method="get" name="form2">
+                        <div class="form-group">
+                            <br/>
+                            <label for="ticketID"><?php echo $hesklang['ticket_trackID']; ?>:</label>
+                            <input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value="" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
+                        </div>
+                        <?php
+                        $tmp = '';
+                        if ($hesk_settings['email_view_ticket'])
+                        {
+                            $tmp = 'document.form1.email.value=document.form2.e.value;';
+                        ?>
+                        <div class="form-group">
+                            <label for="emailAddress"><?php echo $hesklang['email']; ?>:</label>
+                            <input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" name="r" value="Y" <?php echo $do_remember; ?> /> <?php echo $hesklang['rem_email']; ?></label>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                        <input type="submit" value="<?php echo $hesklang['view_ticket']; ?>" class="btn btn-default" /><input type="hidden" name="Refresh" value="<?php echo rand(10000,99999); ?>"><input type="hidden" name="f" value="1">
+                    </form>
+                </div>
+            </div>
 		</div>
-		</div>
-		<div align="left" class="col-md-7">
+		<div class="col-md-8">
 				<?php
 				// Print small search box
 				if ($hesk_settings['kb_enable'])

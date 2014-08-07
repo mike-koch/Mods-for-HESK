@@ -212,16 +212,6 @@ div.rightSideDash {
     padding-left: 18px;
     padding-right: 18px;
 }
-div.enclosingDashboard {
-    margin-left: 50px;
-    margin-right: 50px;
-}
-.moreToLeft {
-    margin-right: 25px;
-}
-.viewTicketSidebar {
-    padding: 25px;
-}
 div.enclosing {
     background-color: #fff;
     color: #4a5571;

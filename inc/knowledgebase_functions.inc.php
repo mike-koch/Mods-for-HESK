@@ -289,7 +289,6 @@ function hesk_kbSearchLarge($admin = '')
     $action = $admin ? 'knowledgebase_private.php' : 'knowledgebase.php';
 
 	?>
-	<br />
 
 	<div style="text-align:center">
 		<form role="form" action="<?php echo $action; ?>" method="get" style="display: inline; margin: 0;" name="searchform">
