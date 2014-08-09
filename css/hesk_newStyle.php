@@ -18,6 +18,10 @@
     $questionMarkColor = $nuMods_settings['questionMarkColor'];
 ?>
 
+.tabPadding {
+    padding: 10px;
+}
+
 @media (max-width:991px) {
     .close-ticket {
         text-align: left;
