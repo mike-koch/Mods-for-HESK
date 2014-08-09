@@ -1582,14 +1582,11 @@ function manage_category() {
 
 
         <div class="row">
-            <div align="left" class="col-md-4">
-                <div class="moreToLeft" style="margin-left:40px">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['catset']; ?></a></li>
-                        <li><?php echo '<a href="manage_knowledgebase.php?a=add_category&amp;parent='.$catid.'">'.$hesklang['kb_i_cat2'].'</a>'; ?></li>
-                    </ul>
-                    <div class="summaryList">
-                        <div class="viewTicketSidebar">
+            <div class="col-md-4">
+                <div style="margin-left:25px">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><?php echo $hesklang['catset']; ?></div>
+                        <div class="panel-body">
                             <form action="manage_knowledgebase.php" method="post" role="form" name="form1" onsubmit="Javascript:return hesk_deleteIfSelected('dodelete','<?php echo hesk_makeJsString($hesklang['kb_delcat']); ?>')">
                                 <div class="form-group">
                                     <label for="title" class="control-label"><?php echo $hesklang['kb_cat_title']; ?></label>
@@ -1629,7 +1626,9 @@ function manage_category() {
                                 <div class="form-group" style="text-align:center">
                                     <input type="hidden" name="a" value="edit_category" />
                                     <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                                    <input type="hidden" name="catid" value="<?php echo $catid; ?>" /><input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default" />
+                                    <input type="hidden" name="catid" value="<?php echo $catid; ?>" />
+                                    <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default" />
+                                    <a class="btn btn-default" href="manage_knowledgebase.php?a=add_category&amp;parent='.$catid.'"><?php echo $hesklang['kb_i_cat2']; ?></a>
                                 </div>
                             </form>
                         </div>
