@@ -701,25 +701,22 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="enclosingDashboard" style="padding-top: 20px">
-<div class="row">
-    <div align="left" class="col-md-4">
-		<div class="moreToLeft">
-			<ul class="nav nav-tabs">
-                <?php 
-                if ( hesk_checkPermission('can_run_reports',0) )
-                {
-                ?>
-                <li><a href="reports.php"><?php echo $hesklang['reports_tab']; ?></a></li>
-                <?php } ?>
-				<li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['export']; ?></a></li>
-			</ul>
-			<div class="summaryList">
-                <div class="viewTicketSidebar">
-				    <p><?php echo $hesklang['export_intro']; ?></p>
-                </div>				
-			</div>
-		</div>
+<div class="row" style="margin-top: 20px">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $hesklang['export']; ?></div>
+            <?php
+                if (hesk_checkPermission('can_run_reports',0)) {
+                    $canRunReports = true;
+                } else {
+                    $canRunReports = false;
+                }
+            ?>
+            <div class="panel-body" <?php if ($canRunReports) {echo 'style="margin-top: -15px;"';} ?>>
+                <?php if ($canRunReports) { echo '<small><a href="reports.php">'.$hesklang['reports_tab'].'</a></small><div class="blankSpace"></div>';} ?>
+                <p><?php echo $hesklang['export_intro']; ?></p>
+            </div>
+        </div>
 	</div>
     <div class="col-md-8">
         <?php
