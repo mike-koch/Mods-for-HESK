@@ -342,96 +342,92 @@ function hesk_iDatabase($problem=0)
 
 	<br />
 	<div class="col-md-4">
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#" onclick="return false;">Summary</a></li>
-		</ul>
-	  <div class="summaryList">
-		
-	  
-	<?php
-	if ($problem == 1)
-	{
-	    echo '<br /><br />Double-check all the information below. Contact your hosting company for the correct information to use!<br /><br /><b>MySQL said:</b> '.$mysql_log.'</p>', 'Database connection failed';
-	}
-    elseif ($problem == 2)
-    {
-	    echo '<b>Database tables already exist!</b><br /><br />
-        HESK database tables with <b>'.$hesk_settings['db_pfix'].'</b> prefix already exist in this database!<br /><br />
-	    To upgrade an existing HESK installation select <a href="index.php">Update existing install</a> instead.<br /><br />
-	    To install a new copy of HESK in use a unique table prefix.';
-    }
-    elseif ($problem == 3)
-    {
-	    echo '<b>Old database tables not found!</b><br /><br />
-        HESK database tables have not been found in this database!<br /><br />
-	    To install HESK use the <a href="index.php">New install</a> option instead.';
-    }
-    elseif ($problem == 4)
-    {
-	    echo '<b>Version '.HESK_NEW_VERSION.' tables already exist!</b><br /><br />
-        Your database seems to be compatible with HESK version '.HESK_NEW_VERSION.'<br /><br />
-	    To install a new copy of HESK use the <a href="index.php">New install</a> option instead.';
-    }
-    else
-    {
-    	echo '<p style="padding: 10px;">To complete setup HESK needs to connect to your database. You can get this information from your hosting control panel.</p>';
-    }
-	?>
-	
-	</div>
-	</div>
-	
-	<div class="col-md-7">
-
-
-	<div class="alert alert-warning"><strong>3. Database Settings</strong></div>
-	<form role="form" action="<?php echo INSTALL_PAGE; ?>" method="post">
-		<div class="h3">Database Settings</div>
-        <div class="footerWithBorder blankSpace"></div>
-        
-        <div class="form-group">
-			<label for="host">Database Host</label>
-			<input type="text" class="form-control" name="host" id="host" placeholder="ex. localhost">
-		</div>
-		<div class="form-group">
-			<label for="name">Database Name</label>
-			<input type="text" class="form-control" name="name" id="name" placeholder="ex. hesk">
-		</div>
-		<div class="form-group">
-			<label for="user">Database User</label>
-			<input type="text" class="form-control" name="user" id="user" placeholder="ex. root">
-		</div>
-		<div class="form-group">
-			<label for="pass">Database User's Password</label>
-			<input type="password" class="form-control" name="pass" id="pass" placeholder="Password">
-		</div>	
-		<?php
-		if (INSTALL_PAGE == 'install.php')
-		{
-			?>
-		<div class="form-group">
-			<label for="pfix">Table Prefix</label>
-			<input type="text" class="form-control" name="pfix" id="pfix" placeholder="ex. hesk_">
-		</div>
-        <br>
-        <div class="h3">HESK Login Details</div>
-        <div class="h6">Username and password you will use to login into HESK administration.</div>
-        <div class="footerWithBorder blankSpace"></div>
-        
-        <div class="form-group">
-            <label for="admin_user">Choose a Username</label>
-            <input type="text" class="form-control" placeholder="Username" name="admin_user" value="<?php echo isset($_SESSION['admin_user']) ? stripslashes($_SESSION['admin_user']) : 'Administrator'; ?>" size="40" autocomplete="off" />
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <p>Summary</p>
+            </div>
+            <div class="panel-body">
+                <?php
+                    if ($problem == 1)
+                    {
+                        echo '<br /><br />Double-check all the information below. Contact your hosting company for the correct information to use!<br /><br /><b>MySQL said:</b> '.$mysql_log.'</p>', 'Database connection failed';
+                    }
+                    elseif ($problem == 2)
+                    {
+                        echo '<b>Database tables already exist!</b><br /><br />
+                        HESK database tables with <b>'.$hesk_settings['db_pfix'].'</b> prefix already exist in this database!<br /><br />
+                        To upgrade an existing HESK installation select <a href="index.php">Update existing install</a> instead.<br /><br />
+                        To install a new copy of HESK in use a unique table prefix.';
+                    }
+                    elseif ($problem == 3)
+                    {
+                        echo '<b>Old database tables not found!</b><br /><br />
+                        HESK database tables have not been found in this database!<br /><br />
+                        To install HESK use the <a href="index.php">New install</a> option instead.';
+                    }
+                    elseif ($problem == 4)
+                    {
+                        echo '<b>Version '.HESK_NEW_VERSION.' tables already exist!</b><br /><br />
+                        Your database seems to be compatible with HESK version '.HESK_NEW_VERSION.'<br /><br />
+                        To install a new copy of HESK use the <a href="index.php">New install</a> option instead.';
+                    }
+                    else
+                    {
+                        echo '<p style="padding: 10px;">To complete setup HESK needs to connect to your database. You can get this information from your hosting control panel.</p>';
+                    }
+                ?>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="admin_pass">Choose a Password</label>
-            <input type="text" class="form-control" placeholder="Password" name="admin_pass" id="admin_pass" value="<?php echo isset($_SESSION['admin_pass']) ? stripslashes($_SESSION['admin_pass']) : ''; ?>" size="40" autocomplete="off" />
-        </div>
+	</div>
+	<div class="col-md-8">
+        <div class="alert alert-warning"><strong>3. Database Settings</strong></div>
+        <form role="form" action="<?php echo INSTALL_PAGE; ?>" method="post">
+            <div class="h3">Database Settings</div>
+            <div class="footerWithBorder blankSpace"></div>
+        
+            <div class="form-group">
+                <label for="host">Database Host</label>
+                <input type="text" class="form-control" name="host" id="host" placeholder="ex. localhost">
+            </div>
+            <div class="form-group">
+                <label for="name">Database Name</label>
+                <input type="text" class="form-control" name="name" id="name" placeholder="ex. hesk">
+            </div>
+            <div class="form-group">
+                <label for="user">Database User</label>
+                <input type="text" class="form-control" name="user" id="user" placeholder="ex. root">
+            </div>
+            <div class="form-group">
+                <label for="pass">Database User's Password</label>
+                <input type="password" class="form-control" name="pass" id="pass" placeholder="Password">
+            </div>	
+            <?php
+            if (INSTALL_PAGE == 'install.php')
+            {
+                ?>
+            <div class="form-group">
+                <label for="pfix">Table Prefix</label>
+                <input type="text" class="form-control" name="pfix" id="pfix" placeholder="ex. hesk_">
+            </div>
+            <br>
+            <div class="h3">HESK Login Details</div>
+            <div class="h6">Username and password you will use to login into HESK administration.</div>
+            <div class="footerWithBorder blankSpace"></div>
+
+            <div class="form-group">
+                <label for="admin_user">Choose a Username</label>
+                <input type="text" class="form-control" placeholder="Username" name="admin_user" value="<?php echo isset($_SESSION['admin_user']) ? stripslashes($_SESSION['admin_user']) : 'Administrator'; ?>" size="40" autocomplete="off" />
+            </div>
+            <div class="form-group">
+                <label for="admin_pass">Choose a Password</label>
+                <input type="text" class="form-control" placeholder="Password" name="admin_pass" id="admin_pass" value="<?php echo isset($_SESSION['admin_pass']) ? stripslashes($_SESSION['admin_pass']) : ''; ?>" size="40" autocomplete="off" />
+            </div>
 			<?php
-		}
-		?>
+		    }
+		    ?>
 
-	<p align="center"><input type="hidden" name="dbtest" value="1" /><button type="submit" class="btn btn-default btn-lg">Continue</button></p>
-	</form>
+	       <p align="center"><input type="hidden" name="dbtest" value="1" /><button type="submit" class="btn btn-default btn-lg">Continue</button></p>
+	   </form>
 
 	<?php
     hesk_iFooter();
@@ -635,20 +631,22 @@ function hesk_iStart()
 	hesk_iHeader();
 	?>
 <div class="row">
-  <div class="col-md-4">
-	    <ul class="nav nav-tabs">
-			<li class="active"><a href="#" onclick="return false;">Summary</a></li>
-		</ul>
-	  <div class="summaryList">
-		<ul>
-			<li>The script is provided &quot;as is&quot;, without any warranty. Use at your own risk.<br />&nbsp;</li>
-			<li>HESK is a registered trademark, using the term HESK requires permission.<br />&nbsp;</li>
-			<li>Do not redistribute this script without express written permission<br />&nbsp;</li>
-			<li>If you wish to remove the &quot;Powered by&quot; links a <a href="https://www.hesk.com/buy.php" target="_blank">license is required</a>.</li>
-		</ul>
-	  </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <p>Summary</p>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <li>The script is provided &quot;as is&quot;, without any warranty. Use at your own risk.<br />&nbsp;</li>
+                    <li>HESK is a registered trademark, using the term HESK requires permission.<br />&nbsp;</li>
+                    <li>Do not redistribute this script without express written permission<br />&nbsp;</li>
+                    <li>If you wish to remove the &quot;Powered by&quot; links a <a href="https://www.hesk.com/buy.php" target="_blank">license is required</a>.</li>
+                </ul>
+            </div>
+        </div>
   </div>
-  <div class="col-md-7">
+  <div class="col-md-8">
 	<div class="alert alert-warning"><strong>1. License Agreement</strong></div>
 	<b>The entire agreement:</b>
 	<div class="agreementBox">
