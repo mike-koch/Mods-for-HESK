@@ -150,27 +150,24 @@ function hesk_kb_header($kb_link) {
       <li class="active"><?php echo $hesklang['kb_text']; ?></li>
     </ol>
 
-    <div class="enclosingDashboard">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="moreToLeft">
-			        <ul class="nav nav-tabs">
-				        <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['quick_help']; ?></a></li>
-			        </ul>
-			        <div class="summaryList">
-                        <div class="viewTicketSidebar">
-				            <p style="text-align: justify;"><?php echo $hesklang['kb_is']; ?></p>
-                        </div>				
-			        </div>
-		        </div>     
-            </div>
-            <div class="col-md-7">
-                <?php
-                    /* Print small search box */
-                    hesk_kbSearchSmall();
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <?php echo $hesklang['quick_help']; ?>
+                </div>
+                <div class="panel-body">
+                    <p style="text-align: justify;"><?php echo $hesklang['kb_is']; ?></p>
+                </div>
+            </div>   
+        </div>
+        <div class="col-md-8">
+            <?php
+                /* Print small search box */
+                hesk_kbSearchSmall();
 
-                    /* Print large search box */
-                    hesk_kbSearchLarge();
+                /* Print large search box */
+                hesk_kbSearchLarge();
                
 } // END hesk_kb_header()
 
