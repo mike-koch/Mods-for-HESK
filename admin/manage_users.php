@@ -164,149 +164,143 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="enclosingDashboard">
 <div style="margin-top: 20px" class="row">
-    <div align="left" class="col-md-4">
-	    <div class="moreToLeft">
-		    <ul class="nav nav-tabs">
-			    <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['add_user']; ?></a></li>
-		    </ul>
-		    <div class="summaryList">
-                <div class="viewTicketSidebar">
-			        <h4><?php echo $hesklang['add_user']; ?></h4>
-                    <h6><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></h6>
-                    <div class="footerWithBorder blankSpace"></div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $hesklang['add_user']; ?></div>
+            <div class="panel-body">
+                <h6><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></h6>
+                <div class="footerWithBorder blankSpace"></div>
 
-                    <form class="form-horizontal" name="form1" action="manage_users.php" method="post">
-                        <div class="form-group">
-                            <label for="name" class="col-sm-5 control-label"><?php echo $hesklang['real_name']; ?>: <font class="important">*</font></label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" name="name" size="40" maxlength="50" value="<?php echo $_SESSION['userdata']['name']; ?>" placeholder="<?php echo $hesklang['real_name']; ?>" />
-                            </div>     
+                <form class="form-horizontal" name="form1" action="manage_users.php" method="post">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-5 control-label"><?php echo $hesklang['real_name']; ?>: <font class="important">*</font></label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" name="name" size="40" maxlength="50" value="<?php echo $_SESSION['userdata']['name']; ?>" placeholder="<?php echo $hesklang['real_name']; ?>" />
+                        </div>     
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="col-sm-5 control-label"><?php echo $hesklang['email']; ?>: <font class="important">*</font></label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" name="email" size="40" maxlength="255" placeholder="<?php echo $hesklang['email']; ?>" value="<?php echo $_SESSION['userdata']['email']; ?>" />    
                         </div>
-                        <div class="form-group">
-                            <label for="email" class="col-sm-5 control-label"><?php echo $hesklang['email']; ?>: <font class="important">*</font></label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" name="email" size="40" maxlength="255" placeholder="<?php echo $hesklang['email']; ?>" value="<?php echo $_SESSION['userdata']['email']; ?>" />    
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="user" class="col-sm-5 control-label"><?php echo $hesklang['username']; ?>: <font class="important">*</font></label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" name="user" size="40" maxlength="20" value="<?php echo $_SESSION['userdata']['user']; ?>" placeholder="<?php echo $hesklang['username']; ?>" />
                         </div>
-                        <div class="form-group">
-                            <label for="user" class="col-sm-5 control-label"><?php echo $hesklang['username']; ?>: <font class="important">*</font></label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" name="user" size="40" maxlength="20" value="<?php echo $_SESSION['userdata']['user']; ?>" placeholder="<?php echo $hesklang['username']; ?>" />
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pass" class="col-sm-5 control-label"><?php echo $hesklang['pass']; ?>: <font class="important">*</font></label>
+                        <div class="col-sm-7">
+                            <input type="password" class="form-control" name="newpass" autocomplete="off" size="40" placeholder="<?php echo $hesklang['pass']; ?>" value="<?php echo $_SESSION['userdata']['cleanpass']; ?>" onkeyup="javascript:hesk_checkPassword(this.value)" />     
                         </div>
-                        <div class="form-group">
-                            <label for="pass" class="col-sm-5 control-label"><?php echo $hesklang['pass']; ?>: <font class="important">*</font></label>
-                            <div class="col-sm-7">
-                                <input type="password" class="form-control" name="newpass" autocomplete="off" size="40" placeholder="<?php echo $hesklang['pass']; ?>" value="<?php echo $_SESSION['userdata']['cleanpass']; ?>" onkeyup="javascript:hesk_checkPassword(this.value)" />     
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPass" class="col-sm-5 control-label" style="font-size: .9em"><?php echo $hesklang['confirm_pass']; ?>: <font class="important">*</font></label>     
+                        <div class="col-sm-7">
+                            <input type="password" name="newpass2" class="form-control" autocomplete="off" placeholder="<?php echo $hesklang['confirm_pass']; ?>" size="40" value="<?php echo $_SESSION['userdata']['cleanpass']; ?>" />
                         </div>
-                        <div class="form-group">
-                            <label for="confirmPass" class="col-sm-5 control-label" style="font-size: .9em"><?php echo $hesklang['confirm_pass']; ?>: <font class="important">*</font></label>     
-                            <div class="col-sm-7">
-                                <input type="password" name="newpass2" class="form-control" autocomplete="off" placeholder="<?php echo $hesklang['confirm_pass']; ?>" size="40" value="<?php echo $_SESSION['userdata']['cleanpass']; ?>" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="pwStrength" class="col-sm-5 control-label" style="font-size: .9em"><?php echo $hesklang['pwdst']; ?>:</label>
-                            <div class="col-sm-7">
-                                <div style="border: 1px solid gray; width: 100px;">
-                                    <div id="progressBar"
-                                        style="font-size: 1px; height: 22px; width: 0px; border: 1px solid white;">
-                                    </div>
-                                </div> 
-                            </div>     
-                        </div>
-                        <div class="form-group">
-                            <label for="administrator" class="col-sm-5 control-label"><?php echo $hesklang['administrator']; ?>: <font class="important">*</font></label>
-                            <div class="col-sm-7">
-                                <?php
-                                /* Only administrators can create new administrator accounts */
-                                if ($_SESSION['isadmin'])
-                                {
-	                                ?>
-                                    <div class="radio"><label><input type="radio" name="isadmin" value="1" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if ($_SESSION['userdata']['isadmin']) echo 'checked="checked"'; ?> /> <?php echo $hesklang['yes'].' '.$hesklang['admin_can']; ?></label></div>
-	                                <div class="radio"><label><input type="radio" name="isadmin" value="0" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if (!$_SESSION['userdata']['isadmin']) echo 'checked="checked"'; ?> /> <?php echo $hesklang['no'].' '.$hesklang['staff_can']; ?></label></div>
-                                    <?php
-                                }
-                                else
-                                {
-	                                echo $hesklang['no'].' '.$hesklang['staff_can'];
-                                }
-                                ?>
-                            </div>
-                        </div>
-                        <div id="options" style="display: <?php echo ($_SESSION['isadmin'] && $_SESSION['userdata']['isadmin']) ? 'none' : 'block'; ?>">
-                            <div class="form-group">
-                                <label for="categories" class="col-sm-5 control-label"><?php echo $hesklang['allowed_cat']; ?>: <font class="important">*</font></label>
-                                <div class="col-sm-7">
-                                     <?php
-                                        foreach ($hesk_settings['categories'] as $catid => $catname)
-                                        {
-        	                                echo '<div class="checkbox"><label><input type="checkbox" name="categories[]" value="' . $catid . '" ';
-                                            if ( in_array($catid,$_SESSION['userdata']['categories']) )
-                                            {
-            	                                echo ' checked="checked" ';
-                                            }
-                                            echo ' />' . $catname . '</label></div> ';
-                                        }
-		                            ?>
-                                </div>     
-                            </div>
-                            <div class="form-group">
-                                <label for="permissions" class="col-sm-5 control-label"><?php echo $hesklang['allow_feat']; ?>: <font class="important">*</font></label>
-                                <div class="col-sm-7">
-                                     <?php
-		                                foreach ($hesk_settings['features'] as $k)
-                                        {
-        	                                echo '<div class="checkbox"><label><input type="checkbox" name="features[]" value="' . $k . '" ';
-                                            if (in_array($k,$_SESSION['userdata']['features']))
-                                            {
-            	                                echo ' checked="checked" ';
-                                            }
-                                            echo ' />' . $hesklang[$k] . '</label></div> ';
-                                        }
-                                    ?>    
-                                </div>     
-                            </div> 
-                        </div>
-                        <?php
-                        if ($hesk_settings['autoassign'])
-                        {
-	                        ?>
-                        <div class="form-group">
-                            <label for="auto-assign" class="col-sm-5 control-label"><?php echo $hesklang['opt']; ?>:</label>
-                            <div class="col-sm-7">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" name="autoassign" value="Y" <?php if ( ! isset($_SESSION['userdata']['autoassign']) || $_SESSION['userdata']['autoassign'] == 1 ) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['user_aa']; ?></label>    
+                    </div>
+                    <div class="form-group">
+                        <label for="pwStrength" class="col-sm-5 control-label" style="font-size: .9em"><?php echo $hesklang['pwdst']; ?>:</label>
+                        <div class="col-sm-7">
+                            <div style="border: 1px solid gray; width: 100px;">
+                                <div id="progressBar"
+                                    style="font-size: 1px; height: 22px; width: 0px; border: 1px solid white;">
                                 </div>
+                            </div> 
+                        </div>     
+                    </div>
+                    <div class="form-group">
+                        <label for="administrator" class="col-sm-5 control-label"><?php echo $hesklang['administrator']; ?>: <font class="important">*</font></label>
+                        <div class="col-sm-7">
+                            <?php
+                            /* Only administrators can create new administrator accounts */
+                            if ($_SESSION['isadmin'])
+                            {
+                                ?>
+                                <div class="radio"><label><input type="radio" name="isadmin" value="1" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if ($_SESSION['userdata']['isadmin']) echo 'checked="checked"'; ?> /> <?php echo $hesklang['yes'].' '.$hesklang['admin_can']; ?></label></div>
+                                <div class="radio"><label><input type="radio" name="isadmin" value="0" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if (!$_SESSION['userdata']['isadmin']) echo 'checked="checked"'; ?> /> <?php echo $hesklang['no'].' '.$hesklang['staff_can']; ?></label></div>
+                                <?php
+                            }
+                            else
+                            {
+                                echo $hesklang['no'].' '.$hesklang['staff_can'];
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div id="options" style="display: <?php echo ($_SESSION['isadmin'] && $_SESSION['userdata']['isadmin']) ? 'none' : 'block'; ?>">
+                        <div class="form-group">
+                            <label for="categories" class="col-sm-5 control-label"><?php echo $hesklang['allowed_cat']; ?>: <font class="important">*</font></label>
+                            <div class="col-sm-7">
+                                 <?php
+                                    foreach ($hesk_settings['categories'] as $catid => $catname)
+                                    {
+                                        echo '<div class="checkbox"><label><input type="checkbox" name="categories[]" value="' . $catid . '" ';
+                                        if ( in_array($catid,$_SESSION['userdata']['categories']) )
+                                        {
+                                            echo ' checked="checked" ';
+                                        }
+                                        echo ' />' . $catname . '</label></div> ';
+                                    }
+                                ?>
+                            </div>     
+                        </div>
+                        <div class="form-group">
+                            <label for="permissions" class="col-sm-5 control-label"><?php echo $hesklang['allow_feat']; ?>: <font class="important">*</font></label>
+                            <div class="col-sm-7">
+                                 <?php
+                                    foreach ($hesk_settings['features'] as $k)
+                                    {
+                                        echo '<div class="checkbox"><label><input type="checkbox" name="features[]" value="' . $k . '" ';
+                                        if (in_array($k,$_SESSION['userdata']['features']))
+                                        {
+                                            echo ' checked="checked" ';
+                                        }
+                                        echo ' />' . $hesklang[$k] . '</label></div> ';
+                                    }
+                                ?>    
+                            </div>     
+                        </div> 
+                    </div>
+                    <?php
+                    if ($hesk_settings['autoassign'])
+                    {
+                        ?>
+                    <div class="form-group">
+                        <label for="auto-assign" class="col-sm-5 control-label"><?php echo $hesklang['opt']; ?>:</label>
+                        <div class="col-sm-7">
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="autoassign" value="Y" <?php if ( ! isset($_SESSION['userdata']['autoassign']) || $_SESSION['userdata']['autoassign'] == 1 ) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['user_aa']; ?></label>    
                             </div>
                         </div>
-                        <?php  } ?>
-                        <div class="form-group">
-                            <label for="signature" class="col-sm-5 control-label"><?php echo $hesklang['signature_max']; ?>:</label>
-                            
-                            <div class="col-sm-7">
-                                <textarea class="form-control" name="signature" rows="6" placeholder="<?php echo $hesklang['sig']; ?>" cols="40"><?php echo $_SESSION['userdata']['signature']; ?></textarea>
-                                <?php echo $hesklang['sign_extra']; ?>
-                            </div>     
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12" style="text-align: right">
-                                <input type="hidden" name="a" value="new" />
-                                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                                <input type="submit" class="btn btn-default" value="<?php echo $hesklang['create_user']; ?>" />
-                                <a class="btn btn-default" href="manage_users.php?a=reset_form"><?php echo $hesklang['refi']; ?></a>     
-                            </div>     
-                        </div>
-                                  
-                    </form>
-                </div>				
-		    </div>
-	    </div>
+                    </div>
+                    <?php  } ?>
+                    <div class="form-group">
+                        <label for="signature" class="col-sm-5 control-label"><?php echo $hesklang['signature_max']; ?>:</label>
+
+                        <div class="col-sm-7">
+                            <textarea class="form-control" name="signature" rows="6" placeholder="<?php echo $hesklang['sig']; ?>" cols="40"><?php echo $_SESSION['userdata']['signature']; ?></textarea>
+                            <?php echo $hesklang['sign_extra']; ?>
+                        </div>     
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align: right">
+                            <input type="hidden" name="a" value="new" />
+                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                            <input type="submit" class="btn btn-default" value="<?php echo $hesklang['create_user']; ?>" />
+                            <a class="btn btn-default" href="manage_users.php?a=reset_form"><?php echo $hesklang['refi']; ?></a>     
+                        </div>     
+                    </div>
+
+                </form>
+            </div>
+        </div>
 	</div>
-    <div class="col-md-7">
+    <div class="col-md-8">
          <script language="Javascript" type="text/javascript"><!--
             function confirm_delete()
             {
