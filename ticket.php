@@ -269,49 +269,41 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                         if ($ticket['isClosed'] == true && $ticket['locked'] != 1 && $hesk_settings['custopen']) {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=2&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['open_action'].'">'.$hesklang['open_action'].'</a>';}
                         else {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=3&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['close_action'].'">'.$hesklang['close_action'].'</a>';} ?></p>
                 </div>
-                <div class="medLowPriority">
+            </div>
+            <div class="row medLowPriority">
+                <?php //This entire conditional is all just for priority
+                if ($hesk_settings['cust_urgency'])
+                {
+                    $repliesColumnWidth = 2;
+                    echo '<div class="col-md-2 col-sm-12 ';
+                    if ($ticket['priority'] == 0) {echo 'criticalPriority">';}
+                    elseif ($ticket['priority'] == 1) {echo 'highPriority">';}
+                    else {echo 'medLowPriority" style="border-right: solid 1px #ddd; margin-top: 1px;">';}
+                    echo '<p class="ticketPropertyTitle">'.$hesklang['priority'].'</p>';
 
-                </div>
+                    if ($ticket['priority']==0) {echo '<p class="ticketPropertyText">'.$hesklang['critical'].'</p>';}
+                    elseif ($ticket['priority']==1) {echo '<p class="ticketPropertyText">'.$hesklang['high'].'</p>';}
+                    elseif ($ticket['priority']==2) {echo '<p class="ticketPropertyText">'.$hesklang['medium'].'</p>';}
+                    else {echo '<p class="ticketPropertyText">'.$hesklang['low'].'</p>';}
+                    echo '</div>';
+                }
+                else
+                {
+                    $hesk_settings['ticketColumnWidth'] = 3;
+                }
+                echo '<div class="col-md-3 col-sm-12" style="border-right: solid 1px #ddd; margin-top: 1px;"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>';
+                    $ticketStatusKey = $ticket['statusKey'];
+                     echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatusKey].'</p>';
+                echo '</div>';
+                echo '<div class="col-md-3 col-sm-12" style="border-right: solid 1px #ddd; margin-top: 1px;"><p class="ticketPropertyTitle">'.$hesklang['last_replier'].'</p>
+                        <p class="ticketPropertyText">'.$ticket['repliername'].'</p></div>';
+                echo '<div class="col-md-'.$repliesColumnWidth.' col-sm-12" style="border-right: solid 1px #ddd; margin-top: 1px;"><p class="ticketPropertyTitle">'.$hesklang['category'].'</p>
+                        <p class="ticketPropertyText">'.$category['name'].'</p></div>';
+                echo '<div class="col-md-'.$repliesColumnWidth.' col-sm-12"><p class="ticketPropertyTitle">'.$hesklang['replies'].'</p>
+                        <p class="ticketPropertyText">'.$replies.'</p></div>';
+                ?>
             </div>
         </div>
-        <table class="table table-bordered">
-            <tr class="medLowPriority">
-
-                <?php //This entire conditional is all just for priority
-                    if ($hesk_settings['cust_urgency'])
-                    {
-                       $hesk_settings['ticketColumnWidth'] = 4;
-
-                       echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'" ';
-                       if ($ticket['priority'] == 0) {echo 'class="criticalPriority">';}
-                       elseif ($ticket['priority'] == 1) {echo 'class="highPriority">';}
-                       else {echo 'class="medLowPriority">';}
-
-                       echo '<p class="ticketPropertyTitle">'.$hesklang['priority'].'</p>';
-
-                       if ($ticket['priority']==0) {echo '<p class="ticketPropertyText">'.$hesklang['critical'].'</p>';}
-                        elseif ($ticket['priority']==1) {echo '<p class="ticketPropertyText">'.$hesklang['high'].'</p>';}
-                        elseif ($ticket['priority']==2) {echo '<p class="ticketPropertyText">'.$hesklang['medium'].'</p>';}
-                        else {echo '<p class="ticketPropertyText">'.$hesklang['low'].'</p>';}
-                       echo '</td>';
-                    }
-                    else
-                    {
-                       $hesk_settings['ticketColumnWidth'] = 5;
-                    }
-                    echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>';
-                        $ticketStatusKey = $ticket['statusKey'];
-                         echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatusKey].'</p>';
-                        echo '</td>';
-                    echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['last_replier'].'</p>
-                            <p class="ticketPropertyText">'.$ticket['repliername'].'</p></td>';
-                    echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['category'].'</p>
-                            <p class="ticketPropertyText">'.$category['name'].'</p></td>';
-                    echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['replies'].'</p>
-                            <p class="ticketPropertyText">'.$replies.'</p></td>';
-                ?>
-            </tr>
-        </table>
         <!-- REPLIES -->
 
         <?php
