@@ -18,6 +18,37 @@
     $questionMarkColor = $nuMods_settings['questionMarkColor'];
 ?>
 
+@media (max-width:991px) {
+    .close-ticket {
+        text-align: left;
+    }
+}
+
+@media (min-width:992px) {
+    .close-ticket {
+        text-align: right;
+    }
+}
+
+
+@media (max-width:991px) {
+    .ticket-cell {
+        border-bottom: solid 1px #ddd;
+        border-right: 0;
+        padding-top: 5px;
+    }
+}
+
+@media (min-width:992px) {
+    .ticket-cell {
+        border-bottom: 0;
+        border-right: solid 1px #ddd;
+        margin-top: 1px;
+        height: 90px;
+        padding-top: 10px;
+    }
+}
+
 .row {
     margin-left: 0px;
     margin-right: 0px;

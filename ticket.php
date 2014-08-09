@@ -261,10 +261,13 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6 col-sm-12">
-                    <p><?php echo $hesklang['created_on']; ?>: <?php echo hesk_date($ticket['dt'], true); ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $hesklang['last_update']; ?>: <?php echo hesk_date($ticket['lastchange'], true); ?></p>
+                <div class="col-md-3 col-sm-12">
+                    <p><?php echo $hesklang['created_on']; ?>: <?php echo hesk_date($ticket['dt'], true); ?></p>
                 </div>
-                <div class="col-md-2 col-md-offset-4 col-sm-12" style="text-align: right">
+                <div class="col-md-3 col-sm-12">
+                    <p><?php echo $hesklang['last_update']; ?>: <?php echo hesk_date($ticket['lastchange'], true); ?></p>
+                </div>
+                <div class="col-md-2 col-md-offset-4 col-sm-12 close-ticket">
                     <p><?php $random=rand(10000,99999);
                         if ($ticket['isClosed'] == true && $ticket['locked'] != 1 && $hesk_settings['custopen']) {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=2&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['open_action'].'">'.$hesklang['open_action'].'</a>';}
                         else {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=3&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['close_action'].'">'.$hesklang['close_action'].'</a>';} ?></p>
@@ -275,10 +278,10 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 if ($hesk_settings['cust_urgency'])
                 {
                     $repliesColumnWidth = 2;
-                    echo '<div class="col-md-2 col-sm-12 ';
+                    echo '<div class="col-md-2 col-sm-12 ticket-cell ';
                     if ($ticket['priority'] == 0) {echo 'criticalPriority">';}
                     elseif ($ticket['priority'] == 1) {echo 'highPriority">';}
-                    else {echo 'medLowPriority" style="border-right: solid 1px #ddd; margin-top: 1px;">';}
+                    else {echo 'medLowPriority">';}
                     echo '<p class="ticketPropertyTitle">'.$hesklang['priority'].'</p>';
 
                     if ($ticket['priority']==0) {echo '<p class="ticketPropertyText">'.$hesklang['critical'].'</p>';}
@@ -291,19 +294,20 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 {
                     $hesk_settings['ticketColumnWidth'] = 3;
                 }
-                echo '<div class="col-md-3 col-sm-12" style="border-right: solid 1px #ddd; margin-top: 1px;"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>';
+                echo '<div class="col-md-3 col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>';
                     $ticketStatusKey = $ticket['statusKey'];
                      echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatusKey].'</p>';
                 echo '</div>';
-                echo '<div class="col-md-3 col-sm-12" style="border-right: solid 1px #ddd; margin-top: 1px;"><p class="ticketPropertyTitle">'.$hesklang['last_replier'].'</p>
+                echo '<div class="col-md-3 col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['last_replier'].'</p>
                         <p class="ticketPropertyText">'.$ticket['repliername'].'</p></div>';
-                echo '<div class="col-md-'.$repliesColumnWidth.' col-sm-12" style="border-right: solid 1px #ddd; margin-top: 1px;"><p class="ticketPropertyTitle">'.$hesklang['category'].'</p>
+                echo '<div class="col-md-'.$repliesColumnWidth.' col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['category'].'</p>
                         <p class="ticketPropertyText">'.$category['name'].'</p></div>';
-                echo '<div class="col-md-'.$repliesColumnWidth.' col-sm-12"><p class="ticketPropertyTitle">'.$hesklang['replies'].'</p>
+                echo '<div class="col-md-'.$repliesColumnWidth.' col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['replies'].'</p>
                         <p class="ticketPropertyText">'.$replies.'</p></div>';
                 ?>
             </div>
         </div>
+        <div class="blankSpace"></div>
         <!-- REPLIES -->
 
         <?php
