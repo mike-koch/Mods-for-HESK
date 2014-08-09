@@ -423,86 +423,81 @@ function print_form()
   <li class="active"><?php echo $hesklang['view_ticket_nav']; ?></li>
 </ol>	
 
-<div class="enclosingDashboard">
-    <div class="row">
-        <div align="left" class="col-md-4">
-            <div class="moreToLeft">
-			    <ul class="nav nav-tabs">
-				    <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['quick_help']; ?></a></li>
-			    </ul>
-			    <div class="summaryList">
-                    <div class="viewTicketSidebar">
-				        <p><?php echo $hesklang['quick_help_view_ticket']; ?></p>
-                    </div>				
-			    </div>
-		    </div>
+<div class="row">
+    <div align="left" class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <?php echo $hesklang['quick_help']; ?>
+            </div>
+            <div class="panel-body">
+                <p><?php echo $hesklang['quick_help_view_ticket']; ?></p>
+            </div>
         </div>
-        <div class="col-md-7">
+    </div>
+    <div class="col-md-8">
+        <?php
+            /* This will handle error, success and notice messages */
+            hesk_handle_messages();
+        ?>
+        <h3 align="left"><?php echo $hesklang['view_existing']; ?></h3>
+        <div class="footerWithBorder"></div>
+        <div class="blankSpace"></div>
+        <form action="ticket.php" class="form-horizontal" role="form" method="get" name="form2">
+            <div class="form-group">
+                <label for="track" class="col-sm-3 control-label"><?php echo $hesklang['ticket_trackID']; ?></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="track" id="track" maxlength="20" size="35" value="<?php echo $trackingID; ?>" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
+                </div>
+            </div>
             <?php
-                /* This will handle error, success and notice messages */
-                hesk_handle_messages();
+                $tmp = '';
+                if ($hesk_settings['email_view_ticket'])
+                {
+                    $tmp = 'document.form1.email.value=document.form2.e.value;';
             ?>
-            <h3 align="left"><?php echo $hesklang['view_existing']; ?></h3>
-            <div class="footerWithBorder"></div>
+            <div class="form-group">
+                <label for="e" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="e" name="e" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>" />
+                </div>
+            </div>
+            <div align="left" class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" name="r" value="Y" <?php echo $do_remember; ?> /> <?php echo $hesklang['rem_email']; ?>
+                    </label>
+                  </div>
+                </div>
+            </div>
+            <?php } ?>
+            <div align="left" class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                  <button type="submit" class="btn btn-default" value="<?php echo $hesklang['view_ticket']; ?>"><?php echo $hesklang['view_ticket']; ?></button>
+                  <input type="hidden" name="Refresh" value="<?php echo rand(10000,99999); ?>"><input type="hidden" name="f" value="1">
+                  <div class="blankSpace"></div>
+                  <a href="Javascript:void(0)" onclick="javascript:hesk_toggleLayerDisplay('forgot');<?php echo $tmp; ?>"><?php echo $hesklang['forgot_tid'];?></a>
+                </div>
+            </div>
+        </form>
+        <div align="left" id="forgot" class="alert alert-info" style="display: <?php echo $display; ?>;">
+            <p><?php echo $hesklang['tid_mail']; ?></p>
             <div class="blankSpace"></div>
-            <form action="ticket.php" class="form-horizontal" role="form" method="get" name="form2">
+            <form action="index.php" method="post" class="form-horizontal" name="form1">
                 <div class="form-group">
-                    <label for="track" class="col-sm-3 control-label"><?php echo $hesklang['ticket_trackID']; ?></label>
+                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="track" id="track" maxlength="20" size="35" value="<?php echo $trackingID; ?>" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
+                        <input type="text" id="email" class="form-control" name="email" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/><input type="hidden" name="a" value="forgot_tid" />
                     </div>
                 </div>
-                <?php
-                    $tmp = '';
-	                if ($hesk_settings['email_view_ticket'])
-	                {
-    	                $tmp = 'document.form1.email.value=document.form2.e.value;';
-		        ?>
                 <div class="form-group">
-                    <label for="e" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="e" name="e" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>" />
-                    </div>
-                </div>
-                <div align="left" class="form-group">
                     <div class="col-sm-offset-3 col-sm-9">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox" name="r" value="Y" <?php echo $do_remember; ?> /> <?php echo $hesklang['rem_email']; ?>
-                        </label>
-                      </div>
-                    </div>
-                </div>
-                <?php } ?>
-                <div align="left" class="form-group">
-                    <div class="col-sm-offset-3 col-sm-9">
-                      <button type="submit" class="btn btn-default" value="<?php echo $hesklang['view_ticket']; ?>"><?php echo $hesklang['view_ticket']; ?></button>
-                      <input type="hidden" name="Refresh" value="<?php echo rand(10000,99999); ?>"><input type="hidden" name="f" value="1">
-                      <div class="blankSpace"></div>
-                      <a href="Javascript:void(0)" onclick="javascript:hesk_toggleLayerDisplay('forgot');<?php echo $tmp; ?>"><?php echo $hesklang['forgot_tid'];?></a>
+                        <button type="submit" class="btn btn-default" value="<?php echo $hesklang['tid_send']; ?>"><?php echo $hesklang['tid_send']; ?></button>
                     </div>
                 </div>
             </form>
-            <div align="left" id="forgot" class="alert alert-info" style="display: <?php echo $display; ?>;">
-			    <p><?php echo $hesklang['tid_mail']; ?></p>
-                <div class="blankSpace"></div>
-                <form action="index.php" method="post" class="form-horizontal" name="form1">
-                    <div class="form-group">
-                        <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
-                        <div class="col-sm-9">
-                            <input type="text" id="email" class="form-control" name="email" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/><input type="hidden" name="a" value="forgot_tid" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-9">
-                            <button type="submit" class="btn btn-default" value="<?php echo $hesklang['tid_send']; ?>"><?php echo $hesklang['tid_send']; ?></button>
-                        </div>
-                    </div>
-			    </form>
-		    </div>
         </div>
     </div>
-</div>
 </div>
 
 <?php
