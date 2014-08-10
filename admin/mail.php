@@ -133,9 +133,8 @@ function confirm_delete()
 //-->
 </script>
 
-<div class="enclosingDashboard" style="padding-top: 20px">
-<div class="row">
-    <div class="col-md-3" style="margin-top: 60px">
+<div class="row" style="margin-top: 20px">
+    <div class="col-md-3">
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $hesklang['navigation']; ?></div>
             <ul class="list-group">
