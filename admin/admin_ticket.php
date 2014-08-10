@@ -515,11 +515,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         ?>   
         <div class="blankSpace"></div>
         <!-- BEGIN TICKT HEAD -->
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <td colspan="20" style="border-bottom: 0px">
-                        <h3>
+        <div class="table-bordered">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
                         <?php
                         if ($ticket['archive'])
                         {
@@ -531,12 +530,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         }
                         echo $ticket['subject'];
                         ?></h3>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="10" style="border-width: 0px"><?php echo $hesklang['created_on'].': '.hesk_date($ticket['dt']); ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $hesklang['last_update'].': '.hesk_date($ticket['lastchange']); ?></td>
-                    <td colspan="10" style="border-width: 0px; text-align: right">
-                        <?php
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <p><?php echo $hesklang['created_on'].': '.hesk_date($ticket['dt']); ?></p>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <p><?php echo $hesklang['last_update'].': '.hesk_date($ticket['lastchange']); ?></p>
+                </div>
+                <div class="col-md-2 col-md-offset-4 col-sm-12 close-ticket">
+                    <?php
                             $random=rand(10000,99999);
 
                             $statusSql = 'SELECT `ID`, `ShortNameContentKey`, `IsStaffClosedOption`, `IsStaffReopenedStatus` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsStaffClosedOption` = 1 OR `IsStaffReopenedStatus` = 1';
@@ -569,172 +573,171 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		                        href="change_status.php?track='.$trackingID.'&amp;s='.$staffReopenedStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">'.$hesklang['open_action'].'</a>';
                             }
                         ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="20" style="border-width: 0px">
-                        <b><i><?php echo $hesklang['notes']; ?>: </i></b>
-                        <?php
-                        if ($can_reply)
-                        {
-                        ?>
-                        &nbsp; <a href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('notesform')"><?php echo $hesklang['addnote']; ?></a>
-                        <?php
-                        }
-                        ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <b><i><?php echo $hesklang['notes']; ?>: </i></b>
+                    <?php
+                    if ($can_reply)
+                    {
+                    ?>
+                    &nbsp; <a href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('notesform')"><?php echo $hesklang['addnote']; ?></a>
+                    <?php
+                    }
+                    ?>
 
-                        <div id="notesform" style="display:none">
-	                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
-	                        <textarea class="form-control" name="notemsg" rows="6" cols="60"></textarea><br />
-	                        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"  /><input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
-                            <i><?php echo $hesklang['nhid']; ?></i>
-                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                        </form>
-	                    </div>   
-                    </td>
-                </tr>
-                <?php
+                    <div id="notesform" style="display:none">
+                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
+                        <textarea class="form-control" name="notemsg" rows="6" cols="60"></textarea><br />
+                        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"  /><input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
+                        <i><?php echo $hesklang['nhid']; ?></i>
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                    </form>
+                    </div>
+                </div>
+            </div>
+            <div class="blankSpace"></div>
+            <?php
 	            $res = hesk_dbQuery("SELECT t1.*, t2.`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` AS t1 LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS t2 ON t1.`who` = t2.`id` WHERE `ticket`='".intval($ticket['id'])."' ORDER BY t1.`id` " . ($hesk_settings['new_top'] ? 'DESC' : 'ASC') );
 	            while ($note = hesk_dbFetchAssoc($res))
 	            {
-	            ?>
-                <tr>
-                <td colspan="20" class="notes" style="padding: 10px; border: #ffe6b8 1px solid">
+            ?>
+            <div class="row">
+                <div class="col-md-12 alert-warning">
                     <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?><p><a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');"><i class="fa fa-times"></i> Delete Note</a></p><?php }?>
                     <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt']); ?></p>
                     <p><?php echo $note['message']; ?></p>
-                </td>
-               
-                </tr>
-                <?php
+                </div>
+            </div>
+            <?php
 	            }
-                ?>
-                <tr class="medLowPriority">
-                    <?php
-                          $hesk_settings['ticketColumnWidth'] = 5;
+            ?>
+            <div class="row medLowPriority">
+                <?php
 
-                           $options = array(
-        	                    0 => '<option value="0">'.$hesklang['critical'].'</option>',
-        	                    1 => '<option value="1">'.$hesklang['high'].'</option>',
-                                2 => '<option value="2">'.$hesklang['medium'].'</option>',
-                                3 => '<option value="3">'.$hesklang['low'].'</option>'
-                            );
+                   $options = array(
+                        0 => '<option value="0">'.$hesklang['critical'].'</option>',
+                        1 => '<option value="1">'.$hesklang['high'].'</option>',
+                        2 => '<option value="2">'.$hesklang['medium'].'</option>',
+                        3 => '<option value="3">'.$hesklang['low'].'</option>'
+                    );
 
-                           echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'" ';
-                           if ($ticket['priority'] == 0) {echo 'class="criticalPriority">';}
-                           elseif ($ticket['priority'] == 1) {echo 'class="highPriority">';}
-                           else {echo 'class="medLowPriority">';}
+                   echo '<div class="ticket-cell-admin col-md-3 col-sm-12 ';
+                   if ($ticket['priority'] == 0) {echo 'criticalPriority">';}
+                   elseif ($ticket['priority'] == 1) {echo 'highPriority">';}
+                   else {echo 'medLowPriority">';}
 
-                           echo '<p class="ticketPropertyTitle">'.$hesklang['priority'].'</p>';
+                   echo '<p class="ticketPropertyTitle">'.$hesklang['priority'].'</p>';
 
-                           if ($ticket['priority']==0) {echo '<p class="ticketPropertyText">'.$hesklang['critical'].'</p>';}
-                            elseif ($ticket['priority']==1) {echo '<p class="ticketPropertyText">'.$hesklang['high'].'</p>';}
-			                elseif ($ticket['priority']==2) {echo '<p class="ticketPropertyText">'.$hesklang['medium'].'</p>';}
-			                else {echo '<p class="ticketPropertyText">'.$hesklang['low'].'</p>';}
-                           echo '<br/>
-                           <form style="margin-bottom:0;" id="changePriorityForm" action="priority.php" method="post">
+                   if ($ticket['priority']==0) {echo '<p class="ticketPropertyText">'.$hesklang['critical'].'</p>';}
+                    elseif ($ticket['priority']==1) {echo '<p class="ticketPropertyText">'.$hesklang['high'].'</p>';}
+                    elseif ($ticket['priority']==2) {echo '<p class="ticketPropertyText">'.$hesklang['medium'].'</p>';}
+                    else {echo '<p class="ticketPropertyText">'.$hesklang['low'].'</p>';}
+                   echo '<br/>
+                   <form style="margin-bottom:0;" id="changePriorityForm" action="priority.php" method="post">
+
+                    <span style="white-space:nowrap;">
+                    <select class="form-control" name="priority" onchange="document.getElementById(\'changePriorityForm\').submit();">
+                    <option value="-1" selected="selected">'.$hesklang['priorityChange'].'</option>
+                    ';
+                    echo implode('',$options);
+                    echo '
+                    </select>
+
+                    <input type="submit" style="display: none" value="'.$hesklang['go'].'" /><input type="hidden" name="track" value="'.$trackingID.'" />
+                    <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />
+                    </span>
+
+                    </form>
+
+                   </div>';
+
+                echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>'; 
+                    $status_options = array();
+                    $results = hesk_dbQuery("SELECT `ID`, `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+                    while ($row = $results->fetch_assoc())
+                    {
+                        $status_options[$row['ID']] = '<option value="'.$row['ID'].'">'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                    }
+
+                    $ticketStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `TicketViewContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = " .$ticket['status']));
+                    echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatus['TicketViewContentKey']].'</p>';
+                    echo '<br/>
+
+                    <form role="form" id="changeStatusForm" style="margin-bottom:0;" action="change_status.php" method="post">
+                        <span style="white-space:nowrap;">
+                            <select class="form-control" onchange="document.getElementById(\'changeStatusForm\').submit();" name="s">
+                                <option value="-1" selected="selected">'.$hesklang['statusChange'].'</option>
+                                ' . implode('', $status_options) . '
+                            </select>
+
+                            <input type="submit" style="display:none;" value="'.$hesklang['go'].'" class="btn btn-default" /><input type="hidden" name="track" value="'.$trackingID.'" />
+                            <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />
+                        </span>
+                    </form>
+                    </div>';
+                echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticketPropertyTitle">'.$hesklang['owner'].'</p>
+                        <p class="ticketPropertyText">';
+
+                        echo isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] :
+                        ($can_assign_self ? $hesklang['unas'].' [<a href="assign_owner.php?track='.$trackingID.'&amp;owner='.$_SESSION['id'].'&amp;token='.hesk_token_echo(0).'">'.$hesklang['asss'].'</a>]' : $hesklang['unas']);
+
+                        echo '</p><br/>';
+
+                        if (hesk_checkPermission('can_assign_others',0))
+                        {
+                            echo'
+                            <form style="margin-bottom:0;" id="changeOwnerForm" action="assign_owner.php" method="post">
+                            <span style="white-space:nowrap;">
+                            <select class="form-control"  name="owner" onchange="document.getElementById(\'changeOwnerForm\').submit();">
+                            <option value="" selected="selected">'.$hesklang['ownerChange'].'</option>';
+                            if ($ticket['owner'])
+                            {
+                                echo '<option value="-1"> &gt; '.$hesklang['unas'].' &lt; </option>';
+                            }
+
+                            foreach ($admins as $k=>$v)
+                            {
+                                if ($k != $ticket['owner'])
+                                {
+                                    echo '<option value="'.$k.'">'.$v.'</option>';
+                                }
+                            }
+                            echo '</select>
+                            <input type="submit" style="display: none" value="'.$hesklang['go'].'" class="orangebutton" onmouseover="hesk_btn(this,\'orangebuttonover\');" onmouseout="hesk_btn(this,\'orangebutton\');" />
+                            <input type="hidden" name="track" value="'.$trackingID.'" />
+                            <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />
+                            </span>';
+                        }
+                        echo '</form></div>';
+                echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticketPropertyTitle">'.$hesklang['category'].'</p>
+                        <p class="ticketPropertyText">'.$category['name'].'</p>';
+
+                        if ($can_change_cat)
+                        {
+                        echo '
+
+                        <br/>
+                        <form style="margin-bottom:0;" id="changeCategory" action="move_category.php" method="post">
 
                             <span style="white-space:nowrap;">
-                            <select class="form-control" name="priority" onchange="document.getElementById(\'changePriorityForm\').submit();">
-                            <option value="-1" selected="selected">'.$hesklang['priorityChange'].'</option>
-                            ';
-                            echo implode('',$options);
-                            echo '
+                            <select name="category" class="form-control" onchange="document.getElementById(\'changeCategory\').submit();">
+                            <option value="-1" selected="selected">'.$hesklang['categoryChange'].'</option>
+                            '.$categories_options.'
                             </select>
 
                             <input type="submit" style="display: none" value="'.$hesklang['go'].'" /><input type="hidden" name="track" value="'.$trackingID.'" />
                             <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />
                             </span>
 
-                            </form>
-                           
-                           </td>';
+                        </form>'; }
 
-                        echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>'; 
-                            $status_options = array();
-                            $results = hesk_dbQuery("SELECT `ID`, `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
-                            while ($row = $results->fetch_assoc())
-                            {
-                                $status_options[$row['ID']] = '<option value="'.$row['ID'].'">'.$hesklang[$row['ShortNameContentKey']].'</option>';
-                            }
-
-                            $ticketStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `TicketViewContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = " .$ticket['status']));
-                            echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatus['TicketViewContentKey']].'</p>';
-                            echo '<br/>
-                            
-                            <form role="form" id="changeStatusForm" style="margin-bottom:0;" action="change_status.php" method="post">
-                                <span style="white-space:nowrap;">
-                                    <select class="form-control" onchange="document.getElementById(\'changeStatusForm\').submit();" name="s">
-	                                    <option value="-1" selected="selected">'.$hesklang['statusChange'].'</option>
-                                        ' . implode('', $status_options) . '
-                                    </select>
-
-	                                <input type="submit" style="display:none;" value="'.$hesklang['go'].'" class="btn btn-default" /><input type="hidden" name="track" value="'.$trackingID.'" />
-                                    <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />
-                                </span>
-                            </form>
-                            </td>';
-                        echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['owner'].'</p>
-                                <p class="ticketPropertyText">';
-                                
-                                echo isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] :
-        	                    ($can_assign_self ? $hesklang['unas'].' [<a href="assign_owner.php?track='.$trackingID.'&amp;owner='.$_SESSION['id'].'&amp;token='.hesk_token_echo(0).'">'.$hesklang['asss'].'</a>]' : $hesklang['unas']);
-                        
-                                echo '</p><br/>';
-                                
-                                if (hesk_checkPermission('can_assign_others',0))
-                                {
-			                        echo'
-                                    <form style="margin-bottom:0;" id="changeOwnerForm" action="assign_owner.php" method="post">
-                                    <span style="white-space:nowrap;">
-                                    <select class="form-control"  name="owner" onchange="document.getElementById(\'changeOwnerForm\').submit();">
-			                        <option value="" selected="selected">'.$hesklang['ownerChange'].'</option>';
-                                    if ($ticket['owner'])
-                                    {
-            	                        echo '<option value="-1"> &gt; '.$hesklang['unas'].' &lt; </option>';
-                                    }
-
-			                        foreach ($admins as $k=>$v)
-			                        {
-				                        if ($k != $ticket['owner'])
-				                        {
-					                        echo '<option value="'.$k.'">'.$v.'</option>';
-				                        }
-			                        }
-			                        echo '</select>
-			                        <input type="submit" style="display: none" value="'.$hesklang['go'].'" class="orangebutton" onmouseover="hesk_btn(this,\'orangebuttonover\');" onmouseout="hesk_btn(this,\'orangebutton\');" />
-			                        <input type="hidden" name="track" value="'.$trackingID.'" />
-			                        <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />
-                                    </span>';
-                                }
-                                echo '</form></td>';
-                        echo '<td colspan="'.$hesk_settings['ticketColumnWidth'].'"><p class="ticketPropertyTitle">'.$hesklang['category'].'</p>
-                                <p class="ticketPropertyText">'.$category['name'].'</p>';
-                                
-                                if ($can_change_cat)
-                                {
-                                echo '
-                                
-                                <br/>
-                                <form style="margin-bottom:0;" id="changeCategory" action="move_category.php" method="post">
-
-                                    <span style="white-space:nowrap;">
-                                    <select name="category" class="form-control" onchange="document.getElementById(\'changeCategory\').submit();">
-	                                <option value="-1" selected="selected">'.$hesklang['categoryChange'].'</option>
-                                    '.$categories_options.'
-                                    </select>
-
-	                                <input type="submit" style="display: none" value="'.$hesklang['go'].'" /><input type="hidden" name="track" value="'.$trackingID.'" />
-                                    <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />
-                                    </span>
-
-                                </form>'; }
-                                
-                                echo '</td>';
+                        echo '</div>';
                     ?>
-                </tr>
-            </tbody>
-        </table>
+            </div>
+        </div>
+        <div class="blankSpace"></div>
         <!-- END TICKET HEAD -->
 
         <?php

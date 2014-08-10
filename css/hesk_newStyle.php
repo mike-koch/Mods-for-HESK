@@ -43,6 +43,15 @@
     }
 }
 
+@media (max-width:991px) {
+    .ticket-cell-admin {
+        border-bottom: solid 1px #ddd;
+        border-right: 0;
+        padding-top: 5px;
+        height: 125px;
+    }
+}
+
 @media (min-width:992px) {
     .ticket-cell {
         border-bottom: 0;
@@ -51,6 +60,16 @@
         height: 90px;
         padding-top: 10px;
     }
+}
+
+@media (min-width:992px) {
+    .ticket-cell-admin {
+        border-bottom: 0;
+        border-right: solid 1px #ddd;
+        margin-top: 1px;
+        height: 125px;
+        padding-top: 10px;
+    }    
 }
 
 .row {
