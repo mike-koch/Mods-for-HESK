@@ -118,16 +118,12 @@ if ($total > 0)
         //-- Precondition: The panel has already been created, and there is NO open <div class="panel-body"> tag yet.
 		echo '
             <div class="panel-body">
-                '.sprintf($hesklang['tickets_on_pages'],$total,$pages).' '.$hesklang['jump_page'].' <select name="myHpage" id="myHpage">';
-                for ($i=1;$i<=$pages;$i++)
-                {
-                    $tmp = ($page == $i) ? ' selected="selected"' : '';
-                    echo '<option value="'.$i.'"'.$tmp.'>'.$i.'</option>';
-                }
-                echo'</select> <input type="button" value="'.$hesklang['go'].'" onclick="javascript:window.location=\''.$href.'?'.$query.'\'+document.getElementById(\'myHpage\').value" class="btn btn-default btn-xs" /><br />';
+                '.sprintf($hesklang['tickets_on_pages'],$total,$pages).' <br />';
                 
 		/* List pages */
-        echo '<div class="row"><div class="col-md-10 col-md-offset-1 col-sm-12" style="text-align: center"><ul class="pagination">';
+        echo '<div class="row">
+                <div class="col-md-6 col-sm-12" style="text-align: right;">
+                    <ul class="pagination" style="margin: 0">';
 		if ($pages > 7)
 		{
 			if ($page > 2)
@@ -168,7 +164,18 @@ if ($total > 0)
 				echo '<li><a href="'.$href.'?'.$query.$pages.'">&raquo;</a></li>'; // >>
 			}
 		}
-        echo '</ul></div></div></span>';
+        echo ' </ul>
+               </div>
+               <div class="col-md-6 col-sm-12" style="text-align: right">'.$hesklang['jump_page'].'
+                    <select class="form-control" name="myHpage" id="myHpage">';
+                for ($i=1;$i<=$pages;$i++)
+                {
+                    $tmp = ($page == $i) ? ' selected="selected"' : '';
+                    echo '<option value="'.$i.'"'.$tmp.'>'.$i.'</option>';
+                }
+                echo'</select> <input type="button" value="'.$hesklang['go'].'" onclick="javascript:window.location=\''.$href.'?'.$query.'\'+document.getElementById(\'myHpage\').value" class="btn btn-default btn-xs" />
+                </div>
+             </div></span>';
 
 	}
 
