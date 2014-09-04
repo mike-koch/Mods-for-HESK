@@ -115,33 +115,29 @@ if ($total > 0)
 
 	if ($pages > 1)
 	{
+        //-- Precondition: The panel has already been created, and there is NO open <div class="panel-body"> tag yet.
 		echo '
-        <div>
-            <div align="center" style="float: left">
-                '.sprintf($hesklang['tickets_on_pages'],$total,$pages).' '.$hesklang['jump_page'].' <select name="myHpage" id="myHpage">
-            </div>
-            <div align="right" style="text-align: right">
-                <a href="new_ticket.php">'.$hesklang['nti'].'</a>
-            </div>
-        </div>';
-		for ($i=1;$i<=$pages;$i++)
-		{
-        	$tmp = ($page == $i) ? ' selected="selected"' : '';
-			echo '<option value="'.$i.'"'.$tmp.'>'.$i.'</option>';
-		}
-		echo'</select> <input type="button" value="'.$hesklang['go'].'" onclick="javascript:window.location=\''.$href.'?'.$query.'\'+document.getElementById(\'myHpage\').value" class="btn btn-default btn-xs" /><br />';
-
+            <div class="panel-body">
+                '.sprintf($hesklang['tickets_on_pages'],$total,$pages).' '.$hesklang['jump_page'].' <select name="myHpage" id="myHpage">';
+                for ($i=1;$i<=$pages;$i++)
+                {
+                    $tmp = ($page == $i) ? ' selected="selected"' : '';
+                    echo '<option value="'.$i.'"'.$tmp.'>'.$i.'</option>';
+                }
+                echo'</select> <input type="button" value="'.$hesklang['go'].'" onclick="javascript:window.location=\''.$href.'?'.$query.'\'+document.getElementById(\'myHpage\').value" class="btn btn-default btn-xs" /><br />';
+                
 		/* List pages */
+        echo '<div class="row"><div class="col-md-10 col-md-offset-1 col-sm-12" style="text-align: center"><ul class="pagination">';
 		if ($pages > 7)
 		{
 			if ($page > 2)
 			{
-				echo '<a href="'.$href.'?'.$query.'1"><b>&laquo;</b></a> &nbsp; ';
+				echo '<li><a href="'.$href.'?'.$query.'1">&laquo;</a></li>'; // <<
 			}
 
 			if ($prev_page)
 			{
-				echo '<a href="'.$href.'?'.$query.$prev_page.'"><b>&lsaquo;</b></a> &nbsp; ';
+				echo '<li><a href="'.$href.'?'.$query.$prev_page.'">&lsaquo;</a></li>'; // <
 			}
 		}
 
@@ -151,11 +147,11 @@ if ($total > 0)
 			{
 				if ($i == $page)
 				{
-					echo ' <b>'.$i.'</b> ';
+					echo '<li class="active"><a href="#">'.$i.'</a></li> ';
 				}
 				else
 				{
-					echo ' <a href="'.$href.'?'.$query.$i.'">'.$i.'</a> ';
+					echo '<li><a href="'.$href.'?'.$query.$i.'">'.$i.'</a></li>';
 				}
 			}
 		}
@@ -164,36 +160,16 @@ if ($total > 0)
 		{
 			if ($next_page)
 			{
-				echo ' &nbsp; <a href="'.$href.'?'.$query.$next_page.'"><b>&rsaquo;</b></a> ';
+				echo '<li><a href="'.$href.'?'.$query.$next_page.'">&rsaquo;</a></li>'; // >
 			}
 
 			if ($page < ($pages - 1))
 			{
-				echo ' &nbsp; <a href="'.$href.'?'.$query.$pages.'"><b>&raquo;</b></a>';
+				echo '<li><a href="'.$href.'?'.$query.$pages.'">&raquo;</a></li>'; // >>
 			}
 		}
+        echo '</ul></div></div></span>';
 
-		echo '</p>';
-        echo '
-        <div>
-            <div align="center" style="float: left"></div>
-            <div align="right" style="text-align: right">
-                <a href="new_ticket.php">'.$hesklang['nti'].'</a>
-            </div>
-        </div>';
-
-	} // end PAGES > 1
-	else
-	{
-		echo '
-        <div>
-            <div align="center" style="float: left">
-                '.sprintf($hesklang['tickets_on_pages'],$total,$pages).'
-            </div>
-            <div align="right" style="text-align: right">
-                <a href="new_ticket.php">'.$hesklang['nti'].'</a>
-            </div>
-        </div>';
 	}
 
 	/* We have the full SQL query now, get tickets */

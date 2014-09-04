@@ -59,7 +59,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
 <div class="row">
-    <div class="col-md-8 col-md-offset-2" style="padding-top: 20px">
+    <div class="col-md-10 col-md-offset-1" style="padding-top: 20px">
     <?php 
         /* This will handle error, success and notice messages */
         hesk_handle_messages();
@@ -70,12 +70,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	        if ( ! isset($_SESSION['hide']['ticket_list']) )  //Number of tickets (table header. NOT ACTUAL TABLE)
             {
                 echo '
-                <div class="row">
-                    <div class="col-md-4">&nbsp;</div>
-                    <div class="col-md-4" style="text-align: center"><h3>'.$hesklang['open_tickets'].'</h3></div>
-                    <div class="col-md-4">&nbsp;</div>
-                </div>
-                ';
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>'.$hesklang['open_tickets'].' <span style="float: right; font-size: .75em"><a href="new_ticket.php">'.$hesklang['nti'].'</a></span></h4>
+                    </div>'; // The rest of the panel will be printed by print_tickets.inc.php
 	        }
 
 	        /* Reset default settings? */
