@@ -20,5 +20,24 @@ function toggleRow(id) {
     }
 }
 
+function toggleColumn(className) {
+    if ($('.' + className).css('display') == 'none') {
+        $('.' + className).show();
+    } else {
+        $('.' + className).hide();
+    }
+}
+
+function toggleFilterCheckboxes(show) {
+    if (show) {
+        $('#filterCheckboxes').show();
+        $('#showFiltersText').hide();
+        $('#hideFiltersText').show();
+    } else {
+        $('#filterCheckboxes').hide();
+        $('#showFiltersText').show();
+        $('#hideFiltersText').hide();
+    }
+}
 
 jQuery(document).ready(loadJquery);
