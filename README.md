@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/mkoch227/numods.png?label=ready&title=Ready)](https://waffle.io/mkoch227/numods)
 <h2><a href="http://numods.mkochcs.com" target="_blank">NuMods</a> v1.2.4</h2>
 
 This branch contains all files modified from the base version of HESK to become NuMods, a set of modifications for HESK v2.x
