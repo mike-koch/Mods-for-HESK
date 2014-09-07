@@ -72,7 +72,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 echo '
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4>'.$hesklang['open_tickets'].' <span style="float: right; font-size: .75em"><a href="new_ticket.php">'.$hesklang['nti'].'</a></span></h4>
+                        <h4>'.$hesklang['open_tickets'].' <span style="float: right; margin-top: -7px;"><a href="new_ticket.php" class="btn btn-success">'.$hesklang['nti'].'</a></span></h4>
                     </div>'; // The rest of the panel will be printed by print_tickets.inc.php
 	        }
 

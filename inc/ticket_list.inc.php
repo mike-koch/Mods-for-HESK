@@ -61,6 +61,8 @@ $mysql_time = hesk_dbTime();
 $result = hesk_dbQuery($sql_count);
 $total  = hesk_dbResult($result);
 
+//-- Precondition: The panel has already been created, and there is NO open <div class="panel-body"> tag yet.
+echo '<div class="panel-body">';
 if ($total > 0)
 {
 
@@ -112,13 +114,11 @@ if ($total > 0)
 
 	$prev_page = ($page - 1 <= 0) ? 0 : $page - 1;
 	$next_page = ($page + 1 > $pages) ? 0 : $page + 1;
+    
+    echo sprintf($hesklang['tickets_on_pages'],$total,$pages).' <br />';
 
-	if ($pages > 1)
+    if ($pages > 1)
 	{
-        //-- Precondition: The panel has already been created, and there is NO open <div class="panel-body"> tag yet.
-		echo '
-            <div class="panel-body">
-                '.sprintf($hesklang['tickets_on_pages'],$total,$pages).' <br />';
                 
 		/* List pages */
         echo '<div class="row">
@@ -166,16 +166,18 @@ if ($total > 0)
 		}
         echo ' </ul>
                </div>
-               <div class="col-md-6 col-sm-12" style="text-align: right">'.$hesklang['jump_page'].'
-                    <select class="form-control" name="myHpage" id="myHpage">';
+               <div class="col-md-6 col-sm-12" style="text-align: left">
+                    <div class="form-inline">'.$hesklang['jump_page'].'
+                    <select class="form-control" name="myHpage" id="myHpage" onchange="javascript:window.location=\''.$href.'?'.$query.'\'+document.getElementById(\'myHpage\').value">';
                 for ($i=1;$i<=$pages;$i++)
                 {
                     $tmp = ($page == $i) ? ' selected="selected"' : '';
                     echo '<option value="'.$i.'"'.$tmp.'>'.$i.'</option>';
                 }
-                echo'</select> <input type="button" value="'.$hesklang['go'].'" onclick="javascript:window.location=\''.$href.'?'.$query.'\'+document.getElementById(\'myHpage\').value" class="btn btn-default btn-xs" />
+                echo'</select>
                 </div>
-             </div></span>';
+             </div>
+         </div>';
 
 	}
 
@@ -240,7 +242,6 @@ if ($total > 0)
     }
 
 	$i = 0;
-	$checkall = '<input type="checkbox" name="checkall" value="2" onclick="hesk_changeAll()" />';
 
     $group_tmp = '';
 	$is_table = 0;
@@ -260,7 +261,7 @@ if ($total > 0)
         $first_line = '(' . $hesklang['unas'] . ')'." \n\n";
 		if ($ticket['owner'] == $_SESSION['id'])
 		{
-			$owner = '<span class="assignedyou" title="'.$hesklang['tasy2'].'"><span class="glyphicon glyphicon-user"></span></span> ';
+			$owner = '<span class="assignedyou" title="'.$hesklang['tasy2'].'"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="top" title="'.$hesklang['tasy2'].'"></span></span> ';
             $first_line = $hesklang['tasy2'] . " \n\n";
 		}
 		elseif ($ticket['owner'])
@@ -269,14 +270,14 @@ if ($total > 0)
             {
             	$admins[$ticket['owner']] = $hesklang['e_udel'];
             }
-			$owner = '<span class="assignedother" title="'.$hesklang['taso3'] . ' ' . $admins[$ticket['owner']] .'"><span class="glyphicon glyphicon-user"></span></span> ';
+			$owner = '<span class="assignedother" title="'.$hesklang['taso3'] . ' ' . $admins[$ticket['owner']] .'"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="top" title="'.$hesklang['taso3'].' '.$admins[$ticket['owner']].'"></span></span> ';
             $first_line = $hesklang['taso3'] . ' ' . $admins[$ticket['owner']] . " \n\n";
 		}
 
         $tagged = '';
         if ($ticket['archive'])
         {
-			$tagged = '<i class="fa fa-tag"></i> ';
+			$tagged = '<i class="fa fa-tag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['archived2'].'"></i> ';
         }
 
         $statusName = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ShortNameContentKey`, `TextColor` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$ticket['status']));
@@ -293,7 +294,7 @@ if ($total > 0)
 				$color = 'warning';
                 break;
 			case 2:
-				$ticket['priority']='<span style="color: green; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['medium '].'"></span>';
+				$ticket['priority']='<span style="color: green; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['medium'].'"></span>';
 				break;
 			default:
 				$ticket['priority']='<span style="color: blue; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['low'].'"></span>';
@@ -315,8 +316,8 @@ if ($total > 0)
 		$ticket['message'] = $first_line . substr(strip_tags($ticket['message']),0,200).'...';
 
 		echo <<<EOC
-		<tr class="$color" title="$ticket[message]">
-		<td><input type="checkbox" name="id[]" value="$ticket[id]" />&nbsp;</td>
+		<tr class="$color" id="$ticket[id]" title="$ticket[message]">
+		<td><input type="checkbox" id="check$ticket[id]" name="id[]" value="$ticket[id]" />&nbsp;</td>
 		<td><a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[trackid]</a></td>
 		<td>$ticket[lastchange]</td>
 		<td>$ticket[name]</td>
@@ -336,28 +337,6 @@ EOC;
 
     <table border="0" width="100%">
     <tr>
-    <td width="50%" style="text-align:left;vertical-align:top">
-	    <?php
-	    if (hesk_checkPermission('can_add_archive',0))
-	    {
-		    ?>
-			<i class="fa fa-tag"></i> <?php echo $hesklang['archived2']; ?>&nbsp;&nbsp;
-		    <?php
-	    }
-	    ?>
-
-	    <span class="assignedyou"><span class="glyphicon glyphicon-user"></span></span> <?php echo $hesklang['tasy2']; ?>&nbsp;&nbsp;
-
-	    <?php
-	    if (hesk_checkPermission('can_view_ass_others',0))
-	    {
-		    ?>
-			<span class="assignedother"><span class="glyphicon glyphicon-user"></span></span> <?php echo $hesklang['taso2']; ?>
-		    <?php
-	    }
-	    ?>
-        &nbsp;
-    </td>
     <td width="50%" style="text-align:right;vertical-align:top">
 		<select class="form-control" name="a">
 		<option value="close" selected="selected"><?php echo $hesklang['close_selected']; ?></option>
@@ -396,6 +375,8 @@ EOC;
     </table>
 
 	</form>
+    </div>
+    </div>
 	<?php
 
 } // END ticket list if total > 0
@@ -421,10 +402,10 @@ function hesk_print_list_head()
 	global $href, $query, $sort_possible, $hesklang;
 	?>
 	<div align="center">
-	<table class="table table-hover">
+	<table id="ticket-table" class="table table-hover">
         <thead>
 	        <tr>
-	        <th><input type="checkbox" name="checkall" value="2" onclick="hesk_changeAll(this)" /></th>
+	        <th><input type="checkbox" id="checkall" name="checkall" value="2" onclick="hesk_changeAll(this)" /></th>
 	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['trackid'] . '&amp;sort='; ?>trackid"><?php echo $hesklang['trackID']; ?></a></th>
 	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['lastchange'] . '&amp;sort='; ?>lastchange"><?php echo $hesklang['last_update']; ?></a></th>
 	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['name'] . '&amp;sort='; ?>name"><?php echo $hesklang['name']; ?></a></th>

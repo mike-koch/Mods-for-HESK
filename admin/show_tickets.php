@@ -58,12 +58,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 ?>
 
-<div class="col-md-8 col-md-offset-2">
+<div class="col-md-10 col-md-offset-1" style="margin-top: 20px">
     <?php
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
     ?>
-    <h3 style="text-align: center"><?php echo $hesklang['tickets']; ?></h3>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4><?php echo $hesklang['tickets']; ?> <span style="float: right; margin-top: -7px;"><a href="new_ticket.php" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> New ticket</a></span></h4>
+        </div>
     <?php
         /* Print the list of tickets */
         $is_search = 1;

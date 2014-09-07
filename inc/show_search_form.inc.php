@@ -98,232 +98,236 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
 ?>
 
 <!-- ** START SHOW TICKET FORM ** -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4><?php echo $hesklang['show_tickets']; ?></h4>
+    </div>
+    <div class="panel-body">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td valign="top">
+                    <form name="showt" action="show_tickets.php" method="get">
+                        <table class="table" style="border-top: 0 !important" border="0" cellpadding="3" cellspacing="0" width="100%">
+                            <tr>
+                                <td style="border-top: 0px" width="20%" class="alignTop"><b><?php echo $hesklang['status']; ?></b>: &nbsp; </td>
+                                <td style="border-top: 0px" width="80%">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <?php
+                                            $rowCounter = 1;
+                                            $statusRS = hesk_dbQuery('SELECT `ID`, `ShortNameContentKey`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
+                                            while ($row = $statusRS->fetch_assoc())
+                                            {
+                                                if ($rowCounter > 3)
+                                                {
+                                                    echo '</tr><tr>';
+                                                    $rowCounter = 1;
+                                                }
+                                                echo '<td width=';
+                                                if ($rowCounter != 3)
+                                                {
+                                                    echo '"33%"';
+                                                } else
+                                                {
+                                                    echo '"34%"';
+                                                }
+                                                echo '<label><input type="checkbox" name="s'.$row['ID'].'" value="1"';
+                                                if (isset($status[$row['ID']])) {echo 'checked="checked"';}
+                                                echo '/> <span style="font-weight: bold;color: '.$row['TextColor'].';">'.$hesklang[$row['ShortNameContentKey']].'</span></label></td>';
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td valign="top">
-<form name="showt" action="show_tickets.php" method="get">
-<h3 style="margin-bottom:5px"><?php echo $hesklang['show_tickets']; ?></h3>
-<div class="footerWithBorder blankSpace"></div>
-<table border="0" cellpadding="3" cellspacing="0" width="100%">
-<tr>
-<td width="20%" class="alignTop"><b><?php echo $hesklang['status']; ?></b>: &nbsp; </td>
-<td width="80%">
+                                                $rowCounter++;
+                                            }
+                                            ?>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
 
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tr>
-    <?php
-    $rowCounter = 1;
-    $statusRS = hesk_dbQuery('SELECT `ID`, `ShortNameContentKey`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
-    while ($row = $statusRS->fetch_assoc())
-    {
-        if ($rowCounter > 3)
+        <div id="topSubmit" style="display:<?php echo $more ? 'none' : 'block' ; ?>">
+        &nbsp;<br />
+        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['show_tickets']; ?>" />
+        <a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow');Javascript:hesk_toggleLayerDisplay('topSubmit');document.showt.more.value='1';"><?php echo $hesklang['mopt']; ?></a>
+        <br />&nbsp;<br />
+        </div>
+
+        <div id="divShow" style="display:<?php echo $more ? 'block' : 'none' ; ?>">
+
+        <table class="table table-striped" border="0" cellpadding="3" cellspacing="0" width="100%">
+        <tr>
+        <td width="20%" class="borderTop alignTop"><b><?php echo $hesklang['priority']; ?></b>: &nbsp; </td>
+        <td width="80%" class="borderTop alignTop">
+
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+        <td width="33%"><label><input type="checkbox" name="p0" value="1" <?php if (isset($priority[0])) {echo 'checked="checked"';} ?> /> <span class="critical"><?php echo $hesklang['critical']; ?></span></label></td>
+        <td width="33%"><label><input type="checkbox" name="p2" value="1" <?php if (isset($priority[2])) {echo 'checked="checked"';} ?> /> <span class="medium"><?php echo $hesklang['medium']; ?></span></label></td>
+        <td width="34%">&nbsp;</td>
+        </tr>
+        <tr>
+        <td width="33%"><label><input type="checkbox" name="p1" value="1" <?php if (isset($priority[1])) {echo 'checked="checked"';} ?> /> <span class="important"><?php echo $hesklang['high']; ?></span></label></td>
+        <td width="33%"><label><input type="checkbox" name="p3" value="1" <?php if (isset($priority[3])) {echo 'checked="checked"';} ?> /> <span class="normal"><?php echo $hesklang['low']; ?></span></label></td>
+        <td width="34%">&nbsp;</td>
+        </tr>
+        </table>
+
+        </td>
+        </tr>
+
+        <tr>
+        <td class="borderTop alignTop"><b><?php echo $hesklang['show']; ?></b>: &nbsp; </td>
+        <td class="borderTop">
+
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+        <td width="33%" class="alignTop">
+        <label><input type="checkbox" name="s_my" value="1" <?php if ($s_my[1]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_my']; ?></label>
+        <?php
+        if ($can_view_unassigned)
         {
-            echo '</tr><tr>';
-            $rowCounter = 1;
+            ?>
+            <br />
+            <label><input type="checkbox" name="s_un" value="1" <?php if ($s_un[1]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_un']; ?></label>
+            <?php
         }
-        echo '<td width=';
-        if ($rowCounter != 3)
+        ?>
+        </td>
+        <td width="33%" class="alignTop">
+        <?php
+        if ($can_view_ass_others)
         {
-            echo '"33%"';
-        } else
-        {
-            echo '"34%"';
+            ?>
+            <label><input type="checkbox" name="s_ot" value="1" <?php if ($s_ot[1]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_ot']; ?></label>
+            <br />
+            <?php
         }
-        echo '<label><input type="checkbox" name="s'.$row['ID'].'" value="1"';
-        if (isset($status[$row['ID']])) {echo 'checked="checked"';}
-        echo '/> <span style="color: '.$row['TextColor'].';">'.$hesklang[$row['ShortNameContentKey']].'</span></label></td>';
+        ?>
+        <label><input type="checkbox" name="archive" value="1" <?php if ($archive[1]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['disp_only_archived']; ?></label></td>
+        <td width="34%">&nbsp;</td>
+        </tr>
+        </table>
 
-        $rowCounter++;
-    }
-    ?>
-</tr>
-</table>
+        </td>
+        </tr>
 
-</td>
-</tr>
-</table>
+        <tr>
+        <td class="borderTop alignTop"><b><?php echo $hesklang['sort_by']; ?></b>: &nbsp; </td>
+        <td class="borderTop">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+        <td width="33%"><label><input type="radio" name="sort" value="priority"  <?php if ($sort == 'priority') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['priority']; ?></label></td>
+        <td width="33%"><label><input type="radio" name="sort" value="lastchange" <?php if ($sort == 'lastchange') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['last_update']; ?></label></td>
+        <td width="34%"><label><input type="radio" name="sort" value="name" <?php if ($sort == 'name') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['name']; ?></label></td>
+        </tr>
+        <tr>
+        <td width="33%"><label><input type="radio" name="sort" value="subject" <?php if ($sort == 'subject') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['subject']; ?></label></td>
+        <td width="33%"><label><input type="radio" name="sort" value="status" <?php if ($sort == 'status') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['status']; ?></label></td>
+        <td width="34%">&nbsp;</td>
+        </tr>
+        </table>
 
-<div id="topSubmit" style="display:<?php echo $more ? 'none' : 'block' ; ?>">
-&nbsp;<br />
-<input class="btn btn-default" type="submit" value="<?php echo $hesklang['show_tickets']; ?>" />
-<a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow');Javascript:hesk_toggleLayerDisplay('topSubmit');document.showt.more.value='1';"><?php echo $hesklang['mopt']; ?></a>
-<br />&nbsp;<br />
+        </td>
+        </tr>
+
+        <tr>
+        <td class="borderTop alignTop"><b><?php echo $hesklang['gb']; ?></b>: &nbsp; </td>
+        <td class="borderTop">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+        <td width="33%"><label><input type="radio" name="g" value=""  <?php if ( ! $group) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['dg']; ?></label></td>
+        <td width="33%"><?php
+        if ($can_view_unassigned || $can_view_ass_others)
+        {
+            ?>
+            <label><input type="radio" name="g" value="owner" <?php if ($group == 'owner') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['owner']; ?></label>
+            <?php
+        }
+        else
+        {
+            echo '&nbsp;';
+        }
+        ?>
+        </td>
+        <td width="34%">&nbsp;</td>
+        </tr>
+        <tr>
+        <td width="33%"><label><input type="radio" name="g" value="category" <?php if ($group == 'category') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['category']; ?></label></td>
+        <td width="33%"><label><input type="radio" name="g" value="priority" <?php if ($group == 'priority') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['priority']; ?></label></td>
+        <td width="34%">&nbsp;</td>
+        </tr>
+        </table>
+
+        </td>
+        </tr>
+
+        <tr>
+        <td class="borderTop alignMiddle"><b><?php echo $hesklang['category']; ?></b>: &nbsp; </td>
+        <td class="borderTop alignMiddle">
+        <div class="col-md-4" style="padding-left: 0px"><select class="form-control" name="category">
+        <option value="0" ><?php echo $hesklang['any_cat']; ?></option>
+        <?php echo $category_options; ?>
+        </select></div>
+        </td>
+        </tr>
+
+        <tr>
+        <td class="borderTop"><b><?php echo $hesklang['display']; ?></b>: &nbsp; </td>
+        <td class="borderTop"><div class="col-md-2" style="padding-left: 0px; padding-right:0px"><input type="text" class="form-control" name="limit" value="<?php echo $maxresults; ?>" size="4" /></div><div class="col-md-3" style="line-height: 40px"><?php echo $hesklang['tickets_page']; ?></div></td>
+        </tr>
+        <tr>
+        <td class="borderTop alignMiddle"><b><?php echo $hesklang['order']; ?></b>: &nbsp; </td>
+        <td class="borderTop alignMiddle">
+        <label><input type="radio" name="asc" value="1" <?php if ($asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['ascending']; ?></label>
+        |
+        <label><input type="radio" name="asc" value="0" <?php if (!$asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['descending']; ?></label></td>
+        </tr>
+
+        <tr>
+        <td class="borderTop alignTop"><b><?php echo $hesklang['opt']; ?></b>: &nbsp; </td>
+        <td class="borderTop">
+
+        <label><input type="checkbox" name="cot" value="1" <?php if ($cot) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['cot']; ?></label><br />
+        <label><input type="checkbox" name="def" value="1" /> <?php echo $hesklang['def']; ?></label> (<a href="admin_main.php?reset=1&amp;token=<?php echo hesk_token_echo(0); ?>"><?php echo $hesklang['redv']; ?></a>)
+
+        </td>
+
+        </table>
+
+        <p><input class="btn btn-default" type="submit" value="<?php echo $hesklang['show_tickets']; ?>" />
+        <input type="hidden" name="more" value="<?php echo $more ? 1 : 0 ; ?>" /><a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow');Javascript:hesk_toggleLayerDisplay('topSubmit');document.showt.more.value='0';"><?php echo $hesklang['lopt']; ?></a></p>
+
+        </div>
+
+        </form>
+
+        </td>
+        </tr>
+        </table>
+    </div>
 </div>
-
-<div id="divShow" style="display:<?php echo $more ? 'block' : 'none' ; ?>">
-
-<table border="0" cellpadding="3" cellspacing="0" width="100%">
-<tr>
-<td width="20%" class="borderTop alignTop"><b><?php echo $hesklang['priority']; ?></b>: &nbsp; </td>
-<td width="80%" class="borderTop alignTop">
-
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tr>
-<td width="34%"><label><input type="checkbox" name="p0" value="1" <?php if (isset($priority[0])) {echo 'checked="checked"';} ?> /> <span class="critical"><?php echo $hesklang['critical']; ?></span></label></td>
-<td width="33%"><label><input type="checkbox" name="p2" value="1" <?php if (isset($priority[2])) {echo 'checked="checked"';} ?> /> <span class="medium"><?php echo $hesklang['medium']; ?></span></label></td>
-<td width="33%">&nbsp;</td>
-</tr>
-<tr>
-<td width="34%"><label><input type="checkbox" name="p1" value="1" <?php if (isset($priority[1])) {echo 'checked="checked"';} ?> /> <span class="important"><?php echo $hesklang['high']; ?></span></label></td>
-<td width="33%"><label><input type="checkbox" name="p3" value="1" <?php if (isset($priority[3])) {echo 'checked="checked"';} ?> /> <span class="normal"><?php echo $hesklang['low']; ?></span></label></td>
-<td width="33%">&nbsp;</td>
-</tr>
-</table>
-
-</td>
-</tr>
-
-<tr>
-<td class="borderTop alignTop"><b><?php echo $hesklang['show']; ?></b>: &nbsp; </td>
-<td class="borderTop">
-
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tr>
-<td width="34%" class="alignTop">
-<label><input type="checkbox" name="s_my" value="1" <?php if ($s_my[1]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_my']; ?></label>
-<?php
-if ($can_view_unassigned)
-{
-	?>
-    <br />
-	<label><input type="checkbox" name="s_un" value="1" <?php if ($s_un[1]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_un']; ?></label>
-	<?php
-}
-?>
-</td>
-<td width="33%" class="alignTop">
-<?php
-if ($can_view_ass_others)
-{
-	?>
-	<label><input type="checkbox" name="s_ot" value="1" <?php if ($s_ot[1]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_ot']; ?></label>
-    <br />
-	<?php
-}
-?>
-<label><input type="checkbox" name="archive" value="1" <?php if ($archive[1]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['disp_only_archived']; ?></label></td>
-<td width="33%">&nbsp;</td>
-</tr>
-</table>
-
-</td>
-</tr>
-
-<tr>
-<td class="borderTop alignTop"><b><?php echo $hesklang['sort_by']; ?></b>: &nbsp; </td>
-<td class="borderTop">
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tr>
-<td width="34%"><label><input type="radio" name="sort" value="priority"  <?php if ($sort == 'priority') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['priority']; ?></label></td>
-<td width="33%"><label><input type="radio" name="sort" value="lastchange" <?php if ($sort == 'lastchange') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['last_update']; ?></label></td>
-<td width="33%"><label><input type="radio" name="sort" value="name" <?php if ($sort == 'name') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['name']; ?></label></td>
-</tr>
-<tr>
-<td width="34%"><label><input type="radio" name="sort" value="subject" <?php if ($sort == 'subject') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['subject']; ?></label></td>
-<td width="33%"><label><input type="radio" name="sort" value="status" <?php if ($sort == 'status') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['status']; ?></label></td>
-<td width="33%">&nbsp;</td>
-</tr>
-</table>
-
-</td>
-</tr>
-
-<tr>
-<td class="borderTop alignTop"><b><?php echo $hesklang['gb']; ?></b>: &nbsp; </td>
-<td class="borderTop">
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tr>
-<td width="34%"><label><input type="radio" name="g" value=""  <?php if ( ! $group) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['dg']; ?></label></td>
-<td width="33%"><?php
-if ($can_view_unassigned || $can_view_ass_others)
-{
-	?>
-	<label><input type="radio" name="g" value="owner" <?php if ($group == 'owner') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['owner']; ?></label>
-	<?php
-}
-else
-{
-	echo '&nbsp;';
-}
-?>
-</td>
-<td width="33%">&nbsp;</td>
-</tr>
-<tr>
-<td width="34%"><label><input type="radio" name="g" value="category" <?php if ($group == 'category') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['category']; ?></label></td>
-<td width="33%"><label><input type="radio" name="g" value="priority" <?php if ($group == 'priority') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['priority']; ?></label></td>
-<td width="33%">&nbsp;</td>
-</tr>
-</table>
-
-</td>
-</tr>
-
-<tr>
-<td class="borderTop alignMiddle"><b><?php echo $hesklang['category']; ?></b>: &nbsp; </td>
-<td class="borderTop alignMiddle">
-<div class="col-md-4" style="padding-left: 0px"><select class="form-control" name="category">
-<option value="0" ><?php echo $hesklang['any_cat']; ?></option>
-<?php echo $category_options; ?>
-</select></div>
-</td>
-</tr>
-
-<tr>
-<td class="borderTop"><b><?php echo $hesklang['display']; ?></b>: &nbsp; </td>
-<td class="borderTop"><div class="col-md-2" style="padding-left: 0px; padding-right:0px"><input type="text" class="form-control" name="limit" value="<?php echo $maxresults; ?>" size="4" /></div><div class="col-md-3" style="line-height: 40px"><?php echo $hesklang['tickets_page']; ?></div></td>
-</tr>
-<tr>
-<td class="borderTop alignMiddle"><b><?php echo $hesklang['order']; ?></b>: &nbsp; </td>
-<td class="borderTop alignMiddle">
-<label><input type="radio" name="asc" value="1" <?php if ($asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['ascending']; ?></label>
-|
-<label><input type="radio" name="asc" value="0" <?php if (!$asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['descending']; ?></label></td>
-</tr>
-
-<tr>
-<td class="borderTop alignTop"><b><?php echo $hesklang['opt']; ?></b>: &nbsp; </td>
-<td class="borderTop">
-
-<label><input type="checkbox" name="cot" value="1" <?php if ($cot) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['cot']; ?></label><br />
-<label><input type="checkbox" name="def" value="1" /> <?php echo $hesklang['def']; ?></label> (<a href="admin_main.php?reset=1&amp;token=<?php echo hesk_token_echo(0); ?>"><?php echo $hesklang['redv']; ?></a>)
-
-</td>
-
-</table>
-
-<p><input class="btn btn-default" type="submit" value="<?php echo $hesklang['show_tickets']; ?>" />
-<input type="hidden" name="more" value="<?php echo $more ? 1 : 0 ; ?>" /><a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow');Javascript:hesk_toggleLayerDisplay('topSubmit');document.showt.more.value='0';"><?php echo $hesklang['lopt']; ?></a></p>
-
-</div>
-
-</form>
-
-</td>
-</tr>
-</table>
 
 <!-- ** END SHOW TICKET FORM ** -->
 <div class="blankSpace"></div>
 
 <!-- ** START SEARCH TICKETS FORM ** -->
-
+<div class="panel panel-default">
+<div class="panel-heading">
+    <h4><?php echo $hesklang['find_ticket_by']; ?></h4>
+</div>
+<div class="panel-body">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td valign="top">
 
 <form class="form-inline" action="find_tickets.php" method="get" name="findby" id="findby">
-<h3 style="margin-bottom:5px"><?php echo $hesklang['find_ticket_by']; ?></h3>
-<div class="footerWithBorder blankSpace"></div>
 
-<table border="0" cellpadding="3" cellspacing="0">
+<table class="table" style="width: auto" border="0" cellpadding="3" cellspacing="0">
 <tr>
-<td style="text-align:left">
+<td style="text-align:left; border-top: 0px">
 <b style="color: #000"><?php echo $hesklang['s_for']; ?></b><br />
 <input class="form-control" type="text" name="q" size="30" <?php if (isset($q)) {echo 'value="'.$q.'"';} ?> />
 </td>
-<td style="text-align:left">
+<td style="text-align:left; border-top: 0px">
 <b style="color: #000"><?php echo $hesklang['s_in']; ?></b><br />
 <select class="form-control" name="what">
 <option value="trackid" <?php if ($what=='trackid') {echo 'selected="selected"';} ?> ><?php echo $hesklang['trackID']; ?></option>
@@ -367,10 +371,10 @@ echo '<option value="'.$k.'" '.$selected.'>'.$v['name'].'</option>';
 
 &nbsp;<br />
 
-<table border="0" cellpadding="3" cellspacing="0" width="100%">
+<table class="table table-striped" border="0" cellpadding="3" cellspacing="0" width="100%">
 <tr>
-<td class="borderTop alignMiddle" width="20%"><b><?php echo $hesklang['category']; ?></b>: &nbsp; </td>
-<td class="borderTop alignMiddle" width="80%">
+<td class="alignMiddle" width="20%"><b><?php echo $hesklang['category']; ?></b>: &nbsp; </td>
+<td class="alignMiddle" width="80%">
 <select class="form-control" name="category">
 <option value="0" ><?php echo $hesklang['any_cat']; ?></option>
 <?php echo $category_options; ?>
@@ -378,14 +382,14 @@ echo '<option value="'.$k.'" '.$selected.'>'.$v['name'].'</option>';
 </td>
 </tr>
 <tr>
-<td class="borderTop alignMiddle"><b><?php echo $hesklang['date']; ?></b>: &nbsp; </td>
-<td class="borderTop alignMiddle">
+<td class="alignMiddle"><b><?php echo $hesklang['date']; ?></b>: &nbsp; </td>
+<td class="alignMiddle">
 <div class="col-md-3" style="padding-left: 0px"><input class="form-control tcal" type="text" name="dt" id="dt" size="10" <?php if ($date_input) {echo 'value="'.$date_input.'"';} ?> /></div>
 </td>
 </tr>
 <tr>
-<td class="borderTop alignTop"><b><?php echo $hesklang['s_incl']; ?></b>: &nbsp; </td>
-<td class="borderTop">
+<td class="alignTop"><b><?php echo $hesklang['s_incl']; ?></b>: &nbsp; </td>
+<td>
 <label><input type="checkbox" name="s_my" value="1" <?php if ($s_my[2]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_my']; ?></label>
 <?php
 if ($can_view_ass_others)
@@ -409,8 +413,8 @@ if ($can_view_unassigned)
 </td>
 </tr>
 <tr>
-<td class="borderTop"><b><?php echo $hesklang['display']; ?></b>: &nbsp; </td>
-<td class="borderTop"><div class="col-md-2" style="padding-left: 0px; padding-right: 0px"><input class="form-control" type="text" name="limit" value="<?php echo $maxresults; ?>" size="4" /></div><div class="col-md-10" style="line-height: 40px"><?php echo $hesklang['results_page']; ?></div></td>
+<td><b><?php echo $hesklang['display']; ?></b>: &nbsp; </td>
+<td><div class="col-md-2" style="padding-left: 0px; padding-right: 0px; text-align:right"><input class="form-control" type="text" name="limit" value="<?php echo $maxresults; ?>" size="4" /></div><div class="col-md-10" style="line-height: 40px"><?php echo $hesklang['results_page']; ?></div></td>
 </tr>
 </table>
 
@@ -423,6 +427,8 @@ if ($can_view_unassigned)
 </td>
 </tr>
 </table>
+</div>
+</div>
 
 <!-- ** END SEARCH TICKETS FORM ** -->
 
