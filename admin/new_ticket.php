@@ -91,24 +91,18 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
   <li><a href="admin_main.php"><?php echo $hesk_settings['hesk_title']; ?></a></li>
   <li class="active"><?php echo $hesklang['nti2']; ?></li>
 </ol>
-
-<div class="enclosingDashboard">
-    <div class="row">
-        <div align="left" class="col-md-4">
-            <div class="moreToLeft">
-		        <ul class="nav nav-tabs">
-			        <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['quick_help']; ?></a></li>
-		        </ul>
-		        <div class="summaryList">
-                    <div class="viewTicketSidebar">
-				        <p><?php echo $hesklang['nti3']; ?></p>
-                        <br/>
-                        <p><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></p>
-                    </div>				
-		        </div>
-	        </div>
+    <div class="row" style="margin-top: 20px">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><?php echo $hesklang['quick_help']; ?></div>
+                <div class="panel-body">
+                    <p><?php echo $hesklang['nti3']; ?></p>
+                    <br/>
+                    <p><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></p>
+                </div>
+            </div>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
             <?php
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
