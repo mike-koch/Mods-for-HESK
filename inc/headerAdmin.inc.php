@@ -34,6 +34,7 @@
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
+require(HESK_PATH . 'nuMods_settings.inc.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -41,10 +42,19 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 	<title><?php echo (isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>" />
     <meta name="viewport" content="width=device-width, user-scalable=no">
+	<?php if ($nuMods_settings['rtl']) { ?>
+    <link href="<?php echo HESK_PATH; ?>hesk_style_v25RTL.css" type="text/css" rel="stylesheet" />
+    <?php } else { ?>
 	<link href="<?php echo HESK_PATH; ?>hesk_style_v25.css" type="text/css" rel="stylesheet" />
+    <?php } ?>
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+    <?php if ($nuMods_settings['rtl']) { ?>
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php" type="text/css" rel="stylesheet" />
+    <?php } else { ?>
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+    <?php } ?>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript_v25.js"></script>

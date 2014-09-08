@@ -272,9 +272,9 @@ function hesk_show_kb_article($artid)
 		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `views`=`views`+1 WHERE `id`='".intval($artid)."' LIMIT 1");
     }
 
-    echo '<h3 style="text-align: left">'.$article['subject'].'</h3>
+    echo '<h3 class="text-left">'.$article['subject'].'</h3>
     <div class="footerWithBorder blankSpace"></div>
-    <h4 style="text-align: left">'.$hesklang['as'].'</h4>
+    <h4 class="text-left">'.$hesklang['as'].'</h4>
     <div class="kbContent">'
     . $article['content'].'</div>';
 
@@ -311,8 +311,8 @@ function hesk_show_kb_article($artid)
     ?>
 
     
-    <h4 style="text-align: left"><?php echo $hesklang['ad']; ?></h4>
-    <div style="text-align: left">
+    <h4 class="text-left"><?php echo $hesklang['ad']; ?></h4>
+    <div class="text-left">
         <p><?php echo $hesklang['aid']; ?>: <?php echo $article['id']; ?></p>
         <p><?php echo $hesklang['category']; ?>: <a href="<?php echo $link; ?>"><?php echo $article['cat_name']; ?></a></p>
 
@@ -375,8 +375,8 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 	if ($thiscat['parent'])
 	{
 		$link = ($thiscat['parent'] == 1) ? 'knowledgebase.php' : 'knowledgebase.php?category='.$thiscat['parent'];
-		echo '<h3 style="text-align: left">'.$hesklang['kb_cat'].': '.$thiscat['name'].' </h3>
-        <p align="left"><a href="javascript:history.go(-1)" title="'.$hesklang['back'].'"><span class="glyphicon glyphicon-circle-arrow-left"></span> Go back</a></p>
+		echo '<h3 class="text-left">'.$hesklang['kb_cat'].': '.$thiscat['name'].' </h3>
+        <p class="text-left"><a href="javascript:history.go(-1)" title="'.$hesklang['back'].'"><span class="glyphicon glyphicon-circle-arrow-left"></span> Go back</a></p>
         <div class="footerWithBorder blankSpace"></div>
         <div class="blankSpace"></div>
 		';
@@ -387,7 +387,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 	{
         ?>
 
-		<h4 style="text-align: left"><?php echo $hesklang['kb_cat_sub']; ?></h4>
+		<h4 class="text-left"><?php echo $hesklang['kb_cat_sub']; ?></h4>
         <div class="footerWithBorder blankSpace"></div>
 
 		<table border="0" cellspacing="1" cellpadding="3" width="100%">
@@ -477,7 +477,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 	} // END if NumRows > 0
 	?>
 
-	<h4 style="text-align: left"><?php echo $hesklang['ac']; ?></h4>
+	<h4 class="text-left"><?php echo $hesklang['ac']; ?></h4>
     <div class="footerWithBorder blankSpace"></div>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">

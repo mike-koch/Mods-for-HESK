@@ -407,11 +407,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     </div>     
 </div>
 
-
-<p style="text-align:center"></p>
-
-<p>&nbsp;</p>
-
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();

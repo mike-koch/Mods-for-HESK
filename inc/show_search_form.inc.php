@@ -323,11 +323,11 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
 
 <table class="table" style="width: auto" border="0" cellpadding="3" cellspacing="0">
 <tr>
-<td style="text-align:left; border-top: 0px">
+<td class="text-left" style="border-top: 0px">
 <b style="color: #000"><?php echo $hesklang['s_for']; ?></b><br />
 <input class="form-control" type="text" name="q" size="30" <?php if (isset($q)) {echo 'value="'.$q.'"';} ?> />
 </td>
-<td style="text-align:left; border-top: 0px">
+<td class="text-left" style="border-top: 0px">
 <b style="color: #000"><?php echo $hesklang['s_in']; ?></b><br />
 <select class="form-control" name="what">
 <option value="trackid" <?php if ($what=='trackid') {echo 'selected="selected"';} ?> ><?php echo $hesklang['trackID']; ?></option>
@@ -414,7 +414,7 @@ if ($can_view_unassigned)
 </tr>
 <tr>
 <td><b><?php echo $hesklang['display']; ?></b>: &nbsp; </td>
-<td><div class="col-md-2" style="padding-left: 0px; padding-right: 0px; text-align:right"><input class="form-control" type="text" name="limit" value="<?php echo $maxresults; ?>" size="4" /></div><div class="col-md-10" style="line-height: 40px"><?php echo $hesklang['results_page']; ?></div></td>
+<td><div class="col-md-2 text-right" style="padding-left: 0px; padding-right: 0px;"><input class="form-control" type="text" name="limit" value="<?php echo $maxresults; ?>" size="4" /></div><div class="col-md-10" style="line-height: 40px"><?php echo $hesklang['results_page']; ?></div></td>
 </tr>
 </table>
 

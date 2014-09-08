@@ -973,7 +973,7 @@ function hesk_getAdminButtonsInTicket($reply=0,$white=1)
 {
 	global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete;
 
-	$options = '<div class="btn-group" style="width: 70%; text-align: right; margin-left: auto; margin-right: auto">';
+	$options = '<div class="btn-group text-right" style="width: 70%; margin-left: auto; margin-right: auto">';
 
     /* Style and mousover/mousout */
     $tmp = $white ? 'White' : 'Blue';
@@ -1156,7 +1156,7 @@ function hesk_printReplyForm() {
 ?>
 <!-- START REPLY FORM -->
 
-        <h3 style="text-align: left"><?php echo $hesklang['add_reply']; ?></h3>
+        <h3 class="text-left"><?php echo $hesklang['add_reply']; ?></h3>
         <div class="footerWithBorder"></div>
         <div class="blankSpace"></div>
         
@@ -1182,7 +1182,7 @@ function hesk_printReplyForm() {
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="time_worked" id="time_worked" size="10" value="<?php echo ( isset($_SESSION['time_worked']) ? hesk_getTime($_SESSION['time_worked']) : '00:00:00'); ?>" />
                 </div>
-                <div class="col-sm-3" style="text-align:  right">
+                <div class="col-sm-3 text-right">
                     <input type="button" class="btn btn-success" onclick="ss()" id="startb" value="<?php echo $hesklang['start']; ?>" />
 		            <input type="button" class="btn btn-danger" onclick="r()" value="<?php echo $hesklang['reset']; ?>" />
                 </div>

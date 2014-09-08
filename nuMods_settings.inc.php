@@ -13,5 +13,8 @@ $nuMods_settings['dropdownItemTextHoverColor'] = '#262626';
 $nuMods_settings['dropdownItemTextHoverBackgroundColor'] = '#f5f5f5';
 $nuMods_settings['questionMarkColor'] = '#000000';
 
+//-- Set this to 1 for right-to-left text. EXPERIMENTAL!
+$nuMods_settings['rtl'] = 0;
+
 /* DO NOT EDIT ANYTHING BELOW THIS LINE */
 $nuMods_settings['version']='1.2.4';

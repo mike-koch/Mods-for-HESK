@@ -288,7 +288,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </div>     
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-12" style="text-align: right">
+                        <div class="col-sm-12 text-right">
                             <input type="hidden" name="a" value="new" />
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                             <input type="submit" class="btn btn-default" value="<?php echo $hesklang['create_user']; ?>" />

@@ -455,7 +455,7 @@ function show_message()
                     </tr>
                     </table>
                 </td>
-                <td style="text-align:right; vertical-align:top;">
+                <td class="text-right" style="vertical-align:top;">
 
                     <?php
                     $folder = '&amp;folder=outbox';

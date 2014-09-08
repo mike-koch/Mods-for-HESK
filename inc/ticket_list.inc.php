@@ -122,7 +122,7 @@ if ($total > 0)
                 
 		/* List pages */
         echo '<div class="row">
-                <div class="col-md-6 col-sm-12" style="text-align: right;">
+                <div class="col-md-6 col-sm-12 text-right nu-rtlFloatLeft">
                     <ul class="pagination" style="margin: 0">';
 		if ($pages > 7)
 		{
@@ -166,7 +166,7 @@ if ($total > 0)
 		}
         echo ' </ul>
                </div>
-               <div class="col-md-6 col-sm-12" style="text-align: left">
+               <div class="col-md-6 col-sm-12 text-left">
                     <div class="form-inline">'.$hesklang['jump_page'].'
                     <select class="form-control" name="myHpage" id="myHpage" onchange="javascript:window.location=\''.$href.'?'.$query.'\'+document.getElementById(\'myHpage\').value">';
                 for ($i=1;$i<=$pages;$i++)
@@ -441,7 +441,7 @@ EOC;
             </div>
         </div>
     </td>
-    <td width="50%" style="text-align:right;vertical-align:top">
+    <td width="50%" class="text-right" style="vertical-align:top">
 		<select class="form-control" name="a">
 		<option value="close" selected="selected"><?php echo $hesklang['close_selected']; ?></option>
 		<?php

@@ -19,11 +19,11 @@
 ?>
 
 .nu-rtlFloatLeft {
-    /* Don't do anything; the pager looks good already */
+    float: left;
 }
 
 .nu-floatRight {
-    float: right;
+    float: left;
 }
 
 .tabPadding {
@@ -32,13 +32,13 @@
 
 @media (max-width:991px) {
     .close-ticket {
-        text-align: left;
+        text-align: right;
     }
 }
 
 @media (min-width:992px) {
     .close-ticket {
-        text-align: right;
+        text-align: left;
     }
 }
 
@@ -46,7 +46,7 @@
 @media (max-width:991px) {
     .ticket-cell {
         border-bottom: solid 1px #ddd;
-        border-right: 0;
+        border-left: 0;
         padding-top: 5px;
     }
 }
@@ -54,7 +54,7 @@
 @media (max-width:991px) {
     .ticket-cell-admin {
         border-bottom: solid 1px #ddd;
-        border-right: 0;
+        border-left: 0;
         padding-top: 5px;
         height: 125px;
     }
@@ -63,7 +63,7 @@
 @media (min-width:992px) {
     .ticket-cell {
         border-bottom: 0;
-        border-right: solid 1px #ddd;
+        border-left: solid 1px #ddd;
         margin-top: 1px;
         height: 90px;
         padding-top: 10px;
@@ -73,7 +73,7 @@
 @media (min-width:992px) {
     .ticket-cell-admin {
         border-bottom: 0;
-        border-right: solid 1px #ddd;
+        border-left: solid 1px #ddd;
         margin-top: 1px;
         height: 125px;
         padding-top: 10px;
@@ -81,8 +81,8 @@
 }
 
 .row {
-    margin-left: 0px;
     margin-right: 0px;
+    margin-left: 0px;
 }
 
 .navbar {
@@ -141,12 +141,12 @@
 .loginError {
     width: 40%;
     padding: 20px;
-    margin-left: auto;
     margin-right: auto;
+    margin-left: auto;
 }
 .kbContent {
     padding-top: 10px;
-    text-align: left;
+    text-align: right;
 }
 .withBorder {
     border-bottom: 1px solid #ddd;
@@ -168,9 +168,9 @@
 }
 .ticketMessageTop {
     padding-top: 10px;
-    padding-left: 10px;
     padding-right: 10px;
-    margin-right: -15px;
+    padding-left: 10px;
+    margin-left: -15px;
     color: #888;
     background-color: #fff;
 }
@@ -181,15 +181,15 @@
 }
 
 .pushMarginLeft {
-    margin-left: -15px;
     margin-right: -15px;
-    padding-right: 0;
+    margin-left: -15px;
+    padding-left: 0;
 }
 
 .ticketMessageBottom {
-    padding-left: 10px;
     padding-right: 10px;
-    margin-right: -15px;
+    padding-left: 10px;
+    margin-left: -15px;
     word-wrap: break-word;
     font-size: 15px;
     background-color: #fff;
@@ -200,7 +200,7 @@
 }
 
 .ticketMessage {
-    margin-left: 238px;
+    margin-right: 238px;
     background: #fff;
     height: 100%;
     position: relative;
@@ -243,7 +243,7 @@ div.footerWithBorder {
     background-color: #fff;
     border-radius: 4px;
     font-size: .83em;
-    margin-right: 5px;
+    margin-left: 5px;
     vertical-align: top;
 }
 
@@ -255,7 +255,7 @@ div.footerWithBorder {
 .block > .upper > img {
     padding-top:5px;
     padding-bottom:5px;
-    padding-left:41px;
+    padding-right:41px;
 }
 
 .block > .lower {
@@ -271,8 +271,8 @@ div.block:hover {
     background-color: #e9ecef;
 }
 div.rightSideDash {
-    padding-left: 18px;
     padding-right: 18px;
+    padding-left: 18px;
 }
 div.enclosing {
     background-color: #fff;
@@ -285,20 +285,20 @@ div.headersm {
     color: #fff;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 12px;
-    text-align: left;
+    text-align: right;
     background-color: #424b5c;
     background-repeat: repeat-x;
     padding: 12px 20px 8px;
     margin: 0;
     font-weight: 700;
-    padding-left: 20px;
+    padding-right: 20px;
 }
 div.installWarning {
     width: 70%;
     height: 52px;
     margin-top: 10px;
-    margin-left: auto;
     margin-right: auto;
+    margin-left: auto;
 }
 div.setupContainer {
     margin: 50px;
@@ -340,7 +340,7 @@ div.setupButtons {
     border-top-color: transparent;
 }
 .installRequirements {
-    margin-left: auto;
     margin-right: auto;
+    margin-left: auto;
     width: 90%;
 }

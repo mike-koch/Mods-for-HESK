@@ -103,7 +103,7 @@ if ( defined('HESK_DEMO') )
             <div class="panel-heading"><?php echo $hesklang['check_status']; ?></div>
             <div class="panel-body">
                 <table>
-                    <tr><td style="text-align: right">
+                    <tr><td class="text-right">
                         <?php echo $hesklang['v']; ?>:
                         </td>
                         <td style="padding-left: 10px">     
@@ -141,20 +141,20 @@ if ( defined('HESK_DEMO') )
                         ?>
                     </td></tr>
                     <tr>
-                        <td style="text-align: right">
+                        <td class="text-right">
                             <?php echo $hesklang['nuModsVersion']; ?>:
                         </td>
                         <td style="padding-left: 10px">
                             <?php echo $nuMods_settings['version']; ?>
                         </td>
                     </tr>
-                    <tr><td style="text-align: right">
+                    <tr><td class="text-right">
                         <?php echo $hesklang['phpv']; ?>:
                         </td><td style="padding-left: 10px">
                         <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : PHP_VERSION . ' ' . (function_exists('mysqli_connect') ? '(MySQLi)' : '(MySQL)'); ?>
                     </td></tr>
                     <tr>
-                        <td style="text-align: right">
+                        <td class="text-right">
                             /hesk_settings.inc.php
                         </td>
                         <td style="padding-left: 10px">
@@ -169,7 +169,7 @@ if ( defined('HESK_DEMO') )
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right">
+                        <td class="text-right">
                             /<?php echo $hesk_settings['attach_dir']; ?>
                         </td>
                         <td style="padding-left: 10px">
@@ -1515,11 +1515,11 @@ if ( defined('HESK_DEMO') )
                     </div>
                     <table border="0"  width="100%">
                     <tr>
-                    <td style="text-align:right" width="200"></td>
+                    <td class="text-right" width="200"></td>
                     <td></td>
                     </tr>
                     <tr>
-                    <td style="text-align:right" width="200">&nbsp;</td>
+                    <td class="text-right" width="200">&nbsp;</td>
                     <td></td>
                     </tr>
                     </table>
@@ -1632,7 +1632,7 @@ if ( defined('HESK_DEMO') )
                         </div>
                         <table border="0"  width="100%">
                         <tr>
-                        <td style="text-align:right;vertical-align:top" width="200"></td>
+                        <td class="text-right" style="vertical-align:top" width="200"></td>
                         <td></td>
                         </tr>
                         </table>
@@ -2052,7 +2052,7 @@ function hesk_cacheLatestVersion($latest)
 
 function hesk_testLanguage($return_options = 0)
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $nuMods_settings;
 
 	/* Get a list of valid emails */
     include_once(HESK_PATH . 'inc/email_functions.inc.php');
@@ -2209,7 +2209,7 @@ function hesk_testLanguage($return_options = 0)
 		        background:#fff;
 		        color: black;
 		        font : 68.8%/1.5 Verdana, Geneva, Arial, Helvetica, sans-serif;
-		        text-align:left;
+		        text-align: <?php if ($nuMods_settings['rtl']) { echo 'right'; } else { echo 'left'; } ?>;
 		}
 
 		p

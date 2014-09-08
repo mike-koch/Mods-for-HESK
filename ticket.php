@@ -520,7 +520,7 @@ function hesk_printCustomerReplyForm($reopen=0)
 
 	?>
 
-	<h3 style="text-align:left"><?php echo $hesklang['add_reply']; ?></h3>
+	<h3 class="text-left"><?php echo $hesklang['add_reply']; ?></h3>
     <div class="footerWithBorder"></div>
     <div class="blankSpace"></div>
 
@@ -538,7 +538,7 @@ function hesk_printCustomerReplyForm($reopen=0)
 	    ?>
         <div class="form-group">
             <label for="attachments" class="col-sm-3 control-label"><?php echo $hesklang['attachments']; ?>:</label>
-            <div class="col-sm-9" style="text-align: left">
+            <div class="col-sm-9 text-left">
                 <?php
                     for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
                     {

@@ -91,7 +91,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
 	?>
 
     
-	<h4 style="text-align: left"><?php echo $hesklang['popart']; ?></h4>
+	<h4 class="text-left"><?php echo $hesklang['popart']; ?></h4>
     <div class="footerWithBorder blankSpace"></div>
 
     <table border="0" width="100%">
@@ -107,7 +107,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
     /* Show number of views? */
 	if ($hesk_settings['kb_views'] && hesk_dbNumRows($res) != 0)
 	{
-		echo '<td style="text-align:right"><i>' . $hesklang['views'] . '</i></td>';
+		echo '<td class="text-right"><i>' . $hesklang['views'] . '</i></td>';
 	}
 	?>
 
@@ -124,7 +124,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
 	/* If no results found end here */
 	if (hesk_dbNumRows($res) == 0)
 	{
-		echo '<p style="text-align: left;"><i>'.$hesklang['noa'].'</i><br />&nbsp;</p>';
+		echo '<p class="text-left"><i>'.$hesklang['noa'].'</i><br />&nbsp;</p>';
         return true;
 	}
 
@@ -147,7 +147,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
 
 		if ($hesk_settings['kb_views'])
 		{
-			echo '<td valign="top" style="text-align:right" width="200">' . $article['views'] . '</td>';
+			echo '<td valign="top" class="text-right" width="200">' . $article['views'] . '</td>';
 		}
 
 		echo '
@@ -201,7 +201,7 @@ function hesk_kbLatestArticles($how_many, $index = 1)
 	}
 	?>
 
-	<h4 style="text-align: left"><?php echo $hesklang['latart']; ?></h4>
+	<h4 class="text-left"><?php echo $hesklang['latart']; ?></h4>
     <div class="footerWithBorder blankSpace"></div>
 
     <table border="0" width="100%">
@@ -216,7 +216,7 @@ function hesk_kbLatestArticles($how_many, $index = 1)
     /* Show number of views? */
 	if ($hesk_settings['kb_date'] && hesk_dbNumRows($res) != 0)
 	{
-		echo '<td style="text-align:right"><i>' . $hesklang['dta'] . '</i></td>';
+		echo '<td class="text-right"><i>' . $hesklang['dta'] . '</i></td>';
 	}
 	?>
 
@@ -233,7 +233,7 @@ function hesk_kbLatestArticles($how_many, $index = 1)
 	/* If no results found end here */
 	if (hesk_dbNumRows($res) == 0)
 	{
-		echo '<p style="text-align: left"><i>'.$hesklang['noa'].'</i><br />&nbsp;</p>';
+		echo '<p class="text-left"><i>'.$hesklang['noa'].'</i><br />&nbsp;</p>';
         return true;
 	}
 
@@ -256,7 +256,7 @@ function hesk_kbLatestArticles($how_many, $index = 1)
 
 		if ($hesk_settings['kb_date'])
 		{
-			echo '<td valign="top" style="text-align:right" width="200">' . hesk_date($article['dt'], true) . '</td>';
+			echo '<td valign="top" class="text-right" width="200">' . hesk_date($article['dt'], true) . '</td>';
 		}
 
 		echo '
@@ -333,7 +333,7 @@ function hesk_kbSearchSmall()
 	}
     ?>
 
-	<td style="text-align:right" valign="top" width="300">
+	<td class="text-right" valign="top" width="300">
 		<div style="display:inline;margin-left:auto;margin-right:auto">
 			<form action="knowledgebase.php" method="get" class="form-inline" style="display: inline; margin: 0;">
 			     <input type="text" name="search" class="form-control" />

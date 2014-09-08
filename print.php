@@ -37,6 +37,7 @@ define('HESK_PATH','./');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'nuMods_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 
@@ -110,7 +111,7 @@ hr
 	background-color: #9e9e9e;
 	height: 1px;
 	width: 100%;
-	text-align: left;
+	text-align: <?php if ($nuMods_settings['rtl']) {echo 'right';} else {echo 'left';} ?>;
 }
 </style>
 </head>
