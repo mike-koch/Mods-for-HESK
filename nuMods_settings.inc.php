@@ -20,4 +20,4 @@ $nuMods_settings['rtl'] = 0;
 $nuMods_settings['show_icons'] = 0;
 
 /* DO NOT EDIT ANYTHING BELOW THIS LINE */
-$nuMods_settings['version']='1.2.4';
+$nuMods_settings['version']='1.3.0';
