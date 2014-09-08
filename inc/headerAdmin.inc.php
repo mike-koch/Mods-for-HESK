@@ -131,7 +131,7 @@ require(HESK_PATH . 'nuMods_settings.inc.php');
 
 <?php
 include(HESK_PATH . 'header.txt');
-$display = 'display: none';
+$display = 'style="display: none"';
 if ($nuMods_settings['show_icons']) {
     $display = '';
 }
