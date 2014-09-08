@@ -56,6 +56,7 @@ require(HESK_PATH . 'nuMods_settings.inc.php');
     <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
     <?php } ?>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript_v25.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
@@ -129,6 +130,10 @@ require(HESK_PATH . 'nuMods_settings.inc.php');
 
 <?php
 include(HESK_PATH . 'header.txt');
+$display = 'display: none';
+if ($nuMods_settings['show_icons']) {
+    $display = '';
+}
 ?>
 
 <div class="enclosing">
@@ -144,17 +149,17 @@ include(HESK_PATH . 'header.txt');
 	    </div>
 	    <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="<?php echo HESK_PATH; ?>">Home</a></li>
+          <li><a href="<?php echo HESK_PATH; ?>"><i class="fa fa-home" style="<?php echo $display; ?>"></i>&nbsp;<?php echo $hesklang['main_page']; ?></a></li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $hesklang['ticket'] ?><b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket" style="<?php echo $display; ?>"></i>&nbsp;<?php echo $hesklang['ticket'] ?><b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><?php echo $hesklang['sub_ticket'] ?></a></li>
-              <li><a href="<?php echo HESK_PATH; ?>ticket.php"><?php echo $hesklang['view_ticket_nav'] ?></a></li>
+              <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i class="fa fa-plus-circle" style="<?php echo $display; ?>"></i>&nbsp;<?php echo $hesklang['sub_ticket'] ?></a></li>
+              <li><a href="<?php echo HESK_PATH; ?>ticket.php"><i class="fa fa-search" style="<?php echo $display; ?>"></i>&nbsp;<?php echo $hesklang['view_ticket_nav'] ?></a></li>
             </ul>
           </li>
           <?php if ($hesk_settings['kb_enable'])
            { ?>
-	      <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><?php echo $hesklang['kb_text'] ?></a></li> <?php       } ?>
+	      <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><i class="fa fa-book" style="<?php echo $display; ?>"></i>&nbsp;<?php echo $hesklang['kb_text'] ?></a></li> <?php       } ?>
           <?php include ('custom/header-custom.inc.php'); ?>
         </ul>
       </div><!-- /.navbar-collapse -->

@@ -56,6 +56,7 @@ require(HESK_PATH . 'nuMods_settings.inc.php');
     <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
     <?php } ?>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript_v25.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/nuMods-javascript.js"></script>
@@ -130,4 +131,8 @@ require(HESK_PATH . 'nuMods_settings.inc.php');
 
 <?php
 include(HESK_PATH . 'header.txt');
+$display = 'display: none';
+if ($nuMods_settings['show_icons']) {
+    $display = '';
+}
 ?>
