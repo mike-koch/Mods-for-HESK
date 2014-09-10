@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'nuMods_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -70,7 +71,7 @@ exit();
 /*** START FUNCTIONS ***/
 function do_login()
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $nuMods_settings;
 
     $hesk_error_buffer = array();
 
@@ -176,25 +177,56 @@ function do_login()
 	    $_SESSION[$k]=$v;
 	}
 
-	/* Check password */
-	if (hesk_Pass2Hash($pass) != $_SESSION['pass'])
+    // Check if the user should be authenticated via Active Directory / LDAP
+    $usesLdap = $res['UsesLDAP'];
+    if ($usesLdap) {
+        //-- do AD-specific logic here.
+        $application_user = $nuMods_settings['ldap_application_user'];
+        $password = $nuMods_settings['ldap_application_password'];
+
+        //-- Connect to LDAP server
+        $connectionIp = $nuMods_settings['ldap_server_ip'];
+        $port = $nuMods_settings['ldap_server_port'];
+        $connection = ldap_connect($connectionIp, $port);
+        if ($connection == false) {
+            die("Couldn't connect to LDAP server.");
+        }
+
+        //-- Bind the application user to the connection
+        $bind = ldap_bind($connection, $application_user, $password);
+        if ($bind == false) {
+            die("Couldn't authenticate as the application user.");
+        }
+
+        //-- Find the user's DN
+        //TODO LDAP escape the $user string!
+        $dnQuery = "(&(uid=" . $user . ")(objectClass=person))";
+        $search_base = $nuMods_settings['ldap_search_base'];
+        $search_status = ldap_search(
+            $connection, $search_base, $dnQuery, array('dn')
+        );
+
+    }
+
+    /* Check password */
+    if (hesk_Pass2Hash($pass) != $_SESSION['pass'])
     {
         hesk_session_stop();
-    	$_SESSION['a_iserror'] = array('pass');
-		hesk_process_messages($hesklang['wrong_pass'],'NOREDIRECT');
-		print_login();
-		exit();
-	}
+        $_SESSION['a_iserror'] = array('pass');
+        hesk_process_messages($hesklang['wrong_pass'],'NOREDIRECT');
+        print_login();
+        exit();
+    }
 
     $pass_enc = hesk_Pass2Hash($_SESSION['pass'].strtolower($user).$_SESSION['pass']);
 
     /* Check if default password */
     if ($_SESSION['pass'] == '499d74967b28a841c98bb4baaabaad699ff3c079')
     {
-    	hesk_process_messages($hesklang['chdp'],'NOREDIRECT','NOTICE');
+        hesk_process_messages($hesklang['chdp'],'NOREDIRECT','NOTICE');
     }
 
-	unset($_SESSION['pass']);
+    unset($_SESSION['pass']);
 
 	/* Login successful, clean brute force attempts */
 	hesk_cleanBfAttempts();
