@@ -202,36 +202,9 @@ function do_login()
         //TODO LDAP escape the $user string!
         $dnQuery = "(&(uid=" . $user . ")(objectClass=person))";
         $search_base = $nuMods_settings['ldap_search_base'];
-        $search = ldap_search(
+        $search_status = ldap_search(
             $connection, $search_base, $dnQuery, array('dn')
         );
-        if ($search == false) {
-            die("Search failed.");
-        }
-
-        $search_result = ldap_get_entries($connection, $search);
-        if ($search_result == false) {
-            die("Couldn't pull information from LDAP/AD server");
-        }
-        $userdn = '';
-        if ((int) @$search_result['count'] > 0) {
-            // Definitely pulled something, we don't check here
-            //     for this example if it's more results than 1,
-            //     although you should.
-            $userdn = $result[0]['dn'];
-        }
-
-        if (trim((string) $userdn) == '') {
-            die("Empty DN. Something is wrong.");
-        }
-
-        // Authenticate with the newly found DN and user-provided password
-        $auth_status = ldap_bind($connection, $userdn, $pass);
-        if ($auth_status === FALSE) {
-            //-- Login failed!
-            $_SESSION['a_iserror'] = array('pass');
-            hesk_process_messages($hesklang['wrong_pass'],'NOREDIRECT');
-        }
 
     }
 
