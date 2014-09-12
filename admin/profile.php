@@ -228,11 +228,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                <?php echo $hesklang['sign_extra']; ?>
                 </div>
             </div>
+            <h4><?php echo $hesklang['pref']; ?></h4>
             <?php
             if ($can_reply_tickets)                
             {
             ?>
-            <h4><?php echo $hesklang['pref']; ?></h4>
             <div class="footerWithBorder blankSpace"></div>
             <div class="form-group">
                 <label for="afterreply" class="col-sm-3 control-label"><?php echo $hesklang['aftrep']; ?>:</label>
@@ -257,6 +257,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>     
             </div>
             <?php } ?>
+            <div class="form-group">
+                <label for="autoRefresh" class="col-sm-3 control-label">Ticket Table Auto-Refresh:</label>
+                <div class="col-sm-9">
+                    <!-- TODO Contentify the text -->
+                    <input type="text" class="form-control" id="autorefresh" name="autorefresh" value="<?php echo $_SESSION['new']['autorefresh']; ?>">
+                    <span class="help-block">Enter value in milliseconds, or 0 to disable. No fractional values.</span>
+                </div>
+            </div>
             <h4><?php echo $hesklang['notn']; ?></h4>
             <h6><?php echo $hesklang['nomw']; ?></h6>
             <div class="footerWithBorder blankSpace"></div>
@@ -394,6 +402,9 @@ function update_profile() {
     /* Auto-start ticket timer */
     $_SESSION['new']['autostart'] = isset($_POST['autostart']) ? 1 : 0;
 
+    /* Update auto-refresh time */
+    $_SESSION['new']['autorefresh'] = isset($_POST['autorefresh']) ? $_POST['autorefresh'] : 0;
+
     /* Notifications */
     $_SESSION['new']['notify_new_unassigned']	= empty($_POST['notify_new_unassigned']) || ! $can_view_unassigned ? 0 : 1;
     $_SESSION['new']['notify_new_my'] 			= empty($_POST['notify_new_my']) ? 0 : 1;
@@ -415,6 +426,7 @@ function update_profile() {
     else
     {
 		/* Update database */
+        //TODO Add auto-refresh to the update SQL
 		hesk_dbQuery(
         "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET
 	    `name`='".hesk_dbEscape($_SESSION['new']['name'])."',
@@ -424,6 +436,7 @@ function update_profile() {
 		$sql_pass ,
 	    `afterreply`='".intval($_SESSION['new']['afterreply'])."' ,
         `autostart`='".intval($_SESSION['new']['autostart'])."' ,
+        `autorefresh`='".intval($_SESSION['new']['autorefresh'])."' ,
 	    `notify_new_unassigned`='".intval($_SESSION['new']['notify_new_unassigned'])."' ,
         `notify_new_my`='".intval($_SESSION['new']['notify_new_my'])."' ,
         `notify_reply_unassigned`='".intval($_SESSION['new']['notify_reply_unassigned'])."' ,
