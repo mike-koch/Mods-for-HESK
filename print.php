@@ -214,8 +214,8 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
             $num_cols = 0;
         }
 	?>
-		<td><?php echo $v['name']; ?>:</td>
-		<td><?php echo hesk_unhortenUrl($ticket[$k]); ?></td>
+        <td bgcolor="#EEE"><b><?php echo $v['name']; ?>:</b></td>
+		<td bgcolor="#DDD"><?php echo hesk_unhortenUrl($ticket[$k]); ?></td>
 	<?php
 	}
 }
