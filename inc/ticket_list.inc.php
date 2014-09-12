@@ -317,7 +317,7 @@ if ($total > 0)
         $ownerColumn = $ticket['owner'] != 0 ? $admins[$ticket['owner']] : '('.$hesklang['unas'].')';
         
         $customFieldsHtml = '';
-        for ($i = 0; $i <= 20; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             if ($hesk_settings['custom_fields']['custom'.$i]['use']) {
                 $display = 'display: none';
                 if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
