@@ -479,8 +479,6 @@ EOC;
     </table>
 
 	</form>
-    </div>
-    </div>
 	<?php
 
 } // END ticket list if total > 0
@@ -499,6 +497,8 @@ else
     
     echo '</div></div>';
 }
+echo '</div>
+    </div>';
 
 
 function hesk_print_list_head()
