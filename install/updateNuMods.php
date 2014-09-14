@@ -65,9 +65,9 @@ if ($_GET['update'] == 1)
     </head>
     <body>
         <div style="display: <?php echo $showInstructions; ?>">
-        <h1>Update NuMods from v1.2.0 - v1.2.3 to v1.2.4</h1>
-        <p>If you have NuMods v1.2.0 - v1.2.3, click <a href="updateTo1-2-4.php">here</a> to update to v1.2.4. <b>Do not use the installation below!</b></p>
-        <h1>Install NuMods v1.2.4 from a version <b>before 1.2.0</b></h1>
+        <h1>Update NuMods from v1.2.4 - v1.3.0 to v1.3.1</h1>
+        <p><a href="updateTo1-3-1.php">Update here</a>. <b>Do not use the installation below!</b></p>
+        <h1>Install NuMods v1.3.1 <b>for the first time</b></h1>
         <h4><i>If you have not yet installed/updated HESK, please do so first before continuing; otherwise installation will <b>fail</b>!</i></h4>
         <br/>
         <p>Please verify the database information below.  Addtionally, ensure that the database user has CREATE permissions.</p>
