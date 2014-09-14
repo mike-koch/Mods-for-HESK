@@ -36,7 +36,7 @@
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 require(HESK_PATH . 'nuMods_settings.inc.php');
 // Check to see if we're in maintenance mode before sending anything to the DOM
-if ($nuMods_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE')) {
+if ($nuMods_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE') && !defined('ON_LOGIN_PAGE')) {
     header('Location: '.HESK_PATH.'maintenance.php');
 }
 ?>
