@@ -19,5 +19,8 @@ $nuMods_settings['rtl'] = 0;
 //-- Set this to 1 to show icons next to navigation menu items
 $nuMods_settings['show_icons'] = 0;
 
+//-- Set this to 1 to enable maintenance mode
+$nuMods_settings['maintenance_mode'] = 0;
+
 /* DO NOT EDIT ANYTHING BELOW THIS LINE */
 $nuMods_settings['version']='1.3.0';

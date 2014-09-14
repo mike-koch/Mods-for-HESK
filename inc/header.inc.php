@@ -35,6 +35,10 @@
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 require(HESK_PATH . 'nuMods_settings.inc.php');
+// Check to see if we're in maintenance mode before sending anything to the DOM
+if ($nuMods_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE')) {
+    header('Location: '.HESK_PATH.'maintenance.php');
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -62,6 +66,7 @@ require(HESK_PATH . 'nuMods_settings.inc.php');
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
 
     <?php
+
 	/* Prepare Javascript that browser should load on page load */
     $onload = "javascript:var i=new Image();i.src='" . HESK_PATH . "img/orangebtnover.gif';var i2=new Image();i2.src='" . HESK_PATH . "img/greenbtnover.gif';";
 
