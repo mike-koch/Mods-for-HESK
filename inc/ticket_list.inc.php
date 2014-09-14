@@ -116,7 +116,7 @@ if ($total > 0)
 	$next_page = ($page + 1 > $pages) ? 0 : $page + 1;
     $autorefreshInSeconds = $_SESSION['autorefresh']/1000;
     $autorefresh = '';
-    if ($autorefreshInSeconds > 0) {
+    if ($autorefreshInSeconds > 999) {
         $autorefresh = ' | '.$hesklang['autorefresh'].' '.$autorefreshInSeconds.' '.$hesklang['abbr']['second'];
     }
     echo sprintf($hesklang['tickets_on_pages'],$total,$pages).$autorefresh.' <br />';
@@ -491,7 +491,7 @@ else
     echo '<div class="row"><div class="col-sm-12">';
     $autorefreshInSeconds = $_SESSION['autorefresh']/1000;
     
-    if ($autorefreshInSeconds > 0) {
+    if ($autorefreshInSeconds > 999) {
         echo $hesklang['autorefresh'].' '.$autorefreshInSeconds.' '.$hesklang['abbr']['second'];
     }
     

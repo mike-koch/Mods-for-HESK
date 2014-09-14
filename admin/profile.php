@@ -262,7 +262,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="col-sm-9">
                     <!-- TODO Contentify the text -->
                     <input type="text" class="form-control" id="autorefresh" name="autorefresh" value="<?php echo $_SESSION['new']['autorefresh']; ?>">
-                    <span class="help-block">Enter value in milliseconds, or 0 to disable. No fractional values.</span>
+                    <span class="help-block">Enter value in milliseconds, or 0 to disable. No fractional values, and value must be 1000 or greater.</span>
                 </div>
             </div>
             <h4><?php echo $hesklang['notn']; ?></h4>
