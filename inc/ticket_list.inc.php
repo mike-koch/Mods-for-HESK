@@ -114,8 +114,12 @@ if ($total > 0)
 
 	$prev_page = ($page - 1 <= 0) ? 0 : $page - 1;
 	$next_page = ($page + 1 > $pages) ? 0 : $page + 1;
-    
-    echo sprintf($hesklang['tickets_on_pages'],$total,$pages).' <br />';
+    $autorefreshInSeconds = $_SESSION['autorefresh']/1000;
+    $autorefresh = '';
+    if ($autorefreshInSeconds > 0) {
+        $autorefresh = ' | '.$hesklang['autorefresh'].' '.$autorefreshInSeconds.' '.$hesklang['abbr']['second'];
+    }
+    echo sprintf($hesklang['tickets_on_pages'],$total,$pages).$autorefresh.' <br />';
 
     if ($pages > 1)
 	{
@@ -485,6 +489,11 @@ EOC;
 else
 {
     echo '<div class="row"><div class="col-sm-12">';
+    $autorefreshInSeconds = $_SESSION['autorefresh']/1000;
+    
+    if ($autorefreshInSeconds > 0) {
+        echo $hesklang['autorefresh'].' '.$autorefreshInSeconds.' '.$hesklang['abbr']['second'];
+    }
     
     if (isset($is_search) || $href == 'find_tickets.php')
     {
