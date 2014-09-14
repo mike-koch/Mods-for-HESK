@@ -31,7 +31,7 @@
 *  a license please visit the page below:
 *  https://www.hesk.com/buy.php
 *******************************************************************************/
-
+define('MINIMUM_REFRESH_THRESHOLD_IN_SECONDS', 1);
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
@@ -116,9 +116,15 @@ if ($total > 0)
 	$next_page = ($page + 1 > $pages) ? 0 : $page + 1;
     $autorefreshInSeconds = $_SESSION['autorefresh']/1000;
     $autorefresh = '';
-    if ($autorefreshInSeconds > 999) {
+    if ($autorefreshInSeconds >= MINIMUM_REFRESH_THRESHOLD_IN_SECONDS) {
         $autorefresh = ' | '.$hesklang['autorefresh'].' '.$autorefreshInSeconds.' '.$hesklang['abbr']['second'];
-    }
+        ?>
+        <script>
+            (function(){
+             setTimeout("location.reload(true);",<?php echo $_SESSION['autorefresh']; ?>);
+            })();
+        </script>
+    <?php }
     echo sprintf($hesklang['tickets_on_pages'],$total,$pages).$autorefresh.' <br />';
 
     if ($pages > 1)
@@ -491,8 +497,15 @@ else
     echo '<div class="row"><div class="col-sm-12">';
     $autorefreshInSeconds = $_SESSION['autorefresh']/1000;
     
-    if ($autorefreshInSeconds > 999) {
+    if ($autorefreshInSeconds >= MINIMUM_REFRESH_THRESHOLD_IN_SECONDS) {
         echo $hesklang['autorefresh'].' '.$autorefreshInSeconds.' '.$hesklang['abbr']['second'];
+        ?>
+        <script>
+            (function(){
+             setTimeout("location.reload(true);",<?php echo $_SESSION['autorefresh']; ?>);
+            })();
+        </script>
+        <?php
     }
     
     if (isset($is_search) || $href == 'find_tickets.php')

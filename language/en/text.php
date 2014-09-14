@@ -23,6 +23,7 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
 // ADDED OR MODIFIED IN NuMods 1.3.1
 $hesklang['autorefresh'] = 'Autorefresh:';
+$hesklang['autorefresh_restrictions'] = 'Enter value in milliseconds. Value must be greater than 1000 to use this feature. No fractional values.';
 
 // ADDED OR MODIFIED IN NuMods 1.3.0
 $hesklang['show_filters'] = 'Show Column Filters';
