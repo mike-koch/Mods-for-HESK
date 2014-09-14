@@ -426,7 +426,6 @@ function update_profile() {
     else
     {
 		/* Update database */
-        //TODO Add auto-refresh to the update SQL
 		hesk_dbQuery(
         "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET
 	    `name`='".hesk_dbEscape($_SESSION['new']['name'])."',
