@@ -471,7 +471,15 @@ if ( defined('HESK_DEMO') )
               <li><a href="#customFields" data-toggle="tab"><?php echo $hesklang['tab_4']; ?></a></li>
               <li><a href="#email" data-toggle="tab"><?php echo $hesklang['tab_6']; ?></a></li>
               <li><a href="#misc" data-toggle="tab"><?php echo $hesklang['tab_5']; ?></a></li>
-              <li><a href="#statuses" data-toggle="tab"><?php echo $hesklang['statuses']; ?></a></li>
+              <li class="dropdown">
+                  <a href="#" id="nuModsDropdown" class="dropdown-toggle" data-toggle="dropdown">
+                      <?php echo $hesklang['numods']; ?><span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="nuModsDropdown">
+                      <li><a href="#numods-general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
+                      <li><a href="#statuses" data-toggle="tab"><?php echo $hesklang['statuses']; ?></a></li>
+                  </ul>
+              </li>
             </ul>
 
             <!-- Tab panes -->
@@ -1773,6 +1781,57 @@ if ( defined('HESK_DEMO') )
                     </div>
                 </div>
               </div>
+              <!-- NuMods: General Settings -->
+              <div class="tab-pane fade in" id="numods-general">
+                  <h6 style="font-weight: bold"><?php echo $hesklang['gs']; ?></h6>
+                  <div class="footerWithBorder blankSpace"></div>
+                  <div class="form-group">
+                      <label for="rtl" class="col-sm-3 col-xs-12 control-label">
+                          <?php echo 'Display site right-to-left:'; ?>
+                          <a href="#" onclick="javascript:alert('Check this box to convert the helpdesk to right-to-left');">
+                              <i class="fa fa-question-circle settingsquestionmark"></i>
+                          </a>
+                      </label>
+                      <div class="col-sm-9 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input type="checkbox" <?php if ($nuMods_settings['rtl']) {echo 'checked' ;} ?>> Display site right-to-left
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="show-icons" class="col-sm-3 col-xs-12 control-label">
+                          <?php echo 'Show icons:'; ?>
+                          <a href="#" onclick="javascript:alert('Check this box to show icons next to navigation bar items');">
+                              <i class="fa fa-question-circle settingsquestionmark"></i>
+                          </a>
+                      </label>
+                      <div class="col-sm-9 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input type="checkbox" <?php if ($nuMods_settings['show_icons']) {echo 'checked';} ?>> Show icons on navigation bar
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="maintenance-mode" class="col-sm-3 col-xs-12 control-label">
+                          <?php echo 'Maintenance Mode:'; ?>
+                          <a href="#" onclick="javascript:alert('Check this box to show icons next to navigation bar items');">
+                              <i class="fa fa-question-circle settingsquestionmark"></i>
+                          </a>
+                      </label>
+                      <div class="col-sm-9 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input type="checkbox" <?php if ($nuMods_settings['maintenance_mode']) {echo 'checked';} ?>> Enable Maintenance Mode
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- NuMods: Statuses -->
               <div class="tab-pane fade in" id="statuses">
                   <h6 style="font-weight: bold"><?php echo $hesklang['basicProperties']; ?></h6>
                   <div class="footerWithBorder blankSpace"></div>
