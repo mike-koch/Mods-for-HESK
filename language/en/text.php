@@ -24,20 +24,34 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 // ADDED OR MODIFIED IN NuMods 1.4.0
 $hesklang['numods'] = 'NuMods';
 $hesklang['navbarBackgroundColor'] = 'Navbar Background Color';
+$hesklang['navbarBackgroundColorHelp'] = 'The main color of the top navigation bar. This applies to both the client and staff-side.';
 $hesklang['navbarBrandColor'] = 'Navbar Brand Color';
+$hesklang['navbarBrandColorHelp'] = 'The text color of the \'brand\' on the left (also the name of the Help Desk).';
 $hesklang['navbarBrandHoverColor'] = 'Navbar Brand Hover Color';
+$hesklang['navbarBrandHoverColorHelp'] = 'The text color of the \'brand\' on the left when the use moves their mouse over the text.';
 $hesklang['navbarItemTextColor'] = 'Navbar Item Text Color';
+$hesklang['navbarItemTextColorHelp'] = 'The text color of the navigation items on the navigation bar (by default \'Home\', \'Ticket\', and \'Knowledgebase\' are the three items on the client-side).';
 $hesklang['navbarItemTextHoverColor'] = 'Navbar Item Text Hover Color';
+$hesklang['navbarItemTextHoverColorHelp'] = 'The text color of the navigation items on the navigation bar when the user hovers over one of the items.';
 $hesklang['navbarItemTextSelectedColor'] = 'Navbar Item Text Selected Color';
+$hesklang['navbarItemTextSelectedColorHelp'] = 'The text color of the navigation items on the navigation bar when the user clicks on an item, and a dropdown menu appears (such as \'Ticket\').';
 $hesklang['navbarItemSelectedBackgroundColor'] = 'Navbar Item Selected Background Color';
+$hesklang['navbarItemSelectedBackgroundColorHelp'] = 'The background color of the navigation items on the navigation bar when the user clicks on an item, and a dropdown menu appears (such as \'Ticket\').';
 $hesklang['dropdownItemTextColor'] = 'Dropdown Item Text Color';
+$hesklang['dropdownItemTextColorHelp'] = 'The text color of a dropdown item.';
 $hesklang['dropdownItemTextHoverColor'] = 'Dropdown Item Text Hover Color';
+$hesklang['dropdownItemTextHoverColorHelp'] = 'The text color of a dropdown item when the mouse hovers over it.';
 $hesklang['questionMarkColor'] = 'Question Mark Color';
+$hesklang['questionMarkColorHelp'] = 'The text color for the question mark circle, as seen on the \'Settings\' page and on other various pages.';
 $hesklang['dropdownItemTextHoverBackgroundColor'] = 'Dropdown Item Text Hover Background Color';
+$hesklang['dropdownItemTextHoverBackgroundColorHelp'] = 'The background color of a dropdown item when the mouse hovers over it.';
 $hesklang['uiColors'] = 'UI Colors';
 $hesklang['displayRtl'] = 'Display site right-to-left';
+$hesklang['displayRtlHelp'] = 'Check this to set the text direction to right-to-left.';
 $hesklang['showIcons'] = 'Show Icons';
+$hesklang['showIconsHelp'] = 'Check this box to show icons next to navigation bar items';
 $hesklang['maintenanceMode'] = 'Maintenance Mode';
+$hesklang['maintenanceModeHelp'] = 'Check this box to put the Help Desk in maintenance mode. Staff can still log into the backend, but the front end will be inaccessible.';
 $hesklang['err_nuMods_settings'] = 'Can\'t open file <b>nuMods_settings.inc.php</b> for writing. Please CHMOD this file to 666 (rw-rw-rw-)';
 
 // ADDED OR MODIFIED IN NuMods 1.3.1

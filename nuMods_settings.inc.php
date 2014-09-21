@@ -13,7 +13,7 @@ $nuMods_settings['dropdownItemTextHoverColor'] = '#262626';
 $nuMods_settings['dropdownItemTextHoverBackgroundColor'] = '#f5f5f5';
 $nuMods_settings['questionMarkColor'] = '#000000';
 
-//-- Set this to 1 for right-to-left text. EXPERIMENTAL!
+//-- Set this to 1 for right-to-left text.
 $nuMods_settings['rtl'] = 0;
 
 //-- Set this to 1 to show icons next to navigation menu items

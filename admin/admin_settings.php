@@ -459,7 +459,7 @@ if ( defined('HESK_DEMO') )
         //-->
         </script> 
 
-        <h3><?php echo $hesklang['settings']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['settings_intro']) . '\n\n' . hesk_makeJsString($hesklang['all_req']); ?>')"><i class="fa fa-question-circle" style="color:black"></i></a></h3>
+        <h3><?php echo $hesklang['settings']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['settings_intro']) . '\n\n' . hesk_makeJsString($hesklang['all_req']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h3>
         <div class="footerWithBorder blankSpace"></div>
 
         <form method="post" action="admin_settings_save.php" name="form1" onsubmit="return hesk_checkFields()" class="form-horizontal" role="form">
@@ -1789,9 +1789,9 @@ if ( defined('HESK_DEMO') )
                   <div class="form-group">
                       <label for="rtl" class="col-sm-3 col-xs-12 control-label">
                           <?php echo $hesklang['displayRtl']; ?>
-                          <a href="#" onclick="javascript:alert('Check this box to convert the helpdesk to right-to-left');">
-                              <i class="fa fa-question-circle settingsquestionmark"></i>
-                          </a>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                             title="<?php echo $hesklang['displayRtl']; ?>"
+                             data-content="<?php echo $hesklang['displayRtlHelp']; ?>"></i>
                       </label>
                       <div class="col-sm-9 col-xs-12">
                           <div class="checkbox">
@@ -1804,9 +1804,9 @@ if ( defined('HESK_DEMO') )
                   <div class="form-group">
                       <label for="show-icons" class="col-sm-3 col-xs-12 control-label">
                           <?php echo $hesklang['showIcons']; ?>
-                          <a href="#" onclick="javascript:alert('Check this box to show icons next to navigation bar items');">
-                              <i class="fa fa-question-circle settingsquestionmark"></i>
-                          </a>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                             title="<?php echo $hesklang['showIcons']; ?>"
+                             data-content="<?php echo $hesklang['showIconsHelp']; ?>"></i>
                       </label>
                       <div class="col-sm-9 col-xs-12">
                           <div class="checkbox">
@@ -1817,11 +1817,10 @@ if ( defined('HESK_DEMO') )
                       </div>
                   </div>
                   <div class="form-group">
-                      <label for="maintenance-mode" class="col-sm-3 col-xs-12 control-label">
-                          <?php echo $hesklang['maintenanceMode']; ?>
-                          <a href="#" onclick="javascript:alert('Check this box to show icons next to navigation bar items');">
-                              <i class="fa fa-question-circle settingsquestionmark"></i>
-                          </a>
+                      <label for="maintenance-mode" class="col-sm-3 col-xs-12 control-label"><?php echo $hesklang['maintenanceMode']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                             title="<?php echo $hesklang['maintenanceMode']; ?>"
+                             data-content="<?php echo $hesklang['maintenanceModeHelp']; ?>"></i>
                       </label>
                       <div class="col-sm-9 col-xs-12">
                           <div class="checkbox">
@@ -2014,7 +2013,11 @@ if ( defined('HESK_DEMO') )
                   <div class="row">
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="navbarBackgroundColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBackgroundColor']; ?> (?)</label>
+                              <label for="navbarBackgroundColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBackgroundColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['navbarBackgroundColor']; ?>"
+                                     data-content="<?php echo $hesklang['navbarBackgroundColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="navbarBackgroundColor" name="navbarBackgroundColor" class="form-control" value="<?php echo $nuMods_settings['navbarBackgroundColor']; ?>">
                               </div>
@@ -2022,7 +2025,11 @@ if ( defined('HESK_DEMO') )
                       </div>
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="navbarBrandColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBrandColor']; ?> (?)</label>
+                              <label for="navbarBrandColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBrandColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['navbarBrandColor']; ?>"
+                                     data-content="<?php echo $hesklang['navbarBrandColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="navbarBrandColor" name="navbarBrandColor" class="form-control" value="<?php echo $nuMods_settings['navbarBrandColor']; ?>">
                               </div>
@@ -2032,7 +2039,11 @@ if ( defined('HESK_DEMO') )
                   <div class="row">
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="navbarBrandHoverColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBrandHoverColor']; ?> (?)</label>
+                              <label for="navbarBrandHoverColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBrandHoverColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['navbarBrandHoverColor']; ?>"
+                                     data-content="<?php echo $hesklang['navbarBrandHoverColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="navbarBrandHoverColor" name="navbarBrandHoverColor" class="form-control" value="<?php echo $nuMods_settings['navbarBrandHoverColor']; ?>">
                               </div>
@@ -2040,7 +2051,11 @@ if ( defined('HESK_DEMO') )
                       </div>
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="navbarItemTextColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextColor']; ?> (?)</label>
+                              <label for="navbarItemTextColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['navbarItemTextColor']; ?>"
+                                     data-content="<?php echo $hesklang['navbarItemTextColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="navbarItemTextColor" name="navbarItemTextColor" class="form-control" value="<?php echo $nuMods_settings['navbarItemTextColor']; ?>">
                               </div>
@@ -2050,7 +2065,11 @@ if ( defined('HESK_DEMO') )
                   <div class="row">
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="navbarItemTextHoverColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextHoverColor']; ?> (?)</label>
+                              <label for="navbarItemTextHoverColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextHoverColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['navbarItemTextHoverColor']; ?>"
+                                     data-content="<?php echo $hesklang['navbarItemTextHoverColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="navbarItemTextHoverColor" name="navbarItemTextHoverColor" class="form-control" value="<?php echo $nuMods_settings['navbarItemTextHoverColor']; ?>">
                               </div>
@@ -2058,7 +2077,11 @@ if ( defined('HESK_DEMO') )
                       </div>
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="navbarItemTextSelectedColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextSelectedColor']; ?> (?)</label>
+                              <label for="navbarItemTextSelectedColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextSelectedColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['navbarItemTextSelectedColor']; ?>"
+                                     data-content="<?php echo $hesklang['navbarItemTextSelectedColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="navbarItemTextSelectedColor" name="navbarItemTextSelectedColor" class="form-control" value="<?php echo $nuMods_settings['navbarItemTextSelectedColor']; ?>">
                               </div>
@@ -2068,7 +2091,11 @@ if ( defined('HESK_DEMO') )
                   <div class="row">
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="navbarItemSelectedBackgroundColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemSelectedBackgroundColor']; ?> (?)</label>
+                              <label for="navbarItemSelectedBackgroundColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemSelectedBackgroundColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['navbarItemSelectedBackgroundColor']; ?>"
+                                     data-content="<?php echo $hesklang['navbarItemSelectedBackgroundColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="navbarItemSelectedBackgroundColor" name="navbarItemSelectedBackgroundColor" class="form-control" value="<?php echo $nuMods_settings['navbarItemSelectedBackgroundColor']; ?>">
                               </div>
@@ -2076,7 +2103,11 @@ if ( defined('HESK_DEMO') )
                       </div>
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="dropdownItemTextColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextColor']; ?> (?)</label>
+                              <label for="dropdownItemTextColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['dropdownItemTextColor']; ?>"
+                                     data-content="<?php echo $hesklang['dropdownItemTextColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="dropdownItemTextColor" name="dropdownItemTextColor" class="form-control" value="<?php echo $nuMods_settings['dropdownItemTextColor']; ?>">
                               </div>
@@ -2086,7 +2117,11 @@ if ( defined('HESK_DEMO') )
                   <div class="row">
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="dropdownItemTextHoverColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextHoverColor']; ?> (?)</label>
+                              <label for="dropdownItemTextHoverColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextHoverColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['dropdownItemTextHoverColor']; ?>"
+                                     data-content="<?php echo $hesklang['dropdownItemTextHoverColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="dropdownItemTextHoverColor" name="dropdownItemTextHoverColor" class="form-control" value="<?php echo $nuMods_settings['dropdownItemTextHoverColor']; ?>">
                               </div>
@@ -2094,7 +2129,11 @@ if ( defined('HESK_DEMO') )
                       </div>
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="questionMarkColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['questionMarkColor']; ?> (?)</label>
+                              <label for="questionMarkColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['questionMarkColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['questionMarkColor']; ?>"
+                                     data-content="<?php echo $hesklang['questionMarkColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="questionMarkColor" name="questionMarkColor" class="form-control" value="<?php echo $nuMods_settings['questionMarkColor']; ?>">
                               </div>
@@ -2104,7 +2143,11 @@ if ( defined('HESK_DEMO') )
                   <div class="row">
                       <div class="col-sm-6 col-xs-12">
                           <div class="form-group">
-                              <label for="dropdownItemTextHoverBackgroundColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextHoverBackgroundColor']; ?> (?)</label>
+                              <label for="dropdownItemTextHoverBackgroundColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextHoverBackgroundColor']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                                     title="<?php echo $hesklang['dropdownItemTextHoverBackgroundColor']; ?>"
+                                     data-content="<?php echo $hesklang['dropdownItemTextHoverBackgroundColorHelp']; ?>"></i>
+                              </label>
                               <div class="col-sm-5 col-xs-12">
                                   <input type="text" id="dropdownItemTextHoverBackgroundColor" name="dropdownItemTextHoverBackgroundColor" class="form-control" value="<?php echo $nuMods_settings['dropdownItemTextHoverBackgroundColor']; ?>">
                               </div>
