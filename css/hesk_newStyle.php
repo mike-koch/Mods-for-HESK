@@ -123,9 +123,6 @@
     color: <?php echo $questionMarkColor; ?>;
     font-size: 14px;
 }
-.settingsquestionmark:hover {
-    text-decoration: underline;
-}
 .h3questionmark {
     color: <?php echo $questionMarkColor; ?>;
     font-size: 14px;

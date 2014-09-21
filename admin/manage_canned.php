@@ -225,7 +225,7 @@ myField.value += myValue;
         /* This will handle error, success and notice messages */
         hesk_handle_messages();
         ?>
-        <h3><?php echo $hesklang['manage_saved']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['manage_intro']); ?>')"><i class="fa fa-question-circle" style="color:black"></i></a></h3>
+        <h3><?php echo $hesklang['manage_saved']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['manage_intro']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h3>
         <div class="footerWithBorder blankSpace"></div>
 
         <form action="manage_canned.php" method="post" name="form1" class="form-horizontal" role="form">

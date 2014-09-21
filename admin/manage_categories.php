@@ -174,7 +174,7 @@ else {return false;}
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
         ?>
-        <h3><?php echo $hesklang['manage_cat']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['cat_intro']); ?>')"><i class="fa fa-question-circle" style="color:black"></i></a></h3>
+        <h3><?php echo $hesklang['manage_cat']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['cat_intro']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h3>
         <div class="footerWithBorder blankSpace"></div>
         <table class="table table-hover">
             <tr>

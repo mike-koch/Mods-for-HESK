@@ -263,7 +263,7 @@ if (!isset($_SESSION['hide']['treemenu']))
 {
 	?>
 <div class="col-md-10 col-md-offset-1">
-	<h3><?php echo $hesklang['kb']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['kb_intro']); ?>')"><i class="fa fa-question-circle" style="font-size:20px"></i></a></h3>
+	<h3><?php echo $hesklang['kb']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['kb_intro']); ?>')"><i class="fa fa-question-circle settingsquestionmark" style="font-size:20px"></i></a></h3>
     <div class="footerWithBorder blankSpace"></div>
 
 	<!-- SUB NAVIGATION -->

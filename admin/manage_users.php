@@ -315,7 +315,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         hesk_handle_messages();
         ?>
 
-        <h3 style="padding-bottom:5px"><?php echo $hesklang['manage_users']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')"><i class="fa fa-question-circle" style="color:black"></i></a></h3>
+        <h3 style="padding-bottom:5px"><?php echo $hesklang['manage_users']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h3>
         <div class="footerWithBorder blankSpace"></div>
 
         <table class="table table-hover">
