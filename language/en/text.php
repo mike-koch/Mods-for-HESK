@@ -23,6 +23,22 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
 // ADDED OR MODIFIED IN NuMods 1.4.0
 $hesklang['numods'] = 'NuMods';
+$hesklang['navbarBackgroundColor'] = 'Navbar Background Color';
+$hesklang['navbarBrandColor'] = 'Navbar Brand Color';
+$hesklang['navbarBrandHoverColor'] = 'Navbar Brand Hover Color';
+$hesklang['navbarItemTextColor'] = 'Navbar Item Text Color';
+$hesklang['navbarItemTextHoverColor'] = 'Navbar Item Text Hover Color';
+$hesklang['navbarItemTextSelectedColor'] = 'Navbar Item Text Selected Color';
+$hesklang['navbarItemSelectedBackgroundColor'] = 'Navbar Item Selected Background Color';
+$hesklang['dropdownItemTextColor'] = 'Dropdown Item Text Color';
+$hesklang['dropdownItemTextHoverColor'] = 'Dropdown Item Text Hover Color';
+$hesklang['questionMarkColor'] = 'Question Mark Color';
+$hesklang['dropdownItemTextHoverBackgroundColor'] = 'Dropdown Item Text Hover Background Color';
+$hesklang['uiColors'] = 'UI Colors';
+$hesklang['displayRtl'] = 'Display site right-to-left';
+$hesklang['showIcons'] = 'Show Icons';
+$hesklang['maintenanceMode'] = 'Maintenance Mode';
+$hesklang['err_nuMods_settings'] = 'Can\'t open file <b>nuMods_settings.inc.php</b> for writing. Please CHMOD this file to 666 (rw-rw-rw-)';
 
 // ADDED OR MODIFIED IN NuMods 1.3.1
 $hesklang['autorefresh'] = 'Autorefresh:';

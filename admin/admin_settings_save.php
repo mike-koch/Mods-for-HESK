@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'nuMods_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/email_functions.inc.php');
@@ -497,6 +498,56 @@ $stmt->bind_param('i', $_POST['lockedTicketStatus']);
 $stmt->execute();
 
 $set['hesk_version'] = $hesk_settings['hesk_version'];
+
+// Save the nuMods_settings.inc.php file
+$set['nuMods_version'] = $nuMods_settings['version'];
+$set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
+$set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
+$set['maintenance-mode'] = empty($_POST['maintenance-mode']) ? 0 : 1;
+$set['navbarBackgroundColor'] = hesk_input(hesk_POST('navbarBackgroundColor'));
+$set['navbarBrandColor'] = hesk_input(hesk_POST('navbarBrandColor'));
+$set['navbarBrandHoverColor'] = hesk_input(hesk_POST('navbarBrandHoverColor'));
+$set['navbarItemTextColor'] = hesk_input(hesk_POST('navbarItemTextColor'));
+$set['navbarItemTextHoverColor'] = hesk_input(hesk_POST('navbarItemTextHoverColor'));
+$set['navbarItemTextSelectedColor'] = hesk_input(hesk_POST('navbarItemTextSelectedColor'));
+$set['navbarItemSelectedBackgroundColor'] = hesk_input(hesk_POST('navbarItemSelectedBackgroundColor'));
+$set['dropdownItemTextColor'] = hesk_input(hesk_POST('dropdownItemTextColor'));
+$set['dropdownItemTextHoverColor'] = hesk_input(hesk_POST('dropdownItemTextHoverColor'));
+$set['questionMarkColor'] = hesk_input(hesk_POST('questionMarkColor'));
+$set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownItemTextHoverBackgroundColor'));
+$nuMods_file_content='<?php
+
+//-- NuMods Theme Color Settings
+$nuMods_settings[\'navbarBackgroundColor\'] = \''.$set['navbarBackgroundColor'].'\';
+$nuMods_settings[\'navbarBrandColor\'] = \''.$set['navbarBrandColor'].'\';
+$nuMods_settings[\'navbarBrandHoverColor\'] = \''.$set['navbarBrandHoverColor'].'\';
+$nuMods_settings[\'navbarItemTextColor\'] = \''.$set['navbarItemTextColor'].'\';
+$nuMods_settings[\'navbarItemTextHoverColor\'] = \''.$set['navbarItemTextHoverColor'].'\';
+$nuMods_settings[\'navbarItemTextSelectedColor\'] = \''.$set['navbarItemTextSelectedColor'].'\';
+$nuMods_settings[\'navbarItemSelectedBackgroundColor\'] = \''.$set['navbarItemSelectedBackgroundColor'].'\';
+$nuMods_settings[\'dropdownItemTextColor\'] = \''.$set['dropdownItemTextColor'].'\';
+$nuMods_settings[\'dropdownItemTextHoverColor\'] = \''.$set['dropdownItemTextHoverColor'].'\';
+$nuMods_settings[\'dropdownItemTextHoverBackgroundColor\'] = \''.$set['dropdownItemTextHoverBackgroundColor'].'\';
+$nuMods_settings[\'questionMarkColor\'] = \''.$set['questionMarkColor'].'\';
+
+//-- Set this to 1 for right-to-left text.
+$nuMods_settings[\'rtl\'] = '.$set['rtl'].';
+
+//-- Set this to 1 to show icons next to navigation menu items
+$nuMods_settings[\'show_icons\'] = '.$set['show-icons'].';
+
+//-- Set this to 1 to enable maintenance mode
+$nuMods_settings[\'maintenance_mode\'] = '.$set['maintenance-mode'].';
+
+/* DO NOT EDIT ANYTHING BELOW THIS LINE */
+$nuMods_settings[\'version\']= \''.$set['nuMods_version'].'\';';
+
+// Write the file
+if ( ! file_put_contents(HESK_PATH . 'nuMods_settings.inc.php', $nuMods_file_content) )
+{
+    hesk_error($hesklang['err_nuMods_settings']);
+}
+
 
 // Prepare settings file and save it
 $settings_file_content='<?php

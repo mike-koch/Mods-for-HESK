@@ -478,6 +478,7 @@ if ( defined('HESK_DEMO') )
                   <ul class="dropdown-menu" role="menu" aria-labelledby="nuModsDropdown">
                       <li><a href="#numods-general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
                       <li><a href="#statuses" data-toggle="tab"><?php echo $hesklang['statuses']; ?></a></li>
+                      <li><a href="#colors" data-toggle="tab"><?php echo $hesklang['uiColors']; ?></a></li>
                   </ul>
               </li>
             </ul>
@@ -1787,7 +1788,7 @@ if ( defined('HESK_DEMO') )
                   <div class="footerWithBorder blankSpace"></div>
                   <div class="form-group">
                       <label for="rtl" class="col-sm-3 col-xs-12 control-label">
-                          <?php echo 'Display site right-to-left:'; ?>
+                          <?php echo $hesklang['displayRtl']; ?>
                           <a href="#" onclick="javascript:alert('Check this box to convert the helpdesk to right-to-left');">
                               <i class="fa fa-question-circle settingsquestionmark"></i>
                           </a>
@@ -1795,14 +1796,14 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-9 col-xs-12">
                           <div class="checkbox">
                               <label>
-                                  <input type="checkbox" <?php if ($nuMods_settings['rtl']) {echo 'checked' ;} ?>> Display site right-to-left
+                                  <input id="rtl" name="rtl" type="checkbox" <?php if ($nuMods_settings['rtl']) {echo 'checked' ;} ?>> Display site right-to-left
                               </label>
                           </div>
                       </div>
                   </div>
                   <div class="form-group">
                       <label for="show-icons" class="col-sm-3 col-xs-12 control-label">
-                          <?php echo 'Show icons:'; ?>
+                          <?php echo $hesklang['showIcons']; ?>
                           <a href="#" onclick="javascript:alert('Check this box to show icons next to navigation bar items');">
                               <i class="fa fa-question-circle settingsquestionmark"></i>
                           </a>
@@ -1810,14 +1811,14 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-9 col-xs-12">
                           <div class="checkbox">
                               <label>
-                                  <input type="checkbox" <?php if ($nuMods_settings['show_icons']) {echo 'checked';} ?>> Show icons on navigation bar
+                                  <input id="show-icons" name="show-icons" type="checkbox" <?php if ($nuMods_settings['show_icons']) {echo 'checked';} ?>> Show icons on navigation bar
                               </label>
                           </div>
                       </div>
                   </div>
                   <div class="form-group">
                       <label for="maintenance-mode" class="col-sm-3 col-xs-12 control-label">
-                          <?php echo 'Maintenance Mode:'; ?>
+                          <?php echo $hesklang['maintenanceMode']; ?>
                           <a href="#" onclick="javascript:alert('Check this box to show icons next to navigation bar items');">
                               <i class="fa fa-question-circle settingsquestionmark"></i>
                           </a>
@@ -1825,7 +1826,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-9 col-xs-12">
                           <div class="checkbox">
                               <label>
-                                  <input type="checkbox" <?php if ($nuMods_settings['maintenance_mode']) {echo 'checked';} ?>> Enable Maintenance Mode
+                                  <input id="maintenance-mode" name="maintenance-mode" type="checkbox" <?php if ($nuMods_settings['maintenance_mode']) {echo 'checked';} ?>> Enable Maintenance Mode
                               </label>
                           </div>
                       </div>
@@ -2003,6 +2004,111 @@ if ( defined('HESK_DEMO') )
                               }
                               ?>
                           </select>
+                      </div>
+                  </div>
+              </div>
+              <!-- NuMods: Color settings -->
+              <div class="tab-pane fade in" id="colors">
+                  <h6 style="font-weight: bold"><?php echo $hesklang['uiColors']; ?></h6>
+                  <div class="footerWithBorder blankSpace"></div>
+                  <div class="row">
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="navbarBackgroundColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBackgroundColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="navbarBackgroundColor" name="navbarBackgroundColor" class="form-control" value="<?php echo $nuMods_settings['navbarBackgroundColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="navbarBrandColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBrandColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="navbarBrandColor" name="navbarBrandColor" class="form-control" value="<?php echo $nuMods_settings['navbarBrandColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="navbarBrandHoverColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBrandHoverColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="navbarBrandHoverColor" name="navbarBrandHoverColor" class="form-control" value="<?php echo $nuMods_settings['navbarBrandHoverColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="navbarItemTextColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="navbarItemTextColor" name="navbarItemTextColor" class="form-control" value="<?php echo $nuMods_settings['navbarItemTextColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="navbarItemTextHoverColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextHoverColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="navbarItemTextHoverColor" name="navbarItemTextHoverColor" class="form-control" value="<?php echo $nuMods_settings['navbarItemTextHoverColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="navbarItemTextSelectedColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextSelectedColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="navbarItemTextSelectedColor" name="navbarItemTextSelectedColor" class="form-control" value="<?php echo $nuMods_settings['navbarItemTextSelectedColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="navbarItemSelectedBackgroundColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemSelectedBackgroundColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="navbarItemSelectedBackgroundColor" name="navbarItemSelectedBackgroundColor" class="form-control" value="<?php echo $nuMods_settings['navbarItemSelectedBackgroundColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="dropdownItemTextColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="dropdownItemTextColor" name="dropdownItemTextColor" class="form-control" value="<?php echo $nuMods_settings['dropdownItemTextColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="dropdownItemTextHoverColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextHoverColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="dropdownItemTextHoverColor" name="dropdownItemTextHoverColor" class="form-control" value="<?php echo $nuMods_settings['dropdownItemTextHoverColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="questionMarkColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['questionMarkColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="questionMarkColor" name="questionMarkColor" class="form-control" value="<?php echo $nuMods_settings['questionMarkColor']; ?>">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-sm-6 col-xs-12">
+                          <div class="form-group">
+                              <label for="dropdownItemTextHoverBackgroundColor" class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextHoverBackgroundColor']; ?> (?)</label>
+                              <div class="col-sm-5 col-xs-12">
+                                  <input type="text" id="dropdownItemTextHoverBackgroundColor" name="dropdownItemTextHoverBackgroundColor" class="form-control" value="<?php echo $nuMods_settings['dropdownItemTextHoverBackgroundColor']; ?>">
+                              </div>
+                          </div>
                       </div>
                   </div>
               </div>
