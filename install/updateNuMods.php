@@ -55,32 +55,35 @@ if ($_GET['update'] == 1)
         hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (ID, ShortNameContentKey, TicketViewContentKey, TextColor, IsNewTicketStatus, IsClosed, IsClosedByClient, IsCustomerReplyStatus,
 		IsStaffClosedOption, IsStaffReopenedStatus, IsDefaultStaffReplyStatus, LockedTicketStatus)
 	VALUES (5, 'on_hold', 'on_hold', '#000000', 0, 0, 0, 0, 0, 0, 0, 0);");
+        hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `autorefresh` BIGINT NOT NULL DEFAULT 0 AFTER `replies`;");
     }
 }
 
 ?>
 <html>
     <head>
-        <title>NuMods 1.2.4 Install / Upgrade</title>
+        <title>NuMods 1.4.0 Install / Upgrade</title>
     </head>
     <body>
         <div style="display: <?php echo $showInstructions; ?>">
-        <h1>Update NuMods from v1.2.4 - v1.3.0 to v1.3.1</h1>
+        <h1>Update NuMods from v1.3.1 to v1.4.0</h1>
+        <p><a href="#">Update here.</a> <b>Do not use any of the other links below!</b></p>
+        <h1>Update NuMods from v1.2.4 - v1.3.0 to v1.4.0</h1>
         <p><a href="updateTo1-3-1.php">Update here</a>. <b>Do not use the installation below!</b></p>
         <h1>Install NuMods v1.3.1 <b>for the first time</b></h1>
         <h4><i>If you have not yet installed/updated HESK, please do so first before continuing; otherwise installation will <b>fail</b>!</i></h4>
         <br/>
-        <p>Please verify the database information below.  Addtionally, ensure that the database user has CREATE permissions.</p>
+        <p>Please verify the database information below.  Additionally, ensure that the database user has CREATE permissions.</p>
         <p><b>Database Host: </b> <?php echo $hesk_settings['db_host']; ?></p>
         <p><b>Database Name: </b><?php echo $hesk_settings['db_name']; ?></p>
         <p><b>Database User: </b><?php echo $hesk_settings['db_user']; ?></p>
         <p><b>Database Password: </b><?php echo $hesk_settings['db_pass']; ?></p>
         <p><b>Database Prefix: </b><?php echo $hesk_settings['db_pfix']; ?></p>
-        <a href="?update=1">Proceed with installation/upgrade</a>
+        <a href="?update=1">Proceed with installation</a>
         </div>
         <div style="display: <?php echo $showFinished; ?>">
-            <h1>Installation / Upgrade Finished</h1>
-            <p>The installation / upgrade of NuMods has finished. You can now delete the <b>install</b> directory and access the <a href="<?php echo HESK_PATH . 'admin'; ?>">admin area</a></p>
+            <h1>Installation Finished</h1>
+            <p>The installation of NuMods has finished. You can now delete the <b>install</b> directory and access the <a href="<?php echo HESK_PATH . 'admin'; ?>">admin area</a></p>
         </div>
     </body>
 </html>
