@@ -479,6 +479,7 @@ if ( defined('HESK_DEMO') )
                       <li><a href="#numods-general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
                       <li><a href="#statuses" data-toggle="tab"><?php echo $hesklang['statuses']; ?></a></li>
                       <li><a href="#colors" data-toggle="tab"><?php echo $hesklang['uiColors']; ?></a></li>
+                      <li><a href="#deniedParties" data-toggle="tab">(!) IP / Email Bans</a></li>
                   </ul>
               </li>
             </ul>
@@ -2153,6 +2154,45 @@ if ( defined('HESK_DEMO') )
                               </div>
                           </div>
                       </div>
+                  </div>
+              </div>
+              <!-- NuMods: Denied Parties -->
+              <div class="tab-pane fade in" id="deniedParties">
+                  <h6 style="font-weight: bold">(!) IP Bans</h6>
+                  <div class="footerWithBorder blankSpace"></div>
+                  <div class="table-responsive">
+                      <table class="table table-hover">
+                          <thead>
+                            <tr>
+                                <th>Delete</th> <!-- Checkbox placeholder -->
+                                <th>(!) From</th>
+                                <th>(!) To</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          <?php
+                          $ipRs= hesk_dbQuery('SELECT * FROM `'.$hesk_settings['db_pfix'].'denied_ips`');
+                          while ($row = $ipRs->fetch_assoc()) {
+                              echo '<tr id="trIp'.$row['ID'].'">';
+                              echo '<td><input type="checkbox" name="ipDelete'.$row['ID'].'" onclick="toggleRow(\'trIp'.$row['ID'].'\')"></td>';
+                              echo '<td><input type="text" id="ipFrom'.$row['ID'].'" name="ipFrom'.$row['ID'].'" placeholder="From" class="form-control" value="'.$row['RangeStart'].'"></td>';
+                              echo '<td><input type="text" id="ipTo'.$row['ID'].'" name="ipTo'.$row['ID'].'" placeholder="To" class="form-control" value="'.$row['RangeEnd'].'"></td>';
+                              echo '</tr>';
+                          }
+
+                          ?>
+                            <tr class="info">
+                                <!-- Add new IP range -->
+                                <td><b>(!)Add New</b></td>
+                                <td>
+                                    <input type="text" id="addIpFrom" name="addIpFrom" placeholder="From" class="form-control">
+                                </td>
+                                <td>
+                                    <input type="text" id="addIpTo" name="addIpTo" placeholder="To" class="form-control">
+                                </td>
+                            </tr>
+                          </tbody>
+                      </table>
                   </div>
               </div>
                 <div class="form-group">
