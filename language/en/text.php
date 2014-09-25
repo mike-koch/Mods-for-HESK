@@ -53,6 +53,10 @@ $hesklang['showIconsHelp'] = 'Check this box to show icons next to navigation ba
 $hesklang['maintenanceMode'] = 'Maintenance Mode';
 $hesklang['maintenanceModeHelp'] = 'Check this box to put the Help Desk in maintenance mode. Staff can still log into the backend, but the front end will be inaccessible.';
 $hesklang['err_nuMods_settings'] = 'Can\'t open file <b>nuMods_settings.inc.php</b> for writing. Please CHMOD this file to 666 (rw-rw-rw-)';
+$hesklang['ip_to'] = 'To';
+$hesklang['ip_bans'] = 'IP Bans';
+$hesklang['email_bans'] = 'Email Bans';
+$hesklang['ip_email_bans'] = 'IP / Email Bans';
 
 // ADDED OR MODIFIED IN NuMods 1.3.1
 $hesklang['autorefresh'] = 'Autorefresh:';
