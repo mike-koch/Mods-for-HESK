@@ -78,6 +78,19 @@ hesk_dbConnect();
 
 $hesk_error_buffer = array();
 
+// Check to see if the user's IP address or email they submitted is banned.
+$ipAddress = ip2long($_SERVER['REMOTE_ADDR']);
+$ipSql = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_ips` WHERE `RangeStart` <= \''.hesk_dbEscape($ipAddress)
+    .'\' AND `RangeEnd` >= \''.hesk_dbEscape($ipAddress).'\'');
+if ($ipSql->num_rows > 0) {
+    $hesk_error_buffer['ip_ban'] = $hesklang['ip_banned'];
+}
+
+$emailSql = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_emails` WHERE Email = \''.hesk_dbEscape(hesk_POST('email')).'\'');
+if ($emailSql->num_rows > 0) {
+    $hesk_error_buffer['email_ban'] = $hesklang['email_banned'];
+}
+
 // Check anti-SPAM question
 if ($hesk_settings['question_use'])
 {

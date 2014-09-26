@@ -57,6 +57,8 @@ $hesklang['ip_to'] = 'To';
 $hesklang['ip_bans'] = 'IP Bans';
 $hesklang['email_bans'] = 'Email Bans';
 $hesklang['ip_email_bans'] = 'IP / Email Bans';
+$hesklang['ip_banned'] = 'Your IP has been banned by the help desk. You will be unable to submit a ticket until your IP ban has been removed.';
+$hesklang['email_banned'] = 'The email address you have entered has been banned by the help desk. You will be unable to submit a ticket until your email ban has been removed.';
 
 // ADDED OR MODIFIED IN NuMods 1.3.1
 $hesklang['autorefresh'] = 'Autorefresh:';
