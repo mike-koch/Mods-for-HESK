@@ -503,15 +503,19 @@ while ($row = $ipBanSql->fetch_assoc()) {
     if (isset($_POST['ipDelete'][$row['ID']])) {
         hesk_dbQuery('DELETE FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_ips` WHERE ID = '.hesk_dbEscape($row['ID']));
     } else {
+        $ipAddressFrom = ip2long($_POST['ipFrom'][$row['ID']]);
+        $ipAddressTo = ip2long($_POST['ipTo'][$row['ID']]);
         hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_ips`
-            SET `RangeStart` = \''.hesk_dbEscape($_POST['ipFrom'][$row['ID']]).'\',
-                `RangeEnd` = \''.hesk_dbEscape($_POST['ipTo'][$row['ID']]).'\'
+            SET `RangeStart` = \''.hesk_dbEscape($ipAddressFrom).'\',
+                `RangeEnd` = \''.hesk_dbEscape($ipAddressTo).'\'
             WHERE ID = '.hesk_dbEscape($row['ID']));
     }
 }
 if (!empty($_POST['addIpFrom']) && !empty($_POST['addIpTo'])) {
+    $ipAddressFrom = ip2long($_POST['addIpFrom']);
+    $ipAddressTo = ip2long($_POST['addIpTo']);
     hesk_dbQuery('INSERT INTO `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_ips` (`RangeStart`, `RangeEnd`)
-        VALUES (\''.hesk_dbEscape($_POST['addIpFrom']).'\', \''.hesk_dbEscape($_POST['addIpTo']).'\')');
+        VALUES (\''.hesk_dbEscape($ipAddressFrom).'\', \''.hesk_dbEscape($ipAddressTo).'\')');
 }
 
 //-- Email Bans

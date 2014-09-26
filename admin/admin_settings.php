@@ -2175,8 +2175,8 @@ if ( defined('HESK_DEMO') )
                           while ($row = $ipRs->fetch_assoc()) {
                               echo '<tr id="trIp'.$row['ID'].'">';
                               echo '<td><input type="checkbox" name="ipDelete['.$row['ID'].']" onclick="toggleRow(\'trIp'.$row['ID'].'\')"></td>';
-                              echo '<td><input type="text" name="ipFrom['.$row['ID'].']" placeholder="'.$hesklang['from'].'" class="form-control" value="'.$row['RangeStart'].'"></td>';
-                              echo '<td><input type="text" name="ipTo['.$row['ID'].']" placeholder="'.$hesklang['ip_to'].'" class="form-control" value="'.$row['RangeEnd'].'"></td>';
+                              echo '<td><input type="text" name="ipFrom['.$row['ID'].']" placeholder="'.$hesklang['from'].'" class="form-control" value="'.long2ip($row['RangeStart']).'"></td>';
+                              echo '<td><input type="text" name="ipTo['.$row['ID'].']" placeholder="'.$hesklang['ip_to'].'" class="form-control" value="'.long2ip($row['RangeEnd']).'"></td>';
                               echo '</tr>';
                           }
 
