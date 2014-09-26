@@ -280,7 +280,7 @@ function print_login()
     <div>
         <form class="form-signin form-horizontal" role="form" action="index.php" method="post" name="form1">
             
-            <h2 class="form-signin-heading"><span <?php echo $display; ?>><span class="mega-octicon octicon-sign-in"></span>&nbsp;</span><?php echo $hesklang['admin_login']; ?></a></h2><br/>
+            <h2 class="form-signin-heading"><span <?php echo $iconDisplay; ?>><span class="mega-octicon octicon-sign-in"></span>&nbsp;</span><?php echo $hesklang['admin_login']; ?></a></h2><br/>
             <?php if (in_array('pass',$_SESSION['a_iserror'])) { echo '<div class="form-group has-error">';} else { echo '<div class="form-group">';}?>
                 <label for="user" class="col-sm-3 control-label"><?php echo $hesklang['username']; ?>:</label>
                 <div class="col-sm-9">

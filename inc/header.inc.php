@@ -135,9 +135,9 @@ if ($nuMods_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE') && !
 
 <?php
 include(HESK_PATH . 'header.txt');
-$display = 'style="display: none"';
+$iconDisplay = 'style="display: none"';
 if ($nuMods_settings['show_icons']) {
-    $display = '';
+    $iconDisplay = '';
 }
 ?>
 
@@ -154,17 +154,17 @@ if ($nuMods_settings['show_icons']) {
 	    </div>
 	    <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="<?php echo HESK_PATH; ?>"><i class="fa fa-home" <?php echo $display; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?></a></li>
+          <li><a href="<?php echo HESK_PATH; ?>"><i class="fa fa-home" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?></a></li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket" <?php echo $display; ?>></i>&nbsp;<?php echo $hesklang['ticket'] ?><b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['ticket'] ?><b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i class="fa fa-plus-circle" <?php echo $display; ?>></i>&nbsp;<?php echo $hesklang['sub_ticket'] ?></a></li>
-              <li><a href="<?php echo HESK_PATH; ?>ticket.php"><i class="fa fa-search" <?php echo $display; ?>></i>&nbsp;<?php echo $hesklang['view_ticket_nav'] ?></a></li>
+              <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i class="fa fa-plus-circle" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['sub_ticket'] ?></a></li>
+              <li><a href="<?php echo HESK_PATH; ?>ticket.php"><i class="fa fa-search" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['view_ticket_nav'] ?></a></li>
             </ul>
           </li>
           <?php if ($hesk_settings['kb_enable'])
            { ?>
-	      <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><i class="fa fa-book" <?php echo $display; ?>></i>&nbsp;<?php echo $hesklang['kb_text'] ?></a></li> <?php       } ?>
+	      <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><i class="fa fa-book" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['kb_text'] ?></a></li> <?php       } ?>
           <?php include ('custom/header-custom.inc.php'); ?>
         </ul>
       </div><!-- /.navbar-collapse -->

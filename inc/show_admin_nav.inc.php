@@ -51,17 +51,17 @@ $num_mail = hesk_checkNewMail();
 	    </div>
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li><a href="admin_main.php"><i class="fa fa-home" <?php echo $display; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?></a></li>
-          <?php if (hesk_checkPermission('can_man_users',0)){echo '<li><a href="manage_users.php"><i class="fa fa-users" '.$display.'></i>&nbsp;'.$hesklang['menu_users'].'</a></li>';} 
-                if (hesk_checkPermission('can_man_cat',0))  {echo '<li><a href="manage_categories.php"><i class="fa fa-pie-chart" '.$display.'></i>&nbsp;'.$hesklang['menu_cat'].'</a></li>';}
-                if (hesk_checkPermission('can_man_canned',0)) {echo '<li><a href="manage_canned.php"><i class="fa fa-file-text-o" '.$display.'></i>&nbsp;'.$hesklang['menu_can'].'</a></li>';}
-                if (hesk_checkPermission('can_man_kb',0)) {echo '<li><a href="manage_knowledgebase.php"><i class="fa fa-book" '.$display.'></i>&nbsp;'.$hesklang['menu_kb'].'</a></li>';}
-                    else {echo '<li><a href="knowledgebase_private.php"><i class="fa fa-book" '.$display.'></i>&nbsp;'.$hesklang['menu_kb'].'</a></li>';} 
-                if (hesk_checkPermission('can_run_reports',0)) {echo '<li><a href="reports.php"><i class="fa fa-line-chart" '.$display.'></i>&nbsp;'.$hesklang['reports'].'</a></li>';}
-                    elseif (hesk_checkPermission('can_export',0)) {echo '<li><a href="export.php"><i class="fa fa-line-chart" '.$display.'></i>&nbsp;'.$hesklang['reports'].'</a></li>';}
-                if (hesk_checkPermission('can_man_settings',0)) {echo '<li><a href="admin_settings.php"><i class="fa fa-cog" '.$display.'></i>&nbsp;'.$hesklang['settings'].'</a></li>';} ?>
-          <li><a href="profile.php"><i class="fa fa-user" <?php echo $display; ?>></i>&nbsp;<?php echo $hesklang['menu_profile']; ?></a></li>
-          <li><a href="mail.php"><i class="fa fa-envelope-o" <?php echo $display; ?>></i>&nbsp;<?php echo $hesklang['menu_msg']; ?>
+          <li><a href="admin_main.php"><i class="fa fa-home" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?></a></li>
+          <?php if (hesk_checkPermission('can_man_users',0)){echo '<li><a href="manage_users.php"><i class="fa fa-users" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_users'].'</a></li>';}
+                if (hesk_checkPermission('can_man_cat',0))  {echo '<li><a href="manage_categories.php"><i class="fa fa-pie-chart" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_cat'].'</a></li>';}
+                if (hesk_checkPermission('can_man_canned',0)) {echo '<li><a href="manage_canned.php"><i class="fa fa-file-text-o" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_can'].'</a></li>';}
+                if (hesk_checkPermission('can_man_kb',0)) {echo '<li><a href="manage_knowledgebase.php"><i class="fa fa-book" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_kb'].'</a></li>';}
+                    else {echo '<li><a href="knowledgebase_private.php"><i class="fa fa-book" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_kb'].'</a></li>';}
+                if (hesk_checkPermission('can_run_reports',0)) {echo '<li><a href="reports.php"><i class="fa fa-line-chart" '.$iconDisplay.'></i>&nbsp;'.$hesklang['reports'].'</a></li>';}
+                    elseif (hesk_checkPermission('can_export',0)) {echo '<li><a href="export.php"><i class="fa fa-line-chart" '.$iconDisplay.'></i>&nbsp;'.$hesklang['reports'].'</a></li>';}
+                if (hesk_checkPermission('can_man_settings',0)) {echo '<li><a href="admin_settings.php"><i class="fa fa-cog" '.$iconDisplay.'></i>&nbsp;'.$hesklang['settings'].'</a></li>';} ?>
+          <li><a href="profile.php"><i class="fa fa-user" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['menu_profile']; ?></a></li>
+          <li><a href="mail.php"><i class="fa fa-envelope-o" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['menu_msg']; ?>
               <?php if ($num_mail != 0)
                 {
                     echo '<span class="badge">';
@@ -70,10 +70,10 @@ $num_mail = hesk_checkNewMail();
                     echo '</span>';
                 } ?>
               </a></li>
-          <?php include('custom/show_admin_nav-custom.inc.php'); 
-          $display = ($display == '') ? 'style="font-size: 14px"' : $display;
+          <?php include('custom/show_admin_nav-custom.inc.php');
+          $iconDisplay = ($iconDisplay == '') ? 'style="font-size: 14px"' : $iconDisplay;
           ?>
-          <li><a href="index.php?a=logout&amp;token=<?php echo hesk_token_echo(); ?>"><span class="octicon octicon-sign-out" <?php echo $display; ?>></span>&nbsp;<?php echo $hesklang['logout']; ?></a></li>
+          <li><a href="index.php?a=logout&amp;token=<?php echo hesk_token_echo(); ?>"><span class="octicon octicon-sign-out" <?php echo $iconDisplay; ?>></span>&nbsp;<?php echo $hesklang['logout']; ?></a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </nav>
