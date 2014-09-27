@@ -500,6 +500,35 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     }
                     ?>
                 </li>
+                <li class="list-group-item">
+                    <strong><?php echo $hesklang['parent']; ?></strong>
+                    <p><?php
+                        if ($ticket['parent'] != null) {
+                            //-- Get the tracking ID of the parent
+                            $parent = hesk_dbQuery('SELECT `trackid` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets`
+                                WHERE `ID` = '.hesk_dbEscape($ticket['parent']))->fetch_assoc();
+                            echo '<a href="admin_ticket.php?track='.$parent['trackid'].'&Refresh='.mt_rand(10000,99999).'">'.$parent['trackid'].'</a>';
+                        } else {
+                            echo $hesklang['none'];
+                        }
+                    ?></p>
+                </li>
+                <li class="list-group-item">
+                    <strong><?php echo $hesklang['children']; ?></strong>
+                    <p><?php
+                    //-- Check if any tickets have a parent set to this tracking ID
+                    $hasRows = false;
+                    $childrenRS = hesk_dbQuery('SELECT `trackid` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets`
+                        WHERE `parent` = '.hesk_dbEscape($ticket['id']));
+                    while ($row = $childrenRS->fetch_assoc()) {
+                        $hasRows = true;
+                        echo '<a href="admin_ticket.php?track='.$row['trackid'].'&Refresh='.mt_rand(10000,99999).'">'.$row['trackid'].'</a><br>';
+                    }
+                    if (!$hasRows) {
+                        echo $hesklang['none'];
+                    }
+                    ?></p>
+                </li>
             </ul>
         </div>
     </div>
