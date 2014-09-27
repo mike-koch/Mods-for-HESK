@@ -1265,8 +1265,10 @@ function hesk_printReplyForm() {
 	                </select></div><br />
 	                <label><input type="checkbox" name="signature" value="1" checked="checked" /> <?php echo $hesklang['attach_sign']; ?></label>
 	                (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)<br />
-                    <label><input type="checkbox" name="no_notify" value="1" /> <?php echo $hesklang['dsen']; ?></label><br/><br/>
-                    
+                    <label><input type="checkbox" name="no_notify" value="1" <?php if (empty($ticket['email'])) { echo 'checked="checked" disabled'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
+                    <?php if (empty($ticket['email'])) {
+                        echo '<input type="hidden" name="no_notify" value="1">';
+                    } ?>
                     <input type="hidden" name="orig_id" value="<?php echo $ticket['id']; ?>" />
                     <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                     <input class="btn btn-default" type="submit" value="<?php echo $hesklang['submit_reply']; ?>" />

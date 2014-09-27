@@ -119,8 +119,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <input type="text" class="form-control" name="name" size="40" maxlength="30" value="<?php if (isset($_SESSION['as_name'])) {echo stripslashes(hesk_input($_SESSION['as_name']));} ?>"   placeholder="<?php echo $hesklang['name']; ?>"/>
                     </div>
                 </div>
-                <?php if (in_array('email',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} elseif (in_array('email',$_SESSION['isnotice'])) {echo '<div class="form-group has-warning">';} else {echo '<div class="form-group">';} ?>
-                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: <font class="important">*</font></label>
+                <div class="form-group">
+                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: </label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" name="email" size="40" maxlength="255" value="<?php if (isset($_SESSION['as_email'])) {echo stripslashes(hesk_input($_SESSION['as_email']));} ?>" <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(1)"'; } ?> placeholder="<?php echo $hesklang['email']; ?>"/>
                     </div>

@@ -63,7 +63,7 @@ if ( empty($_POST) && ! empty($_SERVER['CONTENT_LENGTH']) )
 $hesk_error_buffer = array();
 
 $tmpvar['name']	    = hesk_input( hesk_POST('name') ) or $hesk_error_buffer['name']=$hesklang['enter_your_name'];
-$tmpvar['email']	= hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer['email']=$hesklang['enter_valid_email'];
+$tmpvar['email']	= hesk_POST('email');
 $tmpvar['category'] = intval( hesk_POST('category') ) or $hesk_error_buffer['category']=$hesklang['sel_app_cat'];
 $tmpvar['priority'] = intval( hesk_POST('priority') );
 
@@ -178,7 +178,7 @@ elseif (hesk_checkPermission('can_assign_self',0) && hesk_okCategory($tmpvar['ca
 }
 
 // Notify customer of the ticket?
-$notify = ! empty($_POST['notify']) ? 1 : 0;
+$notify = (!empty($_POST['notify']) && !empty($tmpvar['email']) ) ? 1 : 0;
 
 // Show ticket after submission?
 $show = ! empty($_POST['show']) ? 1 : 0;
