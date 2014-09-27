@@ -403,6 +403,7 @@ for ($i=1;$i<=20;$i++)
 
 //-- Update the statuses
 hesk_dbConnect();
+$wasStatusDeleted = false;
 //-- Get all the status IDs
 $statusesSql = 'SELECT * FROM `'.$hesk_settings['db_pfix'].'statuses`';
 $results = hesk_dbQuery($statusesSql);
@@ -415,19 +416,7 @@ while ($row = $results->fetch_assoc())
         $stmt = hesk_dbConnect()->prepare($delete);
         $stmt->bind_param('i', $row['ID']);
         $stmt->execute();
-
-        //-- In case we deleted a status in the middle, we now need to re-index the other IDs.
-        $reIndexQuery = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` > '.$row['ID'];
-        $reIndexRS = hesk_dbQuery($reIndexQuery);
-        //-- Update each ID by subtracting 1
-        $reIndexQuery = 'UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` SET `ID` = ? WHERE `ID` = ?';
-        while ($row = $reIndexRS->fetch_assoc())
-        {
-            $stmt = hesk_dbConnect()->prepare($reIndexQuery);
-            $newID = $row['ID'] - 1;
-            $stmt->bind_param('ii', $newID, $row['ID']);
-            $stmt->execute();
-        }
+        $wasStatusDeleted = true;
     } else
     {
         //-- Update the information in the database with what is on the page
@@ -437,6 +426,16 @@ while ($row = $results->fetch_assoc())
         $stmt->bind_param('sssii', $_POST['s'.$row['ID'].'_shortName'], $_POST['s'.$row['ID'].'_longName'], $_POST['s'.$row['ID'].'_textColor'], $isStatusClosed, $row['ID']);
         $stmt->execute();
     }
+}
+
+//-- If any statuses were deleted, re-index them before adding a new one
+if ($wasStatusDeleted) {
+    //-- First drop and re-add the ID column
+    hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` DROP COLUMN `ID`");
+    hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD `ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+
+    //-- Since statuses should be zero-based, but are now one-based, subtract one from each ID
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `ID` = `ID`-1");
 }
 
 //-- Insert the addition if there is anything to add
