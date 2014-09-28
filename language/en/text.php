@@ -67,6 +67,8 @@ $hesklang['child_added'] = 'Successfully added <strong>%s</strong> as a child to
 $hesklang['is_child_already'] = '<strong>%s</strong> is already a child of this ticket.'; //%s: the child tracking ID
 $hesklang['child_does_not_exist'] = '<strong>%s</strong> is not a valid Tracking ID!'; //%s: the child tracking ID
 $hesklang['child_is_itself'] = 'You cannot set a ticket as a child of itself.';
+$hesklang['delete_relationship'] = 'Delete Relationship';
+$hesklang['relationship_deleted'] = 'Parent/Child relationship deleted.';
 
 // ADDED OR MODIFIED IN NuMods 1.3.1
 $hesklang['autorefresh'] = 'Autorefresh:';
