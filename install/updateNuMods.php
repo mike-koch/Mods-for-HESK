@@ -55,19 +55,26 @@ if ($_GET['update'] == 1)
 		IsStaffClosedOption, IsStaffReopenedStatus, IsDefaultStaffReplyStatus, LockedTicketStatus)
 	VALUES (5, 'on_hold', 'on_hold', '#000000', 0, 0, 0, 0, 0, 0, 0, 0);");
         hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `autorefresh` BIGINT NOT NULL DEFAULT 0 AFTER `replies`;");
+		hesk_dbQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_ips` (
+		  `ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		  `RangeStart` VARCHAR(100) NOT NULL,
+		  `RangeEnd` VARCHAR(100) NOT NULL)");
+		hesk_dbQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Email VARCHAR(100) NOT NULL);");
+		hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `parent` MEDIUMINT(8) NULL AFTER `custom20`;");
+
     }
 }
 
 ?>
 <html>
     <head>
-        <title>NuMods 1.4.0 Install / Upgrade</title>
+        <title>NuMods 1.4.1 Install / Upgrade</title>
     </head>
     <body>
         <div style="display: <?php echo $showInstructions; ?>">
-        <h1>Update NuMods from v1.2.4 - v1.3.0 to v1.4.0</h1>
-        <p><a href="updateTo1-4-0.php">Update here</a>. <b>Do not use the installation below!</b></p>
-        <h1>Install NuMods v1.4.0 <b>for the first time</b></h1>
+        <h1>Update NuMods from v1.2.4 - v1.3.0 to v1.4.1</h1>
+        <p><a href="updateTo1-4-1.php">Update here</a>. <b>Do not use the installation below!</b></p>
+        <h1>Install NuMods v1.4.1 <b>for the first time</b></h1>
         <h4><i>If you have not yet installed/updated HESK, please do so first before continuing; otherwise installation will <b>fail</b>!</i></h4>
         <br/>
         <p>Please verify the database information below.  Additionally, ensure that the database user has CREATE and ALTER permissions.</p>
