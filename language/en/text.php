@@ -69,8 +69,6 @@ $hesklang['child_does_not_exist'] = '<strong>%s</strong> is not a valid Tracking
 $hesklang['child_is_itself'] = 'You cannot set a ticket as a child of itself.';
 $hesklang['delete_relationship'] = 'Delete Relationship';
 $hesklang['relationship_deleted'] = 'Parent/Child relationship deleted.';
-
-// ADDED OR MODIFIED IN NuMods 1.3.1
 $hesklang['autorefresh'] = 'Autorefresh:';
 $hesklang['autorefresh_restrictions'] = 'Enter value in milliseconds. Value must be greater than 1000 to use this feature. No fractional values.';
 
