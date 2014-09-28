@@ -3,7 +3,6 @@ define('IN_SCRIPT',1);
 define('HESK_PATH','../');
 require(HESK_PATH . 'install/install_functions.inc.php');
 require(HESK_PATH . 'hesk_settings.inc.php');
-
 $showFinished = 'none';
 $showInstructions = 'block';
 if ($_GET['update'] == 1)
@@ -70,16 +69,17 @@ if ($_GET['update'] == 1)
         <p><a href="#">Update here.</a> <b>Do not use any of the other links below!</b></p>
         <h1>Update NuMods from v1.2.4 - v1.3.0 to v1.4.0</h1>
         <p><a href="updateTo1-3-1.php">Update here</a>. <b>Do not use the installation below!</b></p>
-        <h1>Install NuMods v1.3.1 <b>for the first time</b></h1>
+        <h1>Install NuMods v1.4.0 <b>for the first time</b></h1>
         <h4><i>If you have not yet installed/updated HESK, please do so first before continuing; otherwise installation will <b>fail</b>!</i></h4>
         <br/>
-        <p>Please verify the database information below.  Additionally, ensure that the database user has CREATE permissions.</p>
+        <p>Please verify the database information below.  Additionally, ensure that the database user has CREATE and ALTER permissions.</p>
         <p><b>Database Host: </b> <?php echo $hesk_settings['db_host']; ?></p>
         <p><b>Database Name: </b><?php echo $hesk_settings['db_name']; ?></p>
         <p><b>Database User: </b><?php echo $hesk_settings['db_user']; ?></p>
         <p><b>Database Password: </b><?php echo $hesk_settings['db_pass']; ?></p>
         <p><b>Database Prefix: </b><?php echo $hesk_settings['db_pfix']; ?></p>
         <a href="?update=1">Proceed with installation</a>
+        <p>By proceeding, you agree to the terms of the <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License.</a></p>
         </div>
         <div style="display: <?php echo $showFinished; ?>">
             <h1>Installation Finished</h1>
