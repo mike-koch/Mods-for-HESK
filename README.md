@@ -4,10 +4,15 @@
 This branch contains all files modified from the base version of HESK to become NuMods, a set of modifications for HESK v2.x
 
 <h2>Features</h2>
-<p>Currently, the two major features of NuMods are:</p>
 <ul>
   <li>A new, responsive user interface</li>
   <li>Ability to create custom ticket statuses</li>
+  <li>Ability to ban IP addresses / email addresses</li>
+  <li>Right-to-left text direction</li>
+  <li>Designate parent/child relationships for tickets</li>
+  <li>Dynamically add columns to the ticket dashboard</li>
+  <li>Maintenance Mode</li>
+  <li>Ticket Dashboard Automatic Refresh</li>
 </ul>
 
 <h2>Download</h2>
@@ -33,7 +38,7 @@ You can download this tweak via two ways:
 
 <h2>Languages</h2>
 <p>As of current, only English is a supported language, as there have been several language items that have been edited/created. If you want to translate NuMods to your own language, it is recommended to download the original HESK language file for your language, and then add/edit the lines listed under <code>//Added or modified in HESK UI</code> and <code>//Added or modified in NuMods X.X.X</code> (where X.X.X is a version number) for your language.</p>
-<p>If you create a translation for NuMods, please submit it via a pull request or via the PHP Junkyards forum, where it will be committed to this branch.</p>
+<p>NuMods translations are available at <a href="http://numods.mkochcs.com/download.php" target="_blank">http://numods.mkochcs.com/download.php</a>.</p>
 
 <h2>Browser Compability</h2>
 <p>This list may be incomplete. Please leave a note on the PHP Junkyard forums for additional browser compatibility information.
