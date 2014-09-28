@@ -65,10 +65,8 @@ if ($_GET['update'] == 1)
     </head>
     <body>
         <div style="display: <?php echo $showInstructions; ?>">
-        <h1>Update NuMods from v1.3.1 to v1.4.0</h1>
-        <p><a href="#">Update here.</a> <b>Do not use any of the other links below!</b></p>
         <h1>Update NuMods from v1.2.4 - v1.3.0 to v1.4.0</h1>
-        <p><a href="updateTo1-3-1.php">Update here</a>. <b>Do not use the installation below!</b></p>
+        <p><a href="updateTo1-4-0.php">Update here</a>. <b>Do not use the installation below!</b></p>
         <h1>Install NuMods v1.4.0 <b>for the first time</b></h1>
         <h4><i>If you have not yet installed/updated HESK, please do so first before continuing; otherwise installation will <b>fail</b>!</i></h4>
         <br/>
