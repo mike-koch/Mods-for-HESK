@@ -309,6 +309,42 @@ if ( ($can_reply || $can_edit) && isset($_POST['h']) && isset($_POST['m']) && is
 	hesk_process_messages($hesklang['twu'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
 }
 
+/* Add child action */
+if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
+    //-- Make sure this isn't the same ticket or one of its merged tickets.
+    $mergedTickets = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` WHERE `trackid` =
+        \''.hesk_dbEscape($trackingID).'\' AND `merged` LIKE \'#'.hesk_dbEscape($_POST['childTrackingId']).'\'');
+    if ($_POST['childTrackingId'] == $trackingID || $mergedTickets->num_rows > 0) {
+        hesk_process_messages($hesklang['child_is_itself'], 'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
+    }
+
+    //-- Does the child exist?
+    $existRs = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` WHERE `trackid` = \''.hesk_dbEscape($_POST['childTrackingId']).'\'');
+    if ($existRs->num_rows == 0) {
+        //-- Maybe it was merged?
+        $existRs = hesk_dbQuery('SELECT `trackid` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` WHERE `merged` LIKE \'#'.hesk_dbEscape($_POST['childTrackingId']).'#\'');
+        if ($existRs->num_rows > 0) {
+            //-- Yes, it was merged. Set the child to the "new" ticket; not the merged one.
+            $exist = $existRs->fetch_assoc();
+            $_POST['childTrackingId'] = $exist['trackid'];
+        } else {
+            hesk_process_messages(sprintf($hesklang['child_does_not_exist'], $_POST['childTrackingId']), 'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
+        }
+    }
+
+    //-- Check if the ticket is already a child.
+    $childRs = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` WHERE `parent` = '.$ticket['id'].' AND `trackid` = \''.$_POST['childTrackingId'].'\'');
+    if ($childRs->num_rows > 0) {
+        hesk_process_messages(sprintf($hesklang['is_child_already'], $_POST['childTrackingId']), 'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999), 'NOTICE');
+    }
+
+    hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` SET `parent` = '.$ticket['id'].' WHERE `trackid` = \''.$_POST['childTrackingId'].'\'');
+    hesk_process_messages(sprintf($hesklang['child_added'], $_POST['childTrackingId']), 'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999), 'SUCCESS');
+}
+
+/* Delete child action */
+//TODO Populate this
+
 /* Delete attachment action */
 if (isset($_GET['delatt']) && hesk_token_check())
 {
@@ -528,6 +564,23 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         echo $hesklang['none'];
                     }
                     ?></p>
+                    <?php
+                    if ($can_reply || $can_edit) {
+                    ?>
+                    <div id="addChildText"><p><?php echo '<a class="btn btn-default btn-sm" href="javascript:void(0)" onclick="toggleChildrenForm(true)">'.$hesklang['add_child'].'</a>'; ?></p></div>
+                    <div id="childrenForm" style="display: none">
+                        <form action="admin_ticket.php" method="post">
+                            <div class="form-group"><label for="childTrackingId" class="control-label">Tracking ID</label>
+                            <input type="text" name="childTrackingId" class="form-control input-sm"></div>
+                            <input type="submit" class="btn btn-primary btn-sm" value="<?php echo $hesklang['save']; ?>">
+                            <a class="btn btn-default btn-sm" href="javascript:void(0)" onclick="toggleChildrenForm(false)">
+                                <?php echo $hesklang['cancel']; ?>
+                            </a>
+                            <input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
+                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                        </form>
+                    </div>
+                    <?php } ?>
                 </li>
             </ul>
         </div>

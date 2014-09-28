@@ -40,4 +40,14 @@ function toggleFilterCheckboxes(show) {
     }
 }
 
+function toggleChildrenForm(show) {
+    if (show) {
+        $('#childrenForm').show();
+        $('#addChildText').hide();
+    } else {
+        $('#childrenForm').hide();
+        $('#addChildText').show();
+    }
+}
+
 jQuery(document).ready(loadJquery);

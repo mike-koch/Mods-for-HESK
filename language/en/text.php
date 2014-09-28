@@ -62,6 +62,11 @@ $hesklang['email_banned'] = 'The email address you have entered has been banned 
 $hesklang['none'] = 'None';
 $hesklang['parent'] = 'Parent';
 $hesklang['children'] = 'Children';
+$hesklang['add_child'] = 'Add Child';
+$hesklang['child_added'] = 'Successfully added <strong>%s</strong> as a child to this ticket.'; //%s: the child tracking ID
+$hesklang['is_child_already'] = '<strong>%s</strong> is already a child of this ticket.'; //%s: the child tracking ID
+$hesklang['child_does_not_exist'] = '<strong>%s</strong> is not a valid Tracking ID!'; //%s: the child tracking ID
+$hesklang['child_is_itself'] = 'You cannot set a ticket as a child of itself.';
 
 // ADDED OR MODIFIED IN NuMods 1.3.1
 $hesklang['autorefresh'] = 'Autorefresh:';
