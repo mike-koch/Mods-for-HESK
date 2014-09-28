@@ -23,4 +23,4 @@ $nuMods_settings['show_icons'] = 0;
 $nuMods_settings['maintenance_mode'] = 0;
 
 /* DO NOT EDIT ANYTHING BELOW THIS LINE */
-$nuMods_settings['version']= '1.3.0';
+$nuMods_settings['version']= '1.4.0';
