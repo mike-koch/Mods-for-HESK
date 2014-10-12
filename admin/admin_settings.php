@@ -1797,7 +1797,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-9 col-xs-12">
                           <div class="checkbox">
                               <label>
-                                  <input id="rtl" name="rtl" type="checkbox" <?php if ($nuMods_settings['rtl']) {echo 'checked' ;} ?>> Display site right-to-left
+                                  <input id="rtl" name="rtl" type="checkbox" <?php if ($nuMods_settings['rtl']) {echo 'checked' ;} ?>> <?php echo $hesklang['display_rtl']; ?>
                               </label>
                           </div>
                       </div>
@@ -1812,7 +1812,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-9 col-xs-12">
                           <div class="checkbox">
                               <label>
-                                  <input id="show-icons" name="show-icons" type="checkbox" <?php if ($nuMods_settings['show_icons']) {echo 'checked';} ?>> Show icons on navigation bar
+                                  <input id="show-icons" name="show-icons" type="checkbox" <?php if ($nuMods_settings['show_icons']) {echo 'checked';} ?>> <?php echo $hesklang['show_icons_navigation']; ?>
                               </label>
                           </div>
                       </div>
@@ -1826,7 +1826,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-9 col-xs-12">
                           <div class="checkbox">
                               <label>
-                                  <input id="maintenance-mode" name="maintenance-mode" type="checkbox" <?php if ($nuMods_settings['maintenance_mode']) {echo 'checked';} ?>> Enable Maintenance Mode
+                                  <input id="maintenance-mode" name="maintenance-mode" type="checkbox" <?php if ($nuMods_settings['maintenance_mode']) {echo 'checked';} ?>> <?php echo $hesklang['enable_maintenance']; ?>
                               </label>
                           </div>
                       </div>

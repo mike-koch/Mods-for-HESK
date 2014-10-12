@@ -21,6 +21,11 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN NuMods 1.5.0
+$hesklang['display_rtl'] = 'Display site right-to-left';
+$hesklang['show_icons_navigation'] = 'Show icons on navigation bar';
+$hesklang['enable_maintenance'] = 'Enable maintenance mode';
+
 // ADDED OR MODIFIED IN NuMods 1.4.0
 $hesklang['numods'] = 'NuMods';
 $hesklang['navbarBackgroundColor'] = 'Navbar Background Color';
