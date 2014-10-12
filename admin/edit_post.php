@@ -116,7 +116,7 @@ if (isset($_POST['save']))
     else
     {
 		$tmpvar['name']    = hesk_input( hesk_POST('name') ) or $hesk_error_buffer[]=$hesklang['enter_your_name'];
-		$tmpvar['email']   = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer[]=$hesklang['enter_valid_email'];
+		$tmpvar['email']   = hesk_validateEmail( hesk_POST('email'), 'ERR', 0);
 		$tmpvar['subject'] = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer[]=$hesklang['enter_ticket_subject'];
 		$tmpvar['message'] = hesk_input( hesk_POST('message') ) or $hesk_error_buffer[]=$hesklang['enter_message'];
 
