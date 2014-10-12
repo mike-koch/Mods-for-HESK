@@ -527,7 +527,7 @@ function hesk_print_list_head()
 {
 	global $href, $query, $sort_possible, $hesklang, $hesk_settings;
 	?>
-	<div align="center">
+	<div class="table-responsive">
 	<table id="ticket-table" class="table table-hover">
         <thead>
 	        <tr>
