@@ -1788,13 +1788,13 @@ if ( defined('HESK_DEMO') )
                   <h6 style="font-weight: bold"><?php echo $hesklang['gs']; ?></h6>
                   <div class="footerWithBorder blankSpace"></div>
                   <div class="form-group">
-                      <label for="rtl" class="col-sm-3 col-xs-12 control-label">
+                      <label for="rtl" class="col-sm-4 col-xs-12 control-label">
                           <?php echo $hesklang['displayRtl']; ?>
                           <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
                              title="<?php echo $hesklang['displayRtl']; ?>"
                              data-content="<?php echo $hesklang['displayRtlHelp']; ?>"></i>
                       </label>
-                      <div class="col-sm-9 col-xs-12">
+                      <div class="col-sm-8 col-xs-12">
                           <div class="checkbox">
                               <label>
                                   <input id="rtl" name="rtl" type="checkbox" <?php if ($nuMods_settings['rtl']) {echo 'checked' ;} ?>> <?php echo $hesklang['display_rtl']; ?>
@@ -1803,13 +1803,13 @@ if ( defined('HESK_DEMO') )
                       </div>
                   </div>
                   <div class="form-group">
-                      <label for="show-icons" class="col-sm-3 col-xs-12 control-label">
+                      <label for="show-icons" class="col-sm-4 col-xs-12 control-label">
                           <?php echo $hesklang['showIcons']; ?>
                           <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
                              title="<?php echo $hesklang['showIcons']; ?>"
                              data-content="<?php echo $hesklang['showIconsHelp']; ?>"></i>
                       </label>
-                      <div class="col-sm-9 col-xs-12">
+                      <div class="col-sm-8 col-xs-12">
                           <div class="checkbox">
                               <label>
                                   <input id="show-icons" name="show-icons" type="checkbox" <?php if ($nuMods_settings['show_icons']) {echo 'checked';} ?>> <?php echo $hesklang['show_icons_navigation']; ?>
@@ -1818,12 +1818,12 @@ if ( defined('HESK_DEMO') )
                       </div>
                   </div>
                   <div class="form-group">
-                      <label for="maintenance-mode" class="col-sm-3 col-xs-12 control-label"><?php echo $hesklang['maintenanceMode']; ?>
+                      <label for="maintenance-mode" class="col-sm-4 col-xs-12 control-label"><?php echo $hesklang['maintenanceMode']; ?>
                           <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
                              title="<?php echo $hesklang['maintenanceMode']; ?>"
                              data-content="<?php echo $hesklang['maintenanceModeHelp']; ?>"></i>
                       </label>
-                      <div class="col-sm-9 col-xs-12">
+                      <div class="col-sm-8 col-xs-12">
                           <div class="checkbox">
                               <label>
                                   <input id="maintenance-mode" name="maintenance-mode" type="checkbox" <?php if ($nuMods_settings['maintenance_mode']) {echo 'checked';} ?>> <?php echo $hesklang['enable_maintenance']; ?>
