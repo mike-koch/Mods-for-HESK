@@ -671,44 +671,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         ?>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <b><i><?php echo $hesklang['notes']; ?>: </i></b>
-                    <?php
-                    if ($can_reply)
-                    {
-                    ?>
-                    &nbsp; <a href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('notesform')"><?php echo $hesklang['addnote']; ?></a>
-                    <?php
-                    }
-                    ?>
-
-                    <div id="notesform" style="display:none">
-                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
-                        <textarea class="form-control" name="notemsg" rows="6" cols="60"></textarea><br />
-                        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"  /><input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
-                        <i><?php echo $hesklang['nhid']; ?></i>
-                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                    </form>
-                    </div>
-                </div>
-            </div>
-            <div class="blankSpace"></div>
-            <?php
-	            $res = hesk_dbQuery("SELECT t1.*, t2.`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` AS t1 LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS t2 ON t1.`who` = t2.`id` WHERE `ticket`='".intval($ticket['id'])."' ORDER BY t1.`id` " . ($hesk_settings['new_top'] ? 'DESC' : 'ASC') );
-	            while ($note = hesk_dbFetchAssoc($res))
-	            {
-            ?>
-            <div class="row">
-                <div class="col-md-12 alert-warning">
-                    <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?><p><a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');"><i class="fa fa-times"></i> Delete Note</a></p><?php }?>
-                    <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt']); ?></p>
-                    <p><?php echo $note['message']; ?></p>
-                </div>
-            </div>
-            <?php
-	            }
-            ?>
             <div class="row medLowPriority">
                 <?php
 
@@ -831,6 +793,43 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                         echo '</div>';
                     ?>
+            </div>
+        </div>
+        <?php
+        $res = hesk_dbQuery("SELECT t1.*, t2.`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` AS t1 LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS t2 ON t1.`who` = t2.`id` WHERE `ticket`='".intval($ticket['id'])."' ORDER BY t1.`id` " . ($hesk_settings['new_top'] ? 'DESC' : 'ASC') );
+        while ($note = hesk_dbFetchAssoc($res))
+        {
+            ?>
+            <div class="row">
+                <div class="col-md-12 alert-warning">
+                    <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?><p><a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');"><i class="fa fa-times"></i> Delete Note</a></p><?php }?>
+                    <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt']); ?></p>
+                    <p><?php echo $note['message']; ?></p>
+                </div>
+            </div>
+        <?php
+        }
+        ?>
+        <div class="row">
+            <div class="col-md-12">
+                <b><i><?php echo $hesklang['notes']; ?>: </i></b>
+                <?php
+                if ($can_reply)
+                {
+                    ?>
+                    &nbsp; <a href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('notesform')"><?php echo $hesklang['addnote']; ?></a>
+                <?php
+                }
+                ?>
+
+                <div id="notesform" style="display:none">
+                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
+                        <textarea class="form-control" name="notemsg" rows="6" cols="60"></textarea><br />
+                        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"  /><input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
+                        <i><?php echo $hesklang['nhid']; ?></i>
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                    </form>
+                </div>
             </div>
         </div>
         <div class="blankSpace"></div>
