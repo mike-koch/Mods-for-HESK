@@ -276,10 +276,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <div class="checkbox">
                                 <label><input type="checkbox" name="autoassign" value="Y" <?php if ( ! isset($_SESSION['userdata']['autoassign']) || $_SESSION['userdata']['autoassign'] == 1 ) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['user_aa']; ?></label>
                             </div>
-                            <?php } ?>
+                            <?php } if ($_SESSION['can_manage_settings']) { ?>
                             <div class="checkbox">
                                     <label><input type="checkbox" name="manage_settings"> Can Manage Settings (!)</label>
                             </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="form-group">
@@ -688,7 +689,12 @@ function edit_user()
                         <?php } if ($_GET['id'] != 1) { ?>
                             <div class="checkbox">
                                 <?php if (isset($_SESSION['userdata']['can_manage_settings'])) { ?>
-                                    <label><input type="checkbox" name="manage_settings" <?php if ($_SESSION['userdata']['can_manage_settings']) { echo 'checked';} ?>> Can Manage Settings (!)</label>
+                                    <label><input type="checkbox" name="manage_settings"
+                                            <?php if ($_SESSION['userdata']['can_manage_settings']) { echo 'checked="checked"';} ?>
+                                            <?php if (!$_SESSION['can_manage_settings']) { echo 'disabled'; } ?>> Can Manage Settings (!)</label>
+                                    <?php if (!$_SESSION['can_manage_settings'] && $_SESSION['userdata']['can_manage_settings']) {
+                                        echo '<input type="hidden" name="manage_settings" value="1">';
+                                    } ?>
                                 <?php } ?>
                             </div>
                         <?php } else { ?>
