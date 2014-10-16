@@ -266,19 +266,22 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </div>     
                         </div> 
                     </div>
-                    <?php
-                    if ($hesk_settings['autoassign'])
-                    {
-                        ?>
                     <div class="form-group">
                         <label for="auto-assign" class="col-sm-5 control-label"><?php echo $hesklang['opt']; ?>:</label>
                         <div class="col-sm-7">
+                            <?php
+                            if ($hesk_settings['autoassign'])
+                            {
+                            ?>
                             <div class="checkbox">
-                                <label><input type="checkbox" name="autoassign" value="Y" <?php if ( ! isset($_SESSION['userdata']['autoassign']) || $_SESSION['userdata']['autoassign'] == 1 ) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['user_aa']; ?></label>    
+                                <label><input type="checkbox" name="autoassign" value="Y" <?php if ( ! isset($_SESSION['userdata']['autoassign']) || $_SESSION['userdata']['autoassign'] == 1 ) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['user_aa']; ?></label>
+                            </div>
+                            <?php } ?>
+                            <div class="checkbox">
+                                    <label><input type="checkbox" name="manage_settings"> Can Manage Settings (!)</label>
                             </div>
                         </div>
                     </div>
-                    <?php  } ?>
                     <div class="form-group">
                         <label for="signature" class="col-sm-5 control-label"><?php echo $hesklang['signature_max']; ?>:</label>
 
@@ -530,7 +533,7 @@ function edit_user()
 
     if ( ! isset($_SESSION['save_userdata']))
     {
-		$res = hesk_dbQuery("SELECT `user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges` AS `features` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($id)."' LIMIT 1");
+		$res = hesk_dbQuery("SELECT `user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges` AS `features`, `can_manage_settings` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($id)."' LIMIT 1");
     	$_SESSION['userdata'] = hesk_dbFetchAssoc($res);
 
         /* Store original username for display until changes are saved successfully */
@@ -674,17 +677,25 @@ function edit_user()
                         </div>
                     </div>
                 </div>
-                <?php if ($hesk_settings['autoassign'])
-                {    ?>                
                 <div class="form-group">
                     <label for="autoassign" class="col-sm-3 control-label"><?php echo $hesklang['opt']; ?>:</label>
                     <div class="col-sm-9">
+                        <?php if ($hesk_settings['autoassign'])
+                        {    ?>
                         <div class="checkbox">
                             <label><input type="checkbox" name="autoassign" value="Y" <?php if ( isset($_SESSION['userdata']['autoassign']) && $_SESSION['userdata']['autoassign'] == 1 ) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['user_aa']; ?></label>
-                        </div>   
+                        </div>
+                        <?php } if ($_GET['id'] != 1) { ?>
+                            <div class="checkbox">
+                                <?php if (isset($_SESSION['userdata']['can_manage_settings'])) { ?>
+                                    <label><input type="checkbox" name="manage_settings" <?php if ($_SESSION['userdata']['can_manage_settings']) { echo 'checked';} ?>> Can Manage Settings (!)</label>
+                                <?php } ?>
+                            </div>
+                        <?php } else { ?>
+                            <input type="hidden" name="manage_settings" value="1">
+                        <?php } ?>
                     </div>
-                </div> 
-                <?php } ?>
+                </div>
                 <div class="form-group">
                     <label for="signature" class="col-sm-3 control-label"><?php echo $hesklang['signature_max']; ?>:</label>
                     <div class="col-sm-9">
@@ -754,7 +765,7 @@ function new_user()
 		$myuser['features'] = '';
     }
 
-	hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."users` (`user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges` $sql_where) VALUES (
+	hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."users` (`user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges`, `can_manage_settings` $sql_where) VALUES (
 	'".hesk_dbEscape($myuser['user'])."',
 	'".hesk_dbEscape($myuser['pass'])."',
 	'".intval($myuser['isadmin'])."',
@@ -763,7 +774,8 @@ function new_user()
 	'".hesk_dbEscape($myuser['signature'])."',
 	'".hesk_dbEscape($myuser['categories'])."',
 	'".intval($myuser['autoassign'])."',
-	'".hesk_dbEscape($myuser['features'])."'
+	'".hesk_dbEscape($myuser['features'])."',
+	'".hesk_dbEscape($myuser['can_manage_settings'])."'
 	$sql_what )" );
 
     $_SESSION['seluser'] = hesk_dbInsertID();
@@ -850,7 +862,8 @@ function update_user()
     `categories`='".hesk_dbEscape($myuser['categories'])."',
     `isadmin`='".intval($myuser['isadmin'])."',
     `autoassign`='".intval($myuser['autoassign'])."',
-    `heskprivileges`='".hesk_dbEscape($myuser['features'])."'
+    `heskprivileges`='".hesk_dbEscape($myuser['features'])."',
+    `can_manage_settings`='".hesk_dbEscape($myuser['can_manage_settings'])."'
     $sql_where
     WHERE `id`='".intval($myuser['id'])."' LIMIT 1");
 
@@ -871,6 +884,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
 	$myuser['email']	  = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer .= '<li>' . $hesklang['enter_valid_email'] . '</li>';
 	$myuser['user']		  = hesk_input( hesk_POST('user') ) or $hesk_error_buffer .= '<li>' . $hesklang['enter_username'] . '</li>';
 	$myuser['isadmin']	  = empty($_POST['isadmin']) ? 0 : 1;
+    $myuser['can_manage_settings'] = isset($_POST['manage_settings']) ? 1 : 0;
 	$myuser['signature']  = hesk_input( hesk_POST('signature') );
     $myuser['autoassign'] = hesk_POST('autoassign') == 'Y' ? 1 : 0;
 
