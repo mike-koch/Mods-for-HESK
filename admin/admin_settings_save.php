@@ -49,7 +49,7 @@ hesk_dbConnect();
 hesk_isLoggedIn();
 
 // Check permissions for this feature
-hesk_checkPermission('can_man_settings');
+hesk_checkPermission('can_manage_settings');
 
 // A security check
 hesk_token_check('POST');

@@ -25,6 +25,7 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 $hesklang['display_rtl'] = 'Display site right-to-left';
 $hesklang['show_icons_navigation'] = 'Show icons on navigation bar';
 $hesklang['enable_maintenance'] = 'Enable maintenance mode';
+$hesklang['can_man_settings']='Can manage help desk settings';
 
 // ADDED OR MODIFIED IN NuMods 1.4.0
 $hesklang['numods'] = 'NuMods';
@@ -563,7 +564,6 @@ $hesklang['can_man_kb']='Manage knowledgebase';
 $hesklang['can_man_users']='Manage users';
 $hesklang['can_man_cat']='Manage categories';
 $hesklang['can_man_canned']='Manage canned responses';
-$hesklang['can_man_settings']='Manage help desk settings';
 $hesklang['can_del_notes']='Delete any ticket notes';
 $hesklang['dan']='users can delete their own ticket notes, select this only if you wish to allow this user to also be able to delete notes from other users';
 $hesklang['in_all_cat']='in allowed categories only';

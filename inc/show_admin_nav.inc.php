@@ -59,7 +59,7 @@ $num_mail = hesk_checkNewMail();
                     else {echo '<li><a href="knowledgebase_private.php"><i class="fa fa-book" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_kb'].'</a></li>';}
                 if (hesk_checkPermission('can_run_reports',0)) {echo '<li><a href="reports.php"><i class="fa fa-line-chart" '.$iconDisplay.'></i>&nbsp;'.$hesklang['reports'].'</a></li>';}
                     elseif (hesk_checkPermission('can_export',0)) {echo '<li><a href="export.php"><i class="fa fa-line-chart" '.$iconDisplay.'></i>&nbsp;'.$hesklang['reports'].'</a></li>';}
-                if (hesk_checkPermission('can_man_settings',0)) {echo '<li><a href="admin_settings.php"><i class="fa fa-cog" '.$iconDisplay.'></i>&nbsp;'.$hesklang['settings'].'</a></li>';} ?>
+                if (hesk_checkPermission('can_manage_settings',0)) {echo '<li><a href="admin_settings.php"><i class="fa fa-cog" '.$iconDisplay.'></i>&nbsp;'.$hesklang['settings'].'</a></li>';} ?>
           <li><a href="profile.php"><i class="fa fa-user" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['menu_profile']; ?></a></li>
           <li><a href="mail.php"><i class="fa fa-envelope-o" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['menu_msg']; ?>
               <?php if ($num_mail != 0)

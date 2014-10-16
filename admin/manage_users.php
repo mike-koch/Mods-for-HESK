@@ -61,7 +61,6 @@ $hesk_settings['features'] = array(
 'can_man_users',		/* User can create and edit staff accounts */
 'can_man_cat',			/* User can manage categories/departments */
 'can_man_canned',		/* User can manage canned responses */
-'can_man_settings',		/* User can manage help desk settings */
 'can_add_archive',		/* User can mark tickets as "Tagged" */
 'can_assign_self',		/* User can assign tickets to himself/herself */
 'can_assign_others',	/* User can assign tickets to other staff members */
@@ -278,7 +277,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </div>
                             <?php } if ($_SESSION['can_manage_settings']) { ?>
                             <div class="checkbox">
-                                    <label><input type="checkbox" name="manage_settings"> Can Manage Settings (!)</label>
+                                    <label><input type="checkbox" name="manage_settings"> <?php echo $hesklang['can_man_settings']; ?></label>
                             </div>
                             <?php } ?>
                         </div>
@@ -691,7 +690,7 @@ function edit_user()
                                 <?php if (isset($_SESSION['userdata']['can_manage_settings'])) { ?>
                                     <label><input type="checkbox" name="manage_settings"
                                             <?php if ($_SESSION['userdata']['can_manage_settings']) { echo 'checked="checked"';} ?>
-                                            <?php if (!$_SESSION['can_manage_settings']) { echo 'disabled'; } ?>> Can Manage Settings (!)</label>
+                                            <?php if (!$_SESSION['can_manage_settings']) { echo 'disabled'; } ?>> <?php echo $hesklang['can_man_settings']; ?></label>
                                     <?php if (!$_SESSION['can_manage_settings'] && $_SESSION['userdata']['can_manage_settings']) {
                                         echo '<input type="hidden" name="manage_settings" value="1">';
                                     } ?>
