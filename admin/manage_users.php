@@ -429,11 +429,14 @@ while ($myuser = hesk_dbFetchAssoc($res))
 		$autoassign_code = '';
     }
 
-    /* Is the user active? */
-    if ($myuser['active']) {
-        $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['disable_user'].'"><i style="color: green; font-size: 16px" class="fa fa-user"></i></a>';
-    } else {
-        $activeMarkup = '<a href="manage_users.php?a=active&amp;s=1&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['enable_user'].'"><i style="color: gray; font-size: 16px" class="fa fa-user"></i></a>';
+    $activeMarkup = '';
+    if ($myuser['id'] != $_SESSION['id']) {
+        /* Is the user active? */
+        if ($myuser['active']) {
+            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" data-toggle="tooltip" data-placement="top" title="' . $hesklang['disable_user'] . '"><i style="color: green; font-size: 16px" class="fa fa-user"></i></a>';
+        } else {
+            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" data-toggle="tooltip" data-placement="top" title="' . $hesklang['enable_user'] . '"><i style="color: gray; font-size: 16px" class="fa fa-user"></i></a>';
+        }
     }
 
 echo <<<EOC
