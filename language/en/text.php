@@ -34,6 +34,8 @@ $hesklang['user_deactivated'] = 'User has been deactivated';
 $hesklang['active_user'] = 'Is active user';
 $hesklang['self_deactivation'] = 'You cannot deactivate yourself!';
 $hesklang['inactive_user'] = 'Your account is currently inactive. Contact an administrator for more information.';
+$hesklang['notify_customer_email'] = 'Emails to customer on reply';
+$hesklang['notify_customer_email_text'] = 'Don\'t send email notifications of replies to the customer by default';
 
 // ADDED OR MODIFIED IN NuMods 1.4.0
 $hesklang['numods'] = 'NuMods';
