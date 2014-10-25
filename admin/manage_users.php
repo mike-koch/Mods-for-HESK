@@ -433,7 +433,7 @@ while ($myuser = hesk_dbFetchAssoc($res))
     if ($myuser['active']) {
         $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['disable_user'].'"><i style="color: green; font-size: 16px" class="fa fa-user"></i></a>';
     } else {
-        $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['enable_user'].'"><i style="color: gray; font-size: 16px" class="fa fa-user"></i></a>';
+        $activeMarkup = '<a href="manage_users.php?a=active&amp;s=1&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['enable_user'].'"><i style="color: gray; font-size: 16px" class="fa fa-user"></i></a>';
     }
 
 echo <<<EOC
@@ -709,7 +709,7 @@ function edit_user()
                             <input type="hidden" name="manage_settings" value="1">
                         <?php } ?>
                         <div class="checkbox">
-                            <label><input type="checkbox" name="manage_active" <?php if ($_SESSION['userdata']['active']) { echo 'checked';} ?>> <?php echo $hesklang['active_user']; ?></label>
+                            <label><input type="checkbox" name="active" <?php if ($_SESSION['userdata']['active']) { echo 'checked';} ?>> <?php echo $hesklang['active_user']; ?></label>
                         </div>
                     </div>
                 </div>
@@ -824,15 +824,18 @@ function update_user()
 	$myuser = hesk_validateUserInfo(0,$_SERVER['PHP_SELF']);
     $myuser['id'] = $tmp;
 
-	/* If can't view assigned changes this */
-	if (in_array('can_view_unassigned',$myuser['features']))
-	{
-		$sql_where = "";
-	}
-	else
-	{
-		$sql_where = " , `notify_new_unassigned`='0', `notify_reply_unassigned`='0' ";
-	}
+    /* Only active users can be assigned tickets */
+    if ($myuser['active']) {
+        /* If can't view assigned changes this */
+        if (in_array('can_view_unassigned', $myuser['features'])) {
+            $sql_where = "";
+        } else {
+            $sql_where = " , `notify_new_unassigned`='0', `notify_reply_unassigned`='0' ";
+        }
+    } else {
+        $myuser['autoassign'] = 0;
+        $sql_where = " , `notify_new_unassigned`='0', `notify_new_my`='0', `notify_reply_unassigned`='0', `notify_reply_my`='0', `notify_assigned`='0', `notify_pm`='0', `notify_note`='0' ";
+    }
 
     /* Check for duplicate usernames */
 	$res = hesk_dbQuery("SELECT `id`,`isadmin`,`categories`,`heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `user` = '".hesk_dbEscape($myuser['user'])."' LIMIT 1");
@@ -878,6 +881,7 @@ function update_user()
     `signature`='".hesk_dbEscape($myuser['signature'])."'," . ( isset($myuser['pass']) ? "`pass`='".hesk_dbEscape($myuser['pass'])."'," : '' ) . "
     `categories`='".hesk_dbEscape($myuser['categories'])."',
     `isadmin`='".intval($myuser['isadmin'])."',
+    `active`='".intval($myuser['active'])."',
     `autoassign`='".intval($myuser['autoassign'])."',
     `heskprivileges`='".hesk_dbEscape($myuser['features'])."',
     `can_manage_settings`='".hesk_dbEscape($myuser['can_manage_settings'])."'
@@ -904,6 +908,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     $myuser['can_manage_settings'] = isset($_POST['manage_settings']) ? 1 : 0;
 	$myuser['signature']  = hesk_input( hesk_POST('signature') );
     $myuser['autoassign'] = hesk_POST('autoassign') == 'Y' ? 1 : 0;
+    $myuser['active'] = empty($_POST['active']) ? 0 : 1;
 
     /* If it's not admin at least one category and fature is required */
     $myuser['categories']	= array();
@@ -1082,7 +1087,6 @@ function toggle_active()
         $active = 0;
         $tmp = $hesklang['user_deactivated'];
     }
-
     hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `active` = '".$active."' WHERE `id` = '".intval($myuser)."'");
 
     if (hesk_dbAffectedRows() != 1) {
