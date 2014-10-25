@@ -61,7 +61,7 @@ if (!isset($_SESSION['isnotice']))
 
 /* List of users */
 $admins = array();
-$result = hesk_dbQuery("SELECT `id`,`name`,`isadmin`,`categories`,`heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `id` ASC");
+$result = hesk_dbQuery("SELECT `id`,`name`,`isadmin`,`categories`,`heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `active` = '1' ORDER BY `id` ASC");
 while ($row=hesk_dbFetchAssoc($result))
 {
 	/* Is this an administrator? */
