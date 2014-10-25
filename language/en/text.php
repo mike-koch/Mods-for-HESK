@@ -22,6 +22,7 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
 // ADDED OR MODIFIED IN NuMods 1.5.0
+$hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';
 $hesklang['display_rtl'] = 'Display site right-to-left';
 $hesklang['show_icons_navigation'] = 'Show icons on navigation bar';
 $hesklang['enable_maintenance'] = 'Enable maintenance mode';

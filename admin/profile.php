@@ -258,9 +258,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
             <?php } ?>
             <div class="form-group">
-                <label for="autoRefresh" class="col-sm-3 control-label">Ticket Table Auto-Refresh:</label>
+                <label for="autoRefresh" class="col-sm-3 control-label"><?php echo $hesklang['ticket_auto_refresh']; ?></label>
                 <div class="col-sm-9">
-                    <!-- TODO Contentify the text -->
                     <input type="text" class="form-control" id="autorefresh" name="autorefresh" value="<?php echo $_SESSION['new']['autorefresh']; ?>">
                     <span class="help-block"><?php echo $hesklang['autorefresh_restrictions']; ?></span>
                 </div>
