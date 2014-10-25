@@ -1364,7 +1364,7 @@ function hesk_printReplyForm() {
                         <label><input type="checkbox" name="no_notify" value="1" checked="checked" disabled> <?php echo $hesklang['dsen']; ?></label><br/><br/>
                         <input type="hidden" name="no_notify" value="1">
                     <?php } else { ?>
-                        <label><input type="checkbox" name="no_notify" value="1" <?php if ($_SESSION['default_notify_customer_email']) { echo 'checked'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
+                        <label><input type="checkbox" name="no_notify" value="1" <?php if (!$_SESSION['default_notify_customer_email']) { echo 'checked'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
                     <?php } ?>
                     <input type="hidden" name="orig_id" value="<?php echo $ticket['id']; ?>" />
                     <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
