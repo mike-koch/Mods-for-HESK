@@ -26,6 +26,11 @@ $hesklang['display_rtl'] = 'Display site right-to-left';
 $hesklang['show_icons_navigation'] = 'Show icons on navigation bar';
 $hesklang['enable_maintenance'] = 'Enable maintenance mode';
 $hesklang['can_man_settings']='Can manage help desk settings';
+$hesklang['disable_user'] = 'User is active (click to deactivate)';
+$hesklang['enable_user'] = 'User is inactive (click to activate)';
+$hesklang['user_activated'] = 'User has been activated';
+$hesklang['user_deactivated'] = 'User has been deactivated';
+$hesklang['active_user'] = 'Is active user';
 
 // ADDED OR MODIFIED IN NuMods 1.4.0
 $hesklang['numods'] = 'NuMods';
