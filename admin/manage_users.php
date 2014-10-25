@@ -79,6 +79,7 @@ $default_userdata = array(
 	'user' => '',
 	'signature' => '',
 	'isadmin' => 1,
+    'active' => 1,
 	'categories' => array('1'),
 	'features' => array('can_view_tickets','can_reply_tickets','can_change_cat','can_assign_self','can_view_unassigned','can_view_online'),
 	'signature' => '',
@@ -137,6 +138,7 @@ if ( $action = hesk_REQUEST('a') )
 	elseif ($action == 'save')       {update_user();}
 	elseif ($action == 'remove')     {remove();}
 	elseif ($action == 'autoassign') {toggle_autoassign();}
+    elseif ($action == 'active')     {toggle_active();}
     else 							 {hesk_error($hesklang['invalid_action']);}
 }
 
@@ -427,6 +429,13 @@ while ($myuser = hesk_dbFetchAssoc($res))
 		$autoassign_code = '';
     }
 
+    /* Is the user active? */
+    if ($myuser['active']) {
+        $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['disable_user'].'"><i style="color: green; font-size: 16px" class="fa fa-user"></i></a>';
+    } else {
+        $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['enable_user'].'"><i style="color: gray; font-size: 16px" class="fa fa-user"></i></a>';
+    }
+
 echo <<<EOC
 <tr>
 <td>$myuser[name]</td>
@@ -443,7 +452,7 @@ if ($hesk_settings['rating'])
 }
 
 echo <<<EOC
-<td>$autoassign_code $edit_code $remove_code</td>
+<td>$autoassign_code $edit_code $remove_code $activeMarkup</td>
 </tr>
 
 EOC;
@@ -533,7 +542,7 @@ function edit_user()
 
     if ( ! isset($_SESSION['save_userdata']))
     {
-		$res = hesk_dbQuery("SELECT `user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges` AS `features`, `can_manage_settings` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($id)."' LIMIT 1");
+		$res = hesk_dbQuery("SELECT `user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges` AS `features`, `can_manage_settings`, `active` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($id)."' LIMIT 1");
     	$_SESSION['userdata'] = hesk_dbFetchAssoc($res);
 
         /* Store original username for display until changes are saved successfully */
@@ -699,6 +708,9 @@ function edit_user()
                         <?php } else { ?>
                             <input type="hidden" name="manage_settings" value="1">
                         <?php } ?>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="manage_active" <?php if ($_SESSION['userdata']['active']) { echo 'checked';} ?>> <?php echo $hesklang['active_user']; ?></label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -1050,4 +1062,33 @@ function toggle_autoassign()
 
     hesk_process_messages($tmp,'./manage_users.php','SUCCESS');
 } // End toggle_autoassign()
+
+function toggle_active()
+{
+    global $hesk_settings, $hesklang;
+
+    /* Security check */
+    hesk_token_check();
+
+    $myuser = intval(hesk_GET('id')) or hesk_error($hesklang['no_valid_id']);
+    $_SESSION['seluser'] = $myuser;
+
+    if (intval(hesk_GET('s')))
+    {
+        $active = 1;
+        $tmp = $hesklang['user_activated'];
+    } else
+    {
+        $active = 0;
+        $tmp = $hesklang['user_deactivated'];
+    }
+
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `active` = '".$active."' WHERE `id` = '".intval($myuser)."'");
+
+    if (hesk_dbAffectedRows() != 1) {
+        hesk_process_messages($hesklang['int_error'].': '.$hesklang['user_not_found'],'./manage_users.php');
+    }
+
+    hesk_process_messages($tmp,'./manage_users.php','SUCCESS');
+}
 ?>
