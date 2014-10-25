@@ -197,10 +197,21 @@ function do_login()
 
 	unset($_SESSION['pass']);
 
+
+
 	/* Login successful, clean brute force attempts */
 	hesk_cleanBfAttempts();
 
-	/* Regenerate session ID (security) */
+    /* Make sure our user is active */
+    if (!$_SESSION['active']) {
+        hesk_session_stop();
+        $_SESSION['a_iserror'] = array('active');
+        hesk_process_messages($hesklang['inactive_user'], 'NOREDIRECT');
+        print_login();
+        exit();
+    }
+
+    /* Regenerate session ID (security) */
 	hesk_session_regenerate_id();
 
 	/* Remember username? */
