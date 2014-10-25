@@ -1078,6 +1078,12 @@ function toggle_active()
     $myuser = intval(hesk_GET('id')) or hesk_error($hesklang['no_valid_id']);
     $_SESSION['seluser'] = $myuser;
 
+    if (intval($myuser) == $_SESSION['id'])
+    {
+        //-- You can't deactivate yourself!
+        hesk_process_messages($hesklang['self_deactivation'], './manage_users.php');
+    }
+
     if (intval(hesk_GET('s')))
     {
         $active = 1;

@@ -31,6 +31,7 @@ $hesklang['enable_user'] = 'User is inactive (click to activate)';
 $hesklang['user_activated'] = 'User has been activated';
 $hesklang['user_deactivated'] = 'User has been deactivated';
 $hesklang['active_user'] = 'Is active user';
+$hesklang['self_deactivation'] = 'You cannot deactivate yourself!';
 
 // ADDED OR MODIFIED IN NuMods 1.4.0
 $hesklang['numods'] = 'NuMods';
