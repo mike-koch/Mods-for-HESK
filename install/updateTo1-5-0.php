@@ -4,7 +4,7 @@ define('HESK_PATH','../');
 require(HESK_PATH . 'install/install_functions.inc.php');
 require(HESK_PATH . 'hesk_settings.inc.php');
 hesk_dbConnect();
-hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `active` BIT NOT NULL DEFAULT 1 AFTER `autorefresh`");
+hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `active` ENUM('0', '1') NOT NULL DEFAULT 1 AFTER `autorefresh`");
 hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `can_manage_settings` INT NOT NULL DEFAULT 1");
 ?>
 
