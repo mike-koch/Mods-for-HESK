@@ -1831,6 +1831,30 @@ if ( defined('HESK_DEMO') )
                           </div>
                       </div>
                   </div>
+                  <div class="form-group">
+                      <label for="customer-category" class="col-sm-4 col-xs-12 control-label"><?php echo $hesklang['customer_category']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="left"
+                             title="<?php echo $hesklang['customer_category']; ?>"
+                             data-content="<?php echo $hesklang['customer_category_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12 form-inline">
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="customer-category" value="0" <?php if ($nuMods_settings['customer_category'] == 0) {echo 'checked';} ?>> <?php echo $hesklang['off']; ?>
+                              </label>
+                          </div>&nbsp;&nbsp;
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="customer-category" value="1" <?php if ($nuMods_settings['customer_category'] == 1) {echo 'checked';} ?>> <?php echo $hesklang['on_not_required']; ?>
+                              </label>
+                          </div>&nbsp;&nbsp;
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="customer-category" value="0" <?php if ($nuMods_settings['customer_category'] == 2) {echo 'checked';} ?>> <?php echo $hesklang['on_required']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
               </div>
               <!-- NuMods: Statuses -->
               <div class="tab-pane fade in" id="statuses">
