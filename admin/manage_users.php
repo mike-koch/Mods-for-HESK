@@ -387,8 +387,10 @@ while ($myuser = hesk_dbFetchAssoc($res))
     if ($myuser['id'] == $_SESSION['id'])
     {
     	$edit_code = '<a href="profile.php"><i style="font-size: 16px" class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="'.$hesklang['edit'].'"></i></a>';
-    }
-    else
+    } elseif ($myuser['id'] == 1)
+    {
+        $edit_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
+    } else
     {
     	$edit_code = '<a href="manage_users.php?a=edit&amp;id='.$myuser['id'].'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['edit'].'"><i style="font-size: 16px" class="fa fa-pencil"></i></a>';
     }
@@ -539,6 +541,11 @@ function edit_user()
     if ($id == $_SESSION['id'])
     {
     	hesk_process_messages($hesklang['eyou'],'profile.php','NOTICE');
+    }
+
+    if ($id == 1)
+    {
+        hesk_process_messages($hesklang['cant_edit_admin'],'./manage_users.php');
     }
 
     $_SESSION['edit_userdata'] = TRUE;
