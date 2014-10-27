@@ -404,12 +404,11 @@ while ($myuser = hesk_dbFetchAssoc($res))
     	$myuser['isadmin'] = '<font class="resolved">'.$hesklang['no'].'</font>';
     }
 
-    /* Deleting user with ID 1 (default administrator) is not allowed */
-    if ($myuser['id'] == 1)
+    /* Deleting user with ID 1 (default administrator) is not allowed. Also don't allow the logged in user to be deleted or inactivated */
+    if ($myuser['id'] == 1 || $myuser['id'] == $_SESSION['id'])
     {
         $remove_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
-    }
-    else
+    } else
     {
         $remove_code = ' <a href="manage_users.php?a=remove&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"><i style="font-size: 16px; color: red" class="fa fa-times"></i></a>';
     }
@@ -432,7 +431,7 @@ while ($myuser = hesk_dbFetchAssoc($res))
     }
 
     $activeMarkup = '';
-    if ($myuser['id'] != $_SESSION['id']) {
+    if ($myuser['id'] != $_SESSION['id'] && $myuser['id'] != 1) {
         /* Is the user active? */
         if ($myuser['active']) {
             $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" data-toggle="tooltip" data-placement="top" title="' . $hesklang['disable_user'] . '"><i style="color: green; font-size: 16px" class="fa fa-user"></i></a>';
