@@ -1,5 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/mkoch227/numods.png?label=ready&title=Ready)](https://waffle.io/mkoch227/numods)
-<h2><a href="http://numods.mkochcs.com" target="_blank">NuMods</a> v1.4.1</h2>
+<h2><a href="http://numods.mkochcs.com" target="_blank">NuMods</a> v1.5.0</h2>
 
 This branch contains all files modified from the base version of HESK to become NuMods, a set of modifications for HESK v2.x
 
@@ -13,11 +13,12 @@ This branch contains all files modified from the base version of HESK to become 
   <li>Dynamically add columns to the ticket dashboard</li>
   <li>Maintenance Mode</li>
   <li>Ticket Dashboard Automatic Refresh</li>
+  <li>...and more!</li>
 </ul>
 
 <h2>Download</h2>
 
-You can download this tweak via two ways:
+You can download this mod via two ways:
 
 <ol>
 <li><strong>Stable Releases:</strong> Releases that have a release tag associated with a commit are considered releases.  You can click on "releases" on the top of the repo, and then click "zip" or "tar.gz" to download the repo at that stage.</li>

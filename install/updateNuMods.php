@@ -74,7 +74,7 @@ if ($_GET['update'] == 1)
     <body>
         <div style="display: <?php echo $showInstructions; ?>">
         <h1>Update NuMods from v1.4.1 to v1.5.0</h1>
-        <p><a href="#">Update here</a>. <b>Do not use the installation below!</b> </p>
+        <p><a href="updateTo1-5-0.php">Update here</a>. <b>Do not use the installation below!</b> </p>
         <h1>Update NuMods from v1.2.4 - v1.3.0 to v1.5.0</h1>
 		<p>If you attempted the v1.4.0 installation and it failed, use <a href="updateTo1-4-1.php?ar=true">this update link</a>. Do not use the link below!</p>
         <p><a href="updateTo1-4-1.php">Update here</a>. <b>Do not use the installation below!</b></p>
