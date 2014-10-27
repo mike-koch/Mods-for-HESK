@@ -22,8 +22,5 @@ $nuMods_settings['show_icons'] = 0;
 //-- Set this to 1 to enable maintenance mode
 $nuMods_settings['maintenance_mode'] = 0;
 
-//-- Set this to 0 for off, 1 for on/not required, or 2 for on and required
-$nuMods_settings['customer_category'] = 0;
-
 /* DO NOT EDIT ANYTHING BELOW THIS LINE */
 $nuMods_settings['version']= '1.4.1';

@@ -37,10 +37,6 @@ $hesklang['inactive_user'] = 'Your account is currently inactive. Contact an adm
 $hesklang['notify_customer_email'] = 'Emails to customer on reply';
 $hesklang['notify_customer_email_text'] = 'Don\'t send email notifications of replies to the customer by default';
 $hesklang['cant_edit_admin'] = 'You cannot edit the God Admin (User ID = 1)';
-$hesklang['customer_category'] = 'Allow Customer To Specify Category';
-$hesklang['customer_category_help'] = 'Allow the customer to specify the category for their ticket';
-$hesklang['on_required'] = 'On, required';
-$hesklang['on_not_required'] = 'On, not required';
 
 // ADDED OR MODIFIED IN NuMods 1.4.0
 $hesklang['numods'] = 'NuMods';

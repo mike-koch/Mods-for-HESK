@@ -401,7 +401,6 @@ for ($i=1;$i<=20;$i++)
 	}
 }
 
-
 //-- Update the statuses
 hesk_dbConnect();
 $wasStatusDeleted = false;
@@ -551,7 +550,6 @@ $set['dropdownItemTextColor'] = hesk_input(hesk_POST('dropdownItemTextColor'));
 $set['dropdownItemTextHoverColor'] = hesk_input(hesk_POST('dropdownItemTextHoverColor'));
 $set['questionMarkColor'] = hesk_input(hesk_POST('questionMarkColor'));
 $set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownItemTextHoverBackgroundColor'));
-$set['customer-category'] = hesk_input(hesk_POST('customer-category'));
 $nuMods_file_content='<?php
 
 //-- NuMods Theme Color Settings
@@ -575,9 +573,6 @@ $nuMods_settings[\'show_icons\'] = '.$set['show-icons'].';
 
 //-- Set this to 1 to enable maintenance mode
 $nuMods_settings[\'maintenance_mode\'] = '.$set['maintenance-mode'].';
-
-//-- Set this to 0 for off, 1 for on/not required, or 2 for on and required
-$nuMods_settings[\'customer_category\'] = '.$set['customer-category'].';
 
 /* DO NOT EDIT ANYTHING BELOW THIS LINE */
 $nuMods_settings[\'version\']= \''.$set['nuMods_version'].'\';';
