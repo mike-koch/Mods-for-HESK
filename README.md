@@ -1,4 +1,5 @@
-[![Stories in Ready](https://badge.waffle.io/mkoch227/numods.png?label=ready&title=Ready)](https://waffle.io/mkoch227/numods)
+[![Stories in Ready](https://badge.waffle.io/mkoch227/Mods-For-Hesk.png?label=ready&title=Ready)](https://waffle.io/mkoch227/Mods-For-Hesk)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mkoch227/mods-for-hesk/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 <h2><a href="http://numods.mkochcs.com" target="_blank">NuMods</a> v1.5.0</h2>
 
 This branch contains all files modified from the base version of HESK to become NuMods, a set of modifications for HESK v2.x
