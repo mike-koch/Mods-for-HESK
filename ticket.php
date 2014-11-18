@@ -294,7 +294,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 }
                 else
                 {
-                    $hesk_settings['ticketColumnWidth'] = 3;
+                    $repliesColumnWidth = 3;
                 }
                 echo '<div class="col-md-3 col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>';
                     $ticketStatusKey = $ticket['statusKey'];
