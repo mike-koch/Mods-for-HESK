@@ -56,7 +56,7 @@
         border-bottom: solid 1px #ddd;
         border-left: 0;
         padding-top: 5px;
-        height: 125px;
+        height: 100px;
     }
 }
 
@@ -75,7 +75,7 @@
         border-bottom: 0;
         border-left: solid 1px #ddd;
         margin-top: 1px;
-        height: 125px;
+        height: 100px;
         padding-top: 10px;
     }    
 }
