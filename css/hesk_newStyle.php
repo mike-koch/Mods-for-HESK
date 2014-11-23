@@ -65,7 +65,7 @@
         border-bottom: 0;
         border-right: solid 1px #ddd;
         margin-top: 1px;
-        height: 90px;
+        min-height: 70px;
         padding-top: 10px;
     }
 }
@@ -207,11 +207,27 @@
     font-size: 11px;
     text-transform: uppercase;
 }
+
+@media (min-width: 992px) {
+    .ticketPropertyText {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ticketPropertyText:hover {
+        white-space: normal;
+        overflow: none;
+    }
+}
+
 .ticketPropertyText {
     font-size: 16px;
     line-height: 1em;
     color: #fff;
+    padding-bottom: 2px;
 }
+
 .criticalPriority {
     background-color: red;
 }

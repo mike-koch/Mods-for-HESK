@@ -65,7 +65,7 @@
         border-bottom: 0;
         border-left: solid 1px #ddd;
         margin-top: 1px;
-        height: 90px;
+        min-height: 70px;
         padding-top: 10px;
     }
 }
@@ -209,6 +209,18 @@
     color: rgba(255, 255, 255, .75);
     font-size: 11px;
     text-transform: uppercase;
+}
+@media (min-width: 992px) {
+    .ticketPropertyText {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ticketPropertyText:hover {
+        white-space: normal;
+        overflow: none;
+    }
 }
 .ticketPropertyText {
     font-size: 16px;
