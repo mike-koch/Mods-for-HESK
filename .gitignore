@@ -1,7 +1,6 @@
 admin/admin_suggest_articles.php
 admin/archive.php
 admin/assign_owner.php
-admin/delete_tickets.php
 admin/generate_spam_question.php
 admin/move_category.php
 admin/options.php
@@ -149,7 +148,6 @@ img/tag_off.png
 img/unlock.png
 img/vertical.jpg
 img/view.png
-inc/admin_functions.inc.php
 inc/assignment_search.inc.php
 inc/attachments.inc.php
 inc/calendar/img/cal.gif
@@ -164,7 +162,6 @@ inc/calendar/tcal.js
 inc/calendar/tcal.php
 inc/database.inc.php
 inc/database_mysqli.inc.php
-inc/email_functions.inc.php
 inc/footer.inc.php
 inc/index.htm
 inc/mail/email_parser.php

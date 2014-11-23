@@ -21,6 +21,11 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods For Hesk 1.6.0
+$hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
+$hesklang['ticket_reopen'] = '[#%%TRACK_ID%%] Ticket reopened';
+$hesklang['ticket_reopen_assigned'] = '[#%%TRACK_ID%%] Assigned ticket reopened';
+
 // ADDED OR MODIFIED IN NuMods 1.5.0
 $hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';
 $hesklang['display_rtl'] = 'Display site right-to-left';
