@@ -1310,7 +1310,7 @@ function make_clickable_callback($type, $whitespace, $url, $relative_url, $class
 	$text	= htmlspecialchars($text);
 	$append	= htmlspecialchars($append);
 
-	$html	= "$whitespace<a href=\"$url\"$class>$text</a>$append";
+	$html	= "$whitespace<a href=\"$url\" target=\"blank\" $class>$text</a>$append";
 
 	return $html;
 } // END make_clickable_callback()
