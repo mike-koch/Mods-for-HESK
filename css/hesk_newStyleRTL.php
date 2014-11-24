@@ -39,6 +39,7 @@
 @media (min-width:992px) {
     .close-ticket {
         text-align: left;
+        padding-bottom: 5px;
     }
 }
 

@@ -25,6 +25,7 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
 $hesklang['ticket_reopen'] = '[#%%TRACK_ID%%] Ticket reopened';
 $hesklang['ticket_reopen_assigned'] = '[#%%TRACK_ID%%] Assigned ticket reopened';
+$hesklang['create_based_on_contact'] = 'Create Ticket For Same Contact';
 
 // ADDED OR MODIFIED IN NuMods 1.5.0
 $hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';

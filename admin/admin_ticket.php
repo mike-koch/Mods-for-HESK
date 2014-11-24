@@ -630,13 +630,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3 col-sm-12">
+                <div class="col-md-3 col-sm-12" style="padding-top: 6px">
                     <p><?php echo $hesklang['created_on'].': '.hesk_date($ticket['dt']); ?></p>
                 </div>
-                <div class="col-md-3 col-sm-12">
+                <div class="col-md-3 col-sm-12" style="padding-top: 6px">
                     <p><?php echo $hesklang['last_update'].': '.hesk_date($ticket['lastchange']); ?></p>
                 </div>
-                <div class="col-md-2 col-md-offset-4 col-sm-12 close-ticket">
+                <div class="col-md-6 col-sm-12 close-ticket">
                     <?php
                             $random=rand(10000,99999);
 
@@ -659,16 +659,40 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             $isTicketClosedRow = hesk_dbQuery($isTicketClosedSql)->fetch_assoc();
                             $isTicketClosed = $isTicketClosedRow['IsClosed'];
 
+                            echo '<div class="btn-group" role="group">';
                             if ($isTicketClosed == 0) // Ticket is still open
                             {
                                 echo '<a
-		                        href="change_status.php?track='.$trackingID.'&amp;s='.$staffClosedOptionStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">'.$hesklang['close_action'].'</a>';
+		                        class="btn btn-default btn-sm" href="change_status.php?track='.$trackingID.'&amp;s='.$staffClosedOptionStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">
+		                            <i class="fa fa-check-circle"></i> '.$hesklang['close_action'].'</a>';
                             }
                             else
                             {
                                 echo '<a
-		                        href="change_status.php?track='.$trackingID.'&amp;s='.$staffReopenedStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">'.$hesklang['open_action'].'</a>';
+		                        class="btn btn-default btn-sm" href="change_status.php?track='.$trackingID.'&amp;s='.$staffReopenedStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">
+		                            <i class="fa fa-check-circle"></i> '.$hesklang['open_action'].'</a>';
                             }
+
+                            $linkText = 'new_ticket.php?name='.$ticket['name'].'&email='.$ticket['email'].'&catid='.$category['id'].'&priority='.$ticket['priority'];
+                            foreach ($hesk_settings['custom_fields'] as $k=>$v)
+                            {
+                                if ($v['use'] == 1)
+                                {
+
+                                    if ($v['type'] == 'checkbox')
+                                    {
+                                        $value = str_replace('<br />', '-CHECKBOX-', $ticket[$k]);
+                                    } else {
+                                        $value = $ticket[$k];
+                                    }
+                                    $linkText .= '&c_'.$k.'='.$value;
+                                }
+                            }
+
+                            echo '<a class="btn btn-default btn-sm" href="'.$linkText.'">
+                                      <i class="fa fa-plus"></i> '.$hesklang['create_based_on_contact'].'
+                                  </a>';
+                            echo '</div>';
                         ?>
                 </div>
             </div>
