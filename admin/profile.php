@@ -311,14 +311,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_reply_my" value="1" <?php if (!empty($_SESSION['new']['notify_reply_my'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['ncrt']; ?> <?php echo $hesklang['s_my']; ?></label></div></div>
                     <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_assigned" value="1" <?php if (!empty($_SESSION['new']['notify_assigned'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['ntam']; ?></label></div></div>
 	                <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_note" value="1" <?php if (!empty($_SESSION['new']['notify_note'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['ntnote']; ?></label></div></div>
+                    <?php if ($_SESSION['isadmin']) { ?>
+                    <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_note_unassigned" value="1" <?php if (!empty($_SESSION['new']['notify_note_unassigned'])) {echo 'checked="checked"';}?>> <?php echo $hesklang['notify_note_unassigned']; ?></label></div> </div>
                 <?php
-                } // END $can_view_tickets
+                    }
+                }
                 ?>
                 <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_pm" value="1" <?php if (!empty($_SESSION['new']['notify_pm'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['npms']; ?></label></div></div>
             </div>
             <input type="hidden" name="action" value="update" />
             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" /> 
-	        <div style="text-align: center"><input type="submit" class="btn btn-default" value="<?php echo $hesklang['update_profile']; ?>" class="orangebutton" /></div>
+	        <div style="text-align: center"><input type="submit" class="btn btn-default" value="<?php echo $hesklang['update_profile']; ?>" /></div>
         </form>
     </div>
 </div>
@@ -419,6 +422,7 @@ function update_profile() {
     $_SESSION['new']['notify_reply_my']			= empty($_POST['notify_reply_my']) ? 0 : 1;
     $_SESSION['new']['notify_assigned']			= empty($_POST['notify_assigned']) ? 0 : 1;
     $_SESSION['new']['notify_note']				= empty($_POST['notify_note']) ? 0 : 1;
+    $_SESSION['new']['notify_note_unassigned']  = empty($_POST['notify_note_unassigned']) ? 0 : 1;
     $_SESSION['new']['notify_pm']				= empty($_POST['notify_pm']) ? 0 : 1;
     $_SESSION['new']['default_notify_customer_email']   = empty($_POST['default_notify_customer_email']) ? 1 : 0;
 
@@ -451,6 +455,7 @@ function update_profile() {
         `notify_assigned`='".intval($_SESSION['new']['notify_assigned'])."' ,
         `notify_pm`='".intval($_SESSION['new']['notify_pm'])."',
         `notify_note`='".intval($_SESSION['new']['notify_note'])."',
+        `notify_note_unassigned`='".intval($_SESSION['new']['notify_note_unassigned'])."',
         `default_notify_customer_email`='".intval($_SESSION['new']['default_notify_customer_email'])."'
 	    WHERE `id`='".intval($_SESSION['id'])."' LIMIT 1"
         );
