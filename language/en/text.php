@@ -45,6 +45,7 @@ $hesklang['inactive_user'] = 'Your account is currently inactive. Contact an adm
 $hesklang['notify_customer_email'] = 'Emails to customer on reply';
 $hesklang['notify_customer_email_text'] = 'Don\'t send email notifications of replies to the customer by default';
 $hesklang['cant_edit_admin'] = 'You cannot edit the God Admin (User ID = 1)';
+$hesklang['notifications_disabled_info'] = 'Changing notifications settings has been disabled by your administrator.';
 
 // ADDED OR MODIFIED IN NuMods 1.4.0
 $hesklang['numods'] = 'NuMods';
