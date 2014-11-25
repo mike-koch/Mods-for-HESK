@@ -251,7 +251,6 @@ install/update.php
 language/en/emails/category_moved.txt
 language/en/emails/forgot_ticket_id.txt
 language/en/emails/index.htm
-language/en/emails/new_note.txt
 language/en/emails/new_pm.txt
 language/en/emails/new_reply_by_customer.txt
 language/en/emails/new_reply_by_staff.txt

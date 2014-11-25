@@ -1,0 +1,17 @@
+Hello,
+
+A new note has been added to ticket "%%SUBJECT%%".
+
+Note by %%NAME%%:
+
+%%MESSAGE%%
+
+
+You can manage this ticket here:
+%%TRACK_URL%%
+
+
+Regards,
+
+%%SITE_TITLE%%
+%%SITE_URL%%
