@@ -263,7 +263,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         }
                                         echo ' />' . $hesklang[$k] . '</label></div> ';
                                     }
-                                ?>    
+                                ?>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="can_change_notification_settings" checked> <?php echo $hesklang['can_change_notification_settings']; ?> </label>
+                                </div>
                             </div>     
                         </div> 
                     </div>
@@ -551,7 +554,8 @@ function edit_user()
 
     if ( ! isset($_SESSION['save_userdata']))
     {
-		$res = hesk_dbQuery("SELECT `user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges` AS `features`, `can_manage_settings`, `active` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($id)."' LIMIT 1");
+		$res = hesk_dbQuery("SELECT `user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges` AS `features`, `can_manage_settings`, `active`, `can_change_notification_settings`
+                            FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($id)."' LIMIT 1");
     	$_SESSION['userdata'] = hesk_dbFetchAssoc($res);
 
         /* Store original username for display until changes are saved successfully */
@@ -691,7 +695,21 @@ function edit_user()
 	                                }
 	                                echo ' />' . $hesklang[$k] . '</label></div> ';
 	                            }
-	                        ?>    
+
+                                $manageNotificationCheckboxState = '';
+                                if (
+                                    isset($_SESSION['userdata']['can_change_notification_settings'])
+                                    && $_SESSION['userdata']['can_change_notification_settings'] == 1)
+                                {
+                                    $manageNotificationCheckboxState = 'checked';
+                                }
+
+	                        ?>
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="can_change_notification_settings" <?php echo $manageNotificationCheckboxState; ?>>
+                                        <?php echo $hesklang['can_change_notification_settings']; ?>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -791,7 +809,8 @@ function new_user()
 		$myuser['features'] = '';
     }
 
-	hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."users` (`user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges`, `can_manage_settings` $sql_where) VALUES (
+	hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."users` (
+	    `user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges`, `can_manage_settings`, `can_change_notification_settings` $sql_where) VALUES (
 	'".hesk_dbEscape($myuser['user'])."',
 	'".hesk_dbEscape($myuser['pass'])."',
 	'".intval($myuser['isadmin'])."',
@@ -801,7 +820,8 @@ function new_user()
 	'".hesk_dbEscape($myuser['categories'])."',
 	'".intval($myuser['autoassign'])."',
 	'".hesk_dbEscape($myuser['features'])."',
-	'".hesk_dbEscape($myuser['can_manage_settings'])."'
+	'".hesk_dbEscape($myuser['can_manage_settings'])."',
+	'".hesk_dbEscape($myuser['can_change_notification_settings'])."'
 	$sql_what )" );
 
     $_SESSION['seluser'] = hesk_dbInsertID();
@@ -893,7 +913,8 @@ function update_user()
     `active`='".intval($myuser['active'])."',
     `autoassign`='".intval($myuser['autoassign'])."',
     `heskprivileges`='".hesk_dbEscape($myuser['features'])."',
-    `can_manage_settings`='".hesk_dbEscape($myuser['can_manage_settings'])."'
+    `can_manage_settings`='".hesk_dbEscape($myuser['can_manage_settings'])."',
+    `can_change_notification_settings`='".hesk_dbEscape($myuser['can_change_notification_settings'])."'
     $sql_where
     WHERE `id`='".intval($myuser['id'])."' LIMIT 1");
 
@@ -918,6 +939,11 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
 	$myuser['signature']  = hesk_input( hesk_POST('signature') );
     $myuser['autoassign'] = hesk_POST('autoassign') == 'Y' ? 1 : 0;
     $myuser['active'] = empty($_POST['active']) ? 0 : 1;
+    $myuser['can_change_notification_settings'] = empty($_POST['can_change_notification_settings']) ? 0 : 1;
+    if ($myuser['isadmin'])
+    {
+        $myuser['can_change_notification_settings'] = 1;
+    }
 
     /* If it's not admin at least one category and fature is required */
     $myuser['categories']	= array();

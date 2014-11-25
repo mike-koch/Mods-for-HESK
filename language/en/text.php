@@ -27,6 +27,7 @@ $hesklang['ticket_reopen'] = '[#%%TRACK_ID%%] Ticket reopened';
 $hesklang['ticket_reopen_assigned'] = '[#%%TRACK_ID%%] Assigned ticket reopened';
 $hesklang['create_based_on_contact'] = 'Create Ticket For Same Contact';
 $hesklang['notify_note_unassigned'] = 'Someone adds a note to a ticket not assigned to me';
+$hesklang['can_change_notification_settings'] = 'Can change notification settings';
 
 // ADDED OR MODIFIED IN NuMods 1.5.0
 $hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';
