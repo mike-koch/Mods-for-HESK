@@ -241,51 +241,47 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST'))
 		hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` (`ticket`,`who`,`dt`,`message`) VALUES ('".intval($ticket['id'])."','".intval($_SESSION['id'])."',NOW(),'".hesk_dbEscape($msg)."')");
 
         /* Notify assigned staff that a note has been added if needed */
-        if ($ticket['owner'] && $ticket['owner'] != $_SESSION['id'])
+        $users = hesk_dbQuery("SELECT `email`, `notify_note` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE (`id`='".intval($ticket['owner'])."' OR (`isadmin` = '1' AND `notify_note_unassigned` = '1')) AND `id` <> '".intval($_SESSION['id'])."'");
+
+        if (hesk_dbNumRows($users) > 0)
         {
-			$res = hesk_dbQuery("SELECT `email`, `notify_note` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($ticket['owner'])."' LIMIT 1");
+            // 1. Generate the array with ticket info that can be used in emails
+            $info = array(
+            'email'			=> $ticket['email'],
+            'category'		=> $ticket['category'],
+            'priority'		=> $ticket['priority'],
+            'owner'			=> $ticket['owner'],
+            'trackid'		=> $ticket['trackid'],
+            'status'		=> $ticket['status'],
+            'name'			=> $_SESSION['name'],
+            'lastreplier'	=> $ticket['lastreplier'],
+            'subject'		=> $ticket['subject'],
+            'message'		=> stripslashes($msg),
+            'dt'            => hesk_date($ticket['dt'], true),
+            'lastchange'    => hesk_date($ticket['lastchange'], true),
+            );
 
-			if (hesk_dbNumRows($res) == 1)
-			{
-				$owner = hesk_dbFetchAssoc($res);
+            // 2. Add custom fields to the array
+            foreach ($hesk_settings['custom_fields'] as $k => $v)
+            {
+                $info[$k] = $v['use'] ? $ticket[$k] : '';
+            }
 
-				// 1. Generate the array with ticket info that can be used in emails
-				$info = array(
-				'email'			=> $ticket['email'],
-				'category'		=> $ticket['category'],
-				'priority'		=> $ticket['priority'],
-				'owner'			=> $ticket['owner'],
-				'trackid'		=> $ticket['trackid'],
-				'status'		=> $ticket['status'],
-				'name'			=> $_SESSION['name'],
-				'lastreplier'	=> $ticket['lastreplier'],
-				'subject'		=> $ticket['subject'],
-				'message'		=> stripslashes($msg),
-                'dt'            => hesk_date($ticket['dt'], true),
-                'lastchange'    => hesk_date($ticket['lastchange'], true),
-				);
+            // 3. Make sure all values are properly formatted for email
+            $ticket = hesk_ticketToPlain($info, 1, 0);
 
-				// 2. Add custom fields to the array
-				foreach ($hesk_settings['custom_fields'] as $k => $v)
-				{
-					$info[$k] = $v['use'] ? $ticket[$k] : '';
-				}
+            /* Get email functions */
+            require(HESK_PATH . 'inc/email_functions.inc.php');
 
-				// 3. Make sure all values are properly formatted for email
-				$ticket = hesk_ticketToPlain($info, 1, 0);
+            /* Format email subject and message for staff */
+            $subject = hesk_getEmailSubject('new_note',$ticket);
+            $message = hesk_getEmailMessage('new_note',$ticket,1);
 
-				/* Get email functions */
-				require(HESK_PATH . 'inc/email_functions.inc.php');
-
-				/* Format email subject and message for staff */
-				$subject = hesk_getEmailSubject('new_note',$ticket);
-				$message = hesk_getEmailMessage('new_note',$ticket,1);
-
-				/* Send email to staff */
-				hesk_mail($owner['email'], $subject, $message);
-			}
+            /* Send email to staff */
+            while ($user = hesk_dbFetchAssoc($users)) {
+                hesk_mail($user['email'], $subject, $message);
+            }
         }
-
     }
     header('Location: admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
     exit();
