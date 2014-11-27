@@ -358,3 +358,9 @@ div.setupButtons {
     margin-right: auto;
     width: 90%;
 }
+
+@media (min-width: 768px) {
+    .float-right-sm {
+        float: right;
+    }
+}
