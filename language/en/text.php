@@ -31,6 +31,7 @@ $hesklang['can_change_notification_settings'] = 'Can change notification setting
 $hesklang['note_edit_successful'] = 'Note edited';
 $hesklang['note_last_edit'] = 'Note last edited on: %s'; // %s: timestamp of last edit
 $hesklang['total_number_of_edits'] = 'Total number of edits: %s'; // %s: total number of edits
+$hesklang['add_row'] = 'Add row';
 
 // ADDED OR MODIFIED IN NuMods 1.5.0
 $hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';

@@ -61,4 +61,12 @@ function toggleNote(noteId, showForm) {
     }
 }
 
+function addFileDialog(id, divId) {
+
+    var nextId = +($('#'+id).text());
+    $('#'+divId).append('<input type="file" name="files[' + nextId + ']" style="margin-bottom: 5px">');
+    $('#'+id).text(nextId+1);
+
+}
+
 jQuery(document).ready(loadJquery);

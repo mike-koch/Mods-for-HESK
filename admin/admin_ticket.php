@@ -866,7 +866,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         ?>
         <div class="row">
             <div class="col-md-12">
-                <b><i><?php echo $hesklang['notes']; ?>: </i></b>
                 <?php
                 if ($can_reply)
                 {
@@ -877,11 +876,33 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 ?>
 
                 <div id="notesform" style="display:none">
-                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
-                        <textarea class="form-control" name="notemsg" rows="6" cols="60"></textarea><br />
-                        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"  /><input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
-                        <i><?php echo $hesklang['nhid']; ?></i>
-                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;" enctype="multipart/form-data">
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-md-7">
+                                <h5><?php echo $hesklang['message']; ?></h5>
+                                <div class="footerWithBorder" style="margin-bottom: 10px;"></div>
+                                <textarea class="form-control" name="notemsg" rows="6" cols="60"></textarea>
+                            </div>
+                            <div class="col-md-5">
+                                <h5><?php echo $hesklang['attachments']; ?></h5>
+                                <div class="footerWithBorder" style="margin-bottom: 10px;"></div>
+                                <span style="display: none" id="number-of-file-dialogs">2</span>
+                                <div id="files-for-notes">
+                                    <input type="file" name="file[0]" style="margin-bottom: 5px;">
+                                    <input type="file" name="file[1]" style="margin-bottom: 5px;">
+                                </div>
+                                <a href="javascript:void(0)" onclick="addFileDialog('number-of-file-dialogs', 'files-for-notes')">
+                                    <?php echo $hesklang['add_row']; ?>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"  /><input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
+                                <i><?php echo $hesklang['nhid']; ?></i>
+                                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
