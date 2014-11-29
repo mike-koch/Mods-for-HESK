@@ -32,7 +32,9 @@ $hesklang['note_edit_successful'] = 'Note edited';
 $hesklang['note_last_edit'] = 'Note last edited on: %s'; // %s: timestamp of last edit
 $hesklang['total_number_of_edits'] = 'Total number of edits: %s'; // %s: total number of edits
 $hesklang['add_row'] = 'Add row';
-$hesklang['addnote']='Add note';
+$hesklang['addnote'] = 'Add note';
+$hesklang['no_noteID'] = 'No Note ID';
+$hesklang['note_id_not_found'] = 'Note ID not found';
 
 // ADDED OR MODIFIED IN NuMods 1.5.0
 $hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';

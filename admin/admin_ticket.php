@@ -888,11 +888,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </div>
                         <div class="col-md-4">
                             <?php
-                            $noteAttachmentRS = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `note_id` = ".intval($note['id']));
+                            $noteAttachmentRS = hesk_dbQuery("SELECT `att_id`, `real_name`, `note_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `note_id` = ".intval($note['id']));
 
                             while ($noteAttachment = hesk_dbFetchAssoc($noteAttachmentRS)) {
-                                echo '<a href="../download_attachment.php?att_id='.$noteAttachment.'&amp;track='.$trackingID.'"><i class="fa fa-paperclip"></i></a>
-                                        <a href="../download_attachment.php?att_id='.$noteAttachment.'&amp;track='.$trackingID.'">'.$att_name.'</a><br />';
+                                echo '<a href="../download_attachment.php?att_id='.$noteAttachment['att_id'].'&amp;note='.$noteAttachment['note_id'].'"><i class="fa fa-paperclip"></i></a>
+                                        <a href="../download_attachment.php?att_id='.$noteAttachment['att_id'].'&amp;note='.$noteAttachment['note_id'].'">'.$noteAttachment['real_name'].'</a><br />';
                             } ?>
                         </div>
                     </div>
