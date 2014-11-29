@@ -427,6 +427,45 @@ if (isset($_GET['delatt']) && hesk_token_check())
 	hesk_process_messages($hesklang['kb_att_rem'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
 }
 
+/* Delete note attachment option */
+if (isset($_GET['delete-note-att']) && hesk_token_check()) {
+    if ( ! $can_delete || ! $can_edit)
+    {
+        hesk_process_messages($hesklang['no_permission'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
+    }
+
+    $att_id = intval( hesk_GET('delete-note-att') ) or hesk_error($hesklang['inv_att_id']);
+
+    $reply = intval( hesk_GET('reply', 0) );
+    if ($reply < 1)
+    {
+        $reply = 0;
+    }
+
+    /* Get attachment info */
+    $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `att_id`='".intval($att_id)."' LIMIT 1");
+    if (hesk_dbNumRows($res) != 1)
+    {
+        hesk_process_messages($hesklang['id_not_valid'].' (att_id)','admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
+    }
+    $att = hesk_dbFetchAssoc($res);
+
+    /* Is note ID valid for this attachment? */
+    if (!isset($_GET['note_id']) || $att['note_id'] != $_GET['note_id'])
+    {
+        hesk_process_messages($hesklang['trackID_not_found'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
+    }
+
+    /* Delete file from server */
+    hesk_unlink(HESK_PATH.$hesk_settings['attach_dir'].'/'.$att['saved_name']);
+
+    /* Delete attachment from database */
+    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `att_id`='".intval($att_id)."'");
+
+    hesk_process_messages($hesklang['kb_att_rem'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
+}
+
+
 if (isset($_POST['note_message'])) {
     $n = $_POST['note_id'];
     if ($can_del_notes)
@@ -891,8 +930,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             $noteAttachmentRS = hesk_dbQuery("SELECT `att_id`, `real_name`, `note_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `note_id` = ".intval($note['id']));
 
                             while ($noteAttachment = hesk_dbFetchAssoc($noteAttachmentRS)) {
-                                echo '<a href="../download_attachment.php?att_id='.$noteAttachment['att_id'].'&amp;note='.$noteAttachment['note_id'].'"><i class="fa fa-paperclip"></i></a>
-                                        <a href="../download_attachment.php?att_id='.$noteAttachment['att_id'].'&amp;note='.$noteAttachment['note_id'].'">'.$noteAttachment['real_name'].'</a><br />';
+                                echo '<a href="admin_ticket.php?delete-note-att='.$noteAttachment['att_id'].'&amp;note_id='.$noteAttachment['note_id'].'&amp;track='.$trackingID.'&amp;'.$tmp.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');"><i class="fa fa-times" style="color: #FF0000"></i></a>
+                                      <a href="../download_attachment.php?att_id='.$noteAttachment['att_id'].'&amp;note='.$noteAttachment['note_id'].'"><i class="fa fa-paperclip"></i></a>
+                                      <a href="../download_attachment.php?att_id='.$noteAttachment['att_id'].'&amp;note='.$noteAttachment['note_id'].'">'.$noteAttachment['real_name'].'</a><br />';
                             } ?>
                         </div>
                     </div>
