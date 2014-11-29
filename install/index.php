@@ -54,8 +54,8 @@ hesk_iHeader();
 	<a class="btn btn-default btn-lg" href="update.php?" role="button">Upgrade</a>
 	<p><br/>Upgrade existing HESK installation to version <?php echo HESK_NEW_VERSION; ?></p>
     <br/><br/>
-    <a class="btn btn-default btn-lg" href="updateNuMods.php?update=0" role="button">Install / Upgrade NuMods</a>
-    <p><br/>Install or upgrade existing NuMods installation to version <?php echo NUMODS_NEW_VERSION; ?></p>
+    <a class="btn btn-default btn-lg" href="updateModsForHesk.php" role="button">Install / Upgrade Mods for Hesk</a>
+    <p><br/>Install or upgrade existing Mods for Hesk installation to version <?php echo MODS_FOR_HESK_NEW_VERSION; ?></p>
 </div>
 
 <?php

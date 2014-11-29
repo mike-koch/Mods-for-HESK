@@ -35,8 +35,11 @@ $hesklang['add_row'] = 'Add row';
 $hesklang['addnote'] = 'Add note';
 $hesklang['no_noteID'] = 'No Note ID';
 $hesklang['note_id_not_found'] = 'Note ID not found';
+$hesklang['mods_for_hesk'] = 'Mods for Hesk';
+$hesklang['err_modsForHesk_settings'] = 'Can\'t open file <b>modsForHesk_settings.inc.php</b> for writing. Please CHMOD this file to 666 (rw-rw-rw-)';
+$hesklang['mods_for_hesk_version'] = 'Mods for Hesk Version';
 
-// ADDED OR MODIFIED IN NuMods 1.5.0
+// ADDED OR MODIFIED IN Mods For Hesk 1.5.0
 $hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';
 $hesklang['display_rtl'] = 'Display site right-to-left';
 $hesklang['show_icons_navigation'] = 'Show icons on navigation bar';
@@ -54,8 +57,7 @@ $hesklang['notify_customer_email_text'] = 'Don\'t send email notifications of re
 $hesklang['cant_edit_admin'] = 'You cannot edit the God Admin (User ID = 1)';
 $hesklang['notifications_disabled_info'] = 'Changing notifications settings has been disabled by your administrator.';
 
-// ADDED OR MODIFIED IN NuMods 1.4.0
-$hesklang['numods'] = 'NuMods';
+// ADDED OR MODIFIED IN Mods For Hesk 1.4.0
 $hesklang['navbarBackgroundColor'] = 'Navbar Background Color';
 $hesklang['navbarBackgroundColorHelp'] = 'The main color of the top navigation bar. This applies to both the client and staff-side.';
 $hesklang['navbarBrandColor'] = 'Navbar Brand Color';
@@ -85,7 +87,6 @@ $hesklang['showIcons'] = 'Show Icons';
 $hesklang['showIconsHelp'] = 'Check this box to show icons next to navigation bar items';
 $hesklang['maintenanceMode'] = 'Maintenance Mode';
 $hesklang['maintenanceModeHelp'] = 'Check this box to put the Help Desk in maintenance mode. Staff can still log into the backend, but the front end will be inaccessible.';
-$hesklang['err_nuMods_settings'] = 'Can\'t open file <b>nuMods_settings.inc.php</b> for writing. Please CHMOD this file to 666 (rw-rw-rw-)';
 $hesklang['ip_to'] = 'To';
 $hesklang['ip_bans'] = 'IP Bans';
 $hesklang['email_bans'] = 'Email Bans';
@@ -105,14 +106,14 @@ $hesklang['relationship_deleted'] = 'Parent/Child relationship deleted.';
 $hesklang['autorefresh'] = 'Autorefresh:';
 $hesklang['autorefresh_restrictions'] = 'Enter value in milliseconds. Value must be greater than 1000 to use this feature. No fractional values.';
 
-// ADDED OR MODIFIED IN NuMods 1.3.0
+// ADDED OR MODIFIED IN Mods For Hesk 1.3.0
 $hesklang['show_filters'] = 'Show Column Filters';
 $hesklang['hide_filters'] = 'Hide Column Filters';
 
-// ADDED OR MODIFIED IN NuMods 1.2.2
+// ADDED OR MODIFIED IN Mods For Hesk 1.2.2
 $hesklang['changeLanguage'] = 'Change language to';
 
-// ADDED OR MODIFIED IN NuMods 1.2
+// ADDED OR MODIFIED IN Mods For Hesk 1.2
 $hesklang['statuses'] = 'Statuses';
 $hesklang['basicProperties'] = 'Basic Properties';
 $hesklang['shortNameKey'] = 'Short Name Key';
@@ -130,7 +131,6 @@ $hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close tic
 $hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to';
 $hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to';
 $hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to';
-$hesklang['nuModsVersion'] = 'NuMods Version';
 $hesklang['shortNameRequired'] = 'Short Name Key is required.';
 $hesklang['longNameRequired'] = 'Long Name Key is required.';
 $hesklang['textColorRequired'] = 'Text Color is required.';
@@ -146,7 +146,7 @@ $hesklang['resolved']='Resolved'; // Ticket has been RESOLVED
 $hesklang['quick_help_ticket']='Here is the information on your ticket. You can add a reply to this ticket, close it, or re-open the ticket if applicable.';
 
 
-// ADDED OR MODIFIED IN HESK UI
+// ADDED OR MODIFIED IN Mods For Hesk pre-1.2
 $hesklang['search_the_knowledgebase'] = 'Search the Knowledgebase';
 $hesklang['view_ticket_nav']='View Ticket';
 $hesklang['quick_help']='Quick Help';

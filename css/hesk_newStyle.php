@@ -1,21 +1,21 @@
 <?php
     header("Content-type: text/css; charset: UTF-8");
-    require_once('../nuMods_settings.inc.php');
+    require_once('../modsForHesk_settings.inc.php');
 
-    $navbarBackgroundColor = $nuMods_settings['navbarBackgroundColor'];
-    $navbarBrandColor = $nuMods_settings['navbarBrandColor'];
-    $navbarBrandHoverColor = $nuMods_settings['navbarBrandHoverColor'];
+    $navbarBackgroundColor = $modsForHesk_settings['navbarBackgroundColor'];
+    $navbarBrandColor = $modsForHesk_settings['navbarBrandColor'];
+    $navbarBrandHoverColor = $modsForHesk_settings['navbarBrandHoverColor'];
 
-    $navbarItemTextColor = $nuMods_settings['navbarItemTextColor'];
-    $navbarItemTextHoverColor = $nuMods_settings['navbarItemTextHoverColor'];
-    $navbarItemTextSelectedColor = $nuMods_settings['navbarItemTextSelectedColor'];
-    $navbarItemSelectedBackgroundColor = $nuMods_settings['navbarItemSelectedBackgroundColor'];
+    $navbarItemTextColor = $modsForHesk_settings['navbarItemTextColor'];
+    $navbarItemTextHoverColor = $modsForHesk_settings['navbarItemTextHoverColor'];
+    $navbarItemTextSelectedColor = $modsForHesk_settings['navbarItemTextSelectedColor'];
+    $navbarItemSelectedBackgroundColor = $modsForHesk_settings['navbarItemSelectedBackgroundColor'];
 
-    $dropdownItemTextColor = $nuMods_settings['dropdownItemTextColor'];
-    $dropdownItemTextHoverColor = $nuMods_settings['dropdownItemTextHoverColor'];
-    $dropdownItemTextHoverBackgroundColor = $nuMods_settings['dropdownItemTextHoverBackgroundColor'];
+    $dropdownItemTextColor = $modsForHesk_settings['dropdownItemTextColor'];
+    $dropdownItemTextHoverColor = $modsForHesk_settings['dropdownItemTextHoverColor'];
+    $dropdownItemTextHoverBackgroundColor = $modsForHesk_settings['dropdownItemTextHoverBackgroundColor'];
 
-    $questionMarkColor = $nuMods_settings['questionMarkColor'];
+    $questionMarkColor = $modsForHesk_settings['questionMarkColor'];
 ?>
 
 .nu-rtlFloatLeft {

@@ -5,10 +5,10 @@ define('ON_MAINTENANCE_PAGE', 1);
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'nuMods_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require_once(HESK_PATH . 'inc/header.inc.php');
-if (!$nuMods_settings['maintenance_mode']) {
+if (!$modsForHesk_settings['maintenance_mode']) {
     //-- The user refreshed the maintenance page, but maintenance mode is off. Redirect them back to the index page.
     header('Location: '.HESK_PATH);
 }

@@ -34,9 +34,9 @@
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
-require(HESK_PATH . 'nuMods_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 // Check to see if we're in maintenance mode before sending anything to the DOM
-if ($nuMods_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE') && !defined('ON_LOGIN_PAGE')) {
+if ($modsForHesk_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE') && !defined('ON_LOGIN_PAGE')) {
     header('Location: '.HESK_PATH.'maintenance.php');
 }
 ?>
@@ -46,14 +46,14 @@ if ($nuMods_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE') && !
 	<title><?php echo (isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>" />
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <?php if ($nuMods_settings['rtl']) { ?>
+    <?php if ($modsForHesk_settings['rtl']) { ?>
     <link href="<?php echo HESK_PATH; ?>hesk_style_v25RTL.css" type="text/css" rel="stylesheet" />
     <?php } else { ?>
 	<link href="<?php echo HESK_PATH; ?>hesk_style_v25.css" type="text/css" rel="stylesheet" />
     <?php } ?>
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css" type="text/css" rel="stylesheet" />
-    <?php if ($nuMods_settings['rtl']) { ?>
+    <?php if ($modsForHesk_settings['rtl']) { ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php" type="text/css" rel="stylesheet" />
     <?php } else { ?>
@@ -136,7 +136,7 @@ if ($nuMods_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE') && !
 <?php
 include(HESK_PATH . 'header.txt');
 $iconDisplay = 'style="display: none"';
-if ($nuMods_settings['show_icons']) {
+if ($modsForHesk_settings['show_icons']) {
     $iconDisplay = '';
 }
 ?>
