@@ -21,6 +21,3 @@ $modsForHesk_settings['show_icons'] = 0;
 
 //-- Set this to 1 to enable maintenance mode
 $modsForHesk_settings['maintenance_mode'] = 0;
-
-/* DO NOT EDIT ANYTHING BELOW THIS LINE */
-$modsForHesk_settings['version']= '1.5.0';

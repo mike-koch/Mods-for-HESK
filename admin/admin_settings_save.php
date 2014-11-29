@@ -535,7 +535,6 @@ if (!empty($_POST['addEmail'])) {
 $set['hesk_version'] = $hesk_settings['hesk_version'];
 
 // Save the modsForHesk_settings.inc.php file
-$set['modsForHesk_version'] = $modsForHesk_settings['version'];
 $set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
 $set['maintenance-mode'] = empty($_POST['maintenance-mode']) ? 0 : 1;
@@ -572,10 +571,7 @@ $modsForHesk_settings[\'rtl\'] = '.$set['rtl'].';
 $modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';
 
 //-- Set this to 1 to enable maintenance mode
-$modsForHesk_settings[\'maintenance_mode\'] = '.$set['maintenance-mode'].';
-
-/* DO NOT EDIT ANYTHING BELOW THIS LINE */
-$modsForHesk_settings[\'version\']= \''.$set['modsForHesk_version'].'\';';
+$modsForHesk_settings[\'maintenance_mode\'] = '.$set['maintenance-mode'].';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )
