@@ -95,6 +95,9 @@ if ( defined('HESK_DEMO') )
 	$hesk_settings['recaptcha_private_key']	= $hesklang['hdemo'];
 }
 
+// Get the current version of Mods for Hesk
+$modsForHeskVersionRS = hesk_dbQuery("SELECT `Value` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` WHERE `Key` = 'modsForHeskVersion'");
+$modsForHeskVersion = hesk_dbFetchAssoc($modsForHeskVersionRS)['Value'];
 ?>
 
 <div class="row" style="margin-top: 20px">
@@ -145,7 +148,7 @@ if ( defined('HESK_DEMO') )
                             <?php echo $hesklang['mods_for_hesk_version']; ?>:
                         </td>
                         <td style="padding-left: 10px">
-                            <?php echo $modsForHesk_settings['version']; ?>
+                            <?php echo $modsForHeskVersion; ?>
                         </td>
                     </tr>
                     <tr><td class="text-right">
