@@ -32,6 +32,7 @@ $hesklang['note_edit_successful'] = 'Note edited';
 $hesklang['note_last_edit'] = 'Note last edited on: %s'; // %s: timestamp of last edit
 $hesklang['total_number_of_edits'] = 'Total number of edits: %s'; // %s: total number of edits
 $hesklang['add_row'] = 'Add row';
+$hesklang['addnote']='Add note';
 
 // ADDED OR MODIFIED IN NuMods 1.5.0
 $hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';
@@ -679,7 +680,6 @@ $hesklang['opt2']='Options for this radio button, enter one option per line (eac
 $hesklang['opt3']='Options for this select box, enter one option per line (each line will be a choice your customers can choose from). You need to enter at least two options!';
 $hesklang['atl2']='Enter at least two options (one per line)!';
 $hesklang['notes']='Notes';
-$hesklang['addnote']='+ Add note';
 $hesklang['noteby']='Note by';
 $hesklang['delnote']='Delete note';
 $hesklang['noteerr']='Note already deleted or wrong parameters';
