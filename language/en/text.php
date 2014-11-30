@@ -21,7 +21,7 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
-// ADDED OR MODIFIED IN Mods For Hesk 1.6.0
+// ADDED OR MODIFIED IN Mods For HESK 1.6.0
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
 $hesklang['ticket_reopen'] = '[#%%TRACK_ID%%] Ticket reopened';
 $hesklang['ticket_reopen_assigned'] = '[#%%TRACK_ID%%] Assigned ticket reopened';
@@ -35,11 +35,11 @@ $hesklang['add_row'] = 'Add row';
 $hesklang['addnote'] = 'Add note';
 $hesklang['no_noteID'] = 'No Note ID';
 $hesklang['note_id_not_found'] = 'Note ID not found';
-$hesklang['mods_for_hesk'] = 'Mods for Hesk';
+$hesklang['mods_for_hesk'] = 'Mods for HESK';
 $hesklang['err_modsForHesk_settings'] = 'Can\'t open file <b>modsForHesk_settings.inc.php</b> for writing. Please CHMOD this file to 666 (rw-rw-rw-)';
-$hesklang['mods_for_hesk_version'] = 'Mods for Hesk Version';
+$hesklang['mods_for_hesk_version'] = 'Mods for HESK Version';
 
-// ADDED OR MODIFIED IN Mods For Hesk 1.5.0
+// ADDED OR MODIFIED IN Mods For HESK 1.5.0
 $hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';
 $hesklang['display_rtl'] = 'Display site right-to-left';
 $hesklang['show_icons_navigation'] = 'Show icons on navigation bar';
@@ -57,7 +57,7 @@ $hesklang['notify_customer_email_text'] = 'Don\'t send email notifications of re
 $hesklang['cant_edit_admin'] = 'You cannot edit the God Admin (User ID = 1)';
 $hesklang['notifications_disabled_info'] = 'Changing notifications settings has been disabled by your administrator.';
 
-// ADDED OR MODIFIED IN Mods For Hesk 1.4.0
+// ADDED OR MODIFIED IN Mods For HESK 1.4.0
 $hesklang['navbarBackgroundColor'] = 'Navbar Background Color';
 $hesklang['navbarBackgroundColorHelp'] = 'The main color of the top navigation bar. This applies to both the client and staff-side.';
 $hesklang['navbarBrandColor'] = 'Navbar Brand Color';
@@ -106,14 +106,14 @@ $hesklang['relationship_deleted'] = 'Parent/Child relationship deleted.';
 $hesklang['autorefresh'] = 'Autorefresh:';
 $hesklang['autorefresh_restrictions'] = 'Enter value in milliseconds. Value must be greater than 1000 to use this feature. No fractional values.';
 
-// ADDED OR MODIFIED IN Mods For Hesk 1.3.0
+// ADDED OR MODIFIED IN Mods For HESK 1.3.0
 $hesklang['show_filters'] = 'Show Column Filters';
 $hesklang['hide_filters'] = 'Hide Column Filters';
 
-// ADDED OR MODIFIED IN Mods For Hesk 1.2.2
+// ADDED OR MODIFIED IN Mods For HESK 1.2.2
 $hesklang['changeLanguage'] = 'Change language to';
 
-// ADDED OR MODIFIED IN Mods For Hesk 1.2
+// ADDED OR MODIFIED IN Mods For HESK 1.2
 $hesklang['statuses'] = 'Statuses';
 $hesklang['basicProperties'] = 'Basic Properties';
 $hesklang['shortNameKey'] = 'Short Name Key';
@@ -146,7 +146,7 @@ $hesklang['resolved']='Resolved'; // Ticket has been RESOLVED
 $hesklang['quick_help_ticket']='Here is the information on your ticket. You can add a reply to this ticket, close it, or re-open the ticket if applicable.';
 
 
-// ADDED OR MODIFIED IN Mods For Hesk pre-1.2
+// ADDED OR MODIFIED IN Mods For HESK pre-1.2
 $hesklang['search_the_knowledgebase'] = 'Search the Knowledgebase';
 $hesklang['view_ticket_nav']='View Ticket';
 $hesklang['quick_help']='Quick Help';

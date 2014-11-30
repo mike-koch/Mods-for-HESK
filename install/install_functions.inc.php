@@ -37,7 +37,7 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 // We will be installing this HESK version:
 define('HESK_NEW_VERSION','2.5.5');
-define('MODS_FOR_HESK_NEW_VERSION','1.5.0');
+define('MODS_FOR_HESK_NEW_VERSION','1.6.0');
 
 // Other required files and settings
 define('INSTALL',1);
