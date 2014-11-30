@@ -84,11 +84,6 @@ $modsForHeskVersion = hesk_dbFetchAssoc($modsForHeskVersionRS)['Value'];
 // Demo mode? Hide values of sensitive settings
 if ( defined('HESK_DEMO') )
 {
-	$hesk_settings['db_host']			= $hesklang['hdemo'];
-	$hesk_settings['db_name']			= $hesklang['hdemo'];
-	$hesk_settings['db_user']			= $hesklang['hdemo'];
-	$hesk_settings['db_pass']			= $hesklang['hdemo'];
-	$hesk_settings['db_pfix']			= $hesklang['hdemo'];
 	$hesk_settings['smtp_host_name']	= $hesklang['hdemo'];
 	$hesk_settings['smtp_user']			= $hesklang['hdemo'];
 	$hesk_settings['smtp_password']		= $hesklang['hdemo'];
@@ -557,31 +552,31 @@ if ( defined('HESK_DEMO') )
                 <div class="form-group">
                     <label for="s_db_host" class="col-sm-3 control-label"><?php echo $hesklang['db_host']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#32','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="<?php echo $hesklang['db_host']; ?>" type="text" name="s_db_host" id="m1" size="40" maxlength="255" value="<?php echo $hesk_settings['db_host']; ?>" autocomplete="off" />    
+                        <input class="form-control" placeholder="<?php echo $hesklang['db_host']; ?>" type="text" name="s_db_host" id="m1" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_host']; ?>" autocomplete="off" />    
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_db_name" class="col-sm-3 control-label"><?php echo $hesklang['db_name']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#33','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['db_name']; ?>" name="s_db_name" id="m2" size="40" maxlength="255" value="<?php echo $hesk_settings['db_name']; ?>" autocomplete="off" />    
+                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['db_name']; ?>" name="s_db_name" id="m2" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_name']; ?>" autocomplete="off" />    
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_db_user" class="col-sm-3 control-label"><?php echo $hesklang['db_user']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#34','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['db_user']; ?>" name="s_db_user" id="m3" size="40" maxlength="255" value="<?php echo $hesk_settings['db_user']; ?>" autocomplete="off" />    
+                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['db_user']; ?>" name="s_db_user" id="m3" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_user']; ?>" autocomplete="off" />    
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_db_pass" class="col-sm-3 control-label"><?php echo $hesklang['db_pass']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#35','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control" placeholder="<?php echo $hesklang['db_pass']; ?>" name="s_db_pass" id="m4" size="40" maxlength="255" value="<?php echo $hesk_settings['db_pass'] ; ?>" autocomplete="off" />    
+                        <input type="password" class="form-control" placeholder="<?php echo $hesklang['db_pass']; ?>" name="s_db_pass" id="m4" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_pass'] ; ?>" autocomplete="off" />    
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_db_pfix" class="col-sm-3 control-label"><?php echo $hesklang['prefix']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#36','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['prefix']; ?>" name="s_db_pfix" id="m5" size="40" maxlength="255" value="<?php echo $hesk_settings['db_pfix']; ?>" autocomplete="off" />    
+                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['prefix']; ?>" name="s_db_pfix" id="m5" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_pfix']; ?>" autocomplete="off" />    
                     </div>
                 </div>
                 <div class="form-group">
