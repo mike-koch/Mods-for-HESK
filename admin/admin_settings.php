@@ -79,7 +79,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 // Get the current version of Mods for Hesk
 $modsForHeskVersionRS = hesk_dbQuery("SELECT `Value` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` WHERE `Key` = 'modsForHeskVersion'");
-$modsForHeskVersion = hesk_dbFetchAssoc($modsForHeskVersionRS)['Value'];
+$modsForHeskVersionArray = hesk_dbFetchAssoc($modsForHeskVersionRS);
+$modsForHeskVersion = $modsForHeskVersionArray['Value'];
 
 // Demo mode? Hide values of sensitive settings
 if ( defined('HESK_DEMO') )
