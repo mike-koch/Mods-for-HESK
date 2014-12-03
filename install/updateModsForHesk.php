@@ -12,6 +12,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
         <h1>Mods for HESK 1.6.0 Install / Upgrade</h1>
         <h3>Select your current Mods for HESK version number to upgrade.</h3>
         <ul style="list-style-type: none">
+            <li><a href="updateTo1-6-1.php">v1.6.0</a></li>
             <li><a href="updateTo1-6-0.php">v1.5.0</a></li>
             <li><a href="updateTo1-5-0.php">v1.4.1</a></li>
             <li><a href="updateTo1-4-1.php?ar=true">v1.4.0</a></li>
