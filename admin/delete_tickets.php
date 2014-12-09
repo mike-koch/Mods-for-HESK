@@ -243,7 +243,7 @@ else
 
         hesk_okCategory($ticket['category']);
 
-        $closedStatusRS = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `IsStaffClosedOption` = 1");
+        $closedStatusRS = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsStaffClosedOption` = 1");
         $closedStatus = hesk_dbFetchAssoc($closedStatusRS);
 
 		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='".$closedStatus['ID']."', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($this_id)."' LIMIT 1");
