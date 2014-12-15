@@ -212,16 +212,6 @@ require_once(HESK_PATH . 'inc/header.inc.php');
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $hesklang['quick_help']; ?></div>
             <div class="panel-body">
-                <?php if ($hesk_settings['can_sel_lang']) { ?>
-                <div class="row">
-                    <div class="col-md-6 col-xs-12">
-                        <label class="control-label" style="margin-top:8px;"><?php echo $hesklang['changeLanguage']; ?></label>
-                    </div>
-                    <div class="col-md-6 col-xs-12">
-                        <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
-                    </div>
-                </div>
-                <?php } ?>
                 <p><?php echo $hesklang['quick_help_ticket']; ?></p>
             </div>
         </div>

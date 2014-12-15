@@ -167,6 +167,12 @@ if ($modsForHesk_settings['show_icons']) {
 	      <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><i class="fa fa-book" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['kb_text'] ?></a></li> <?php       } ?>
           <?php include ('custom/header-custom.inc.php'); ?>
         </ul>
+        <?php if ($hesk_settings['can_sel_lang']) { ?>
+            <div class="navbar-form navbar-right" role="search" style="margin-right: 20px; min-width: 80px;">
+                <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
+            </div>
+        <?php } ?>
+
       </div><!-- /.navbar-collapse -->
     </nav>
 
