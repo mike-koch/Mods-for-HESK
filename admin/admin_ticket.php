@@ -1020,7 +1020,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="col-md-3 col-xs-12">
                 <div class="ticketName"><?php echo $ticket['name']; ?></div>
                 <div class="ticketEmail"><?php echo $ticket['email']; ?></div>
-                <div class="ticketEmail"><?php echo $hesklang['ip']; ?>: <?php echo $ticket['ip']; ?></div>
+                <div class="ticketEmail"><?php echo $hesklang['ip']; ?>: <?php echo '<a href="http://whois.domaintools.com/'.$ticket['ip'].'">'.$ticket['ip'].'</a>'; ?></div>
             </div>
             <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">

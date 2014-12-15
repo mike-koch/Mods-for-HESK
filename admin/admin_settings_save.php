@@ -537,6 +537,7 @@ $set['hesk_version'] = $hesk_settings['hesk_version'];
 // Save the modsForHesk_settings.inc.php file
 $set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
+$set['maintenance-mode'] = empty($_POST['maintenance-mode']) ? 0 : 1;
 $set['navbarBackgroundColor'] = hesk_input(hesk_POST('navbarBackgroundColor'));
 $set['navbarBrandColor'] = hesk_input(hesk_POST('navbarBrandColor'));
 $set['navbarBrandHoverColor'] = hesk_input(hesk_POST('navbarBrandHoverColor'));
@@ -567,7 +568,10 @@ $modsForHesk_settings[\'questionMarkColor\'] = \''.$set['questionMarkColor'].'\'
 $modsForHesk_settings[\'rtl\'] = '.$set['rtl'].';
 
 //-- Set this to 1 to show icons next to navigation menu items
-$modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';';
+$modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';
+
+//-- Set this to 1 to enable maintenance mode
+$modsForHesk_settings[\'maintenance_mode\'] = '.$set['maintenance-mode'].';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )

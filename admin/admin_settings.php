@@ -1817,6 +1817,20 @@ if ( defined('HESK_DEMO') )
                           </div>
                       </div>
                   </div>
+                  <div class="form-group">
+                      <label for="maintenance-mode" class="col-sm-4 col-xs-12 control-label"><?php echo $hesklang['maintenanceMode']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                             title="<?php echo $hesklang['maintenanceMode']; ?>"
+                             data-content="<?php echo $hesklang['maintenanceModeHelp']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input id="maintenance-mode" name="maintenance-mode" type="checkbox" <?php if ($modsForHesk_settings['maintenance_mode']) {echo 'checked';} ?>> <?php echo $hesklang['enable_maintenance']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
               </div>
               <!-- Mods For Hesk: Statuses -->
               <div class="tab-pane fade in" id="statuses">
