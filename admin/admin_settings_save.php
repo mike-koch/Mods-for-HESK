@@ -390,7 +390,7 @@ for ($i=1;$i<=20;$i++)
 		$set['custom_fields'][$this_field]['maxlen']	= intval( hesk_POST('s_custom'.$i.'_maxlen', 255) );
         $set['custom_fields'][$this_field]['value']		= hesk_input( hesk_POST('s_custom'.$i.'_val') );
 
-        if (!in_array($set['custom_fields'][$this_field]['type'],array('text','textarea','select','radio','checkbox')))
+        if (!in_array($set['custom_fields'][$this_field]['type'],array('text','textarea','select','radio','checkbox','date','multiselect')))
         {
         	$set['custom_fields'][$this_field]['type'] = 'text';
         }

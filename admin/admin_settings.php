@@ -1239,8 +1239,6 @@ if ( defined('HESK_DEMO') )
                         <option value="select"   '.($this_field['type'] == 'select' ? 'selected="selected"' : '').  '>'.$hesklang['ssb'].'</option>
                         <option value="checkbox" '.($this_field['type'] == 'checkbox' ? 'selected="selected"' : '').'>'.$hesklang['scb'].'</option>
                         <option value="date" '.($this_field['type'] == 'date' ? 'selected="selected"' : '').'>'.$hesklang['date_custom_field'].'</option>
-                        <option value="time" '.($this_field['type'] == 'time' ? 'selected="selected"' : '').'>'.$hesklang['time_custom_field'].'</option>
-                        <option value="datetime" '.($this_field['type'] == 'datetime' ? 'selected="selected"' : '').'>'.$hesklang['datetime_custom_field'].'</option>
                         <option value="multiselect" '.($this_field['type'] == 'multiselect' ? 'selected="selected"' : '').'>'.$hesklang['multiple_select_custom_field'].'</option>
                         </select>
                     </td>

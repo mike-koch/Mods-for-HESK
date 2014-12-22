@@ -268,12 +268,6 @@ switch ($type)
     case 'date':
         echo '<p>'.$hesklang['date_custom_field_text'].'</p>';
         break;
-    case 'time':
-        echo '<p>'.$hesklang['time_custom_field_text'].'</p>';
-        break;
-    case 'datetime':
-        echo '<p>'.$hesklang['datetime_custom_field_text'].'</p>';
-        break;
     case 'multiselect':
         $options=str_replace('#HESK#',"\n",$query);
         echo '
