@@ -21,6 +21,12 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods For HESK 2.0.0
+$hesklang['date_custom_field'] = 'Date';
+$hesklang['time_custom_field'] = 'Time';
+$hesklang['datetime_custom_field'] = 'Date and time';
+$hesklang['multiple_select_custom_field'] = 'Multiple Select box';
+
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
 $hesklang['ticket_reopen'] = '[#%%TRACK_ID%%] Ticket reopened';
