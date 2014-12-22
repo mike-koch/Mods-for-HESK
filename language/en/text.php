@@ -23,9 +23,13 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
 // ADDED OR MODIFIED IN Mods For HESK 2.0.0
 $hesklang['date_custom_field'] = 'Date';
+$hesklang['date_custom_field_text'] = 'No options for this custom field type.';
 $hesklang['time_custom_field'] = 'Time';
+$hesklang['time_custom_field_text'] = 'No options for this custom field type.';
 $hesklang['datetime_custom_field'] = 'Date and time';
+$hesklang['datetime_custom_field_text'] = 'No options for this custom field type.';
 $hesklang['multiple_select_custom_field'] = 'Multiple Select box';
+$hesklang['multiple_select_custom_field_text'] = 'Options for this multi-select box, enter one option per line (each line will be a choice your customers can choose from). You need to enter at least two options!';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
