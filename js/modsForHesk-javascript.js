@@ -7,7 +7,12 @@ var loadJquery = function()
     //-- Active popovers
     $('[data-toggle="popover"]').popover({
         trigger: 'hover'
-    })
+    });
+
+    //-- Activate jQuery's date picker
+    $(function() {
+        $('.datepicker').datepicker();
+    });
 };
 
 function toggleRow(id) {

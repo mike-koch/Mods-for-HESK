@@ -345,11 +345,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     $v['value'] = $k_value;
                                 }
 
-                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
 
-                                echo '<div class="form-group">
-                                <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="date" class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                    </div>
                                 </div>';
                                 break;
 

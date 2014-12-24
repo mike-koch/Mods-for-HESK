@@ -364,3 +364,8 @@ div.setupButtons {
         float: right;
     }
 }
+
+.white-readonly {
+    cursor: text !important;
+    background-color: #fff !important;
+}

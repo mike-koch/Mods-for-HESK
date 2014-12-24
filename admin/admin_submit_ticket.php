@@ -92,13 +92,9 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
 	if ($v['use'] && isset($_POST[$k]))
     {
-        // Dates must be in YYYY-MM-DD format. Thanks to
-        // http://stackoverflow.com/questions/19773418/regex-to-validate-date-in-php-using-format-as-yyyy-mm-dd for the regex!
+        // Date will be handled by the jQuery datepicker
         if( $v['type'] == 'date' && $_POST[$k] != '')
         {
-            if (!preg_match('^(19|20)\d\d[\-\/.](0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])$', $_POST[$k]) || strtotime($_POST[$k]) < 0)
-            $hesk_error_buffer[$k]=$hesklang['invalid_date_format'];
-        } else {
             $tmpvar[$k] = hesk_dateToString($_POST[$k]);
         }
 
