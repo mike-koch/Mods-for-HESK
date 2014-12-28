@@ -278,8 +278,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             case 'multiselect':
                                 $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
-                                echo '<div class="form-group"><label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'" '.$cls.' multiple>';
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
 
                                 $options = explode('#HESK#',$v['value']);
 
@@ -539,8 +539,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             case 'multiselect':
                                 $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
-                                echo '<div class="form-group"><label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'" '.$cls.' multiple>';
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
 
                                 $options = explode('#HESK#',$v['value']);
 
