@@ -11,7 +11,12 @@ var loadJquery = function()
 
     //-- Activate jQuery's date picker
     $(function() {
-        $('.datepicker').datepicker();
+        $('.datepicker').datepicker({
+            todayBtn: "linked",
+            clearBtn: true,
+            autoclose: true,
+            todayHighlight: true
+        });
     });
 };
 
