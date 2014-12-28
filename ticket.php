@@ -330,8 +330,16 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                             {
                                 if ($v['use'] && $v['place']==0)
                                 {
-                                    echo '
-                                    <p>'.$v['name'].': '.$ticket[$k].'</p>';
+                                    echo '<p>'.$v['name'].': ';
+                                    if ($v['type'] == 'date' && !empty($ticket[$k]))
+                                    {
+                                        $dt = date('Y-m-d h:i:s', $ticket[$k]);
+                                        echo hesk_dateToString($dt, 0);
+                                    } else
+                                    {
+                                        echo $ticket[$k];
+                                    }
+                                    echo '</p>';
                                 }
                             }
                         ?>
@@ -348,8 +356,16 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                         {
                             if ($v['use'] && $v['place'])
                             {
-                                echo '
-                                <p>'.$v['name'].': '.$ticket[$k].'</p>';
+                                echo '<p>'.$v['name'].': ';
+                                if ($v['type'] == 'date' && !empty($ticket[$k]))
+                                {
+                                    $dt = date('Y-m-d h:i:s', $ticket[$k]);
+                                    echo hesk_dateToString($dt, 0);
+                                } else
+                                {
+                                    echo $ticket[$k];
+                                }
+                                echo '</p>';
                             }
                         }
                         /* Attachments */

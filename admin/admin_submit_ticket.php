@@ -95,7 +95,7 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
         // Date will be handled by the jQuery datepicker
         if( $v['type'] == 'date' && $_POST[$k] != '')
         {
-            $tmpvar[$k] = hesk_date($_POST[$k]);
+            $tmpvar[$k] = strtotime($_POST[$k]);
         } else if (is_array($_POST[$k]))
         {
 			$tmpvar[$k]='';

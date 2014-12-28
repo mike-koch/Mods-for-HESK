@@ -238,10 +238,21 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
             {
             	$hesk_error_buffer[$k]=$hesklang['fill_all'].': '.$v['name'];
             }
+
+            if ($v['type'] == 'date')
+            {
+                $tmpvar[$k] = strtotime($_POST[$k]);
+            }
         }
 		else
         {
-        	$tmpvar[$k]=hesk_makeURL(nl2br(hesk_input( hesk_POST($k) )));
+            if ($v['type'] == 'date' && $_POST[$k] != '')
+            {
+                $tmpvar[$k] = strtotime($_POST[$k]);
+            } else
+            {
+                $tmpvar[$k] = hesk_makeURL(nl2br(hesk_input(hesk_POST($k))));
+            }
         }
 		$_SESSION["c_$k"]=hesk_POST($k);
 	}
