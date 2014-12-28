@@ -516,6 +516,51 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>';
 	                        break;
 
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
+
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                    </div>
+                                </div>';
+                                break;
+
+                            case 'multiselect':
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group"><label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'" '.$cls.' multiple>';
+
+                                $options = explode('#HESK#',$v['value']);
+
+                                foreach ($options as $option)
+                                {
+
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+
+                                echo '</select></div></div>';
+                                break;
+
 	                        /* Default text input */
 	                        default:
                 	            if (strlen($k_value) != 0)
