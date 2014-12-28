@@ -1833,6 +1833,21 @@ if ( defined('HESK_DEMO') )
                           </div>
                       </div>
                   </div>
+                  <div class="form-group">
+                      <label for="custom-field-setting" class="col-sm-4 col-xs-12 control-label">
+                          <?php echo $hesklang['custom_field_setting']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                             title="<?php echo $hesklang['custom_field_setting']; ?>"
+                             data-content="<?php echo $hesklang['custom_field_setting_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input id="custom-field-setting" name="custom-field-setting" type="checkbox" <?php if ($modsForHesk_settings['custom_field_setting']) {echo 'checked';} ?>> <?php echo $hesklang['enable_custom_field_language']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
               </div>
               <!-- Mods For Hesk: Statuses -->
               <div class="tab-pane fade in" id="statuses">
