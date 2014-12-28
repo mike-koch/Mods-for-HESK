@@ -353,6 +353,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <div class="col-sm-9">
                                         <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
                                 </div>';
                                 break;
@@ -530,6 +531,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <div class="col-sm-9">
                                         <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
                                 </div>';
                                 break;

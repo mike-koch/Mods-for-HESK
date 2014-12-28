@@ -15,7 +15,8 @@ var loadJquery = function()
             todayBtn: "linked",
             clearBtn: true,
             autoclose: true,
-            todayHighlight: true
+            todayHighlight: true,
+            format: "yyyy-mm-dd"
         });
     });
 };
