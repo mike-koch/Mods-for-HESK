@@ -28,7 +28,8 @@ $hesklang['multiple_select_custom_field'] = 'Multiple Select box';
 $hesklang['multiple_select_custom_field_text'] = 'Options for this multi-select box, enter one option per line (each line will be a choice your customers can choose from). You need to enter at least two options!';
 $hesklang['date_format'] = 'Date must be in YYYY-MM-DD format.';
 $hesklang['custom_field_setting'] = 'Multilanguage support';
-$hesklang['custom_field_setting_help'] = 'Enabling this setting will use the name of the custom field as the language file\'s key, rather than the direct name itself. This will allow for translatable custom field.';
+$hesklang['custom_field_setting_help'] = 'Enabling this setting will use the name of the custom field as the language
+    file\'s key, rather than the direct name itself. This allows the custom field to be translated into different languages.';
 $hesklang['enable_custom_field_language'] = 'Enable multilanguage support';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0

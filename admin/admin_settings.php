@@ -1792,7 +1792,7 @@ if ( defined('HESK_DEMO') )
                   <div class="form-group">
                       <label for="rtl" class="col-sm-4 col-xs-12 control-label">
                           <?php echo $hesklang['displayRtl']; ?>
-                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                              title="<?php echo $hesklang['displayRtl']; ?>"
                              data-content="<?php echo $hesklang['displayRtlHelp']; ?>"></i>
                       </label>
@@ -1807,7 +1807,7 @@ if ( defined('HESK_DEMO') )
                   <div class="form-group">
                       <label for="show-icons" class="col-sm-4 col-xs-12 control-label">
                           <?php echo $hesklang['showIcons']; ?>
-                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                              title="<?php echo $hesklang['showIcons']; ?>"
                              data-content="<?php echo $hesklang['showIconsHelp']; ?>"></i>
                       </label>
@@ -1821,7 +1821,7 @@ if ( defined('HESK_DEMO') )
                   </div>
                   <div class="form-group">
                       <label for="maintenance-mode" class="col-sm-4 col-xs-12 control-label"><?php echo $hesklang['maintenanceMode']; ?>
-                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                              title="<?php echo $hesklang['maintenanceMode']; ?>"
                              data-content="<?php echo $hesklang['maintenanceModeHelp']; ?>"></i>
                       </label>
@@ -1839,7 +1839,7 @@ if ( defined('HESK_DEMO') )
                   <div class="form-group">
                       <label for="custom-field-setting" class="col-sm-4 col-xs-12 control-label">
                           <?php echo $hesklang['custom_field_setting']; ?>
-                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                              title="<?php echo $hesklang['custom_field_setting']; ?>"
                              data-content="<?php echo $hesklang['custom_field_setting_help']; ?>"></i>
                       </label>

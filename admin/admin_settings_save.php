@@ -538,6 +538,7 @@ $set['hesk_version'] = $hesk_settings['hesk_version'];
 $set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
 $set['maintenance-mode'] = empty($_POST['maintenance-mode']) ? 0 : 1;
+$set['custom-field-setting'] = empty($_POST['custom-field-setting']) ? 0 : 1;
 $set['navbarBackgroundColor'] = hesk_input(hesk_POST('navbarBackgroundColor'));
 $set['navbarBrandColor'] = hesk_input(hesk_POST('navbarBrandColor'));
 $set['navbarBrandHoverColor'] = hesk_input(hesk_POST('navbarBrandHoverColor'));
@@ -571,7 +572,10 @@ $modsForHesk_settings[\'rtl\'] = '.$set['rtl'].';
 $modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';
 
 //-- Set this to 1 to enable maintenance mode
-$modsForHesk_settings[\'maintenance_mode\'] = '.$set['maintenance-mode'].';';
+$modsForHesk_settings[\'maintenance_mode\'] = '.$set['maintenance-mode'].';
+
+//-- Set this to 1 to enable custom field names as keys
+$modsForHesk_settings[\'custom_field_setting\'] = '.$set['custom-field-setting'].';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )

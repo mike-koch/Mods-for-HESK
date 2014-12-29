@@ -6,7 +6,8 @@ var loadJquery = function()
 
     //-- Active popovers
     $('[data-toggle="popover"]').popover({
-        trigger: 'hover'
+        trigger: 'hover',
+        container: 'body'
     });
 
     //-- Activate jQuery's date picker
