@@ -330,6 +330,11 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                             {
                                 if ($v['use'] && $v['place']==0)
                                 {
+                                    if ($modsForHesk_settings['custom_field_setting'])
+                                    {
+                                        $v['name'] = $hesklang[$v['name']];
+                                    }
+
                                     echo '<p>'.$v['name'].': ';
                                     if ($v['type'] == 'date' && !empty($ticket[$k]))
                                     {
@@ -356,6 +361,11 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                         {
                             if ($v['use'] && $v['place'])
                             {
+                                if ($modsForHesk_settings['custom_field_setting'])
+                                {
+                                    $v['name'] = $hesklang[$v['name']];
+                                }
+
                                 echo '<p>'.$v['name'].': ';
                                 if ($v['type'] == 'date' && !empty($ticket[$k]))
                                 {

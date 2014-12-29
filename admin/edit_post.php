@@ -246,6 +246,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		        {
 			        if ($v['use'])
 		            {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 				        $k_value  = $ticket[$k];
 
 				        if ($v['type'] == 'checkbox')

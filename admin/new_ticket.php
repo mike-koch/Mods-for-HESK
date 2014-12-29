@@ -184,6 +184,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	            {
 		            if ($v['use'] && $v['place']==0)
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 	    	            // $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
                         // Staff doesn't need to fill in required custom fields
                         $v['req'] = '';
@@ -398,6 +403,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	            {
 		            if ($v['use'] && $v['place'])
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 	    	            // $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
                         // Staff doesn't need to fill in required custom fields
                         $v['req'] = '';

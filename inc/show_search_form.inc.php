@@ -349,6 +349,11 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                             $selected = ($what == $k) ? 'selected="selected"' : '';
                                             if ($v['use'])
                                             {
+                                                if ($modsForHesk_settings['custom_field_setting'])
+                                                {
+                                                    $v['name'] = $hesklang[$v['name']];
+                                                }
+
                                                 $v['name'] = (strlen($v['name']) > 30) ? substr($v['name'],0,30) . '...' : $v['name'];
                                                 echo '<option value="'.$k.'" '.$selected.'>'.$v['name'].'</option>';
                                             }

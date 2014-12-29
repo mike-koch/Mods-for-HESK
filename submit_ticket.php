@@ -207,6 +207,11 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
 	if ($v['use'])
     {
+        if ($modsForHesk_settings['custom_field_setting'])
+        {
+            $v['name'] = $hesklang[$v['name']];
+        }
+
         if ($v['type'] == 'checkbox')
         {
 			$tmpvar[$k]='';

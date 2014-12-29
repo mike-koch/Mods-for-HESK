@@ -285,6 +285,11 @@ myField.value += myValue;
                             {
                                 if ($v['use'])
                                 {
+                                    if ($modsForHesk_settings['custom_field_setting'])
+                                    {
+                                        $v['name'] = $hesklang[$v['name']];
+                                    }
+
                                     echo '| <a href="javascript:void(0)" onclick="hesk_insertTag(\'HESK_'.$k.'\')">'.$v['name'].'</a> ';
                                 }
                             }

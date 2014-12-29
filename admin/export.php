@@ -481,6 +481,11 @@ if (isset($_GET['w']))
 	{
 		if ($v['use'])
 		{
+            if ($modsForHesk_settings['custom_field_setting'])
+            {
+                $v['name'] = $hesklang[$v['name']];
+            }
+
 			$tmp .= '<Cell><Data ss:Type="String">'.$v['name'].'</Data></Cell>' . "\n";
 		}
 	}

@@ -66,7 +66,7 @@ exit();
 
 function print_add_ticket()
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
 	// Auto-focus first empty or error field
 	define('AUTOFOCUS', true);
@@ -222,8 +222,14 @@ function print_add_ticket()
 
 	            foreach ($hesk_settings['custom_fields'] as $k=>$v)
 	            {
+
 		            if ($v['use'] && $v['place']==0)
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 	    	            $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
 
 			            if ($v['type'] == 'checkbox')
@@ -447,12 +453,18 @@ function print_add_ticket()
 	            <!-- START CUSTOM AFTER -->
 	            <?php
 
-	            /* custom fields BEFORE comments */
+	            /* custom fields AFTER comments */
 
 	            foreach ($hesk_settings['custom_fields'] as $k=>$v)
 	            {
+
 		            if ($v['use'] && $v['place'])
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+                        
 	    	            $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
 
 			            if ($v['type'] == 'checkbox')
