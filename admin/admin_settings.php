@@ -1833,6 +1833,9 @@ if ( defined('HESK_DEMO') )
                           </div>
                       </div>
                   </div>
+                  <div class="blankSpace"></div>
+                  <h6 style="font-weight: bold"><?php echo $hesklang['tab_4']; ?></h6>
+                  <div class="footerWithBorder blankSpace"></div>
                   <div class="form-group">
                       <label for="custom-field-setting" class="col-sm-4 col-xs-12 control-label">
                           <?php echo $hesklang['custom_field_setting']; ?>
