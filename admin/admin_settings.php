@@ -1215,7 +1215,9 @@ if ( defined('HESK_DEMO') )
                 <th><?php echo $hesklang['enable']; ?></th>
                 <th><?php echo $hesklang['s_type']; ?></th>
                 <th><?php echo $hesklang['custom_r']; ?></th>
-                <th><?php echo $hesklang['custom_n']; ?></th>
+                <th>
+                    <?php if ($modsForHesk_settings['custom_field_setting']) { echo $hesklang['custom_language_key']; } else { echo $hesklang['custom_n']; } ?>
+                </th>
                 <th><?php echo $hesklang['custom_place']; ?></th>
                 <th><?php echo $hesklang['opt']; ?></th>
                 </tr>

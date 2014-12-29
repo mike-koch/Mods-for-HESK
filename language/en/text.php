@@ -31,6 +31,7 @@ $hesklang['custom_field_setting'] = 'Multilanguage support';
 $hesklang['custom_field_setting_help'] = 'Enabling this setting will use the name of the custom field as the language
     file\'s key, rather than the direct name itself. This allows the custom field to be translated into different languages.';
 $hesklang['enable_custom_field_language'] = 'Enable multilanguage support';
+$hesklang['custom_language_key'] = 'Field language file key';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
