@@ -360,22 +360,32 @@ if ($hesk_settings['attachments']['use'] && ! empty($attachments) )
     }
 }
 
-// Insert ticket to database
-$ticket = hesk_newTicket($tmpvar);
-
-// Notify the customer
-hesk_notifyCustomer();
-
-// Need to notify staff?
-// --> From autoassign?
-if ($tmpvar['owner'] && $autoassign_owner['notify_assigned'])
+// Check to see if the email address of the user is verified. If not, add the ticket to the stage_ticket table and send verification email
+$verifiedEmailSql = "SELECT `Email` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."verified_emails` WHERE `Email` = '".hesk_dbEscape($tmpvar['email'])."'";
+$verifiedEmailRS = hesk_dbQuery($verifiedEmailSql);
+if ($verifiedEmailRS->num_rows == 0)
 {
-	hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
-}
-// --> No autoassign, find and notify appropriate staff
-elseif ( ! $tmpvar['owner'] )
+    //-- email has not yet been verified.
+    $ticket = hesk_newTicket($tmpvar, false);
+} else
 {
-	hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
+    //-- email has been verified, and a ticket can be created
+    $ticket = hesk_newTicket($tmpvar);
+
+    // Notify the customer
+        hesk_notifyCustomer();
+
+    // Need to notify staff?
+    // --> From autoassign?
+        if ($tmpvar['owner'] && $autoassign_owner['notify_assigned'])
+        {
+            hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
+        }
+    // --> No autoassign, find and notify appropriate staff
+        elseif ( ! $tmpvar['owner'] )
+        {
+            hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
+        }
 }
 
 // Next ticket show suggested articles again
