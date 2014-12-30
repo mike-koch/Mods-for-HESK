@@ -367,13 +367,25 @@ if ($verifiedEmailRS->num_rows == 0)
 {
     //-- email has not yet been verified.
     $ticket = hesk_newTicket($tmpvar, false);
+
+    //-- generate the activation key, which is a hash of their email address along with the current time.
+    $unhashedKey = $tmpvar['email'].time();
+    $key = hash('sha512', $unhashed);
+
+    $escapedEmail = hesk_dbEscape($tmpvar['email']);
+    $escapedKey = hesk_dbEscape($key);
+    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email`, `ActivationKey`)
+        VALUES ('".$escapedEmail."', '".$escapedKey."')");
+
+    /* TODO Send email to customer asking to verify email address. A link with the activation key will be in the email
+         for them to visit to activate. */
 } else
 {
     //-- email has been verified, and a ticket can be created
     $ticket = hesk_newTicket($tmpvar);
 
     // Notify the customer
-        hesk_notifyCustomer();
+    hesk_notifyCustomer();
 
     // Need to notify staff?
     // --> From autoassign?
