@@ -8,6 +8,7 @@ $updateSuccess = true;
 
 hesk_dbConnect();
 hesk_dbQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."verified_emails` (`Email` VARCHAR(255) NOT NULL)");
+hesk_dbQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email` VARCHAR(255) NOT NULL, `ActivationKey` VARCHAR(500) NOT NULL)");
 hesk_dbQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `trackid` varchar(13) COLLATE utf8_unicode_ci NOT NULL,
