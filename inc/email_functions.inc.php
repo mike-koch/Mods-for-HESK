@@ -246,6 +246,9 @@ function hesk_validEmails()
 		// --> New note by someone to a ticket assigned to you
 		'new_note' => $hesklang['new_note'],
 
+        // --> Assigned ticket reopened
+        'ticket_reopen_assigned' => $hesklang['ticket_reopen_assigned'],
+
     );
 } // END hesk_validEmails()
 
