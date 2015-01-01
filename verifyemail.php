@@ -79,7 +79,6 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             }
         }
         if ($showForm) {
-            //-- The user accessed this page with no key. Output a form to enter their key.
             ?>
             <form class="form-horizontal" action="verifyemail.php" method="post">
                 <div class="form-group">
