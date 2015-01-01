@@ -377,8 +377,8 @@ if ($verifiedEmailRS->num_rows == 0)
     hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email`, `ActivationKey`)
         VALUES ('".$escapedEmail."', '".$escapedKey."')");
 
-    /* TODO Send email to customer asking to verify email address. A link with the activation key will be in the email
-         for them to visit to activate. */
+    require(HESK_PATH . 'inc/email_functions.inc.php');
+    hesk_notifyCustomer('verify_email');
 } else
 {
     //-- email has been verified, and a ticket can be created

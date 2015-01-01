@@ -46,6 +46,25 @@ if ($hesk_settings['smtp'])
 	}
 }
 
+function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $activationKey)
+{
+    global $hesk_settings, $ticket;
+
+    if (defined('HESK_DEMO'))
+    {
+        return true;
+    }
+
+    // Format email subject and message
+    $subject = hesk_getEmailSubject($email_template);
+    $message = hesk_getEmailMessage($email_template, null, 0, 0, 0);
+    $activationUrl = $hesk_settings['hesk_url'] . '/verifyemail.php?key=%%ACTIVATIONKEY%%';
+    $message = str_replace('%%VERIFYURL%%', $activationUrl, $message);
+    $message = str_replace('%%ACTIVATIONKEY%%', $activationKey, $message);
+
+    hesk_mail($ticket['email'], $subject, $message);
+}
+
 
 function hesk_notifyCustomer($email_template = 'new_ticket')
 {
