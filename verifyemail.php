@@ -1,12 +1,12 @@
 <?php
 define('IN_SCRIPT',1);
 define('HESK_PATH','./');
-define('ON_MAINTENANCE_PAGE', 1);
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+hesk_load_database_functions();
 require(HESK_PATH . 'inc/posting_functions.inc.php');
 require_once(HESK_PATH . 'inc/header.inc.php');
 ?>
@@ -21,14 +21,18 @@ require_once(HESK_PATH . 'inc/header.inc.php');
         <div class="footerWithBorder blankSpace"></div>
 
         <?php
+        $showForm = true;
+
         if (isset($_GET['key']) || isset($_POST['key']))
         {
+
             $key = isset($_GET['key'])
                 ? $_GET['key']
                 : $_POST['key'];
 
             $submittedTickets = array();
             $email = '';
+            hesk_dbConnect();
             $getRs = hesk_dbQuery("SELECT `Email` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails`
                 WHERE `ActivationKey` = '".hesk_dbEscape($key)."'");
             while ($result = $getRs->fetch_assoc())
@@ -50,6 +54,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             //-- were any tickets activated?
             if (count($submittedTickets) > 0)
             {
+                $showForm = false;
                 ?>
                 <div class="alert alert-success">
                     <p><i class="fa fa-check"></i> <?php echo sprintf($hesklang['email_verified'], $email) ?></p>
@@ -72,10 +77,24 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 </div>
                 <?php
             }
-        } else
-        {
+        }
+        if ($showForm) {
             //-- The user accessed this page with no key. Output a form to enter their key.
-            //TODO Do this
+            ?>
+            <form class="form-horizontal" action="verifyemail.php" method="post">
+                <div class="form-group">
+                    <label for="key" class="col-sm-3 control-label"><?php echo $hesklang['activation_key']; ?></label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="key" name="key" placeholder="<?php echo $hesklang['activation_key']; ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <input type="submit" class="btn btn-default" value="<?php echo $hesklang['verify_email']; ?>">
+                    </div>
+                </div>
+            </form>
+            <?php
         }
         ?>
     </div>
