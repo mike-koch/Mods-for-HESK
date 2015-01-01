@@ -43,6 +43,21 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 while ($innerResult = $ticketRs->fetch_assoc())
                 {
                     hesk_newTicket($innerResult);
+                    // Notify the customer
+                    hesk_notifyCustomer();
+
+                    // Need to notify staff?
+                    // --> From autoassign?
+                    if ($tmpvar['owner'] && $autoassign_owner['notify_assigned'])
+                    {
+                        hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
+                    }
+                    // --> No autoassign, find and notify appropriate staff
+                    elseif ( ! $tmpvar['owner'] )
+                    {
+                        hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
+                    }
+                    
                     array_push($submittedTickets, $innerResult['trackid']);
                     hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets`
                         WHERE `id` = ".$innerResult['id']);
