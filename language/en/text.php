@@ -33,6 +33,9 @@ $hesklang['custom_field_setting_help'] = 'Enabling this setting will use the nam
 $hesklang['enable_custom_field_language'] = 'Enable multilanguage support';
 $hesklang['custom_language_key'] = 'Field language file key';
 $hesklang['ticket_reopen_assigned'] = '[#%%TRACK_ID%%] Assigned ticket reopened';
+$hesklang['verify_email'] = 'Verify Email';
+$hesklang['email_verified'] = 'The email address <b>%s</b> has been verified. Additionally, the following tickets have been created:'; //%s: email address
+$hesklang['verify_no_records'] = 'No records were found for this activation key. Has this activation key already been used?';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
