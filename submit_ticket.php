@@ -37,6 +37,7 @@ define('HESK_PATH','./');
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 require(HESK_PATH . 'inc/email_functions.inc.php');
@@ -360,26 +361,32 @@ if ($hesk_settings['attachments']['use'] && ! empty($attachments) )
     }
 }
 
-// Check to see if the email address of the user is verified. If not, add the ticket to the stage_ticket table and send verification email
-$verifiedEmailSql = "SELECT `Email` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."verified_emails` WHERE `Email` = '".hesk_dbEscape($tmpvar['email'])."'";
-$verifiedEmailRS = hesk_dbQuery($verifiedEmailSql);
-if ($verifiedEmailRS->num_rows == 0)
+// Should the helpdesk validate emails?
+$createTicket = true;
+if ($modsForHesk_settings['customer_email_verification_required'])
 {
-    //-- email has not yet been verified.
-    $ticket = hesk_newTicket($tmpvar, false);
+    $verifiedEmailSql = "SELECT `Email` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."verified_emails` WHERE `Email` = '".hesk_dbEscape($tmpvar['email'])."'";
+    $verifiedEmailRS = hesk_dbQuery($verifiedEmailSql);
+    if ($verifiedEmailRS->num_rows == 0)
+    {
+        //-- email has not yet been verified.
+        $ticket = hesk_newTicket($tmpvar, false);
 
-    //-- generate the activation key, which is a hash of their email address along with the current time.
-    $unhashedKey = $tmpvar['email'].time();
-    $key = hash('sha512', $unhashed);
+        //-- generate the activation key, which is a hash of their email address along with the current time.
+        $unhashedKey = $tmpvar['email'].time();
+        $key = hash('sha512', $unhashed);
 
-    $escapedEmail = hesk_dbEscape($tmpvar['email']);
-    $escapedKey = hesk_dbEscape($key);
-    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email`, `ActivationKey`)
+        $escapedEmail = hesk_dbEscape($tmpvar['email']);
+        $escapedKey = hesk_dbEscape($key);
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email`, `ActivationKey`)
         VALUES ('".$escapedEmail."', '".$escapedKey."')");
 
-    require(HESK_PATH . 'inc/email_functions.inc.php');
-    hesk_notifyCustomer('verify_email');
-} else
+        require(HESK_PATH . 'inc/email_functions.inc.php');
+        hesk_notifyCustomer('verify_email');
+        $createTicket = false;
+    }
+}
+if ($createTicket)
 {
     //-- email has been verified, and a ticket can be created
     $ticket = hesk_newTicket($tmpvar);
