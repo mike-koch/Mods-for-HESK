@@ -51,8 +51,8 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails`
                     WHERE `ActivationKey` = '".hesk_dbEscape($key)."'");
 
-            //-- were any tickets activated?
-            if (count($submittedTickets) > 0)
+            //-- were there an email recored for the key?
+            if (!empty($email))
             {
                 $showForm = false;
                 ?>
