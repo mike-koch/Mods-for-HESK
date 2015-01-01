@@ -440,14 +440,19 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 
 <div style="width: 80%; margin-left: auto; margin-right: auto;">
     <?php
-    // Show success message with link to ticket
-    hesk_show_success(
+    if ($createTicket) {
+        // Show success message with link to ticket
+        hesk_show_success(
 
-        $hesklang['ticket_submitted'] . '<br /><br />' .
-        $hesklang['ticket_submitted_success'] . ': <b>' . $ticket['trackid'] . '</b><br /><br />
+            $hesklang['ticket_submitted'] . '<br /><br />' .
+            $hesklang['ticket_submitted_success'] . ': <b>' . $ticket['trackid'] . '</b><br /><br />
         <a href="' . $hesk_settings['hesk_url'] . '/ticket.php?track=' . $ticket['trackid'] . '">' . $hesklang['view_your_ticket'] . '</a>'
 
-    );
+        );
+    } else
+    {
+        hesk_show_notice($hesklang['verify_your_email'].'<br><br>'.$hesklang['check_spambox']);
+    }
 
     // Any other messages to display?
     hesk_handle_messages();

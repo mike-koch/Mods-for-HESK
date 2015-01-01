@@ -46,6 +46,7 @@ $hesklang['require_customer_validate_email'] = 'Require customers to verify emai
 $hesklang['multi_eml_disabled'] = 'This feature has been disabled because this help desk has been configured to require
     customers to verify their email address';
 $hesklang['feature_disabled'] = 'Feature Disabled';
+$hesklang['verify_your_email'] = 'Your ticket has been created; however your email needs to be verified before your ticket can be addressed. An email has been sent to the email provided for verification.';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
