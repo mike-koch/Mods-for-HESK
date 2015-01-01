@@ -1674,7 +1674,24 @@ if ( defined('HESK_DEMO') )
                         <label for="s_multi_eml" class="col-sm-3 control-label"><?php echo $hesklang['meml']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#57','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-9">
                             <div class="checkbox">
-                                <label><input type="checkbox" name="s_multi_eml" value="1" <?php if ($hesk_settings['multi_eml']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['meml2']; ?></label>
+                                <?php
+                                if ($modsForHesk_settings['customer_email_verification_required'])
+                                {
+                                ?>
+                                    <label>
+                                        <i class="fa fa-ban" style="color: red; font-size: 1.2em; margin-left: -20px; font-weight: bold"
+                                           data-toggle="popover"
+                                           title="<?php echo $hesklang['feature_disabled']; ?>"
+                                           data-content="<?php echo $hesklang['multi_eml_disabled']; ?>"></i> <?php echo $hesklang['meml2']; ?></label>
+                                    <input type="hidden" name="s_multi_eml" value="0">
+                                <?php
+                                } else
+                                {
+                                ?>
+                                    <label><input type="checkbox" name="s_multi_eml" value="1" <?php if ($hesk_settings['multi_eml']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['meml2']; ?></label>
+                                <?php
+                                }
+                                ?>
                             </div>    
                         </div>
                     </div>
@@ -1831,6 +1848,20 @@ if ( defined('HESK_DEMO') )
                           <div class="checkbox">
                               <label>
                                   <input id="maintenance-mode" name="maintenance-mode" type="checkbox" <?php if ($modsForHesk_settings['maintenance_mode']) {echo 'checked';} ?>> <?php echo $hesklang['enable_maintenance']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group"><!-- TODO -->
+                      <label for="email-verification" class="col-sm-4 col-xs-12 control-label"><?php echo $hesklang['customer_email_verification']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                             title="<?php echo $hesklang['customer_email_verification']; ?>"
+                             data-content="<?php echo $hesklang['customer_email_verification_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input id="email-verification" name="email-verification" type="checkbox" <?php if ($modsForHesk_settings['customer_email_verification_required']) {echo 'checked';} ?>> <?php echo $hesklang['require_customer_validate_email']; ?>
                               </label>
                           </div>
                       </div>

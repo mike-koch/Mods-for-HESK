@@ -4,10 +4,17 @@ var loadJquery = function()
     //-- Activate tooltips
     $('[data-toggle="tooltip"]').tooltip();
 
-    //-- Active popovers
+    //-- Activate popovers
     $('[data-toggle="popover"]').popover({
         trigger: 'hover',
         container: 'body'
+    });
+
+    //-- Activate HTML popovers
+    $('[data-toggle="htmlpopover"]').popover({
+        trigger: 'hover',
+        container: 'body',
+        html: 'true'
     });
 
     //-- Activate jQuery's date picker

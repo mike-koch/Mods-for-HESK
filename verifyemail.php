@@ -57,7 +57,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                     {
                         hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
                     }
-                    
+
                     array_push($submittedTickets, $innerResult['trackid']);
                     hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets`
                         WHERE `id` = ".$innerResult['id']);

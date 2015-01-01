@@ -539,6 +539,14 @@ $set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
 $set['maintenance-mode'] = empty($_POST['maintenance-mode']) ? 0 : 1;
 $set['custom-field-setting'] = empty($_POST['custom-field-setting']) ? 0 : 1;
+$set['customer-email-verification-required'] = empty($_POST['email-verification']) ? 0 : 1;
+
+if ($set['customer-email-verification-required'])
+{
+    //-- Don't allow multiple emails if verification is required
+    $set['multi_eml'] = 0;
+}
+
 $set['navbarBackgroundColor'] = hesk_input(hesk_POST('navbarBackgroundColor'));
 $set['navbarBrandColor'] = hesk_input(hesk_POST('navbarBrandColor'));
 $set['navbarBrandHoverColor'] = hesk_input(hesk_POST('navbarBrandHoverColor'));
@@ -575,7 +583,10 @@ $modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';
 $modsForHesk_settings[\'maintenance_mode\'] = '.$set['maintenance-mode'].';
 
 //-- Set this to 1 to enable custom field names as keys
-$modsForHesk_settings[\'custom_field_setting\'] = '.$set['custom-field-setting'].';';
+$modsForHesk_settings[\'custom_field_setting\'] = '.$set['custom-field-setting'].';
+
+//-- Set this to 1 to enable email verification for new customers
+$modsForHesk_settings[\'customer_email_verification_required\'] = '.$set['customer-email-verification-required'].';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )

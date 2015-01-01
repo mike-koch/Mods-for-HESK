@@ -38,6 +38,14 @@ $hesklang['email_verified'] = 'The email address <b>%s</b> has been verified. Ad
 $hesklang['verify_no_records'] = 'No records were found for this activation key. Has this activation key already been used?';
 $hesklang['activation_key'] = 'Activation Key';
 $hesklang['no_tickets_created'] = 'No tickets created';
+$hesklang['customer_email_verification'] = 'Customer Email Verifications';
+$hesklang['customer_email_verification_help'] = 'Require customers to verify their email address via email. Once their
+    address has been verified, it does not need to be re-verified in the future. <br><br> <b>NOTE:</b> Enabling this will disable the
+    ability for the customer to provide multiple emails, as HESK will be unable to determine which email needs to be verified.';
+$hesklang['require_customer_validate_email'] = 'Require customers to verify email';
+$hesklang['multi_eml_disabled'] = 'This feature has been disabled because this help desk has been configured to require
+    customers to verify their email address';
+$hesklang['feature_disabled'] = 'Feature Disabled';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
