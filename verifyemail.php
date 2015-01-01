@@ -64,6 +64,10 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                             {
                                 echo '<li><a href="'.$hesk_settings['hesk_url'].'/ticket.php?track='.$ticket['trackid'].'">'.$ticket.'</a></li>';
                             }
+                            if (count($submittedTickets) == 0)
+                            {
+                                echo '<li>'.$hesklang['no_tickets_created'].'</li>';
+                            }
                         ?>
                     </ul>
                 </div>

@@ -37,6 +37,7 @@ $hesklang['verify_email'] = 'Verify Email';
 $hesklang['email_verified'] = 'The email address <b>%s</b> has been verified. Additionally, the following tickets have been created:'; //%s: email address
 $hesklang['verify_no_records'] = 'No records were found for this activation key. Has this activation key already been used?';
 $hesklang['activation_key'] = 'Activation Key';
+$hesklang['no_tickets_created'] = 'No tickets created';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
