@@ -213,7 +213,7 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
             $v['name'] = $hesklang[$v['name']];
         }
 
-        if ($v['type'] == 'checkbox')
+        if ($v['type'] == 'checkbox' || $v['type'] == 'multiselect')
         {
 			$tmpvar[$k]='';
 
