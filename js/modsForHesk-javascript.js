@@ -29,6 +29,14 @@ var loadJquery = function()
     });
 };
 
+function selectAll(id) {
+    $('#' + id + ' option').prop('selected', true);
+}
+
+function deselectAll(id) {
+    $('#' + id + ' option').prop('selected', false);
+}
+
 function toggleRow(id) {
     if ($('#' + id).hasClass('danger'))
     {

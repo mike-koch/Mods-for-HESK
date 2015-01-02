@@ -371,7 +371,12 @@ function print_add_ticket()
                                     echo '<option '.$selected.'>'.$option.'</option>';
                                 }
 
-                                echo '</select></div></div>';
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div>
+                                </div></div>';
                                 break;
 
                             case 'date':
@@ -606,7 +611,11 @@ function print_add_ticket()
                                     echo '<option '.$selected.'>'.$option.'</option>';
                                 }
 
-                                echo '</select></div></div>';
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
                                 break;
 
                             case 'date':

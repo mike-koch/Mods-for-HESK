@@ -399,7 +399,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     }
                                     echo '<option '.$selected.'>'.$option.'</option>';
                                 }
-                                echo '</select></div></div>';
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
                                 break;
 
 		                    /* Default text input */
