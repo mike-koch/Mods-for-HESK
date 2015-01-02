@@ -67,7 +67,10 @@ $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
 $file .= '
 
 //-- Set this to 1 to enable custom field names as keys
-$modsForHesk_settings[\'custom_field_setting\'] = 0;';
+$modsForHesk_settings[\'custom_field_setting\'] = 0;
+
+//-- Set this to 1 to enable email verification for new customers
+$modsForHesk_settings[\'customer_email_verification_required\'] = 0;';
 
 if (!file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file))
 {
