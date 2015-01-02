@@ -80,7 +80,20 @@ $modsForHesk_settings[\'customer_email_verification_required\'] = 0;';
 if (!file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file))
 {
     $updateSuccess = false;
-    echo '<h1>Failure!</h1><p>An issue occurred when trying to update the modsForHesk_settings.inc.php file.</p>';
+    echo '<h1>Failure!</h1>
+    <p>An issue occurred when trying to update the modsForHesk_settings.inc.php file.</p>
+    <br>
+    <p>Add the following lines to your modsForHesk_settings.inc.php file:</p>
+    <br>
+    <code>//-- Set this to 1 to enable custom field names as keys
+        $modsForHesk_settings[\'custom_field_setting\'] = 0;</code><br><br>
+
+    <code>//-- Set this to 1 to enable email verification for new customers
+        $modsForHesk_settings[\'customer_email_verification_required\'] = 0;</code>
+
+    <br><br>
+    <p>Now you can delete the <b>install</b> folder for security reasons, and then proceed back to the <a href="../">Help Desk</a></p>';
+
 }
 
 if ($updateSuccess) {
