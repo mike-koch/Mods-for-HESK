@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -34,6 +34,7 @@
 
 define('IN_SCRIPT',1);
 define('HESK_PATH','../');
+define('ON_LOGIN_PAGE',1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -196,10 +197,21 @@ function do_login()
 
 	unset($_SESSION['pass']);
 
+
+
 	/* Login successful, clean brute force attempts */
 	hesk_cleanBfAttempts();
 
-	/* Regenerate session ID (security) */
+    /* Make sure our user is active */
+    if (!$_SESSION['active']) {
+        hesk_session_stop();
+        $_SESSION['a_iserror'] = array('active');
+        hesk_process_messages($hesklang['inactive_user'], 'NOREDIRECT');
+        print_login();
+        exit();
+    }
+
+    /* Regenerate session ID (security) */
 	hesk_session_regenerate_id();
 
 	/* Remember username? */
@@ -279,7 +291,7 @@ function print_login()
     <div>
         <form class="form-signin form-horizontal" role="form" action="index.php" method="post" name="form1">
             
-            <h2 class="form-signin-heading">&nbsp;<?php echo $hesklang['admin_login']; ?></a></h2><br/>
+            <h2 class="form-signin-heading"><span <?php echo $iconDisplay; ?>><span class="mega-octicon octicon-sign-in"></span>&nbsp;</span><?php echo $hesklang['admin_login']; ?></a></h2><br/>
             <?php if (in_array('pass',$_SESSION['a_iserror'])) { echo '<div class="form-group has-error">';} else { echo '<div class="form-group">';}?>
                 <label for="user" class="col-sm-3 control-label"><?php echo $hesklang['username']; ?>:</label>
                 <div class="col-sm-9">

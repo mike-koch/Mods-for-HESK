@@ -1,22 +1,85 @@
 <?php
     header("Content-type: text/css; charset: UTF-8");
-    require_once('../nuMods_settings.inc.php');
+    require_once('../modsForHesk_settings.inc.php');
 
-    $navbarBackgroundColor = $nuMods_settings['navbarBackgroundColor'];
-    $navbarBrandColor = $nuMods_settings['navbarBrandColor'];
-    $navbarBrandHoverColor = $nuMods_settings['navbarBrandHoverColor'];
+    $navbarBackgroundColor = $modsForHesk_settings['navbarBackgroundColor'];
+    $navbarBrandColor = $modsForHesk_settings['navbarBrandColor'];
+    $navbarBrandHoverColor = $modsForHesk_settings['navbarBrandHoverColor'];
 
-    $navbarItemTextColor = $nuMods_settings['navbarItemTextColor'];
-    $navbarItemTextHoverColor = $nuMods_settings['navbarItemTextHoverColor'];
-    $navbarItemTextSelectedColor = $nuMods_settings['navbarItemTextSelectedColor'];
-    $navbarItemSelectedBackgroundColor = $nuMods_settings['navbarItemSelectedBackgroundColor'];
+    $navbarItemTextColor = $modsForHesk_settings['navbarItemTextColor'];
+    $navbarItemTextHoverColor = $modsForHesk_settings['navbarItemTextHoverColor'];
+    $navbarItemTextSelectedColor = $modsForHesk_settings['navbarItemTextSelectedColor'];
+    $navbarItemSelectedBackgroundColor = $modsForHesk_settings['navbarItemSelectedBackgroundColor'];
 
-    $dropdownItemTextColor = $nuMods_settings['dropdownItemTextColor'];
-    $dropdownItemTextHoverColor = $nuMods_settings['dropdownItemTextHoverColor'];
-    $dropdownItemTextHoverBackgroundColor = $nuMods_settings['dropdownItemTextHoverBackgroundColor'];
+    $dropdownItemTextColor = $modsForHesk_settings['dropdownItemTextColor'];
+    $dropdownItemTextHoverColor = $modsForHesk_settings['dropdownItemTextHoverColor'];
+    $dropdownItemTextHoverBackgroundColor = $modsForHesk_settings['dropdownItemTextHoverBackgroundColor'];
 
-    $questionMarkColor = $nuMods_settings['questionMarkColor'];
+    $questionMarkColor = $modsForHesk_settings['questionMarkColor'];
 ?>
+
+.nu-rtlFloatLeft {
+    /* Don't do anything; the pager looks good already */
+}
+
+.nu-floatRight {
+    float: right;
+}
+
+.tabPadding {
+    padding: 10px;
+}
+
+@media (max-width:991px) {
+    .close-ticket {
+        text-align: left;
+    }
+}
+
+@media (min-width:992px) {
+    .close-ticket {
+        text-align: right;
+        padding-bottom: 5px;
+    }
+}
+
+
+@media (max-width:991px) {
+    .ticket-cell {
+        border-bottom: solid 1px #ddd;
+        border-right: 0;
+        padding-top: 5px;
+    }
+}
+
+@media (max-width:991px) {
+    .ticket-cell-admin {
+        border-bottom: solid 1px #ddd;
+        border-right: 0;
+        padding-top: 5px;
+        height: 100px;
+    }
+}
+
+@media (min-width:992px) {
+    .ticket-cell {
+        border-bottom: 0;
+        border-right: solid 1px #ddd;
+        margin-top: 1px;
+        min-height: 70px;
+        padding-top: 10px;
+    }
+}
+
+@media (min-width:992px) {
+    .ticket-cell-admin {
+        border-bottom: 0;
+        border-right: solid 1px #ddd;
+        margin-top: 1px;
+        height: 100px;
+        padding-top: 10px;
+    }    
+}
 
 .row {
     margin-left: 0px;
@@ -60,9 +123,6 @@
 .settingsquestionmark {
     color: <?php echo $questionMarkColor; ?>;
     font-size: 14px;
-}
-.settingsquestionmark:hover {
-    text-decoration: underline;
 }
 .h3questionmark {
     color: <?php echo $questionMarkColor; ?>;
@@ -148,11 +208,27 @@
     font-size: 11px;
     text-transform: uppercase;
 }
+
+@media (min-width: 992px) {
+    .ticketPropertyText {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ticketPropertyText:hover {
+        white-space: normal;
+        overflow: none;
+    }
+}
+
 .ticketPropertyText {
     font-size: 16px;
     line-height: 1em;
     color: #fff;
+    padding-bottom: 2px;
 }
+
 .criticalPriority {
     background-color: red;
 }
@@ -211,16 +287,6 @@ div.block:hover {
 div.rightSideDash {
     padding-left: 18px;
     padding-right: 18px;
-}
-div.enclosingDashboard {
-    margin-left: 50px;
-    margin-right: 50px;
-}
-.moreToLeft {
-    margin-right: 25px;
-}
-.viewTicketSidebar {
-    padding: 25px;
 }
 div.enclosing {
     background-color: #fff;
@@ -291,4 +357,15 @@ div.setupButtons {
     margin-left: auto;
     margin-right: auto;
     width: 90%;
+}
+
+@media (min-width: 768px) {
+    .float-right-sm {
+        float: right;
+    }
+}
+
+.white-readonly {
+    cursor: text !important;
+    background-color: #fff !important;
 }

@@ -2,7 +2,7 @@
 /*
 * Language file for Help Desk Software HESK (www.hesk.com)
 * Language: ENGLISH
-* Version: 2.5.3
+* Version: 2.5.5
 * Author: Klemen Stirn (http://www.hesk.com)
 *
 * !!! This file must be saved in UTF-8 encoding without byte order mark (BOM) !!!
@@ -21,10 +21,126 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
-// ADDED OR MODIFIED IN NuMods 1.2.2
+// ADDED OR MODIFIED IN Mods For HESK 2.0.0
+$hesklang['date_custom_field'] = 'Date';
+$hesklang['date_custom_field_text'] = 'No options for this custom field type.';
+$hesklang['multiple_select_custom_field'] = 'Multiple Select box';
+$hesklang['multiple_select_custom_field_text'] = 'Options for this multi-select box, enter one option per line (each line will be a choice your customers can choose from). You need to enter at least two options!';
+$hesklang['date_format'] = 'Date must be in YYYY-MM-DD format.';
+$hesklang['custom_field_setting'] = 'Multilanguage support';
+$hesklang['custom_field_setting_help'] = 'Enabling this setting will use the name of the custom field as the language
+    file\'s key, rather than the direct name itself. This allows the custom field to be translated into different languages.';
+$hesklang['enable_custom_field_language'] = 'Enable multilanguage support';
+$hesklang['custom_language_key'] = 'Field language file key';
+$hesklang['ticket_reopen_assigned'] = '[#%%TRACK_ID%%] Assigned ticket reopened';
+$hesklang['verify_email'] = 'Verify Email';
+$hesklang['email_verified'] = 'The email address <b>%s</b> has been verified. Additionally, the following tickets have been created:'; //%s: email address
+$hesklang['verify_no_records'] = 'No records were found for this activation key. Has this activation key already been used?';
+$hesklang['activation_key'] = 'Activation Key';
+$hesklang['no_tickets_created'] = 'No tickets created';
+$hesklang['customer_email_verification'] = 'Customer Email Verifications';
+$hesklang['customer_email_verification_help'] = 'Require customers to verify their email address via email. Once their
+    address has been verified, it does not need to be re-verified in the future. <br><br> <b>NOTE:</b> Enabling this will disable the
+    ability for the customer to provide multiple emails, as HESK will be unable to determine which email needs to be verified.';
+$hesklang['require_customer_validate_email'] = 'Require customers to verify email';
+$hesklang['multi_eml_disabled'] = 'This feature has been disabled because this help desk has been configured to require
+    customers to verify their email address';
+$hesklang['feature_disabled'] = 'Feature Disabled';
+$hesklang['verify_your_email'] = 'Your ticket has been created; however your email needs to be verified before your ticket can be addressed. An email has been sent to the email provided for verification.';
+
+// ADDED OR MODIFIED IN Mods For HESK 1.6.0
+$hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
+$hesklang['ticket_reopen'] = '[#%%TRACK_ID%%] Ticket reopened';
+$hesklang['ticket_reopen_assigned'] = '[#%%TRACK_ID%%] Assigned ticket reopened';
+$hesklang['create_based_on_contact'] = 'Create Ticket For Same Contact';
+$hesklang['notify_note_unassigned'] = 'Someone adds a note to a ticket not assigned to me';
+$hesklang['can_change_notification_settings'] = 'Can change notification settings';
+$hesklang['note_edit_successful'] = 'Note edited';
+$hesklang['note_last_edit'] = 'Note last edited on: %s'; // %s: timestamp of last edit
+$hesklang['total_number_of_edits'] = 'Total number of edits: %s'; // %s: total number of edits
+$hesklang['add_row'] = 'Add row';
+$hesklang['addnote'] = 'Add note';
+$hesklang['no_noteID'] = 'No Note ID';
+$hesklang['note_id_not_found'] = 'Note ID not found';
+$hesklang['mods_for_hesk'] = 'Mods for HESK';
+$hesklang['err_modsForHesk_settings'] = 'Can\'t open file <b>modsForHesk_settings.inc.php</b> for writing. Please CHMOD this file to 666 (rw-rw-rw-)';
+$hesklang['mods_for_hesk_version'] = 'Mods for HESK Version';
+
+// ADDED OR MODIFIED IN Mods For HESK 1.5.0
+$hesklang['ticket_auto_refresh'] = 'Ticket Table Auto-Refresh:';
+$hesklang['display_rtl'] = 'Display site right-to-left';
+$hesklang['show_icons_navigation'] = 'Show icons on navigation bar';
+$hesklang['enable_maintenance'] = 'Enable maintenance mode';
+$hesklang['can_man_settings']='Can manage help desk settings';
+$hesklang['disable_user'] = 'User is active (click to deactivate)';
+$hesklang['enable_user'] = 'User is inactive (click to activate)';
+$hesklang['user_activated'] = 'User has been activated';
+$hesklang['user_deactivated'] = 'User has been deactivated';
+$hesklang['active_user'] = 'Is active user';
+$hesklang['self_deactivation'] = 'You cannot deactivate yourself!';
+$hesklang['inactive_user'] = 'Your account is currently inactive. Contact an administrator for more information.';
+$hesklang['notify_customer_email'] = 'Emails to customer on reply';
+$hesklang['notify_customer_email_text'] = 'Don\'t send email notifications of replies to the customer by default';
+$hesklang['cant_edit_admin'] = 'You cannot edit the God Admin (User ID = 1)';
+$hesklang['notifications_disabled_info'] = 'Changing notifications settings has been disabled by your administrator.';
+
+// ADDED OR MODIFIED IN Mods For HESK 1.4.0
+$hesklang['navbarBackgroundColor'] = 'Navbar Background Color';
+$hesklang['navbarBackgroundColorHelp'] = 'The main color of the top navigation bar. This applies to both the client and staff-side.';
+$hesklang['navbarBrandColor'] = 'Navbar Brand Color';
+$hesklang['navbarBrandColorHelp'] = 'The text color of the \'brand\' on the left (also the name of the Help Desk).';
+$hesklang['navbarBrandHoverColor'] = 'Navbar Brand Hover Color';
+$hesklang['navbarBrandHoverColorHelp'] = 'The text color of the \'brand\' on the left when the use moves their mouse over the text.';
+$hesklang['navbarItemTextColor'] = 'Navbar Item Text Color';
+$hesklang['navbarItemTextColorHelp'] = 'The text color of the navigation items on the navigation bar (by default \'Home\', \'Ticket\', and \'Knowledgebase\' are the three items on the client-side).';
+$hesklang['navbarItemTextHoverColor'] = 'Navbar Item Text Hover Color';
+$hesklang['navbarItemTextHoverColorHelp'] = 'The text color of the navigation items on the navigation bar when the user hovers over one of the items.';
+$hesklang['navbarItemTextSelectedColor'] = 'Navbar Item Text Selected Color';
+$hesklang['navbarItemTextSelectedColorHelp'] = 'The text color of the navigation items on the navigation bar when the user clicks on an item, and a dropdown menu appears (such as \'Ticket\').';
+$hesklang['navbarItemSelectedBackgroundColor'] = 'Navbar Item Selected Background Color';
+$hesklang['navbarItemSelectedBackgroundColorHelp'] = 'The background color of the navigation items on the navigation bar when the user clicks on an item, and a dropdown menu appears (such as \'Ticket\').';
+$hesklang['dropdownItemTextColor'] = 'Dropdown Item Text Color';
+$hesklang['dropdownItemTextColorHelp'] = 'The text color of a dropdown item.';
+$hesklang['dropdownItemTextHoverColor'] = 'Dropdown Item Text Hover Color';
+$hesklang['dropdownItemTextHoverColorHelp'] = 'The text color of a dropdown item when the mouse hovers over it.';
+$hesklang['questionMarkColor'] = 'Question Mark Color';
+$hesklang['questionMarkColorHelp'] = 'The text color for the question mark circle, as seen on the \'Settings\' page and on other various pages.';
+$hesklang['dropdownItemTextHoverBackgroundColor'] = 'Dropdown Item Text Hover Background Color';
+$hesklang['dropdownItemTextHoverBackgroundColorHelp'] = 'The background color of a dropdown item when the mouse hovers over it.';
+$hesklang['uiColors'] = 'UI Colors';
+$hesklang['displayRtl'] = 'Display site right-to-left';
+$hesklang['displayRtlHelp'] = 'Check this to set the text direction to right-to-left.';
+$hesklang['showIcons'] = 'Show Icons';
+$hesklang['showIconsHelp'] = 'Check this box to show icons next to navigation bar items';
+$hesklang['maintenanceMode'] = 'Maintenance Mode';
+$hesklang['maintenanceModeHelp'] = 'Check this box to put the Help Desk in maintenance mode. Staff can still log into the backend, but the front end will be inaccessible.';
+$hesklang['ip_to'] = 'To';
+$hesklang['ip_bans'] = 'IP Bans';
+$hesklang['email_bans'] = 'Email Bans';
+$hesklang['ip_email_bans'] = 'IP / Email Bans';
+$hesklang['ip_banned'] = 'Your IP has been banned by the help desk. You will be unable to submit a ticket until your IP ban has been removed.';
+$hesklang['email_banned'] = 'The email address you have entered has been banned by the help desk. You will be unable to submit a ticket until your email ban has been removed.';
+$hesklang['none'] = 'None';
+$hesklang['parent'] = 'Parent';
+$hesklang['children'] = 'Children';
+$hesklang['add_child'] = 'Add Child';
+$hesklang['child_added'] = 'Successfully added <strong>%s</strong> as a child to this ticket.'; //%s: the child tracking ID
+$hesklang['is_child_already'] = '<strong>%s</strong> is already a child of this ticket.'; //%s: the child tracking ID
+$hesklang['child_does_not_exist'] = '<strong>%s</strong> is not a valid Tracking ID!'; //%s: the child tracking ID
+$hesklang['child_is_itself'] = 'You cannot set a ticket as a child of itself.';
+$hesklang['delete_relationship'] = 'Delete Relationship';
+$hesklang['relationship_deleted'] = 'Parent/Child relationship deleted.';
+$hesklang['autorefresh'] = 'Autorefresh:';
+$hesklang['autorefresh_restrictions'] = 'Enter value in milliseconds. Value must be greater than 1000 to use this feature. No fractional values.';
+
+// ADDED OR MODIFIED IN Mods For HESK 1.3.0
+$hesklang['show_filters'] = 'Show Column Filters';
+$hesklang['hide_filters'] = 'Hide Column Filters';
+
+// ADDED OR MODIFIED IN Mods For HESK 1.2.2
 $hesklang['changeLanguage'] = 'Change language to';
 
-// ADDED OR MODIFIED IN NuMods 1.2
+// ADDED OR MODIFIED IN Mods For HESK 1.2
 $hesklang['statuses'] = 'Statuses';
 $hesklang['basicProperties'] = 'Basic Properties';
 $hesklang['shortNameKey'] = 'Short Name Key';
@@ -42,7 +158,6 @@ $hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close tic
 $hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to';
 $hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to';
 $hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to';
-$hesklang['nuModsVersion'] = 'NuMods Version';
 $hesklang['shortNameRequired'] = 'Short Name Key is required.';
 $hesklang['longNameRequired'] = 'Long Name Key is required.';
 $hesklang['textColorRequired'] = 'Text Color is required.';
@@ -58,7 +173,7 @@ $hesklang['resolved']='Resolved'; // Ticket has been RESOLVED
 $hesklang['quick_help_ticket']='Here is the information on your ticket. You can add a reply to this ticket, close it, or re-open the ticket if applicable.';
 
 
-// ADDED OR MODIFIED IN HESK UI
+// ADDED OR MODIFIED IN Mods For HESK pre-1.2
 $hesklang['search_the_knowledgebase'] = 'Search the Knowledgebase';
 $hesklang['view_ticket_nav']='View Ticket';
 $hesklang['quick_help']='Quick Help';
@@ -410,7 +525,7 @@ $hesklang['remember_user']='Remember my username';
 $hesklang['wrong_user']='Wrong username';
 $hesklang['no_permission']='You don\'t have permission to perform this task, please login with an account that has.';
 $hesklang['tickets_on_pages']='Number of tickets: %d | Number of pages: %d'; // First %d is replaced with number of tickets, second %d with number of pages
-$hesklang['jump_page']=' | Jump to page:';
+$hesklang['jump_page']='Jump to page:';
 $hesklang['no_tickets_open']='No unresolved tickets found';
 $hesklang['no_tickets_crit']='No tickets found matching your criteria';
 $hesklang['confirm_execute']='Are you sure you want to continue?';
@@ -503,7 +618,6 @@ $hesklang['can_man_kb']='Manage knowledgebase';
 $hesklang['can_man_users']='Manage users';
 $hesklang['can_man_cat']='Manage categories';
 $hesklang['can_man_canned']='Manage canned responses';
-$hesklang['can_man_settings']='Manage help desk settings';
 $hesklang['can_del_notes']='Delete any ticket notes';
 $hesklang['dan']='users can delete their own ticket notes, select this only if you wish to allow this user to also be able to delete notes from other users';
 $hesklang['in_all_cat']='in allowed categories only';
@@ -595,7 +709,6 @@ $hesklang['opt2']='Options for this radio button, enter one option per line (eac
 $hesklang['opt3']='Options for this select box, enter one option per line (each line will be a choice your customers can choose from). You need to enter at least two options!';
 $hesklang['atl2']='Enter at least two options (one per line)!';
 $hesklang['notes']='Notes';
-$hesklang['addnote']='+ Add note';
 $hesklang['noteby']='Note by';
 $hesklang['delnote']='Delete note';
 $hesklang['noteerr']='Note already deleted or wrong parameters';

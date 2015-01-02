@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -61,7 +61,7 @@ if (!isset($_SESSION['isnotice']))
 
 /* List of users */
 $admins = array();
-$result = hesk_dbQuery("SELECT `id`,`name`,`isadmin`,`categories`,`heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `id` ASC");
+$result = hesk_dbQuery("SELECT `id`,`name`,`isadmin`,`categories`,`heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `active` = '1' ORDER BY `id` ASC");
 while ($row=hesk_dbFetchAssoc($result))
 {
 	/* Is this an administrator? */
@@ -91,24 +91,18 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
   <li><a href="admin_main.php"><?php echo $hesk_settings['hesk_title']; ?></a></li>
   <li class="active"><?php echo $hesklang['nti2']; ?></li>
 </ol>
-
-<div class="enclosingDashboard">
-    <div class="row">
-        <div align="left" class="col-md-4">
-            <div class="moreToLeft">
-		        <ul class="nav nav-tabs">
-			        <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['quick_help']; ?></a></li>
-		        </ul>
-		        <div class="summaryList">
-                    <div class="viewTicketSidebar">
-				        <p><?php echo $hesklang['nti3']; ?></p>
-                        <br/>
-                        <p><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></p>
-                    </div>				
-		        </div>
-	        </div>
+    <div class="row" style="margin-top: 20px">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><?php echo $hesklang['quick_help']; ?></div>
+                <div class="panel-body">
+                    <p><?php echo $hesklang['nti3']; ?></p>
+                    <br/>
+                    <p><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></p>
+                </div>
+            </div>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
             <?php
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
@@ -122,13 +116,19 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <?php if (in_array('name',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} else {echo '<div class="form-group">';} ?>
                     <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>: <font class="important">*</font></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="name" size="40" maxlength="30" value="<?php if (isset($_SESSION['as_name'])) {echo stripslashes(hesk_input($_SESSION['as_name']));} ?>"   placeholder="<?php echo $hesklang['name']; ?>"/>
+                        <input type="text" class="form-control" name="name" size="40" maxlength="30"
+                               value="<?php if (isset($_SESSION['as_name'])) {echo stripslashes(hesk_input($_SESSION['as_name']));}
+                                   else if (isset($_GET['name'])) {echo hesk_GET('name');} ?>"
+                               placeholder="<?php echo $hesklang['name']; ?>">
                     </div>
                 </div>
-                <?php if (in_array('email',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} elseif (in_array('email',$_SESSION['isnotice'])) {echo '<div class="form-group has-warning">';} else {echo '<div class="form-group">';} ?>
-                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: <font class="important">*</font></label>
+                <div class="form-group">
+                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: </label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="email" size="40" maxlength="255" value="<?php if (isset($_SESSION['as_email'])) {echo stripslashes(hesk_input($_SESSION['as_email']));} ?>" <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(1)"'; } ?> placeholder="<?php echo $hesklang['email']; ?>"/>
+                        <input type="text" class="form-control" name="email" size="40" maxlength="255"
+                               value="<?php if (isset($_SESSION['as_email'])) {echo stripslashes(hesk_input($_SESSION['as_email']));}
+                                   else if (isset($_GET['email'])) {echo hesk_GET('email');} ?>" <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(1)"'; } ?>
+                               placeholder="<?php echo $hesklang['email']; ?>">
                     </div>
                 
                 </div>
@@ -160,10 +160,18 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <label for="priority" class="col-sm-3 control-label"><?php echo $hesklang['priority']; ?>: <font class="important">*</font></label>
                     <div class="col-sm-9">
                         <select name="priority" class="form-control">
-                            <option value="3" <?php if(isset($_SESSION['as_priority']) && $_SESSION['as_priority']==3) {echo 'selected="selected"';} ?>><?php echo $hesklang['low']; ?></option>
-	                        <option value="2" <?php if(isset($_SESSION['as_priority']) && $_SESSION['as_priority']==2) {echo 'selected="selected"';} ?>><?php echo $hesklang['medium']; ?></option>
-	                        <option value="1" <?php if(isset($_SESSION['as_priority']) && $_SESSION['as_priority']==1) {echo 'selected="selected"';} ?>><?php echo $hesklang['high']; ?></option>
-	                        <option value="0" <?php if(isset($_SESSION['as_priority']) && $_SESSION['as_priority']==0) {echo 'selected="selected"';} ?>><?php echo $hesklang['critical']; ?></option>
+                            <option value="3" <?php
+                                if((isset($_SESSION['as_priority']) && $_SESSION['as_priority']==3)
+                                    || (isset($_GET['priority']) && $_GET['priority']==3)) {echo 'selected="selected"';} ?>><?php echo $hesklang['low']; ?></option>
+	                        <option value="2" <?php
+                                if((isset($_SESSION['as_priority']) && $_SESSION['as_priority']==2)
+                                    || (isset($_GET['priority']) && $_GET['priority']==2)) {echo 'selected="selected"';} ?>><?php echo $hesklang['medium']; ?></option>
+	                        <option value="1" <?php
+                                if((isset($_SESSION['as_priority']) && $_SESSION['as_priority']==1)
+                                    || (isset($_GET['priority']) && $_GET['priority']==1)) {echo 'selected="selected"';} ?>><?php echo $hesklang['high']; ?></option>
+	                        <option value="0" <?php
+                                if((isset($_SESSION['as_priority']) && $_SESSION['as_priority']==0)
+                                    || (isset($_GET['priority']) && $_GET['priority']==0)) {echo 'selected="selected"';} ?>><?php echo $hesklang['critical']; ?></option>
                         </select>
                     </div>
                 </div>
@@ -176,11 +184,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	            {
 		            if ($v['use'] && $v['place']==0)
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 	    	            // $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
                         // Staff doesn't need to fill in required custom fields
                         $v['req'] = '';
 
-			            if ($v['type'] == 'checkbox')
+			            if ($v['type'] == 'checkbox' && !isset($_GET["c_$k"]))
                         {
             	            $k_value = array();
                             if (isset($_SESSION["c_$k"]) && is_array($_SESSION["c_$k"]))
@@ -194,6 +207,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         elseif (isset($_SESSION["c_$k"]))
                         {
             	            $k_value  = stripslashes(hesk_input($_SESSION["c_$k"]));
+                        }
+                        elseif (isset($_GET["c_$k"]))
+                        {
+                            if ($v['type'] == 'checkbox')
+                            {
+                                $k_value = explode('-CHECKBOX-', $_GET["c_$k"]);
+                            } else
+                            {
+                                $k_value = stripslashes(hesk_GET("c_$k"));
+                            }
                         }
                         else
                         {
@@ -257,11 +280,41 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                            echo '</select></div></div>';
 	                        break;
 
+                            case 'multiselect':
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+
+                                $options = explode('#HESK#',$v['value']);
+
+                                foreach ($options as $option)
+                                {
+
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
+                            break;
+
 	                        /* Checkbox */
 	        	            case 'checkbox':
 					            echo '<div class="form-group"><label class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label><div align="left" class="col-sm-9">';
-
-	            	            $options = explode('#HESK#',$v['value']);
+                                $options = explode('#HESK#',$v['value']);
                                 $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
 	                            foreach ($options as $option)
@@ -294,6 +347,25 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
+
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
+
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
+                                    </div>
+                                </div>';
+                                break;
 
 	                        /* Default text input */
 	                        default:
@@ -317,7 +389,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <?php if (in_array('subject',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} else {echo '<div class="form-group">';} ?>
                     <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>: <font class="important">*</font></label>
                     <div class="col-sm-9">
-                        <input class="form-control" type="text" name="subject" size="40" maxlength="40" value="<?php if (isset($_SESSION['as_subject'])) {echo stripslashes(hesk_input($_SESSION['as_subject']));} ?>" placeholder="<?php echo $hesklang['subject']; ?>" />
+                        <input class="form-control" type="text" name="subject" size="40" maxlength="40" value="<?php if (isset($_SESSION['as_subject']) || isset($_GET['subject'])) {echo stripslashes(hesk_input($_SESSION['as_subject']));} ?>" placeholder="<?php echo $hesklang['subject']; ?>" />
                     </div>         
                 </div>
                 <?php if (in_array('message',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} else {echo '<div class="form-group">';} ?>
@@ -335,6 +407,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	            {
 		            if ($v['use'] && $v['place'])
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 	    	            // $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
                         // Staff doesn't need to fill in required custom fields
                         $v['req'] = '';
@@ -453,6 +530,56 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
+
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
+
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
+                                    </div>
+                                </div>';
+                                break;
+
+                            case 'multiselect':
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+
+                                $options = explode('#HESK#',$v['value']);
+
+                                foreach ($options as $option)
+                                {
+
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
+                                break;
 
 	                        /* Default text input */
 	                        default:

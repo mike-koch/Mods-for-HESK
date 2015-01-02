@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -66,7 +66,7 @@ exit();
 
 function print_add_ticket()
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
 	// Auto-focus first empty or error field
 	define('AUTOFOCUS', true);
@@ -101,29 +101,16 @@ function print_add_ticket()
 </ol>	
 
 <!-- START MAIN LAYOUT -->
-<div class="enclosingDashboard">
     <div class="row">
         <div align="left" class="col-md-4">
-		    <div class="moreToLeft">
-			    <ul class="nav nav-tabs">
-				    <li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['quick_help']; ?></a></li>
-			    </ul>
-			    <div class="summaryList">
-                    <div class="viewTicketSidebar">
-                        <div class="row">
-                            <div class="col-md-6 col-xs-12">
-                                <label class="control-label" style="margin-top:8px;"><?php echo $hesklang['changeLanguage']; ?></label>
-                            </div>
-                            <div class="col-md-6 col-xs-12">
-                                <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
-                            </div>
-                        </div>
-				        <p><?php echo $hesklang['quick_help_submit_ticket']; ?></p>
-                    </div>				
-			    </div>
-		    </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><?php echo $hesklang['quick_help']; ?></div>
+                <div class="panel-body">
+                    <p><?php echo $hesklang['quick_help_submit_ticket']; ?></p>
+                </div>
+            </div>
 	    </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
             <?php
                 // This will handle error, success and notice messages
                 hesk_handle_messages();
@@ -235,8 +222,14 @@ function print_add_ticket()
 
 	            foreach ($hesk_settings['custom_fields'] as $k=>$v)
 	            {
+
 		            if ($v['use'] && $v['place']==0)
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 	    	            $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
 
 			            if ($v['type'] == 'checkbox')
@@ -353,6 +346,57 @@ function print_add_ticket()
 					            <div class="col-sm-9"><textarea class="form-control" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
+
+                            case 'multiselect':
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+
+                                $options = explode('#HESK#',$v['value']);
+
+                                foreach ($options as $option)
+                                {
+
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div>
+                                </div></div>';
+                                break;
+
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
+
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
+                                    </div>
+                                </div>';
+                                break;
 
 	                        /* Default text input */
 	                        default:
@@ -414,12 +458,18 @@ function print_add_ticket()
 	            <!-- START CUSTOM AFTER -->
 	            <?php
 
-	            /* custom fields BEFORE comments */
+	            /* custom fields AFTER comments */
 
 	            foreach ($hesk_settings['custom_fields'] as $k=>$v)
 	            {
+
 		            if ($v['use'] && $v['place'])
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+                        
 	    	            $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
 
 			            if ($v['type'] == 'checkbox')
@@ -536,6 +586,56 @@ function print_add_ticket()
 					            <div class="col-sm-9"><textarea class="form-control" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
+
+                            case 'multiselect':
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+
+                                $options = explode('#HESK#',$v['value']);
+
+                                foreach ($options as $option)
+                                {
+
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
+                                break;
+
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
+
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
+                                    </div>
+                                </div>';
+                                break;
 
 	                        /* Default text input */
 	                        default:
@@ -727,43 +827,39 @@ function print_start()
   <li><a href="<?php echo $hesk_settings['site_url']; ?>"><?php echo $hesk_settings['site_title']; ?></a></li>
   <li class="active"><?php echo $hesk_settings['hesk_title']; ?></li>
 </ol>
-<div class="enclosingDashboard">
 	<div class="row">
-		<div align="left" class="col-md-4">
-		<div class="moreToLeft">
-			<ul class="nav nav-tabs">
-				<li class="active"><a href="#" onclick="return false;"><?php echo $hesklang['view_ticket']; ?></a></li>
-			</ul>
-			<div class="summaryList">
-				<form role="form" class="viewTicketSidebar" action="ticket.php" method="get" name="form2">
-					<div class="form-group">
-						<br/>
-						<label for="ticketID"><?php echo $hesklang['ticket_trackID']; ?>:</label>
-						<input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value="" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
-					</div>
-					<?php
-					$tmp = '';
-					if ($hesk_settings['email_view_ticket'])
-					{
-						$tmp = 'document.form1.email.value=document.form2.e.value;';
-					?>
-					<div class="form-group">
-						<label for="emailAddress"><?php echo $hesklang['email']; ?>:</label>
-						<input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/>
-					</div>
-					<div class="checkbox">
-						<input type="checkbox" name="r" value="Y" <?php echo $do_remember; ?> /> <?php echo $hesklang['rem_email']; ?></label>
-					</div>
-					<?php
-					}
-					?>
-					<input type="submit" value="<?php echo $hesklang['view_ticket']; ?>" class="btn btn-default" /><input type="hidden" name="Refresh" value="<?php echo rand(10000,99999); ?>"><input type="hidden" name="f" value="1">
-				</form>
-				
-			</div>
+		<div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><?php echo $hesklang['view_ticket']; ?></div>
+                <div class="panel-body">
+                    <form role="form" class="viewTicketSidebar" action="ticket.php" method="get" name="form2">
+                        <div class="form-group">
+                            <br/>
+                            <label for="ticketID"><?php echo $hesklang['ticket_trackID']; ?>:</label>
+                            <input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value="" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
+                        </div>
+                        <?php
+                        $tmp = '';
+                        if ($hesk_settings['email_view_ticket'])
+                        {
+                            $tmp = 'document.form1.email.value=document.form2.e.value;';
+                        ?>
+                        <div class="form-group">
+                            <label for="emailAddress"><?php echo $hesklang['email']; ?>:</label>
+                            <input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" name="r" value="Y" <?php echo $do_remember; ?> /> <?php echo $hesklang['rem_email']; ?></label>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                        <input type="submit" value="<?php echo $hesklang['view_ticket']; ?>" class="btn btn-default" /><input type="hidden" name="Refresh" value="<?php echo rand(10000,99999); ?>"><input type="hidden" name="f" value="1">
+                    </form>
+                </div>
+            </div>
 		</div>
-		</div>
-		<div align="left" class="col-md-7">
+		<div class="col-md-8">
 				<?php
 				// Print small search box
 				if ($hesk_settings['kb_enable'])

@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -63,7 +63,7 @@ if ( empty($_POST) && ! empty($_SERVER['CONTENT_LENGTH']) )
 $hesk_error_buffer = array();
 
 $tmpvar['name']	    = hesk_input( hesk_POST('name') ) or $hesk_error_buffer['name']=$hesklang['enter_your_name'];
-$tmpvar['email']	= hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer['email']=$hesklang['enter_valid_email'];
+$tmpvar['email']	= hesk_POST('email');
 $tmpvar['category'] = intval( hesk_POST('category') ) or $hesk_error_buffer['category']=$hesklang['sel_app_cat'];
 $tmpvar['priority'] = intval( hesk_POST('priority') );
 
@@ -92,7 +92,11 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
 	if ($v['use'] && isset($_POST[$k]))
     {
-       	if (is_array($_POST[$k]))
+        // Date will be handled by the jQuery datepicker
+        if( $v['type'] == 'date' && $_POST[$k] != '')
+        {
+            $tmpvar[$k] = strtotime($_POST[$k]);
+        } else if (is_array($_POST[$k]))
         {
 			$tmpvar[$k]='';
 			foreach ($_POST[$k] as $myCB)
@@ -178,7 +182,7 @@ elseif (hesk_checkPermission('can_assign_self',0) && hesk_okCategory($tmpvar['ca
 }
 
 // Notify customer of the ticket?
-$notify = ! empty($_POST['notify']) ? 1 : 0;
+$notify = (!empty($_POST['notify']) && !empty($tmpvar['email']) ) ? 1 : 0;
 
 // Show ticket after submission?
 $show = ! empty($_POST['show']) ? 1 : 0;

@@ -1,0 +1,14 @@
+Dear %%NAME%%,
+
+Your support ticket "%%SUBJECT%%" has been updated to a closed/resolved status.
+
+Ticket tracking ID: %%TRACK_ID%%
+
+You can view the status of your ticket here:
+%%TRACK_URL%%
+
+
+Sincerely,
+
+%%SITE_TITLE%%
+%%SITE_URL%%

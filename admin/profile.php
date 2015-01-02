@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -155,7 +155,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 	?>
         <script language="javascript" type="text/javascript">
-		document.write('<?php echo str_replace(array('"','<','=','>'),array('\42','\74','\75','\76'),$str . '</form>'); ?>');
+		document.write('<?php echo str_replace(array('"','<','=','>',"'"),array('\42','\74','\75','\76','\47'),$str . '</form>'); ?>');
         </script>
         <noscript>
         <?php
@@ -228,11 +228,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                <?php echo $hesklang['sign_extra']; ?>
                 </div>
             </div>
+            <h4><?php echo $hesklang['pref']; ?></h4>
             <?php
             if ($can_reply_tickets)                
             {
             ?>
-            <h4><?php echo $hesklang['pref']; ?></h4>
             <div class="footerWithBorder blankSpace"></div>
             <div class="form-group">
                 <label for="afterreply" class="col-sm-3 control-label"><?php echo $hesklang['aftrep']; ?>:</label>
@@ -256,54 +256,97 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>     
                 </div>     
             </div>
+            <div class="form-group">
+                <label for="default_notify_customer_email" class="col-sm-3 control-label"><?php echo $hesklang['notify_customer_email']; ?>:</label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="default_notify_customer_email" value="1" <?php if (empty($_SESSION['new']['default_notify_customer_email'])) {echo 'checked="checked"';}?>> <?php echo $hesklang['notify_customer_email_text']; ?></label>
+                    </div>
+                </div>
+            </div>
             <?php } ?>
+            <div class="form-group">
+                <label for="autoRefresh" class="col-sm-3 control-label"><?php echo $hesklang['ticket_auto_refresh']; ?></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="autorefresh" name="autorefresh" value="<?php echo $_SESSION['new']['autorefresh']; ?>">
+                    <span class="help-block"><?php echo $hesklang['autorefresh_restrictions']; ?></span>
+                </div>
+            </div>
             <h4><?php echo $hesklang['notn']; ?></h4>
             <h6><?php echo $hesklang['nomw']; ?></h6>
             <div class="footerWithBorder blankSpace"></div>
+            <?php $disabledText = isset($_SESSION['new']['can_change_notification_settings']) && $_SESSION['new']['can_change_notification_settings'] ? '' : 'disabled';
+                if ($disabledText == 'disabled') { ?>
+                    <div class="alert alert-info"><?php echo $hesklang['notifications_disabled_info']; ?></div>
+               <?php }
+            ?>
             <div class="form-group">
                 <?php
                 if ($can_view_tickets)
                 {
-		            if ($can_view_unassigned)
-		            {
-			            ?>
-			            <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_new_unassigned" value="1" <?php if (!empty($_SESSION['new']['notify_new_unassigned'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['nwts']; ?> <?php echo $hesklang['unas']; ?></label></div></div>
-			            <?php
-		            }
-		            else
+                    if ($can_view_unassigned)
                     {
-			            ?>
-			            <input type="hidden" name="notify_new_unassigned" value="0" />
-			            <?php
-		            }
-		            ?>
+                        ?>
+                        <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_new_unassigned" value="1" <?php if (!empty($_SESSION['new']['notify_new_unassigned'])) {echo 'checked="checked"';} echo ' '.$disabledText ?> /> <?php echo $hesklang['nwts']; ?> <?php echo $hesklang['unas']; ?></label></div></div>
+                    <?php
+                        if ($disabledText == 'disabled')
+                        { ?>
+                            <input type="hidden" name="notify_new_unassigned" value="<?php echo !empty($_SESSION['new']['notify_new_unassigned']) ? '1' :  '0'; ?>">
+                        <?php }
+                    }
+                    else
+                    {
+                        ?>
+                        <input type="hidden" name="notify_new_unassigned" value="0" />
+                    <?php
+                    }
+                    ?>
+                    <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_new_my" value="1" <?php if (!empty($_SESSION['new']['notify_new_my'])) {echo 'checked="checked"';} echo ' '.$disabledText ?> /> <?php echo $hesklang['nwts']; ?> <?php echo $hesklang['s_my']; ?></label></div></div>
+                    <?php
+                    if ($disabledText == 'disabled')
+                    { ?>
+                        <input type="hidden" name="notify_new_my" value="<?php echo !empty($_SESSION['new']['notify_new_my']) ? '1' : '0'; ?>">
+                    <?php }
 
-		            <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_new_my" value="1" <?php if (!empty($_SESSION['new']['notify_new_my'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['nwts']; ?> <?php echo $hesklang['s_my']; ?></label></div></div>
+                    if ($can_view_unassigned)
+                    {
+                    ?>
+                        <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_reply_unassigned" value="1" <?php if (!empty($_SESSION['new']['notify_reply_unassigned'])) {echo 'checked="checked"';} echo ' '.$disabledText ?> /> <?php echo $hesklang['ncrt']; ?> <?php echo $hesklang['unas']; ?></label></div></div>
+                    <?php
+                        if ($disabledText == 'disabled')
+                        { ?>
+                            <input type="hidden" name="notify_reply_unassigned" value="<?php echo !empty($_SESSION['new']['notify_reply_unassigned']) ? '1' : '0'; ?>">
+                        <?php }
+                    }
+                    else
+                    {
+                        ?>
+                        <input type="hidden" name="notify_reply_unassigned" value="0" />
+                    <?php
+                    }
+                        ?>
+                        <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_reply_my" value="1" <?php if (!empty($_SESSION['new']['notify_reply_my'])) {echo 'checked="checked"';} echo ' '.$disabledText ?> /> <?php echo $hesklang['ncrt']; ?> <?php echo $hesklang['s_my']; ?></label></div></div>
+                        <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_assigned" value="1" <?php if (!empty($_SESSION['new']['notify_assigned'])) {echo 'checked="checked"';} echo ' '.$disabledText ?> /> <?php echo $hesklang['ntam']; ?></label></div></div>
+                        <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_note" value="1" <?php if (!empty($_SESSION['new']['notify_note'])) {echo 'checked="checked"';} echo ' '.$disabledText ?> /> <?php echo $hesklang['ntnote']; ?></label></div></div>
+                        <?php
+                        if ($disabledText == 'disabled')
+                        { ?>
+                            <input type="hidden" name="notify_reply_my" value="<?php echo !empty($_SESSION['new']['notify_reply_my']) ? '1' : '0'; ?>">
+                            <input type="hidden" name="notify_assigned" value="<?php echo !empty($_SESSION['new']['notify_assigned']) ? '1' : '0'; ?>">
+                            <input type="hidden" name="notify_note" value="<?php echo !empty($_SESSION['new']['notify_note']) ? '1' : '0'; ?>">
+                        <?php }
 
-                    <?php if ($can_view_unassigned)
-		            {
-			            ?>
-			            <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_reply_unassigned" value="1" <?php if (!empty($_SESSION['new']['notify_reply_unassigned'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['ncrt']; ?> <?php echo $hesklang['unas']; ?></label></div></div>
-			            <?php
-		            }
-		            else
-		            {
-			            ?>
-			            <input type="hidden" name="notify_reply_unassigned" value="0" />
-			            <?php
-		            }
-		            ?>
-	                <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_reply_my" value="1" <?php if (!empty($_SESSION['new']['notify_reply_my'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['ncrt']; ?> <?php echo $hesklang['s_my']; ?></label></div></div>
-                    <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_assigned" value="1" <?php if (!empty($_SESSION['new']['notify_assigned'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['ntam']; ?></label></div></div>
-	                <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_note" value="1" <?php if (!empty($_SESSION['new']['notify_note'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['ntnote']; ?></label></div></div>
-                <?php
-                } // END $can_view_tickets
+                        if ($_SESSION['isadmin']) { ?>
+                        <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_note_unassigned" value="1" <?php if (!empty($_SESSION['new']['notify_note_unassigned'])) {echo 'checked="checked"';}?>> <?php echo $hesklang['notify_note_unassigned']; ?></label></div> </div>
+                    <?php
+                    }
+                }
+
                 ?>
-                <div class="col-md-9 col-md-offset-3"><div class="checkbox"><label><input type="checkbox" name="notify_pm" value="1" <?php if (!empty($_SESSION['new']['notify_pm'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['npms']; ?></label></div></div>
             </div>
             <input type="hidden" name="action" value="update" />
             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" /> 
-	        <div style="text-align: center"><input type="submit" class="btn btn-default" value="<?php echo $hesklang['update_profile']; ?>" class="orangebutton" /></div>
+	        <div style="text-align: center"><input type="submit" class="btn btn-default" value="<?php echo $hesklang['update_profile']; ?>" /></div>
         </form>
     </div>
 </div>
@@ -394,6 +437,9 @@ function update_profile() {
     /* Auto-start ticket timer */
     $_SESSION['new']['autostart'] = isset($_POST['autostart']) ? 1 : 0;
 
+    /* Update auto-refresh time */
+    $_SESSION['new']['autorefresh'] = isset($_POST['autorefresh']) ? $_POST['autorefresh'] : 0;
+
     /* Notifications */
     $_SESSION['new']['notify_new_unassigned']	= empty($_POST['notify_new_unassigned']) || ! $can_view_unassigned ? 0 : 1;
     $_SESSION['new']['notify_new_my'] 			= empty($_POST['notify_new_my']) ? 0 : 1;
@@ -401,7 +447,9 @@ function update_profile() {
     $_SESSION['new']['notify_reply_my']			= empty($_POST['notify_reply_my']) ? 0 : 1;
     $_SESSION['new']['notify_assigned']			= empty($_POST['notify_assigned']) ? 0 : 1;
     $_SESSION['new']['notify_note']				= empty($_POST['notify_note']) ? 0 : 1;
+    $_SESSION['new']['notify_note_unassigned']  = empty($_POST['notify_note_unassigned']) ? 0 : 1;
     $_SESSION['new']['notify_pm']				= empty($_POST['notify_pm']) ? 0 : 1;
+    $_SESSION['new']['default_notify_customer_email']   = empty($_POST['default_notify_customer_email']) ? 1 : 0;
 
     /* Any errors? */
     if (strlen($hesk_error_buffer))
@@ -424,13 +472,16 @@ function update_profile() {
 		$sql_pass ,
 	    `afterreply`='".intval($_SESSION['new']['afterreply'])."' ,
         `autostart`='".intval($_SESSION['new']['autostart'])."' ,
+        `autorefresh`='".intval($_SESSION['new']['autorefresh'])."' ,
 	    `notify_new_unassigned`='".intval($_SESSION['new']['notify_new_unassigned'])."' ,
         `notify_new_my`='".intval($_SESSION['new']['notify_new_my'])."' ,
         `notify_reply_unassigned`='".intval($_SESSION['new']['notify_reply_unassigned'])."' ,
         `notify_reply_my`='".intval($_SESSION['new']['notify_reply_my'])."' ,
         `notify_assigned`='".intval($_SESSION['new']['notify_assigned'])."' ,
         `notify_pm`='".intval($_SESSION['new']['notify_pm'])."',
-        `notify_note`='".intval($_SESSION['new']['notify_note'])."'
+        `notify_note`='".intval($_SESSION['new']['notify_note'])."',
+        `notify_note_unassigned`='".intval($_SESSION['new']['notify_note_unassigned'])."',
+        `default_notify_customer_email`='".intval($_SESSION['new']['default_notify_customer_email'])."'
 	    WHERE `id`='".intval($_SESSION['id'])."' LIMIT 1"
         );
 

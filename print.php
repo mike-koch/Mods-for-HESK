@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -37,6 +37,7 @@ define('HESK_PATH','./');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 
@@ -110,7 +111,7 @@ hr
 	background-color: #9e9e9e;
 	height: 1px;
 	width: 100%;
-	text-align: left;
+	text-align: <?php if ($modsForHesk_settings['rtl']) {echo 'right';} else {echo 'left';} ?>;
 }
 </style>
 </head>
@@ -148,8 +149,8 @@ else
 }
 
 /* Other variables that need processing */
-$ticket['dt'] = hesk_date($ticket['dt']);
-$ticket['lastchange'] = hesk_date($ticket['lastchange']);
+$ticket['dt'] = hesk_date($ticket['dt'], true);
+$ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
 $random=mt_rand(10000,99999);
 
 // Print ticket head
@@ -205,17 +206,23 @@ $num_cols = 0;
 echo '<tr>';
 foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
-	if ($v['use'])
+    if ($v['use'])
 	{
+        if ($modsForHesk_settings['custom_field_setting'])
+        {
+            $v['name'] = $hesklang[$v['name']];
+        }
+
         if ($num_cols == 3)
         {
             echo '</tr><tr>';
             $num_cols = 0;
         }
 	?>
-		<td><?php echo $v['name']; ?>:</td>
-		<td><?php echo hesk_unhortenUrl($ticket[$k]); ?></td>
+        <td bgcolor="#EEE"><b><?php echo $v['name']; ?>:</b></td>
+		<td bgcolor="#DDD"><?php echo hesk_unhortenUrl($ticket[$k]); ?></td>
 	<?php
+        $num_cols++;
 	}
 }
 
@@ -228,7 +235,7 @@ echo '<p>' . hesk_unhortenUrl($ticket['message']) . '</p>';
 // Print replies
 while ($reply = hesk_dbFetchAssoc($res))
 {
-	$reply['dt'] = hesk_date($reply['dt']);
+	$reply['dt'] = hesk_date($reply['dt'], true);
 
     echo '
     <hr />

@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -116,7 +116,7 @@ if (isset($_POST['save']))
     else
     {
 		$tmpvar['name']    = hesk_input( hesk_POST('name') ) or $hesk_error_buffer[]=$hesklang['enter_your_name'];
-		$tmpvar['email']   = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer[]=$hesklang['enter_valid_email'];
+		$tmpvar['email']   = hesk_validateEmail( hesk_POST('email'), 'ERR', 0);
 		$tmpvar['subject'] = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer[]=$hesklang['enter_ticket_subject'];
 		$tmpvar['message'] = hesk_input( hesk_POST('message') ) or $hesk_error_buffer[]=$hesklang['enter_message'];
 
@@ -144,7 +144,10 @@ if (isset($_POST['save']))
 		{
 			if ($v['use'] && isset($_POST[$k]))
 		    {
-	        	if (is_array($_POST[$k]))
+                if( $v['type'] == 'date' && $_POST[$k] != '')
+                {
+                    $tmpvar[$k] = strtotime($_POST[$k]);
+                } elseif (is_array($_POST[$k]))
 	            {
 					$tmpvar[$k]='';
 					foreach ($_POST[$k] as $myCB)
@@ -246,6 +249,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		        {
 			        if ($v['use'])
 		            {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 				        $k_value  = $ticket[$k];
 
 				        if ($v['type'] == 'checkbox')
@@ -360,6 +368,44 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		                        </div>';
 		                    break;
 
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.date('Y-m-d', $v['value']).'" readonly/>
+                                    </div>
+                                </div>';
+                                break;
+                            case 'multiselect':
+                                echo '<div class="form-group"><label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'" multiple>';
+                                $options = explode('#HESK#',$v['value']);
+                                foreach ($options as $option)
+                                {
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
+                                break;
+
 		                    /* Default text input */
 		                    default:
 	                	        if (strlen($k_value) != 0)
@@ -406,11 +452,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </form>
     </div>     
 </div>
-
-
-<p style="text-align:center"></p>
-
-<p>&nbsp;</p>
 
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');

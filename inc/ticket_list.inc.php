@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -31,7 +31,7 @@
 *  a license please visit the page below:
 *  https://www.hesk.com/buy.php
 *******************************************************************************/
-
+define('MINIMUM_REFRESH_THRESHOLD_IN_SECONDS', 1);
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
@@ -61,6 +61,8 @@ $mysql_time = hesk_dbTime();
 $result = hesk_dbQuery($sql_count);
 $total  = hesk_dbResult($result);
 
+//-- Precondition: The panel has already been created, and there is NO open <div class="panel-body"> tag yet.
+echo '<div class="panel-body">';
 if ($total > 0)
 {
 
@@ -112,36 +114,36 @@ if ($total > 0)
 
 	$prev_page = ($page - 1 <= 0) ? 0 : $page - 1;
 	$next_page = ($page + 1 > $pages) ? 0 : $page + 1;
+    $autorefreshInSeconds = $_SESSION['autorefresh']/1000;
+    $autorefresh = '';
+    if ($autorefreshInSeconds >= MINIMUM_REFRESH_THRESHOLD_IN_SECONDS) {
+        $autorefresh = ' | '.$hesklang['autorefresh'].' '.$autorefreshInSeconds.' '.$hesklang['abbr']['second'];
+        ?>
+        <script>
+            (function(){
+             setTimeout("location.reload(true);",<?php echo $_SESSION['autorefresh']; ?>);
+            })();
+        </script>
+    <?php }
+    echo sprintf($hesklang['tickets_on_pages'],$total,$pages).$autorefresh.' <br />';
 
-	if ($pages > 1)
+    if ($pages > 1)
 	{
-		echo '
-        <div>
-            <div align="center" style="float: left">
-                '.sprintf($hesklang['tickets_on_pages'],$total,$pages).' '.$hesklang['jump_page'].' <select name="myHpage" id="myHpage">
-            </div>
-            <div align="right" style="text-align: right">
-                <a href="new_ticket.php">'.$hesklang['nti'].'</a>
-            </div>
-        </div>';
-		for ($i=1;$i<=$pages;$i++)
-		{
-        	$tmp = ($page == $i) ? ' selected="selected"' : '';
-			echo '<option value="'.$i.'"'.$tmp.'>'.$i.'</option>';
-		}
-		echo'</select> <input type="button" value="'.$hesklang['go'].'" onclick="javascript:window.location=\''.$href.'?'.$query.'\'+document.getElementById(\'myHpage\').value" class="btn btn-default btn-xs" /><br />';
-
+                
 		/* List pages */
+        echo '<div class="row">
+                <div class="col-md-6 col-sm-12 text-right nu-rtlFloatLeft">
+                    <ul class="pagination" style="margin: 0">';
 		if ($pages > 7)
 		{
 			if ($page > 2)
 			{
-				echo '<a href="'.$href.'?'.$query.'1"><b>&laquo;</b></a> &nbsp; ';
+				echo '<li><a href="'.$href.'?'.$query.'1">&laquo;</a></li>'; // <<
 			}
 
 			if ($prev_page)
 			{
-				echo '<a href="'.$href.'?'.$query.$prev_page.'"><b>&lsaquo;</b></a> &nbsp; ';
+				echo '<li><a href="'.$href.'?'.$query.$prev_page.'">&lsaquo;</a></li>'; // <
 			}
 		}
 
@@ -151,11 +153,11 @@ if ($total > 0)
 			{
 				if ($i == $page)
 				{
-					echo ' <b>'.$i.'</b> ';
+					echo '<li class="active"><a href="#">'.$i.'</a></li> ';
 				}
 				else
 				{
-					echo ' <a href="'.$href.'?'.$query.$i.'">'.$i.'</a> ';
+					echo '<li><a href="'.$href.'?'.$query.$i.'">'.$i.'</a></li>';
 				}
 			}
 		}
@@ -164,29 +166,29 @@ if ($total > 0)
 		{
 			if ($next_page)
 			{
-				echo ' &nbsp; <a href="'.$href.'?'.$query.$next_page.'"><b>&rsaquo;</b></a> ';
+				echo '<li><a href="'.$href.'?'.$query.$next_page.'">&rsaquo;</a></li>'; // >
 			}
 
 			if ($page < ($pages - 1))
 			{
-				echo ' &nbsp; <a href="'.$href.'?'.$query.$pages.'"><b>&raquo;</b></a>';
+				echo '<li><a href="'.$href.'?'.$query.$pages.'">&raquo;</a></li>'; // >>
 			}
 		}
+        echo ' </ul>
+               </div>
+               <div class="col-md-6 col-sm-12 text-left">
+                    <div class="form-inline">'.$hesklang['jump_page'].'
+                    <select class="form-control" name="myHpage" id="myHpage" onchange="javascript:window.location=\''.$href.'?'.$query.'\'+document.getElementById(\'myHpage\').value">';
+                for ($i=1;$i<=$pages;$i++)
+                {
+                    $tmp = ($page == $i) ? ' selected="selected"' : '';
+                    echo '<option value="'.$i.'"'.$tmp.'>'.$i.'</option>';
+                }
+                echo'</select>
+                </div>
+             </div>
+         </div>';
 
-		echo '</p>';
-
-	} // end PAGES > 1
-	else
-	{
-		echo '
-        <div>
-            <div align="center" style="float: left">
-                '.sprintf($hesklang['tickets_on_pages'],$total,$pages).'
-            </div>
-            <div align="right" style="text-align: right">
-                <a href="new_ticket.php">'.$hesklang['nti'].'</a>
-            </div>
-        </div>';
 	}
 
 	/* We have the full SQL query now, get tickets */
@@ -250,7 +252,6 @@ if ($total > 0)
     }
 
 	$i = 0;
-	$checkall = '<input type="checkbox" name="checkall" value="2" onclick="hesk_changeAll()" />';
 
     $group_tmp = '';
 	$is_table = 0;
@@ -270,7 +271,7 @@ if ($total > 0)
         $first_line = '(' . $hesklang['unas'] . ')'." \n\n";
 		if ($ticket['owner'] == $_SESSION['id'])
 		{
-			$owner = '<span class="assignedyou" title="'.$hesklang['tasy2'].'"><span class="glyphicon glyphicon-user"></span></span> ';
+			$owner = '<span class="assignedyou" title="'.$hesklang['tasy2'].'"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="top" title="'.$hesklang['tasy2'].'"></span></span> ';
             $first_line = $hesklang['tasy2'] . " \n\n";
 		}
 		elseif ($ticket['owner'])
@@ -279,14 +280,14 @@ if ($total > 0)
             {
             	$admins[$ticket['owner']] = $hesklang['e_udel'];
             }
-			$owner = '<span class="assignedother" title="'.$hesklang['taso3'] . ' ' . $admins[$ticket['owner']] .'"><span class="glyphicon glyphicon-user"></span></span> ';
+			$owner = '<span class="assignedother" title="'.$hesklang['taso3'] . ' ' . $admins[$ticket['owner']] .'"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="top" title="'.$hesklang['taso3'].' '.$admins[$ticket['owner']].'"></span></span> ';
             $first_line = $hesklang['taso3'] . ' ' . $admins[$ticket['owner']] . " \n\n";
 		}
 
         $tagged = '';
         if ($ticket['archive'])
         {
-			$tagged = '<i class="fa fa-tag"></i> ';
+			$tagged = '<i class="fa fa-tag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['archived2'].'"></i> ';
         }
 
         $statusName = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ShortNameContentKey`, `TextColor` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$ticket['status']));
@@ -303,7 +304,7 @@ if ($total > 0)
 				$color = 'warning';
                 break;
 			case 2:
-				$ticket['priority']='<span style="color: green; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['medium '].'"></span>';
+				$ticket['priority']='<span style="color: green; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['medium'].'"></span>';
 				break;
 			default:
 				$ticket['priority']='<span style="color: blue; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['low'].'"></span>';
@@ -323,17 +324,32 @@ if ($total > 0)
 		$ticket['archive'] = !($ticket['archive']) ? $hesklang['no'] : $hesklang['yes'];
 
 		$ticket['message'] = $first_line . substr(strip_tags($ticket['message']),0,200).'...';
+        $ownerColumn = $ticket['owner'] != 0 ? $admins[$ticket['owner']] : '('.$hesklang['unas'].')';
+        
+        $customFieldsHtml = '';
+        for ($i = 1; $i <= 20; $i++) {
+            if ($hesk_settings['custom_fields']['custom'.$i]['use']) {
+                $display = 'display: none';
+                if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
+                    $display = '';
+                }
+                $customFieldsHtml .= '<td style="'.$display.'" class="column_columnCustom'.$i.'">'.$ticket['custom'.$i].'</td>';
+            }
+        }
+        
 
 		echo <<<EOC
-		<tr class="$color" title="$ticket[message]">
-		<td><input type="checkbox" name="id[]" value="$ticket[id]" />&nbsp;</td>
-		<td><a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[trackid]</a></td>
-		<td>$ticket[lastchange]</td>
-		<td>$ticket[name]</td>
-		<td>$tagged$owner<a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[subject]</a></td>
-		<td>$ticket[status]&nbsp;</td>
-		<td>$ticket[repliername]</td>
-		<td>$ticket[priority]&nbsp;</td>
+		<tr class="$color" id="$ticket[id]" title="$ticket[message]">
+		<td><input type="checkbox" id="check$ticket[id]" name="id[]" value="$ticket[id]" />&nbsp;</td>
+		<td class="column_trackID"><a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[trackid]</a></td>
+		<td class="column_last_update">$ticket[lastchange]</td>
+		<td class="column_name">$ticket[name]</td>
+		<td class="column_subject">$tagged$owner<a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[subject]</a></td>
+		<td class="column_status">$ticket[status]&nbsp;</td>
+		<td class="column_lastreplier">$ticket[repliername]</td>
+		<td class="column_priority">$ticket[priority]</td>
+        <td class="column_owner" style="display: none">$ownerColumn</td>
+        $customFieldsHtml
 		</tr>
 
 EOC;
@@ -343,32 +359,99 @@ EOC;
 	</div>
 
     &nbsp;<br />
-
+    <?php 
+    $columnOneCheckboxes = array();
+    $columnTwoCheckboxes = array();
+    $columnThreeCheckboxes = array();
+    $currentColumn = 3;
+    
+    for ($i = 1; $i <= 20; $i++) {
+        if ($hesk_settings['custom_fields']['custom'.$i]['use']) {
+            if ($currentColumn == 1) {
+                array_push($columnOneCheckboxes, $i);
+                $currentColumn = 2;
+            } elseif ($currentColumn == 2) {
+                array_push($columnTwoCheckboxes, $i);
+                $currentColumn = 3;
+            } else {
+                array_push($columnThreeCheckboxes, $i);
+                $currentColumn = 1;
+            }
+        }
+    }
+    ?>
     <table border="0" width="100%">
     <tr>
-    <td width="50%" style="text-align:left;vertical-align:top">
-	    <?php
-	    if (hesk_checkPermission('can_add_archive',0))
-	    {
-		    ?>
-			<i class="fa fa-tag"></i> <?php echo $hesklang['archived2']; ?>&nbsp;&nbsp;
-		    <?php
-	    }
-	    ?>
-
-	    <span class="assignedyou"><span class="glyphicon glyphicon-user"></span></span> <?php echo $hesklang['tasy2']; ?>&nbsp;&nbsp;
-
-	    <?php
-	    if (hesk_checkPermission('can_view_ass_others',0))
-	    {
-		    ?>
-			<span class="assignedother"><span class="glyphicon glyphicon-user"></span></span> <?php echo $hesklang['taso2']; ?>
-		    <?php
-	    }
-	    ?>
-        &nbsp;
+    <td width="50%" style="vertical-align:top">
+        <h6 id="showFiltersText" style="font-weight: bold"><a href="javascript:void(0)" onclick="toggleFilterCheckboxes(true)"><?php echo $hesklang['show_filters']; ?></a></h6>
+        <h6 id="hideFiltersText" style="font-weight: bold; display: none"><a href="javascript:void(0)" onclick="toggleFilterCheckboxes(false)"><?php echo $hesklang['hide_filters']; ?></a></h6>
+        <div id="filterCheckboxes" style="display: none" class="row">
+            <div class="col-md-4 col-sm-12">
+                <div class="checkbox">
+                    <input type="checkbox" onclick="toggleColumn('column_trackID')" checked> <?php echo $hesklang['trackID']; ?>
+                </div><br>
+                <div class="checkbox">
+                    <input type="checkbox" onclick="toggleColumn('column_subject')" checked> <?php echo $hesklang['subject']; ?>
+                </div><br>
+                <div class="checkbox">
+                    <input type="checkbox" onclick="toggleColumn('column_priority')" checked> <?php echo $hesklang['priority']; ?>
+                </div>
+                <?php 
+                    foreach ($columnOneCheckboxes as $i) {
+                        $checked = '';
+                        if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
+                            $checked = 'checked';
+                        }
+                        echo '<br><div class="checkbox">
+                            <input type="checkbox" onclick="toggleColumn(\'column_columnCustom'.$i.'\')" '.$checked.'>
+                                '.$hesk_settings['custom_fields']['custom'.$i]['name'].'</div>';
+                    }
+                ?>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="checkbox">
+                    <input type="checkbox" onclick="toggleColumn('column_last_update')" checked> <?php echo $hesklang['last_update']; ?>
+                </div><br>
+                <div class="checkbox">
+                    <input type="checkbox" onclick="toggleColumn('column_status')" checked> <?php echo $hesklang['status']; ?>
+                </div><br>
+                <div class="checkbox">
+                    <input type="checkbox" onclick="toggleColumn('column_owner')"> <?php echo $hesklang['owner']; ?>
+                </div>
+                <?php 
+                    foreach ($columnTwoCheckboxes as $i) {
+                        $checked = '';
+                        if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
+                            $checked = 'checked';
+                        }
+                        echo '<br><div class="checkbox">
+                            <input type="checkbox" onclick="toggleColumn(\'column_columnCustom'.$i.'\')" '.$checked.'>
+                                '.$hesk_settings['custom_fields']['custom'.$i]['name'].'</div>';
+                    }
+                ?>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="checkbox">
+                    <input type="checkbox" onclick="toggleColumn('column_name')" checked> <?php echo $hesklang['name']; ?>
+                </div><br>
+                <div class="checkbox">
+                    <input type="checkbox" onclick="toggleColumn('column_lastreplier')" checked> <?php echo $hesklang['last_replier']; ?>
+                </div>
+                <?php 
+                    foreach ($columnThreeCheckboxes as $i) {
+                        $checked = '';
+                        if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
+                            $checked = 'checked';
+                        }
+                        echo '<br><div class="checkbox">
+                            <input type="checkbox" onclick="toggleColumn(\'column_columnCustom'.$i.'\')" '.$checked.'>
+                                '.$hesk_settings['custom_fields']['custom'.$i]['name'].'</div>';
+                    }
+                ?>
+            </div>
+        </div>
     </td>
-    <td width="50%" style="text-align:right;vertical-align:top">
+    <td width="50%" class="text-right" style="vertical-align:top">
 		<select class="form-control" name="a">
 		<option value="close" selected="selected"><?php echo $hesklang['close_selected']; ?></option>
 		<?php
@@ -412,6 +495,18 @@ EOC;
 else
 {
     echo '<div class="row"><div class="col-sm-12">';
+    $autorefreshInSeconds = $_SESSION['autorefresh']/1000;
+    
+    if ($autorefreshInSeconds >= MINIMUM_REFRESH_THRESHOLD_IN_SECONDS) {
+        echo $hesklang['autorefresh'].' '.$autorefreshInSeconds.' '.$hesklang['abbr']['second'];
+        ?>
+        <script>
+            (function(){
+             setTimeout("location.reload(true);",<?php echo $_SESSION['autorefresh']; ?>);
+            })();
+        </script>
+        <?php
+    }
     
     if (isset($is_search) || $href == 'find_tickets.php')
     {
@@ -424,24 +519,39 @@ else
     
     echo '</div></div>';
 }
+echo '</div>
+    </div>';
 
 
 function hesk_print_list_head()
 {
-	global $href, $query, $sort_possible, $hesklang;
+	global $href, $query, $sort_possible, $hesklang, $hesk_settings;
 	?>
-	<div align="center">
-	<table class="table table-hover">
+	<div class="table-responsive">
+	<table id="ticket-table" class="table table-hover">
         <thead>
 	        <tr>
-	        <th><input type="checkbox" name="checkall" value="2" onclick="hesk_changeAll(this)" /></th>
-	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['trackid'] . '&amp;sort='; ?>trackid"><?php echo $hesklang['trackID']; ?></a></th>
-	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['lastchange'] . '&amp;sort='; ?>lastchange"><?php echo $hesklang['last_update']; ?></a></th>
-	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['name'] . '&amp;sort='; ?>name"><?php echo $hesklang['name']; ?></a></th>
-	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['subject'] . '&amp;sort='; ?>subject"><?php echo $hesklang['subject']; ?></a></th>
-	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['status'] . '&amp;sort='; ?>status"><?php echo $hesklang['status']; ?></a></th>
-	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['lastreplier'] . '&amp;sort='; ?>lastreplier"><?php echo $hesklang['last_replier']; ?></a></th>
-	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['priority'] . '&amp;sort='; ?>priority"><i class="fa fa-sort-<?php echo (($sort_possible['priority']) ? 'asc' : 'desc'); ?>"></i></a></th>
+	        <th><input type="checkbox" id="checkall" name="checkall" value="2" onclick="hesk_changeAll(this)" /></th>
+	        <th class="column_trackID"><a href="<?php echo $href . '?' . $query . $sort_possible['trackid'] . '&amp;sort='; ?>trackid"><?php echo $hesklang['trackID']; ?></a></th>
+	        <th class="column_last_update"><a href="<?php echo $href . '?' . $query . $sort_possible['lastchange'] . '&amp;sort='; ?>lastchange"><?php echo $hesklang['last_update']; ?></a></th>
+	        <th class="column_name"><a href="<?php echo $href . '?' . $query . $sort_possible['name'] . '&amp;sort='; ?>name"><?php echo $hesklang['name']; ?></a></th>
+	        <th class="column_subject"><a href="<?php echo $href . '?' . $query . $sort_possible['subject'] . '&amp;sort='; ?>subject"><?php echo $hesklang['subject']; ?></a></th>
+	        <th class="column_status"><a href="<?php echo $href . '?' . $query . $sort_possible['status'] . '&amp;sort='; ?>status"><?php echo $hesklang['status']; ?></a></th>
+	        <th class="column_lastreplier"><a href="<?php echo $href . '?' . $query . $sort_possible['lastreplier'] . '&amp;sort='; ?>lastreplier"><?php echo $hesklang['last_replier']; ?></a></th>
+	        <th class="column_priority"><a href="<?php echo $href . '?' . $query . $sort_possible['priority'] . '&amp;sort='; ?>priority"><i class="fa fa-sort-<?php echo (($sort_possible['priority']) ? 'asc' : 'desc'); ?>"></i></a></th>
+            <!-- All other fields, hidden by default. -->
+            <th class="column_owner" style="display: none"><a href="<?php echo $href . '?' . $query . $sort_possible['priority'] . '&amp;sort='; ?>owner"><?php echo $hesklang['owner']; ?></a></th>
+            <?php
+            for ($i = 1; $i <= 20; $i++) {
+                if ($hesk_settings['custom_fields']['custom'.$i]['use']) {
+                    $display = 'display: none';
+                    if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
+                        $display = '';
+                    }
+                    echo '<th style="'.$display.'" class="column_columnCustom'.$i.'"><a href="'.$href . '?' . $query . $sort_possible['priority'] . '&amp;sort=custom'.$i.'">'.$hesk_settings['custom_fields']['custom'.$i]['name'].'</a></th>';
+                }
+            }
+            ?>
 	        </tr>
         </thead>
 	<?php

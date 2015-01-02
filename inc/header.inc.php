@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -34,6 +34,11 @@
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
+// Check to see if we're in maintenance mode before sending anything to the DOM
+if ($modsForHesk_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE') && !defined('ON_LOGIN_PAGE')) {
+    header('Location: '.HESK_PATH.'maintenance.php');
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -41,16 +46,30 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 	<title><?php echo (isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>" />
     <meta name="viewport" content="width=device-width, user-scalable=no">
+    <?php if ($modsForHesk_settings['rtl']) { ?>
+    <link href="<?php echo HESK_PATH; ?>hesk_style_v25RTL.css" type="text/css" rel="stylesheet" />
+    <?php } else { ?>
 	<link href="<?php echo HESK_PATH; ?>hesk_style_v25.css" type="text/css" rel="stylesheet" />
+    <?php } ?>
+    <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <?php if ($modsForHesk_settings['rtl']) { ?>
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php" type="text/css" rel="stylesheet" />
+    <?php } else { ?>
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+    <?php } ?>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript_v25.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
+    <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
+    <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
 
     <?php
+
 	/* Prepare Javascript that browser should load on page load */
     $onload = "javascript:var i=new Image();i.src='" . HESK_PATH . "img/orangebtnover.gif';var i2=new Image();i2.src='" . HESK_PATH . "img/greenbtnover.gif';";
 
@@ -119,6 +138,10 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 <?php
 include(HESK_PATH . 'header.txt');
+$iconDisplay = 'style="display: none"';
+if ($modsForHesk_settings['show_icons']) {
+    $iconDisplay = '';
+}
 ?>
 
 <div class="enclosing">
@@ -134,19 +157,25 @@ include(HESK_PATH . 'header.txt');
 	    </div>
 	    <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="<?php echo HESK_PATH; ?>">Home</a></li>
+          <li><a href="<?php echo HESK_PATH; ?>"><i class="fa fa-home" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?></a></li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $hesklang['ticket'] ?><b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['ticket'] ?><b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><?php echo $hesklang['sub_ticket'] ?></a></li>
-              <li><a href="<?php echo HESK_PATH; ?>ticket.php"><?php echo $hesklang['view_ticket_nav'] ?></a></li>
+              <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i class="fa fa-plus-circle" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['sub_ticket'] ?></a></li>
+              <li><a href="<?php echo HESK_PATH; ?>ticket.php"><i class="fa fa-search" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['view_ticket_nav'] ?></a></li>
             </ul>
           </li>
           <?php if ($hesk_settings['kb_enable'])
            { ?>
-	      <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><?php echo $hesklang['kb_text'] ?></a></li> <?php       } ?>
+	      <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><i class="fa fa-book" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['kb_text'] ?></a></li> <?php       } ?>
           <?php include ('custom/header-custom.inc.php'); ?>
         </ul>
+        <?php if ($hesk_settings['can_sel_lang']) { ?>
+            <div class="navbar-form navbar-right" role="search" style="margin-right: 20px; min-width: 80px;">
+                <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
+            </div>
+        <?php } ?>
+
       </div><!-- /.navbar-collapse -->
     </nav>
 

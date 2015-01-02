@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -156,19 +156,21 @@ function hesk_iFinish()
 	?>
 	
 	<div class="row">
-	  <div class="col-md-4">
-	    <ul class="nav nav-tabs">
-			<li class="active"><a href="#" onclick="return false;">Summary</a></li>
-		</ul>
-		<div class="summaryList">
-			<p>Congratulations, you have successfully completed HESK database setup!</p>
-		</div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p>Summary</p>
+                </div>
+                <div class="panel-body">
+                    <p>Congratulations, you have successfully completed HESK database setup!</p>
+                </div>
+          </div>
 	  </div>
-	  <div class="col-md-7">
+	  <div class="col-md-8">
 		<div class="alert alert-success"><strong>Success!</strong> HESK Successfully installed</div>
 		<div class="h3">Next Steps:<br/><br/></div>
         <ol>
-            <li><span style="color:#ff0000">Don't forget to run the <a href="<?php echo HESK_PATH . 'install/updateNuHesk.php?update=0'; ?>">NuHesk Installation</a>!</li>
+            <li><span style="color:#ff0000">Don't forget to run the <a href="<?php echo HESK_PATH . 'install/updateModsForHesk.php'; ?>">Mods for HESK Installation</a>!</li>
             <li>Remember your login details:<br />
 
 <pre style="font-size: 1.17em">

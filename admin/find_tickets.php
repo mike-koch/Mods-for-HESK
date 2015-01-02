@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -65,8 +65,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 </tr>
 <tr>
 <td>
-
-<h3 align="center"><?php echo $hesklang['tickets_found']; ?></h3>
+<div class="row" style="padding-top: 20px">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4><?php echo $hesklang['tickets_found']; ?> <span style="float: right; margin-top: -7px;"><a href="new_ticket.php" class="btn btn-success"><?php echo $hesklang['nti']; ?></a></span></h4>
+            </div>
 
 <?php
 
@@ -236,8 +240,6 @@ if ($handle !== FALSE)
 	require_once(HESK_PATH . 'inc/ticket_list.inc.php');
 }
 ?>
-
-<hr />
 
 <?php
 

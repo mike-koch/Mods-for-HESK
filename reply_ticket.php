@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.5.5 from 5th August 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -192,8 +192,8 @@ $info = array(
 'subject'		=> $ticket['subject'],
 'message'		=> stripslashes($message),
 'attachments'	=> $myattachments,
-'dt'			=> hesk_date($ticket['dt']),
-'lastchange'	=> hesk_date($ticket['lastchange']),
+'dt'			=> hesk_date($ticket['dt'], true),
+'lastchange'	=> hesk_date($ticket['lastchange'], true),
 );
 
 // 2. Add custom fields to the array
