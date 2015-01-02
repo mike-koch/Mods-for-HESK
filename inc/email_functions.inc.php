@@ -56,8 +56,8 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
     }
 
     // Format email subject and message
-    $subject = hesk_getEmailSubject($email_template);
-    $message = hesk_getEmailMessage($email_template, null, 0, 0, 0);
+    $subject = hesk_getEmailSubject($email_template, $ticket);
+    $message = hesk_getEmailMessage($email_template, $ticket);
     $activationUrl = $hesk_settings['hesk_url'] . '/verifyemail.php?key=%%ACTIVATIONKEY%%';
     $message = str_replace('%%VERIFYURL%%', $activationUrl, $message);
     $message = str_replace('%%ACTIVATIONKEY%%', $activationKey, $message);
@@ -243,6 +243,9 @@ function hesk_validEmails()
 
         // --> Ticket closed
         'ticket_closed' => $hesklang['ticket_closed'],
+
+        // --> Verify email
+        'verify_email' => $hesklang['verify_email'],
 
 
 		/*** Emails sent to STAFF ***/

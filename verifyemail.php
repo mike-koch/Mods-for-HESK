@@ -8,6 +8,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 require(HESK_PATH . 'inc/posting_functions.inc.php');
+require(HESK_PATH . 'inc/email_functions.inc.php');
 require_once(HESK_PATH . 'inc/header.inc.php');
 ?>
 <ol class="breadcrumb">
@@ -42,18 +43,20 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                     WHERE `email` = '".hesk_dbEscape($result['Email'])."'");
                 while ($innerResult = $ticketRs->fetch_assoc())
                 {
-                    hesk_newTicket($innerResult);
+                    $ticket = hesk_newTicket($innerResult);
                     // Notify the customer
                     hesk_notifyCustomer();
 
                     // Need to notify staff?
                     // --> From autoassign?
-                    if ($tmpvar['owner'] && $autoassign_owner['notify_assigned'])
+                    $getOwnerRs = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE ID = ".hesk_dbEscape($ticket['owner']));
+                    $autoassign_owner = $getOwnerRs->fetch_assoc();
+                    if ($ticket['owner'] && $autoassign_owner['notify_assigned'])
                     {
                         hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
                     }
                     // --> No autoassign, find and notify appropriate staff
-                    elseif ( ! $tmpvar['owner'] )
+                    elseif ( ! $ticket['owner'] )
                     {
                         hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
                     }
@@ -62,11 +65,14 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                     hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets`
                         WHERE `id` = ".$innerResult['id']);
                 }
+
+                //Add email address to the verified emails table
+                hesk_dbQuery('INSERT INTO `'.hesk_dbEscape($hesk_settings['db_pfix']).'verified_emails` (`Email`) VALUES (\''.hesk_dbEscape($email).'\')');
             }
             hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails`
                     WHERE `ActivationKey` = '".hesk_dbEscape($key)."'");
 
-            //-- were there an email recored for the key?
+            //-- was there an email recorded for the key?
             if (!empty($email))
             {
                 $showForm = false;
@@ -77,7 +83,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                         <?php
                             foreach ($submittedTickets as $ticket)
                             {
-                                echo '<li><a href="'.$hesk_settings['hesk_url'].'/ticket.php?track='.$ticket['trackid'].'">'.$ticket.'</a></li>';
+                                echo '<li><a href="'.$hesk_settings['hesk_url'].'/ticket.php?track='.$ticket.'">'.$ticket.'</a></li>';
                             }
                             if (count($submittedTickets) == 0)
                             {

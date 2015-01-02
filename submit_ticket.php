@@ -374,15 +374,14 @@ if ($modsForHesk_settings['customer_email_verification_required'])
 
         //-- generate the activation key, which is a hash of their email address along with the current time.
         $unhashedKey = $tmpvar['email'].time();
-        $key = hash('sha512', $unhashed);
+        $key = hash('sha512', $unhashedKey);
 
         $escapedEmail = hesk_dbEscape($tmpvar['email']);
         $escapedKey = hesk_dbEscape($key);
         hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email`, `ActivationKey`)
         VALUES ('".$escapedEmail."', '".$escapedKey."')");
 
-        require(HESK_PATH . 'inc/email_functions.inc.php');
-        hesk_notifyCustomer('verify_email');
+        hesk_notifyCustomerForVerifyEmail('verify_email', $key);
         $createTicket = false;
     }
 }
