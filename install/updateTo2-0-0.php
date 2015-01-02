@@ -64,13 +64,18 @@ hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET 
 
 //-- Add the new custom field property to modsForHesk_settings.inc.php
 $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-$file .= '
+
+//-- Only add the additional settings if they aren't already there.
+if (strpos($file, 'custom_field_setting') !== true)
+{
+    $file .= '
 
 //-- Set this to 1 to enable custom field names as keys
 $modsForHesk_settings[\'custom_field_setting\'] = 0;
 
 //-- Set this to 1 to enable email verification for new customers
 $modsForHesk_settings[\'customer_email_verification_required\'] = 0;';
+}
 
 if (!file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file))
 {
