@@ -1,6 +1,6 @@
 <?php
 
-require('/../models/ticket.php');
+require(__DIR__ . '/../models/ticket.php');
 
 
 class TicketRepository {
@@ -9,8 +9,8 @@ class TicketRepository {
     }
 
     public static function getTicketForId($id, $settings) {
-
         $connection = new mysqli($settings['db_host'], $settings['db_user'], $settings['db_pass'], $settings['db_name']);
+
         if ($connection->connect_error)
         {
             return ('An error occurred when establishing a connection to the database.');
@@ -24,35 +24,6 @@ class TicketRepository {
         $result = $results->fetch_assoc();
         $connection->close();
         return self::generateTicketModel($result);
-    }
-
-    public static function getTicketForTrackingId($id, $settings)
-    {
-        $connection = new mysqli($settings['db_host'], $settings['db_user'], $settings['db_pass'], $settings['db_name']);
-        if ($connection->connect_error)
-        {
-            return ('An error occurred when establishing a connection to the database.');
-        }
-
-        $sql = self::getDefaultSql($settings).
-            'WHERE T.trackid = '.$id;
-        $results = $connection->query($sql);
-
-        //-- There should only be one result as Tracking IDs should be unique. If there are two, return a 422 response.
-        if ($results->num_rows > 1)
-        {
-            header(http_response_code(422));
-            return;
-        } elseif ($results->num_rows == 0)
-        {
-            //-- No ticket found. Return a 404.
-            header(http_response_code(404));
-            return;
-        } else {
-            $result = $results->fetch_assoc();
-            $connection->close();
-            return self::generateTicketModel($result);
-        }
     }
 
     private static function generateTicketModel($result) {
