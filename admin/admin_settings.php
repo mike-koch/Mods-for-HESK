@@ -141,10 +141,10 @@ if ( defined('HESK_DEMO') )
                         ?>
                     </td></tr>
                     <tr>
-                        <td class="text-right">
+                        <td class="text-right" style="padding-bottom: 5px">
                             <?php echo $hesklang['mods_for_hesk_version']; ?>:
                         </td>
-                        <td style="padding-left: 10px">
+                        <td style="padding-left: 10px; padding-bottom: 5px">
                             <?php echo $modsForHeskVersion; ?>
                         </td>
                     </tr>
@@ -152,6 +152,11 @@ if ( defined('HESK_DEMO') )
                         <?php echo $hesklang['phpv']; ?>:
                         </td><td style="padding-left: 10px">
                         <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : PHP_VERSION . ' ' . (function_exists('mysqli_connect') ? '(MySQLi)' : '(MySQL)'); ?>
+                    </td></tr>
+                    <tr><td class="text-right" style="padding-bottom: 5px">
+                        <?php echo $hesklang['mysqlv']; ?>:
+                    </td><td style="padding-left: 10px; padding-bottom: 5px">
+                        <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : hesk_dbResult( hesk_dbQuery('SELECT VERSION() AS version') ); ?>
                     </td></tr>
                     <tr>
                         <td class="text-right">
