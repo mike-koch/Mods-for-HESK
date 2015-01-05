@@ -21,7 +21,7 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
-// ADDED OR MODIFIED IN Mods For HESK 2.0.0
+// ADDED OR MODIFIED IN Mods For HESK 1.7.0
 $hesklang['date_custom_field'] = 'Date';
 $hesklang['date_custom_field_text'] = 'No options for this custom field type.';
 $hesklang['multiple_select_custom_field'] = 'Multiple Select box';
@@ -47,6 +47,7 @@ $hesklang['multi_eml_disabled'] = 'This feature has been disabled because this h
     customers to verify their email address';
 $hesklang['feature_disabled'] = 'Feature Disabled';
 $hesklang['verify_your_email'] = 'Your ticket has been created; however your email needs to be verified before your ticket can be addressed. An email has been sent to the email provided for verification.';
+$hesklang['installation_information'] = 'Installation Information';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
 $hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';

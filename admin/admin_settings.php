@@ -100,7 +100,7 @@ if ( defined('HESK_DEMO') )
 <div class="row" style="margin-top: 20px">
     <div class="col-md-4">
         <div class="panel panel-default">
-            <div class="panel-heading"><?php echo $hesklang['check_status']; ?></div>
+            <div class="panel-heading"><?php echo $hesklang['installation_information']; ?></div>
             <div class="panel-body">
                 <table>
                     <tr><td class="text-right">
@@ -1857,7 +1857,7 @@ if ( defined('HESK_DEMO') )
                           </div>
                       </div>
                   </div>
-                  <div class="form-group"><!-- TODO -->
+                  <div class="form-group">
                       <label for="email-verification" class="col-sm-4 col-xs-12 control-label"><?php echo $hesklang['customer_email_verification']; ?>
                           <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
                              title="<?php echo $hesklang['customer_email_verification']; ?>"
