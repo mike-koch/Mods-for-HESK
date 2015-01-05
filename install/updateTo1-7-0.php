@@ -60,7 +60,7 @@ hesk_dbQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_ti
   KEY `statuses` (`status`),
   KEY `owner` (`owner`)
 )");
-hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.0.0' WHERE `Key` = 'modsForHeskVersion'");
+hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '1.7.0' WHERE `Key` = 'modsForHeskVersion'");
 
 //-- Add the new custom field property to modsForHesk_settings.inc.php
 $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
