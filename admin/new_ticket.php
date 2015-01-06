@@ -184,6 +184,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	            {
 		            if ($v['use'] && $v['place']==0)
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 	    	            // $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
                         // Staff doesn't need to fill in required custom fields
                         $v['req'] = '';
@@ -275,6 +280,37 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                            echo '</select></div></div>';
 	                        break;
 
+                            case 'multiselect':
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+
+                                $options = explode('#HESK#',$v['value']);
+
+                                foreach ($options as $option)
+                                {
+
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
+                            break;
+
 	                        /* Checkbox */
 	        	            case 'checkbox':
 					            echo '<div class="form-group"><label class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label><div align="left" class="col-sm-9">';
@@ -311,6 +347,25 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
+
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
+
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
+                                    </div>
+                                </div>';
+                                break;
 
 	                        /* Default text input */
 	                        default:
@@ -352,6 +407,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	            {
 		            if ($v['use'] && $v['place'])
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 	    	            // $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
                         // Staff doesn't need to fill in required custom fields
                         $v['req'] = '';
@@ -470,6 +530,56 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
+
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
+
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
+                                    </div>
+                                </div>';
+                                break;
+
+                            case 'multiselect':
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+
+                                $options = explode('#HESK#',$v['value']);
+
+                                foreach ($options as $option)
+                                {
+
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
+                                break;
 
 	                        /* Default text input */
 	                        default:

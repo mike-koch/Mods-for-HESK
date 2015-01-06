@@ -1,0 +1,16 @@
+Hello,
+
+A support ticket assigned to you has been re-opened.
+
+%%NAME%% has just re-opened the ticket "%%SUBJECT%%".
+
+Tracking ID: %%TRACK_ID%%
+
+You can manage this ticket here:
+%%TRACK_URL%%
+
+
+Regards,
+
+%%SITE_TITLE%%
+%%SITE_URL%%

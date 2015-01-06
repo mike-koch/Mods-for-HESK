@@ -66,7 +66,7 @@ exit();
 
 function print_add_ticket()
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
 	// Auto-focus first empty or error field
 	define('AUTOFOCUS', true);
@@ -106,16 +106,6 @@ function print_add_ticket()
             <div class="panel panel-default">
                 <div class="panel-heading"><?php echo $hesklang['quick_help']; ?></div>
                 <div class="panel-body">
-                    <?php if ($hesk_settings['can_sel_lang']) { ?>
-                    <div class="row">
-                        <div class="col-md-6 col-xs-12">
-                            <label class="control-label" style="margin-top:8px;"><?php echo $hesklang['changeLanguage']; ?></label>
-                        </div>
-                        <div class="col-md-6 col-xs-12">
-                            <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
-                        </div>
-                    </div>
-                    <?php } ?>
                     <p><?php echo $hesklang['quick_help_submit_ticket']; ?></p>
                 </div>
             </div>
@@ -232,8 +222,14 @@ function print_add_ticket()
 
 	            foreach ($hesk_settings['custom_fields'] as $k=>$v)
 	            {
+
 		            if ($v['use'] && $v['place']==0)
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 	    	            $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
 
 			            if ($v['type'] == 'checkbox')
@@ -350,6 +346,57 @@ function print_add_ticket()
 					            <div class="col-sm-9"><textarea class="form-control" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
+
+                            case 'multiselect':
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+
+                                $options = explode('#HESK#',$v['value']);
+
+                                foreach ($options as $option)
+                                {
+
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div>
+                                </div></div>';
+                                break;
+
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
+
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
+                                    </div>
+                                </div>';
+                                break;
 
 	                        /* Default text input */
 	                        default:
@@ -411,12 +458,18 @@ function print_add_ticket()
 	            <!-- START CUSTOM AFTER -->
 	            <?php
 
-	            /* custom fields BEFORE comments */
+	            /* custom fields AFTER comments */
 
 	            foreach ($hesk_settings['custom_fields'] as $k=>$v)
 	            {
+
 		            if ($v['use'] && $v['place'])
 	                {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+                        
 	    	            $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
 
 			            if ($v['type'] == 'checkbox')
@@ -533,6 +586,56 @@ function print_add_ticket()
 					            <div class="col-sm-9"><textarea class="form-control" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
+
+                            case 'multiselect':
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+
+                                $options = explode('#HESK#',$v['value']);
+
+                                foreach ($options as $option)
+                                {
+
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
+                                break;
+
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' isError ' : '';
+
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
+                                        <span class="help-block">'.$hesklang['date_format'].'</span>
+                                    </div>
+                                </div>';
+                                break;
 
 	                        /* Default text input */
 	                        default:

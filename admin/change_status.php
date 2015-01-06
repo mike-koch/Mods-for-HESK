@@ -94,7 +94,11 @@ if ($statusRow['IsClosed']) // Closed
 
     // Notify customer
     require(HESK_PATH . 'inc/email_functions.inc.php');
-    hesk_notifyCustomer('ticket_closed');
+
+    if (!empty($ticket['email']))
+    {
+        hesk_notifyCustomer('ticket_closed');
+    }
 }
 elseif ($statusRow['ID'] != 0) //Ticket is still open, but not new
 {

@@ -5,7 +5,14 @@ require(HESK_PATH . 'install/install_functions.inc.php');
 require(HESK_PATH . 'hesk_settings.inc.php');
 hesk_dbConnect();
 //-- Need to do this since we are no longer restricted on IDs and we want an INT for proper INNER JOINs
-hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` CHANGE COLUMN `status` `status` INT NOT NULL DEFAULT '0'");
+hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `status_int` INT NOT NULL DEFAULT 0 AFTER `status`");
+$ticketsRS = hesk_dbQuery("SELECT `id`, `status` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets`");
+while ($currentResult = $ticketsRS->fetch_assoc())
+{
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status_int` = ".$currentResult['status']." WHERE `id` = ".$currentResult['id']);
+}
+hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` DROP COLUMN `status`");
+hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` CHANGE COLUMN `status_int` `status` INT NOT NULL");
 
 hesk_dbQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (
                       `ID` INT NOT NULL,

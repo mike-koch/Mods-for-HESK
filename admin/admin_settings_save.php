@@ -390,7 +390,7 @@ for ($i=1;$i<=20;$i++)
 		$set['custom_fields'][$this_field]['maxlen']	= intval( hesk_POST('s_custom'.$i.'_maxlen', 255) );
         $set['custom_fields'][$this_field]['value']		= hesk_input( hesk_POST('s_custom'.$i.'_val') );
 
-        if (!in_array($set['custom_fields'][$this_field]['type'],array('text','textarea','select','radio','checkbox')))
+        if (!in_array($set['custom_fields'][$this_field]['type'],array('text','textarea','select','radio','checkbox','date','multiselect')))
         {
         	$set['custom_fields'][$this_field]['type'] = 'text';
         }
@@ -537,6 +537,14 @@ $set['hesk_version'] = $hesk_settings['hesk_version'];
 // Save the modsForHesk_settings.inc.php file
 $set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
+$set['custom-field-setting'] = empty($_POST['custom-field-setting']) ? 0 : 1;
+$set['customer-email-verification-required'] = empty($_POST['email-verification']) ? 0 : 1;
+
+if ($set['customer-email-verification-required'])
+{
+    //-- Don't allow multiple emails if verification is required
+    $set['multi_eml'] = 0;
+}
 $set['navbarBackgroundColor'] = hesk_input(hesk_POST('navbarBackgroundColor'));
 $set['navbarBrandColor'] = hesk_input(hesk_POST('navbarBrandColor'));
 $set['navbarBrandHoverColor'] = hesk_input(hesk_POST('navbarBrandHoverColor'));
@@ -567,7 +575,13 @@ $modsForHesk_settings[\'questionMarkColor\'] = \''.$set['questionMarkColor'].'\'
 $modsForHesk_settings[\'rtl\'] = '.$set['rtl'].';
 
 //-- Set this to 1 to show icons next to navigation menu items
-$modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';';
+$modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';
+
+//-- Set this to 1 to enable custom field names as keys
+$modsForHesk_settings[\'custom_field_setting\'] = '.$set['custom-field-setting'].';
+
+//-- Set this to 1 to enable email verification for new customers
+$modsForHesk_settings[\'customer_email_verification_required\'] = '.$set['customer-email-verification-required'].';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )

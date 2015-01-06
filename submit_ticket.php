@@ -37,6 +37,7 @@ define('HESK_PATH','./');
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 require(HESK_PATH . 'inc/email_functions.inc.php');
@@ -207,7 +208,12 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
 	if ($v['use'])
     {
-        if ($v['type'] == 'checkbox')
+        if ($modsForHesk_settings['custom_field_setting'])
+        {
+            $v['name'] = $hesklang[$v['name']];
+        }
+
+        if ($v['type'] == 'checkbox' || $v['type'] == 'multiselect')
         {
 			$tmpvar[$k]='';
 
@@ -238,10 +244,21 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
             {
             	$hesk_error_buffer[$k]=$hesklang['fill_all'].': '.$v['name'];
             }
+
+            if ($v['type'] == 'date')
+            {
+                $tmpvar[$k] = strtotime($_POST[$k]);
+            }
         }
 		else
         {
-        	$tmpvar[$k]=hesk_makeURL(nl2br(hesk_input( hesk_POST($k) )));
+            if ($v['type'] == 'date' && $_POST[$k] != '')
+            {
+                $tmpvar[$k] = strtotime($_POST[$k]);
+            } else
+            {
+                $tmpvar[$k] = hesk_makeURL(nl2br(hesk_input(hesk_POST($k))));
+            }
         }
 		$_SESSION["c_$k"]=hesk_POST($k);
 	}
@@ -344,22 +361,49 @@ if ($hesk_settings['attachments']['use'] && ! empty($attachments) )
     }
 }
 
-// Insert ticket to database
-$ticket = hesk_newTicket($tmpvar);
-
-// Notify the customer
-hesk_notifyCustomer();
-
-// Need to notify staff?
-// --> From autoassign?
-if ($tmpvar['owner'] && $autoassign_owner['notify_assigned'])
+// Should the helpdesk validate emails?
+$createTicket = true;
+if ($modsForHesk_settings['customer_email_verification_required'])
 {
-	hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
+    $verifiedEmailSql = "SELECT `Email` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."verified_emails` WHERE `Email` = '".hesk_dbEscape($tmpvar['email'])."'";
+    $verifiedEmailRS = hesk_dbQuery($verifiedEmailSql);
+    if ($verifiedEmailRS->num_rows == 0)
+    {
+        //-- email has not yet been verified.
+        $ticket = hesk_newTicket($tmpvar, false);
+
+        //-- generate the activation key, which is a hash of their email address along with the current time.
+        $unhashedKey = $tmpvar['email'].time();
+        $key = hash('sha512', $unhashedKey);
+
+        $escapedEmail = hesk_dbEscape($tmpvar['email']);
+        $escapedKey = hesk_dbEscape($key);
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email`, `ActivationKey`)
+        VALUES ('".$escapedEmail."', '".$escapedKey."')");
+
+        hesk_notifyCustomerForVerifyEmail('verify_email', $key);
+        $createTicket = false;
+    }
 }
-// --> No autoassign, find and notify appropriate staff
-elseif ( ! $tmpvar['owner'] )
+if ($createTicket)
 {
-	hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
+    //-- email has been verified, and a ticket can be created
+    $ticket = hesk_newTicket($tmpvar);
+
+    // Notify the customer
+    hesk_notifyCustomer();
+
+    // Need to notify staff?
+    // --> From autoassign?
+        if ($tmpvar['owner'] && $autoassign_owner['notify_assigned'])
+        {
+            hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
+        }
+    // --> No autoassign, find and notify appropriate staff
+        elseif ( ! $tmpvar['owner'] )
+        {
+            hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
+        }
 }
 
 // Next ticket show suggested articles again
@@ -395,14 +439,19 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 
 <div style="width: 80%; margin-left: auto; margin-right: auto;">
     <?php
-    // Show success message with link to ticket
-    hesk_show_success(
+    if ($createTicket) {
+        // Show success message with link to ticket
+        hesk_show_success(
 
-        $hesklang['ticket_submitted'] . '<br /><br />' .
-        $hesklang['ticket_submitted_success'] . ': <b>' . $ticket['trackid'] . '</b><br /><br />
+            $hesklang['ticket_submitted'] . '<br /><br />' .
+            $hesklang['ticket_submitted_success'] . ': <b>' . $ticket['trackid'] . '</b><br /><br />
         <a href="' . $hesk_settings['hesk_url'] . '/ticket.php?track=' . $ticket['trackid'] . '">' . $hesklang['view_your_ticket'] . '</a>'
 
-    );
+        );
+    } else
+    {
+        hesk_show_notice($hesklang['verify_your_email'].'<br><br>'.$hesklang['check_spambox']);
+    }
 
     // Any other messages to display?
     hesk_handle_messages();

@@ -47,6 +47,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
     <?php } else { ?>
 	<link href="<?php echo HESK_PATH; ?>hesk_style_v25.css" type="text/css" rel="stylesheet" />
     <?php } ?>
+    <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css" type="text/css" rel="stylesheet" />
     <?php if ($modsForHesk_settings['rtl']) { ?>
@@ -60,6 +61,8 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript_v25.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
+    <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
+    <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
 
     <?php
 
@@ -163,6 +166,12 @@ if ($modsForHesk_settings['show_icons']) {
 	      <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><i class="fa fa-book" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['kb_text'] ?></a></li> <?php       } ?>
           <?php include ('custom/header-custom.inc.php'); ?>
         </ul>
+        <?php if ($hesk_settings['can_sel_lang']) { ?>
+            <div class="navbar-form navbar-right" role="search" style="margin-right: 20px; min-width: 80px;">
+                <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
+            </div>
+        <?php } ?>
+
       </div><!-- /.navbar-collapse -->
     </nav>
 

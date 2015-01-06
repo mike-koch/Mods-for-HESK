@@ -92,7 +92,11 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
 	if ($v['use'] && isset($_POST[$k]))
     {
-       	if (is_array($_POST[$k]))
+        // Date will be handled by the jQuery datepicker
+        if( $v['type'] == 'date' && $_POST[$k] != '')
+        {
+            $tmpvar[$k] = strtotime($_POST[$k]);
+        } else if (is_array($_POST[$k]))
         {
 			$tmpvar[$k]='';
 			foreach ($_POST[$k] as $myCB)

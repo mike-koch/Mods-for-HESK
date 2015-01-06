@@ -47,6 +47,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
     <?php } else { ?>
 	<link href="<?php echo HESK_PATH; ?>hesk_style_v25.css" type="text/css" rel="stylesheet" />
     <?php } ?>
+    <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css" type="text/css" rel="stylesheet" />
     <?php if ($modsForHesk_settings['rtl']) { ?>
@@ -61,6 +62,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript_v25.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
+    <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
 
     <?php
 	/* Prepare Javascript that browser should load on page load */

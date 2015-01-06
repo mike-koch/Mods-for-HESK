@@ -206,8 +206,13 @@ $num_cols = 0;
 echo '<tr>';
 foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
-	if ($v['use'])
+    if ($v['use'])
 	{
+        if ($modsForHesk_settings['custom_field_setting'])
+        {
+            $v['name'] = $hesklang[$v['name']];
+        }
+
         if ($num_cols == 3)
         {
             echo '</tr><tr>';

@@ -100,7 +100,7 @@ if ( defined('HESK_DEMO') )
 <div class="row" style="margin-top: 20px">
     <div class="col-md-4">
         <div class="panel panel-default">
-            <div class="panel-heading"><?php echo $hesklang['check_status']; ?></div>
+            <div class="panel-heading"><?php echo $hesklang['installation_information']; ?></div>
             <div class="panel-body">
                 <table>
                     <tr><td class="text-right">
@@ -141,10 +141,10 @@ if ( defined('HESK_DEMO') )
                         ?>
                     </td></tr>
                     <tr>
-                        <td class="text-right">
+                        <td class="text-right" style="padding-bottom: 5px">
                             <?php echo $hesklang['mods_for_hesk_version']; ?>:
                         </td>
-                        <td style="padding-left: 10px">
+                        <td style="padding-left: 10px; padding-bottom: 5px">
                             <?php echo $modsForHeskVersion; ?>
                         </td>
                     </tr>
@@ -152,6 +152,11 @@ if ( defined('HESK_DEMO') )
                         <?php echo $hesklang['phpv']; ?>:
                         </td><td style="padding-left: 10px">
                         <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : PHP_VERSION . ' ' . (function_exists('mysqli_connect') ? '(MySQLi)' : '(MySQL)'); ?>
+                    </td></tr>
+                    <tr><td class="text-right" style="padding-bottom: 5px">
+                        <?php echo $hesklang['mysqlv']; ?>:
+                    </td><td style="padding-left: 10px; padding-bottom: 5px">
+                        <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : hesk_dbResult( hesk_dbQuery('SELECT VERSION() AS version') ); ?>
                     </td></tr>
                     <tr>
                         <td class="text-right">
@@ -1215,7 +1220,9 @@ if ( defined('HESK_DEMO') )
                 <th><?php echo $hesklang['enable']; ?></th>
                 <th><?php echo $hesklang['s_type']; ?></th>
                 <th><?php echo $hesklang['custom_r']; ?></th>
-                <th><?php echo $hesklang['custom_n']; ?></th>
+                <th>
+                    <?php if ($modsForHesk_settings['custom_field_setting']) { echo $hesklang['custom_language_key']; } else { echo $hesklang['custom_n']; } ?>
+                </th>
                 <th><?php echo $hesklang['custom_place']; ?></th>
                 <th><?php echo $hesklang['opt']; ?></th>
                 </tr>
@@ -1238,6 +1245,8 @@ if ( defined('HESK_DEMO') )
                         <option value="radio"    '.($this_field['type'] == 'radio' ? 'selected="selected"' : '').   '>'.$hesklang['srb'].'</option>
                         <option value="select"   '.($this_field['type'] == 'select' ? 'selected="selected"' : '').  '>'.$hesklang['ssb'].'</option>
                         <option value="checkbox" '.($this_field['type'] == 'checkbox' ? 'selected="selected"' : '').'>'.$hesklang['scb'].'</option>
+                        <option value="date" '.($this_field['type'] == 'date' ? 'selected="selected"' : '').'>'.$hesklang['date_custom_field'].'</option>
+                        <option value="multiselect" '.($this_field['type'] == 'multiselect' ? 'selected="selected"' : '').'>'.$hesklang['multiple_select_custom_field'].'</option>
                         </select>
                     </td>
                     <td><div class="checkbox"><label><input type="checkbox" name="s_custom'.$i.'_req" value="1" id="s_custom'.$i.'_req" '; if ($this_field['req']) {echo 'checked="checked"';} echo $onload_locally.' /> '.$hesklang['yes'].'</label></div></td>
@@ -1670,7 +1679,24 @@ if ( defined('HESK_DEMO') )
                         <label for="s_multi_eml" class="col-sm-3 control-label"><?php echo $hesklang['meml']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#57','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-9">
                             <div class="checkbox">
-                                <label><input type="checkbox" name="s_multi_eml" value="1" <?php if ($hesk_settings['multi_eml']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['meml2']; ?></label>
+                                <?php
+                                if ($modsForHesk_settings['customer_email_verification_required'])
+                                {
+                                ?>
+                                    <label>
+                                        <i class="fa fa-ban" style="color: red; font-size: 1.2em; margin-left: -20px; font-weight: bold"
+                                           data-toggle="popover"
+                                           title="<?php echo $hesklang['feature_disabled']; ?>"
+                                           data-content="<?php echo $hesklang['multi_eml_disabled']; ?>"></i> <?php echo $hesklang['meml2']; ?></label>
+                                    <input type="hidden" name="s_multi_eml" value="0">
+                                <?php
+                                } else
+                                {
+                                ?>
+                                    <label><input type="checkbox" name="s_multi_eml" value="1" <?php if ($hesk_settings['multi_eml']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['meml2']; ?></label>
+                                <?php
+                                }
+                                ?>
                             </div>    
                         </div>
                     </div>
@@ -1790,7 +1816,7 @@ if ( defined('HESK_DEMO') )
                   <div class="form-group">
                       <label for="rtl" class="col-sm-4 col-xs-12 control-label">
                           <?php echo $hesklang['displayRtl']; ?>
-                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                              title="<?php echo $hesklang['displayRtl']; ?>"
                              data-content="<?php echo $hesklang['displayRtlHelp']; ?>"></i>
                       </label>
@@ -1805,7 +1831,7 @@ if ( defined('HESK_DEMO') )
                   <div class="form-group">
                       <label for="show-icons" class="col-sm-4 col-xs-12 control-label">
                           <?php echo $hesklang['showIcons']; ?>
-                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="bottom"
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                              title="<?php echo $hesklang['showIcons']; ?>"
                              data-content="<?php echo $hesklang['showIconsHelp']; ?>"></i>
                       </label>
@@ -1813,6 +1839,38 @@ if ( defined('HESK_DEMO') )
                           <div class="checkbox">
                               <label>
                                   <input id="show-icons" name="show-icons" type="checkbox" <?php if ($modsForHesk_settings['show_icons']) {echo 'checked';} ?>> <?php echo $hesklang['show_icons_navigation']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="email-verification" class="col-sm-4 col-xs-12 control-label"><?php echo $hesklang['customer_email_verification']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                             title="<?php echo $hesklang['customer_email_verification']; ?>"
+                             data-content="<?php echo $hesklang['customer_email_verification_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input id="email-verification" name="email-verification" type="checkbox" <?php if ($modsForHesk_settings['customer_email_verification_required']) {echo 'checked';} ?>> <?php echo $hesklang['require_customer_validate_email']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="blankSpace"></div>
+                  <h6 style="font-weight: bold"><?php echo $hesklang['tab_4']; ?></h6>
+                  <div class="footerWithBorder blankSpace"></div>
+                  <div class="form-group">
+                      <label for="custom-field-setting" class="col-sm-4 col-xs-12 control-label">
+                          <?php echo $hesklang['custom_field_setting']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                             title="<?php echo $hesklang['custom_field_setting']; ?>"
+                             data-content="<?php echo $hesklang['custom_field_setting_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input id="custom-field-setting" name="custom-field-setting" type="checkbox" <?php if ($modsForHesk_settings['custom_field_setting']) {echo 'checked';} ?>> <?php echo $hesklang['enable_custom_field_language']; ?>
                               </label>
                           </div>
                       </div>

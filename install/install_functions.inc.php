@@ -37,7 +37,7 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 // We will be installing this HESK version:
 define('HESK_NEW_VERSION','2.5.5');
-define('MODS_FOR_HESK_NEW_VERSION','1.6.0');
+define('MODS_FOR_HESK_NEW_VERSION','1.7.0');
 
 // Other required files and settings
 define('INSTALL',1);
@@ -347,35 +347,7 @@ function hesk_iDatabase($problem=0)
                 <p>Summary</p>
             </div>
             <div class="panel-body">
-                <?php
-                    if ($problem == 1)
-                    {
-                        echo '<br /><br />Double-check all the information below. Contact your hosting company for the correct information to use!<br /><br /><b>MySQL said:</b> '.$mysql_log.'</p>', 'Database connection failed';
-                    }
-                    elseif ($problem == 2)
-                    {
-                        echo '<b>Database tables already exist!</b><br /><br />
-                        HESK database tables with <b>'.$hesk_settings['db_pfix'].'</b> prefix already exist in this database!<br /><br />
-                        To upgrade an existing HESK installation select <a href="index.php">Update existing install</a> instead.<br /><br />
-                        To install a new copy of HESK in use a unique table prefix.';
-                    }
-                    elseif ($problem == 3)
-                    {
-                        echo '<b>Old database tables not found!</b><br /><br />
-                        HESK database tables have not been found in this database!<br /><br />
-                        To install HESK use the <a href="index.php">New install</a> option instead.';
-                    }
-                    elseif ($problem == 4)
-                    {
-                        echo '<b>Version '.HESK_NEW_VERSION.' tables already exist!</b><br /><br />
-                        Your database seems to be compatible with HESK version '.HESK_NEW_VERSION.'<br /><br />
-                        To install a new copy of HESK use the <a href="index.php">New install</a> option instead.';
-                    }
-                    else
-                    {
-                        echo '<p style="padding: 10px;">To complete setup HESK needs to connect to your database. You can get this information from your hosting control panel.</p>';
-                    }
-                ?>
+                <p style="padding: 10px;">To complete setup HESK needs to connect to your database. You can get this information from your hosting control panel.</p>
             </div>
         </div>
 	</div>
@@ -384,6 +356,39 @@ function hesk_iDatabase($problem=0)
         <form role="form" action="<?php echo INSTALL_PAGE; ?>" method="post">
             <div class="h3">Database Settings</div>
             <div class="footerWithBorder blankSpace"></div>
+            <?php
+            if ($problem == 1)
+            {
+                echo '<div class="alert alert-danger">';
+                echo '<br /><br />Double-check all the information below. Contact your hosting company for the correct information to use!<br /><br /><b>MySQL said:</b> '.$mysql_log.'</p>', 'Database connection failed';
+                echo '</div>';
+            }
+            elseif ($problem == 2)
+            {
+                echo '<div class="alert alert-danger">';
+                echo '<b>Database tables already exist!</b><br /><br />
+                        HESK database tables with <b>'.$hesk_settings['db_pfix'].'</b> prefix already exist in this database!<br /><br />
+                        To upgrade an existing HESK installation select <a href="index.php">Update existing install</a> instead.<br /><br />
+                        To install a new copy of HESK in use a unique table prefix.';
+                echo '</div>';
+            }
+            elseif ($problem == 3)
+            {
+                echo '<div class="alert alert-danger">';
+                echo '<b>Old database tables not found!</b><br /><br />
+                        HESK database tables have not been found in this database!<br /><br />
+                        To install HESK use the <a href="index.php">New install</a> option instead.';
+                echo '</div>';
+            }
+            elseif ($problem == 4)
+            {
+                echo '<div class="alert alert-danger">';
+                echo '<b>Version '.HESK_NEW_VERSION.' tables already exist!</b><br /><br />
+                        Your database seems to be compatible with HESK version '.HESK_NEW_VERSION.'<br /><br />
+                        To install a new copy of HESK use the <a href="index.php">New install</a> option instead.';
+                echo '</div>';
+            }
+            ?>
         
             <div class="form-group">
                 <label for="host">Database Host</label>

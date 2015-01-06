@@ -144,7 +144,10 @@ if (isset($_POST['save']))
 		{
 			if ($v['use'] && isset($_POST[$k]))
 		    {
-	        	if (is_array($_POST[$k]))
+                if( $v['type'] == 'date' && $_POST[$k] != '')
+                {
+                    $tmpvar[$k] = strtotime($_POST[$k]);
+                } elseif (is_array($_POST[$k]))
 	            {
 					$tmpvar[$k]='';
 					foreach ($_POST[$k] as $myCB)
@@ -246,6 +249,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		        {
 			        if ($v['use'])
 		            {
+                        if ($modsForHesk_settings['custom_field_setting'])
+                        {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+
 				        $k_value  = $ticket[$k];
 
 				        if ($v['type'] == 'checkbox')
@@ -359,6 +367,44 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 						            </div>
 		                        </div>';
 		                    break;
+
+                            case 'date':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+                                echo '
+                                <div class="form-group">
+                                    <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="datepicker form-control white-readonly" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                            maxlength="'.$v['maxlen'].'" value="'.date('Y-m-d', $v['value']).'" readonly/>
+                                    </div>
+                                </div>';
+                                break;
+                            case 'multiselect':
+                                echo '<div class="form-group"><label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
+                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'" multiple>';
+                                $options = explode('#HESK#',$v['value']);
+                                foreach ($options as $option)
+                                {
+                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    {
+                                        $k_value = $option;
+                                        $selected = 'selected="selected"';
+                                    }
+                                    else
+                                    {
+                                        $selected = '';
+                                    }
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
+                                echo '</select>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                </div></div></div>';
+                                break;
 
 		                    /* Default text input */
 		                    default:

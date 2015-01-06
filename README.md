@@ -1,5 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/mkoch227/Mods-For-Hesk.png?label=waffle:ready&title=Ready)](https://waffle.io/mkoch227/Mods-For-Hesk)
-<h2><a href="http://mods-for-hesk.mkochcs.com" target="_blank">Mods for HESK</a> v1.6.1</h2>
+<h2><a href="http://mods-for-hesk.mkochcs.com" target="_blank">Mods for HESK</a> v1.7.0</h2>
 
 Mods for HESK is a set of modifications for HESK v2.5.5, a free and popular helpdesk solution.
 
@@ -26,16 +26,7 @@ You can download Mods for HESK via two ways:
 </ol>
 
 <h2>Installation</h2>
-
-<ol>
-<li>Download HESK from <a href="http://www.hesk.com/download.php" target="_blank">http://www.hesk.com/download.php</a>.</li>
-<li>Extract the contents of HESK to a directory of your choice.</li>
-<li>Download Mods for HESK from one of the two methods described above.</li>
-<li>Copy and paste the contents of the zip/tar.gz bundle and overwrite any files in the original HESK 2.x folder.</li>
-<li>Upload the resulting folder to your webserver.</li>
-<li>Go to the /install directory in your web browser and click on "Install/Update Mods for HESK Installation"</li>
-</ol>
-<p>Please consult the official HESK Documentation on how to install HESK, as it is the same for both HESK and Mods for HESK.</p>
+<p>Visit <a href="http://mods-for-hesk.mkochcs.com/download.php">http://mods-for-hesk.mkochcs.com/download.php</a> for installation instructions.</p>
 
 <h2>Languages</h2>
 <p>As of current, only English is a supported language, as there have been several language items that have been edited/created. If you want to translate Mods for HESK to your own language, it is recommended to download the original HESK language file for your language, and then add/edit the lines listed under <code>//Added or modified in Mods for HESK X.X.X (where X.X.X is a version number) for your language.</p>

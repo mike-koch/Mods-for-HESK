@@ -4,11 +4,38 @@ var loadJquery = function()
     //-- Activate tooltips
     $('[data-toggle="tooltip"]').tooltip();
 
-    //-- Active popovers
+    //-- Activate popovers
     $('[data-toggle="popover"]').popover({
-        trigger: 'hover'
-    })
+        trigger: 'hover',
+        container: 'body'
+    });
+
+    //-- Activate HTML popovers
+    $('[data-toggle="htmlpopover"]').popover({
+        trigger: 'hover',
+        container: 'body',
+        html: 'true'
+    });
+
+    //-- Activate jQuery's date picker
+    $(function() {
+        $('.datepicker').datepicker({
+            todayBtn: "linked",
+            clearBtn: true,
+            autoclose: true,
+            todayHighlight: true,
+            format: "yyyy-mm-dd"
+        });
+    });
 };
+
+function selectAll(id) {
+    $('#' + id + ' option').prop('selected', true);
+}
+
+function deselectAll(id) {
+    $('#' + id + ' option').prop('selected', false);
+}
 
 function toggleRow(id) {
     if ($('#' + id).hasClass('danger'))
