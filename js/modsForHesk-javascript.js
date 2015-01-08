@@ -77,15 +77,4 @@ function toggleChildrenForm(show) {
     }
 }
 
-function toggleNote(noteId, showForm) {
-    if (showForm) {
-        $('#note-' + noteId + '-p').hide();
-        $('#note-' + noteId + '-form').show();
-    } else {
-        $('#note-' + noteId + '-p').show();
-        $('#note-' + noteId + '-form').hide();
-        $('#note-' + noteId + '-textarea').val($('#note-' + noteId + '-p').text())
-    }
-}
-
 jQuery(document).ready(loadJquery);

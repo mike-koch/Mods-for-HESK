@@ -402,24 +402,6 @@ if (isset($_GET['delatt']) && hesk_token_check())
 	hesk_process_messages($hesklang['kb_att_rem'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
 }
 
-if (isset($_POST['note_message'])) {
-    $n = $_POST['note_id'];
-    if ($can_del_notes)
-    {
-        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes`
-            SET `edit_date` = NOW(), `message` = '".hesk_dbEscape($_POST['note_message'])."', `number_of_edits` = `number_of_edits` + 1
-            WHERE `id`='".intval($n)."' LIMIT 1");
-    }
-    else
-    {
-        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes`
-            SET `edit_date` = NOW(), `message` = '".hesk_dbEscape($_POST['note_message'])."', `number_of_edits` = `number_of_edits` + 1
-            WHERE `id`='".intval($n)."' AND `who`='".intval($_SESSION['id'])."' LIMIT 1");
-    }
-    hesk_process_messages($hesklang['note_edit_successful'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
-}
-
-
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
@@ -833,33 +815,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         {
             ?>
             <div class="row">
-                <div class="col-md-12 alert-warning" style="padding-top: 5px;">
-                    <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?>
-                        <div class="btn-group btn-group-sm float-right-sm" role="group" style="padding-top: 5px; padding-bottom: 5px;">
-                            <a class="btn btn-danger"
-                               href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');">
-                                <i class="fa fa-times"></i> <?php echo $hesklang['delete']; ?>
-                            </a>&nbsp;
-                            <a class="btn btn-warning"
-                               href="javascript:void(0)" onclick="toggleNote(<?php echo $note['id']; ?>, true)">
-                                <i class="fa fa-pencil"></i> <?php echo $hesklang['edit']; ?>
-                            </a>
-                        </div>
-                    <?php }?>
+                <div class="col-md-12 alert-warning">
+                    <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?><p><a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');"><i class="fa fa-times"></i> Delete Note</a></p><?php }?>
                     <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt']); ?></p>
-                    <p id="note-<?php echo $note['id']; ?>-p"><?php echo $note['message']; ?></p>
-                    <form style="display: none" id="note-<?php echo $note['id']; ?>-form" role="form" method="post"
-                          action="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;token=<?php hesk_token_echo(); ?>">
-                        <textarea style="margin-bottom: 5px;" class="form-control" id="note-<?php echo $note['id']; ?>-textarea" name="note_message"><?php echo $note['message']; ?></textarea>
-                        <input type="hidden" name="note_id" value="<?php echo $note['id']; ?>">
-                        <button style="margin-bottom: 5px;" class="btn btn-success btn-sm" type="submit"><i class="fa fa-check"></i> <?php echo $hesklang['save']; ?></button>
-                        <a style="margin-bottom: 5px;" class="btn btn-danger btn-sm" href="javascript:void(0)" onclick="toggleNote(<?php echo $note['id']; ?>, false)">
-                            <i class="fa fa-times"></i> <?php echo $hesklang['cancel']; ?>
-                        </a>
-                    </form>
-                    <?php if ($note['number_of_edits'] > 0) { ?>
-                        <p><i><?php echo sprintf($hesklang['note_last_edit'], hesk_date($note['edit_date'])); echo ' | '.sprintf($hesklang['total_number_of_edits'], $note['number_of_edits']); ?></i></p>
-                    <?php } ?>
+                    <p><?php echo $note['message']; ?></p>
                 </div>
             </div>
         <?php
