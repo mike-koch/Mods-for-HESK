@@ -126,10 +126,6 @@ $hesklang['relationship_deleted'] = 'Parent/Child relationship deleted.';
 $hesklang['autorefresh'] = 'Autorefresh:';
 $hesklang['autorefresh_restrictions'] = 'Enter value in milliseconds. Value must be greater than 1000 to use this feature. No fractional values.';
 
-// ADDED OR MODIFIED IN Mods For HESK 1.3.0
-$hesklang['show_filters'] = 'Show Column Filters';
-$hesklang['hide_filters'] = 'Hide Column Filters';
-
 // ADDED OR MODIFIED IN Mods For HESK 1.2.2
 $hesklang['changeLanguage'] = 'Change language to';
 

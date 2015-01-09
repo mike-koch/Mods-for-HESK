@@ -182,6 +182,7 @@ inc/mail/sasl/sasl.php
 inc/mail/smtp.php
 inc/posting_functions.inc.php
 inc/prepare_ticket_export.inc.php
+inc/prepare_ticket_search.inc.php
 inc/print_group.inc.php
 inc/recaptcha/LICENSE
 inc/recaptcha/index.htm

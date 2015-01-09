@@ -324,32 +324,18 @@ if ($total > 0)
 		$ticket['archive'] = !($ticket['archive']) ? $hesklang['no'] : $hesklang['yes'];
 
 		$ticket['message'] = $first_line . substr(strip_tags($ticket['message']),0,200).'...';
-        $ownerColumn = $ticket['owner'] != 0 ? $admins[$ticket['owner']] : '('.$hesklang['unas'].')';
-        
-        $customFieldsHtml = '';
-        for ($i = 1; $i <= 20; $i++) {
-            if ($hesk_settings['custom_fields']['custom'.$i]['use']) {
-                $display = 'display: none';
-                if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
-                    $display = '';
-                }
-                $customFieldsHtml .= '<td style="'.$display.'" class="column_columnCustom'.$i.'">'.$ticket['custom'.$i].'</td>';
-            }
-        }
         
 
 		echo <<<EOC
 		<tr class="$color" id="$ticket[id]" title="$ticket[message]">
 		<td><input type="checkbox" id="check$ticket[id]" name="id[]" value="$ticket[id]" />&nbsp;</td>
-		<td class="column_trackID"><a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[trackid]</a></td>
-		<td class="column_last_update">$ticket[lastchange]</td>
-		<td class="column_name">$ticket[name]</td>
-		<td class="column_subject">$tagged$owner<a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[subject]</a></td>
-		<td class="column_status">$ticket[status]&nbsp;</td>
-		<td class="column_lastreplier">$ticket[repliername]</td>
-		<td class="column_priority">$ticket[priority]</td>
-        <td class="column_owner" style="display: none">$ownerColumn</td>
-        $customFieldsHtml
+        <td><a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[trackid]</a></td>
+        <td>$ticket[lastchange]</td>
+        <td>$ticket[name]</td>
+        <td>$tagged$owner<a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[subject]</a></td>
+        <td>$ticket[status]&nbsp;</td>
+        <td>$ticket[repliername]</td>
+        <td>$ticket[priority]&nbsp;</td>
 		</tr>
 
 EOC;
@@ -359,98 +345,8 @@ EOC;
 	</div>
 
     &nbsp;<br />
-    <?php 
-    $columnOneCheckboxes = array();
-    $columnTwoCheckboxes = array();
-    $columnThreeCheckboxes = array();
-    $currentColumn = 3;
-    
-    for ($i = 1; $i <= 20; $i++) {
-        if ($hesk_settings['custom_fields']['custom'.$i]['use']) {
-            if ($currentColumn == 1) {
-                array_push($columnOneCheckboxes, $i);
-                $currentColumn = 2;
-            } elseif ($currentColumn == 2) {
-                array_push($columnTwoCheckboxes, $i);
-                $currentColumn = 3;
-            } else {
-                array_push($columnThreeCheckboxes, $i);
-                $currentColumn = 1;
-            }
-        }
-    }
-    ?>
     <table border="0" width="100%">
     <tr>
-    <td width="50%" style="vertical-align:top">
-        <h6 id="showFiltersText" style="font-weight: bold"><a href="javascript:void(0)" onclick="toggleFilterCheckboxes(true)"><?php echo $hesklang['show_filters']; ?></a></h6>
-        <h6 id="hideFiltersText" style="font-weight: bold; display: none"><a href="javascript:void(0)" onclick="toggleFilterCheckboxes(false)"><?php echo $hesklang['hide_filters']; ?></a></h6>
-        <div id="filterCheckboxes" style="display: none" class="row">
-            <div class="col-md-4 col-sm-12">
-                <div class="checkbox">
-                    <input type="checkbox" onclick="toggleColumn('column_trackID')" checked> <?php echo $hesklang['trackID']; ?>
-                </div><br>
-                <div class="checkbox">
-                    <input type="checkbox" onclick="toggleColumn('column_subject')" checked> <?php echo $hesklang['subject']; ?>
-                </div><br>
-                <div class="checkbox">
-                    <input type="checkbox" onclick="toggleColumn('column_priority')" checked> <?php echo $hesklang['priority']; ?>
-                </div>
-                <?php 
-                    foreach ($columnOneCheckboxes as $i) {
-                        $checked = '';
-                        if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
-                            $checked = 'checked';
-                        }
-                        echo '<br><div class="checkbox">
-                            <input type="checkbox" onclick="toggleColumn(\'column_columnCustom'.$i.'\')" '.$checked.'>
-                                '.$hesk_settings['custom_fields']['custom'.$i]['name'].'</div>';
-                    }
-                ?>
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <div class="checkbox">
-                    <input type="checkbox" onclick="toggleColumn('column_last_update')" checked> <?php echo $hesklang['last_update']; ?>
-                </div><br>
-                <div class="checkbox">
-                    <input type="checkbox" onclick="toggleColumn('column_status')" checked> <?php echo $hesklang['status']; ?>
-                </div><br>
-                <div class="checkbox">
-                    <input type="checkbox" onclick="toggleColumn('column_owner')"> <?php echo $hesklang['owner']; ?>
-                </div>
-                <?php 
-                    foreach ($columnTwoCheckboxes as $i) {
-                        $checked = '';
-                        if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
-                            $checked = 'checked';
-                        }
-                        echo '<br><div class="checkbox">
-                            <input type="checkbox" onclick="toggleColumn(\'column_columnCustom'.$i.'\')" '.$checked.'>
-                                '.$hesk_settings['custom_fields']['custom'.$i]['name'].'</div>';
-                    }
-                ?>
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <div class="checkbox">
-                    <input type="checkbox" onclick="toggleColumn('column_name')" checked> <?php echo $hesklang['name']; ?>
-                </div><br>
-                <div class="checkbox">
-                    <input type="checkbox" onclick="toggleColumn('column_lastreplier')" checked> <?php echo $hesklang['last_replier']; ?>
-                </div>
-                <?php 
-                    foreach ($columnThreeCheckboxes as $i) {
-                        $checked = '';
-                        if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
-                            $checked = 'checked';
-                        }
-                        echo '<br><div class="checkbox">
-                            <input type="checkbox" onclick="toggleColumn(\'column_columnCustom'.$i.'\')" '.$checked.'>
-                                '.$hesk_settings['custom_fields']['custom'.$i]['name'].'</div>';
-                    }
-                ?>
-            </div>
-        </div>
-    </td>
     <td width="50%" class="text-right" style="vertical-align:top">
 		<select class="form-control" name="a">
 		<option value="close" selected="selected"><?php echo $hesklang['close_selected']; ?></option>
@@ -532,26 +428,13 @@ function hesk_print_list_head()
         <thead>
 	        <tr>
 	        <th><input type="checkbox" id="checkall" name="checkall" value="2" onclick="hesk_changeAll(this)" /></th>
-	        <th class="column_trackID"><a href="<?php echo $href . '?' . $query . $sort_possible['trackid'] . '&amp;sort='; ?>trackid"><?php echo $hesklang['trackID']; ?></a></th>
-	        <th class="column_last_update"><a href="<?php echo $href . '?' . $query . $sort_possible['lastchange'] . '&amp;sort='; ?>lastchange"><?php echo $hesklang['last_update']; ?></a></th>
-	        <th class="column_name"><a href="<?php echo $href . '?' . $query . $sort_possible['name'] . '&amp;sort='; ?>name"><?php echo $hesklang['name']; ?></a></th>
-	        <th class="column_subject"><a href="<?php echo $href . '?' . $query . $sort_possible['subject'] . '&amp;sort='; ?>subject"><?php echo $hesklang['subject']; ?></a></th>
-	        <th class="column_status"><a href="<?php echo $href . '?' . $query . $sort_possible['status'] . '&amp;sort='; ?>status"><?php echo $hesklang['status']; ?></a></th>
-	        <th class="column_lastreplier"><a href="<?php echo $href . '?' . $query . $sort_possible['lastreplier'] . '&amp;sort='; ?>lastreplier"><?php echo $hesklang['last_replier']; ?></a></th>
-	        <th class="column_priority"><a href="<?php echo $href . '?' . $query . $sort_possible['priority'] . '&amp;sort='; ?>priority"><i class="fa fa-sort-<?php echo (($sort_possible['priority']) ? 'asc' : 'desc'); ?>"></i></a></th>
-            <!-- All other fields, hidden by default. -->
-            <th class="column_owner" style="display: none"><a href="<?php echo $href . '?' . $query . $sort_possible['priority'] . '&amp;sort='; ?>owner"><?php echo $hesklang['owner']; ?></a></th>
-            <?php
-            for ($i = 1; $i <= 20; $i++) {
-                if ($hesk_settings['custom_fields']['custom'.$i]['use']) {
-                    $display = 'display: none';
-                    if ((isset($_GET['sort']) && $_GET['sort'] == 'custom'.$i) || (isset($_GET['what']) && $_GET['what'] == 'custom'.$i)) {
-                        $display = '';
-                    }
-                    echo '<th style="'.$display.'" class="column_columnCustom'.$i.'"><a href="'.$href . '?' . $query . $sort_possible['priority'] . '&amp;sort=custom'.$i.'">'.$hesk_settings['custom_fields']['custom'.$i]['name'].'</a></th>';
-                }
-            }
-            ?>
+            <th><a href="<?php echo $href . '?' . $query . $sort_possible['trackid'] . '&amp;sort='; ?>trackid"><?php echo $hesklang['trackID']; ?></a></th>
+	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['lastchange'] . '&amp;sort='; ?>lastchange"><?php echo $hesklang['last_update']; ?></a></th>
+            <th><a href="<?php echo $href . '?' . $query . $sort_possible['name'] . '&amp;sort='; ?>name"><?php echo $hesklang['name']; ?></a></th>
+            <th><a href="<?php echo $href . '?' . $query . $sort_possible['subject'] . '&amp;sort='; ?>subject"><?php echo $hesklang['subject']; ?></a></th>
+            <th><a href="<?php echo $href . '?' . $query . $sort_possible['status'] . '&amp;sort='; ?>status"><?php echo $hesklang['status']; ?></a></th>
+            <th><a href="<?php echo $href . '?' . $query . $sort_possible['lastreplier'] . '&amp;sort='; ?>lastreplier"><?php echo $hesklang['last_replier']; ?></a></th>
+            <th><a href="<?php echo $href . '?' . $query . $sort_possible['priority'] . '&amp;sort='; ?>priority"><i class="fa fa-sort-<?php echo (($sort_possible['priority']) ? 'asc' : 'desc'); ?>"></i></a></th>
 	        </tr>
         </thead>
 	<?php
