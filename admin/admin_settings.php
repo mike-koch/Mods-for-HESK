@@ -484,7 +484,6 @@ if ( defined('HESK_DEMO') )
                       <li><a href="#mods-for-hesk-general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
                       <li><a href="#statuses" data-toggle="tab"><?php echo $hesklang['statuses']; ?></a></li>
                       <li><a href="#colors" data-toggle="tab"><?php echo $hesklang['uiColors']; ?></a></li>
-                      <li><a href="#ipEmailBans" data-toggle="tab"><?php echo $hesklang['ip_email_bans']; ?></a></li>
                   </ul>
               </li>
             </ul>
@@ -2200,77 +2199,6 @@ if ( defined('HESK_DEMO') )
                       </div>
                   </div>
               </div>
-              <!-- Mods For Hesk: IP/Email Bans -->
-              <div class="tab-pane fade in" id="ipEmailBans">
-                  <h6 style="font-weight: bold"><?php echo $hesklang['ip_bans']; ?></h6>
-                  <div class="footerWithBorder blankSpace"></div>
-                  <div class="table-responsive">
-                      <table class="table table-hover">
-                          <thead>
-                            <tr>
-                                <th><?php echo $hesklang['delete']; ?></th>
-                                <th><?php echo $hesklang['from']; ?></th>
-                                <th><?php echo $hesklang['ip_to']; ?></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          <?php
-                          $ipRs= hesk_dbQuery('SELECT * FROM `'.$hesk_settings['db_pfix'].'denied_ips`');
-                          while ($row = $ipRs->fetch_assoc()) {
-                              echo '<tr id="trIp'.$row['ID'].'">';
-                              echo '<td><input type="checkbox" name="ipDelete['.$row['ID'].']" onclick="toggleRow(\'trIp'.$row['ID'].'\')"></td>';
-                              echo '<td><input type="text" name="ipFrom['.$row['ID'].']" placeholder="'.$hesklang['from'].'" class="form-control" value="'.long2ip($row['RangeStart']).'"></td>';
-                              echo '<td><input type="text" name="ipTo['.$row['ID'].']" placeholder="'.$hesklang['ip_to'].'" class="form-control" value="'.long2ip($row['RangeEnd']).'"></td>';
-                              echo '</tr>';
-                          }
-
-                          ?>
-                            <tr class="info">
-                                <!-- Add new IP range -->
-                                <td><b><?php echo $hesklang['addNew']; ?></b></td>
-                                <td>
-                                    <input type="text" name="addIpFrom" placeholder="<?php echo $hesklang['from']; ?>" class="form-control">
-                                </td>
-                                <td>
-                                    <input type="text" name="addIpTo" placeholder="<?php echo $hesklang['ip_to']; ?>" class="form-control">
-                                </td>
-                            </tr>
-                          </tbody>
-                      </table>
-                  </div>
-                  <div class="blankSpace"></div>
-                  <h6 style="font-weight: bold"><?php echo $hesklang['email_bans']; ?></h6>
-                  <div class="footerWithBorder blankSpace"></div>
-                  <div class="table-responsive">
-                      <table class="table table-hover">
-                          <thead>
-                              <tr>
-                                  <th><?php echo $hesklang['delete']; ?></th>
-                                  <th><?php echo $hesklang['email']; ?></th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <?php
-                              $emailRs = hesk_dbQuery('SELECT * FROM `'.$hesk_settings['db_pfix'].'denied_emails`');
-                              while ($row = $emailRs->fetch_assoc()) {
-                                  echo '<tr id="trEmail'.$row['ID'].'">';
-                                  echo '<td><input type="checkbox" name="emailDelete['.$row['ID'].']" onclick="toggleRow(\'trEmail'.$row['ID'].'\')"></td>';
-                                  echo '<td><input type="text" name="email['.$row['ID'].']" class="form-control" placeholder="'.$hesklang['email'].'" value="'.$row['Email'].'"></td>';
-                                  echo '</tr>';
-                              }
-                              ?>
-
-                              <!-- Add new email -->
-                              <tr class="info">
-                                  <td><b><?php echo $hesklang['addNew']; ?></b></td>
-                                  <td>
-                                      <input type="text" name="addEmail" class="form-control" placeholder="<?php echo $hesklang['email']; ?>">
-                                  </td>
-                              </tr>
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <br/>
@@ -2284,7 +2212,7 @@ if ( defined('HESK_DEMO') )
                         {
                             echo '<input type="button" value="'.$hesklang['save_changes'].' ('.$hesklang['disabled'].')" class="btn btn-default"  disabled="disabled" /><br /><font class="error">'.$hesklang['e_save_settings'].'</font>';
                         }
-                        ?>    
+                        ?>
                     </div>
                 </div>
             </div>

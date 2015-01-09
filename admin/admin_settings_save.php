@@ -496,42 +496,6 @@ $stmt = hesk_dbConnect()->prepare($updateQuery);
 $stmt->bind_param('i', $_POST['lockedTicketStatus']);
 $stmt->execute();
 
-//-- IP Bans
-$ipBanSql = hesk_dbQuery('SELECT * FROM `'.$hesk_settings['db_pfix'].'denied_ips`');
-while ($row = $ipBanSql->fetch_assoc()) {
-    if (isset($_POST['ipDelete'][$row['ID']])) {
-        hesk_dbQuery('DELETE FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_ips` WHERE ID = '.hesk_dbEscape($row['ID']));
-    } else {
-        $ipAddressFrom = ip2long($_POST['ipFrom'][$row['ID']]);
-        $ipAddressTo = ip2long($_POST['ipTo'][$row['ID']]);
-        hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_ips`
-            SET `RangeStart` = \''.hesk_dbEscape($ipAddressFrom).'\',
-                `RangeEnd` = \''.hesk_dbEscape($ipAddressTo).'\'
-            WHERE ID = '.hesk_dbEscape($row['ID']));
-    }
-}
-if (!empty($_POST['addIpFrom']) && !empty($_POST['addIpTo'])) {
-    $ipAddressFrom = ip2long($_POST['addIpFrom']);
-    $ipAddressTo = ip2long($_POST['addIpTo']);
-    hesk_dbQuery('INSERT INTO `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_ips` (`RangeStart`, `RangeEnd`)
-        VALUES (\''.hesk_dbEscape($ipAddressFrom).'\', \''.hesk_dbEscape($ipAddressTo).'\')');
-}
-
-//-- Email Bans
-$emailBanSql = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_emails`');
-while ($row = $emailBanSql->fetch_assoc()) {
-    if (isset($_POST['emailDelete'][$row['ID']])) {
-        hesk_dbQuery('DELETE FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_emails` WHERE ID = '.hesk_dbEscape($row['ID']));
-    } else {
-        hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_emails`
-            SET Email = \''.hesk_dbEscape($_POST['email'][$row['ID']]).'\'
-            WHERE ID = '.hesk_dbEscape($row['ID']));
-    }
-}
-if (!empty($_POST['addEmail'])) {
-    hesk_dbQuery('INSERT INTO `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_emails` (Email) VALUES (\''.hesk_dbEscape($_POST['addEmail']).'\')');
-}
-
 $set['hesk_version'] = $hesk_settings['hesk_version'];
 
 // Save the modsForHesk_settings.inc.php file
