@@ -11,6 +11,7 @@ docs/docs_style.css
 docs/index.html
 docs/quick-guide.html
 docs/step-by-step-guide.html
+download_attachment.php
 file_limits.php
 footer.txt
 header.txt
@@ -146,6 +147,7 @@ img/tag_off.png
 img/unlock.png
 img/vertical.jpg
 img/view.png
+inc/admin_functions.inc.php
 inc/assignment_search.inc.php
 inc/attachments.inc.php
 inc/calendar/img/cal.gif
@@ -178,8 +180,10 @@ inc/mail/sasl/ntlm_sasl_client.php
 inc/mail/sasl/plain_sasl_client.php
 inc/mail/sasl/sasl.php
 inc/mail/smtp.php
+inc/pipe_functions.inc.php
 inc/posting_functions.inc.php
 inc/prepare_ticket_export.inc.php
+inc/prepare_ticket_search.inc.php
 inc/print_group.inc.php
 inc/recaptcha/LICENSE
 inc/recaptcha/index.htm

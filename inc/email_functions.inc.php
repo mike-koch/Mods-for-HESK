@@ -241,9 +241,6 @@ function hesk_validEmails()
 		// --> New ticket submitted
 		'new_ticket' => $hesklang['ticket_received'],
 
-        // --> Ticket closed
-        'ticket_closed' => $hesklang['ticket_closed'],
-
         // --> Verify email
         'verify_email' => $hesklang['verify_email'],
 
@@ -267,9 +264,6 @@ function hesk_validEmails()
 
 		// --> New note by someone to a ticket assigned to you
 		'new_note' => $hesklang['new_note'],
-
-        // --> Assigned ticket reopened
-        'ticket_reopen_assigned' => $hesklang['ticket_reopen_assigned'],
 
     );
 } // END hesk_validEmails()

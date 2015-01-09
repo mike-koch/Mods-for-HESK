@@ -90,16 +90,11 @@ if (!file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file))
 
     <code>//-- Set this to 1 to enable email verification for new customers
         $modsForHesk_settings[\'customer_email_verification_required\'] = 0;</code>
-
-    <br><br>
-    <p>Now you can delete the <b>install</b> folder for security reasons, and then proceed back to the <a href="../">Help Desk</a></p>';
+        
+    <p>After you have done this, <a href="updateTo2-0-0.php">click this link to continue installation</a></p>';
 
 }
 
 if ($updateSuccess) {
-?>
-
-<h1>Installation / Update complete!</h1>
-<p>Please delete the <b>install</b> folder for security reasons, and then proceed back to the <a href="../">Help Desk</a></p>
-
-<?php } ?>
+    header('Location: updateTo2-0-0.php');
+} ?>

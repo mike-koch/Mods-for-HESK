@@ -256,14 +256,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>     
                 </div>     
             </div>
-            <div class="form-group">
-                <label for="default_notify_customer_email" class="col-sm-3 control-label"><?php echo $hesklang['notify_customer_email']; ?>:</label>
-                <div class="col-sm-9">
-                    <div class="checkbox">
-                        <label><input type="checkbox" name="default_notify_customer_email" value="1" <?php if (empty($_SESSION['new']['default_notify_customer_email'])) {echo 'checked="checked"';}?>> <?php echo $hesklang['notify_customer_email_text']; ?></label>
-                    </div>
-                </div>
-            </div>
             <?php } ?>
             <div class="form-group">
                 <label for="autoRefresh" class="col-sm-3 control-label"><?php echo $hesklang['ticket_auto_refresh']; ?></label>
@@ -449,7 +441,6 @@ function update_profile() {
     $_SESSION['new']['notify_note']				= empty($_POST['notify_note']) ? 0 : 1;
     $_SESSION['new']['notify_note_unassigned']  = empty($_POST['notify_note_unassigned']) ? 0 : 1;
     $_SESSION['new']['notify_pm']				= empty($_POST['notify_pm']) ? 0 : 1;
-    $_SESSION['new']['default_notify_customer_email']   = empty($_POST['default_notify_customer_email']) ? 1 : 0;
 
     /* Any errors? */
     if (strlen($hesk_error_buffer))
@@ -480,8 +471,7 @@ function update_profile() {
         `notify_assigned`='".intval($_SESSION['new']['notify_assigned'])."' ,
         `notify_pm`='".intval($_SESSION['new']['notify_pm'])."',
         `notify_note`='".intval($_SESSION['new']['notify_note'])."',
-        `notify_note_unassigned`='".intval($_SESSION['new']['notify_note_unassigned'])."',
-        `default_notify_customer_email`='".intval($_SESSION['new']['default_notify_customer_email'])."'
+        `notify_note_unassigned`='".intval($_SESSION['new']['notify_note_unassigned'])."'
 	    WHERE `id`='".intval($_SESSION['id'])."' LIMIT 1"
         );
 

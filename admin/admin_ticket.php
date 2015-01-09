@@ -39,7 +39,6 @@ define('HESK_PATH','../');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
-require(HESK_PATH . 'inc/posting_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -239,31 +238,7 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST'))
     {
     	/* Add note to database */
     	$msg = nl2br(hesk_makeURL($msg));
-        hesk_dbInsertID();
 		hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` (`ticket`,`who`,`dt`,`message`) VALUES ('".intval($ticket['id'])."','".intval($_SESSION['id'])."',NOW(),'".hesk_dbEscape($msg)."')");
-        $noteId = hesk_dbInsertID();
-
-        /* Upload attachments to database */
-        if ($hesk_settings['attachments']['use'])
-        {
-            require(HESK_PATH . 'inc/attachments.inc.php');
-            $attachments = array();
-            for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
-            {
-                $att = hesk_uploadFile($i);
-                if ($att !== false && !empty($att))
-                {
-                    $attachments[$i] = $att;
-                }
-            }
-        }
-        if ($hesk_settings['attachments']['use'] && !empty($attachments))
-        {
-            foreach ($attachments as $myatt)
-            {
-                hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` (`note_id`,`saved_name`,`real_name`,`size`) VALUES ('".hesk_dbEscape($noteId)."','".hesk_dbEscape($myatt['saved_name'])."','".hesk_dbEscape($myatt['real_name'])."','".intval($myatt['size'])."')");
-            }
-        }
 
 
         /* Notify assigned staff that a note has been added if needed */
@@ -426,63 +401,6 @@ if (isset($_GET['delatt']) && hesk_token_check())
 
 	hesk_process_messages($hesklang['kb_att_rem'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
 }
-
-/* Delete note attachment option */
-if (isset($_GET['delete-note-att']) && hesk_token_check()) {
-    if ( ! $can_delete || ! $can_edit)
-    {
-        hesk_process_messages($hesklang['no_permission'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
-    }
-
-    $att_id = intval( hesk_GET('delete-note-att') ) or hesk_error($hesklang['inv_att_id']);
-
-    $reply = intval( hesk_GET('reply', 0) );
-    if ($reply < 1)
-    {
-        $reply = 0;
-    }
-
-    /* Get attachment info */
-    $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `att_id`='".intval($att_id)."' LIMIT 1");
-    if (hesk_dbNumRows($res) != 1)
-    {
-        hesk_process_messages($hesklang['id_not_valid'].' (att_id)','admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
-    }
-    $att = hesk_dbFetchAssoc($res);
-
-    /* Is note ID valid for this attachment? */
-    if (!isset($_GET['note_id']) || $att['note_id'] != $_GET['note_id'])
-    {
-        hesk_process_messages($hesklang['trackID_not_found'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
-    }
-
-    /* Delete file from server */
-    hesk_unlink(HESK_PATH.$hesk_settings['attach_dir'].'/'.$att['saved_name']);
-
-    /* Delete attachment from database */
-    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `att_id`='".intval($att_id)."'");
-
-    hesk_process_messages($hesklang['kb_att_rem'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
-}
-
-
-if (isset($_POST['note_message'])) {
-    $n = $_POST['note_id'];
-    if ($can_del_notes)
-    {
-        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes`
-            SET `edit_date` = NOW(), `message` = '".hesk_dbEscape($_POST['note_message'])."', `number_of_edits` = `number_of_edits` + 1
-            WHERE `id`='".intval($n)."' LIMIT 1");
-    }
-    else
-    {
-        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes`
-            SET `edit_date` = NOW(), `message` = '".hesk_dbEscape($_POST['note_message'])."', `number_of_edits` = `number_of_edits` + 1
-            WHERE `id`='".intval($n)."' AND `who`='".intval($_SESSION['id'])."' LIMIT 1");
-    }
-    hesk_process_messages($hesklang['note_edit_successful'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
-}
-
 
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
@@ -897,48 +815,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         {
             ?>
             <div class="row">
-                <div class="col-md-12 alert-warning" style="padding-top: 5px;">
-                    <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?>
-                        <div class="btn-group btn-group-sm float-right-sm" role="group" style="padding-top: 5px; padding-bottom: 5px;">
-                            <a class="btn btn-danger"
-                               href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');">
-                                <i class="fa fa-times"></i> <?php echo $hesklang['delete']; ?>
-                            </a>&nbsp;
-                            <a class="btn btn-warning"
-                               href="javascript:void(0)" onclick="toggleNote(<?php echo $note['id']; ?>, true)">
-                                <i class="fa fa-pencil"></i> <?php echo $hesklang['edit']; ?>
-                            </a>
-                        </div>
-                    <?php }?>
+                <div class="col-md-12 alert-warning">
+                    <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?><p><a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');"><i class="fa fa-times"></i> Delete Note</a></p><?php }?>
                     <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt']); ?></p>
-                    <div class="row" style="margin-top: 23px;">
-                        <div class="col-md-7">
-                            <p id="note-<?php echo $note['id']; ?>-p"><?php echo $note['message']; ?></p>
-
-                            <form style="display: none" id="note-<?php echo $note['id']; ?>-form" role="form" method="post"
-                                  action="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;token=<?php hesk_token_echo(); ?>">
-                                <textarea style="margin-bottom: 5px;" class="form-control" id="note-<?php echo $note['id']; ?>-textarea" name="note_message"><?php echo $note['message']; ?></textarea>
-                                <input type="hidden" name="note_id" value="<?php echo $note['id']; ?>">
-                                <button style="margin-bottom: 5px;" class="btn btn-success btn-sm" type="submit"><i class="fa fa-check"></i> <?php echo $hesklang['save']; ?></button>
-                                <a style="margin-bottom: 5px;" class="btn btn-danger btn-sm" href="javascript:void(0)" onclick="toggleNote(<?php echo $note['id']; ?>, false)">
-                                    <i class="fa fa-times"></i> <?php echo $hesklang['cancel']; ?>
-                                </a>
-                            </form>
-                        </div>
-                        <div class="col-md-4">
-                            <?php
-                            $noteAttachmentRS = hesk_dbQuery("SELECT `att_id`, `real_name`, `note_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `note_id` = ".intval($note['id']));
-
-                            while ($noteAttachment = hesk_dbFetchAssoc($noteAttachmentRS)) {
-                                echo '<a href="admin_ticket.php?delete-note-att='.$noteAttachment['att_id'].'&amp;note_id='.$noteAttachment['note_id'].'&amp;track='.$trackingID.'&amp;'.$tmp.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');"><i class="fa fa-times" style="color: #FF0000"></i></a>
-                                      <a href="../download_attachment.php?att_id='.$noteAttachment['att_id'].'&amp;note='.$noteAttachment['note_id'].'"><i class="fa fa-paperclip"></i></a>
-                                      <a href="../download_attachment.php?att_id='.$noteAttachment['att_id'].'&amp;note='.$noteAttachment['note_id'].'">'.$noteAttachment['real_name'].'</a><br />';
-                            } ?>
-                        </div>
-                    </div>
-                    <?php if ($note['number_of_edits'] > 0) { ?>
-                        <p><i><?php echo sprintf($hesklang['note_last_edit'], hesk_date($note['edit_date'])); echo ' | '.sprintf($hesklang['total_number_of_edits'], $note['number_of_edits']); ?></i></p>
-                    <?php } ?>
+                    <p><?php echo $note['message']; ?></p>
                 </div>
             </div>
         <?php
@@ -946,6 +826,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         ?>
         <div class="row">
             <div class="col-md-12">
+                <b><i><?php echo $hesklang['notes']; ?>: </i></b>
                 <?php
                 if ($can_reply)
                 {
@@ -956,35 +837,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 ?>
 
                 <div id="notesform" style="display:none">
-                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;" enctype="multipart/form-data">
-                        <div class="row" style="margin-bottom: 10px;">
-                            <div class="col-md-7">
-                                <h5><?php echo $hesklang['message']; ?></h5>
-                                <div class="footerWithBorder" style="margin-bottom: 10px;"></div>
-                                <textarea class="form-control" name="notemsg" rows="6" cols="60"></textarea>
-                            </div>
-                            <div class="col-md-5">
-                                <h5><?php echo $hesklang['attachments']; ?></h5>
-                                <div class="footerWithBorder" style="margin-bottom: 10px;"></div>
-                                <span style="display: none" id="number-of-file-dialogs">2</span>
-                                <div id="files-for-notes">
-                                    <?php for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
-                                    {
-                                        echo '<input type="file" name="attachment['.$i.']" size="50" /><br />';
-                                    }
-
-                                    echo '<a href="Javascript:void(0)" onclick="Javascript:hesk_window(\'../file_limits.php\',250,500);return false;">' . $hesklang['ful'] . '</a>';
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"  /><input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
-                                <i><?php echo $hesklang['nhid']; ?></i>
-                                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                            </div>
-                        </div>
+                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
+                        <textarea class="form-control" name="notemsg" rows="6" cols="60"></textarea><br />
+                        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"  /><input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
+                        <i><?php echo $hesklang['nhid']; ?></i>
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                     </form>
                 </div>
             </div>
@@ -1020,7 +877,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="col-md-3 col-xs-12">
                 <div class="ticketName"><?php echo $ticket['name']; ?></div>
                 <div class="ticketEmail"><?php echo $ticket['email']; ?></div>
-                <div class="ticketEmail"><?php echo $hesklang['ip']; ?>: <?php echo '<a href="http://whois.domaintools.com/'.$ticket['ip'].'">'.$ticket['ip'].'</a>'; ?></div>
+                <div class="ticketEmail"><?php echo $hesklang['ip']; ?>: <?php echo $ticket['ip']; ?></div>
             </div>
             <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
@@ -1543,12 +1400,10 @@ function hesk_printReplyForm() {
 	                </select></div><br />
 	                <label><input type="checkbox" name="signature" value="1" checked="checked" /> <?php echo $hesklang['attach_sign']; ?></label>
 	                (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)<br />
-                    <?php if (empty($ticket['email'])) { ?>
-                        <label><input type="checkbox" name="no_notify" value="1" checked="checked" disabled> <?php echo $hesklang['dsen']; ?></label><br/><br/>
-                        <input type="hidden" name="no_notify" value="1">
-                    <?php } else { ?>
-                        <label><input type="checkbox" name="no_notify" value="1" <?php if (!$_SESSION['default_notify_customer_email']) { echo 'checked'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
-                    <?php } ?>
+                    <label><input type="checkbox" name="no_notify" value="1" <?php if (empty($ticket['email'])) { echo 'checked="checked" disabled'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
+                    <?php if (empty($ticket['email'])) {
+                        echo '<input type="hidden" name="no_notify" value="1">';
+                    } ?>
                     <input type="hidden" name="orig_id" value="<?php echo $ticket['id']; ?>" />
                     <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                     <input class="btn btn-default" type="submit" value="<?php echo $hesklang['submit_reply']; ?>" />

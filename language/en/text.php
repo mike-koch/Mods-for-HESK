@@ -50,19 +50,11 @@ $hesklang['verify_your_email'] = 'Your ticket has been created; however your ema
 $hesklang['installation_information'] = 'Installation Information';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
-$hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
-$hesklang['ticket_reopen'] = '[#%%TRACK_ID%%] Ticket reopened';
-$hesklang['ticket_reopen_assigned'] = '[#%%TRACK_ID%%] Assigned ticket reopened';
 $hesklang['create_based_on_contact'] = 'Create Ticket For Same Contact';
 $hesklang['notify_note_unassigned'] = 'Someone adds a note to a ticket not assigned to me';
 $hesklang['can_change_notification_settings'] = 'Can change notification settings';
-$hesklang['note_edit_successful'] = 'Note edited';
-$hesklang['note_last_edit'] = 'Note last edited on: %s'; // %s: timestamp of last edit
-$hesklang['total_number_of_edits'] = 'Total number of edits: %s'; // %s: total number of edits
 $hesklang['add_row'] = 'Add row';
 $hesklang['addnote'] = 'Add note';
-$hesklang['no_noteID'] = 'No Note ID';
-$hesklang['note_id_not_found'] = 'Note ID not found';
 $hesklang['mods_for_hesk'] = 'Mods for HESK';
 $hesklang['err_modsForHesk_settings'] = 'Can\'t open file <b>modsForHesk_settings.inc.php</b> for writing. Please CHMOD this file to 666 (rw-rw-rw-)';
 $hesklang['mods_for_hesk_version'] = 'Mods for HESK Version';
@@ -80,8 +72,6 @@ $hesklang['user_deactivated'] = 'User has been deactivated';
 $hesklang['active_user'] = 'Is active user';
 $hesklang['self_deactivation'] = 'You cannot deactivate yourself!';
 $hesklang['inactive_user'] = 'Your account is currently inactive. Contact an administrator for more information.';
-$hesklang['notify_customer_email'] = 'Emails to customer on reply';
-$hesklang['notify_customer_email_text'] = 'Don\'t send email notifications of replies to the customer by default';
 $hesklang['cant_edit_admin'] = 'You cannot edit the God Admin (User ID = 1)';
 $hesklang['notifications_disabled_info'] = 'Changing notifications settings has been disabled by your administrator.';
 
@@ -115,12 +105,6 @@ $hesklang['showIcons'] = 'Show Icons';
 $hesklang['showIconsHelp'] = 'Check this box to show icons next to navigation bar items';
 $hesklang['maintenanceMode'] = 'Maintenance Mode';
 $hesklang['maintenanceModeHelp'] = 'Check this box to put the Help Desk in maintenance mode. Staff can still log into the backend, but the front end will be inaccessible.';
-$hesklang['ip_to'] = 'To';
-$hesklang['ip_bans'] = 'IP Bans';
-$hesklang['email_bans'] = 'Email Bans';
-$hesklang['ip_email_bans'] = 'IP / Email Bans';
-$hesklang['ip_banned'] = 'Your IP has been banned by the help desk. You will be unable to submit a ticket until your IP ban has been removed.';
-$hesklang['email_banned'] = 'The email address you have entered has been banned by the help desk. You will be unable to submit a ticket until your email ban has been removed.';
 $hesklang['none'] = 'None';
 $hesklang['parent'] = 'Parent';
 $hesklang['children'] = 'Children';
@@ -133,10 +117,6 @@ $hesklang['delete_relationship'] = 'Delete Relationship';
 $hesklang['relationship_deleted'] = 'Parent/Child relationship deleted.';
 $hesklang['autorefresh'] = 'Autorefresh:';
 $hesklang['autorefresh_restrictions'] = 'Enter value in milliseconds. Value must be greater than 1000 to use this feature. No fractional values.';
-
-// ADDED OR MODIFIED IN Mods For HESK 1.3.0
-$hesklang['show_filters'] = 'Show Column Filters';
-$hesklang['hide_filters'] = 'Hide Column Filters';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.2.2
 $hesklang['changeLanguage'] = 'Change language to';

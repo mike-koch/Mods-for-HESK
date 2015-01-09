@@ -359,12 +359,6 @@ div.setupButtons {
     width: 90%;
 }
 
-@media (min-width: 768px) {
-    .float-right-sm {
-        float: right;
-    }
-}
-
 .white-readonly {
     cursor: text !important;
     background-color: #fff !important;

@@ -19,11 +19,8 @@ $modsForHesk_settings['rtl'] = 0;
 //-- Set this to 1 to show icons next to navigation menu items
 $modsForHesk_settings['show_icons'] = 0;
 
-//-- Set this to 1 to enable maintenance mode
-$modsForHesk_settings['maintenance_mode'] = 0;
-
 //-- Set this to 1 to enable custom field names as keys
 $modsForHesk_settings['custom_field_setting'] = 0;
 
 //-- Set this to 1 to enable email verification for new customers
-$modsForHesk_settings['customer_email_verification_required'] = 0;
+$modsForHesk_settings['customer_email_verification_required'] = 0;$modsForHesk_settings['show_icons'] = 0;
