@@ -74,13 +74,6 @@ if ( ! isset($status_options[$status]))
 
 $locked = 0;
 
-// Ticket info
-$result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
-if (hesk_dbNumRows($result) != 1) {
-    hesk_error($hesklang['ticket_not_found']);
-}
-$ticket = hesk_dbFetchAssoc($result);
-
 $statusRow = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID`, `IsClosed` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$status));
 if ($statusRow['IsClosed']) // Closed
 {
@@ -90,14 +83,6 @@ if ($statusRow['IsClosed']) // Closed
     if ($hesk_settings['custopen'] != 1)
     {
     	$locked = 1;
-    }
-
-    // Notify customer
-    require(HESK_PATH . 'inc/email_functions.inc.php');
-
-    if (!empty($ticket['email']))
-    {
-        hesk_notifyCustomer('ticket_closed');
     }
 }
 elseif ($statusRow['ID'] != 0) //Ticket is still open, but not new
@@ -111,15 +96,6 @@ else // Ticket is marked as "NEW"
     $revision = sprintf($hesklang['thist4'],hesk_date(),$_SESSION['name'].' ('.$_SESSION['user'].')');
 }
 
-//-- Notify staff after ticket re-open?
-$currentStatusRS = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.$ticket['status']);
-$currentStatus = hesk_dbFetchAssoc($currentStatusRS);
-
-if (intval($currentStatus['IsClosed']) == 1 && $statusRow['IsClosed'] == 0 && $ticket['owner'] != $_SESSION['id']) {
-    $ticket['name'] = $_SESSION['name'];
-    require(HESK_PATH . 'inc/email_functions.inc.php');
-    hesk_notifyAssignedStaff(false, 'ticket_reopen_assigned');
-}
 
 hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='{$status}', `locked`='{$locked}', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
 

@@ -50,9 +50,6 @@ $hesklang['verify_your_email'] = 'Your ticket has been created; however your ema
 $hesklang['installation_information'] = 'Installation Information';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
-$hesklang['ticket_closed'] = '[#%%TRACK_ID%%] Ticket closed/resolved';
-$hesklang['ticket_reopen'] = '[#%%TRACK_ID%%] Ticket reopened';
-$hesklang['ticket_reopen_assigned'] = '[#%%TRACK_ID%%] Assigned ticket reopened';
 $hesklang['create_based_on_contact'] = 'Create Ticket For Same Contact';
 $hesklang['notify_note_unassigned'] = 'Someone adds a note to a ticket not assigned to me';
 $hesklang['can_change_notification_settings'] = 'Can change notification settings';

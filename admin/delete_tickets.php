@@ -248,8 +248,6 @@ else
 
 		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='".$closedStatus['ID']."', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($this_id)."' LIMIT 1");
 		$i++;
-
-        hesk_notifyCustomer('ticket_closed');
 	}
 
     hesk_process_messages(sprintf($hesklang['num_tickets_closed'],$i),$referer,'SUCCESS');
