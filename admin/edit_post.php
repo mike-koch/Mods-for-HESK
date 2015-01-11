@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -241,7 +241,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="form-group">
                     <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>:</label>
                     <div class="col-sm-9">
-                        <input class="form-control" type="text" name="email" size="40" maxlength="255" value="<?php echo $ticket['email'];?>" placeholder="<?php echo $hesklang['email']; ?>" />
+                        <input class="form-control" type="text" name="email" size="40" maxlength="1000" value="<?php echo $ticket['email'];?>" placeholder="<?php echo $hesklang['email']; ?>" />
                     </div>
                 </div>
                 <?php
@@ -299,6 +299,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 						        <div class="form-group">
 						        <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
 		                        <div class="col-sm-9"><select class="form-control" name="'.$k.'">';
+
+                                // Show "Click to select"?
+                                $v['value'] = str_replace('{HESK_SELECT}', '', $v['value'], $num);
+                                if ($num)
+                                {
+                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                }
 
 		            	        $options = explode('#HESK#',$v['value']);
 
