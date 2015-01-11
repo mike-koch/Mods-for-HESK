@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -91,7 +91,7 @@ function do_login()
 	if ($hesk_settings['secimg_use'] == 2 && !isset($_SESSION['img_a_verified']))
 	{
 		// Using ReCaptcha?
-		if ($hesk_settings['recaptcha_use'])
+		if ($hesk_settings['recaptcha_use'] == 1)
 		{
 			require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
 
@@ -110,6 +110,29 @@ function do_login()
 				$hesk_error_buffer['mysecnum']=$hesklang['recaptcha_error'];
 			}
 		}
+        // Using ReCaptcha API v2?
+        elseif ($hesk_settings['recaptcha_use'] == 2)
+        {
+            require(HESK_PATH . 'inc/recaptcha/recaptchalib_v2.php');
+
+            $resp = null;
+            $reCaptcha = new ReCaptcha($hesk_settings['recaptcha_private_key']);
+
+            // Was there a reCAPTCHA response?
+            if ( isset($_POST["g-recaptcha-response"]) )
+            {
+                $resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], hesk_POST("g-recaptcha-response") );
+            }
+
+            if ($resp != null && $resp->success)
+            {
+                $_SESSION['img_a_verified']=true;
+            }
+            else
+            {
+                $hesk_error_buffer['mysecnum']=$hesklang['recaptcha_error'];
+            }
+        }
 		// Using PHP generated image
 		else
 		{
@@ -235,33 +258,39 @@ function do_login()
 	if ($hesk_settings['autoclose'])
     {
     	$revision = sprintf($hesklang['thist3'],hesk_date(),$hesklang['auto']);
-		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='3', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."')  WHERE `status` = '2' AND `lastchange` <= '".hesk_dbEscape( date('Y-m-d H:i:s',time() - $hesk_settings['autoclose']*86400) )."'");
-    }
+        $dt  = date('Y-m-d H:i:s',time() - $hesk_settings['autoclose']*86400);
 
-	/* Redirect to the destination page */
-	if ( hesk_isREQUEST('goto') )
-	{
-    	$url = hesk_REQUEST('goto');
-	    $url = str_replace('&amp;','&',$url);
-
-        /* goto parameter can be set to the local domain only */
-        $myurl = parse_url($hesk_settings['hesk_url']);
-        $goto  = parse_url($url);
-
-        if (isset($myurl['host']) && isset($goto['host']))
+        // Notify customer of closed ticket?
+        if ($hesk_settings['notify_closed'])
         {
-        	if ( str_replace('www.','',strtolower($myurl['host'])) != str_replace('www.','',strtolower($goto['host'])) )
+            //TODO Change status ID to the ID which customer's replies update the status to.
+            // Get list of tickets
+            $result = hesk_dbQuery("SELECT * FROM `".$hesk_settings['db_pfix']."tickets` WHERE `status` = '2' AND `lastchange` <= '".hesk_dbEscape($dt)."' ");
+            if (hesk_dbNumRows($result) > 0)
             {
-            	$url = 'admin_main.php';
+                global $ticket;
+
+                // Load required functions?
+                if ( ! function_exists('hesk_notifyCustomer') )
+                {
+                    require(HESK_PATH . 'inc/email_functions.inc.php');
+                }
+
+                while ($ticket = hesk_dbFetchAssoc($result))
+                {
+                    $ticket['dt'] = hesk_date($ticket['dt'], true);
+                    $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
+                    hesk_notifyCustomer('ticket_closed');
+                }
             }
         }
 
-	    header('Location: '.$url);
-	}
-	else
-	{
-	    header('Location: admin_main.php');
-	}
+        // Update ticket statuses and history in database
+        hesk_dbQuery("UPDATE `".$hesk_settings['db_pfix']."tickets` SET `status`='3', `closedat`=NOW(), `closedby`='-1', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `status` = '2' AND `lastchange` <= '".hesk_dbEscape($dt)."' ");
+    }
+
+    /* Redirect to the destination page */
+    header('Location: ' . hesk_verifyGoto() );
 	exit();
 } // End do_login()
 
@@ -269,6 +298,13 @@ function do_login()
 function print_login()
 {
 	global $hesk_settings, $hesklang;
+
+    // Tell header to load reCaptcha API if needed
+    if ($hesk_settings['recaptcha_use'] == 2)
+    {
+        define('RECAPTCHA',1);
+    }
+
     $hesk_settings['tmp_title'] = $hesk_settings['hesk_title'] . ' - ' .$hesklang['admin_login'];
 	require_once(HESK_PATH . 'inc/header.inc.php');
 
@@ -327,7 +363,7 @@ function print_login()
 				    if ($hesk_settings['list_users'])
 				    {
 				        echo '<select class="form-control" name="user" '.$cls.'>';
-				        $res = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` ORDER BY `user` ASC');
+                        $res = hesk_dbQuery('SELECT `user` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` ORDER BY `user` ASC');
 				        while ($row=hesk_dbFetchAssoc($res))
 				        {
 				            $sel = (strtolower($savedUser) == strtolower($row['user'])) ? 'selected="selected"' : '';
@@ -359,7 +395,7 @@ function print_login()
 					echo '<img src="'.HESK_PATH.'img/success.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" /> '.$hesklang['vrfy'];
 				}
 				// Not verified yet, should we use Recaptcha?
-				elseif ($hesk_settings['recaptcha_use'])
+				elseif ($hesk_settings['recaptcha_use'] == 1)
 				{
 					?>
 					<script type="text/javascript">
@@ -376,13 +412,20 @@ function print_login()
 						play_again : "<?php echo hesk_slashJS($hesklang['play_again']); ?>",
 						cant_hear_this : "<?php echo hesk_slashJS($hesklang['cant_hear_this']); ?>",
 						incorrect_try_again : "<?php echo hesk_slashJS($hesklang['incorrect_try_again']); ?>",
-						image_alt_text : "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>",
-					},
+						image_alt_text : "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>"
+					}
 					};
 					</script>
 					<?php
 					require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
-					echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, $hesk_settings['recaptcha_ssl']);
+                    echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, true);
+                }
+                // Use reCaptcha API v2?
+                elseif ($hesk_settings['recaptcha_use'] == 2)
+                {
+                    ?>
+                    <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>"></div>
+                <?php
 				}
 				// At least use some basic PHP generated image (better than nothing)
 				else
@@ -435,6 +478,12 @@ function print_login()
 		        {
 			        echo '<input type="hidden" name="goto" value="'.$url.'" />';
 		        }
+
+                // Do we allow staff password reset?
+                if ($hesk_settings['reset_pass'])
+                {
+                    echo '<br />&nbsp;<br /><a href="password.php" class="smaller">'.$hesklang['fpass'].'</a>';
+                }
 		        ?>
             </div>
         </div>
