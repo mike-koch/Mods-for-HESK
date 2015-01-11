@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -55,6 +55,10 @@ $can_archive		 = hesk_checkPermission('can_add_archive',0);
 $can_assign_self	 = hesk_checkPermission('can_assign_self',0);
 $can_view_unassigned = hesk_checkPermission('can_view_unassigned',0);
 $can_change_cat		 = hesk_checkPermission('can_change_cat',0);
+$can_ban_emails		 = hesk_checkPermission('can_ban_emails', 0);
+$can_unban_emails	 = hesk_checkPermission('can_unban_emails', 0);
+$can_ban_ips		 = hesk_checkPermission('can_ban_ips', 0);
+$can_unban_ips		 = hesk_checkPermission('can_unban_ips', 0);
 
 // Get ticket ID
 $trackingID = hesk_cleanID() or print_form();
@@ -118,12 +122,12 @@ else
 }
 
 /* Get category name and ID */
-$result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='".intval($ticket['category'])."' LIMIT 1");
+$result = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='".intval($ticket['category'])."' LIMIT 1");
 
 /* If this category has been deleted use the default category with ID 1 */
 if (hesk_dbNumRows($result) != 1)
 {
-	$result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='1' LIMIT 1");
+    $result = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='1' LIMIT 1");
 }
 
 $category = hesk_dbFetchAssoc($result);
@@ -141,17 +145,54 @@ if (isset($_GET['delete_post']) && $can_delete && hesk_token_check())
 		$res = hesk_dbQuery("SELECT `id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='".intval($ticket['id'])."' ORDER BY `id` DESC LIMIT 1");
         $last_reply_id = hesk_dbResult($res,0,0);
 
-		/* Does this post have any attachments? */
-		$res = hesk_dbQuery("SELECT `attachments` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `id`='".intval($n)."' AND `replyto`='".intval($ticket['id'])."' LIMIT 1");
-		$attachments = hesk_dbResult($res,0,0);
+        // Was this post submitted by staff and does it have any attachments?
+        $res = hesk_dbQuery("SELECT `dt`, `staffid`, `attachments` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `id`='".intval($n)."' AND `replyto`='".intval($ticket['id'])."' LIMIT 1");
+        $reply = hesk_dbFetchAssoc($res);
+
+        // If the reply was by a staff member update the appropriate columns
+        if ( $reply['staffid'] )
+        {
+            // Is this the only staff reply? Delete "firstreply" and "firstreplyby" columns
+            if ($ticket['staffreplies'] <= 1)
+            {
+                $staffreplies_sql = ' , `firstreply`=NULL, `firstreplyby`=NULL, `staffreplies`=0 ';
+            }
+            // Are we deleting the first staff reply? Update "firstreply" and "firstreplyby" columns
+            elseif ($reply['dt'] == $ticket['firstreply'] && $reply['staffid'] == $ticket['firstreplyby'])
+            {
+                // Get the new first reply info
+                $res = hesk_dbQuery("SELECT `dt`, `staffid` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='".intval($ticket['id'])."' AND `id`!='".intval($n)."' AND `staffid`!=0 ORDER BY `id` ASC LIMIT 1");
+
+                // Did we find the new first reply?
+                if ( hesk_dbNumRows($res) )
+                {
+                    $firstreply = hesk_dbFetchAssoc($res);
+                    $staffreplies_sql = " , `firstreply`='".hesk_dbEscape($firstreply['dt'])."', `firstreplyby`='".hesk_dbEscape($firstreply['staffid'])."', `staffreplies`=`staffreplies`-1 ";
+                }
+                // The count must have been wrong, update it
+                else
+                {
+                    $staffreplies_sql = ' , `firstreply`=NULL, `firstreplyby`=NULL, `staffreplies`=0 ';
+                }
+            }
+            // OK, this is not the first and not the only staff reply, just reduce number
+            else
+            {
+                $staffreplies_sql = ' , `staffreplies`=`staffreplies`-1 ';
+            }
+        }
+        else
+        {
+            $staffreplies_sql = '';
+        }
 
 		/* Delete any attachments to this post */
-		if ( strlen($attachments) )
+        if ( strlen($reply['attachments']) )
 		{
         	$hesk_settings['server_path'] = dirname(dirname(__FILE__));
 
 			/* List of attachments */
-			$att=explode(',',substr($attachments, 0, -1));
+            $att=explode(',',substr($reply['attachments'], 0, -1));
 			foreach ($att as $myatt)
 			{
 				list($att_id, $att_name) = explode('#', $myatt);
@@ -178,27 +219,47 @@ if (isset($_GET['delete_post']) && $can_delete && hesk_token_check())
         }
         else
         {
+            $closed_sql = '';
+
 			/* Reply deleted. Need to update status and last replier? */
-			$res = hesk_dbQuery("SELECT `staffid` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='".intval($ticket['id'])."' ORDER BY `id` DESC LIMIT 1");
+            $res = hesk_dbQuery("SELECT `dt`, `staffid` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='".intval($ticket['id'])."' ORDER BY `id` DESC LIMIT 1");
 			if (hesk_dbNumRows($res))
 			{
-				$replier_id = hesk_dbResult($res,0,0);
+                $replier_id = hesk_dbResult($res,0,1);
                 $last_replier = $replier_id ? 1 : 0;
 
 				/* Change status? */
                 $status_sql = '';
 				if ($last_reply_id == $n)
 				{
+                    //TODO Update this to MFH-compatible statuses
 					$status = $ticket['locked'] ? 3 : ($last_replier ? 2 : 1);
                     $status_sql = " , `status`='".intval($status)."' ";
+
+                    // Update closedat and closedby columns as required
+                    if ($status == 3)
+                    {
+                        $closed_sql = " , `closedat`=NOW(), `closedby`=".intval($_SESSION['id'])." ";
+                    }
 				}
 
-				hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `lastreplier`='{$last_replier}', `replierid`='".intval($replier_id)."' $status_sql WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
+                hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `lastreplier`='{$last_replier}', `replierid`='".intval($replier_id)."', `replies`=`replies`-1 $status_sql $closed_sql $staffreplies_sql WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
 			}
 			else
 			{
-            	$status = $ticket['locked'] ? 3 : 0;
-				hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `lastreplier`='0', `status`='$status' WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
+                // Update status, closedat and closedby columns as required
+                if ($ticket['locked'])
+                {
+                    $status = 3;
+                    $closed_sql = " , `closedat`=NOW(), `closedby`=".intval($_SESSION['id'])." ";
+                }
+                else
+                {
+                    $status = 0;
+                    $closed_sql = " , `closedat`=NULL, `closedby`=NULL ";
+                }
+
+                hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `lastreplier`='0', `status`='$status', `replies`=0 $staffreplies_sql WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
 			}
 
 			hesk_process_messages($hesklang['repl'],$_SERVER['PHP_SELF'],'SUCCESS');
@@ -216,15 +277,47 @@ if (isset($_GET['delnote']) && hesk_token_check())
 	$n = intval( hesk_GET('delnote') );
     if ($n)
     {
-    	if ($can_del_notes)
+        // Get note info
+        $res = hesk_dbQuery("SELECT `who`, `attachments` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` WHERE `id`={$n}");
+
+        if ( hesk_dbNumRows($res) )
         {
-			hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` WHERE `id`='".intval($n)."' LIMIT 1");
-        }
-        else
-        {
-        	hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` WHERE `id`='".intval($n)."' AND `who`='".intval($_SESSION['id'])."' LIMIT 1");
+            $note = hesk_dbFetchAssoc($res);
+
+            // Permission to delete note?
+            if ($can_del_notes || $note['who'] == $_SESSION['id'])
+            {
+                // Delete note
+                hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` WHERE `id`='".intval($n)."' LIMIT 1");
+
+                // Delete attachments
+                if ( strlen($note['attachments']) )
+                {
+                    $hesk_settings['server_path'] = dirname(dirname(__FILE__));
+
+                    $attachments = array();
+
+                    $att=explode(',',substr($note['attachments'], 0, -1));
+                    foreach ($att as $myatt)
+                    {
+                        list($att_id, $att_name) = explode('#', $myatt);
+                        $attachments[] = intval($att_id);
+                    }
+
+                    if ( count($attachments) )
+                    {
+                        $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `att_id` IN (".implode(',', $attachments).") ");
+                        while ($file = hesk_dbFetchAssoc($res))
+                        {
+                            hesk_unlink($hesk_settings['server_path'].'/'.$hesk_settings['attach_dir'].'/'.$file['saved_name']);
+                        }
+                        hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `att_id` IN (".implode(',', $attachments).") ");
+                    }
+                }
+            }
         }
     }
+
     header('Location: admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999));
     exit();
 }
@@ -232,14 +325,67 @@ if (isset($_GET['delnote']) && hesk_token_check())
 /* Add a note action */
 if (isset($_POST['notemsg']) && hesk_token_check('POST'))
 {
+    // Error buffer
+    $hesk_error_buffer = array();
+
+    // Get message
 	$msg = hesk_input( hesk_POST('notemsg') );
 
-    if ($msg)
+    // Get attachments
+    if ($hesk_settings['attachments']['use'])
     {
-    	/* Add note to database */
-    	$msg = nl2br(hesk_makeURL($msg));
-		hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` (`ticket`,`who`,`dt`,`message`) VALUES ('".intval($ticket['id'])."','".intval($_SESSION['id'])."',NOW(),'".hesk_dbEscape($msg)."')");
+        require(HESK_PATH . 'inc/posting_functions.inc.php');
+        require(HESK_PATH . 'inc/attachments.inc.php');
+        $attachments = array();
+        for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
+        {
+            $att = hesk_uploadFile($i);
+            if ($att !== false && !empty($att))
+            {
+                $attachments[$i] = $att;
+            }
+        }
+    }
+    $myattachments='';
 
+    // We need message and/or attachments to accept note
+    if ( count($attachments) || strlen($msg) || count($hesk_error_buffer) )
+    {
+        // Any errors?
+        if ( count($hesk_error_buffer) != 0 )
+        {
+            $_SESSION['note_message'] = hesk_POST('notemsg');
+
+            // Remove any successfully uploaded attachments
+            if ($hesk_settings['attachments']['use'])
+            {
+                hesk_removeAttachments($attachments);
+            }
+
+            $tmp = '';
+            foreach ($hesk_error_buffer as $error)
+            {
+                $tmp .= "<li>$error</li>\n";
+            }
+            $hesk_error_buffer = $tmp;
+
+            $hesk_error_buffer = $hesklang['pcer'].'<br /><br /><ul>'.$hesk_error_buffer.'</ul>';
+            hesk_process_messages($hesk_error_buffer,'admin_ticket.php?track='.$ticket['trackid'].'&Refresh='.rand(10000,99999));
+        }
+
+        // Process attachments
+        if ($hesk_settings['attachments']['use'] && ! empty($attachments) )
+        {
+            foreach ($attachments as $myatt)
+            {
+                hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` (`ticket_id`,`saved_name`,`real_name`,`size`,`type`) VALUES ('".hesk_dbEscape($trackingID)."','".hesk_dbEscape($myatt['saved_name'])."','".hesk_dbEscape($myatt['real_name'])."','".intval($myatt['size'])."', '1')");
+                $myattachments .= hesk_dbInsertID() . '#' . $myatt['real_name'] .',';
+            }
+        }
+
+        // Add note to database
+        $msg = nl2br(hesk_makeURL($msg));
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` (`ticket`,`who`,`dt`,`message`,`attachments`) VALUES ('".intval($ticket['id'])."','".intval($_SESSION['id'])."',NOW(),'".hesk_dbEscape($msg)."','".hesk_dbEscape($myattachments)."')");
 
         /* Notify assigned staff that a note has been added if needed */
         $users = hesk_dbQuery("SELECT `email`, `notify_note` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE (`id`='".intval($ticket['owner'])."' OR (`isadmin` = '1' AND `notify_note_unassigned` = '1')) AND `id` <> '".intval($_SESSION['id'])."'");
@@ -260,6 +406,8 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST'))
             'message'		=> stripslashes($msg),
             'dt'            => hesk_date($ticket['dt'], true),
             'lastchange'    => hesk_date($ticket['lastchange'], true),
+            'attachments'	=> $myattachments,
+            'id'			=> $ticket['id'],
             );
 
             // 2. Add custom fields to the array
@@ -289,7 +437,7 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST'))
 }
 
 /* Update time worked */
-if ( ($can_reply || $can_edit) && isset($_POST['h']) && isset($_POST['m']) && isset($_POST['s']) && hesk_token_check('POST'))
+if ($hesk_settings['time_worked'] && ($can_reply || $can_edit) && isset($_POST['h']) && isset($_POST['m']) && isset($_POST['s']) && hesk_token_check('POST'))
 {
 	$h = intval( hesk_POST('h') );
 	$m = intval( hesk_POST('m') );
@@ -367,7 +515,13 @@ if (isset($_GET['delatt']) && hesk_token_check())
 		$reply = 0;
 	}
 
-	/* Get attachment info */
+    $note = intval( hesk_GET('note', 0) );
+    if ($note < 1)
+    {
+        $note = 0;
+    }
+
+    /* Get attachment info */
 	$res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `att_id`='".intval($att_id)."' LIMIT 1");
 	if (hesk_dbNumRows($res) != 1)
 	{
@@ -394,6 +548,10 @@ if (isset($_GET['delatt']) && hesk_token_check())
 		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` SET `attachments`=REPLACE(`attachments`,'".hesk_dbEscape($att_id.'#'.$att['real_name']).",','') WHERE `id`='".intval($reply)."' LIMIT 1");
 		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
 	}
+    elseif ($note)
+    {
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` SET `attachments`=REPLACE(`attachments`,'".hesk_dbEscape($att_id.'#'.$att['real_name']).",','') WHERE `id`={$note} LIMIT 1");
+    }
 	else
 	{
 		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `attachments`=REPLACE(`attachments`,'".hesk_dbEscape($att_id.'#'.$att['real_name']).",',''), `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
@@ -417,7 +575,7 @@ while ($row=hesk_dbFetchAssoc($result))
 
 /* List of users */
 $admins = array();
-$result = hesk_dbQuery("SELECT `id`,`name`,`isadmin`,`categories`,`heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `active` = '1' ORDER BY `id` ASC");
+$result = hesk_dbQuery("SELECT `id`,`name`,`isadmin`,`categories`,`heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `active` = '1' ORDER BY `name` ASC");
 while ($row=hesk_dbFetchAssoc($result))
 {
 	/* Is this an administrator? */
@@ -442,9 +600,15 @@ while ($row=hesk_dbFetchAssoc($result))
 }
 
 /* Get replies */
-$reply = '';
-$result  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='".intval($ticket['id'])."' ORDER BY `id` " . ($hesk_settings['new_top'] ? 'DESC' : 'ASC') );
-$replies = hesk_dbNumRows($result);
+if ($ticket['replies'])
+{
+    $reply = '';
+    $result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='".intval($ticket['id'])."' ORDER BY `id` " . ($hesk_settings['new_top'] ? 'DESC' : 'ASC') );
+}
+else
+{
+    $reply = false;
+}
 
 // Demo mode
 if ( defined('HESK_DEMO') )
@@ -475,7 +639,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </li>
                 <li class="list-group-item">
                     <strong><?php echo $hesklang['replies']; ?></strong><br/>
-                    <?php echo $replies; ?>
+                    <?php echo $ticket['replies']; ?>
                 </li>
                 <li class="list-group-item">
                     <strong><?php echo $hesklang['owner']; ?></strong><br/>
@@ -496,6 +660,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <strong><?php echo $hesklang['last_replier']; ?></strong><br/>
                     <?php echo $ticket['repliername']; ?>
                 </li>
+                <?php
+                if ($hesk_settings['time_worked']) {
+                ?>
                 <li class="list-group-item">
                     <strong><?php echo $hesklang['ts']; ?></strong><br/>
                     <?php
@@ -543,6 +710,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     }
                     ?>
                 </li>
+                <?php } // End if time_worked ?>
                 <li class="list-group-item">
                     <strong><?php echo $hesklang['parent']; ?></strong>
                     <p><?php
@@ -816,9 +984,48 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             ?>
             <div class="row">
                 <div class="col-md-12 alert-warning">
-                    <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?><p><a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');"><i class="fa fa-times"></i> Delete Note</a></p><?php }?>
+                    <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?><p>		<a href="edit_note.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;note=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>"><img
+                                src="../img/edit.png" alt="<?php echo $hesklang['ednote']; ?>" title="<?php echo $hesklang['ednote']; ?>" width="16" height="16" class="optionWhiteOFF" onmouseover="this.className='optionWhiteON'" onmouseout="this.className='optionWhiteOFF'" /></a>
+                        <a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');"><img
+                                src="../img/delete.png" alt="<?php echo $hesklang['delnote']; ?>" title="<?php echo $hesklang['delnote']; ?>" width="16" height="16" class="optionWhiteOFF" onmouseover="this.className='optionWhiteON'" onmouseout="this.className='optionWhiteOFF'" /></a></p><?php }?>
                     <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt']); ?></p>
-                    <p><?php echo $note['message']; ?></p>
+                    <?php
+                    // Message
+                    echo $note['message'];
+
+                    // Attachments
+                    if ( $hesk_settings['attachments']['use'] && strlen($note['attachments']) )
+                    {
+                        echo strlen($note['message']) ? '<br /><br />' : '';
+
+                        $att = explode(',', substr($note['attachments'], 0, -1) );
+                        $num = count($att);
+                        foreach ($att as $myatt)
+                        {
+                            list($att_id, $att_name) = explode('#', $myatt);
+
+                            // Can edit and delete note (attachments)?
+                            if ($can_del_notes || $note['who'] == $_SESSION['id'])
+                            {
+                                // If this is the last attachment and no message, show "delete ticket" link
+                                if ($num == 1 && strlen($note['message']) == 0)
+                                {
+                                    echo '<a href="admin_ticket.php?delnote='.$note['id'].'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');"><img src="../img/delete.png" width="16" height="16" alt="'.$hesklang['dela'].'" title="'.$hesklang['dela'].'" class="optionWhiteOFF" onmouseover="this.className=\'optionWhiteON\'" onmouseout="this.className=\'optionWhiteOFF\'" /></a> ';
+                                }
+                                // Show "delete attachment" link
+                                else
+                                {
+                                    echo '<a href="admin_ticket.php?delatt='.$att_id.'&amp;note='.$note['id'].'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');"><img src="../img/delete.png" width="16" height="16" alt="'.$hesklang['dela'].'" title="'.$hesklang['dela'].'" class="optionWhiteOFF" onmouseover="this.className=\'optionWhiteON\'" onmouseout="this.className=\'optionWhiteOFF\'" /></a> ';
+                                }
+                            }
+
+                            echo '
+				<a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'"><img src="../img/clip.png" width="16" height="16" alt="'.$hesklang['dnl'].' '.$att_name.'" title="'.$hesklang['dnl'].' '.$att_name.'" class="optionWhiteOFF" onmouseover="this.className=\'optionWhiteON\'" onmouseout="this.className=\'optionWhiteOFF\'" /></a>
+				<a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'">'.$att_name.'</a><br />
+				';
+                        }
+                    }
+                    ?>
                 </div>
             </div>
         <?php
@@ -836,9 +1043,21 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 }
                 ?>
 
-                <div id="notesform" style="display:none">
-                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
-                        <textarea class="form-control" name="notemsg" rows="6" cols="60"></textarea><br />
+                <div id="notesform" style="display:<?php echo isset($_SESSION['note_message']) ? 'block' : 'none'; ?>">
+                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;" enctype="multipart/form-data">
+                        <textarea class="form-control" name="notemsg" rows="6" cols="60"><?php echo isset($_SESSION['note_message']) ? stripslashes(hesk_input($_SESSION['note_message'])) : ''; ?></textarea><br />
+                        <?php
+                        // attachments
+                        if ($hesk_settings['attachments']['use'])
+                        {
+                            echo '<br />';
+                            for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
+                            {
+                                echo '<input type="file" name="attachment['.$i.']" size="50" /><br />';
+                            }
+                            echo '<br />';
+                        }
+                        ?>
                         <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"  /><input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
                         <i><?php echo $hesklang['nhid']; ?></i>
                         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
@@ -876,8 +1095,61 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <div class="row ticketMessageContainer">
             <div class="col-md-3 col-xs-12">
                 <div class="ticketName"><?php echo $ticket['name']; ?></div>
-                <div class="ticketEmail"><?php echo $ticket['email']; ?></div>
-                <div class="ticketEmail"><?php echo $hesklang['ip']; ?>: <?php echo $ticket['ip']; ?></div>
+                <div class="ticketEmail">
+                    <?php
+                    if ($can_ban_emails)
+                    {
+                        if ( $email_id = hesk_isBannedEmail($ticket['email']) )
+                        {
+                            if ($can_unban_emails)
+                            {
+                                echo '<a href="banned_emails.php?a=unban&amp;track='.$trackingID.'&amp;id='.intval($email_id).'&amp;token='.hesk_token_echo(0).'"><img src="../img/banned.png" width="16" height="16" alt="'.$hesklang['eisban'].' '.$hesklang['click_unban'].'" title="'.$hesklang['eisban'].' '.$hesklang['click_unban'].'" /></a> ';
+                            }
+                            else
+                            {
+                                echo '<img src="../img/banned.png" width="16" height="16" alt="'.$hesklang['eisban'].'" title="'.$hesklang['eisban'].'" /> ';
+                            }
+                        }
+                        else
+                        {
+                            echo '<a href="banned_emails.php?a=ban&amp;track='.$trackingID.'&amp;email='.urlencode($ticket['email']).'&amp;token='.hesk_token_echo(0).'"><img src="../img/ban.png" width="16" height="16" alt="'.$hesklang['savebanemail'].'" title="'.$hesklang['savebanemail'].'" /></a> ';
+                        }
+                    }
+                    ?><a href="mailto:<?php echo $ticket['email']; ?>"><?php echo $ticket['email']; ?></a>
+                </div>
+                <div class="ticketEmail"><?php echo $hesklang['ip']; ?>:
+                    <?php
+
+                    // Format IP for lookup
+                    if ($ticket['ip'] == 'Unknown' || $ticket['ip'] == $hesklang['unknown'])
+                    {
+                        echo $hesklang['unknown'];
+                    }
+                    else
+                    {
+                        if ($can_ban_ips)
+                        {
+                            if ( $ip_id = hesk_isBannedIP($ticket['ip']) )
+                            {
+                                if ($can_unban_ips)
+                                {
+                                    echo '<a href="banned_ips.php?a=unban&amp;track='.$trackingID.'&amp;id='.intval($ip_id).'&amp;token='.hesk_token_echo(0).'"><img src="../img/banned.png" width="16" height="16" alt="'.$hesklang['ipisban'].' '.$hesklang['click_unban'].'" title="'.$hesklang['ipisban'].' '.$hesklang['click_unban'].'" /></a> ';
+                                }
+                                else
+                                {
+                                    echo '<img src="../img/banned.png" width="16" height="16" alt="'.$hesklang['ipisban'].'" title="'.$hesklang['ipisban'].'" /> ';
+                                }
+                            }
+                            else
+                            {
+                                echo '<a href="banned_ips.php?a=ban&amp;track='.$trackingID.'&amp;ip='.urlencode($ticket['ip']).'&amp;token='.hesk_token_echo(0).'"><img src="../img/ban.png" width="16" height="16" alt="'.$hesklang['savebanip'].'" title="'.$hesklang['savebanip'].'" /></a> ';
+                            }
+                        }
+
+                        echo '<a href="../ip_whois.php?ip=' . urlencode($ticket['ip']) . '">' . $ticket['ip'] . '</a>';
+                    }
+                    ?>
+                </div>
             </div>
             <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
@@ -943,6 +1215,37 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		                    }
 	    	                /* Attachments */
     		                hesk_listAttachments($ticket['attachments'], $i);
+
+                         // Show suggested KB articles
+                         if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && strlen($ticket['articles']) )
+                         {
+                             $suggested = array();
+                             $suggested_list = '';
+
+                             // Get article info from the database
+                             $articles = hesk_dbQuery("SELECT `id`,`subject` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `id` IN (".preg_replace('/[^0-9\,]/', '', $ticket['articles']).")");
+                             while ($article=hesk_dbFetchAssoc($articles))
+                             {
+                                 $suggested[$article['id']] = '<a href="../knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a><br />';
+                             }
+
+                             // Loop through the IDs to preserve the order they were suggested in
+                             $articles = explode(',', $ticket['articles']);
+                             foreach ($articles as $article)
+                             {
+                                 if ( isset($suggested[$article]) )
+                                 {
+                                     $suggested_list .= $suggested[$article];
+                                 }
+                             }
+
+                             // Finally print suggested articles
+                             if ( strlen($suggested_list) )
+                             {
+                                 $suggested_list = '<hr /><i>'.$hesklang['taws'].'</i><br />' . $suggested_list . '&nbsp;';
+                                 echo $_SESSION['show_suggested'] ? $suggested_list : '<a href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay(\'suggested_articles\')">'.$hesklang['sska'].'</a><span id="suggested_articles" style="display:none">'.$suggested_list.'</span>';
+                             }
+                         }
 		                ?>
                  </div>
             </div>
@@ -978,6 +1281,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 /* Clear unneeded session variables */
 hesk_cleanSessionVars('ticket_message');
 hesk_cleanSessionVars('time_worked');
+hesk_cleanSessionVars('note_message');
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
 
@@ -1009,7 +1313,7 @@ function hesk_listAttachments($attachments='', $reply=0, $white=1)
         /* Can edit and delete tickets? */
         if ($can_edit && $can_delete)
         {
-        	echo '<a href="admin_ticket.php?delatt='.$att_id.'&amp;reply='.$reply.'&amp;track='.$trackingID.'&amp;'.$tmp.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');"><i class="fa fa-times"></i></a> ';
+        	echo '<a href="admin_ticket.php?delatt='.$att_id.'&amp;reply='.$reply.'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');"><i class="fa fa-times"></i></a> ';
         }
 
 		echo '
@@ -1234,6 +1538,11 @@ function hesk_printTicketReplies() {
 
 	$i = $hesk_settings['new_top'] ? 0 : 1;
 
+    if ($reply === false)
+    {
+        return $i;
+	}
+
 	while ($reply = hesk_dbFetchAssoc($result))
 	{
 		$color = 'class="ticketMessageContainer"';
@@ -1310,20 +1619,26 @@ function hesk_printReplyForm() {
     	        hesk_show_notice($hesklang['tislock']);
             }
 
-            ?>
+            // Track time worked?
+            if ($hesk_settings['time_worked']) {
+                ?>
 
-            <div class="form-group">
-                <label for="time_worked" class="col-sm-3 control-label"><?php echo $hesklang['ts']; ?>:</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="time_worked" id="time_worked" size="10" value="<?php echo ( isset($_SESSION['time_worked']) ? hesk_getTime($_SESSION['time_worked']) : '00:00:00'); ?>" />
+                <div class="form-group">
+                    <label for="time_worked" class="col-sm-3 control-label"><?php echo $hesklang['ts']; ?>:</label>
+
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="time_worked" id="time_worked" size="10"
+                               value="<?php echo(isset($_SESSION['time_worked']) ? hesk_getTime($_SESSION['time_worked']) : '00:00:00'); ?>"/>
+                    </div>
+                    <div class="col-sm-3 text-right">
+                        <input type="button" class="btn btn-success" onclick="ss()" id="startb"
+                               value="<?php echo $hesklang['start']; ?>"/>
+                        <input type="button" class="btn btn-danger" onclick="r()"
+                               value="<?php echo $hesklang['reset']; ?>"/>
+                    </div>
                 </div>
-                <div class="col-sm-3 text-right">
-                    <input type="button" class="btn btn-success" onclick="ss()" id="startb" value="<?php echo $hesklang['start']; ?>" />
-		            <input type="button" class="btn btn-danger" onclick="r()" value="<?php echo $hesklang['reset']; ?>" />
-                </div>
-            </div>
             <?php
-
+            }
             /* Do we have any canned responses? */
             if (strlen($can_options))
             {
@@ -1345,7 +1660,26 @@ function hesk_printReplyForm() {
             <div class="form-group">
                 <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>: <font class="important">*</font></label>
                 <div class="col-sm-9">
-                    <span id="HeskMsg"><textarea class="form-control" name="message" id="message" rows="12" placeholder="<?php echo $hesklang['message']; ?>" cols="72"><?php if (isset($_SESSION['ticket_message'])) {echo stripslashes(hesk_input($_SESSION['ticket_message']));} ?></textarea></span>     
+                    <span id="HeskMsg"><textarea class="form-control" name="message" id="message" rows="12" placeholder="<?php echo $hesklang['message']; ?>" cols="72">
+                            <?php
+
+                            // Do we have any message stored in session?
+                            if ( isset($_SESSION['ticket_message']) )
+                            {
+                                echo stripslashes( hesk_input( $_SESSION['ticket_message'] ) );
+                            }
+                            // Perhaps a message stored in reply drafts?
+                            else
+                            {
+                                $res = hesk_dbQuery("SELECT `message` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."reply_drafts` WHERE `owner`=".intval($_SESSION['id'])." AND `ticket`=".intval($ticket['id'])." LIMIT 1");
+                                if (hesk_dbNumRows($res) == 1)
+                                {
+                                    echo hesk_dbResult($res);
+                                }
+                            }
+
+                            ?>
+                    </textarea></span>
                 </div>
             </div>
             <?php
@@ -1389,10 +1723,6 @@ function hesk_printReplyForm() {
                    $staffClosedOptionStatus = array();
                    $staffClosedOptionStatus['ID'] = $statusRow['ID'];
 
-	                if ($ticket['status'] != $staffClosedOptionStatus['ID'])
-	                {
-		                echo '<label><input type="checkbox" name="close" value="1" /> '.$hesklang['close_this_ticket'].'</label><br />';
-	                }
 	                ?>
 	                <div class="form-inline"><label><input type="checkbox" name="set_priority" value="1" /> <?php echo $hesklang['change_priority']; ?> </label>
 	                <select class="form-control" name="priority">
@@ -1400,13 +1730,15 @@ function hesk_printReplyForm() {
 	                </select></div><br />
 	                <label><input type="checkbox" name="signature" value="1" checked="checked" /> <?php echo $hesklang['attach_sign']; ?></label>
 	                (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)<br />
-                    <label><input type="checkbox" name="no_notify" value="1" <?php if (empty($ticket['email'])) { echo 'checked="checked" disabled'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
+                    <label><input type="checkbox" name="no_notify" value="1" <?php echo ($_SESSION['notify_customer_reply'] || empty($ticket['email'])) ? '' : 'checked="checked" '; ?> <?php if (empty($ticket['email'])) { echo 'disabled'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
                     <?php if (empty($ticket['email'])) {
                         echo '<input type="hidden" name="no_notify" value="1">';
                     } ?>
                     <input type="hidden" name="orig_id" value="<?php echo $ticket['id']; ?>" />
                     <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                     <input class="btn btn-default" type="submit" value="<?php echo $hesklang['submit_reply']; ?>" />
+                    <!-- TODO Use bootstrap button dropdown to replace submit button with submit dropdown to change status, rather than having eight different buttons, only if ticket is not locked! -->
+                    <input class="btn btn-default" type="submit" name="save_reply" value="<?php echo $hesklang['save_reply']; ?>"
    
                 </div>
             </div>
