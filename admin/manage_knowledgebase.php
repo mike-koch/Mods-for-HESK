@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -609,6 +609,12 @@ function list_draft() {
 				$color = $i ? 'admin_white' : 'admin_gray';
 			}
 
+            // Check for articles with no existing parent category
+            if ( ! isset($kb_cat[$article['catid']]) )
+            {
+                $article['catid'] = hesk_stray_article($article['id']);
+            }
+
 			$tmp   = $i ? 'White' : 'Blue';
 			$style = 'class="option'.$tmp.'OFF" onmouseover="this.className=\'option'.$tmp.'ON\'" onmouseout="this.className=\'option'.$tmp.'OFF\'"';
 			$i     = $i ? 0 : 1;
@@ -736,6 +742,12 @@ function list_private() {
 			{
 				$color = $i ? 'admin_white' : 'admin_gray';
 			}
+
+            // Check for articles with no existing parent category
+            if ( ! isset($kb_cat[$article['catid']]) )
+            {
+                $article['catid'] = hesk_stray_article($article['id']);
+            }
 
 			$tmp   = $i ? 'White' : 'Blue';
 			$style = 'class="option'.$tmp.'OFF" onmouseover="this.className=\'option'.$tmp.'ON\'" onmouseout="this.className=\'option'.$tmp.'OFF\'"';
@@ -1540,8 +1552,6 @@ function manage_category() {
 
 	</td>
 	</tr>
-	<tr>
-	<td>
 
     <ol class="breadcrumb">
         <li><a href="manage_knowledgebase.php"><?php echo $hesklang['kb']; ?></a></li>
@@ -2355,4 +2365,23 @@ function delete_kb_attachments($attachments)
     return true;
 
 } // delete_kb_attachments()
+
+
+function hesk_stray_article($id)
+{
+    global $hesk_settings, $hesklang, $article;
+
+    // Set article to category ID 1
+    $article['catid'] = 1;
+
+    // Update database
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `catid`=1 WHERE `id`='".intval($id)."' LIMIT 1");
+
+    // Update count of articles in categories
+    update_count();
+
+    // Return new category ID
+    return 1;
+
+} // END hesk_stray_article()
 ?>
