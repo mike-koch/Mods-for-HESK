@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -244,6 +244,9 @@ function hesk_validEmails()
         // --> Verify email
         'verify_email' => $hesklang['verify_email'],
 
+        // --> Ticket closed
+        'ticket_closed' => $hesklang['ticket_closed'],
+
 
 		/*** Emails sent to STAFF ***/
 
@@ -264,6 +267,9 @@ function hesk_validEmails()
 
 		// --> New note by someone to a ticket assigned to you
 		'new_note' => $hesklang['new_note'],
+
+        // --> Staff password reset email
+        'reset_password' => $hesklang['reset_password'],
 
     );
 } // END hesk_validEmails()
@@ -585,6 +591,7 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
     $msg = str_replace('%%EMAIL%%',		$ticket['email']			,$msg);
     $msg = str_replace('%%CREATED%%',	$ticket['dt']				,$msg);
     $msg = str_replace('%%UPDATED%%',	$ticket['lastchange']		,$msg);
+    $msg = str_replace('%%ID%%',		$ticket['id']				,$msg);
 
 	/* All custom fields */
 	foreach ($hesk_settings['custom_fields'] as $k=>$v)
