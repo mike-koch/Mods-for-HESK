@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -221,6 +221,9 @@ if (isset($selected['type'][$type]))
 	$selected['type'][$type] = 'selected="selected"';
 }
 
+// Setup date SQL so we don't have to call functions several times
+$hesk_settings['dt_sql'] = " `dt` BETWEEN '" . hesk_dbEscape($date_from) . " 00:00:00' AND '" . hesk_dbEscape($date_to) . " 23:59:59' ";
+
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
@@ -371,24 +374,22 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             }
 
             /* SQL query for category stats */
-            $res = hesk_dbQuery("
-            SELECT DISTINCT `t1`.`category`, `t2`.`num_tickets`, `t2`.`seconds_worked` AS `seconds_worked`, IFNULL(`t3`.`all_replies`,0) AS `all_replies`, IFNULL(`t4`.`staff_replies`,0) AS `staff_replies` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1`
-            LEFT JOIN (SELECT COUNT(*) AS `num_tickets`, SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked`, `category` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1` WHERE DATE(`t1`.`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' " . ( $can_run_reports_full ? "" : " AND `t1`.`owner` = '" . intval($_SESSION['id']) . "'" ) . " GROUP BY `category`) AS `t2` ON `t1`.`category`=`t2`.`category`
-            LEFT JOIN (SELECT COUNT(*) AS `all_replies`, `t1`.`category` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1`, `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` AS `t5` WHERE `t1`.`id`=`t5`.`replyto` AND DATE(`t5`.`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' " . ( $can_run_reports_full ? "" : " AND `t1`.`owner` = '" . intval($_SESSION['id']) . "'" ) . " GROUP BY `t1`.`category`) AS `t3` ON `t1`.`category`=`t3`.`category`
-            LEFT JOIN (SELECT COUNT(*) AS `staff_replies`, `t1`.`category` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1`, `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` AS `t5` WHERE `t1`.`id`=`t5`.`replyto` AND " . ( $can_run_reports_full ? "`t5`.`staffid` > 0" : "`t5`.`staffid` = '" . intval($_SESSION['id']) . "'" ) . " AND DATE(`t5`.`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `t1`.`category`) AS `t4` ON `t1`.`category`=`t4`.`category`
-            WHERE DATE(`t1`.`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "'" .
-            ( $can_run_reports_full ? "" : " AND `t1`.`owner` = '" . intval($_SESSION['id']) . "'" )
-            );
+            $res = hesk_dbQuery("SELECT `category`, COUNT(*) AS `num_tickets`, ".($hesk_settings['time_worked'] ? "SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked`," : '')." SUM(`replies`) AS `all_replies`, SUM(staffreplies) AS `staff_replies` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE {$hesk_settings['dt_sql']} " . ( $can_run_reports_full ? "" : " AND `t1`.`owner` = '" . intval($_SESSION['id']) . "'" ) . " GROUP BY `category`");
 
             /* Update ticket values */
             while ($row = hesk_dbFetchAssoc($res))
             {
+                if ( ! $hesk_settings['time_worked'])
+                {
+                    $row['seconds_worked'] = 0;
+                }
+
                 if (isset($cat[$row['category']]))
                 {
                     $tickets[$row['category']]['num_tickets'] += $row['num_tickets'];
                     $tickets[$row['category']]['all_replies'] += $row['all_replies'];
                     $tickets[$row['category']]['staff_replies'] += $row['staff_replies'];
-                    $tickets[$row['category']]['worked'] = hesk_SecondsToHHMMSS($row['seconds_worked']);
+                    $tickets[$row['category']]['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($row['seconds_worked']) : 0;
                 }
                 else
                 {
@@ -414,7 +415,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             }
 
             // Get number of resolved tickets
-            $res = hesk_dbQuery("SELECT COUNT(*) AS `num_tickets` , `category` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) " . ( $can_run_reports_full ? "" : " AND `owner` = '" . intval($_SESSION['id']) . "'" ) . " AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `category`");
+            $res = hesk_dbQuery("SELECT COUNT(*) AS `num_tickets` , `category` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) " . ( $can_run_reports_full ? "" : " AND `owner` = '" . intval($_SESSION['id']) . "'" ) . " AND {$hesk_settings['dt_sql']} GROUP BY `category`");
 
             // Update number of open and resolved tickets
             while ($row = hesk_dbFetchAssoc($res))
@@ -433,10 +434,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             }
 
             // Convert total seconds worked to HH:MM:SS
-            $totals['worked'] = hesk_SecondsToHHMMSS($totals['worked']);
+            $totals['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($totals['worked']) : 0;
             if ( isset($tickets[9999]) )
             {
-                $tickets[9999]['worked'] = hesk_SecondsToHHMMSS($tickets[9999]['worked']);
+                $tickets[9999]['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($tickets[9999]['worked']) : 0;
             }
 
             ?>
@@ -448,7 +449,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><?php echo $hesklang['closed']; ?></th>
                     <th><?php echo $hesklang['replies'] . ' (' . $hesklang['all'] .')'; ?></th>
                     <th><?php echo $hesklang['replies'] . ' (' . $hesklang['staff'] .')'; ?></th>
-                    <th><?php echo $hesklang['ts']; ?></th>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<th>'.$hesklang['ts'].'</th>';
+                      }
+                      ?>
                   </tr>
 
             <?php
@@ -463,7 +469,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><b><?php echo $totals['resolved']; ?></b></td>
                     <td><b><?php echo $totals['all_replies']; ?></b></td>
                     <td><b><?php echo $totals['staff_replies']; ?></b></td>
-                    <td><b><?php echo $totals['worked']; ?></b></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td>'.$totals['worked'].'</td>';
+                      }
+                      ?>
                   </tr>
             <?php
             }
@@ -480,7 +491,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><?php echo $d['resolved']; ?></td>
                     <td><?php echo $d['all_replies']; ?></td>
                     <td><?php echo $d['staff_replies']; ?></td>
-                    <td><?php echo $d['worked']; ?></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td>'.$d['worked'].'</td>';
+                      }
+                      ?>
                   </tr>
                 <?php
             }
@@ -492,7 +508,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><b><?php echo $totals['resolved']; ?></b></td>
                     <td><b><?php echo $totals['all_replies']; ?></b></td>
                     <td><b><?php echo $totals['staff_replies']; ?></b></td>
-                    <td><b><?php echo $totals['worked']; ?></b></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td>'.$totals['worked'].'</td>';
+                      }
+                      ?>
                   </tr>
                 </table>
             <?php
@@ -514,7 +535,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             if ($_SESSION['isadmin'] || hesk_checkPermission('can_run_reports_full', 0) )
             {
                 // -> get list of users
-                $res = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `id` ASC");
+                $res = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `name` ASC");
 
                 // -> populate $admins and $tickets arrays
                 while ($row=hesk_dbFetchAssoc($res))
@@ -531,19 +552,24 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 }
 
                 // -> get list of tickets
-                $res = hesk_dbQuery("SELECT `owner`, COUNT(*) AS `cnt`, SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('" . implode("','", array_keys($admins) ) . "') AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `owner`");
+                $res = hesk_dbQuery("SELECT `owner`, COUNT(*) AS `cnt`".($hesk_settings['time_worked'] ? ", SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked`" : '')." FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('" . implode("','", array_keys($admins) ) . "') AND {$hesk_settings['dt_sql']} GROUP BY `owner`");
 
                 // -> update ticket list values
                 while ($row = hesk_dbFetchAssoc($res))
                 {
+                    if ( ! $hesk_settings['time_worked'])
+                    {
+                        $row['seconds_worked'] = 0;
+                    }
+
                     $tickets[$row['owner']]['asstickets'] += $row['cnt'];
                     $totals['asstickets'] += $row['cnt'];
-                    $tickets[$row['owner']]['worked'] = hesk_SecondsToHHMMSS($row['seconds_worked']);
+                    $tickets[$row['owner']]['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($row['seconds_worked']) : 0;
                     $totals['worked'] += $row['seconds_worked'];
                 }
 
                 // -> get list of resolved tickets
-                $res = hesk_dbQuery("SELECT `owner`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('" . implode("','", array_keys($admins) ) . "') AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `owner`");
+                $res = hesk_dbQuery("SELECT `owner`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('" . implode("','", array_keys($admins) ) . "') AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) AND {$hesk_settings['dt_sql']} GROUP BY `owner`");
 
                 // -> update resolved ticket list values
                 while ($row = hesk_dbFetchAssoc($res))
@@ -553,7 +579,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 }
 
                 // -> get number of replies
-                $res = hesk_dbQuery("SELECT `staffid`, COUNT(*) AS `cnt`, COUNT(DISTINCT `replyto`) AS `tcnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `staffid` IN ('" . implode("','", array_keys($admins) ) . "') AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `staffid`");
+                $res = hesk_dbQuery("SELECT `staffid`, COUNT(*) AS `cnt`, COUNT(DISTINCT `replyto`) AS `tcnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `staffid` IN ('" . implode("','", array_keys($admins) ) . "') AND {$hesk_settings['dt_sql']} GROUP BY `staffid`");
 
                 // -> update number of replies values
                 while ($row = hesk_dbFetchAssoc($res))
@@ -571,17 +597,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 $admins[$_SESSION['id']] = $_SESSION['name'];
 
                 // -> get list of tickets
-                $res = hesk_dbQuery("SELECT COUNT(*) AS `cnt`, SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` = '" . intval($_SESSION['id']) . "' AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "'");
+                $res = hesk_dbQuery("SELECT COUNT(*) AS `cnt`".($hesk_settings['time_worked'] ? ", SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked`" : '')." FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` = '" . intval($_SESSION['id']) . "' AND {$hesk_settings['dt_sql']}");
                 $row = hesk_dbFetchAssoc($res);
 
                 // -> update ticket values
                 $tickets[$_SESSION['id']]['asstickets'] = $row['cnt'];
                 $totals['asstickets'] = $row['cnt'];
-                $tickets[$_SESSION['id']]['worked'] = hesk_SecondsToHHMMSS($row['seconds_worked']);
+                $tickets[$_SESSION['id']]['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($row['seconds_worked']) : 0;
                 $totals['worked'] += $row['seconds_worked'];
 
                 // -> get list of resolved tickets
-                $res = hesk_dbQuery("SELECT COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` = '" . intval($_SESSION['id']) . "' AND `status`='3' AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "'");
+                $res = hesk_dbQuery("SELECT COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` = '" . intval($_SESSION['id']) . "' AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) AND {$hesk_settings['dt_sql']}");
                 $row = hesk_dbFetchAssoc($res);
 
                 // -> update resolved ticket values
@@ -589,7 +615,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 $totals['resolved'] = $row['cnt'];
 
                 // -> get number of replies
-                $res = hesk_dbQuery("SELECT COUNT(*) AS `cnt`, COUNT(DISTINCT `replyto`) AS `tcnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `staffid` = '" . intval($_SESSION['id']) . "' AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "'");
+                $res = hesk_dbQuery("SELECT COUNT(*) AS `cnt`, COUNT(DISTINCT `replyto`) AS `tcnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `staffid` = '" . intval($_SESSION['id']) . "' AND {$hesk_settings['dt_sql']}");
                 $row = hesk_dbFetchAssoc($res);
 
                 $tickets[$_SESSION['id']]['tickets'] = $row['tcnt'];
@@ -601,7 +627,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             }
 
             // Convert total seconds worked to HH:MM:SS
-            $totals['worked'] = hesk_SecondsToHHMMSS($totals['worked']);
+            $totals['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($totals['worked']) : 0;
 
             ?>
                 <table class="table table-striped table-condensed">
@@ -612,7 +638,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><?php echo $hesklang['closed']; ?></th>
                     <th><?php echo $hesklang['ticall']; ?></th>
                     <th><?php echo $hesklang['replies']; ?></th>
-                    <th><?php echo $hesklang['ts']; ?></th>
+                      <?php
+                      	if ($hesk_settings['time_worked'])
+                      	{
+                      		echo '<th>'.$hesklang['ts'].'</th>';
+                        }
+                      ?>
                   </tr>
 
             <?php
@@ -627,7 +658,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><b><?php echo $totals['resolved']; ?></b></td>
                     <td><b><?php echo $totals['tickets']; ?></b></td>
                     <td><b><?php echo $totals['replies']; ?></b></td>
-                    <td><b><?php echo $totals['worked']; ?></b></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td><b>'.$totals['worked'].'</b></td>';
+                      }
+                      ?>
                   </tr>
             <?php
             }
@@ -643,7 +679,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><?php echo $d['resolved']; ?></td>
                     <td><?php echo $d['tickets']; ?></td>
                     <td><?php echo $d['replies']; ?></td>
-                    <td><?php echo $d['worked']; ?></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td>'.$d['worked'].'</td>';
+                      }
+                      ?>
                   </tr>
                 <?php
             }
@@ -655,7 +696,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><b><?php echo $totals['resolved']; ?></b></td>
                     <td><b><?php echo $totals['tickets']; ?></b></td>
                     <td><b><?php echo $totals['replies']; ?></b></td>
-                    <td><b><?php echo $totals['worked']; ?></b></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td><b>'.$totals['worked'].'</b></td>';
+                      }
+                      ?>
                   </tr>
                 </table>
             <?php
@@ -681,20 +727,25 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             }
 
             // SQL query for all
-            $res = hesk_dbQuery("SELECT YEAR(`dt`) AS `myyear`, MONTH(`dt`) AS `mymonth`, COUNT(*) AS `cnt`, SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `myyear`,`mymonth`");
+            $res = hesk_dbQuery("SELECT YEAR(`dt`) AS `myyear`, MONTH(`dt`) AS `mymonth`, COUNT(*) AS `cnt`".($hesk_settings['time_worked'] ? ", SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked`" : '')." FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND {$hesk_settings['dt_sql']} GROUP BY `myyear`,`mymonth`");
 
             // Update ticket values
             while ($row = hesk_dbFetchAssoc($res))
             {
+                if ( ! $hesk_settings['time_worked'])
+                {
+                    $row['seconds_worked'] = 0;
+                }
+
                 $row['mymonth'] = sprintf('%02d',$row['mymonth']);
                 $tickets[$row['myyear'].'-'.$row['mymonth'].'-01']['all'] += $row['cnt'];
-                $tickets[$row['myyear'].'-'.$row['mymonth'].'-01']['worked'] = hesk_SecondsToHHMMSS($row['seconds_worked']);
+                $tickets[$row['myyear'].'-'.$row['mymonth'].'-01']['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($row['seconds_worked']) : 0;
                 $totals['all'] += $row['cnt'];
                 $totals['worked'] += $row['seconds_worked'];
             }
 
             // SQL query for resolved
-            $res = hesk_dbQuery("SELECT YEAR(`dt`) AS `myyear`, MONTH(`dt`) AS `mymonth`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND `status` = '3' AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `myyear`,`mymonth`");
+            $res = hesk_dbQuery("SELECT YEAR(`dt`) AS `myyear`, MONTH(`dt`) AS `mymonth`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) AND {$hesk_settings['dt_sql']} GROUP BY `myyear`,`mymonth`");
 
             // Update ticket values
             while ($row = hesk_dbFetchAssoc($res))
@@ -705,7 +756,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             }
 
             // Convert total seconds worked to HH:MM:SS
-            $totals['worked'] = hesk_SecondsToHHMMSS($totals['worked']);
+            $totals['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($totals['worked']) : 0;
 
             ?>
                 <table class="table table-striped table-condensed">
@@ -714,7 +765,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><?php echo $hesklang['atik']; ?></th>
                     <th><?php echo $hesklang['topen']; ?></th>
                     <th><?php echo $hesklang['closed']; ?></th>
-                    <th><?php echo $hesklang['ts']; ?></th>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<th>'.$hesklang['ts'].'</th>';
+                      }
+                      ?>
                   </tr>
 
             <?php
@@ -727,7 +783,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><b><?php echo $totals['all']; ?></b></th>
                     <th><b><?php echo $totals['all']-$totals['resolved']; ?></b></th>
                     <th><b><?php echo $totals['resolved']; ?></b></th>
-                    <th><b><?php echo $totals['worked']; ?></b></th>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<th><b>'.$totals['worked'].'</b></th>';
+                      }
+                      ?>
                   </tr>
             <?php
             }
@@ -741,7 +802,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><?php echo $d['all']; ?></td>
                     <td><?php echo $d['all']-$d['resolved']; ?></td>
                     <td><?php echo $d['resolved']; ?></td>
-                    <td><?php echo $d['worked']; ?></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td>'.$d['worked'].'</td>';
+                      }
+                      ?>
                   </tr>
                 <?php
             }
@@ -751,7 +817,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><b><?php echo $totals['all']; ?></b></td>
                     <td><b><?php echo $totals['all']-$totals['resolved']; ?></b></td>
                     <td><b><?php echo $totals['resolved']; ?></b></td>
-                    <td><b><?php echo $totals['worked']; ?></b></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td><b>'.$d['worked'].'</b></td>';
+                      }
+                      ?>
                   </tr>
                 </table>
 
@@ -778,19 +849,24 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             }
 
             // SQL query for all
-            $res = hesk_dbQuery("SELECT DATE(`dt`) AS `mydt`, COUNT(*) AS `cnt`, SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `mydt`");
+            $res = hesk_dbQuery("SELECT DATE(`dt`) AS `mydt`, COUNT(*) AS `cnt`".($hesk_settings['time_worked'] ? ", SUM( TIME_TO_SEC(`time_worked`) ) AS `seconds_worked`" : '')." FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND {$hesk_settings['dt_sql']} GROUP BY `mydt`");
 
             // Update ticket values
             while ($row = hesk_dbFetchAssoc($res))
             {
+                if ( ! $hesk_settings['time_worked'])
+                {
+                	$row['seconds_worked'] = 0;
+                }
+
                 $tickets[$row['mydt']]['all'] += $row['cnt'];
-                $tickets[$row['mydt']]['worked'] = hesk_SecondsToHHMMSS($row['seconds_worked']);
+                $tickets[$row['mydt']]['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($row['seconds_worked']) : 0;
                 $totals['all'] += $row['cnt'];
                 $totals['worked'] += $row['seconds_worked'];
             }
 
             // SQL query for resolved
-            $res = hesk_dbQuery("SELECT DATE(`dt`) AS `mydt`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `mydt`");
+            $res = hesk_dbQuery("SELECT DATE(`dt`) AS `mydt`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE " . ( $can_run_reports_full ? '1' : "`owner` = '" . intval($_SESSION['id']) . "'" ) . " AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1) AND {$hesk_settings['dt_sql']} GROUP BY `mydt`");
 
             // Update ticket values
             while ($row = hesk_dbFetchAssoc($res))
@@ -800,7 +876,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             }
 
             // Convert total seconds worked to HH:MM:SS
-            $totals['worked'] = hesk_SecondsToHHMMSS($totals['worked']);
+            $totals['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($totals['worked']) : 0;
 
             ?>
                 <table class="table table-striped table-condensed">
@@ -809,7 +885,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><?php echo $hesklang['atik']; ?></th>
                     <th><?php echo $hesklang['topen']; ?></th>
                     <th><?php echo $hesklang['closed']; ?></th>
-                    <th><?php echo $hesklang['ts']; ?></th>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<th>'.$hesklang['ts'].'</th>';
+                      }
+                      ?>
                   </tr>
 
             <?php
@@ -822,7 +903,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><b><?php echo $totals['all']; ?></b></td>
                     <td><b><?php echo $totals['all']-$totals['resolved']; ?></b></td>
                     <td><b><?php echo $totals['resolved']; ?></b></td>
-                    <td><b><?php echo $totals['worked']; ?></b></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td><b>'.$totals['worked'].'</b></td>';
+                      }
+                      ?>
                   </tr>
             <?php
             }
@@ -836,7 +922,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><?php echo $d['all']; ?></td>
                     <td><?php echo $d['all']-$d['resolved']; ?></td>
                     <td><?php echo $d['resolved']; ?></td>
-                    <td><?php echo $d['worked']; ?></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td>'.$d['worked'].'</td>';
+                      }
+                      ?>
                   </tr>
                 <?php
             }
@@ -846,7 +937,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td><b><?php echo $totals['all']; ?></b></td>
                     <td><b><?php echo $totals['all']-$totals['resolved']; ?></b></td>
                     <td><b><?php echo $totals['resolved']; ?></b></td>
-                    <td><b><?php echo $totals['worked']; ?></b></td>
+                      <?php
+                      if ($hesk_settings['time_worked'])
+                      {
+                          echo '<td>'.$totals['worked'].'</td>';
+                      }
+                      ?>
                   </tr>
                 </table>
             <?php
