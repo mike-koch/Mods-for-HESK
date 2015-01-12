@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -62,6 +62,61 @@ hesk_getLanguage();
 
 
 /*** FUNCTIONS ***/
+
+function hesk_service_message($sm)
+{
+    switch ($sm['style'])
+    {
+        case 1:
+            $style = "success";
+            break;
+        case 2:
+            $style = "info";
+            break;
+        case 3:
+            $style = "notice";
+            break;
+        case 4:
+            $style = "error";
+            break;
+        default:
+            $style = "none";
+    }
+
+    ?>
+    <div class="<?php echo $style; ?>">
+        <?php echo $style == 'none' ? '' : '<img src="'.HESK_PATH.'img/'.$style.'.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" /> '; ?>
+        <b><?php echo $sm['title']; ?></b> <?php echo $sm['message']; ?>
+    </div>
+    <br />
+<?php
+} // END hesk_service_message()
+
+
+function hesk_isBannedIP($ip)
+{
+    global $hesk_settings, $hesklang, $hesk_db_link;
+
+    $ip = ip2long($ip) or $ip = 0;
+
+    $res = hesk_dbQuery("SELECT `id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."banned_ips` WHERE {$ip} BETWEEN `ip_from` AND `ip_to` LIMIT 1");
+
+    return ( hesk_dbNumRows($res) == 1 ) ? hesk_dbResult($res) : false;
+
+} // END hesk_isBannedIP()
+
+
+function hesk_isBannedEmail($email)
+{
+    global $hesk_settings, $hesklang, $hesk_db_link;
+
+    $email = strtolower($email);
+
+    $res = hesk_dbQuery("SELECT `id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."banned_emails` WHERE `email` IN ('".hesk_dbEscape($email)."', '".hesk_dbEscape( substr($email, strrpos($email, "@") ) )."') LIMIT 1");
+
+    return ( hesk_dbNumRows($res) == 1 ) ? hesk_dbResult($res) : false;
+
+} // END hesk_isBannedEmail()
 
 
 function hesk_clean_utf8($in)
@@ -126,6 +181,11 @@ function hesk_POST($in, $default = '')
 {
 	return isset($_POST[$in]) && ! is_array($_POST[$in]) ? $_POST[$in] : $default;
 } // END hesk_POST()
+
+function hesk_POST_array($in, $default = array() )
+{
+    return isset($_POST[$in]) && is_array($_POST[$in]) ? $_POST[$in] : $default;
+} // END hesk_POST_array()
 
 
 function hesk_REQUEST($in, $default = false)
@@ -559,7 +619,13 @@ function hesk_limitBfAttempts($showError=1)
 {
 	global $hesk_settings, $hesklang;
 
-	/* If this feature is disabled or already called, return false */
+    // Check if this IP is banned permanently
+    if ( hesk_isBannedIP($_SERVER['REMOTE_ADDR']) )
+    {
+        hesk_error($hesklang['baned_ip'], 0);
+    }
+
+    /* If this feature is disabled or already called, return false */
     if ( ! $hesk_settings['attempt_limit'] || defined('HESK_BF_LIMIT') )
     {
     	return false;
@@ -571,7 +637,7 @@ function hesk_limitBfAttempts($showError=1)
 	$ip = $_SERVER['REMOTE_ADDR'];
 
     /* Get number of failed attempts from the database */
-	$res = hesk_dbQuery("SELECT `number`, (CASE WHEN `last_attempt` IS NOT NULL AND DATE_ADD( last_attempt, INTERVAL " . hesk_dbEscape($hesk_settings['attempt_banmin']) . " MINUTE ) > NOW( ) THEN 1 ELSE 0 END) AS `banned` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` WHERE `ip`='".hesk_dbEscape($ip)."' LIMIT 1");
+    $res = hesk_dbQuery("SELECT `number`, (CASE WHEN `last_attempt` IS NOT NULL AND DATE_ADD(`last_attempt`, INTERVAL ".intval($hesk_settings['attempt_banmin'])." MINUTE ) > NOW() THEN 1 ELSE 0 END) AS `banned` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` WHERE `ip`='".hesk_dbEscape($ip)."' LIMIT 1");
 
     /* Not in the database yet? Add first one and return false */
 	if (hesk_dbNumRows($res) != 1)
@@ -702,6 +768,9 @@ function hesk_process_messages($message,$redirect_to,$type='ERROR')
         case 'NOTICE':
         	$_SESSION['HESK_NOTICE'] = TRUE;
             break;
+        case 'INFO':
+            $_SESSION['HESK_INFO'] = TRUE;
+            break;
         default:
         	$_SESSION['HESK_ERROR'] = TRUE;
     }
@@ -741,6 +810,10 @@ function hesk_handle_messages()
 		{
 			hesk_show_notice($_SESSION['HESK_MESSAGE']);
 		}
+        elseif ( isset($_SESSION['HESK_INFO']) )
+        {
+            hesk_show_info($_SESSION['HESK_MESSAGE']);
+        }
 
 		hesk_cleanSessionVars('HESK_MESSAGE');
 	}
@@ -749,6 +822,7 @@ function hesk_handle_messages()
 	hesk_cleanSessionVars('HESK_ERROR');
 	hesk_cleanSessionVars('HESK_SUCCESS');
 	hesk_cleanSessionVars('HESK_NOTICE');
+    hesk_cleanSessionVars('HESK_INFO');
 
 	// Secondary message
 	if ( isset($_SESSION['HESK_2ND_NOTICE']) && isset($_SESSION['HESK_2ND_MESSAGE']) )
@@ -762,39 +836,55 @@ function hesk_handle_messages()
 } // END hesk_handle_messages()
 
 
-function hesk_show_error($message,$title='') {
+function hesk_show_error($message,$title='',$append_colon=true) {
 	global $hesk_settings, $hesklang;
     $title = $title ? $title : $hesklang['error'];
+    $title = $append_colon ? $title . ':' : $title;
 	?>
 	<div align="left" class="alert alert-danger">
-		<b><?php echo $title; ?>:</b> <?php echo $message; ?>
+		<b><?php echo $title; ?></b> <?php echo $message; ?>
 	</div>
 	<?php
 } // END hesk_show_error()
 
 
-function hesk_show_success($message,$title='') {
+function hesk_show_success($message,$title='',$append_colon=true) {
 	global $hesk_settings, $hesklang;
     $title = $title ? $title : $hesklang['success'];
+    $title = $append_colon ? $title . ':' : $title;
 	?>
 	<div align="left" class="alert alert-success">
-		<b><?php echo $title; ?>:</b> <?php echo $message; ?>
+		<b><?php echo $title; ?></b> <?php echo $message; ?>
 	</div>
 	<?php
 } // END hesk_show_success()
 
 
-function hesk_show_notice($message,$title='') {
+function hesk_show_notice($message,$title='',$append_colon=true) {
 	global $hesk_settings, $hesklang;
     $title = $title ? $title : $hesklang['note'];
+    $title = $append_colon ? $title . ':' : $title;
 	?>
 	<div class="alert alert-warning">
-		<b><?php echo $title; ?>:</b> <?php echo $message; ?>
+		<b><?php echo $title; ?></b> <?php echo $message; ?>
 	</div>
     <br />
 	<?php
 } // END hesk_show_notice()
 
+function hesk_show_info($message,$title='',$append_colon=true)
+{
+    global $hesk_settings, $hesklang;
+    $title = $title ? $title : $hesklang['info'];
+    $title = $append_colon ? $title . ':' : $title;
+    ?>
+    <div class="info">
+        <img src="<?php echo HESK_PATH; ?>img/info.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" />
+        <b><?php echo $title; ?></b> <?php echo $message; ?>
+    </div>
+    <br />
+<?php
+} // END hesk_show_info()
 
 function hesk_token_echo($do_echo = 1)
 {
@@ -1080,7 +1170,7 @@ function hesk_returnLanguage()
 } // END hesk_returnLanguage()
 
 
-function hesk_date($dt='', $from_database=false)
+function hesk_date($dt='', $from_database=false, $is_str=true, $return_str=true)
 {
 	global $hesk_settings;
 
@@ -1088,7 +1178,7 @@ function hesk_date($dt='', $from_database=false)
     {
     	$dt = time();
     }
-    else
+    elseif ($is_str)
     {
     	$dt = strtotime($dt);
     }
@@ -1117,7 +1207,7 @@ function hesk_date($dt='', $from_database=false)
 	}
 
     // Return formatted date
-	return date($hesk_settings['timeformat'], $dt);
+    return $return_str ? date($hesk_settings['timeformat'], $dt) : $dt;
     
 } // End hesk_date()
 
@@ -1634,6 +1724,76 @@ function hesk_slashArray($a)
     return ($a);
 } // END hesk_slashArray()
 
+function hesk_check_kb_only($redirect = true)
+{
+    global $hesk_settings;
+
+    if ($hesk_settings['kb_enable'] != 2)
+    {
+        return false;
+    }
+    elseif ($redirect)
+    {
+        header('Location:knowledgebase.php');
+        exit;
+    }
+    else
+    {
+        return true;
+    }
+
+} // END hesk_check_kb_only()
+
+
+function hesk_check_maintenance($dodie = true)
+{
+    global $hesk_settings, $hesklang;
+
+    // No maintenance mode - return true
+    if ( ! $hesk_settings['maintenance_mode'] && ! is_dir(HESK_PATH . 'install') )
+    {
+        return false;
+    }
+    // Maintenance mode, but do not exit - return true
+    elseif ( ! $dodie)
+    {
+        return true;
+    }
+
+    // Maintenance mode - show notice and exit
+    require_once(HESK_PATH . 'inc/header.inc.php');
+    ?>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="3"><img src="<?php echo HESK_PATH; ?>img/headerleftsm.jpg" width="3" height="25" alt="" /></td>
+            <td class="headersm"><?php echo $hesk_settings['hesk_title']; ?></td>
+            <td width="3"><img src="<?php echo HESK_PATH; ?>img/headerrightsm.jpg" width="3" height="25" alt="" /></td>
+        </tr>
+    </table>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="3">
+    <tr>
+    <td>
+
+    <p>&nbsp;</p>
+
+    <div class="notice">
+        <img src="<?php echo HESK_PATH; ?>img/notice.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" />
+        <b><?php echo $hesklang['mm1']; ?></b><br /><br />
+        <?php echo $hesklang['mm2']; ?><br /><br />
+        <?php echo $hesklang['mm3']; ?>
+    </div>
+
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+    <?php
+    require_once(HESK_PATH . 'inc/footer.inc.php');
+    exit();
+} // END hesk_check_maintenance()
 
 function hesk_error($error,$showback=1) {
 global $hesk_settings, $hesklang;
