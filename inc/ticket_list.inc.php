@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -39,7 +39,7 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 if (!isset($admins))
 {
 	$admins = array();
-	$res2 = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `id` ASC");
+	$res2 = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `name` ASC");
 	while ($row=hesk_dbFetchAssoc($res2))
 	{
 		$admins[$row['id']]=$row['name'];
@@ -260,6 +260,7 @@ if ($total > 0)
 	while ($ticket=hesk_dbFetchAssoc($result))
 	{
 
+        // Are we grouping tickets?
 		if ($group)
         {
 			require(HESK_PATH . 'inc/print_group.inc.php');
@@ -284,15 +285,7 @@ if ($total > 0)
             $first_line = $hesklang['taso3'] . ' ' . $admins[$ticket['owner']] . " \n\n";
 		}
 
-        $tagged = '';
-        if ($ticket['archive'])
-        {
-			$tagged = '<i class="fa fa-tag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['archived2'].'"></i> ';
-        }
-
-        $statusName = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ShortNameContentKey`, `TextColor` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$ticket['status']));
-        $ticket['status']='<span style="color: '.$statusName['TextColor'].'">'.$hesklang[$statusName['ShortNameContentKey']].'</span>';
-
+        // Prepare ticket priority
 		switch ($ticket['priority'])
 		{
 			case 0:
@@ -310,35 +303,151 @@ if ($total > 0)
 				$ticket['priority']='<span style="color: blue; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="'.$hesklang['low'].'"></span>';
 		}
 
-        $ticket['lastchange']=hesk_time_since(strtotime($ticket['lastchange']));
+        // Set message (needed for row title)
+        $ticket['message'] = $first_line . substr(strip_tags($ticket['message']),0,200).'...';
 
-		if ($ticket['lastreplier'])
+        // Start ticket row
+        echo '
+		<tr title="'.$ticket['message'].'">
+		<td class="'.$color.'" style="text-align:left; white-space:nowrap;"><input type="checkbox" name="id[]" value="'.$ticket['id'].'" />&nbsp;</td>
+		';
+
+        // Print sequential ID and link it to the ticket page
+        if ( hesk_show_column('id') )
+        {
+            echo '<td class="'.$color.'" style="text-align:left; white-space:nowrap;"><a href="admin_ticket.php?track='.$ticket['trackid'].'&amp;Refresh='.$random.'">'.$ticket['id'].'</a></td>';
+        }
+
+        // Print tracking ID and link it to the ticket page
+        if ( hesk_show_column('trackid') )
+        {
+            echo '<td class="'.$color.'" style="text-align:left; white-space:nowrap;"><a href="admin_ticket.php?track='.$ticket['trackid'].'&amp;Refresh='.$random.'">'.$ticket['trackid'].'</a></td>';
+        }
+
+        // Print date submitted
+        if ( hesk_show_column('dt') )
+        {
+            switch ($hesk_settings['updatedformat'])
+            {
+                case 1:
+                    $ticket['dt'] = hesk_formatDate($ticket['dt']);
+                    break;
+                case 2:
+                    $ticket['dt'] = hesk_time_lastchange($ticket['dt']);
+                    break;
+                default:
+                    $ticket['dt'] = hesk_time_since( strtotime($ticket['dt']) );
+            }
+            echo '<td class="'.$color.'">'.$ticket['dt'].'</td>';
+        }
+
+        // Print last modified
+        if ( hesk_show_column('lastchange') )
 		{
-			$ticket['repliername'] = isset($admins[$ticket['replierid']]) ? $admins[$ticket['replierid']] : $hesklang['staff'];
+            switch ($hesk_settings['updatedformat'])
+            {
+                case 1:
+                    $ticket['lastchange'] = hesk_formatDate($ticket['lastchange']);
+                    break;
+                case 2:
+                    $ticket['lastchange'] = hesk_time_lastchange($ticket['lastchange']);
+                    break;
+                default:
+                    $ticket['lastchange'] = hesk_time_since( strtotime($ticket['lastchange']) );
+            }
+            echo '<td class="'.$color.'">'.$ticket['lastchange'].'</td>';
 		}
-		else
+
+        // Print ticket category
+        if ( hesk_show_column('category') )
 		{
-			$ticket['repliername'] = $ticket['name'];
+            $ticket['category'] = isset($hesk_settings['categories'][$ticket['category']]) ? $hesk_settings['categories'][$ticket['category']] : $hesklang['catd'];
+            echo '<td class="'.$color.'">'.$ticket['category'].'</td>';
 		}
 
-		$ticket['archive'] = !($ticket['archive']) ? $hesklang['no'] : $hesklang['yes'];
+        // Print customer name
+        if ( hesk_show_column('name') )
+        {
+            echo '<td class="'.$color.'">'.$ticket['name'].'</td>';
+        }
 
-		$ticket['message'] = $first_line . substr(strip_tags($ticket['message']),0,200).'...';
-        
+        // Print customer email
+        if ( hesk_show_column('email') )
+        {
+            echo '<td class="'.$color.'"><a href="mailto:'.$ticket['email'].'">'.$hesklang['clickemail'].'</a></td>';
+        }
 
-		echo <<<EOC
-		<tr class="$color" id="$ticket[id]" title="$ticket[message]">
-		<td><input type="checkbox" id="check$ticket[id]" name="id[]" value="$ticket[id]" />&nbsp;</td>
-        <td><a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[trackid]</a></td>
-        <td>$ticket[lastchange]</td>
-        <td>$ticket[name]</td>
-        <td>$tagged$owner<a href="admin_ticket.php?track=$ticket[trackid]&amp;Refresh=$random">$ticket[subject]</a></td>
-        <td>$ticket[status]&nbsp;</td>
-        <td>$ticket[repliername]</td>
-        <td>$ticket[priority]&nbsp;</td>
-		</tr>
+        // Print subject and link to the ticket page
+        if ( hesk_show_column('subject') )
+        {
+            echo '<td class="'.$color.'">'.($ticket['archive'] ? '<img src="../img/tag.png" width="16" height="16" alt="'.$hesklang['archived'].'" title="'.$hesklang['archived'].'"  border="0" style="vertical-align:text-bottom" /> ' : '').$owner.'<a href="admin_ticket.php?track='.$ticket['trackid'].'&amp;Refresh='.$random.'">'.$ticket['subject'].'</a></td>';
+        }
 
-EOC;
+        // Print ticket status
+        if ( hesk_show_column('status') )
+        {
+            $statusName = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ShortNameContentKey`, `TextColor` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$ticket['status']));
+            $ticket['status']='<span style="color: '.$statusName['TextColor'].'">'.$hesklang[$statusName['ShortNameContentKey']].'</span>';
+            echo '<td class="'.$color.'">'.$ticket['status'].'&nbsp;</td>';
+        }
+
+        // Print ticket owner
+        if ( hesk_show_column('owner') )
+        {
+            if ($ticket['owner'])
+            {
+                $ticket['owner'] = isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] : $hesklang['unas'];
+            }
+            else
+            {
+                $ticket['owner'] = $hesklang['unas'];
+            }
+            echo '<td class="'.$color.'">'.$ticket['owner'].'</td>';
+        }
+
+        // Print number of all replies
+        if ( hesk_show_column('replies') )
+        {
+            echo '<td class="'.$color.'">'.$ticket['replies'].'</td>';
+        }
+
+        // Print number of staff replies
+        if ( hesk_show_column('staffreplies') )
+        {
+            echo '<td class="'.$color.'">'.$ticket['staffreplies'].'</td>';
+        }
+
+        // Print last replier
+        if ( hesk_show_column('lastreplier') )
+        {
+            if ($ticket['lastreplier'])
+            {
+                $ticket['repliername'] = isset($admins[$ticket['replierid']]) ? $admins[$ticket['replierid']] : $hesklang['staff'];
+            }
+            else
+            {
+                $ticket['repliername'] = $ticket['name'];
+            }
+            echo '<td class="'.$color.'">'.$ticket['repliername'].'</td>';
+        }
+
+        // Print time worked
+        if ( hesk_show_column('time_worked') )
+        {
+            echo '<td class="'.$color.'">'.$ticket['time_worked'].'</td>';
+        }
+
+        // Print custom fields
+        foreach ($hesk_settings['custom_fields'] as $key => $value)
+        {
+            if ($value['use'] && hesk_show_column($key) )
+                echo '<td class="'.$color.'">'.$ticket[$key].'</td>';
+        }
+
+        // End ticket row
+        echo '
+		<td class="'.$color.'" style="text-align:center; white-space:nowrap;">'.$ticket['priority'].'&nbsp;</td>
+		</tr>';
 	} // End while
 	?>
 	</table>
@@ -349,7 +458,11 @@ EOC;
     <tr>
     <td width="50%" class="text-right" style="vertical-align:top">
 		<select class="form-control" name="a">
-		<option value="close" selected="selected"><?php echo $hesklang['close_selected']; ?></option>
+        <option value="low" selected="selected"><?php echo $hesklang['set_pri_to'].' '.$hesklang['low']; ?></option>
+        <option value="medium"><?php echo $hesklang['set_pri_to'].' '.$hesklang['medium']; ?></option>
+        <option value="high"><?php echo $hesklang['set_pri_to'].' '.$hesklang['high']; ?></option>
+        <option value="critical"><?php echo $hesklang['set_pri_to'].' '.$hesklang['critical']; ?></option>
+        <option value="close"><?php echo $hesklang['close_selected']; ?></option>
 		<?php
 		if ( hesk_checkPermission('can_add_archive', 0) )
 		{
@@ -421,19 +534,19 @@ echo '</div>
 
 function hesk_print_list_head()
 {
-	global $href, $query, $sort_possible, $hesklang, $hesk_settings;
+    global $hesk_settings, $href, $query, $sort_possible, $hesklang;
 	?>
 	<div class="table-responsive">
 	<table id="ticket-table" class="table table-hover">
         <thead>
 	        <tr>
 	        <th><input type="checkbox" id="checkall" name="checkall" value="2" onclick="hesk_changeAll(this)" /></th>
-            <th><a href="<?php echo $href . '?' . $query . $sort_possible['trackid'] . '&amp;sort='; ?>trackid"><?php echo $hesklang['trackID']; ?></a></th>
-	        <th><a href="<?php echo $href . '?' . $query . $sort_possible['lastchange'] . '&amp;sort='; ?>lastchange"><?php echo $hesklang['last_update']; ?></a></th>
-            <th><a href="<?php echo $href . '?' . $query . $sort_possible['name'] . '&amp;sort='; ?>name"><?php echo $hesklang['name']; ?></a></th>
-            <th><a href="<?php echo $href . '?' . $query . $sort_possible['subject'] . '&amp;sort='; ?>subject"><?php echo $hesklang['subject']; ?></a></th>
-            <th><a href="<?php echo $href . '?' . $query . $sort_possible['status'] . '&amp;sort='; ?>status"><?php echo $hesklang['status']; ?></a></th>
-            <th><a href="<?php echo $href . '?' . $query . $sort_possible['lastreplier'] . '&amp;sort='; ?>lastreplier"><?php echo $hesklang['last_replier']; ?></a></th>
+            <?php
+            foreach ($hesk_settings['ticket_list'] as $field)
+            {
+                echo '<th><a href="' . $href . '?' . $query . $sort_possible[$field] . '&amp;sort=' . $field . '">' . $hesk_settings['possible_ticket_list'][$field] . '</a></th>';
+            }
+            ?>
             <th><a href="<?php echo $href . '?' . $query . $sort_possible['priority'] . '&amp;sort='; ?>priority"><i class="fa fa-sort-<?php echo (($sort_possible['priority']) ? 'asc' : 'desc'); ?>"></i></a></th>
 	        </tr>
         </thead>
@@ -492,3 +605,50 @@ function hesk_time_since($original)
     }
     return $print;
 } // END hesk_time_since()
+
+
+function hesk_time_lastchange($original)
+{
+    global $hesk_settings, $hesklang;
+
+    // Save time format setting so we can restore it later
+    $copy = $hesk_settings['timeformat'];
+
+    // We need this time format for this function
+    $hesk_settings['timeformat'] = 'Y-m-d H:i:s';
+
+    // Get HESK time-adjusted start of today if not already
+    if ( ! defined('HESK_TIME_TODAY') )
+    {
+        // Adjust for HESK time and define constants for alter use
+        define('HESK_TIME_TODAY',		date('Y-m-d 00:00:00', hesk_date(NULL, false, false, false) ) );
+        define('HESK_TIME_YESTERDAY',	date('Y-m-d 00:00:00', strtotime(HESK_TIME_TODAY)-86400) ) ;
+    }
+
+    // Adjust HESK time difference and get day name
+    $ticket_time = hesk_date($original, true);
+
+    if ($ticket_time >= HESK_TIME_TODAY)
+    {
+        // For today show HH:MM
+        $day = substr($ticket_time, 11, 5);
+    }
+    elseif ($ticket_time >= HESK_TIME_YESTERDAY)
+    {
+        // For yesterday show word "Yesterday"
+        $day = $hesklang['r2'];
+    }
+    else
+    {
+        // For other days show DD MMM YY
+        list($y, $m, $d) = explode('-', substr($ticket_time, 0, 10) );
+        $day = '<span style="white-space: nowrap;">' . $d . ' ' . $hesklang['ms'.$m] . ' ' . substr($y, 2) . '</span>';
+    }
+
+    // Restore original time format setting
+    $hesk_settings['timeformat'] = $copy;
+
+    // Return value to display
+    return $day;
+
+} // END hesk_time_lastchange()
