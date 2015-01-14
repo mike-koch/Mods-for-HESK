@@ -74,7 +74,17 @@ if ( hesk_check_kb_only(false) )
                 if (hesk_checkPermission('can_man_cat',0))  {
                     echo '<li><a href="manage_categories.php"><i class="fa fa-pie-chart" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_cat'].'</a></li>';
                 }
-                if (hesk_checkPermission('can_man_canned',0)) {
+                if (hesk_checkPermission('can_man_canned', 0) && hesk_checkPermission('can_man_ticket_tpl',0)) {
+                    echo '<li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                  <i class="fa fa-file-text-o" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_can'].'<span class="caret"></span>
+                              </a>
+                              <ul class="dropdown-menu" role="menu">
+                                  <li><a href="manage_canned.php">'.$hesklang['can_man_canned'].'</a></li>
+                                  <li><a href="manage_ticket_templates.php">'.$hesklang['ticket_tpl_man'].'</a></li>
+                              </ul>
+                          </li>';
+                } elseif (hesk_checkPermission('can_man_canned',0)) {
                     echo '<li><a href="manage_canned.php"><i class="fa fa-file-text-o" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_can'].'</a></li>';
                 } elseif (hesk_checkPermission('can_man_ticket_tpl',0)) {
                     echo '<li><a href="manage_ticket_templates.php"><i class="fa fa-file-text-o" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_can'].'</a></li>';
