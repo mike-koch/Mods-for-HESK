@@ -78,7 +78,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         {
             echo '
             <li role="presentation">
-                <a title="' . $hesklang['banip'] . '" href="banned_ips.php">'.$hesklang['banemail'].'</a>
+                <a title="' . $hesklang['banip'] . '" href="banned_ips.php">'.$hesklang['banip'].'</a>
             </li>';
         }
         // Show a link to status_message.php if user has permission to do so
@@ -127,7 +127,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <h6 style="font-weight: bold"><?php echo $hesklang['banex']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
                 <b>john@email.com</b><br />
-                <b>@domain.com</b></td>
+                <b>@domain.com</b>
             </div>
         </div>
         <div class="row">
