@@ -37,7 +37,23 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 $num_mail = hesk_checkNewMail();
 ?>
+<?php
+// Show a notice if we are in maintenance mode
+if ( hesk_check_maintenance(false) )
+{
+    echo '<div style="margin-bottom: -20px">';
+    hesk_show_notice($hesklang['mma2'], $hesklang['mma1'], false);
+    echo '</div>';
+}
 
+// Show a notice if we are in "Knowledgebase only" mode
+if ( hesk_check_kb_only(false) )
+{
+    echo '<div style="margin-bottom: -20px">';
+    hesk_show_notice($hesklang['kbo2'], $hesklang['kbo1'], false);
+    echo '</div>';
+}
+?>
 <div class="enclosing">
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
 	    <div class="navbar-header">
@@ -101,21 +117,3 @@ $num_mail = hesk_checkNewMail();
         </ul>
       </div><!-- /.navbar-collapse -->
     </nav>
-
-    <?php
-    // Show a notice if we are in maintenance mode
-    if ( hesk_check_maintenance(false) )
-    {
-        echo '<div style="padding: 20px 20px 0 20px; margin-bottom: -10px">';
-        hesk_show_notice($hesklang['mma2'], $hesklang['mma1'], false);
-        echo '</div>';
-    }
-
-    // Show a notice if we are in "Knowledgebase only" mode
-    if ( hesk_check_kb_only(false) )
-    {
-        echo '<div style="padding: 20px 20px 0 20px; margin-bottom: -10px">';
-        hesk_show_notice($hesklang['kbo2'], $hesklang['kbo1'], false);
-        echo '</div>';
-    }
-    ?>

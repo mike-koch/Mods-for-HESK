@@ -873,7 +873,6 @@ function hesk_show_notice($message,$title='',$append_colon=true) {
 	<div class="alert alert-warning">
 		<b><?php echo $title; ?></b> <?php echo $message; ?>
 	</div>
-    <br />
 	<?php
 } // END hesk_show_notice()
 
