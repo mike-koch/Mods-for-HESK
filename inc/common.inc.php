@@ -65,19 +65,24 @@ hesk_getLanguage();
 
 function hesk_service_message($sm)
 {
+    $faIcon = "";
     switch ($sm['style'])
     {
         case 1:
-            $style = "success";
+            $style = "alert alert-success";
+            $faIcon = "fa fa-check-circle";
             break;
         case 2:
-            $style = "info";
+            $style = "alert alert-info";
+            $faIcon = "fa fa-comment";
             break;
         case 3:
-            $style = "notice";
+            $style = "alert alert-warning";
+            $faIcon = "fa fa-exclamation-triangle";
             break;
         case 4:
-            $style = "error";
+            $style = "alert alert-danger";
+            $faIcon = "fa fa-times-circle";
             break;
         default:
             $style = "none";
@@ -85,8 +90,8 @@ function hesk_service_message($sm)
 
     ?>
     <div class="<?php echo $style; ?>">
-        <?php echo $style == 'none' ? '' : '<img src="'.HESK_PATH.'img/'.$style.'.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" /> '; ?>
-        <b><?php echo $sm['title']; ?></b> <?php echo $sm['message']; ?>
+        <?php echo $style == 'none' ? '' : '<i class="'.$faIcon.'"></i> '; ?>
+        <b><?php echo $sm['title']; ?></b><?php echo $sm['message']; ?>
     </div>
     <br />
 <?php
