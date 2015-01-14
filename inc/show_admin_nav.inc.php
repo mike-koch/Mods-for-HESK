@@ -102,18 +102,20 @@ $num_mail = hesk_checkNewMail();
       </div><!-- /.navbar-collapse -->
     </nav>
 
-    <div style="padding: 20px 20px 0 20px; margin-bottom: -10px">
     <?php
     // Show a notice if we are in maintenance mode
     if ( hesk_check_maintenance(false) )
     {
+        echo '<div style="padding: 20px 20px 0 20px; margin-bottom: -10px">';
         hesk_show_notice($hesklang['mma2'], $hesklang['mma1'], false);
+        echo '</div>';
     }
 
     // Show a notice if we are in "Knowledgebase only" mode
     if ( hesk_check_kb_only(false) )
     {
+        echo '<div style="padding: 20px 20px 0 20px; margin-bottom: -10px">';
         hesk_show_notice($hesklang['kbo2'], $hesklang['kbo1'], false);
+        echo '</div>';
     }
     ?>
-    </div>
