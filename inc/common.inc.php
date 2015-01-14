@@ -1767,33 +1767,13 @@ function hesk_check_maintenance($dodie = true)
     // Maintenance mode - show notice and exit
     require_once(HESK_PATH . 'inc/header.inc.php');
     ?>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-            <td width="3"><img src="<?php echo HESK_PATH; ?>img/headerleftsm.jpg" width="3" height="25" alt="" /></td>
-            <td class="headersm"><?php echo $hesk_settings['hesk_title']; ?></td>
-            <td width="3"><img src="<?php echo HESK_PATH; ?>img/headerrightsm.jpg" width="3" height="25" alt="" /></td>
-        </tr>
-    </table>
 
-    <table width="100%" border="0" cellspacing="0" cellpadding="3">
-    <tr>
-    <td>
-
-    <p>&nbsp;</p>
-
-    <div class="notice">
-        <img src="<?php echo HESK_PATH; ?>img/notice.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" />
+    <div class="alert alert-warning" style="margin: 20px">
+        <i class="fa fa-exclamation-triangle"></i>
         <b><?php echo $hesklang['mm1']; ?></b><br /><br />
         <?php echo $hesklang['mm2']; ?><br /><br />
         <?php echo $hesklang['mm3']; ?>
     </div>
-
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-
     <?php
     require_once(HESK_PATH . 'inc/footer.inc.php');
     exit();
