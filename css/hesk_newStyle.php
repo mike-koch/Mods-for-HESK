@@ -123,6 +123,7 @@
 .settingsquestionmark {
     color: <?php echo $questionMarkColor; ?>;
     font-size: 14px;
+    cursor: pointer;
 }
 .h3questionmark {
     color: <?php echo $questionMarkColor; ?>;
