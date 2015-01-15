@@ -299,7 +299,7 @@ myField.value += myValue;
             </div>
             <div class="form-group" style="text-align: center">
                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                <input type="submit" value="<?php echo $hesklang['save_reply']; ?>" class="btn btn-default" />   
+                <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default" />
             </div>          
         </form>
     </div>

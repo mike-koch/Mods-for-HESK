@@ -21,6 +21,10 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods For HESK 2.0.0
+$hesklang['saved_ticket_tpl'] = 'Saved Templates';
+$hesklang['new_ticket_tpl']='Add or Edit a Ticket Template';
+
 // ADDED OR MODIFIED IN Mods For HESK 1.7.0
 $hesklang['date_custom_field'] = 'Date';
 $hesklang['date_custom_field_text'] = 'No options for this custom field type.';
@@ -1334,7 +1338,6 @@ $hesklang['ticket_tpl_intro']='Create and edit ticket templates that you can use
 $hesklang['no_ticket_tpl']='No ticket templates';
 $hesklang['ticket_tpl_title']='Title';
 $hesklang['delete_tpl']='Are you sure you want to delete this template?';
-$hesklang['new_ticket_tpl']='Add or Edit a ticket template';
 $hesklang['ticket_tpl_add']='Create a new ticket template';
 $hesklang['ticket_tpl_edit']='Edit selected ticket template';
 $hesklang['save_ticket_tpl']='Save ticket template';
