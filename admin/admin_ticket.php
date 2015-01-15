@@ -984,48 +984,66 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             ?>
             <div class="row">
                 <div class="col-md-12 alert-warning">
-                    <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?><p>		<a href="edit_note.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;note=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>"><img
-                                src="../img/edit.png" alt="<?php echo $hesklang['ednote']; ?>" title="<?php echo $hesklang['ednote']; ?>" width="16" height="16" class="optionWhiteOFF" onmouseover="this.className='optionWhiteON'" onmouseout="this.className='optionWhiteOFF'" /></a>
-                        <a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['delnote']).'?'; ?>');"><img
-                                src="../img/delete.png" alt="<?php echo $hesklang['delnote']; ?>" title="<?php echo $hesklang['delnote']; ?>" width="16" height="16" class="optionWhiteOFF" onmouseover="this.className='optionWhiteON'" onmouseout="this.className='optionWhiteOFF'" /></a></p><?php }?>
-                    <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt']); ?></p>
-                    <?php
-                    // Message
-                    echo $note['message'];
+                    <div class="row" style="padding-top: 10px; padding-bottom: 10px">
+                        <div class="col-md-8">
+                            <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt']); ?></p>
+                            <?php
+                            // Message
+                            echo $note['message'];
 
-                    // Attachments
-                    if ( $hesk_settings['attachments']['use'] && strlen($note['attachments']) )
-                    {
-                        echo strlen($note['message']) ? '<br /><br />' : '';
-
-                        $att = explode(',', substr($note['attachments'], 0, -1) );
-                        $num = count($att);
-                        foreach ($att as $myatt)
-                        {
-                            list($att_id, $att_name) = explode('#', $myatt);
-
-                            // Can edit and delete note (attachments)?
-                            if ($can_del_notes || $note['who'] == $_SESSION['id'])
+                            // Attachments
+                            if ( $hesk_settings['attachments']['use'] && strlen($note['attachments']) )
                             {
-                                // If this is the last attachment and no message, show "delete ticket" link
-                                if ($num == 1 && strlen($note['message']) == 0)
+                                echo strlen($note['message']) ? '<br /><br />' : '';
+
+                                $att = explode(',', substr($note['attachments'], 0, -1) );
+                                $num = count($att);
+                                foreach ($att as $myatt)
                                 {
-                                    echo '<a href="admin_ticket.php?delnote='.$note['id'].'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');"><img src="../img/delete.png" width="16" height="16" alt="'.$hesklang['dela'].'" title="'.$hesklang['dela'].'" class="optionWhiteOFF" onmouseover="this.className=\'optionWhiteON\'" onmouseout="this.className=\'optionWhiteOFF\'" /></a> ';
-                                }
-                                // Show "delete attachment" link
-                                else
-                                {
-                                    echo '<a href="admin_ticket.php?delatt='.$att_id.'&amp;note='.$note['id'].'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');"><img src="../img/delete.png" width="16" height="16" alt="'.$hesklang['dela'].'" title="'.$hesklang['dela'].'" class="optionWhiteOFF" onmouseover="this.className=\'optionWhiteON\'" onmouseout="this.className=\'optionWhiteOFF\'" /></a> ';
+                                    list($att_id, $att_name) = explode('#', $myatt);
+
+                                    // Can edit and delete note (attachments)?
+                                    if ($can_del_notes || $note['who'] == $_SESSION['id'])
+                                    {
+                                        // If this is the last attachment and no message, show "delete ticket" link
+                                        if ($num == 1 && strlen($note['message']) == 0)
+                                        {
+                                            echo '<a href="admin_ticket.php?delnote='.$note['id'].'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');">
+                                                    <i class="fa fa-times" style="font-size:16px;color:red;" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['dela'].'"></i>
+                                                </a> ';
+                                        }
+                                        // Show "delete attachment" link
+                                        else
+                                        {
+                                            echo '<a href="admin_ticket.php?delatt='.$att_id.'&amp;note='.$note['id'].'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');">
+                                                    <i class="fa fa-times" style="font-size:16px;color:red;" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['dela'].'"></i>
+                                                </a> ';
+                                        }
+                                    }
+
+                                    echo '
+                                        <a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'">
+                                            <i class="fa fa-paperclip" style="font-size:16px;" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['dnl'].' '.$att_name.'"></i>
+                                        </a>
+                                        <a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'">'.$att_name.'</a><br />
+                                    ';
                                 }
                             }
-
-                            echo '
-				<a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'"><img src="../img/clip.png" width="16" height="16" alt="'.$hesklang['dnl'].' '.$att_name.'" title="'.$hesklang['dnl'].' '.$att_name.'" class="optionWhiteOFF" onmouseover="this.className=\'optionWhiteON\'" onmouseout="this.className=\'optionWhiteOFF\'" /></a>
-				<a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'">'.$att_name.'</a><br />
-				';
-                        }
-                    }
-                    ?>
+                            ?>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <?php if ($can_del_notes || $note['who'] == $_SESSION['id']) { ?>
+                                <div class="btn-group" role="group">
+                                    <a href="edit_note.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;note=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" class="btn btn-warning">
+                                        <i class="fa fa-pencil"></i>&nbsp;<?php echo $hesklang['ednote']; ?>
+                                    </a>
+                                    <a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000,99999); ?>&amp;delnote=<?php echo $note['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" class="btn btn-danger">
+                                        <i class="fa fa-times"></i>&nbsp;<?php echo $hesklang['delnote']; ?>
+                                    </a>
+                                </div>
+                            <?php }?>
+                        </div>
+                    </div>
                 </div>
             </div>
         <?php
@@ -1097,22 +1115,26 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="ticketName"><?php echo $ticket['name']; ?></div>
                 <div class="ticketEmail">
                     <?php
-                    if ($can_ban_emails)
+                    if ($can_ban_emails && !empty($ticket['email']))
                     {
                         if ( $email_id = hesk_isBannedEmail($ticket['email']) )
                         {
                             if ($can_unban_emails)
                             {
-                                echo '<a href="banned_emails.php?a=unban&amp;track='.$trackingID.'&amp;id='.intval($email_id).'&amp;token='.hesk_token_echo(0).'"><img src="../img/banned.png" width="16" height="16" alt="'.$hesklang['eisban'].' '.$hesklang['click_unban'].'" title="'.$hesklang['eisban'].' '.$hesklang['click_unban'].'" /></a> ';
+                                echo '<a href="banned_emails.php?a=unban&amp;track='.$trackingID.'&amp;id='.intval($email_id).'&amp;token='.hesk_token_echo(0).'">
+                                        <i class="fa fa-ban" style="font-size:16px;color:red" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['eisban'].' '.$hesklang['click_unban'].'"></i>
+                                    </a> ';
                             }
                             else
                             {
-                                echo '<img src="../img/banned.png" width="16" height="16" alt="'.$hesklang['eisban'].'" title="'.$hesklang['eisban'].'" /> ';
+                                echo '<i class="fa fa-ban" style="font-size:16px;color:red" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['eisban'].'"></i>';
                             }
                         }
                         else
                         {
-                            echo '<a href="banned_emails.php?a=ban&amp;track='.$trackingID.'&amp;email='.urlencode($ticket['email']).'&amp;token='.hesk_token_echo(0).'"><img src="../img/ban.png" width="16" height="16" alt="'.$hesklang['savebanemail'].'" title="'.$hesklang['savebanemail'].'" /></a> ';
+                            echo '<a href="banned_emails.php?a=ban&amp;track='.$trackingID.'&amp;email='.urlencode($ticket['email']).'&amp;token='.hesk_token_echo(0).'">
+                                    <i class="fa fa-ban" style="font-size:16px;color:grey" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['savebanemail'].'"></i>
+                                </a> ';
                         }
                     }
                     ?><a href="mailto:<?php echo $ticket['email']; ?>"><?php echo $ticket['email']; ?></a>
@@ -1133,16 +1155,20 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             {
                                 if ($can_unban_ips)
                                 {
-                                    echo '<a href="banned_ips.php?a=unban&amp;track='.$trackingID.'&amp;id='.intval($ip_id).'&amp;token='.hesk_token_echo(0).'"><img src="../img/banned.png" width="16" height="16" alt="'.$hesklang['ipisban'].' '.$hesklang['click_unban'].'" title="'.$hesklang['ipisban'].' '.$hesklang['click_unban'].'" /></a> ';
+                                    echo '<a href="banned_ips.php?a=unban&amp;track='.$trackingID.'&amp;id='.intval($ip_id).'&amp;token='.hesk_token_echo(0).'">
+                                            <i class="fa fa-ban" style="font-size:16px;color:red" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['ipisban'].' '.$hesklang['click_unban'].'"></i>
+                                        </a> ';
                                 }
                                 else
                                 {
-                                    echo '<img src="../img/banned.png" width="16" height="16" alt="'.$hesklang['ipisban'].'" title="'.$hesklang['ipisban'].'" /> ';
+                                    echo '<i class="fa fa-ban" style="font-size:16px;color:red" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['ipisban'].'"></i>';
                                 }
                             }
                             else
                             {
-                                echo '<a href="banned_ips.php?a=ban&amp;track='.$trackingID.'&amp;ip='.urlencode($ticket['ip']).'&amp;token='.hesk_token_echo(0).'"><img src="../img/ban.png" width="16" height="16" alt="'.$hesklang['savebanip'].'" title="'.$hesklang['savebanip'].'" /></a> ';
+                                echo '<a href="banned_ips.php?a=ban&amp;track='.$trackingID.'&amp;ip='.urlencode($ticket['ip']).'&amp;token='.hesk_token_echo(0).'">
+                                        <i class="fa fa-ban" style="font-size:16px;color:grey" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['savebanip'].'"></i>
+                                    </a> ';
                             }
                         }
 
