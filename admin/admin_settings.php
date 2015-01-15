@@ -767,35 +767,6 @@ if ( defined('HESK_DEMO') )
                                 ?>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="s_short_link" class="col-sm-6 control-label"><?php echo $hesklang['shu']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#63','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                            <div class="col-sm-6 form-inline">
-                                <?php
-                                $on = $hesk_settings['short_link'] ? 'checked="checked"' : '';
-                                $off = $hesk_settings['short_link'] ? '' : 'checked="checked"';
-                                echo '
-                                <div class="radio"><label><input type="radio" name="s_short_link" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
-                                <div class="radio"><label><input type="radio" name="s_short_link" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
-                                ?>    
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-6 control-label"><?php echo $hesklang['select']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#65','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                            <div class="col-sm-6 form-inline">
-                                <?php
-                                $on = $hesk_settings['short_link'] ? 'checked="checked"' : '';
-                                $off = $hesk_settings['short_link'] ? '' : 'checked="checked"';
-                                echo '
-                                <div class="radio"><label><input type="radio" name="s_short_link" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
-                                ?>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" name="s_select_cat" value="1" <?php if ($hesk_settings['select_cat']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['category']; ?></label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" name="s_select_pri" value="1" <?php if ($hesk_settings['select_pri']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['priority']; ?></label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!-- Second column -->
                     <div class="col-md-6">
@@ -845,6 +816,29 @@ if ( defined('HESK_DEMO') )
                                 <div class="radio"><label><input type="radio" name="s_debug_mode" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
                                 <div class="radio"><label><input type="radio" name="s_debug_mode" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
                                 ?>    
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="s_short_link" class="col-sm-6 control-label"><?php echo $hesklang['shu']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#63','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $hesk_settings['short_link'] ? 'checked="checked"' : '';
+                                $off = $hesk_settings['short_link'] ? '' : 'checked="checked"';
+                                echo '
+                                <div class="radio"><label><input type="radio" name="s_short_link" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_short_link" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label"><?php echo $hesklang['select']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#65','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="s_select_cat" value="1" <?php if ($hesk_settings['select_cat']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['category']; ?></label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="s_select_pri" value="1" <?php if ($hesk_settings['select_pri']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['priority']; ?></label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1078,11 +1072,11 @@ if ( defined('HESK_DEMO') )
         </div>
 
               <div class="tab-pane fade in" id="knowledgebase">
-                <h6 style="font-weight: bold"><?php echo $hesklang['s_ekb']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#22','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h6>
+                <h6 style="font-weight: bold"><?php echo $hesklang['kb_set']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
-
                 <div class="form-group">
-                    <div class="col-sm-9 col-sm-offset-3 form-inline">
+                    <label for="s_kb_enable" class="col-sm-3 control-label"><?php echo $hesklang['s_ekb']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#22','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                    <div class="col-sm-9 form-inline">
                         <?php
                         $on = $hesk_settings['kb_enable'] == 1 ? 'checked="checked"' : '';
                         $off = $hesk_settings['kb_enable'] ? '' : 'checked="checked"';
@@ -1094,9 +1088,6 @@ if ( defined('HESK_DEMO') )
                         ?>
                     </div>
                 </div>
-
-                <h6 style="font-weight: bold"><?php echo $hesklang['kb_set']; ?></h6>
-                <div class="footerWithBorder blankSpace"></div>
                 <div class="form-group">
                     <label for="s_kb_wysiwyg" class="col-sm-3 control-label"><?php echo $hesklang['swyse']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#52','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9 form-inline">
@@ -1650,7 +1641,7 @@ if ( defined('HESK_DEMO') )
                         </div>
                     </div>
 
-                    <h6 syle="font-weight: bold"><?php echo $hesklang['suge']; ?></h6>
+                    <h6 style="font-weight: bold"><?php echo $hesklang['suge']; ?></h6>
                     <div class="footerWithBorder blankSpace"></div>
 
                     <div class="form-group">
@@ -1695,7 +1686,7 @@ if ( defined('HESK_DEMO') )
                     </div>
 
                     <h6 style="font-weight: bold"><?php echo $hesklang['custnot']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#65','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h6>
-
+                    <div class="footerWithBorder blankSpace"></div>
                     <div class="form-group">
                         <label for="s_notify_new" class="col-sm-3 control-label"><?php echo $hesklang['notnew']; ?></label>
                         <div class="col-sm-9">
@@ -1722,7 +1713,6 @@ if ( defined('HESK_DEMO') )
                             </div>
                         </div>
                     </div>
-                    <div class="footerWithBorder blankSpace"></div>
 
                     <h6 style="font-weight: bold"><?php echo $hesklang['other']; ?></h6>
                     <div class="footerWithBorder blankSpace"></div>
