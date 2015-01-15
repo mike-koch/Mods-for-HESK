@@ -123,9 +123,8 @@ else {return false;}
                         </div>   
                     </div>
                     <div class="form-group">
-                        <label for="priority" class="col-sm-4 control-label"><?php echo $hesklang['def_pri']; ?> <a href="#" onclick="alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i> </a> </label>
+                        <label for="priority" class="col-sm-4 control-label" style="font-size: .87em"><?php echo $hesklang['def_pri']; ?> <a href="#" onclick="alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i> </a> </label>
                         <div class="col-sm-8">
-                            <p><b></b> [<b><a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')">?</a></b>]<br />
                                 <select name="priority" class="form-control">
                                     <?php
                                     // Default priority: low
@@ -194,37 +193,41 @@ else {return false;}
             </div>
             <div class="tab-pane fade" id="changePriority">
                 <form action="manage_categories.php" method="post" role="form" class="form-horizontal">
-                    <!-- TODO Restyle this -->
                     <h4><?php echo $hesklang['ch_cat_pri']; ?></h4>
+                    <div class="footerWithBorder blankSpace"></div>
+                    <div class="form-group">
+                        <label for="catid" class="col-sm-4 control-label"><?php echo $hesklang['category']; ?></label>
+                        <div class="col-sm-8">
+                            <select name="catid" class="form-control"><?php echo $options; ?></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="priority" class="col-sm-4 control-label"><?php echo $hesklang['priority']; ?></label>
+                        <div class="col-sm-8">
+                            <select name="priority" class="form-control">
+                                <?php
+                                // Default priority: low
+                                if ( ! isset($_SESSION['cat_ch_priority']) )
+                                {
+                                    $_SESSION['cat_ch_priority'] = 3;
+                                }
 
-                    <table border="0" style="margin-top:10px;">
-                        <tr>
-                            <td><?php echo $hesklang['category']; ?>:</td>
-                            <td><select name="catid"><?php echo $options; ?></select></td>
-                        </tr>
-                        <tr>
-                            <td><?php echo $hesklang['priority']; ?>:</td>
-                            <td><select name="priority">
-                                    <?php
-                                    // Default priority: low
-                                    if ( ! isset($_SESSION['cat_ch_priority']) )
-                                    {
-                                        $_SESSION['cat_ch_priority'] = 3;
-                                    }
-
-                                    // List possible priorities
-                                    foreach ($priorities as $value => $info)
-                                    {
-                                        echo '<option value="'.$value.'"'.($_SESSION['cat_ch_priority'] == $value ? ' selected="selected"' : '').'>'.$info['text'].'</option>';
-                                    }
-                                    ?>
-                                </select></td>
-                        </tr>
-                    </table>
-
-                    <p><input type="hidden" name="a" value="priority" />
-                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                        <input type="submit" value="<?php echo $hesklang['ch_cat_pri']; ?>" class="orangebutton" onmouseover="hesk_btn(this,'orangebuttonover');" onmouseout="hesk_btn(this,'orangebutton');" /></p>
+                                // List possible priorities
+                                foreach ($priorities as $value => $info)
+                                {
+                                    echo '<option value="'.$value.'"'.($_SESSION['cat_ch_priority'] == $value ? ' selected="selected"' : '').'>'.$info['text'].'</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-4">
+                            <input type="hidden" name="a" value="priority" />
+                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                            <input type="submit" value="<?php echo $hesklang['ch_cat_pri']; ?>" class="btn btn-default">
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -252,8 +255,8 @@ else {return false;}
             <tr>
                 <th><?php echo $hesklang['id']; ?></th>
                 <th><?php echo $hesklang['cat_name']; ?></th>
-                <th><?php echo $hesklang['not']; ?></th>
                 <th><?php echo $hesklang['priority']; ?></th>
+                <th><?php echo $hesklang['not']; ?></th>
                 <th><?php echo $hesklang['graph']; ?></th>
                 <th><?php echo $hesklang['opt']; ?></th>
             </tr>
