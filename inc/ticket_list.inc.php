@@ -380,7 +380,7 @@ if ($total > 0)
         // Print subject and link to the ticket page
         if ( hesk_show_column('subject') )
         {
-            echo '<td class="'.$color.'">'.($ticket['archive'] ? '<img src="../img/tag.png" width="16" height="16" alt="'.$hesklang['archived'].'" title="'.$hesklang['archived'].'"  border="0" style="vertical-align:text-bottom" /> ' : '').$owner.'<a href="admin_ticket.php?track='.$ticket['trackid'].'&amp;Refresh='.$random.'">'.$ticket['subject'].'</a></td>';
+            echo '<td class="'.$color.'">'.($ticket['archive'] ? '<i class="fa fa-tag" style="font-size: 14px;color:#000" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['archived'].'"></i> ' : '').$owner.'<a href="admin_ticket.php?track='.$ticket['trackid'].'&amp;Refresh='.$random.'">'.$ticket['subject'].'</a></td>';
         }
 
         // Print ticket status
