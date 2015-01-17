@@ -358,3 +358,14 @@ div.setupButtons {
     margin-left: auto;
     width: 90%;
 }
+.white-readonly {
+    cursor: text !important;
+    background-color: #fff !important;
+}
+button.btn.dropdown-toggle {
+    height: 34px;
+}
+button.dropdown-submit {
+    background:none!important;
+    border:none;
+}

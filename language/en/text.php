@@ -24,6 +24,8 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 // ADDED OR MODIFIED IN Mods For HESK 2.0.0
 $hesklang['saved_ticket_tpl'] = 'Saved Templates';
 $hesklang['new_ticket_tpl']='Add or Edit a Ticket Template';
+$hesklang['and_change_status_to'] = 'and change status to'; // Used in combination with $hesklang['submit_reply'] (Reads as "Submit reply and change status to")
+
 
 // ADDED OR MODIFIED IN Mods For HESK 1.7.0
 $hesklang['date_custom_field'] = 'Date';

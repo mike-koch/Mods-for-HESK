@@ -220,6 +220,28 @@ if (isset($_GET['delete_post']) && $can_delete && hesk_token_check())
         else
         {
             $closed_sql = '';
+            $changeStatusRs = hesk_dbQuery('SELECT `id`, `LockedTicketStatus`, `IsCustomerReplyStatus`, `IsDefaultStaffReplyStatus`, `IsNewTicketStatus`
+                                                  FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`
+                                                  WHERE `LockedTicketStatus` = 1
+                                                    OR `IsCustomerReplyStatus` = 1
+                                                    OR `IsDefaultStaffReplyStatus` = 1
+                                                    OR `IsNewTicketStatus` = 1');
+            $lockedTicketStatus = '';
+            $customerReplyStatus = '';
+            $defaultStaffReplyStatus = '';
+            $newTicketStatus = '';
+            while ($row = hesk_dbFetchAssoc($changeStatusRs))
+            {
+                if ($row['LockedTicketStatus']) {
+                    $lockedTicketStatus = $row['id'];
+                } elseif ($row['IsCustomerReplyStatus']) {
+                    $customerReplyStatus = $row['id'];
+                } elseif ($row['IsDefaultStaffReplyStatus']) {
+                    $defaultStaffReplyStatus = $row['id'];
+                } elseif ($row['IsNewTicketStatus']) {
+                    $newTicketStatus = $row['id'];
+                }
+            }
 
 			/* Reply deleted. Need to update status and last replier? */
             $res = hesk_dbQuery("SELECT `dt`, `staffid` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='".intval($ticket['id'])."' ORDER BY `id` DESC LIMIT 1");
@@ -232,12 +254,11 @@ if (isset($_GET['delete_post']) && $can_delete && hesk_token_check())
                 $status_sql = '';
 				if ($last_reply_id == $n)
 				{
-                    //TODO Update this to MFH-compatible statuses
-					$status = $ticket['locked'] ? 3 : ($last_replier ? 2 : 1);
+					$status = $ticket['locked'] ? $lockedTicketStatus : ($last_replier ? $defaultStaffReplyStatus : $customerReplyStatus);
                     $status_sql = " , `status`='".intval($status)."' ";
 
                     // Update closedat and closedby columns as required
-                    if ($status == 3)
+                    if ($status == $lockedTicketStatus)
                     {
                         $closed_sql = " , `closedat`=NOW(), `closedby`=".intval($_SESSION['id'])." ";
                     }
@@ -250,12 +271,12 @@ if (isset($_GET['delete_post']) && $can_delete && hesk_token_check())
                 // Update status, closedat and closedby columns as required
                 if ($ticket['locked'])
                 {
-                    $status = 3;
+                    $status = $lockedTicketStatus;
                     $closed_sql = " , `closedat`=NOW(), `closedby`=".intval($_SESSION['id'])." ";
                 }
                 else
                 {
-                    $status = 0;
+                    $status = $newTicketStatus;
                     $closed_sql = " , `closedat`=NULL, `closedby`=NULL ";
                 }
 
@@ -1686,8 +1707,8 @@ function hesk_printReplyForm() {
             <div class="form-group">
                 <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>: <font class="important">*</font></label>
                 <div class="col-sm-9">
-                    <span id="HeskMsg"><textarea class="form-control" name="message" id="message" rows="12" placeholder="<?php echo $hesklang['message']; ?>" cols="72">
-                            <?php
+                    <span id="HeskMsg">
+                        <textarea class="form-control" name="message" id="message" rows="12" placeholder="<?php echo $hesklang['message']; ?>" cols="72"><?php
 
                             // Do we have any message stored in session?
                             if ( isset($_SESSION['ticket_message']) )
@@ -1704,8 +1725,7 @@ function hesk_printReplyForm() {
                                 }
                             }
 
-                            ?>
-                    </textarea></span>
+                            ?></textarea></span>
                 </div>
             </div>
             <?php
@@ -1756,14 +1776,43 @@ function hesk_printReplyForm() {
 	                </select></div><br />
 	                <label><input type="checkbox" name="signature" value="1" checked="checked" /> <?php echo $hesklang['attach_sign']; ?></label>
 	                (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)<br />
-                    <label><input type="checkbox" name="no_notify" value="1" <?php echo ($_SESSION['notify_customer_reply'] || empty($ticket['email'])) ? '' : 'checked="checked" '; ?> <?php if (empty($ticket['email'])) { echo 'disabled'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
+                    <label><input type="checkbox" name="no_notify" value="1" <?php echo ($_SESSION['notify_customer_reply'] && !empty($ticket['email'])) ? '' : 'checked="checked" '; ?> <?php if (empty($ticket['email'])) { echo 'disabled'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
                     <?php if (empty($ticket['email'])) {
                         echo '<input type="hidden" name="no_notify" value="1">';
                     } ?>
                     <input type="hidden" name="orig_id" value="<?php echo $ticket['id']; ?>" />
                     <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                    <input class="btn btn-default" type="submit" value="<?php echo $hesklang['submit_reply']; ?>" />
-                    <!-- TODO Use bootstrap button dropdown to replace submit button with submit dropdown to change status, rather than having eight different buttons, only if ticket is not locked! -->
+                    <div class="btn-group">
+                        <input class="btn btn-primary" type="submit" value="<?php echo $hesklang['submit_reply']; ?>">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a>
+                                <button class="dropdown-submit" type="submit" name="submit_as_customer">
+                                    <?php echo $hesklang['sasc']; ?>
+                                </button>
+                            </a></li>
+                            <li class="divider"></li>
+                            <?php
+                            $allStatusesRs = hesk_dbQuery('SELECT `ID`, `ShortNameContentKey`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
+                            $statuses = array();
+                            while ($row = hesk_dbFetchAssoc($allStatusesRs)) {
+                                array_push($statuses, $row);
+                            }
+
+                            foreach ($statuses as $status) {
+                                echo '<li><a>
+                                        <button class="dropdown-submit" type="submit" name="submit_as_status" value="'.$status['ID'].'"">
+                                            '.$hesklang['submit_reply'].' '.$hesklang['and_change_status_to'].' <b>
+                                            <span style="color:'.$status['TextColor'].'">'.$hesklang[$status['ShortNameContentKey']].'</span></b>
+                                        </button>
+                                    </a></li>';
+                            }
+                            ?>
+                        </ul>
+                    </div>
                     <input class="btn btn-default" type="submit" name="save_reply" value="<?php echo $hesklang['save_reply']; ?>"
    
                 </div>
