@@ -1853,3 +1853,55 @@ function hesk_round_to_half($num)
     	return $half;
     }
 } // END hesk_round_to_half()
+
+function hesk_dateToString($dt, $returnName=1, $returnTime=0, $returnMonth=0, $from_database=false)
+{
+    global $hesk_settings, $hesklang;
+
+    $dt = strtotime($dt);
+
+    // Adjust MySQL time if different from PHP time
+    if ($from_database)
+    {
+        if ( ! defined('MYSQL_TIME_DIFF') )
+        {
+            define('MYSQL_TIME_DIFF', time()-hesk_dbTime() );
+        }
+
+        if (MYSQL_TIME_DIFF != 0)
+        {
+            $dt += MYSQL_TIME_DIFF;
+        }
+
+        // Add HESK set time difference
+        $dt += 3600*$hesk_settings['diff_hours'] + 60*$hesk_settings['diff_minutes'];
+
+        // Daylight saving?
+        if ($hesk_settings['daylight'] && date('I', $dt))
+        {
+            $dt += 3600;
+        }
+    }
+
+    list($y,$m,$n,$d,$G,$i,$s) = explode('-', date('Y-n-j-w-G-i-s', $dt) );
+
+    $m = $hesklang['m'.$m];
+    $d = $hesklang['d'.$d];
+
+    if ($returnName)
+    {
+        return "$d, $m $n, $y";
+    }
+
+    if ($returnTime)
+    {
+        return "$d, $m $n, $y $G:$i:$s";
+    }
+
+    if ($returnMonth)
+    {
+        return "$m $y";
+    }
+
+    return "$m $n, $y";
+} // End hesk_dateToString()
