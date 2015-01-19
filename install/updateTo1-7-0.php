@@ -95,6 +95,9 @@ if (!file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file))
 
 }
 
-if ($updateSuccess) {
-    header('Location: updateTo2-0-0.php');
-} ?>
+if ($updateSuccess) { ?>
+    <script type="text/javascript">
+        window.location.href = "updateTo2-0-0.php"
+    </script>
+    <p>Redirecting to next install script. <a href="updateTo2-0-0.php">Click here if you are not redirected automatically.</a></p>
+<?php } ?>

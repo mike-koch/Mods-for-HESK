@@ -47,5 +47,8 @@ hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`
 hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (ID, ShortNameContentKey, TicketViewContentKey, TextColor, IsNewTicketStatus, IsClosed, IsClosedByClient, IsCustomerReplyStatus,
 		IsStaffClosedOption, IsStaffReopenedStatus, IsDefaultStaffReplyStatus, LockedTicketStatus)
 	VALUES (5, 'on_hold', 'on_hold', '#000000', 0, 0, 0, 0, 0, 0, 0, 0);");
-
-header('Location: updateTo1-4-1.php');
+?>
+<script type="text/javascript">
+    window.location.href = "updateTo1-4-1.php"
+</script>
+<p>Redirecting to next install script. <a href="updateTo1-4-1.php">Click here if you are not redirected automatically.</a></p>

@@ -8,5 +8,8 @@ hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AD
 hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `can_manage_settings` ENUM('0', '1') NOT NULL DEFAULT '1'");
 hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `default_notify_customer_email` ENUM ('0', '1') NOT NULL DEFAULT '1'");
 
-header('Location: updateTo1-6-0.php');
 ?>
+<script type="text/javascript">
+    window.location.href = "updateTo1-6-0.php"
+</script>
+<p>Redirecting to next install script. <a href="updateTo1-6-0.php">Click here if you are not redirected automatically.</a></p>

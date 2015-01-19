@@ -12,5 +12,8 @@ hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachmen
 hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` MODIFY COLUMN `ticket_id` VARCHAR(13) NULL");
 hesk_dbQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key` NVARCHAR(200) NOT NULL, `Value` NVARCHAR(200) NOT NULL)");
 hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`) VALUES ('modsForHeskVersion', '1.6.0')");
-
-header('Location: updateTo1-6-1.php');
+?>
+<script type="text/javascript">
+    window.location.href = "updateTo1-6-1.php"
+</script>
+<p>Redirecting to next install script. <a href="updateTo1-6-1.php">Click here if you are not redirected automatically.</a></p>
