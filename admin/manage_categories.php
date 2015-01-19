@@ -350,8 +350,10 @@ else {return false;}
                 <td width="1" style="white-space: nowrap;">'.$priorities[$mycat['priority']]['formatted'].'</td>
                 <td><a href="show_tickets.php?category='.$mycat['id'].'&amp;s_all=1&amp;s_my=1&amp;s_ot=1&amp;s_un=1" alt="'.$hesklang['list_tickets_cat'].'" title="'.$hesklang['list_tickets_cat'].'">'.$all.'</a></td>
                 <td>
-                <div class="progress-container" style="width: 160px" title="'.sprintf($hesklang['perat'],$width_all.'%').'">
-                <div style="width: '.$width_all.'%;float:left;"></div>
+                <div class="progress" style="width: 160px; margin-bottom: 0" title="'.sprintf($hesklang['perat'],$width_all.'%').'">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: '.$width_all.'%">
+                        <span class="sr-only">40% Complete (success)</span>
+                    </div>
                 </div>
                 </td>
                 <td>
