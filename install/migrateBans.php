@@ -23,7 +23,7 @@ $ipBanRS = hesk_dbQuery("SELECT `RangeStart`, `RangeEnd` FROM `".hesk_dbEscape($
 while ($row = hesk_dbFetchAssoc($ipBanRS)) {
     $ipFrom = long2ip($row['RangeStart']);
     $ipTo = long2ip($row['RangeEnd']);
-    $ipDisplay = $ipFrom . ' - ' . $ipTo;
+    $ipDisplay = $ipFrom == $ipTo ? $ipFrom : $ipFrom . ' - ' . $ipTo;
     hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."banned_ips` (`ip_from`, `ip_to`, `ip_display`, `banned_by`, `dt`)
                 VALUES (".$row['RangeStart'].", ".$row['RangeEnd'].", '".$ipDisplay."', ".$creator.", NOW())");
 }
