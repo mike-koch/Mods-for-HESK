@@ -42,6 +42,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
 	<title><?php echo (isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>" />
     <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="theme-color" content="<?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>">
     <?php if ($modsForHesk_settings['rtl']) { ?>
     <link href="<?php echo HESK_PATH; ?>hesk_style_v25RTL.css" type="text/css" rel="stylesheet" />
     <?php } else { ?>
