@@ -929,6 +929,23 @@ function print_start()
   <li><a href="<?php echo $hesk_settings['site_url']; ?>"><?php echo $hesk_settings['site_title']; ?></a></li>
   <li class="active"><?php echo $hesk_settings['hesk_title']; ?></li>
 </ol>
+    <?php
+    // Service messages
+    $res = hesk_dbQuery('SELECT `title`, `message`, `style` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` WHERE `type`='0' ORDER BY `order` ASC");
+    if (hesk_dbNumRows($res) > 0)
+    {
+    ?>
+    <div class="row">
+        <div class="col-md-12">
+            <?php
+            while ($sm=hesk_dbFetchAssoc($res))
+            {
+                hesk_service_message($sm);
+            }
+            ?>
+        </div>
+    </div>
+    <?php } ?>
 	<div class="row">
 		<div class="col-md-4">
             <div class="panel panel-default">
@@ -963,13 +980,6 @@ function print_start()
 		</div>
 		<div class="col-md-8">
 				<?php
-                // Service messages
-                $res = hesk_dbQuery('SELECT `title`, `message`, `style` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` WHERE `type`='0' ORDER BY `order` ASC");
-                while ($sm=hesk_dbFetchAssoc($res))
-                {
-                    hesk_service_message($sm);
-                }
-
 				// Print small search box
 				if ($hesk_settings['kb_enable'])
 				{

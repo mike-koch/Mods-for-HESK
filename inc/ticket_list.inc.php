@@ -519,11 +519,11 @@ else
     
     if (isset($is_search) || $href == 'find_tickets.php')
     {
-        hesk_show_notice($hesklang['no_tickets_crit'].'<span style="float: right"><a href="new_ticket.php">'.$hesklang['nti'].'</a></span>');
+        hesk_show_notice($hesklang['no_tickets_crit']);
     }
     else
     {
-        hesk_show_notice($hesklang['no_tickets_open'].'<span style="float: right"><a href="new_ticket.php">'.$hesklang['nti'].'</a></span>');
+        hesk_show_notice($hesklang['no_tickets_open']);
     }
     
     echo '</div></div>';

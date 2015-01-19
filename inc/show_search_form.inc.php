@@ -161,10 +161,10 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                 </table>
 
                 <div id="topSubmit" style="display:<?php echo $more ? 'none' : 'block' ; ?>">
-                    &nbsp;<br />
-                    <input class="btn btn-default" type="submit" value="<?php echo $hesklang['show_tickets']; ?>" />
-                    <a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow');Javascript:hesk_toggleLayerDisplay('topSubmit');document.showt.more.value='1';"><?php echo $hesklang['mopt']; ?></a>
-                    <br />&nbsp;<br />
+                    <div class="btn-group">
+                        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['show_tickets']; ?>" />
+                        <a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow');Javascript:hesk_toggleLayerDisplay('topSubmit');document.showt.more.value='1';"><?php echo $hesklang['mopt']; ?></a>
+                    </div>
                 </div>
 
                 <div id="divShow" style="display:<?php echo $more ? 'block' : 'none' ; ?>">
@@ -339,9 +339,11 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
 
                     </table>
 
-                    <p><input class="btn btn-default" type="submit" value="<?php echo $hesklang['show_tickets']; ?>" />
-                        <input type="hidden" name="more" value="<?php echo $more ? 1 : 0 ; ?>" /><a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow');Javascript:hesk_toggleLayerDisplay('topSubmit');document.showt.more.value='0';"><?php echo $hesklang['lopt']; ?></a></p>
-
+                    <div class="btn-group">
+                        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['show_tickets']; ?>" />
+                        <a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow');Javascript:hesk_toggleLayerDisplay('topSubmit');document.showt.more.value='0';"><?php echo $hesklang['lopt']; ?></a>
+                    </div>
+                    <input type="hidden" name="more" value="<?php echo $more ? 1 : 0 ; ?>" />
                 </div>
 
             </form>
@@ -369,26 +371,26 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
 
                         <table class="table" style="width: auto" border="0" cellpadding="3" cellspacing="0">
                             <tr>
-                                <td class="text-left" style="border-top: 0px">
+                                <td class="text-left" style="border-top: 0px;padding-right:0">
                                     <b style="color: #000"><?php echo $hesklang['s_for']; ?></b><br />
-                                    <input class="form-control" type="text" name="q" size="30" <?php if (isset($q)) {echo 'value="'.$q.'"';} ?> />
+                                    <input class="form-control" style="border-bottom-right-radius: 0;border-top-right-radius: 0; border-right: 0" type="text" name="q" size="30" <?php if (isset($q)) {echo 'value="'.$q.'"';} ?> />
                                 </td>
-                                <td class="text-left" style="border-top: 0px">
+                                <td class="text-left" style="border-top: 0px;padding-left:0">
                                     <b style="color: #000"><?php echo $hesklang['s_in']; ?></b><br />
-                                    <select class="form-control" name="what">
-                                        <option value="trackid" <?php if ($what=='trackid') {echo 'selected="selected"';} ?> ><?php echo $hesklang['trackID']; ?></option>
+                                    <select class="form-control btn btn-default" name="what" style="border-bottom-left-radius: 0; border-top-left-radius: 0">
+                                        <option style="background: #ffffff" value="trackid" <?php if ($what=='trackid') {echo 'selected="selected"';} ?> ><?php echo $hesklang['trackID']; ?></option>
                                         <?php
                                         if ($hesk_settings['sequential'])
                                         {
                                             ?>
-                                            <option value="seqid" <?php if ($what=='seqid') {echo 'selected="selected"';} ?> ><?php echo $hesklang['seqid']; ?></option>
+                                            <option style="background: #ffffff" value="seqid" <?php if ($what=='seqid') {echo 'selected="selected"';} ?> ><?php echo $hesklang['seqid']; ?></option>
                                         <?php
                                         }
                                         ?>
-                                        <option value="name"    <?php if ($what=='name') {echo 'selected="selected"';} ?> ><?php echo $hesklang['name']; ?></option>
-                                        <option value="email"	<?php if ($what=='email') {echo 'selected="selected"';} ?> ><?php echo $hesklang['email']; ?></option>
-                                        <option value="subject" <?php if ($what=='subject') {echo 'selected="selected"';} ?> ><?php echo $hesklang['subject']; ?></option>
-                                        <option value="message" <?php if ($what=='message') {echo 'selected="selected"';} ?> ><?php echo $hesklang['message']; ?></option>
+                                        <option style="background: #ffffff" value="name"    <?php if ($what=='name') {echo 'selected="selected"';} ?> ><?php echo $hesklang['name']; ?></option>
+                                        <option style="background: #ffffff" value="email"	<?php if ($what=='email') {echo 'selected="selected"';} ?> ><?php echo $hesklang['email']; ?></option>
+                                        <option style="background: #ffffff" value="subject" <?php if ($what=='subject') {echo 'selected="selected"';} ?> ><?php echo $hesklang['subject']; ?></option>
+                                        <option style="background: #ffffff" value="message" <?php if ($what=='message') {echo 'selected="selected"';} ?> ><?php echo $hesklang['message']; ?></option>
                                         <?php
                                         foreach ($hesk_settings['custom_fields'] as $k=>$v)
                                         {
@@ -401,21 +403,21 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                                 }
 
                                                 $v['name'] = (strlen($v['name']) > 30) ? substr($v['name'],0,30) . '...' : $v['name'];
-                                                echo '<option value="'.$k.'" '.$selected.'>'.$v['name'].'</option>';
+                                                echo '<option style="background: #ffffff" value="'.$k.'" '.$selected.'>'.$v['name'].'</option>';
                                             }
                                         }
                                         ?>
-                                        <option value="notes" <?php if ($what=='notes') {echo 'selected="selected"';} ?> ><?php echo $hesklang['notes']; ?></option>
+                                        <option style="background: #ffffff" value="notes" <?php if ($what=='notes') {echo 'selected="selected"';} ?> ><?php echo $hesklang['notes']; ?></option>
                                     </select>
                                 </td>
                             </tr>
                         </table>
 
                         <div id="topSubmit2" style="display:<?php echo $more2 ? 'none' : 'block' ; ?>">
-                            &nbsp;<br />
-                            <input class="btn btn-default" type="submit" value="<?php echo $hesklang['find_ticket']; ?>" />
-                            <a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow2');Javascript:hesk_toggleLayerDisplay('topSubmit2');document.findby.more2.value='1';"><?php echo $hesklang['mopt']; ?></a>
-                            <br />&nbsp;<br />
+                            <div class="btn-group">
+                                <input class="btn btn-default" type="submit" value="<?php echo $hesklang['find_ticket']; ?>" />
+                                <a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow2');Javascript:hesk_toggleLayerDisplay('topSubmit2');document.findby.more2.value='1';"><?php echo $hesklang['mopt']; ?></a>
+                            </div>
                         </div>
 
                         <div id="divShow2" style="display:<?php echo $more2 ? 'block' : 'none' ; ?>">
@@ -439,7 +441,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                     <tr>
                                         <td class="alignMiddle"><b><?php echo $hesklang['owner']; ?></b>: &nbsp; </td>
                                         <td class="alignMiddle">
-                                            <select name="owner">
+                                            <select class="form-control" name="owner">
                                                 <option value="0" ><?php echo $hesklang['anyown']; ?></option>
                                                 <?php
                                                 foreach ($admins as $id => $name)
@@ -489,12 +491,12 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                     <td><div class="col-md-2 text-right" style="padding-left: 0px; padding-right: 0px;"><input class="form-control" type="text" name="limit" value="<?php echo $maxresults; ?>" size="4" /></div><div class="col-md-10" style="line-height: 40px"><?php echo $hesklang['results_page']; ?></div></td>
                                 </tr>
                             </table>
-
-                            <p><input class="btn btn-default" type="submit" value="<?php echo $hesklang['find_ticket']; ?>" />
-                                <input type="hidden" name="more2" value="<?php echo $more2 ? 1 : 0 ; ?>" /><a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow2');Javascript:hesk_toggleLayerDisplay('topSubmit2');document.findby.more2.value='0';"><?php echo $hesklang['lopt']; ?></a></p>
-
+                            <div class="btn-group">
+                                <input class="btn btn-default" type="submit" value="<?php echo $hesklang['find_ticket']; ?>" />
+                                <a class="btn btn-default" href="javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('divShow2');Javascript:hesk_toggleLayerDisplay('topSubmit2');document.findby.more2.value='0';"><?php echo $hesklang['lopt']; ?></a>
+                            </div>
+                            <input type="hidden" name="more2" value="<?php echo $more2 ? 1 : 0 ; ?>" />
                         </div>
-
                     </form>
                 </td>
             </tr>

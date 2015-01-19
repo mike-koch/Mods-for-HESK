@@ -446,7 +446,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><?php echo $hesklang['category']; ?></th>
                     <th><?php echo $hesklang['tickets']; ?></th>
                     <th><?php echo $hesklang['topen']; ?></th>
-                    <th><?php echo $hesklang['closed']; ?></th>
+                    <th><?php echo $hesklang['closed_title']; ?></th>
                     <th><?php echo $hesklang['replies'] . ' (' . $hesklang['all'] .')'; ?></th>
                     <th><?php echo $hesklang['replies'] . ' (' . $hesklang['staff'] .')'; ?></th>
                       <?php
@@ -635,7 +635,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><?php echo $hesklang['user']; ?></th>
                     <th><?php echo $hesklang['ticass']; ?></th>
                     <th><?php echo $hesklang['topen']; ?></th>
-                    <th><?php echo $hesklang['closed']; ?></th>
+                    <th><?php echo $hesklang['closed_title']; ?></th>
                     <th><?php echo $hesklang['ticall']; ?></th>
                     <th><?php echo $hesklang['replies']; ?></th>
                       <?php
@@ -764,7 +764,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><?php echo $hesklang['month']; ?></th>
                     <th><?php echo $hesklang['atik']; ?></th>
                     <th><?php echo $hesklang['topen']; ?></th>
-                    <th><?php echo $hesklang['closed']; ?></th>
+                    <th><?php echo $hesklang['closed_title']; ?></th>
                       <?php
                       if ($hesk_settings['time_worked'])
                       {
@@ -884,7 +884,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><?php echo $hesklang['date']; ?></th>
                     <th><?php echo $hesklang['atik']; ?></th>
                     <th><?php echo $hesklang['topen']; ?></th>
-                    <th><?php echo $hesklang['closed']; ?></th>
+                    <th><?php echo $hesklang['closed_title']; ?></th>
                       <?php
                       if ($hesk_settings['time_worked'])
                       {
