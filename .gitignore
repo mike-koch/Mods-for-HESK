@@ -15,7 +15,6 @@ download_attachment.php
 file_limits.php
 footer.txt
 header.txt
-hesk_javascript_v25.js
 hesk_settings.inc.php
 img/add_article.png
 img/add_category.png
@@ -147,7 +146,6 @@ img/tag_off.png
 img/unlock.png
 img/vertical.jpg
 img/view.png
-inc/admin_functions.inc.php
 inc/assignment_search.inc.php
 inc/attachments.inc.php
 inc/calendar/img/cal.gif
@@ -268,3 +266,10 @@ robots.txt
 .idea/
 attachments/__latest.txt
 attachments
+img/ban.png
+img/banned.png
+img/ico_tools.png
+inc/recaptcha/recaptchalib_v2.php
+ip_whois.php
+language/en/emails/reset_password.txt
+language/en/help_files/ticket_list.html

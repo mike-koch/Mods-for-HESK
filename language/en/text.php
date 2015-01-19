@@ -2,11 +2,11 @@
 /*
 * Language file for Help Desk Software HESK (www.hesk.com)
 * Language: ENGLISH
-* Version: 2.5.5
+* Version: 2.6.0 beta 1 from 30th December 2014
 * Author: Klemen Stirn (http://www.hesk.com)
 *
 * !!! This file must be saved in UTF-8 encoding without byte order mark (BOM) !!!
-* Test chars: àáâãäåæ 
+* Test chars: àáâãäåæ
 */
 
 // Change "English" to the name of your language
@@ -20,6 +20,13 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
+
+// ADDED OR MODIFIED IN Mods For HESK 2.0.0
+$hesklang['saved_ticket_tpl'] = 'Saved Templates';
+$hesklang['new_ticket_tpl']='Add or Edit a Ticket Template';
+$hesklang['and_change_status_to'] = 'and change status to'; // Used in combination with $hesklang['submit_reply'] (Reads as "Submit reply and change status to")
+$hesklang['closed_title'] = 'Closed';
+
 
 // ADDED OR MODIFIED IN Mods For HESK 1.7.0
 $hesklang['date_custom_field'] = 'Date';
@@ -182,6 +189,7 @@ $hesklang['category_moved']         = '[#%%TRACK_ID%%] Ticket moved: %%SUBJECT%%
 $hesklang['new_note']               = '[#%%TRACK_ID%%] Note added to: %%SUBJECT%%';
 $hesklang['new_pm']                 = 'New private message: %%SUBJECT%%';
 $hesklang['forgot_ticket_id']       = 'List of your support tickets';
+$hesklang['ticket_closed']			= '[#%%TRACK_ID%%] Ticket closed/resolved'; // New in 2.6.0
 
 // ERROR MESSAGES
 $hesklang['cant_connect_db']='Can\'t connect to database!';
@@ -224,7 +232,6 @@ $hesklang['enter_real_name']='Please enter user real name';
 $hesklang['enter_valid_email']='Please enter a valid email address';
 $hesklang['enter_username']='Please enter username (login)';
 $hesklang['asign_one_cat']='Please assign user to at least one category!';
-$hesklang['signature_long']='User signature is too long! Please limit the signature to 255 chars';
 $hesklang['confirm_user_pass']='Please confirm password';
 $hesklang['passwords_not_same']='The two passwords entered are not the same!';
 $hesklang['cant_del_admin']='You cannot delete the default administrator!';
@@ -335,7 +342,6 @@ $hesklang['edit']='Edit';
 $hesklang['add_user']='Add new user';
 $hesklang['req_marked_with']='Required fields are marked with';
 $hesklang['real_name']='Real name';
-$hesklang['signature_max']='Signature<br/> (max 255 chars)';
 $hesklang['sign_extra']='HTML code is not allowed. Links will be clickable.';
 $hesklang['create_user']='Create user';
 $hesklang['editing_user']='Editing user';
@@ -656,7 +662,6 @@ $hesklang['t_m']='minutes';
 $hesklang['day']='Daylight saving';
 $hesklang['tfor']='Time format';
 $hesklang['prefix']='Table prefix';
-$hesklang['s_ekb']='Knowledgebase (KB)';
 $hesklang['s_kbs']='Enable KB search';
 $hesklang['s_kbr']='Enable KB rating';
 $hesklang['s_maxsr']='Max search results';
@@ -1266,10 +1271,6 @@ $hesklang['n2ex']='No tickets found matching your criteria, nothing to export!';
 $hesklang['sp']='SPAM Prevention'; // For settings page
 $hesklang['sit']='-&gt; Image Type';
 $hesklang['sis']='Simple image';
-$hesklang['sir']='ReCaptcha';
-$hesklang['rcpb']='Public key';
-$hesklang['rcpv']='Private key';
-$hesklang['rcsl']='Use SSL';
 $hesklang['pop3keep']='Keep a copy';
 $hesklang['err_dbconn']='Could not connect to MySQL database using provided information!';
 $hesklang['s_inle']='Testing the language folder for valid languages. Only languages that pass all tests are properly installed.';
@@ -1316,6 +1317,206 @@ $hesklang['incorrect_try_again']='Incorrect. Try again.';
 $hesklang['image_alt_text']='reCAPTCHA challenge image';
 $hesklang['recaptcha_error']='Incorrect SPAM Prevention answer, please try again.';
 
+// Added or modified in version 2.6.0
+$hesklang['ms01']='Jan';
+$hesklang['ms02']='Feb';
+$hesklang['ms03']='Mar';
+$hesklang['ms04']='Apr';
+$hesklang['ms05']='May';
+$hesklang['ms06']='Jun';
+$hesklang['ms07']='Jul';
+$hesklang['ms08']='Aug';
+$hesklang['ms09']='Sep';
+$hesklang['ms10']='Oct';
+$hesklang['ms11']='Nov';
+$hesklang['ms12']='Dec';
+$hesklang['lcf']='List date format';
+$hesklang['lcf0']='Short descriptive';
+$hesklang['lcf1']='Date and time';
+$hesklang['lcf2']='HESK style';
+$hesklang['ticket_tpl']='Ticket templates';
+$hesklang['can_man_ticket_tpl']='Manage ticket templates'; // Permission title
+$hesklang['ticket_tpl_man']='Manage ticket templates'; // Page/link title
+$hesklang['ticket_tpl_intro']='Create and edit ticket templates that you can use to quickly submit new tickets from the admin interface.';
+$hesklang['no_ticket_tpl']='No ticket templates';
+$hesklang['ticket_tpl_title']='Title';
+$hesklang['delete_tpl']='Are you sure you want to delete this template?';
+$hesklang['ticket_tpl_add']='Create a new ticket template';
+$hesklang['ticket_tpl_edit']='Edit selected ticket template';
+$hesklang['save_ticket_tpl']='Save ticket template';
+$hesklang['ticket_tpl_saved']='Your ticket template has been saved for future use';
+$hesklang['ticket_tpl_removed']='Selected ticket template has been removed from the database';
+$hesklang['ticket_tpl_not_found']='Ticket template not found';
+$hesklang['sel_ticket_tpl']='Select the ticket template you would like to edit';
+$hesklang['ent_ticket_tpl_title']='Please enter reply title';
+$hesklang['ent_ticket_tpl_msg']='Please enter reply message';
+$hesklang['ticket_tpl_id']='Missing ticket template ID';
+$hesklang['select_ticket_tpl']='Select a ticket template';
+$hesklang['list_tickets_cat']='List all tickets in this category';
+$hesklang['def_msg']='[No message]';
+$hesklang['emlreqmsg']='Require message';
+$hesklang['emlreqmsg2']='Ignore piped/fetched emails with no message';
+$hesklang['relart']='Related articles'; // Title of related articles box
+$hesklang['s_relart']='Related articles'; // On settings page
+$hesklang['tab_7']='Ticket list';
+$hesklang['fitl']='Fields in ticket list';
+$hesklang['submitted']='Submitted';
+$hesklang['clickemail']='View';
+$hesklang['set_pri_to']='Set priority to:'; // Action below the ticket list
+$hesklang['pri_set_to']='Priority has been set to:';
+$hesklang['cat_pri']='The category priority will be used when customers are not allowed to select priority and a ticket is submitted from the customer interface.';
+$hesklang['cat_pri_info']='Your customers are allowed to select priority, so category priority will be ignored.<br /><br />To use category priority instead, turn OFF the following feature in HESK settings:';
+$hesklang['def_pri']='Category priority:';
+$hesklang['ch_cat_pri']='Set category priority';
+$hesklang['cat_pri_ch']='Category priority has been set to:';
+$hesklang['err_dbversion']='Too old MySQL version:'; // %s will be replaced with MySQL version
+$hesklang['signature_max']='Signature (max 1000 chars)';
+$hesklang['signature_long']='User signature is too long! Please limit the signature to 1000 chars';
+$hesklang['ip_whois']='IP whois';
+$hesklang['ednote']='Edit note message';
+$hesklang['ednote2']='Note message saved';
+$hesklang['perm_deny']='Permission denied';
+$hesklang['mis_note']='Missing note ID';
+$hesklang['no_note']='Note with this ID not found';
+$hesklang['save_reply']='Save and continue later';
+$hesklang['reply_saved']='Your reply message has been saved for later.';
+$hesklang['submit_as']='Submit as:';
+$hesklang['sasc']='Submit as Customer reply';
+$hesklang['creb']='Customer reply entered by:';
+$hesklang['show_select']='Show &quot;Click to select&quot; as default option';
+// Settings
+$hesklang['mms']='Maintenance mode';
+$hesklang['mmd']='Enable maintenance mode';
+// Customer notice
+$hesklang['mm1']='Maintenance in progress';
+$hesklang['mm2']='In order to perform scheduled maintenance, our help desk has shut down temporarily.';
+$hesklang['mm3']='We apologize for the inconvenience and ask that you please try again later.';
+// Staff notice
+$hesklang['mma1']='Maintenance mode is active!';
+$hesklang['mma2']='Customers are not able to use the help desk.';
+$hesklang['tools']='Tools';
+$hesklang['banemail']='Banned Emails';
+$hesklang['banemail_intro']='Prevent certain email addresses from submitting tickets to your help desk.';
+$hesklang['no_banemails']='<i>No emails are being banned.</i>';
+$hesklang['eperm']='Permanent email bans:';
+$hesklang['bananemail']='Email address to ban';
+$hesklang['savebanemail']='Ban this email';
+$hesklang['enterbanemail']='Enter the email address you wish to ban.';
+$hesklang['validbanemail']='Enter a valid email address (<i>john.doe@domain.com</i>) or email domain (<i>@domain.com</i>)';
+$hesklang['email_banned']='The email address <i>%s</i> was banned and HESK will no longer accept tickets from this address.'; // %s will be replaced with email
+$hesklang['emailbanexists']='The email address <i>%s</i> is already banned.'; // %s will be replaced with email
+$hesklang['email_unbanned']='Email ban deleted';
+$hesklang['banby']='Banned by';
+$hesklang['delban']='Delete ban';
+$hesklang['delban_confirm']='Delete this ban?';
+$hesklang['baned_e']='You have been banned from submiting new support tickets.';
+$hesklang['baned_ip']='You have been banned from this help desk';
+$hesklang['can_ban_emails']='Can ban emails';
+$hesklang['can_unban_emails']='Can unban emails (enables Can ban emails)';
+$hesklang['eisban']='This email address is banned.';
+$hesklang['click_unban']='Click here to unban.';
+$hesklang['banip']='Banned IPs';
+$hesklang['banip_intro']='Visitors from banned IP addresses will not be able to view or submit tickets and login into the help desk.';
+$hesklang['ipperm']='Permanent IP bans:';
+$hesklang['iptemp']='Login failure bans:';
+$hesklang['savebanip']='Ban this IP';
+$hesklang['no_banips']='<i>No IPs are being banned.</i>';
+$hesklang['bananip']='IP address to ban';
+$hesklang['banex']='Examples:';
+$hesklang['iprange']='IP range';
+$hesklang['savebanip']='Ban this IP';
+$hesklang['ippermban']='Ban this IP permanently';
+$hesklang['enterbanip']='Enter the IP address or range you wish to ban.';
+$hesklang['validbanip']='Enter a valid IP address or IP range';
+$hesklang['ip_banned']='The IP address <i>%s</i> was banned and HESK will no longer accept tickets from this IP address.'; // %s will be replaced with ip
+$hesklang['ip_rbanned']='The IP range <i>%s</i> was banned and HESK will no longer accept tickets from this IP range.'; // %s will be replaced with ip
+$hesklang['ipbanexists']='The IP address <i>%s</i> is already banned.'; // %s will be replaced with ip
+$hesklang['iprbanexists']='The IP range <i>%s</i> is already banned.'; // %s will be replaced with ip
+$hesklang['ip_unbanned']='IP ban deleted';
+$hesklang['ip_tempun']='Temporary IP ban deleted';
+$hesklang['can_ban_ips']='Can ban ips';
+$hesklang['can_unban_ips']='Can unban ips (enables Can ban ips)';
+$hesklang['ipisban']='This IP address is banned.';
+$hesklang['m2e']='Expires in (minutes)';
+$hesklang['info']='Info';
+$hesklang['sm_title']='Service messages';
+$hesklang['sm_intro']='Display a service message in the customer area, for example to notify them about known issues and important news.';
+$hesklang['can_service_msg']='Edit service messages';
+$hesklang['new_sm']='New service message';
+$hesklang['edit_sm']='Edit service message';
+$hesklang['ex_sm']='Existing service messages';
+$hesklang['sm_author']='Author';
+$hesklang['sm_type']='Type';
+$hesklang['sm_published']='Published';
+$hesklang['sm_draft']='Draft';
+$hesklang['sm_style']='Style';
+$hesklang['sm_none']='None';
+$hesklang['sm_success']='Success';
+$hesklang['sm_info']='Info';
+$hesklang['sm_notice']='Notice';
+$hesklang['sm_error']='Error';
+$hesklang['sm_save']='Save service message';
+$hesklang['sm_preview']='Preview service message';
+$hesklang['sm_mtitle']='Title';
+$hesklang['sm_msg']='Message';
+$hesklang['sm_e_title']='Enter service message title';
+$hesklang['sm_e_msg']='Enter service message';
+$hesklang['sm_e_id']='Missing message ID';
+$hesklang['sm_added']='A new service message has been added';
+$hesklang['sm_deleted']='Service message deleted';
+$hesklang['sm_not_found']='This service message does not exist';
+$hesklang['no_sm']='No service messages';
+$hesklang['del_sm']='Delete this service message?';
+$hesklang['sm_mdf']='Service message has been saved';
+$hesklang['sska']='Show suggested articles';
+$hesklang['taws']='These articles were suggested:';
+$hesklang['defaults']='Defaults';
+$hesklang['pncn']='Select notify customer option in the new ticket form';
+$hesklang['pncr']='Select notify customer option in the ticket reply form';
+$hesklang['pssy']='Show what knowledgebase articles were suggested to customers';
+$hesklang['ccct']='Customer resolve';
+$hesklang['custnot']='Notify customers when';
+$hesklang['notnew']='A new support ticket is submitted';
+$hesklang['notclo']='A support ticket is marked Resolved';
+$hesklang['enn']='Except for Email piping/POP3 fetching if email subject contains:';
+$hesklang['spamn']='SPAM notice';
+$hesklang['spam_inbox']='<span style="color:red"><b>No confirmation email?</b><br />We sent a confirmation message to your email address. If you do not receive it within a few minutes, please check your Junk, Bulk or Spam folders. Mark the message as <b>Not SPAM</b> to avoid problems receiving our correspondence in the future.</span>';
+$hesklang['s_ekb']='Enable Knowledgebase';
+$hesklang['ekb_n']='<b>NO</b>, disable Knowledgebase';
+$hesklang['ekb_y']='<b>YES</b>, enable Knowledgebase';
+$hesklang['ekb_o']='<b>YES</b>, use HESK as a Knowledgebase only (<i>disable help desk</i>)';
+$hesklang['kb_set']='Knowledgebase settings';
+$hesklang['kbo1']='Knowledgebase-only mode';
+$hesklang['kbo2']='<br /><br />Visitors cannot submit new support tickets and are taken directly to the knowledgebase.';
+$hesklang['fpass']='Forgot your password?';
+$hesklang['passr']='Password reset';
+$hesklang['passa']='Allow users to reset a forgot password over email';
+$hesklang['passe']='Enter your email address';
+$hesklang['passs']='Send me password reset link';
+$hesklang['noace']='No account with that email address was found';
+$hesklang['pemls']='We sent you an email with instructions on how to reset your password';
+$hesklang['reset_password']='Reset your help desk password'; // Email subject
+$hesklang['ehash']='Invalid or expired password reset link';
+$hesklang['ehaip']='Wrong IP address. Passwords may only be reset from the IP address that requested password reset.';
+$hesklang['resim']='<b>Setup your new password in the form below!</b>';
+$hesklang['permissions']='Permissions';
+$hesklang['atype']='Account type';
+$hesklang['astaff']='Staff';
+$hesklang['oon1']='Send me only open tickets';
+$hesklang['oon2']='Send me all my tickets';
+$hesklang['anyown']='Any owner';
+$hesklang['pfr']='Another POP3 fetching task is still in progress.';
+$hesklang['pjt']='Task timeout';
+$hesklang['pjt2']='minutes after start';
+$hesklang['sir']='ReCaptcha V1 API (old)';
+$hesklang['sir2']='ReCaptcha V2 API (recommended)';
+$hesklang['rcpb']='Site key (Public key)';
+$hesklang['rcpv']='Secret key (Private key)';
+
+// Language for Google reCaptcha API version 2
+// Supported language codes: https://developers.google.com/recaptcha/docs/language
+// If your language is NOT in the supported langauges, leave 'en'
+$hesklang['RECAPTCHA']='en';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

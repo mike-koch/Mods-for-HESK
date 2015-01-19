@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -36,7 +36,42 @@
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');} 
 
 // This SQL code will be used to retrieve results
-$sql_final = "SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE ";
+$sql_final = "SELECT
+`id`,
+`trackid`,
+`name`,
+`email`,
+`category`,
+`priority`,
+`subject`,
+LEFT(`message`, 400) AS `message`,
+`dt`,
+`lastchange`,
+`firstreply`,
+`closedat`,
+`status`,
+`openedby`,
+`firstreplyby`,
+`closedby`,
+`replies`,
+`staffreplies`,
+`owner`,
+`time_worked`,
+`lastreplier`,
+`replierid`,
+`archive`,
+`locked`
+";
+
+foreach ($hesk_settings['custom_fields'] as $k=>$v)
+{
+    if ($v['use'])
+    {
+        $sql_final .= ", `".$k."`";
+    }
+}
+
+$sql_final.= " FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE ";
 
 // This code will be used to count number of results
 $sql_count = "SELECT COUNT(*) FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE ";
@@ -87,11 +122,15 @@ while ($row = $results->fetch_assoc())
 }
 $status = $possible_status;
 
-foreach ($status as $k => $v)
+// Process statuses unless overridden with "s_all" variable
+if ( ! hesk_GET('s_all') )
 {
-	if (empty($_GET['s'.$k]))
+    foreach ($status as $k => $v)
     {
-    	unset($status[$k]);
+        if (empty($_GET['s' . $k]))
+        {
+            unset($status[$k]);
+        }
     }
 }
 

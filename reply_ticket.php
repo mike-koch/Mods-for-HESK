@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -38,6 +38,10 @@ define('HESK_PATH','./');
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+
+// Are we in maintenance mode?
+hesk_check_maintenance();
+
 hesk_load_database_functions();
 require(HESK_PATH . 'inc/email_functions.inc.php');
 require(HESK_PATH . 'inc/posting_functions.inc.php');
@@ -169,7 +173,7 @@ $defaultNewTicketStatus = hesk_dbQuery($defaultNewTicketStatusQuery)->fetch_asso
 $ticket['status'] = $ticket['status'] == $defaultNewTicketStatus['ID'] ? $defaultNewTicketStatus['ID'] : $newStatus['ID'];
 
 /* Update ticket as necessary */
-$res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `status`='{$ticket['status']}',`lastreplier`='0' WHERE `id`='{$ticket['id']}' LIMIT 1");
+$res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `status`='{$ticket['status']}', `replies`=`replies`+1, `lastreplier`='0' WHERE `id`='{$ticket['id']}' LIMIT 1");
 
 // Insert reply into database
 hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`) VALUES ({$ticket['id']},'".hesk_dbEscape($ticket['name'])."','".hesk_dbEscape($message)."',NOW(),'".hesk_dbEscape($myattachments)."')");
@@ -194,6 +198,7 @@ $info = array(
 'attachments'	=> $myattachments,
 'dt'			=> hesk_date($ticket['dt'], true),
 'lastchange'	=> hesk_date($ticket['lastchange'], true),
+'id'			=> $ticket['id'],
 );
 
 // 2. Add custom fields to the array

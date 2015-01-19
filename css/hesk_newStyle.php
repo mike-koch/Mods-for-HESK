@@ -123,6 +123,7 @@
 .settingsquestionmark {
     color: <?php echo $questionMarkColor; ?>;
     font-size: 14px;
+    cursor: pointer;
 }
 .h3questionmark {
     color: <?php echo $questionMarkColor; ?>;
@@ -362,4 +363,13 @@ div.setupButtons {
 .white-readonly {
     cursor: text !important;
     background-color: #fff !important;
+}
+
+button.btn.dropdown-toggle {
+    height: 34px;
+}
+
+button.dropdown-submit {
+    background:none!important;
+    border:none;
 }

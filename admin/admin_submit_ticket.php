@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -65,11 +65,21 @@ $hesk_error_buffer = array();
 $tmpvar['name']	    = hesk_input( hesk_POST('name') ) or $hesk_error_buffer['name']=$hesklang['enter_your_name'];
 $tmpvar['email']	= hesk_POST('email');
 $tmpvar['category'] = intval( hesk_POST('category') ) or $hesk_error_buffer['category']=$hesklang['sel_app_cat'];
-$tmpvar['priority'] = intval( hesk_POST('priority') );
+$tmpvar['priority'] = hesk_POST('priority');
+$tmpvar['priority'] = strlen($tmpvar['priority']) ? intval($tmpvar['priority']) : -1;
 
 if ($tmpvar['priority'] < 0 || $tmpvar['priority'] > 3)
 {
-    $hesk_error_buffer['priority']=$hesklang['sel_app_priority'];
+    // If we are showing "Click to select" priority needs to be selected
+    if ($hesk_settings['select_pri'])
+    {
+        $tmpvar['priority'] = -1;
+        $hesk_error_buffer['priority'] = $hesklang['select_priority'];
+    }
+    else
+    {
+        $tmpvar['priority'] = 3;
+    }
 }
 
 $tmpvar['subject']  = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer['subject']=$hesklang['enter_ticket_subject'];
@@ -121,6 +131,7 @@ $tmpvar['trackid'] = hesk_createID();
 
 // Log who submitted ticket
 $tmpvar['history'] = sprintf($hesklang['thist7'], hesk_date(), $_SESSION['name'].' ('.$_SESSION['user'].')');
+$tmpvar['openedby'] = $_SESSION['id'];
 
 // Owner
 $tmpvar['owner'] = 0;
@@ -214,7 +225,7 @@ if (count($hesk_error_buffer)!=0)
     $_SESSION['as_name']     =  hesk_POST('name');
     $_SESSION['as_email']    =  hesk_POST('email');
     $_SESSION['as_category'] =  hesk_POST('category');
-    $_SESSION['as_priority'] =  hesk_POST('priority');
+    $_SESSION['as_priority'] = $tmpvar['priority'];
     $_SESSION['as_subject']  =  hesk_POST('subject');
     $_SESSION['as_message']  =  hesk_POST('message');
     $_SESSION['as_owner']    = $tmpvar['owner'];
@@ -225,7 +236,7 @@ if (count($hesk_error_buffer)!=0)
 	{
 		if ($v['use'])
 		{
-			$_SESSION["as_$k"] =  hesk_POST($k);
+            $_SESSION["as_$k"] = ($v['type'] == 'checkbox') ? hesk_POST_array($k) : hesk_POST($k);
 		}
 	}
 

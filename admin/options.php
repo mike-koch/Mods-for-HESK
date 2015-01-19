@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -190,6 +190,8 @@ switch ($type)
         ';
     	break;
     case 'select':
+        $query = str_replace('{HESK_SELECT}', '', $query, $show_select);
+
     	$options=str_replace('#HESK#',"\n",$query);
     	echo '
         <script language="javascript">
@@ -217,12 +219,18 @@ switch ($type)
             }
 			text = unescape(text.replace(re_nlchar,\'#HESK#\'));
 
+			if (document.getElementById(\'show_select\').checked)
+			{
+				text = "{HESK_SELECT}" + text;
+			}
+
         	window.opener.document.getElementById(\'s_'.$id.'_val\').value = text;
             window.close();
         }
         </script>
 
         <p>'.$hesklang['opt3'].'</p>
+        <p><label><input type="checkbox" name="show_select" id="show_select" value="1" ' . ($show_select ? 'checked="checked"' : '') . ' /> ' . $hesklang['show_select'] . '</label></p>
         <textarea name="o1" id="o1" rows="6" cols="40">'.$options.'</textarea>
         <p><input type="button" value="  '.$hesklang['ok'].'  " onclick="Javascript:hesk_saveOptions()" /></p>
         ';

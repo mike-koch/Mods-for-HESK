@@ -23,4 +23,4 @@ $modsForHesk_settings['show_icons'] = 0;
 $modsForHesk_settings['custom_field_setting'] = 0;
 
 //-- Set this to 1 to enable email verification for new customers
-$modsForHesk_settings['customer_email_verification_required'] = 0;$modsForHesk_settings['show_icons'] = 0;
+$modsForHesk_settings['customer_email_verification_required'] = 0;

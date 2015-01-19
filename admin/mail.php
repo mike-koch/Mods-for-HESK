@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -48,7 +48,7 @@ hesk_isLoggedIn();
 
 /* List of staff */
 $admins = array();
-$res = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `id` ASC");
+$res = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `name` ASC");
 while ($row=hesk_dbFetchAssoc($res))
 {
 	$admins[$row['id']]=$row['name'];
@@ -572,7 +572,7 @@ function mail_list_messages()
 		} // end PAGES > 1
 
 		// Get messages from the database
-		$res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` WHERE `".hesk_dbEscape($hesk_settings['mailtmp']['this'])."`='".intval($_SESSION['id'])."' AND `deletedby`!='".intval($_SESSION['id'])."' ORDER BY `id` DESC LIMIT ".intval($limit_down)." , ".intval($maxresults)." ");
+        $res = hesk_dbQuery("SELECT `id`, `from`, `to`, `subject`, `dt`, `read` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` WHERE `".hesk_dbEscape($hesk_settings['mailtmp']['this'])."`='".intval($_SESSION['id'])."' AND `deletedby`!='".intval($_SESSION['id'])."' ORDER BY `id` DESC LIMIT ".intval($limit_down)." , ".intval($maxresults)." ");
 		?>
 
 		<form action="mail.php<?php if ($hesk_settings['mailtmp']['folder'] == 'outbox') {echo '?folder=outbox';} ?>" name="form1" method="post">
