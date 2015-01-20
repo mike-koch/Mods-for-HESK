@@ -362,7 +362,7 @@ function print_login()
 
 				    if ($hesk_settings['list_users'])
 				    {
-				        echo '<select class="form-control" name="user" '.$cls.'>';
+				        echo '<select class="form-control" name="user">';
                         $res = hesk_dbQuery('SELECT `user` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` ORDER BY `user` ASC');
 				        while ($row=hesk_dbFetchAssoc($res))
 				        {
