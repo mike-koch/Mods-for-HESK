@@ -82,9 +82,17 @@ else
         }
         $ticket = hesk_dbFetchAssoc($result);
 
-        //TODO Update this to look at any "closed" status; not just ID 3
+        $closedStatusRS = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 1');
+        $ticketIsOpen = true;
+        while ($row = hesk_dbFetchAssoc($closedStatusRS))
+        {
+            if ($ticket['status'] == $row['ID'])
+            {
+                $ticketIsOpen = false;
+            }
+        }
         // Notify customer, but only if ticket is not already closed
-        if ($ticket['status'] != 3)
+        if ($ticketIsOpen)
         {
             require(HESK_PATH . 'inc/email_functions.inc.php');
 

@@ -263,9 +263,10 @@ function do_login()
         // Notify customer of closed ticket?
         if ($hesk_settings['notify_closed'])
         {
-            //TODO Change status ID to the ID which customer's replies update the status to.
+            $closedStatusRs = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsDefaultStaffReplyStatus` = 1');
+            $closedStatus = hesk_dbFetchAssoc($closedStatusRs);
             // Get list of tickets
-            $result = hesk_dbQuery("SELECT * FROM `".$hesk_settings['db_pfix']."tickets` WHERE `status` = '2' AND `lastchange` <= '".hesk_dbEscape($dt)."' ");
+            $result = hesk_dbQuery("SELECT * FROM `".$hesk_settings['db_pfix']."tickets` WHERE `status` = ".$closedStatus['ID']." AND `lastchange` <= '".hesk_dbEscape($dt)."' ");
             if (hesk_dbNumRows($result) > 0)
             {
                 global $ticket;

@@ -309,6 +309,8 @@ function hesk_show_kb_article($artid)
     // Related articles
     if ($hesk_settings['kb_related'])
     {
+        $showRelated = false;
+        $column = 'col-md-12';
         require(HESK_PATH . 'inc/mail/email_parser.php');
 
         $query = hesk_dbEscape( $article['subject'] . ' ' . convert_html_to_text($article['content']) );
@@ -346,12 +348,8 @@ function hesk_show_kb_article($artid)
         // Print related articles if we have any valid matches
         if ( count($related_articles) )
         {
-            echo '<fieldset><legend>'.$hesklang['relart'].'</legend>';
-            foreach ($related_articles as $id => $subject)
-            {
-                echo '<img src="img/article_text.png" width="16" height="16" border="0" alt="" style="vertical-align:middle;padding:2px;" /> <a href="knowledgebase.php?article='.$id.'">'.$subject.'</a><br />';
-            }
-            echo '</fieldset>';
+            $column = 'col-md-6';
+            $showRelated = true;
         }
     }
 
@@ -365,36 +363,53 @@ function hesk_show_kb_article($artid)
     }
     ?>
 
-    
-    <h4 class="text-left"><?php echo $hesklang['ad']; ?></h4>
-    <div class="text-left">
-        <p><?php echo $hesklang['aid']; ?>: <?php echo $article['id']; ?></p>
-        <p><?php echo $hesklang['category']; ?>: <a href="<?php echo $link; ?>"><?php echo $article['cat_name']; ?></a></p>
+    <div class="row">
+        <div class="<?php echo $column; ?> col-sm-12">
+            <h4 class="text-left"><?php echo $hesklang['ad']; ?></h4>
+            <div class="text-left">
+                <p><?php echo $hesklang['aid']; ?>: <?php echo $article['id']; ?></p>
+                <p><?php echo $hesklang['category']; ?>: <a href="<?php echo $link; ?>"><?php echo $article['cat_name']; ?></a></p>
 
-        <?php
-        if ($hesk_settings['kb_date'])
-        {
-        ?>
-        <p><?php echo $hesklang['dta']; ?>: <?php echo hesk_date($article['dt'], true); ?></p>
-        <?php
-        }
+                <?php
+                if ($hesk_settings['kb_date'])
+                {
+                    ?>
+                    <p><?php echo $hesklang['dta']; ?>: <?php echo hesk_date($article['dt'], true); ?></p>
+                <?php
+                }
 
-        if ($hesk_settings['kb_views'])
-        {
-        ?>
-        <p><?php echo $hesklang['views']; ?>: <?php echo (isset($_GET['rated']) ? $article['views'] : $article['views']+1); ?></p>
-        <?php
-        }
+                if ($hesk_settings['kb_views'])
+                {
+                    ?>
+                    <p><?php echo $hesklang['views']; ?>: <?php echo (isset($_GET['rated']) ? $article['views'] : $article['views']+1); ?></p>
+                <?php
+                }
 
-	    if ($hesk_settings['kb_rating'])
-	    {
-		    $alt = $article['rating'] ? sprintf($hesklang['kb_rated'], sprintf("%01.1f", $article['rating'])) : $hesklang['kb_not_rated'];
-		    echo '
+                if ($hesk_settings['kb_rating'])
+                {
+                    $alt = $article['rating'] ? sprintf($hesklang['kb_rated'], sprintf("%01.1f", $article['rating'])) : $hesklang['kb_not_rated'];
+                    echo '
             <p>'.$hesklang['rating'].' ('.$hesklang['votes'].'): <img src="img/star_'.(hesk_round_to_half($article['rating'])*10).'.png" width="85" height="16" alt="'.$alt.'" title="'.$alt.'" border="0" style="vertical-align:text-bottom" /> ('.$article['votes'].')</p>
             ';
-	    }
-	    ?>
+                }
+                ?>
+            </div>
+        </div>
+        <?php if ($showRelated) { ?>
+            <div class="col-md-6 col-sm-12">
+                <h4 class="text-left"><?php echo $hesklang['relart']; ?></h4>
+                <div class="text-left">
+                    <?php
+                    foreach ($related_articles as $id => $subject)
+                    {
+                        echo '<span class="glyphicon glyphicon-file" style="font-size: 16px"></span> <a href="knowledgebase.php?article='.$id.'">'.$subject.'</a><br />';
+                    }
+                    ?>
+                </div>
+            </div>
+        <?php } ?>
     </div>
+
 
     <?php
     if (!isset($_GET['suggest']))
