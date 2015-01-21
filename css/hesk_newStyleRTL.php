@@ -369,3 +369,21 @@ button.dropdown-submit {
     background:none!important;
     border:none;
 }
+
+.file-attachment {
+min-height: 100px;
+max-height: 100px;
+text-align: center;
+}
+
+.file-attachment > i {
+padding-top: 10px;
+color: #ddd;
+text-shadow: 2px 2px #ccc;
+}
+
+.file-attachment > img {
+margin: -15px;
+height: 100px;
+cursor: pointer;
+}

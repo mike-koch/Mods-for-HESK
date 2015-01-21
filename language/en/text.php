@@ -26,6 +26,8 @@ $hesklang['saved_ticket_tpl'] = 'Saved Templates';
 $hesklang['new_ticket_tpl']='Add or Edit a Ticket Template';
 $hesklang['and_change_status_to'] = 'and change status to'; // Used in combination with $hesklang['submit_reply'] (Reads as "Submit reply and change status to")
 $hesklang['closed_title'] = 'Closed';
+$hesklang['image'] = 'Image'; // Used for alt tag
+$hesklang['close_modal'] = 'Close';
 
 
 // ADDED OR MODIFIED IN Mods For HESK 1.7.0

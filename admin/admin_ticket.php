@@ -1261,7 +1261,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		                        }
 		                    }
 	    	                /* Attachments */
-    		                hesk_listAttachments($ticket['attachments'], $i);
+    		                hesk_listAttachments($ticket['attachments']);
 
                          // Show suggested KB articles
                          if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && strlen($ticket['articles']) )
@@ -1353,25 +1353,138 @@ function hesk_listAttachments($attachments='', $reply=0, $white=1)
 	/* List attachments */
 	echo '<p><b>'.$hesklang['attachments'].':</b><br />';
 	$att=explode(',',substr($attachments, 0, -1));
+    $columnNumber = 0;
+    echo '<div class="row">';
 	foreach ($att as $myatt)
 	{
+        $columnNumber++;
+        if ($columnNumber > 4)
+        {
+            echo '</div><div class="row">';
+            $columnNumber = 1;
+        }
 		list($att_id, $att_name) = explode('#', $myatt);
 
-        /* Can edit and delete tickets? */
-        if ($can_edit && $can_delete)
-        {
-        	echo '<a href="admin_ticket.php?delatt='.$att_id.'&amp;reply='.$reply.'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');"><i class="fa fa-times"></i></a> ';
-        }
+        echo '<div class="col-md-3 col-sm-6 col-xs-12">';
 
-		echo '
-		<a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'"><i class="fa fa-paperclip"></i></a>
-		<a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'">'.$att_name.'</a><br />
+        $fileparts = pathinfo($att_name);
+        $fontAwesomeIcon = hesk_getFontAwesomeIconForFileExtension($fileparts['extension']);
+        echo '
+        <div class="panel panel-default file-attachment-panel">
+            <div class="panel-body file-attachment">';
+                //-- File is an image
+                if ($fontAwesomeIcon == 'fa fa-file-image-o') {
+
+                    //-- Get the actual image location and display a thumbnail. It will be linked to a modal to view a larger size.
+                    $path = hesk_getSavedNameUrlForAttachment($att_id);
+                    if ($path == '') {
+                        echo '<i class="fa fa-ban fa-4x"></i>';
+                    } else {
+                        echo '<img src="'.$path.'" alt="'.$hesklang['image'].'" data-toggle="modal" data-target="#modal-attachment-'.$att_id.'">';
+                        echo '<div class="modal fade" id="modal-attachment-'.$att_id.'" tabindex="-1" role="dialog" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                      <div class="modal-content">
+                                          <div class="modal-header">
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                              <h4 class="modal-title" id="myModalLabel">'.$att_name.'</h4>
+                                          </div>
+                                          <div class="modal-body">
+                                              <img class="img-responsive" src="'.$path.'" alt="'.$hesklang['image'].'">
+                                          </div>
+                                          <div class="modal-footer">
+                                              <button type="button" class="btn btn-default" data-dismiss="modal">'.$hesklang['close_modal'].'</button>
+                                              <button type="button" class="btn btn-success">'.$hesklang['dnl'].'</button>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>';
+                    }
+                } else {
+                    //-- Display the FontAwesome icon in the panel's body
+                    echo '<i class="'.$fontAwesomeIcon.' fa-4x"></i>';
+                }
+            echo '</div>
+            <div class="panel-footer">
+                <div class="btn-group">';
+                /* Can edit and delete tickets? */
+                if ($can_edit && $can_delete)
+                {
+                    echo '<a class="btn btn-danger" href="admin_ticket.php?delatt='.$att_id.'&amp;reply='.$reply.'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delete'].'"><i class="fa fa-times"></i></a> ';
+                }
+                echo '
+                <a class="btn btn-success" href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['dnl'].'"><i class="fa fa-arrow-down"></i></a>
+                </div>
+                <p><br>'.$att_name.'</p>
+                ';
+            echo '</div>
+        </div>
         ';
+        echo '</div>';
 	}
-	echo '</p>';
+    echo '</div>';
 
     return true;
 } // End hesk_listAttachments()
+
+function hesk_getSavedNameUrlForAttachment($att_id)
+{
+    global $hesk_settings;
+
+    //-- Call the DB for the attachment
+    $nameRS = hesk_dbQuery("SELECT `saved_name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` WHERE `att_id` = ".hesk_dbEscape($att_id));
+    $name = hesk_dbFetchAssoc($nameRS);
+    $realpath = '../'.$hesk_settings['attach_dir'] . '/' . $name['saved_name'];
+
+    return !file_exists($realpath) ? '' : $realpath;
+}
+
+function hesk_getFontAwesomeIconForFileExtension($fileExtension)
+{
+    $imageExtensions = array('jpg','png','bmp','gif');
+
+    //-- Word, Excel, and PPT file extensions: http://en.wikipedia.org/wiki/List_of_Microsoft_Office_filename_extensions
+    $wordFileExtensions = array('doc','docx','dotm','dot','docm','docb');
+    $excelFileExtensions = array('xls','xlt','xlm','xlsx','xlsm','xltx','xltm');
+    $pptFileExtensions = array('ppt','pot','pps','pptx','pptm','potx','potm','ppsx','ppsm','sldx','sldm');
+
+    //-- File archive extensions: http://en.wikipedia.org/wiki/List_of_archive_formats
+    $archiveFileExtensions = array('tar','gz','zip','rar','7z','bz2','lz','lzma','tgz','tbz2','zipx');
+
+    //-- Audio file extensions: http://en.wikipedia.org/wiki/Audio_file_format#List_of_formats
+    $audioFileExtensions = array('3gp','act','aiff','aac','amr','au','awb','dct','dss','dvf','flac','gsm','iklax','ivs','m4a','m4p','mmf','mp3','mpc','msv','ogg','oga','opus','ra','rm','raw','tta','vox','wav','wma','wv');
+
+    //-- Video file extensions: http://en.wikipedia.org/wiki/Video_file_format#List_of_video_file_formats
+    $videoFileExtensions = array('webm','mkv','flv','drc','mng','avi','mov','qt','wmv','yuv','rm','rmvb','asf','mp4','m4p','m4v','mpg','mp2','mpeg','mpe','mpv','m2v','svi','3gp','3g2','mxf','roq','nsv');
+
+    //-- The only one I know of :D
+    $pdfFileExtensions = array('pdf');
+
+    $textFileExtensions = array('txt');
+
+    $icon = 'fa fa-file-';
+    if (in_array($fileExtension, $imageExtensions)) {
+        $icon.='image-o';
+    } elseif (in_array($fileExtension, $wordFileExtensions)) {
+        $icon.='word-o';
+    } elseif (in_array($fileExtension, $excelFileExtensions)) {
+        $icon.='excel-o';
+    } elseif (in_array($fileExtension, $pptFileExtensions)) {
+        $icon.='powerpoint-o';
+    } elseif (in_array($fileExtension, $archiveFileExtensions)) {
+        $icon.='archive-o';
+    } elseif (in_array($fileExtension, $audioFileExtensions)) {
+        $icon.='audio-o';
+    } elseif (in_array($fileExtension, $videoFileExtensions)) {
+        $icon.='video-o';
+    } elseif (in_array($fileExtension, $pdfFileExtensions)) {
+        $icon.='pdf-o';
+    } elseif (in_array($fileExtension, $textFileExtensions)) {
+        $icon.='text-o';
+    } else {
+        $icon.='o';
+    }
+    return $icon;
+}
 
 
 function hesk_getAdminButtons($reply=0,$white=1)
@@ -1611,7 +1724,7 @@ function hesk_printTicketReplies() {
 			        <p><?php echo $reply['message']; ?></p> 
                 </div>
                 <div class="ticketMessageTop pushMargin">
-                     <?php hesk_listAttachments($reply['attachments'],$i);
+                     <?php hesk_listAttachments($reply['attachments'],$reply['id']);
                         /* Staff rating */
 			            if ($hesk_settings['rating'] && $reply['staffid'])
 			            {
