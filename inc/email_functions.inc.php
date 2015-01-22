@@ -62,7 +62,24 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
     $message = str_replace('%%VERIFYURL%%', $activationUrl, $message);
     $message = str_replace('%%ACTIVATIONKEY%%', $activationKey, $message);
 
-    hesk_mail($ticket['email'], $subject, $message);
+    // Add Cc / Bcc recipents if needed
+    $ccEmails = array();
+    $bccEmails = array();
+    foreach ($hesk_settings['custom_fields'] as $k=>$v) {
+        if ($v['use']) {
+            if ($v['type'] == 'email' && !empty($ticket[$k])) {
+                if ($v['value'] == 'cc') {
+                    $emails = explode(',',$ticket[$k]);
+                    array_push($ccEmails, $emails);
+                } elseif ($v['value'] == 'bcc') {
+                    $emails = explode(',',$ticket[$k]);
+                    array_push($bccEmails, $emails);
+                }
+            }
+        }
+    }
+
+    hesk_mail($ticket['email'], $subject, $message, $ccEmails, $bccEmails);
 }
 
 
@@ -80,8 +97,23 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
 	$subject = hesk_getEmailSubject($email_template,$ticket);
 	$message = hesk_getEmailMessage($email_template,$ticket);
 
+    // Add Cc / Bcc recipents if needed
+    $ccEmails = array();
+    $bccEmails = array();
+    foreach ($hesk_settings['custom_fields'] as $k=>$v) {
+        if ($v['use']) {
+            if ($v['type'] == 'email' && !empty($ticket[$k])) {
+                if ($v['value'] == 'cc') {
+                    array_push($ccEmails, $ticket[$k]);
+                } elseif ($v['value'] == 'bcc') {
+                    array_push($bccEmails, $ticket[$k]);
+                }
+            }
+        }
+    }
+
 	// Send e-mail
-	hesk_mail($ticket['email'], $subject, $message);
+	hesk_mail($ticket['email'], $subject, $message, $ccEmails, $bccEmails);
 
     return true;
 
@@ -275,7 +307,7 @@ function hesk_validEmails()
 } // END hesk_validEmails()
 
 
-function hesk_mail($to,$subject,$message)
+function hesk_mail($to,$subject,$message,$cc=array(),$bcc=array())
 {
 	global $hesk_settings, $hesklang;
 
@@ -307,6 +339,14 @@ function hesk_mail($to,$subject,$message)
     {
     	// Set additional headers
 		$headers = "From: $hesk_settings[from_header]\n";
+        if (count($cc) > 0)
+        {
+            $headers .= "Cc: ".implode(',',$cc);
+        }
+        if (count($bcc) > 0)
+        {
+            $headers .= "Bcc: ".implode(',',$bcc);
+        }
 		$headers.= "Reply-To: $hesk_settings[from_header]\n";
 		$headers.= "Return-Path: $hesk_settings[webmaster_mail]\n";
 		$headers.= "Date: " . date(DATE_RFC2822) . "\n";
@@ -337,15 +377,28 @@ function hesk_mail($to,$subject,$message)
 
     // Send the e-mail using SMTP
     $to_arr = explode(',',$to);
-	if ( ! $smtp->SendMessage($hesk_settings['noreply_mail'], $to_arr, array(
-				"From: $hesk_settings[from_header]",
-				"To: $to",
-                "Reply-To: $hesk_settings[from_header]",
-                "Return-Path: $hesk_settings[webmaster_mail]",
-				"Subject: " . $subject,
-				"Date: " . date(DATE_RFC2822),
-                "Content-Type: text/plain; charset=" . $hesklang['ENCODING']
-			), $message))
+
+
+    $headersArray = array(
+        "From: $hesk_settings[from_header]",
+        "To: $to",
+        "Reply-To: $hesk_settings[from_header]",
+        "Return-Path: $hesk_settings[webmaster_mail]",
+        "Subject: " . $subject,
+        "Date: " . date(DATE_RFC2822),
+        "Content-Type: text/plain; charset=" . $hesklang['ENCODING']
+    );
+    if (count($cc) > 0)
+    {
+        array_push($headersArray,"Cc: ".implode(',',$cc));
+    }
+    if (count($bcc) > 0)
+    {
+        array_push($headersArray,"Bcc: ".implode(',',$bcc));
+    }
+
+
+	if ( ! $smtp->SendMessage($hesk_settings['noreply_mail'], $to_arr, $headersArray, $message))
     {
 		// Suppress errors unless we are in debug mode
 		if ($hesk_settings['debug_mode'])
