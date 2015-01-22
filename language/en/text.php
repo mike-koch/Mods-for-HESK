@@ -28,6 +28,11 @@ $hesklang['and_change_status_to'] = 'and change status to'; // Used in combinati
 $hesklang['closed_title'] = 'Closed';
 $hesklang['image'] = 'Image'; // Used for alt tag
 $hesklang['close_modal'] = 'Close';
+$hesklang['email_custom_field'] = 'Email Address';
+$hesklang['email_custom_field_help'] = 'Allows the input of an email address. Similar to a text field, however the email address(es) will be added to all emails for this ticket, in the Cc or Bcc section, depending on the option selected.';
+$hesklang['email_custom_field_label'] = 'Address Type';
+$hesklang['cc'] = 'Cc:';
+$hesklang['bcc'] = 'Bcc:';
 
 
 // ADDED OR MODIFIED IN Mods For HESK 1.7.0

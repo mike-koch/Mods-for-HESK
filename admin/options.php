@@ -314,6 +314,33 @@ switch ($type)
         <p><input type="button" value="  '.$hesklang['ok'].'  " onclick="Javascript:hesk_saveOptions()" /></p>
         ';
         break;
+    case 'email':
+        $ccSelected = $query == 'cc' ? 'selected="selected"' : '';
+        $bccSelected = $query == 'bcc' ? 'selected="selected"' : '';
+        echo '
+        <script language="javascript">
+        function hesk_saveOptions()
+        {
+            var dropdown = document.getElementById(\'o1\');
+        	window.opener.document.getElementById(\'s_'.$id.'_val\').value = dropdown.options[dropdown.selectedIndex].value;
+            window.close();
+        }
+        </script>
+        <p>'.$hesklang['email_custom_field_help'].'</p>
+		<table border="0">
+        <tr>
+        <td>'.$hesklang['email_custom_field_label'].':</td>
+        <td>
+            <select name="o1" id="o1">
+                <option value="cc" '.$ccSelected.'>'.$hesklang['cc'].'</option>
+                <option value="bcc" '.$bccSelected.'>'.$hesklang['bcc'].'</option>
+            </select>
+        </td>
+        </tr>
+        </table>
+        <p><input type="button" value="  '.$hesklang['ok'].'  " onclick="Javascript:hesk_saveOptions()" /></p>
+        ';
+        break;
     default:
     	die('Invalid type');
 }
