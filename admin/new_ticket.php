@@ -163,6 +163,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
             <!-- START FORM -->
             <form role="form" class="form-horizontal" method="post" action="admin_submit_ticket.php" name="form1" enctype="multipart/form-data">
+                <?php if ($hesk_settings['can_sel_lang']) { ?>
+                    <div class="form-group">
+                        <label for="customerLanguage" class="col-sm-3 control-label"><?php echo $hesklang['chol']; ?>:&nbsp;<span class="important">*</span></label>
+                        <div class="col-sm-9">
+                            <select name="customerLanguage" id="customerLanguage" class="form-control">
+                                <?php hesk_listLanguages(); ?>
+                            </select>
+                        </div>
+                    </div>
+                <?php } ?>
                 <!-- Contact info -->
                 <?php if (in_array('name',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} else {echo '<div class="form-group">';} ?>
                     <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>: <font class="important">*</font></label>

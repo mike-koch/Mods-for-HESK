@@ -62,6 +62,9 @@ if ( empty($_POST) && ! empty($_SERVER['CONTENT_LENGTH']) )
 
 $hesk_error_buffer = array();
 
+if ($hesk_settings['can_sel_lang']) {
+    $tmpvar['language'] = hesk_POST('customerLanguage');
+}
 $tmpvar['name']	    = hesk_input( hesk_POST('name') ) or $hesk_error_buffer['name']=$hesklang['enter_your_name'];
 $tmpvar['email']	= hesk_POST('email');
 $tmpvar['category'] = intval( hesk_POST('category') ) or $hesk_error_buffer['category']=$hesklang['sel_app_cat'];

@@ -115,6 +115,7 @@ if (isset($_POST['save']))
     }
     else
     {
+        $tmpvar['language'] = hesk_POST('customerLanguage');
 		$tmpvar['name']    = hesk_input( hesk_POST('name') ) or $hesk_error_buffer[]=$hesklang['enter_your_name'];
 		$tmpvar['email']   = hesk_validateEmail( hesk_POST('email'), 'ERR', 0);
 		$tmpvar['subject'] = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer[]=$hesklang['enter_ticket_subject'];
@@ -191,7 +192,8 @@ if (isset($_POST['save']))
 		`custom17`='".hesk_dbEscape($tmpvar['custom17'])."',
 		`custom18`='".hesk_dbEscape($tmpvar['custom18'])."',
 		`custom19`='".hesk_dbEscape($tmpvar['custom19'])."',
-		`custom20`='".hesk_dbEscape($tmpvar['custom20'])."'
+		`custom20`='".hesk_dbEscape($tmpvar['custom20'])."',
+		`language`='".hesk_dbEscape($tmpvar['language'])."'
 		WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
     }
 
@@ -225,7 +227,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             /* If it's not a reply edit all the fields */
             if (!$is_reply)
             {
-		    ?>
+                if ($hesk_settings['can_sel_lang']) {
+            ?>
+                    <div class="form-group">
+                        <label for="customerLanguage" class="col-sm-3 control-label"><?php echo $hesklang['chol']; ?>:</label>
+                        <div class="col-sm-9">
+                            <select name="customerLanguage" id="customerLanguage" class="form-control">
+                                <?php hesk_listLanguages(); ?>
+                            </select>
+                        </div>
+                    </div>
+                <?php } ?>
                 <div class="form-group">
                     <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>:</label>
                     <div class="col-sm-9">

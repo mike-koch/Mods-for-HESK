@@ -659,6 +659,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     echo $trackingID.'<br/>'.$tmp;?>
                 </li>
                 <li class="list-group-item">
+                    <strong><?php echo $hesklang['lgs']; ?></strong><br>
+                    <?php echo $ticket['language'] !== NULL ? $ticket['language'] : HESK_DEFAULT_LANGUAGE; ?>
+                </li>
+                <li class="list-group-item">
                     <strong><?php echo $hesklang['replies']; ?></strong><br/>
                     <?php echo $ticket['replies']; ?>
                 </li>
