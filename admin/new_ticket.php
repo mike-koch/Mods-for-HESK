@@ -552,16 +552,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             {
                                 if (document.getElementById('moderep').checked)
                                 {
-                                    document.getElementById('HeskMsg').innerHTML='<textarea name="message" id="message" rows="12" cols="60">'+myMsg+'</textarea>';
-                                    document.getElementById('HeskSub').innerHTML='<input type="text" name="subject" id="subject" size="40" maxlength="40" value="'+mySubject+'" />';
+                                    document.getElementById('HeskMsg').innerHTML='<textarea class="form-control" name="message" id="message" rows="12" cols="60">'+myMsg+'</textarea>';
+                                    document.getElementById('HeskSub').innerHTML='<input class="form-control" type="text" name="subject" id="subject" size="40" maxlength="40" value="'+mySubject+'" />';
                                 }
                                 else
                                 {
                                     var oldMsg = document.getElementById('message').value;
-                                    document.getElementById('HeskMsg').innerHTML='<textarea name="message" id="message" rows="12" cols="60">'+oldMsg+myMsg+'</textarea>';
+                                    document.getElementById('HeskMsg').innerHTML='<textarea class="form-control" name="message" id="message" rows="12" cols="60">'+oldMsg+myMsg+'</textarea>';
                                     if (document.getElementById('subject').value == '')
                                     {
-                                        document.getElementById('HeskSub').innerHTML='<input type="text" name="subject" id="subject" size="40" maxlength="40" value="'+mySubject+'" />';
+                                        document.getElementById('HeskSub').innerHTML='<input class="form-control" type="text" name="subject" id="subject" size="40" maxlength="40" value="'+mySubject+'" />';
                                     }
                                 }
                             }
@@ -593,40 +593,37 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 if ( strlen($can_options) )
                 {
                     ?>
-                    <tr>
-                        <td style="text-align:right" width="150" valign="top">&nbsp;</td>
-                        <td width="80%">
-                            <div align="center">
-                                <table class="white" style="width:100%">
-                                    <tr>
-                                        <td class="admin_gray" colspan="2"><b>&raquo;<?php echo $hesklang['ticket_tpl']; ?></b> <?php echo hesk_checkPermission('can_man_ticket_tpl', 0) ? '(<a href="manage_ticket_templates.php">' . $hesklang['ticket_tpl_man'] . '</a>)' : ''; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="admin_gray">
-                                            <label><input type="radio" name="mode" id="modeadd" value="1" checked="checked" /> <?php echo $hesklang['madd']; ?></label><br />
-                                            <label><input type="radio" name="mode" id="moderep" value="0" /> <?php echo $hesklang['mrep']; ?></label>
-                                        </td>
-                                        <td class="admin_gray">
-                                            <?php echo $hesklang['select_ticket_tpl']; ?>:<br />
-                                            <select name="saved_replies" onchange="setMessage(this.value)">
-                                                <option value="0"> - <?php echo $hesklang['select_empty']; ?> - </option>
-                                                <?php echo $can_options; ?>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </table>
+                    <div class="form-group">
+                        <label for="modeadd" class="col-sm-3 control-label"><?php echo $hesklang['ticket_tpl']; ?>:</label>
+                        <div class="col-sm-9">
+                            <div class="radio">
+                                <label><input type="radio" name="mode" id="modeadd" value="1" checked="checked"> <?php echo $hesklang['madd']; ?></label>
                             </div>
-                        </td>
-                    </tr>
+                            <div class="radio">
+                                <label><input type="radio" name="mode" id="moderep" value="0" /> <?php echo $hesklang['mrep']; ?></label>
+                            </div>
+                            <?php echo hesk_checkPermission('can_man_ticket_tpl', 0) ? '(<a href="manage_ticket_templates.php">' . $hesklang['ticket_tpl_man'] . '</a>)' : ''; ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="saved_replies" class="col-sm-3 control-label"><?php echo $hesklang['select_ticket_tpl']; ?>:</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" name="saved_replies" onchange="setMessage(this.value)">
+                                <option value="0"> - <?php echo $hesklang['select_empty']; ?> - </option>
+                                <?php echo $can_options; ?>
+                            </select>
+                        </div>
+                    </div>
                 <?php
                 } // END printing templates
                 elseif ( hesk_checkPermission('can_man_ticket_tpl', 0) )
                 {
                     ?>
-                    <tr>
-                        <td style="text-align:right" width="150">&nbsp;</td>
-                        <td width="80%"><a href="manage_ticket_templates.php"><?php echo $hesklang['ticket_tpl_man']; ?></a></td>
-                    </tr>
+                    <div class="form-group">
+                        <div class="col-sm-9 col-sm-offset-3">
+                            <a href="manage_ticket_templates.php"><?php echo $hesklang['ticket_tpl_man']; ?></a>
+                        </div>
+                    </div>
                 <?php
                 }
                 ?>
@@ -639,7 +636,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
                 <?php if (in_array('message',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} else {echo '<div class="form-group">';} ?>
                     <div class="col-sm-12">
-                        <span id="HeskSub">
+                        <span id="HeskMsg">
                             <textarea class="form-control" name="message" id="message" rows="12" cols="60" placeholder="<?php echo $hesklang['message']; ?>" ><?php if (isset($_SESSION['as_message'])) {echo stripslashes(hesk_input($_SESSION['as_message']));} ?></textarea>
                         </span>
                     </div>
