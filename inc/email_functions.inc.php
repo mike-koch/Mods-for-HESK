@@ -93,6 +93,14 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
 		return true;
 	}
 
+    $changedLanguage = false;
+    //Set the user's language according to the ticket.
+    if ($ticket['language'] !== NULL)
+    {
+        hesk_setLanguage($ticket['language']);
+        $changedLanguage = true;
+    }
+
 	// Format email subject and message
 	$subject = hesk_getEmailSubject($email_template,$ticket);
 	$message = hesk_getEmailMessage($email_template,$ticket);
@@ -114,6 +122,12 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
 
 	// Send e-mail
 	hesk_mail($ticket['email'], $subject, $message, $ccEmails, $bccEmails);
+
+    // Reset the language if it was changed
+    if ($changedLanguage)
+    {
+        hesk_resetLanguage();
+    }
 
     return true;
 
