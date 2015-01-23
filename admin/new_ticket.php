@@ -434,6 +434,27 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>';
                                 break;
 
+                            case 'email':
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                if ($v['value'] == 'cc' || $v['value'] == 'bcc')
+                                {
+                                    // (b)cc isn't a valid email but is the "value" used by settings. Just remove it.
+                                    $v['value'] = '';
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group">
+                                <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+                                </div>';
+
+                                break;
+
 	                        /* Default text input */
 	                        default:
                 	            if (strlen($k_value) != 0)
