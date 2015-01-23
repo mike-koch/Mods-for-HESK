@@ -305,7 +305,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                    	            $checked = '';
 	                                }
 
-	                	            echo '<label style="font-weight: normal;"><input type="radio" id="'.$v['name'].'" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
+                                    //Clean up multiple dashes or whitespaces
+                                    $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                    $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
+	                	            echo '<label style="font-weight: normal;"><input type="radio" id="'.$formattedId.'" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
 	                            }
 
                                 echo '</div></div>';
@@ -314,10 +318,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                        /* Select drop-down box */
 	                        case 'select':
 
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
                 	            $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
 					            echo '<div class="form-group"><label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'" '.$cls.'>';
+                                <div class="col-sm-9"><select class="form-control" id="'.$formattedId.'" name="'.$k.'" '.$cls.'>';
 
                                 // Show "Click to select"?
                                 $v['value'] = str_replace('{HESK_SELECT}', '', $v['value'], $num);
@@ -348,10 +356,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                        break;
 
                             case 'multiselect':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
                                 $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
                                 echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+                                <div class="col-sm-9"><select class="form-control" id="'.$formattedId.'" name="'.$k.'[]" '.$cls.' multiple>';
 
                                 $options = explode('#HESK#',$v['value']);
 
@@ -373,13 +385,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
-                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$formattedId.'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$formattedId.'\')">Deselect All</button>
                                 </div></div></div>';
                             break;
 
 	                        /* Checkbox */
 	        	            case 'checkbox':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
 					            echo '<div class="form-group"><label class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label><div align="left" class="col-sm-9">';
                                 $options = explode('#HESK#',$v['value']);
                                 $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
@@ -396,13 +412,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                    	            $checked = '';
 	                                }
 
-	                	            echo '<label style="font-weight: normal;"><input id="'.$v['name'].'" type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
+	                	            echo '<label style="font-weight: normal;"><input id="'.$formattedId.'" type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
 	                            }
                                 echo '</div></div>';
 	                        break;
 
 	                        /* Large text box */
 	                        case 'textarea':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
 	                            $size = explode('#',$v['value']);
                                 $size[0] = empty($size[0]) ? 5 : intval($size[0]);
                                 $size[1] = empty($size[1]) ? 30 : intval($size[1]);
@@ -411,11 +431,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
                             case 'date':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
                                 if (strlen($k_value) != 0)
                                 {
                                     $v['value'] = $k_value;
@@ -427,7 +451,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="form-group">
                                     <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
                                         <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
@@ -435,6 +459,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 break;
 
                             case 'email':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
                                 if (strlen($k_value) != 0)
                                 {
                                     $v['value'] = $k_value;
@@ -450,13 +478,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                 echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
                                 </div>';
 
                                 break;
 
 	                        /* Default text input */
 	                        default:
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
                 	            if (strlen($k_value) != 0)
                                 {
                     	            $v['value'] = $k_value;
@@ -466,7 +498,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
                                 </div>';
 	                    }
 	                }
@@ -616,7 +648,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <!-- Custom After -->
                 <?php
 
-	            /* custom fields BEFORE comments */
+	            /* custom fields AFTER comments */
 
 	            foreach ($hesk_settings['custom_fields'] as $k=>$v)
 	            {
@@ -655,6 +687,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                    {
 	        	            /* Radio box */
 	        	            case 'radio':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
 					            echo '<div class="form-group"><label class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label><div align="left" class="col-sm-9">';
 
 	            	            $options = explode('#HESK#',$v['value']);
@@ -673,7 +709,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                    	            $checked = '';
 	                                }
 
-	                	            echo '<label style="font-weight: normal;"><input type="radio" id="'.$v['name'].'" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
+	                	            echo '<label style="font-weight: normal;"><input type="radio" id="'.$formattedId.'" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
 	                            }
 
                                 echo '</div></div>';
@@ -681,11 +717,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 	                        /* Select drop-down box */
 	                        case 'select':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
 
                 	            $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
 					            echo '<div class="form-group"><label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'" '.$cls.'>';
+                                <div class="col-sm-9"><select class="form-control" id="'.$formattedId.'" name="'.$k.'" '.$cls.'>';
 
                                 // Show "Click to select"?
                                 $v['value'] = str_replace('{HESK_SELECT}', '', $v['value'], $num);
@@ -717,6 +756,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 	                        /* Checkbox */
 	        	            case 'checkbox':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
 					            echo '<div class="form-group"><label class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label><div align="left" class="col-sm-9">';
 
 	            	            $options = explode('#HESK#',$v['value']);
@@ -734,13 +777,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                    	            $checked = '';
 	                                }
 
-	                	            echo '<label style="font-weight: normal;"><input id="'.$v['name'].'" type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
+	                	            echo '<label style="font-weight: normal;"><input id="'.$formattedId.'" type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
 	                            }
                                 echo '</div></div>';
 	                        break;
 
 	                        /* Large text box */
 	                        case 'textarea':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
 	                            $size = explode('#',$v['value']);
                                 $size[0] = empty($size[0]) ? 5 : intval($size[0]);
                                 $size[1] = empty($size[1]) ? 30 : intval($size[1]);
@@ -749,11 +796,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
                             case 'date':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
                                 if (strlen($k_value) != 0)
                                 {
                                     $v['value'] = $k_value;
@@ -765,7 +816,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="form-group">
                                     <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
                                         <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
@@ -773,10 +824,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 break;
 
                             case 'multiselect':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
                                 $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
                                 echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+                                <div class="col-sm-9"><select class="form-control" id="'.$formattedId.'" name="'.$k.'[]" '.$cls.' multiple>';
 
                                 $options = explode('#HESK#',$v['value']);
 
@@ -798,13 +853,42 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
-                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$formattedId.'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$formattedId.'\')">Deselect All</button>
                                 </div></div></div>';
+                                break;
+
+                            case 'email':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                if ($v['value'] == 'cc' || $v['value'] == 'bcc')
+                                {
+                                    // (b)cc isn't a valid email but is the "value" used by settings. Just remove it.
+                                    $v['value'] = '';
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group">
+                                <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+                                </div>';
+
                                 break;
 
 	                        /* Default text input */
 	                        default:
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+
                 	            if (strlen($k_value) != 0)
                                 {
                     	            $v['value'] = $k_value;
@@ -814,7 +898,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
                                 </div>';
 	                    }
 	                }
