@@ -478,6 +478,12 @@ for ($i=1;$i<=20;$i++)
 		$set['custom_fields'][$this_field]['maxlen']	= intval( hesk_POST('s_custom'.$i.'_maxlen', 255) );
         $set['custom_fields'][$this_field]['value']		= hesk_input( hesk_POST('s_custom'.$i.'_val') );
 
+        if ($set['custom_fields'][$this_field]['type'] == 'email' && $set['custom_fields'][$this_field]['value'] == '')
+        {
+            // New custom field without any options set. Default to Cc
+            $set['custom_fields'][$this_field]['value'] = 'cc';
+        }
+
         if (!in_array($set['custom_fields'][$this_field]['type'],array('text','textarea','select','radio','checkbox','date','multiselect','email')))
         {
         	$set['custom_fields'][$this_field]['type'] = 'text';
