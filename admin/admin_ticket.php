@@ -859,7 +859,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		                            <i class="fa fa-check-circle"></i> '.$hesklang['open_action'].'</a>';
                             }
 
-                            $linkText = 'new_ticket.php?name='.$ticket['name'].'&email='.$ticket['email'].'&catid='.$category['id'].'&priority='.$ticket['priority'];
+                            $strippedName = strip_tags($ticket['name']);
+                            $strippedEmail = strip_tags($ticket['email']);
+                            $linkText = 'new_ticket.php?name='.$strippedName.'&email='.$strippedEmail.'&catid='.$category['id'].'&priority='.$ticket['priority'];
                             foreach ($hesk_settings['custom_fields'] as $k=>$v)
                             {
                                 if ($v['use'] == 1)
@@ -871,7 +873,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     } else {
                                         $value = $ticket[$k];
                                     }
-                                    $linkText .= '&c_'.$k.'='.$value;
+                                    $strippedCustomField = strip_tags($value);
+                                    $linkText .= '&c_'.$k.'='.$strippedCustomField;
                                 }
                             }
 
