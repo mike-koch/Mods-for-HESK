@@ -406,7 +406,7 @@ function hesk_autoAssignTicket($ticket_category)
 
 	/* Get all possible auto-assign staff, order by number of open tickets */
 	$res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`user`,`t1`.`name`, `t1`.`email`, `t1`.`language`, `t1`.`isadmin`, `t1`.`categories`, `t1`.`notify_assigned`, `t1`.`heskprivileges`,
-					    (SELECT COUNT(*) FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` FORCE KEY (`statuses`) WHERE `owner`=`t1`.`id` AND `status` IN ('0','1','2','4','5') ) as `open_tickets`
+					    (SELECT COUNT(*) FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` FORCE KEY (`statuses`) WHERE `owner`=`t1`.`id` AND `status` IN (SELECT `ID` FROM ".hesk_dbEscape($hesk_settings['db_pfix'])."statuse` WHERE `IsClosed` = 0) ) as `open_tickets`
 						FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS `t1`
 						WHERE `t1`.`autoassign`='1' ORDER BY `open_tickets` ASC, RAND()");
 

@@ -1168,21 +1168,19 @@ function forgot_tid()
     }
 
 	/* Prepare ticket statuses */
-	$my_status = array(
-	    0 => $hesklang['open'],
-	    1 => $hesklang['wait_staff_reply'],
-	    2 => $hesklang['wait_cust_reply'],
-	    3 => $hesklang['closed'],
-	    4 => $hesklang['in_progress'],
-	    5 => $hesklang['on_hold'],
-	);
+    $myStatusSQL = hesk_dbQuery("SELECT `ID`, `TicketViewContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+    $my_status = array();
+    while ($myStatusRow = hesk_dbFetchAssoc($myStatusSQL))
+    {
+        $my_status[$myStatusRow['ID']] = $hesklang[$myStatusRow['TicketViewContentKey']];
+    }
 
 	/* Get ticket(s) from database */
 	hesk_load_database_functions();
 	hesk_dbConnect();
 
     // Get tickets from the database
-	$res = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` FORCE KEY (`statuses`) WHERE ' . ($hesk_settings['open_only'] ? "`status` IN ('0','1','2','4','5') AND " : '') . ' ' . hesk_dbFormatEmail($email) . ' ORDER BY `status` ASC, `lastchange` DESC ');
+	$res = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` FORCE KEY (`statuses`) WHERE ' . ($hesk_settings['open_only'] ? "`status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 0) AND " : '') . ' ' . hesk_dbFormatEmail($email) . ' ORDER BY `status` ASC, `lastchange` DESC ');
 
 	$num = hesk_dbNumRows($res);
 	if ($num < 1)

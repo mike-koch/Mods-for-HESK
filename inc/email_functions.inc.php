@@ -498,26 +498,9 @@ function hesk_getEmailSubject($eml_file, $ticket='', $is_ticket=1, $strip=0)
 	}
 
     /* Set status */
-	switch ($ticket['status'])
-	{
-		case 1:
-			$ticket['status'] = $hesklang['wait_reply'];
-			break;
-		case 2:
-			$ticket['status'] = $hesklang['replied'];
-			break;
-		case 3:
-			$ticket['status'] = $hesklang['closed'];
-			break;
-		case 4:
-			$ticket['status'] = $hesklang['in_progress'];
-			break;
-		case 5:
-			$ticket['status'] = $hesklang['on_hold'];
-			break;
-		default:
-			$ticket['status'] = $hesklang['open'];
-	}
+    $statusRs = hesk_dbQuery("SELECT `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".$ticket['status']);
+    $row = hesk_dbFetchAssoc($statusRs);
+    $ticket['status'] = $hesklang[$row['ShortNameContentKey']];
 
 	/* Replace all special tags */
 	$msg = str_replace('%%SUBJECT%%',	$ticket['subject'],		$msg);
@@ -623,26 +606,9 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
     $ticket['owner'] = hesk_msgToPlain( hesk_getOwnerName($ticket['owner']), 1);
 
     /* Set status */
-	switch ($ticket['status'])
-	{
-		case 1:
-			$ticket['status'] = $hesklang['wait_reply'];
-			break;
-		case 2:
-			$ticket['status'] = $hesklang['replied'];
-			break;
-		case 3:
-			$ticket['status'] = $hesklang['closed'];
-			break;
-		case 4:
-			$ticket['status'] = $hesklang['in_progress'];
-			break;
-		case 5:
-			$ticket['status'] = $hesklang['on_hold'];
-			break;
-		default:
-			$ticket['status'] = $hesklang['open'];
-	}
+    $statusRs = hesk_dbQuery("SELECT `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".$ticket['status']);
+    $row = hesk_dbFetchAssoc($statusRs);
+    $ticket['status'] = $hesklang[$row['ShortNameContentKey']];
 
 	/* Replace all special tags */
 	$msg = str_replace('%%NAME%%',		$ticket['name']				,$msg);
