@@ -332,7 +332,7 @@ if ( ! isset($hesk_error_buffer['email']) && hesk_isBannedEmail($tmpvar['email']
 $below_limit = true;
 if ($hesk_settings['max_open'] && ! isset($hesk_error_buffer['email']) )
 {
-	$res = hesk_dbQuery("SELECT COUNT(*) FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `status` IN (SELECT `ID` FROM ".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 0) AND " . hesk_dbFormatEmail($tmpvar['email']));
+	$res = hesk_dbQuery("SELECT COUNT(*) FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 0) AND " . hesk_dbFormatEmail($tmpvar['email']));
 	$num = hesk_dbResult($res);
 
 	if ($num >= $hesk_settings['max_open'])

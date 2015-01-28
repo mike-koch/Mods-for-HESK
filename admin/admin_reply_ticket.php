@@ -110,7 +110,7 @@ if (strlen($message))
         {
             /* Get the next open ticket that needs a reply */
             $res  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('0','".intval($_SESSION['id'])."')
-                    AND " . hesk_myCategories() . " AND `status` IN (SELECT `ID` FROM ".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`
+                    AND " . hesk_myCategories() . " AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`
                         WHERE `IsNewTicketStatus` = 1 OR `IsCustomerReplyStatus` = 1 OR `IsStaffReopenedStatus` = 1)
                     ORDER BY `owner` DESC, `priority` ASC LIMIT 1");
 
@@ -394,7 +394,7 @@ if ($_SESSION['afterreply'] == 1)
 elseif ($_SESSION['afterreply'] == 2)
 {
 	/* Get the next open ticket that needs a reply */
-    $res  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('0','".intval($_SESSION['id'])."') AND " . hesk_myCategories() . " AND `status` IN (SELECT `ID` FROM ".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`
+    $res  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('0','".intval($_SESSION['id'])."') AND " . hesk_myCategories() . " AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`
                         WHERE `IsNewTicketStatus` = 1 OR `IsCustomerReplyStatus` = 1 OR `IsStaffReopenedStatus` = 1) ORDER BY `owner` DESC, `priority` ASC LIMIT 1");
 
     if (hesk_dbNumRows($res) == 1)
