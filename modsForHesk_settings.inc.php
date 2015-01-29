@@ -24,3 +24,11 @@ $modsForHesk_settings['custom_field_setting'] = 0;
 
 //-- Set this to 1 to enable email verification for new customers
 $modsForHesk_settings['customer_email_verification_required'] = 0;
+
+//-- Set this to 1 to enable HTML-formatted emails.
+$modsForHesk_settings['html_emails'] = 0;
+
+//-- Mailgun Settings
+$modsForHesk_settings['use_mailgun'] = 0;
+$modsForHesk_settings['mailgun_api_key'] = 'API Key';
+$modsForHesk_settings['mailgun_domain'] = 'mail.domain.com';
