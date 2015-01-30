@@ -35,6 +35,7 @@
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
+require_once(HESK_PATH . 'modsForHesk_settings.inc.php');
 
 /* Get includes for SMTP */
 if ($hesk_settings['smtp'])
@@ -323,7 +324,7 @@ function hesk_validEmails()
 
 function hesk_mail($to,$subject,$message,$cc=array(),$bcc=array())
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
 	// Demo mode
 	if ( defined('HESK_DEMO') )
@@ -348,8 +349,42 @@ function hesk_mail($to,$subject,$message,$cc=array(),$bcc=array())
 	# echo "<p>TO: $to<br >SUBJECT: $subject<br >MSG: $message</p>";
 	# return true;
 
+    // Use mailgun
+    if ($modsForHesk_settings['use_mailgun'])
+    {
+        ob_start();
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://api.mailgun.net/v2/".$modsForHesk_settings['mailgun_domain']."/messages");
+
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, 'api:' . $modsForHesk_settings['mailgun_api_key']);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,
+            array(
+                'from'      => $hesk_settings['from_header'],
+                'to'        => $to,
+                'h:Reply-To'=> $hesk_settings['from_header'],
+                'subject'   => $subject,
+                'text'      => $message
+            ));
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $tmp = trim(ob_get_contents());
+        ob_end_clean();
+
+        return (strlen($tmp)) ? $tmp : true;
+    }
     // Use PHP's mail function
-	if ( ! $hesk_settings['smtp'])
+	elseif ( ! $hesk_settings['smtp'])
     {
     	// Set additional headers
 		$headers = "From: $hesk_settings[from_header]\n";
