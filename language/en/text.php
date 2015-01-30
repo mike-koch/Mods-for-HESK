@@ -35,6 +35,16 @@ $hesklang['cc'] = 'Cc:';
 $hesklang['bcc'] = 'Bcc:';
 $hesklang['mailgun'] = 'Mailgun';
 $hesklang['mailgun_help'] = 'Send mail using the Mailgun API. For more information on Mailgun, visit https://www.mailgun.com';
+$hesklang['mailgun_api_key'] = 'Mailgun API Key';
+$hesklang['mailgun_api_key_help'] = 'Your API key for Mailgun.';
+$hesklang['mailgun_domain'] = 'Mailgun Domain';
+$hesklang['mailgun_domain_help'] = 'Your registered domain for Mailgun';
+$hesklang['html_emails'] = 'HTML Emails';
+$hesklang['html_emails_help'] = 'Send HTML-supported emails to staff and customers.<br><br>To use this feature, create a new folder called <b>html</b> in your
+    language\'s <b>emails</b> folder and create templates for each email file. Both the HTML and plaintext versions will be sent (recipient\'s email program will
+    properly display either the HTML or plaintext version, depending on their mail client\'s settings).';
+$hesklang['html_emails_text'] = 'Enable HTML-formatted emails';
+$hesklang['beta_text'] = 'BETA';
 
 
 // ADDED OR MODIFIED IN Mods For HESK 1.7.0

@@ -260,7 +260,16 @@ $set['kb_related']			= intval( hesk_POST('s_kb_related') );
 
 /* --> Email sending */
 $smtp_OK = true;
-$set['smtp'] = empty($_POST['s_smtp']) ? 0 : 1;
+if (empty($_POST['s_smtp'])) {
+    $set['smtp'] = 0;
+    $set['use_mailgun'] = 0;
+} elseif ($_POST['s_smtp'] === 1) {
+    $set['smtp'] = 1;
+    $set['use_mailgun'] = 0;
+} else {
+    $set['smtp'] = 0;
+    $set['use_mailgun'] = 1;
+}
 if ($set['smtp'])
 {
 	// Test SMTP connection
@@ -274,13 +283,18 @@ if ($set['smtp'])
 }
 else
 {
-	$set['smtp_host_name']	= hesk_input( hesk_POST('tmp_smtp_host_name', 'mail.domain.com') );
-	$set['smtp_host_port']	= intval( hesk_POST('tmp_smtp_host_port', 25) );
-	$set['smtp_timeout']	= intval( hesk_POST('tmp_smtp_timeout', 10) );
-	$set['smtp_ssl']		= empty($_POST['tmp_smtp_ssl']) ? 0 : 1;
-	$set['smtp_tls']		= empty($_POST['tmp_smtp_tls']) ? 0 : 1;
-	$set['smtp_user']		= hesk_input( hesk_POST('tmp_smtp_user') );
-	$set['smtp_password']	= hesk_input( hesk_POST('tmp_smtp_password') );
+    $set['smtp_host_name']	= hesk_input( hesk_POST('tmp_smtp_host_name', 'mail.domain.com') );
+    $set['smtp_host_port']	= intval( hesk_POST('tmp_smtp_host_port', 25) );
+    $set['smtp_timeout']	= intval( hesk_POST('tmp_smtp_timeout', 10) );
+    $set['smtp_ssl']		= empty($_POST['tmp_smtp_ssl']) ? 0 : 1;
+    $set['smtp_tls']		= empty($_POST['tmp_smtp_tls']) ? 0 : 1;
+    $set['smtp_user']		= hesk_input( hesk_POST('tmp_smtp_user') );
+    $set['smtp_password']	= hesk_input( hesk_POST('tmp_smtp_password') );
+}
+
+if ($set['use_mailgun'] == 1) {
+    $set['mailgun_api_key'] = hesk_input(hesk_POST('mailgun_api_key'));
+    $set['mailgun_domain'] = hesk_input(hesk_POST('mailgun_domain'));
 }
 
 /* --> Email piping */
@@ -597,6 +611,7 @@ $set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
 $set['custom-field-setting'] = empty($_POST['custom-field-setting']) ? 0 : 1;
 $set['customer-email-verification-required'] = empty($_POST['email-verification']) ? 0 : 1;
+$set['html_emails'] = empty($_POST['html_emails']) ? 0 : 1;
 
 if ($set['customer-email-verification-required'])
 {
@@ -639,7 +654,15 @@ $modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';
 $modsForHesk_settings[\'custom_field_setting\'] = '.$set['custom-field-setting'].';
 
 //-- Set this to 1 to enable email verification for new customers
-$modsForHesk_settings[\'customer_email_verification_required\'] = '.$set['customer-email-verification-required'].';';
+$modsForHesk_settings[\'customer_email_verification_required\'] = '.$set['customer-email-verification-required'].';
+
+//-- Set this to 1 to enable HTML-formatted emails.
+$modsForHesk_settings[\'html_emails\'] = '.$set['html_emails'].';
+
+//-- Mailgun Settings
+$modsForHesk_settings[\'use_mailgun\'] = '.$set['use_mailgun'].';
+$modsForHesk_settings[\'mailgun_api_key\'] = \''.$set['mailgun_api_key'].'\';
+$modsForHesk_settings[\'mailgun_domain\'] = \''.$set['mailgun_domain'].'\';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )

@@ -1343,7 +1343,18 @@ if ( defined('HESK_DEMO') )
                     </div>
                 </div>
                 <div id="mailgun_settings" style="display:<?php echo $onload_mailgun; ?>">
-                    <p>populate this!</p>
+                    <div class="form-group">
+                        <label for="mailgun_api_key" class="col-sm-3 control-label"><?php echo $hesklang['mailgun_api_key']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['mailgun_api_key']; ?>" data-content="<?php echo $hesklang['mailgun_api_key_help']; ?>"></i></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['mailgun_api_key']; ?>" id="mailgun_api_key" name="mailgun_api_key" value="<?php echo $modsForHesk_settings['mailgun_api_key']; ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mailgun_domain" class="col-sm-3 control-label"><?php echo $hesklang['mailgun_domain']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['mailgun_domain']; ?>" data-content="<?php echo $hesklang['mailgun_domain_help']; ?>"></i></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['mailgun_domain']; ?>" id="mailgun_domain" name="mailgun_domain" value="<?php echo $modsForHesk_settings['mailgun_domain']; ?>">
+                        </div>
+                    </div>
                 </div>
                 <div id="smtp_settings" style="display:<?php echo $onload_div; ?>">
                     <div class="form-group">
@@ -1979,6 +1990,22 @@ if ( defined('HESK_DEMO') )
                           <div class="checkbox">
                               <label>
                                   <input id="email-verification" name="email-verification" type="checkbox" <?php if ($modsForHesk_settings['customer_email_verification_required']) {echo 'checked';} ?>> <?php echo $hesklang['require_customer_validate_email']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="html_emails" class="col-sm-4 col-xs-12 control-label">
+                          <span class="label label-warning"><?php echo $hesklang['beta_text']; ?></span>
+                          <?php echo $hesklang['html_emails']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                             title="<?php echo $hesklang['html_emails']; ?>"
+                             data-content="<?php echo $hesklang['html_emails_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input id="html_emails" name="html_emails" type="checkbox" <?php if ($modsForHesk_settings['html_emails']) {echo 'checked';} ?>> <?php echo $hesklang['html_emails_text']; ?>
                               </label>
                           </div>
                       </div>
