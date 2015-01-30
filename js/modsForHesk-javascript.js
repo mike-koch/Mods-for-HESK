@@ -57,4 +57,13 @@ function toggleChildrenForm(show) {
     }
 }
 
+function toggleContainers(showIds, hideIds) {
+    showIds.forEach(function (entry) {
+        $('#' + entry).show();
+    });
+    hideIds.forEach(function (entry) {
+        $('#' + entry).hide();
+    });
+}
+
 jQuery(document).ready(loadJquery);

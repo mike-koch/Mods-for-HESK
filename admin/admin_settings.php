@@ -1299,17 +1299,24 @@ if ( defined('HESK_DEMO') )
 
                 <div class="form-group">
                     <label for="s_smtp" class="col-sm-3 control-label"><?php echo $hesklang['emlsend2']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#55','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                    <div class="col-sm-9 form-inline">
+                    <div class="col-sm-9">
                         <?php
                         $on = '';
                         $off = '';
+                        $mailgunOn = '';
                         $onload_div = 'none';
+                        $onload_mailgun = 'none';
                         $onload_status = '';
 
                         if ($hesk_settings['smtp'])
                         {
                             $on = 'checked="checked"';
                             $onload_div = 'block';
+                        }
+                        elseif ($modsForHesk_settings['use_mailgun'])
+                        {
+                            $mailgunOn = 'checked="checked"';
+                            $onload_mailgun = 'block';
                         }
                         else
                         {
@@ -1318,8 +1325,9 @@ if ( defined('HESK_DEMO') )
                         }
 
                         echo '
-                        <div class="radio"><label><input type="radio" name="s_smtp" value="0" onclick="hesk_attach_disable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'))" onchange="hesk_toggleLayerDisplay(\'smtp_settings\');" '.$off.' /> '.$hesklang['phpmail'].'</label></div>&nbsp;&nbsp;&nbsp;
-                        <div class="radio"><label><input type="radio" name="s_smtp" value="1" onclick="hesk_attach_enable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'))"  onchange="hesk_toggleLayerDisplay(\'smtp_settings\');" '.$on.' /> '.$hesklang['smtp'].'</label></div>';
+                        <div class="radio"><label><input type="radio" name="s_smtp" value="0" onclick="hesk_attach_disable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'));toggleContainers([],[\'smtp_settings\',\'mailgun_settings\']);" '.$off.' /> '.$hesklang['phpmail'].'</label></div>
+                        <div class="radio"><label><input type="radio" name="s_smtp" value="1" onclick="hesk_attach_enable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'));toggleContainers([\'smtp_settings\'],[\'mailgun_settings\']);" '.$on.' /> '.$hesklang['smtp'].'</label></div>
+                        <div class="radio"><label><input type="radio" name="s_smtp" value="2" onclick="toggleContainers([\'mailgun_settings\'],[\'smtp_settings\']);" '.$mailgunOn.'>'.$hesklang['mailgun'].' <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="'.$hesklang['mailgun'].'" data-content="'.$hesklang['mailgun_help'].'"></i></label></div>';
                         ?>
                         <input type="hidden" name="tmp_smtp_host_name" value="<?php echo $hesk_settings['smtp_host_name']; ?>" />
                         <input type="hidden" name="tmp_smtp_host_port" value="<?php echo $hesk_settings['smtp_host_port']; ?>" />
@@ -1333,6 +1341,9 @@ if ( defined('HESK_DEMO') )
 
 
                     </div>
+                </div>
+                <div id="mailgun_settings" style="display:<?php echo $onload_mailgun; ?>">
+                    <p>populate this!</p>
                 </div>
                 <div id="smtp_settings" style="display:<?php echo $onload_div; ?>">
                     <div class="form-group">

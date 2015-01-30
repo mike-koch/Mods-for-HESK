@@ -33,6 +33,8 @@ $hesklang['email_custom_field_help'] = 'Allows the input of an email address. Si
 $hesklang['email_custom_field_label'] = 'Address Type';
 $hesklang['cc'] = 'Cc:';
 $hesklang['bcc'] = 'Bcc:';
+$hesklang['mailgun'] = 'Mailgun';
+$hesklang['mailgun_help'] = 'Send mail using the Mailgun API. For more information on Mailgun, visit https://www.mailgun.com';
 
 
 // ADDED OR MODIFIED IN Mods For HESK 1.7.0
