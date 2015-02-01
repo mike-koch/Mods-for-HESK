@@ -57,7 +57,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
     <?php } else { ?>
     <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
     <?php } ?>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
