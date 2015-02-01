@@ -307,6 +307,8 @@ div.headersm {
     margin: 0;
     font-weight: 700;
     padding-left: 20px;
+    background-image: none;
+    height: auto;
 }
 div.installWarning {
     width: 70%;
