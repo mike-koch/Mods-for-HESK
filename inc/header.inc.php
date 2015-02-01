@@ -44,18 +44,18 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="theme-color" content="<?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>">
     <?php if ($modsForHesk_settings['rtl']) { ?>
-    <link href="<?php echo HESK_PATH; ?>hesk_style_v25RTL.css" type="text/css" rel="stylesheet" />
+    <link href="<?php echo HESK_PATH; ?>hesk_style_RTL.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } else { ?>
-	<link href="<?php echo HESK_PATH; ?>hesk_style.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php if ($modsForHesk_settings['rtl']) { ?>
-    <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php" type="text/css" rel="stylesheet" />
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } else { ?>
-    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } ?>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
