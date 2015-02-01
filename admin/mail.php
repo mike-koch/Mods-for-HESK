@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -353,9 +354,10 @@ function mail_send()
 			/* Format email subject and message for recipient */
 			$subject = hesk_getEmailSubject('new_pm',$pm,0);
 			$message = hesk_getEmailMessage('new_pm',$pm,1,0);
+            $htmlMessage = hesk_getHtmlMessage('new_pm',$pm,1,0);
 
 			/* Send e-mail */
-			hesk_mail($pm_recipient['email'], $subject, $message);
+			hesk_mail($pm_recipient['email'], $subject, $message, $htmlMessage);
         }
 
 		unset($_SESSION['mail']);

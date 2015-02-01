@@ -1,0 +1,7 @@
+<p>Hello,</p>
+<p>A customer has just replied to ticket "%%SUBJECT%%".</p>
+<p>You can manage this ticket here:
+%%TRACK_URL%%</p>
+<p>Regards,</p>
+%%SITE_TITLE%% <br>
+%%SITE_URL%%

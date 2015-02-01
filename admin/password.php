@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 
 // Is the password reset function enabled?
@@ -176,15 +177,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 			// Get the email message
 			$msg = hesk_getEmailMessage('reset_password',array(),1,0,1);
+            $htmlMsg = hesk_getHtmlMessage('reset_password',array(),1,0,1);
 
 			// Replace message special tags
 			$msg = str_replace('%%NAME%%',				hesk_msgToPlain($row['name'],1,1),	$msg);
 			$msg = str_replace('%%SITE_URL%%',			$hesk_settings['site_url'],			$msg);
 			$msg = str_replace('%%SITE_TITLE%%',   		$hesk_settings['site_title'],		$msg);
 			$msg = str_replace('%%PASSWORD_RESET%%',	$hesk_settings['hesk_url'].'/'.$hesk_settings['admin_dir'].'/password.php?h='.$hash, $msg);
+            $htmlMsg = str_replace('%%NAME%%',				hesk_msgToPlain($row['name'],1,1),	$htmlMsg);
+            $htmlMsg = str_replace('%%SITE_URL%%',			$hesk_settings['site_url'],			$htmlMsg);
+            $htmlMsg = str_replace('%%SITE_TITLE%%',   		$hesk_settings['site_title'],		$htmlMsg);
+            $htmlMsg = str_replace('%%PASSWORD_RESET%%',	$hesk_settings['hesk_url'].'/'.$hesk_settings['admin_dir'].'/password.php?h='.$hash, $htmlMsg);
 
 			// Send email
-			hesk_mail($email, $hesklang['reset_password'], $msg);
+			hesk_mail($email, $hesklang['reset_password'], $msg, $htmlMsg);
 
 			// Show success
 			hesk_process_messages($hesklang['pemls'],'NOREDIRECT','SUCCESS');

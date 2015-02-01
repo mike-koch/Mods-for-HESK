@@ -1,0 +1,10 @@
+<p>Dear %%NAME%%,</p>
+<p>Your support ticket "%%SUBJECT%%" has been submitted.</p>
+<p>We reply to all tickets as soon as possible, within 24 to 48 hours. If we expect your ticket will take additional time, we will update you by sending you an email.</p>
+<p>Ticket tracking ID: %%TRACK_ID%%</p>
+<p>You can view the status of your ticket here:
+%%TRACK_URL%%</p>
+<p>You will receive an email notification when our staff replies to your ticket.</p>
+<p>Sincerely,</p>
+%%SITE_TITLE%% <br>
+%%SITE_URL%%

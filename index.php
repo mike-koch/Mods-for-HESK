@@ -37,6 +37,7 @@ define('HESK_PATH','./');
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 
 // Are we in maintenance mode?
@@ -1160,6 +1161,10 @@ function forgot_tid()
 
 	require(HESK_PATH . 'inc/email_functions.inc.php');
 
+    /* Get ticket(s) from database */
+    hesk_load_database_functions();
+    hesk_dbConnect();
+
 	$email = hesk_validateEmail( hesk_POST('email'), 'ERR' ,0) or hesk_process_messages($hesklang['enter_valid_email'],'ticket.php?remind=1');
 
     if ( isset($_POST['open_only']) )
@@ -1174,10 +1179,6 @@ function forgot_tid()
     {
         $my_status[$myStatusRow['ID']] = $hesklang[$myStatusRow['TicketViewContentKey']];
     }
-
-	/* Get ticket(s) from database */
-	hesk_load_database_functions();
-	hesk_dbConnect();
 
     // Get tickets from the database
 	$res = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` FORCE KEY (`statuses`) WHERE ' . ($hesk_settings['open_only'] ? "`status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 0) AND " : '') . ' ' . hesk_dbFormatEmail($email) . ' ORDER BY `status` ASC, `lastchange` DESC ');
@@ -1213,16 +1214,17 @@ $hesk_settings[hesk_url]/ticket.php?track={$my_ticket['trackid']}{$email_param}
 
 	/* Get e-mail message for customer */
 	$msg = hesk_getEmailMessage('forgot_ticket_id','',0,0,1);
-	$msg = str_replace('%%NAME%%',			$name,												$msg);
-	$msg = str_replace('%%NUM%%',			$num,												$msg);
-	$msg = str_replace('%%LIST_TICKETS%%',	$tid_list,											$msg);
-	$msg = str_replace('%%SITE_TITLE%%',	hesk_msgToPlain($hesk_settings['site_title'], 1),	$msg);
-	$msg = str_replace('%%SITE_URL%%',		$hesk_settings['site_url'],							$msg);
+    $msg = processEmail($msg, $name, $num, $tid_list);
+
+    // Get HTML message for customer
+    $htmlMsg = hesk_getHtmlMessage('forgot_ticket_id','',0,0,1);
+    $htmlMsg = processEmail($htmlMsg, $name, $num, $tid_list);
+
 
     $subject = hesk_getEmailSubject('forgot_ticket_id');
 
 	/* Send e-mail */
-	hesk_mail($email, $subject, $msg);
+	hesk_mail($email, $subject, $msg, $htmlMsg);
 
 	/* Show success message */
 	$tmp  = '<b>'.$hesklang['tid_sent'].'!</b>';
@@ -1248,4 +1250,15 @@ $hesk_settings[hesk_url]/ticket.php?track={$my_ticket['trackid']}{$email_param}
 
     } // End forgot_tid()
 
+    function processEmail($msg, $name, $num, $tid_list)
+    {
+        global $hesk_settings;
+
+        $msg = str_replace('%%NAME%%',			$name,												$msg);
+        $msg = str_replace('%%NUM%%',			$num,												$msg);
+        $msg = str_replace('%%LIST_TICKETS%%',	$tid_list,											$msg);
+        $msg = str_replace('%%SITE_TITLE%%',	hesk_msgToPlain($hesk_settings['site_title'], 1),	$msg);
+        $msg = str_replace('%%SITE_URL%%',		$hesk_settings['site_url'],							$msg);
+        return $msg;
+    }
 ?>

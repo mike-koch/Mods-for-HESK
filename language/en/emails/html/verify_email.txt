@@ -1,0 +1,6 @@
+<p>Dear %%NAME%%,</p>
+<p>Your email needs to be verified before your ticket can be submitted. Please click the link below to verify your email.</p>
+<p>%%VERIFYURL%%</p>
+<p>Sincerely,</p>
+%%SITE_TITLE%% <br>
+%%SITE_URL%%
