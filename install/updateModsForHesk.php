@@ -3,6 +3,8 @@ define('IN_SCRIPT',1);
 define('HESK_PATH','../');
 require(HESK_PATH . 'install/install_functions.inc.php');
 require(HESK_PATH . 'hesk_settings.inc.php');
+
+hesk_dbConnect();
 ?>
 <html>
     <head>
@@ -12,6 +14,10 @@ require(HESK_PATH . 'hesk_settings.inc.php');
         <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+        <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
+        <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
+        <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
+        <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
     </head>
     <body>
         <div class="headersm">Mods for HESK 2.0.0 Install / Upgrade</div>
@@ -108,39 +114,82 @@ require(HESK_PATH . 'hesk_settings.inc.php');
                                 </div>
                                 <p>What version of Mods for HESK do you currently have installed?</p>
                                 <hr>
+                                <?php
+                                $tableSql = hesk_dbQuery('SHOW TABLES LIKE \''.hesk_dbEscape($hesk_settings['db_pfix']).'settings\'');
+                                $version = NULL;
+                                $disableAllExcept = NULL;
+                                if (hesk_dbNumRows($tableSql) > 0) {
+                                    $versionRS = hesk_dbQuery('SELECT `Value` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'settings` WHERE `Key` = \'modsForHeskVersion\'');
+                                    $versionArray = hesk_dbFetchAssoc($versionRS);
+                                    $version = $versionArray['Value'];
+
+                                    echo '<div class="row">';
+                                    echo '<div class="col-sm-12">';
+                                    echo '<p id="updateText">Mods for HESK has detected that you currently have v'.$version.' installed.
+                                        The button you should click to upgrade has been highlighted for you. However, if
+                                        Mods for HESK selected the wrong button for you, click <a href="javascript:void(0)" onclick="enableAllDisablable();">here</a> to reset them.</p>';
+                                    echo '</div>';
+                                    echo '</div>';
+                                }
+                                ?>
                                 <div class="row">
                                     <div class="col-md-3 col-sm-12">
-                                        <a class="btn btn-default btn-block" href="updateTo2-0-0.php">v1.7.0</a>
+                                        <?php
+                                        if ($version == '1.7.0') {
+                                            $v170btn = 'btn-success';
+                                            $disableAllExcept = '170';
+                                        } else {
+                                            $v170btn = 'btn-default';
+                                        }
+                                        ?>
+                                        <a id="170" class="btn <?php echo $v170btn; ?> btn-block disablable" href="updateTo2-0-0.php">v1.7.0</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a class="btn btn-default btn-block" href="updateTo1-7-0.php">v1.6.1</a>
+                                        <?php
+                                        if ($version == '1.6.1') {
+                                            $v161btn = 'btn-success';
+                                            $disableAllExcept = '161';
+                                        } else {
+                                            $v161btn = 'btn-default';
+                                        }
+                                        ?>
+                                        <a id="161" class="btn <?php echo $v161btn; ?> btn-block disablable" href="updateTo1-7-0.php">v1.6.1</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a class="btn btn-default btn-block" href="updateTo1-6-1.php">v1.6.0</a>
+
+                                        <?php
+                                        if ($version == '1.6.0') {
+                                            $v160btn = 'btn-success';
+                                            $disableAllExcept = '160';
+                                        } else {
+                                            $v160btn = 'btn-default';
+                                        }
+                                        ?>
+                                        <a id="160" class="btn <?php echo $v160btn; ?> btn-block disablable" href="updateTo1-6-1.php">v1.6.0</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a class="btn btn-default btn-block" href="updateTo1-6-0.php">v1.5.0</a>
+                                        <a id="150" class="btn btn-default btn-block disablable" href="updateTo1-6-0.php">v1.5.0</a>
                                     </div>
                                 </div>
                                 <br>
                                 <div class="row">
                                     <div class="col-md-3 col-sm-12">
-                                        <a class="btn btn-default btn-block" href="updateTo1-5-0.php">v1.4.1</a>
+                                        <a id="141" class="btn btn-default btn-block disablable" href="updateTo1-5-0.php">v1.4.1</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a class="btn btn-default btn-block" href="updateTo1-4-1.php?ar=true">v1.4.0</a>
+                                        <a id="140" class="btn btn-default btn-block disablable" href="updateTo1-4-1.php?ar=true">v1.4.0</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a class="btn btn-default btn-block" href="updateTo1-4-1.php">v1.3.0</a>
+                                        <a id="130" class="btn btn-default btn-block disablable" href="updateTo1-4-1.php">v1.3.0</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a class="btn btn-default btn-block" href="updateTo1-4-1.php">v1.2.4</a>
+                                        <a id="124" class="btn btn-default btn-block disablable" href="updateTo1-4-1.php">v1.2.4</a>
                                     </div>
                                 </div>
                                 <br>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <a class="btn btn-default btn-block" href="freshInstall.php">I do not currently have Mods for HESK installed</a>
+                                        <a class="btn btn-default btn-block disablable" href="freshInstall.php">I do not currently have Mods for HESK installed</a>
                                     </div>
                                 </div>
                                 <br>
@@ -154,8 +203,11 @@ require(HESK_PATH . 'hesk_settings.inc.php');
                     </div>
                 </div>
             </div>
-
-            <p></p>
         </div>
+        <?php
+        if ($disableAllExcept !== NULL) {
+            echo '<script>disableAllDisablable(\''.$disableAllExcept.'\')</script>';
+        }
+        ?>
     </body>
 </html>

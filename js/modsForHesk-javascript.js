@@ -66,4 +66,14 @@ function toggleContainers(showIds, hideIds) {
     });
 }
 
+function disableAllDisablable(exclusion) {
+    $('.disablable').attr('disabled', 'disabled');
+    $('#'+exclusion).removeAttr('disabled');
+}
+
+function enableAllDisablable() {
+    $('.disablable').removeAttr('disabled');
+    $('#updateText').hide();
+}
+
 jQuery(document).ready(loadJquery);
