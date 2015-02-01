@@ -263,7 +263,7 @@ $smtp_OK = true;
 if (empty($_POST['s_smtp'])) {
     $set['smtp'] = 0;
     $set['use_mailgun'] = 0;
-} elseif ($_POST['s_smtp'] === 1) {
+} elseif ($_POST['s_smtp'] == 1) {
     $set['smtp'] = 1;
     $set['use_mailgun'] = 0;
 } else {
