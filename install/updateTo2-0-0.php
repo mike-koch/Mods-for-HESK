@@ -4,56 +4,6 @@ define('HESK_PATH','../');
 require(HESK_PATH . 'install/install_functions.inc.php');
 require(HESK_PATH . 'hesk_settings.inc.php');
 
-hesk_dbConnect();
-hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` DROP COLUMN `note_id`");
-hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` DROP COLUMN `edit_date`");
-hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` DROP COLUMN `number_of_edits`");
-hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `default_notify_customer_email`");
-hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.0.0' WHERE `Key` = 'modsForHeskVersion'");
-
-$keyRs = hesk_dbQuery("SHOW KEYS FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE Key_name='statuses'");
-if (hesk_dbNumRows($keyRs) == 0)
-{
-    //-- Add the key
-    hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD KEY `statuses` (`status`)");
-}
-
-//-- Add the new HTML email property to modsForHesk_settings.inc.php
-$file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-
-//-- Only add the additional settings if they aren't already there.
-if (strpos($file, 'html_emails') !== true)
-{
-    $file .= '
-
-//-- Set this to 1 to enable HTML-formatted emails.
-$modsForHesk_settings[\'html_emails\'] = 0;
-
-//-- Mailgun Settings
-$modsForHesk_settings[\'use_mailgun\'] = 0;
-$modsForHesk_settings[\'mailgun_api_key\'] = \'API Key\';
-$modsForHesk_settings[\'mailgun_domain\'] = \'mail.domain.com\';';
-}
-
-if (!file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file))
-{
-    $updateSuccess = false;
-    echo '<h1>Failure!</h1>
-    <p>An issue occurred when trying to update the modsForHesk_settings.inc.php file.</p>
-    <br>
-    <p>Add the following lines to your modsForHesk_settings.inc.php file:</p>
-    <br>
-    <code>//-- Set this to 1 to enable HTML-formatted emails.
-        $modsForHesk_settings[\'html_emails\'] = 0;</code><br><br>
-    <code>//-- Mailgun Settings
-        $modsForHesk_settings[\'use_mailgun\'] = 0;
-        $modsForHesk_settings[\'mailgun_api_key\'] = \'API Key\';
-        $modsForHesk_settings[\'mailgun_domain\'] = \'mail.domain.com\';
-    </code>
-    <p>After editing your modsForHesk_settings.inc.php file, you can follow the instructions below.';
-
-}
-
 $banRS = hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails`
                         UNION ALL SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_ips`");
 

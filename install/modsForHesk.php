@@ -105,7 +105,7 @@ hesk_dbConnect();
                             <div class="prereqsFailedDiv" style="display:<?php echo $prereqDiv; ?>">
                                 <div class="alert alert-danger">
                                     <p><i class="fa fa-times-circle"></i> You cannot install/upgrade Mods for HESK until the requirements on the left have been met.</p>
-                                    <p><a href="updateModsForHesk.php" class="btn btn-default">Refresh</a></p>
+                                    <p><a href="modsForHesk.php" class="btn btn-default">Refresh</a></p>
                                 </div>
                             </div>
                             <div class="installDiv"  style="display:<?php echo $installDiv; ?>">
@@ -127,7 +127,7 @@ hesk_dbConnect();
                                     echo '<div class="col-sm-12">';
                                     echo '<p id="updateText">Mods for HESK has detected that you currently have v'.$version.' installed.
                                         The button you should click to upgrade has been highlighted for you. However, if
-                                        Mods for HESK selected the wrong button for you, click <a href="javascript:void(0)" onclick="enableAllDisablable();">here</a> to reset them.</p>';
+                                        Mods for HESK selected the wrong version, click <a href="javascript:void(0)" onclick="enableAllDisablable();">here</a> to reset them.</p>';
                                     echo '</div>';
                                     echo '</div>';
                                 }
@@ -142,7 +142,7 @@ hesk_dbConnect();
                                             $v170btn = 'btn-default';
                                         }
                                         ?>
-                                        <a id="170" class="btn <?php echo $v170btn; ?> btn-block disablable" href="updateTo2-0-0.php">v1.7.0</a>
+                                        <a id="170" class="btn <?php echo $v170btn; ?> btn-block disablable" href="installModsForHesk.php?v=170">v1.7.0</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
                                         <?php
@@ -153,7 +153,7 @@ hesk_dbConnect();
                                             $v161btn = 'btn-default';
                                         }
                                         ?>
-                                        <a id="161" class="btn <?php echo $v161btn; ?> btn-block disablable" href="updateTo1-7-0.php">v1.6.1</a>
+                                        <a id="161" class="btn <?php echo $v161btn; ?> btn-block disablable" href="installModsForHesk.php?v=161">v1.6.1</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
 
@@ -165,31 +165,31 @@ hesk_dbConnect();
                                             $v160btn = 'btn-default';
                                         }
                                         ?>
-                                        <a id="160" class="btn <?php echo $v160btn; ?> btn-block disablable" href="updateTo1-6-1.php">v1.6.0</a>
+                                        <a id="160" class="btn <?php echo $v160btn; ?> btn-block disablable" href="installModsForHesk.php?v=160">v1.6.0</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a id="150" class="btn btn-default btn-block disablable" href="updateTo1-6-0.php">v1.5.0</a>
+                                        <a id="150" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=150">v1.5.0</a>
                                     </div>
                                 </div>
                                 <br>
                                 <div class="row">
                                     <div class="col-md-3 col-sm-12">
-                                        <a id="141" class="btn btn-default btn-block disablable" href="updateTo1-5-0.php">v1.4.1</a>
+                                        <a id="141" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=141">v1.4.1</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a id="140" class="btn btn-default btn-block disablable" href="updateTo1-4-1.php?ar=true">v1.4.0</a>
+                                        <a id="140" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=140">v1.4.0</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a id="130" class="btn btn-default btn-block disablable" href="updateTo1-4-1.php">v1.3.0</a>
+                                        <a id="130" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=130">v1.3.0</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <a id="124" class="btn btn-default btn-block disablable" href="updateTo1-4-1.php">v1.2.4</a>
+                                        <a id="124" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=124">v1.2.4</a>
                                     </div>
                                 </div>
                                 <br>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <a class="btn btn-default btn-block disablable" href="freshInstall.php">I do not currently have Mods for HESK installed</a>
+                                        <a class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=0">I do not currently have Mods for HESK installed</a>
                                     </div>
                                 </div>
                                 <br>
