@@ -76,4 +76,56 @@ function enableAllDisablable() {
     $('#updateText').hide();
 }
 
+function startVersionUpgrade(version) {
+    $('#spinner-'+version)
+        .removeClass('fa-exclamation-triangle')
+        .addClass('fa-spinner')
+        .addClass('fa-pulse');
+    changeRowTo('row', version, 'info');
+    changeTextTo('span', version, 'In Progress');
+}
+
+function markUpdateAsSuccess(version) {
+    removeSpinner(version);
+    $('#spinner-'+version).addClass('fa-check-circle');
+    changeTextTo('span', version, 'Completed Successfully');
+    changeRowTo('row', version, 'success');
+}
+
+function removeSpinner(version) {
+    $('#spinner-'+version)
+        .removeClass('fa-pulse')
+        .removeClass('fa-spinner');
+}
+
+function markUpdateAsAttention(version) {
+    removeSpinner(version);
+    $('#spinner-'+version).addClass('fa-exclamation-triangle');
+    changeRowTo('row', version, 'warning');
+    changeTextTo('span', version, 'Attention! See below for more information');
+}
+
+function markUpdateAsFailure(version) {
+    removeSpinner(version);
+    $('#spinner-'+version).addClass('fa-times-circle');
+    changeRowTo('row', version, 'danger');
+    changeTextTo('span', version, 'Update failed! Check the console for more information');
+}
+
+function changeTextTo(prefix, version, text) {
+    $('#'+prefix+'-'+version).text(text);
+}
+
+function changeRowTo(prefix, version, clazz) {
+    //-- Remove all classes
+    $('#'+prefix+'-'+version)
+        .removeClass('info')
+        .removeClass('warning')
+        .removeClass('danger')
+        .removeClass('success');
+
+    //-- Re-add the requested class
+    $('#'+prefix+'-'+version).addClass(clazz);
+}
+
 jQuery(document).ready(loadJquery);

@@ -9,6 +9,39 @@ if (!isset($_GET['v'])) {
     die('Starting version not set!');
 }
 $startingVersion = intval($_GET['v']);
+
+function echoInitialVersionRows($version) {
+    if ($version < 140) {
+        printRow('v1.4.0');
+    }
+    if ($version < 141) {
+        printRow('v1.4.1');
+    }
+    if ($version < 150) {
+        printRow('v1.5.0');
+    }
+    if ($version < 160) {
+        printRow('v1.6.0');
+    }
+    if ($version < 161) {
+        printRow('v1.6.1');
+    }
+    if ($version < 170) {
+        printRow('v1.7.0');
+    }
+    if ($version < 200) {
+        printRow('v2.0.0');
+    }
+}
+
+function printRow($version) {
+    $versionId = str_replace('.','',$version);
+    $versionId = str_replace('v','',$versionId);
+    echo '<tr id="row-'.$versionId.'">';
+    echo '<td>'.$version.'</td>';
+    echo '<td><i id="spinner-'.$versionId.'" class="fa fa-spinner"></i> <span id="span-'.$versionId.'">Waiting...</span></td>';
+    echo '</tr>';
+}
 ?>
 <html>
     <head>
@@ -33,7 +66,7 @@ $startingVersion = intval($_GET['v']);
                 <div class="col-sm-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">Installation Progress</div>
-                        <table class="table table-striped">
+                        <table class="table table-striped" style="table-layout:fixed;">
                             <thead>
                             <tr>
                                 <th>Version</th>
@@ -41,16 +74,29 @@ $startingVersion = intval($_GET['v']);
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="success">
-                                <td>v1.4.0</td>
-                                <td>Success</td>
-                            </tr>
-                            <tr>
-                                <td>v1.4.0</td>
-                                <td>...</td>
-                            </tr>
+                                <?php echoInitialVersionRows($startingVersion); ?>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="attention-row" style="display:block">
+                <div class="col-sm-12">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">Your Attention is Needed!</div>
+                        <div class="panel-body">
+                            <p>Panel Body</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Console</div>
+                        <div class="panel-body" style="min-height: 400px;max-height: 400px; overflow: auto">
+                            <p>CONSOLE</p>
+                        </div>
                     </div>
                 </div>
             </div>
