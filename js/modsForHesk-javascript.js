@@ -128,4 +128,9 @@ function changeRowTo(prefix, version, clazz) {
     $('#'+prefix+'-'+version).addClass(clazz);
 }
 
+function appendToInstallConsole(text) {
+    var currentText = $('#console-text').text();
+    $('#console-text').append(text).append('<br>');
+}
+
 jQuery(document).ready(loadJquery);

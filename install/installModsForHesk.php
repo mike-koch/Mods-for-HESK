@@ -11,6 +11,9 @@ if (!isset($_GET['v'])) {
 $startingVersion = intval($_GET['v']);
 
 function echoInitialVersionRows($version) {
+    if ($version < 1) {
+        printRow('Pre-v1.4.0');
+    }
     if ($version < 140) {
         printRow('v1.4.0');
     }
@@ -37,6 +40,7 @@ function echoInitialVersionRows($version) {
 function printRow($version) {
     $versionId = str_replace('.','',$version);
     $versionId = str_replace('v','',$versionId);
+    $versionId = str_replace('Pre-','p',$versionId);
     echo '<tr id="row-'.$versionId.'">';
     echo '<td>'.$version.'</td>';
     echo '<td><i id="spinner-'.$versionId.'" class="fa fa-spinner"></i> <span id="span-'.$versionId.'">Waiting...</span></td>';
@@ -80,12 +84,11 @@ function printRow($version) {
                     </div>
                 </div>
             </div>
-            <div class="row" id="attention-row" style="display:block">
+            <div class="row" id="attention-row" style="display:none">
                 <div class="col-sm-12">
                     <div class="panel panel-warning">
                         <div class="panel-heading">Your Attention is Needed!</div>
-                        <div class="panel-body">
-                            <p>Panel Body</p>
+                        <div class="panel-body" id="attention-body">
                         </div>
                     </div>
                 </div>
@@ -94,8 +97,8 @@ function printRow($version) {
                 <div class="col-sm-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">Console</div>
-                        <div class="panel-body" style="min-height: 400px;max-height: 400px; overflow: auto">
-                            <p>CONSOLE</p>
+                        <div class="panel-body" style="min-height: 400px;max-height: 400px; overflow: auto;">
+                            <p id="console-text" style="font-family: 'Courier New',monospace;"></p>
                         </div>
                     </div>
                 </div>
@@ -105,26 +108,47 @@ function printRow($version) {
 </html>
 
 <?php
-
+if ($startingVersion < 1) {
+    echo '<script>startVersionUpgrade(\'p140\')</script>';
+    //executePre140Scripts();
+    echo '<script>markUpdateAsSuccess(\'p140\')</script>';
+}
 if ($startingVersion < 140) {
-    // Process 140 scripts
+    echo '<script>startVersionUpgrade(\'140\')</script>';
+    //executePre140Scripts();
+    echo '<script>markUpdateAsSuccess(\'140\')</script>';
 }
 if ($startingVersion < 141) {
-    // Process 141 scripts
+    echo '<script>startVersionUpgrade(\'141\')</script>';
+    //execute141Scripts();
+    echo '<script>markUpdateAsSuccess(\'141\')</script>';
 }
 if ($startingVersion < 150) {
-    // Process 150 scripts
+    echo '<script>startVersionUpgrade(\'150\')</script>';
+    //execute150Scripts();
+    echo '<script>markUpdateAsSuccess(\'150\')</script>';
 }
 if ($startingVersion < 160) {
-    // Process 160 scripts
+    echo '<script>startVersionUpgrade(\'160\')</script>';
+    //execute160Scripts();
+    echo '<script>markUpdateAsSuccess(\'160\')</script>';
 }
 if ($startingVersion < 161) {
-    //Process 161 scripts
+    echo '<script>startVersionUpgrade(\'161\')</script>';
+    //execute161Scripts();
+    echo '<script>markUpdateAsSuccess(\'161\')</script>';
 }
 if ($startingVersion < 170) {
-    // Process 170 scripts
+    echo '<script>startVersionUpgrade(\'170\')</script>';
+    //execute170Scripts();
+    //execute170FileUpdate();
+    echo '<script>markUpdateAsSuccess(\'170\')</script>';
 }
 if ($startingVersion < 200) {
-    // Process 200 scripts
+    echo '<script>startVersionUpgrade(\'200\')</script>';
+    //execute200Scripts();
+    //execute200FileUpdate();
+    echo '<script>markUpdateAsSuccess(\'200\')</script>';
+    //Echo completion message where the warning panel is.
 }
 ?>
