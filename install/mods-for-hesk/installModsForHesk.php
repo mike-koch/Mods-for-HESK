@@ -1,9 +1,8 @@
 <?php
 define('IN_SCRIPT',1);
-define('HESK_PATH','../');
+define('HESK_PATH','../../');
 require(HESK_PATH . 'install/install_functions.inc.php');
 require(HESK_PATH . 'hesk_settings.inc.php');
-require('modsForHeskSql.php');
 
 if (!isset($_GET['v'])) {
     die('Starting version not set!');
@@ -50,11 +49,11 @@ function printRow($version) {
 <html>
     <head>
         <title>Installing / Updating Mods for HESK</title>
-        <link href="../hesk_style.css?<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet" />
+        <link href="../../hesk_style.css?<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet" />
         <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
         <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-        <link href="../css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+        <link href="../../css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
         <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
         <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
         <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
@@ -81,6 +80,20 @@ function printRow($version) {
                                 <?php echoInitialVersionRows($startingVersion); ?>
                             </tbody>
                         </table>
+                        <table class="table table-striped" style="table-layout: fixed">
+                            <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr id="row-banmigrate">
+                                <td>Migrate IP / Email Bans</td>
+                                <td><i id="spinner-banmigrate" class="fa fa-spinner"></i> <span id="span-banmigrate">Waiting...</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -104,51 +117,8 @@ function printRow($version) {
                 </div>
             </div>
         </div>
+        <script>
+            processUpdates(<?php echo intval($startingVersion); ?>);
+        </script>
     </body>
 </html>
-
-<?php
-if ($startingVersion < 1) {
-    echo '<script>startVersionUpgrade(\'p140\')</script>';
-    //executePre140Scripts();
-    echo '<script>markUpdateAsSuccess(\'p140\')</script>';
-}
-if ($startingVersion < 140) {
-    echo '<script>startVersionUpgrade(\'140\')</script>';
-    //executePre140Scripts();
-    echo '<script>markUpdateAsSuccess(\'140\')</script>';
-}
-if ($startingVersion < 141) {
-    echo '<script>startVersionUpgrade(\'141\')</script>';
-    //execute141Scripts();
-    echo '<script>markUpdateAsSuccess(\'141\')</script>';
-}
-if ($startingVersion < 150) {
-    echo '<script>startVersionUpgrade(\'150\')</script>';
-    //execute150Scripts();
-    echo '<script>markUpdateAsSuccess(\'150\')</script>';
-}
-if ($startingVersion < 160) {
-    echo '<script>startVersionUpgrade(\'160\')</script>';
-    //execute160Scripts();
-    echo '<script>markUpdateAsSuccess(\'160\')</script>';
-}
-if ($startingVersion < 161) {
-    echo '<script>startVersionUpgrade(\'161\')</script>';
-    //execute161Scripts();
-    echo '<script>markUpdateAsSuccess(\'161\')</script>';
-}
-if ($startingVersion < 170) {
-    echo '<script>startVersionUpgrade(\'170\')</script>';
-    //execute170Scripts();
-    //execute170FileUpdate();
-    echo '<script>markUpdateAsSuccess(\'170\')</script>';
-}
-if ($startingVersion < 200) {
-    echo '<script>startVersionUpgrade(\'200\')</script>';
-    //execute200Scripts();
-    //execute200FileUpdate();
-    echo '<script>markUpdateAsSuccess(\'200\')</script>';
-    //Echo completion message where the warning panel is.
-}
-?>

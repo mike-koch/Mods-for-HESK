@@ -133,4 +133,59 @@ function appendToInstallConsole(text) {
     $('#console-text').append(text).append('<br>');
 }
 
+function processUpdates(startingVersion) {
+    if (startingVersion < 1) {
+        startVersionUpgrade('p140');
+        executeUpdate(1, 'p140');
+    } else if (startingVersion < 140) {
+        startVersionUpgrade('140');
+        executeUpdate(140, '140');
+    } else if (startingVersion < 141) {
+        startVersionUpgrade('141');
+        executeUpdate(141, '141');
+    } else if (startingVersion < 150) {
+        startVersionUpgrade('150');
+        executeUpdate(150, '150');
+    } else if (startingVersion < 160) {
+        startVersionUpgrade('160');
+        executeUpdate(160, '160');
+    } else if (startingVersion < 161) {
+        startVersionUpgrade('161');
+        executeUpdate(161, '161');
+    } else if (startingVersion < 170) {
+        startVersionUpgrade('170');
+        executeUpdate(170, '170');
+    } else if (startingVersion < 200) {
+        startVersionUpgrade('200');
+        executeUpdate(200, '200');
+    }
+}
+
+function executeUpdate(version, cssclass) {
+    $.ajax({
+        type: 'POST',
+        url: 'ajax/database-ajax.php',
+        data: { version: version },
+        success: function() {
+            appendToInstallConsole('Version: ' + version);
+            console.log('Version: ' + version);
+            markUpdateAsSuccess(cssclass);
+            if (version == 200) {
+                //go to ipbanmigration
+                appendToInstallConsole('Going to IP/Email Ban Migration...');
+                console.log('Going to IP/Email Ban Migration...');
+            }
+            processUpdates(version);
+        },
+        error: function() {
+            markUpdateAsFailure(cssclass);
+            console.error('ERROR!');
+        }
+    });
+}
+
+function migrateIpEmailBans() {
+
+}
+
 jQuery(document).ready(loadJquery);

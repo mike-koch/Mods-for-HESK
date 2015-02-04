@@ -29,5 +29,5 @@ then click "Submit".</p>
 </form>
 <?php } else { ?>
     <h1>Installation / Update complete!</h1>
-    <p>Please delete the <b>install</b> folder for security reasons, and then proceed back to the <a href="../">Help Desk</a></p>
+    <p>Please delete the <b>install</b> folder for security reasons, and then proceed back to the <a href="../../">Help Desk</a></p>
 <?php } ?>
