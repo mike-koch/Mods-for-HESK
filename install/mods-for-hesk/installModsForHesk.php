@@ -69,31 +69,33 @@ function printRow($version) {
                 <div class="col-sm-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">Installation Progress</div>
-                        <table class="table table-striped" style="table-layout:fixed;">
-                            <thead>
-                            <tr>
-                                <th>Version</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                        <div id="install-information">
+                            <table class="table table-striped" style="table-layout:fixed;">
+                                <thead>
+                                <tr>
+                                    <th>Version</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
                                 <?php echoInitialVersionRows($startingVersion); ?>
-                            </tbody>
-                        </table>
-                        <table class="table table-striped" style="table-layout: fixed">
-                            <thead>
-                            <tr>
-                                <th>Task</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr id="row-banmigrate">
-                                <td>Migrate IP / Email Bans</td>
-                                <td><i id="spinner-banmigrate" class="fa fa-spinner"></i> <span id="span-banmigrate">Waiting...</span></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                            <table class="table table-striped" style="table-layout: fixed">
+                                <thead>
+                                <tr>
+                                    <th>Task</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="row-banmigrate">
+                                    <td>Migrate IP / Email Bans</td>
+                                    <td><i id="spinner-banmigrate" class="fa fa-spinner"></i> <span id="span-banmigrate">Waiting...</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

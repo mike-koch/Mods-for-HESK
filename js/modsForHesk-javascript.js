@@ -136,7 +136,7 @@ function appendToInstallConsole(text) {
 function processUpdates(startingVersion) {
     if (startingVersion < 1) {
         startVersionUpgrade('p140');
-        executeUpdate(1000, 'p140');
+        executeUpdate(1, 'p140');
     } else if (startingVersion < 140) {
         startVersionUpgrade('140');
         executeUpdate(140, '140');
@@ -194,7 +194,7 @@ function migrateIpEmailBans(version, cssclass) {
                 markUpdateAsAttention(version);
                 prepareAttentionPanel(getContentForMigratePrompt(parsedData.users));
             } else {
-                markUpdateAsSuccess(version);
+                migrateComplete();
             }
             //if ask user, markUpdateAsAttention and append to Attention! div
             //otherwise, mark success and move to completion script.
@@ -204,6 +204,11 @@ function migrateIpEmailBans(version, cssclass) {
             markUpdateAsFailure(cssclass);
         }
     });
+}
+
+function installationFinished() {
+    var html = '<p>Hey! We finished!</p>';
+    $('#install-information').html(html);
 }
 
 function getContentForMigratePrompt(users) {
@@ -218,7 +223,7 @@ function getContentForMigratePrompt(users) {
     });
     selectMarkup += '</select></div></div><br>';
     var submitMarkup = '<div class="row"><div class="col-md-9 col-md-offset-3 col-xs-12"><button onclick="runMigration()" class="btn btn-default">Migrate</button> ' +
-        '<a href="javascript:void(0)" onclick="dontMigrate()" class="btn btn-danger">Don\'t Migrate</a> </div></div>';
+        '<a href="javascript:void(0)" onclick="migrateComplete()" class="btn btn-danger">Don\'t Migrate</a> </div></div>';
 
     return beginningText + selectMarkup + submitMarkup;
 }
@@ -239,14 +244,19 @@ function runMigration() {
         url: 'ajax/task-ajax.php',
         data: { task: 'migrate-bans', user: userId },
         success: function(data) {
-            markUpdateAsSuccess('banmigrate');
-            //TODO cover entire install area with success message.
+            migrateComplete();
         },
         error: function(data) {
             appendToInstallConsole('ERROR: ' + data.responseText);
             markUpdateAsFailure('banmigrate');
         }
     })
+}
+
+function migrateComplete() {
+    $('#attention-row').hide();
+    markUpdateAsSuccess('banmigrate');
+    installationFinished();
 }
 
 jQuery(document).ready(loadJquery);
