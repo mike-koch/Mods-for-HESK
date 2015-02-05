@@ -2,7 +2,44 @@
 require(HESK_PATH . 'hesk_settings.inc.php');
 
 function executeQuery($sql) {
-    return hesk_dbQuery($sql);
+    global $hesk_last_query;
+    global $hesk_db_link;
+    if ( function_exists('mysqli_connect') ) {
+
+        if ( ! $hesk_db_link && ! hesk_dbConnect())
+        {
+            return false;
+        }
+
+        $hesk_last_query = $sql;
+
+        if ($res = @mysqli_query($hesk_db_link, $sql))
+        {
+            return $res;
+        } else
+        {
+            print "Could not execute query: $sql. MySQL said: ".mysqli_error($hesk_db_link);
+            http_response_code(500);
+            die();
+        }
+    } else {
+        if ( ! $hesk_db_link && ! hesk_dbConnect())
+        {
+            return false;
+        }
+
+        $hesk_last_query = $sql;
+
+        if ($res = @mysql_query($sql, $hesk_db_link))
+        {
+            return $res;
+        } else
+        {
+            print "Could not execute query: $sql. MySQL said: ".mysql_error();
+            http_response_code(500);
+            die();
+        }
+    }
 }
 
 // Version 1.0.0 - <1.4.0
@@ -251,19 +288,16 @@ function getUsers() {
     $users = array();
     $usersRS = executeQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `active` = '1' ORDER BY `name`");
     while ($row = hesk_dbFetchAssoc($usersRS)) {
-        $users[$row['id']] = $row['name'];
+        array_push($users, $row);
     }
 
     return $users;
 }
 
-function migrateBans() {
+function migrateBans($creator) {
     global $hesk_settings;
 
     hesk_dbConnect();
-
-    // Get the ID of the creator
-    $creator = $_POST['user'];
 
     // Insert the email bans
     $emailBanRS = executeQuery("SELECT `Email` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails`");

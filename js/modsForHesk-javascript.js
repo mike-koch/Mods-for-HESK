@@ -136,7 +136,7 @@ function appendToInstallConsole(text) {
 function processUpdates(startingVersion) {
     if (startingVersion < 1) {
         startVersionUpgrade('p140');
-        executeUpdate(1, 'p140');
+        executeUpdate(1000, 'p140');
     } else if (startingVersion < 140) {
         startVersionUpgrade('140');
         executeUpdate(140, '140');
@@ -170,30 +170,83 @@ function executeUpdate(version, cssclass) {
 
             markUpdateAsSuccess(cssclass);
             if (version == 200) {
-                migrateIpEmailBans();
+                migrateIpEmailBans('banmigrate', cssclass);
             }
             processUpdates(version);
         },
-        error: function() {
+        error: function(data) {
+            appendToInstallConsole('ERROR: ' + data.responseText);
             markUpdateAsFailure(cssclass);
         }
     });
 }
 
-function migrateIpEmailBans(cssclass) {
+function migrateIpEmailBans(version, cssclass) {
+    startVersionUpgrade(version);
     $.ajax({
         type: 'POST',
         url: 'ajax/task-ajax.php',
         data: { task: 'ip-email-bans' },
         success: function(data) {
-            console.info(data);
+            var parsedData = $.parseJSON(data);
+            console.info(parsedData);
+            if (parsedData.status == 'ATTENTION') {
+                markUpdateAsAttention(version);
+                prepareAttentionPanel(getContentForMigratePrompt(parsedData.users));
+            } else {
+                markUpdateAsSuccess(version);
+            }
             //if ask user, markUpdateAsAttention and append to Attention! div
             //otherwise, mark success and move to completion script.
         },
-        error: function() {
+        error: function(data) {
+            appendToInstallConsole('ERROR: ' + data.responseText);
             markUpdateAsFailure(cssclass);
         }
     });
+}
+
+function getContentForMigratePrompt(users) {
+    var beginningText = '<h2>Migrating IP / E-mail Bans</h2><p>Mods for HESK has detected that you have added IP address ' +
+        'and/or email bans using Mods for HESK. As part of the upgrade process, Mods for HESK will migrate these bans ' +
+        'for you to HESK 2.6.0\'s IP/email ban feature. Select the user below that will be the "creator" of the bans, ' +
+        'then click "Submit".</p>';
+    var selectMarkup = '<div class="row form-horizontal"><div class="control-label col-md-3 col-xs-12" style="text-align: right;vertical-align: middle"><b>User:</b></div>' +
+        '<div class="col-md-9 col-x-12"><select name="user" class="form-control" id="user-dropdown">';
+    users.forEach(function(user) {
+       selectMarkup += '<option value="'+user.id+'">'+user.name+'</option>';
+    });
+    selectMarkup += '</select></div></div><br>';
+    var submitMarkup = '<div class="row"><div class="col-md-9 col-md-offset-3 col-xs-12"><button onclick="runMigration()" class="btn btn-default">Migrate</button> ' +
+        '<a href="javascript:void(0)" onclick="dontMigrate()" class="btn btn-danger">Don\'t Migrate</a> </div></div>';
+
+    return beginningText + selectMarkup + submitMarkup;
+}
+
+function prepareAttentionPanel(content) {
+    $('#attention-body').html(content);
+    $('#attention-row').show();
+}
+
+function runMigration() {
+    // Get user ID that is selected
+    var userId = $('#user-dropdown').val();
+    // Hide the div, switch back to in progress
+    $('#attention-row').hide();
+    startVersionUpgrade('banmigrate');
+    $.ajax({
+        type: 'POST',
+        url: 'ajax/task-ajax.php',
+        data: { task: 'migrate-bans', user: userId },
+        success: function(data) {
+            markUpdateAsSuccess('banmigrate');
+            //TODO cover entire install area with success message.
+        },
+        error: function(data) {
+            appendToInstallConsole('ERROR: ' + data.responseText);
+            markUpdateAsFailure('banmigrate');
+        }
+    })
 }
 
 jQuery(document).ready(loadJquery);
