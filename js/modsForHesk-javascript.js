@@ -166,26 +166,34 @@ function executeUpdate(version, cssclass) {
         type: 'POST',
         url: 'ajax/database-ajax.php',
         data: { version: version },
-        success: function() {
-            appendToInstallConsole('Version: ' + version);
-            console.log('Version: ' + version);
+        success: function(data) {
+
             markUpdateAsSuccess(cssclass);
             if (version == 200) {
-                //go to ipbanmigration
-                appendToInstallConsole('Going to IP/Email Ban Migration...');
-                console.log('Going to IP/Email Ban Migration...');
+                migrateIpEmailBans();
             }
             processUpdates(version);
         },
         error: function() {
             markUpdateAsFailure(cssclass);
-            console.error('ERROR!');
         }
     });
 }
 
-function migrateIpEmailBans() {
-
+function migrateIpEmailBans(cssclass) {
+    $.ajax({
+        type: 'POST',
+        url: 'ajax/task-ajax.php',
+        data: { task: 'ip-email-bans' },
+        success: function(data) {
+            console.info(data);
+            //if ask user, markUpdateAsAttention and append to Attention! div
+            //otherwise, mark success and move to completion script.
+        },
+        error: function() {
+            markUpdateAsFailure(cssclass);
+        }
+    });
 }
 
 jQuery(document).ready(loadJquery);

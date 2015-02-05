@@ -1,17 +1,7 @@
 <?php
 require(HESK_PATH . 'hesk_settings.inc.php');
 
-function appendToConsole($text, $prefix=NULL) {
-    if ($prefix == NULL) {
-        $whatToAppend = $text;
-    } else {
-        $whatToAppend = $prefix.': '.$text;
-    }
-    echo '<script>appendToInstallConsole(\''.$whatToAppend.'\')</script>';
-}
-
 function executeQuery($sql) {
-    appendToConsole($sql, 'Executing SQL');
     return hesk_dbQuery($sql);
 }
 
@@ -19,8 +9,6 @@ function executeQuery($sql) {
 function executePre140Scripts() {
     global $hesk_settings;
 
-    appendToConsole('STARTING PRE-1.4.0 SCRIPTS');
-    appendToConsole('------------------------------');
     hesk_dbConnect();
     //-- Need to do this since we are no longer restricted on IDs and we want an INT for proper INNER JOINs
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `status_int` INT NOT NULL DEFAULT 0 AFTER `status`;");
@@ -73,9 +61,6 @@ function executePre140Scripts() {
 function execute140Scripts() {
     global $hesk_settings;
 
-    appendToConsole('STARTING 1.4.0 SCRIPTS');
-    appendToConsole('----------------------');
-
     hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `autorefresh` BIGINT NOT NULL DEFAULT 0 AFTER `replies`;");
 
@@ -89,8 +74,6 @@ function execute140Scripts() {
 function execute141Scripts() {
     global $hesk_settings;
 
-    appendToConsole('STARTING 1.4.1 SCRIPTS');
-    appendToConsole('----------------------');
     hesk_dbConnect();
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Email VARCHAR(100) NOT NULL);");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `parent` MEDIUMINT(8) NULL AFTER `custom20`;");
@@ -100,8 +83,6 @@ function execute141Scripts() {
 function execute150Scripts() {
     global $hesk_settings;
 
-    appendToConsole('STARTING 1.5.0 SCRIPTS');
-    appendToConsole('----------------------');
     hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `active` ENUM('0', '1') NOT NULL DEFAULT '1'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `can_manage_settings` ENUM('0', '1') NOT NULL DEFAULT '1'");
@@ -112,8 +93,6 @@ function execute150Scripts() {
 function execute160Scripts() {
     global $hesk_settings;
 
-    appendToConsole('STARTING 1.6.0 SCRIPTS');
-    appendToConsole('----------------------');
     hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `notify_note_unassigned` ENUM('0', '1') NOT NULL DEFAULT '0'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `can_change_notification_settings` ENUM('0', '1') NOT NULL DEFAULT '1'");
@@ -129,8 +108,6 @@ function execute160Scripts() {
 function execute161Scripts() {
     global $hesk_settings;
 
-    appendToConsole('STARTING 1.6.1 SCRIPTS');
-    appendToConsole('----------------------');
     hesk_dbConnect();
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '1.6.1' WHERE `Key` = 'modsForHeskVersion'");
 }
@@ -139,8 +116,6 @@ function execute161Scripts() {
 function execute170Scripts() {
     global $hesk_settings;
 
-    appendToConsole('STARTING 1.7.0 SCRIPTS');
-    appendToConsole('----------------------');
     hesk_dbConnect();
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."verified_emails` (`Email` VARCHAR(255) NOT NULL)");
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email` VARCHAR(255) NOT NULL, `ActivationKey` VARCHAR(500) NOT NULL)");
@@ -206,8 +181,6 @@ function execute170FileUpdate() {
     //-- Only add the additional settings if they aren't already there.
     if (strpos($file, 'custom_field_setting') !== true)
     {
-        appendToConsole('Updating \'modsForHesk_settings.inc.php\' for 1.7.0','INFO');
-
         $file .= '
 
         //-- Set this to 1 to enable custom field names as keys
@@ -225,8 +198,6 @@ function execute170FileUpdate() {
 function execute200Scripts() {
     global $hesk_settings;
 
-    appendToConsole('STARTING 2.0.0 SCRIPTS');
-    appendToConsole('----------------------');
     hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` DROP COLUMN `note_id`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` DROP COLUMN `edit_date`");
@@ -249,7 +220,6 @@ function execute200FileUpdate() {
     //-- Only add the additional settings if they aren't already there.
     if (strpos($file, 'html_emails') !== true)
     {
-        appendToConsole('Updating \'modsForHesk_settings.inc.php\' for 2.0.0','INFO');
         $file .= '
 
         //-- Set this to 1 to enable HTML-formatted emails.
@@ -268,7 +238,6 @@ function checkForIpOrEmailBans() {
     global $hesk_settings;
 
     hesk_dbConnect();
-    appendToConsole('Checking for existing IP/Email bans','INFO');
     $banRS = executeQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails`
                         UNION ALL SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_ips`");
 
@@ -295,7 +264,6 @@ function migrateBans() {
 
     // Get the ID of the creator
     $creator = $_POST['user'];
-    appendToConsole('Migrating IP/Email bans, created by user ID = '.$creator,'INFO');
 
     // Insert the email bans
     $emailBanRS = executeQuery("SELECT `Email` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails`");
