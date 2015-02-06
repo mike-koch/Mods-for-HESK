@@ -30,5 +30,5 @@ $modsForHesk_settings['html_emails'] = 1;
 
 //-- Mailgun Settings
 $modsForHesk_settings['use_mailgun'] = 0;
-$modsForHesk_settings['mailgun_api_key'] = 'KEY';
-$modsForHesk_settings['mailgun_domain'] = 'DOMAIN';
+$modsForHesk_settings['mailgun_api_key'] = '';
+$modsForHesk_settings['mailgun_domain'] = '';
