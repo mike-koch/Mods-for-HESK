@@ -1,7 +1,7 @@
 [![Stories in Ready](https://badge.waffle.io/mkoch227/Mods-For-Hesk.png?label=waffle:ready&title=Ready)](https://waffle.io/mkoch227/Mods-For-Hesk)
-<h2><a href="http://mods-for-hesk.mkochcs.com" target="_blank">Mods for HESK</a> v1.7.0</h2>
+<h2>[BETA] <a href="http://mods-for-hesk.mkochcs.com" target="_blank">Mods for HESK</a> v2.0.0</h2>
 
-Mods for HESK is a set of modifications for HESK v2.5.5, a free and popular helpdesk solution.
+Mods for HESK is a set of modifications for HESK v2.6.0, a free and popular helpdesk solution.
 
 <h2>Features</h2>
 <ul>
