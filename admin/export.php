@@ -896,7 +896,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <label><input type="radio" name="asc" value="1" <?php if ($asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['ascending']; ?></label>         
                     </div>
                     <div class="radio">
-                        <input type="radio" name="asc" value="0" <?php if (!$asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['descending']; ?></label>    
+                        <label><input type="radio" name="asc" value="0" <?php if (!$asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['descending']; ?></label>
                     </div>     
                 </div>
                 </div>         

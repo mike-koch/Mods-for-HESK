@@ -119,6 +119,7 @@
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
     color: <?php echo $navbarItemTextSelectedColor; ?>;
     background-color: <?php echo $navbarItemSelectedBackgroundColor; ?>;
+    background-image: none;
 }
 .settingsquestionmark {
     color: <?php echo $questionMarkColor; ?>;

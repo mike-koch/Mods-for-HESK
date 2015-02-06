@@ -370,14 +370,14 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                     <form class="form-inline" action="find_tickets.php" method="get" name="findby" id="findby">
 
                         <table class="table" style="width: auto" border="0" cellpadding="3" cellspacing="0">
-                            <tr>
-                                <td class="text-left" style="border-top: 0px;padding-right:0">
+                            <tr style="border: none">
+                                <td class="text-left" style="border: none">
                                     <b style="color: #000"><?php echo $hesklang['s_for']; ?></b><br />
-                                    <input class="form-control" style="border-bottom-right-radius: 0;border-top-right-radius: 0; border-right: 0" type="text" name="q" size="30" <?php if (isset($q)) {echo 'value="'.$q.'"';} ?> />
+                                    <input class="form-control" type="text" name="q" size="30" <?php if (isset($q)) {echo 'value="'.$q.'"';} ?> />
                                 </td>
-                                <td class="text-left" style="border-top: 0px;padding-left:0">
+                                <td class="text-left" style="border: none">
                                     <b style="color: #000"><?php echo $hesklang['s_in']; ?></b><br />
-                                    <select class="form-control btn btn-default" name="what" style="border-bottom-left-radius: 0; border-top-left-radius: 0">
+                                    <select class="form-control" name="what">
                                         <option style="background: #ffffff" value="trackid" <?php if ($what=='trackid') {echo 'selected="selected"';} ?> ><?php echo $hesklang['trackID']; ?></option>
                                         <?php
                                         if ($hesk_settings['sequential'])
