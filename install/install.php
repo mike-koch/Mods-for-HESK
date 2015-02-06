@@ -176,7 +176,7 @@ function hesk_iFinish()
 		<div class="alert alert-success"><strong>Success!</strong> HESK Successfully installed</div>
 		<div class="h3">Next Steps:<br/><br/></div>
         <ol>
-            <li><span style="color:#ff0000">Don't forget to run the <a href="<?php echo HESK_PATH . 'install/updateModsForHesk.php'; ?>">Mods for HESK Installation</a>!</li>
+            <li><span style="color:#ff0000">Don't forget to run the <a href="<?php echo HESK_PATH . 'install/mods-for-hesk/modsForHesk.php'; ?>">Mods for HESK Installation</a>!</li>
             <li>Remember your login details:<br />
 
 <pre style="font-size: 1.17em">
@@ -613,6 +613,7 @@ function hesk_iSaveSettings()
 	}
 	$set['debug_mode'] = 0;
 
+    $set['email_providers'] = count($set['email_providers']) ?  "'" . implode("','", $set['email_providers']) . "'" : '';
     $set['notify_spam_tags'] = count($set['notify_spam_tags']) ?  "'" . implode("','", $set['notify_spam_tags']) . "'" : '';
 
     // Check if PHP version is 5.2.3+

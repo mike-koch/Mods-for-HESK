@@ -2,7 +2,9 @@
 var loadJquery = function()
 {
     //-- Activate tooltips
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip({
+        container: 'body'
+    });
 
     //-- Activate popovers
     $('[data-toggle="popover"]').popover({
@@ -196,8 +198,6 @@ function migrateIpEmailBans(version, cssclass) {
             } else {
                 migrateComplete();
             }
-            //if ask user, markUpdateAsAttention and append to Attention! div
-            //otherwise, mark success and move to completion script.
         },
         error: function(data) {
             appendToInstallConsole('ERROR: ' + data.responseText);
@@ -207,8 +207,13 @@ function migrateIpEmailBans(version, cssclass) {
 }
 
 function installationFinished() {
-    var html = '<p>Hey! We finished!</p>';
-    $('#install-information').html(html);
+    var output = '<div class="panel-body">' +
+        '<div class="col-md-12 text-center">' +
+        '<i class="fa fa-check fa-4x" style="color: #008000"></i><br><br>' +
+        '<h4>Awesome! The installation / upgrade has completed. Please delete the <code>install</code> directory and then proceed to your helpdesk!</h4>' +
+        '</div>' +
+        '</div>';
+    $('#install-information').html(output);
 }
 
 function getContentForMigratePrompt(users) {
