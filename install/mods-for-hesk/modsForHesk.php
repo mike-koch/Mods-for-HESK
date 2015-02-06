@@ -123,13 +123,15 @@ hesk_dbConnect();
                                     $versionArray = hesk_dbFetchAssoc($versionRS);
                                     $version = $versionArray['Value'];
 
-                                    echo '<div class="row">';
-                                    echo '<div class="col-sm-12">';
-                                    echo '<p id="updateText">Mods for HESK has detected that you currently have v'.$version.' installed.
+                                    if ($version != MODS_FOR_HESK_NEW_VERSION) {
+                                        echo '<div class="row">';
+                                        echo '<div class="col-sm-12">';
+                                        echo '<p id="updateText">Mods for HESK has detected that you currently have v' . $version . ' installed.
                                         The button you should click to upgrade has been highlighted for you. However, if
                                         Mods for HESK selected the wrong version, click <a href="javascript:void(0)" onclick="enableAllDisablable();">here</a> to reset them.</p>';
-                                    echo '</div>';
-                                    echo '</div>';
+                                        echo '</div>';
+                                        echo '</div>';
+                                    }
                                 }
                                 ?>
                                 <div class="row">
