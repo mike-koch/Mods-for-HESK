@@ -17,7 +17,6 @@ Mods for HESK is a set of modifications for HESK v2.6.0, a free and popular help
  - Admins can restrict users from modifying notification settings
  - More-restricted settings page access
  - Enable / disable staff members
- -
 
 ## Download
 You can download Mods for HESK via two ways:
@@ -31,7 +30,7 @@ Visit [http://mods-for-hesk.mkochcs.com/download.php](http://mods-for-hesk.mkoch
 As of current, only English is a supported language, as there have been several language items that have been edited/created.
   If you want to translate Mods for HESK to your own language, it is recommended to download the original HESK language
   file for your language, and then add/edit the lines listed under `//Added or modified in Mods for HESK X.X.X`
-  (where X.X.X is a version number)` for your language. You will also need to add some email templates. The easiest way
+  (where X.X.X is a version number) for your language. You will also need to add some email templates. The easiest way
   to find out which ones are needed are by clicking "Test language folder" in HESK's settings.
 Mods for HESK translations are available at http://mods-for-hesk.mkochcs.com.
 
