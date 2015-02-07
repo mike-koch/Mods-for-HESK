@@ -440,8 +440,16 @@ if ($total > 0)
         // Print custom fields
         foreach ($hesk_settings['custom_fields'] as $key => $value)
         {
-            if ($value['use'] && hesk_show_column($key) )
-                echo '<td class="'.$color.'">'.$ticket[$key].'</td>';
+            if ($value['use'] && hesk_show_column($key)) {
+                echo '<td class="'.$color.'">';
+                if ($value['type'] == 'date' && !empty($ticket[$key])) {
+                    $dt = date('Y-m-d h:i:s', $ticket[$key]);
+                    echo hesk_dateToString($dt, 0);
+                } else {
+                    echo $ticket[$key];
+                }
+                echo '</td>';
+            }
         }
 
         // End ticket row
