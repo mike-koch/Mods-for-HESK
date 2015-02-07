@@ -14,7 +14,7 @@ table.enclosing {
 	color : #4a5571;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	width: 770px;
+	width: 960px;
 }
 
 
@@ -216,7 +216,7 @@ fieldset {
 	background-color:white;
 	position:relative;
 	display:block;
-	padding: 0px 10px 10px 10px;
+	padding: 15px 10px 10px 10px;
 	margin:20px 0px 20px 0px;
 }
 
@@ -232,10 +232,8 @@ legend {
 	background-position: right top;
 	display:block;
 	width: auto;
-	padding:4px 5px;
-	margin:0px 0px 10px 0px;
+	padding:5px 5px;
 	position:relative;
-	top: -12px;
 	width:130px;	
 }
 
@@ -551,7 +549,6 @@ td.admin_critical {
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	border: 1px solid #ff66ff;
-	border-top: 2px dashed #ff66ff;
 	padding: 1px;
 }
 
@@ -689,6 +686,22 @@ td.admin_yellow {
 	font-size: 11px;
 	border: #d1dceb 1px solid;
 	padding: 1px;	
+}
+
+/* New styles in HESK version 2.6 */
+
+div.info {
+	border: 1px solid #9acfea; 
+	background: #d9edf7; 
+	color: #363636;
+	padding: 10px;
+	vertical-align: middle;
+}
+
+div.none {
+	color: #363636;
+	padding: 10px;
+	vertical-align: middle;
 }
 
 /* New styles in HESK version 2.5 */

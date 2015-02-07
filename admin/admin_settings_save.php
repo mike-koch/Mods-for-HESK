@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -158,13 +158,18 @@ $set['reply_top']		= empty($_POST['s_reply_top']) ? 0 : 1;
 /* --> Features */
 $set['autologin']		= empty($_POST['s_autologin']) ? 0 : 1;
 $set['autoassign']		= empty($_POST['s_autoassign']) ? 0 : 1;
+$set['custclose']		= empty($_POST['s_custclose']) ? 0 : 1;
 $set['custopen']		= empty($_POST['s_custopen']) ? 0 : 1;
 $set['rating']			= empty($_POST['s_rating']) ? 0 : 1;
 $set['cust_urgency']	= empty($_POST['s_cust_urgency']) ? 0 : 1;
 $set['sequential']		= empty($_POST['s_sequential']) ? 0 : 1;
+$set['time_worked']		= empty($_POST['s_time_worked']) ? 0 : 1;
+$set['spam_notice']		= empty($_POST['s_spam_notice']) ? 0 : 1;
 $set['list_users']		= empty($_POST['s_list_users']) ? 0 : 1;
 $set['debug_mode']		= empty($_POST['s_debug_mode']) ? 0 : 1;
 $set['short_link']		= empty($_POST['s_short_link']) ? 0 : 1;
+$set['select_cat']		= empty($_POST['s_select_cat']) ? 0 : 1;
+$set['select_pri']		= empty($_POST['s_select_pri']) ? 0 : 1;
 
 /* --> SPAM prevention */
 $set['secimg_use']		= empty($_POST['s_secimg_use']) ? 0 : ( hesk_POST('s_secimg_use') == 2 ? 2 : 1);
@@ -173,8 +178,7 @@ for ($i=1;$i<=10;$i++)
 {
     $set['secimg_sum'] .= substr('AEUYBDGHJLMNPQRSTVWXZ123456789', rand(0,29), 1);
 }
-$set['recaptcha_use']	= empty($_POST['s_recaptcha_use']) ? 0 : 1;
-$set['recaptcha_ssl']	= empty($_POST['s_recaptcha_ssl']) ? 0 : 1;
+$set['recaptcha_use']	= hesk_checkMinMax( intval( hesk_POST('s_recaptcha_use') ) , 0, 2, 0);
 $set['recaptcha_public_key']	= hesk_input( hesk_POST('s_recaptcha_public_key') );
 $set['recaptcha_private_key']	= hesk_input( hesk_POST('s_recaptcha_private_key') );
 $set['question_use']	= empty($_POST['s_question_use']) ? 0 : 1;
@@ -188,6 +192,7 @@ if ($set['attempt_limit'] > 0)
 	$set['attempt_limit']++;
 }
 $set['attempt_banmin']	= hesk_checkMinMax( intval( hesk_POST('s_attempt_banmin') ) , 5, 99999, 60);
+$set['reset_pass'] = empty($_POST['s_reset_pass']) ? 0 : 1;
 $set['email_view_ticket'] = empty($_POST['s_email_view_ticket']) ? 0 : 1;
 
 /* --> Attachments */
@@ -233,7 +238,7 @@ else
 /*** KNOWLEDGEBASE ***/
 
 /* --> Knowledgebase settings */
-$set['kb_enable']			= empty($_POST['s_kb_enable']) ? 0 : 1;
+$set['kb_enable']			= hesk_checkMinMax( intval( hesk_POST('s_kb_enable') ) , 0, 2, 1);
 $set['kb_wysiwyg']			= empty($_POST['s_kb_wysiwyg']) ? 0 : 1;
 $set['kb_search']			= empty($_POST['s_kb_search']) ? 0 : ( hesk_POST('s_kb_search') == 2 ? 2 : 1);
 $set['kb_recommendanswers']	= empty($_POST['s_kb_recommendanswers']) ? 0 : 1;
@@ -248,17 +253,27 @@ $set['kb_popart']			= intval( hesk_POST('s_kb_popart') ); // Popular articles on
 $set['kb_latest']			= intval( hesk_POST('s_kb_latest') ); // Popular articles on main category page
 $set['kb_index_popart']		= intval( hesk_POST('s_kb_index_popart') );
 $set['kb_index_latest']		= intval( hesk_POST('s_kb_index_latest') );
+$set['kb_related']			= intval( hesk_POST('s_kb_related') );
 
 
 /*** EMAIL ***/
 
 /* --> Email sending */
 $smtp_OK = true;
-$set['smtp'] = empty($_POST['s_smtp']) ? 0 : 1;
+if (empty($_POST['s_smtp'])) {
+    $set['smtp'] = 0;
+    $set['use_mailgun'] = 0;
+} elseif ($_POST['s_smtp'] == 1) {
+    $set['smtp'] = 1;
+    $set['use_mailgun'] = 0;
+} else {
+    $set['smtp'] = 0;
+    $set['use_mailgun'] = 1;
+}
 if ($set['smtp'])
 {
 	// Test SMTP connection
-    $smtp_OK = hesk_testSMTP();
+    $smtp_OK = hesk_testSMTP(true);
 
 	// If SMTP not working, disable it
 	if ( ! $smtp_OK)
@@ -268,13 +283,18 @@ if ($set['smtp'])
 }
 else
 {
-	$set['smtp_host_name']	= hesk_input( hesk_POST('tmp_smtp_host_name', 'localhost') );
-	$set['smtp_host_port']	= intval( hesk_POST('tmp_smtp_host_port', 25) );
-	$set['smtp_timeout']	= intval( hesk_POST('tmp_smtp_timeout', 10) );
-	$set['smtp_ssl']		= empty($_POST['tmp_smtp_ssl']) ? 0 : 1;
-	$set['smtp_tls']		= empty($_POST['tmp_smtp_tls']) ? 0 : 1;
-	$set['smtp_user']		= hesk_input( hesk_POST('tmp_smtp_user') );
-	$set['smtp_password']	= hesk_input( hesk_POST('tmp_smtp_password') );
+    $set['smtp_host_name']	= hesk_input( hesk_POST('tmp_smtp_host_name', 'mail.domain.com') );
+    $set['smtp_host_port']	= intval( hesk_POST('tmp_smtp_host_port', 25) );
+    $set['smtp_timeout']	= intval( hesk_POST('tmp_smtp_timeout', 10) );
+    $set['smtp_ssl']		= empty($_POST['tmp_smtp_ssl']) ? 0 : 1;
+    $set['smtp_tls']		= empty($_POST['tmp_smtp_tls']) ? 0 : 1;
+    $set['smtp_user']		= hesk_input( hesk_POST('tmp_smtp_user') );
+    $set['smtp_password']	= hesk_input( hesk_POST('tmp_smtp_password') );
+}
+
+if ($set['use_mailgun'] == 1) {
+    $set['mailgun_api_key'] = hesk_input(hesk_POST('mailgun_api_key'));
+    $set['mailgun_domain'] = hesk_input(hesk_POST('mailgun_domain'));
 }
 
 /* --> Email piping */
@@ -285,8 +305,11 @@ $pop3_OK = true;
 $set['pop3'] = empty($_POST['s_pop3']) ? 0 : 1;
 if ($set['pop3'])
 {
+    // Get POP3 fetching timeout
+    $set['pop3_job_wait'] = hesk_checkMinMax( intval( hesk_POST('s_pop3_job_wait') ) , 1, 1440, 15);
+
 	// Test POP3 connection
-    $pop3_OK = hesk_testPOP3();
+    $pop3_OK = hesk_testPOP3(true);
 
 	// If POP3 not working, disable it
 	if ( ! $pop3_OK)
@@ -296,6 +319,7 @@ if ($set['pop3'])
 }
 else
 {
+    $set['pop3_job_wait']	= intval( hesk_POST('s_pop3_job_wait', 15) );
 	$set['pop3_host_name']	= hesk_input( hesk_POST('tmp_pop3_host_name', 'mail.domain.com') );
 	$set['pop3_host_port']	= intval( hesk_POST('tmp_pop3_host_port', 110) );
 	$set['pop3_tls']		= empty($_POST['tmp_pop3_tls']) ? 0 : 1;
@@ -351,13 +375,78 @@ if ( ! $set['detect_typos'] || count($set['email_providers']) < 1 )
 
 $set['email_providers'] = count($set['email_providers']) ?  "'" . implode("','", $set['email_providers']) . "'" : '';
 
+
+/* --> Notify customer when */
+$set['notify_new']		= empty($_POST['s_notify_new']) ? 0 : 1;
+$set['notify_closed']	= empty($_POST['s_notify_closed']) ? 0 : 1;
+
+// SPAM tags
+$set['notify_skip_spam'] = empty($_POST['s_notify_skip_spam']) ? 0 : 1;
+$set['notify_spam_tags'] = array();
+
+if ( ! empty($_POST['s_notify_spam_tags']) && ! is_array($_POST['s_notify_spam_tags']) )
+{
+    $lines = preg_split('/$\R?^/m', $_POST['s_notify_spam_tags']);
+
+    foreach ($lines as $tag)
+    {
+        // Remove dangerous tags just as an extra precaution
+        $tag = str_replace( array('<?php', '<?', '<%', '<script'), '', $tag);
+
+        // Remove excess spaces
+        $tag = trim($tag);
+
+        // Remove anything not utf-8
+        $tag = hesk_clean_utf8($tag);
+
+        // Limit tag length
+        if ( strlen($tag) < 1 || strlen($tag) > 50)
+        {
+            continue;
+        }
+
+        // Escape single quotes and backslashes
+        $set['notify_spam_tags'][] = str_replace( array("\\", "'"), array("\\\\", "\\'"), $tag); // '
+    }
+}
+
+if ( count($set['notify_spam_tags']) < 1 )
+{
+    $set['notify_skip_spam'] = 0;
+    $set['notify_spam_tags'] = array('Spam?}','***SPAM***','[SPAM]','SPAM-LOW:','SPAM-MED:');
+}
+
+$set['notify_spam_tags'] = count($set['notify_spam_tags']) ?  "'" . implode("','", $set['notify_spam_tags']) . "'" : '';
+
 /* --> Other */
 $set['strip_quoted']	= empty($_POST['s_strip_quoted']) ? 0 : 1;
+$set['eml_req_msg']		= empty($_POST['s_eml_req_msg']) ? 0 : 1;
 $set['save_embedded']	= empty($_POST['s_save_embedded']) ? 0 : 1;
 $set['multi_eml']		= empty($_POST['s_multi_eml']) ? 0 : 1;
 $set['confirm_email']	= empty($_POST['s_confirm_email']) ? 0 : 1;
 $set['open_only']		= empty($_POST['s_open_only']) ? 0 : 1;
 
+/*** TICKET LIST ***/
+
+$set['ticket_list'] = array();
+foreach ($hesk_settings['possible_ticket_list'] as $key => $title)
+{
+    if ( hesk_POST('s_tl_'.$key, 0) == 1)
+    {
+        $set['ticket_list'][] = $key;
+    }
+}
+
+// We need at least one of these: id, trackid, subject
+if ( ! in_array('id', $set['ticket_list']) && ! in_array('trackid', $set['ticket_list']) && ! in_array('subject', $set['ticket_list']) )
+{
+    $set['ticket_list'][] = 'trackid';
+}
+
+$set['ticket_list'] = count($set['ticket_list']) ?  "'" . implode("','", $set['ticket_list']) . "'" : 'trackid';
+
+/* --> Other */
+$set['updatedformat']	= hesk_checkMinMax( intval( hesk_POST('s_updatedformat') ) , 0, 2, 2);
 
 /*** MISC ***/
 
@@ -368,6 +457,19 @@ $set['daylight']		= empty($_POST['s_daylight']) ? 0 : 1;
 $set['timeformat']		= hesk_input( hesk_POST('s_timeformat') ) or $set['timeformat'] = 'Y-m-d H:i:s';
 
 /* --> Other */
+$set['ip_whois']		= hesk_input( hesk_POST('s_ip_whois', 'http://whois.domaintools.com/{IP}') );
+
+// If no {IP} tag append it to the end
+if ( strlen($set['ip_whois']) == 0 )
+{
+    $set['ip_whois'] = 'http://whois.domaintools.com/{IP}';
+}
+elseif ( strpos($set['ip_whois'], '{IP}') === false )
+{
+    $set['ip_whois'] .= '{IP}';
+}
+
+$set['maintenance_mode']= empty($_POST['s_maintenance_mode']) ? 0 : 1;
 $set['alink']			= empty($_POST['s_alink']) ? 0 : 1;
 $set['submit_notice']	= empty($_POST['s_submit_notice']) ? 0 : 1;
 $set['online']			= empty($_POST['s_online']) ? 0 : 1;
@@ -390,7 +492,13 @@ for ($i=1;$i<=20;$i++)
 		$set['custom_fields'][$this_field]['maxlen']	= intval( hesk_POST('s_custom'.$i.'_maxlen', 255) );
         $set['custom_fields'][$this_field]['value']		= hesk_input( hesk_POST('s_custom'.$i.'_val') );
 
-        if (!in_array($set['custom_fields'][$this_field]['type'],array('text','textarea','select','radio','checkbox','date','multiselect')))
+        if ($set['custom_fields'][$this_field]['type'] == 'email' && $set['custom_fields'][$this_field]['value'] == '')
+        {
+            // New custom field without any options set. Default to Cc
+            $set['custom_fields'][$this_field]['value'] = 'cc';
+        }
+
+        if (!in_array($set['custom_fields'][$this_field]['type'],array('text','textarea','select','radio','checkbox','date','multiselect','email')))
         {
         	$set['custom_fields'][$this_field]['type'] = 'text';
         }
@@ -503,6 +611,7 @@ $set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
 $set['custom-field-setting'] = empty($_POST['custom-field-setting']) ? 0 : 1;
 $set['customer-email-verification-required'] = empty($_POST['email-verification']) ? 0 : 1;
+$set['html_emails'] = empty($_POST['html_emails']) ? 0 : 1;
 
 if ($set['customer-email-verification-required'])
 {
@@ -545,7 +654,15 @@ $modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';
 $modsForHesk_settings[\'custom_field_setting\'] = '.$set['custom-field-setting'].';
 
 //-- Set this to 1 to enable email verification for new customers
-$modsForHesk_settings[\'customer_email_verification_required\'] = '.$set['customer-email-verification-required'].';';
+$modsForHesk_settings[\'customer_email_verification_required\'] = '.$set['customer-email-verification-required'].';
+
+//-- Set this to 1 to enable HTML-formatted emails.
+$modsForHesk_settings[\'html_emails\'] = '.$set['html_emails'].';
+
+//-- Mailgun Settings
+$modsForHesk_settings[\'use_mailgun\'] = '.$set['use_mailgun'].';
+$modsForHesk_settings[\'mailgun_api_key\'] = \''.$set['mailgun_api_key'].'\';
+$modsForHesk_settings[\'mailgun_domain\'] = \''.$set['mailgun_domain'].'\';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )
@@ -599,19 +716,23 @@ $hesk_settings[\'reply_top\']=' . $set['reply_top'] . ';
 // --> Features
 $hesk_settings[\'autologin\']=' . $set['autologin'] . ';
 $hesk_settings[\'autoassign\']=' . $set['autoassign'] . ';
+$hesk_settings[\'custclose\']=' . $set['custclose'] . ';
 $hesk_settings[\'custopen\']=' . $set['custopen'] . ';
 $hesk_settings[\'rating\']=' . $set['rating'] . ';
 $hesk_settings[\'cust_urgency\']=' . $set['cust_urgency'] . ';
 $hesk_settings[\'sequential\']=' . $set['sequential'] . ';
+$hesk_settings[\'time_worked\']=' . $set['time_worked'] . ';
+$hesk_settings[\'spam_notice\']=' . $set['spam_notice'] . ';
 $hesk_settings[\'list_users\']=' . $set['list_users'] . ';
 $hesk_settings[\'debug_mode\']=' . $set['debug_mode'] . ';
 $hesk_settings[\'short_link\']=' . $set['short_link'] . ';
+$hesk_settings[\'select_cat\']=' . $set['select_cat'] . ';
+$hesk_settings[\'select_pri\']=' . $set['select_pri'] . ';
 
 // --> SPAM Prevention
 $hesk_settings[\'secimg_use\']=' . $set['secimg_use'] . ';
 $hesk_settings[\'secimg_sum\']=\'' . $set['secimg_sum'] . '\';
 $hesk_settings[\'recaptcha_use\']=' . $set['recaptcha_use'] . ';
-$hesk_settings[\'recaptcha_ssl\']=' . $set['recaptcha_ssl'] . ';
 $hesk_settings[\'recaptcha_public_key\']=\'' . $set['recaptcha_public_key'] . '\';
 $hesk_settings[\'recaptcha_private_key\']=\'' . $set['recaptcha_private_key'] . '\';
 $hesk_settings[\'question_use\']=' . $set['question_use'] . ';
@@ -621,6 +742,7 @@ $hesk_settings[\'question_ans\']=\'' . $set['question_ans'] . '\';
 // --> Security
 $hesk_settings[\'attempt_limit\']=' . $set['attempt_limit'] . ';
 $hesk_settings[\'attempt_banmin\']=' . $set['attempt_banmin'] . ';
+$hesk_settings[\'reset_pass\']=' . $set['reset_pass'] . ';
 $hesk_settings[\'email_view_ticket\']=' . $set['email_view_ticket'] . ';
 
 // --> Attachments
@@ -650,6 +772,7 @@ $hesk_settings[\'kb_popart\']=' . $set['kb_popart'] . ';
 $hesk_settings[\'kb_latest\']=' . $set['kb_latest'] . ';
 $hesk_settings[\'kb_index_popart\']=' . $set['kb_index_popart'] . ';
 $hesk_settings[\'kb_index_latest\']=' . $set['kb_index_latest'] . ';
+$hesk_settings[\'kb_related\']=' . $set['kb_related'] . ';
 
 
 // ==> EMAIL
@@ -669,6 +792,7 @@ $hesk_settings[\'email_piping\']=' . $set['email_piping'] . ';
 
 // --> POP3 Fetching
 $hesk_settings[\'pop3\']=' . $set['pop3'] . ';
+$hesk_settings[\'pop3_job_wait\']=' . $set['pop3_job_wait'] . ';
 $hesk_settings[\'pop3_host_name\']=\'' . $set['pop3_host_name'] . '\';
 $hesk_settings[\'pop3_host_port\']=' . $set['pop3_host_port'] . ';
 $hesk_settings[\'pop3_tls\']=' . $set['pop3_tls'] . ';
@@ -684,12 +808,26 @@ $hesk_settings[\'loop_time\']=' . $set['loop_time'] . ';
 $hesk_settings[\'detect_typos\']=' . $set['detect_typos'] . ';
 $hesk_settings[\'email_providers\']=array(' . $set['email_providers'] . ');
 
+// --> Notify customer when
+$hesk_settings[\'notify_new\']=' . $set['notify_new'] . ';
+$hesk_settings[\'notify_skip_spam\']=' . $set['notify_skip_spam'] . ';
+$hesk_settings[\'notify_spam_tags\']=array(' . $set['notify_spam_tags'] . ');
+$hesk_settings[\'notify_closed\']=' . $set['notify_closed'] . ';
+
 // --> Other
 $hesk_settings[\'strip_quoted\']=' . $set['strip_quoted'] . ';
+$hesk_settings[\'eml_req_msg\']=' . $set['eml_req_msg'] . ';
 $hesk_settings[\'save_embedded\']=' . $set['save_embedded'] . ';
 $hesk_settings[\'multi_eml\']=' . $set['multi_eml'] . ';
 $hesk_settings[\'confirm_email\']=' . $set['confirm_email'] . ';
 $hesk_settings[\'open_only\']=' . $set['open_only'] . ';
+
+// ==> TICKET LIST
+
+$hesk_settings[\'ticket_list\']=array(' . $set['ticket_list'] . ');
+
+// --> Other
+$hesk_settings[\'updatedformat\']=\'' . $set['updatedformat'] . '\';
 
 
 // ==> MISC
@@ -701,6 +839,8 @@ $hesk_settings[\'daylight\']=' . $set['daylight'] . ';
 $hesk_settings[\'timeformat\']=\'' . $set['timeformat'] . '\';
 
 // --> Other
+$hesk_settings[\'ip_whois\']=\'' . $set['ip_whois'] . '\';
+$hesk_settings[\'maintenance_mode\']=' . $set['maintenance_mode'] . ';
 $hesk_settings[\'alink\']=' . $set['alink'] . ';
 $hesk_settings[\'submit_notice\']=' . $set['submit_notice'] . ';
 $hesk_settings[\'online\']=' . $set['online'] . ';
@@ -835,7 +975,7 @@ function hesk_getLanguagesArray($returnArray=0)
                 {
                 	$add = 0;
                 }
-                elseif ( ! preg_match('/\$hesklang\[\'recaptcha_error\'\]/', $tmp) )
+                elseif ( ! preg_match('/\$hesklang\[\'ms01\'\]/', $tmp) )
                 {
                 	$add = 0;
                 }

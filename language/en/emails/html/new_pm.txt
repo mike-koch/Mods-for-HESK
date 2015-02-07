@@ -1,0 +1,8 @@
+<p>Hello,</p>
+<p>You have received a new private message from %%NAME%% with the following subject:</p>
+<p>%%SUBJECT%%</p>
+<p>You can view your new message by clicking on the following link:
+%%TRACK_URL%%</p>
+<p>Sincerely,</p>
+%%SITE_TITLE%% <br>
+%%SITE_URL%%

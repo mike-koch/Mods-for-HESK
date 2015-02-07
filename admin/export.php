@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -343,7 +343,7 @@ if (isset($_GET['w']))
 
 	// Get staff names
 	$admins = array();
-	$result = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `id` ASC");
+    $result = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `name` ASC");
 	while ($row=hesk_dbFetchAssoc($result))
 	{
 		$admins[$row['id']]=$row['name'];
@@ -528,6 +528,7 @@ if (isset($_GET['w']))
 		$ticket['message'] = hesk_msgToPlain($ticket['message'], 1);
         $ticket['subject'] = hesk_msgToPlain($ticket['subject'], 1);
         $ticket['owner'] = isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] : '';
+        $ticket['category'] = isset($my_cat[$ticket['category']]) ? $my_cat[$ticket['category']] : '';
         
         // Format for export dates
         $hesk_settings['timeformat'] = "Y-m-d\TH:i:s\.000";
@@ -541,7 +542,7 @@ if (isset($_GET['w']))
 <Cell ss:StyleID="s62"><Data ss:Type="DateTime">'.hesk_date($ticket['lastchange'], true).'</Data></Cell>
 <Cell><Data ss:Type="String"><![CDATA['.hesk_msgToPlain($ticket['name'], 1).']]></Data></Cell>
 <Cell><Data ss:Type="String"><![CDATA['.$ticket['email'].']]></Data></Cell>
-<Cell><Data ss:Type="String"><![CDATA['.$my_cat[$ticket['category']].']]></Data></Cell>
+<Cell><Data ss:Type="String"><![CDATA['.$ticket['category'].']]></Data></Cell>
 <Cell><Data ss:Type="String"><![CDATA['.$ticket['priority'].']]></Data></Cell>
 <Cell><Data ss:Type="String"><![CDATA['.$ticket['status'].']]></Data></Cell>
 <Cell><Data ss:Type="String"><![CDATA['.$ticket['subject'].']]></Data></Cell>
@@ -895,7 +896,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <label><input type="radio" name="asc" value="1" <?php if ($asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['ascending']; ?></label>         
                     </div>
                     <div class="radio">
-                        <input type="radio" name="asc" value="0" <?php if (!$asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['descending']; ?></label>    
+                        <label><input type="radio" name="asc" value="0" <?php if (!$asc) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['descending']; ?></label>
                     </div>     
                 </div>
                 </div>         

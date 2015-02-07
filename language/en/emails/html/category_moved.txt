@@ -1,0 +1,10 @@
+<p>Hello,</p>
+<p>A new support ticket has been moved to your category. Ticket details:</p>
+<p>Ticket subject: %%SUBJECT%%<br>
+Tracking ID: %%TRACK_ID%%</p>
+<p>You can manage this ticket here:
+%%TRACK_URL%%</p>
+<br>
+<p>Regards,</p>
+%%SITE_TITLE%% <br>
+%%SITE_URL%%

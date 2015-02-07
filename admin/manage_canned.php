@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -68,7 +68,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <script language="javascript" type="text/javascript"><!--
 function confirm_delete()
 {
-if (confirm('<?php echo addslashes($hesklang['delete_saved']); ?>')) {return true;}
+    if (confirm('<?php echo hesk_makeJsString($hesklang['delete_saved']); ?>')) {return true;}
 else {return false;}
 }
 
@@ -299,7 +299,7 @@ myField.value += myValue;
             </div>
             <div class="form-group" style="text-align: center">
                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                <input type="submit" value="<?php echo $hesklang['save_reply']; ?>" class="btn btn-default" />   
+                <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default" />
             </div>          
         </form>
     </div>

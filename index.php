@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -37,7 +37,14 @@ define('HESK_PATH','./');
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+
+// Are we in maintenance mode?
+hesk_check_maintenance();
+
+// Are we in "Knowledgebase only" mode?
+hesk_check_kb_only();
 
 // What should we do?
 $action = hesk_REQUEST('a');
@@ -71,7 +78,59 @@ function print_add_ticket()
 	// Auto-focus first empty or error field
 	define('AUTOFOCUS', true);
 
-	// Varibles for coloring the fields in case of errors
+    // Pre-populate fields
+    // Customer name
+    if ( isset($_REQUEST['name']) )
+    {
+        $_SESSION['c_name'] = $_REQUEST['name'];
+    }
+
+    // Customer email address
+    if ( isset($_REQUEST['email']) )
+    {
+        $_SESSION['c_email']  = $_REQUEST['email'];
+        $_SESSION['c_email2'] = $_REQUEST['email'];
+    }
+
+    // Category ID
+    if ( isset($_REQUEST['catid']) )
+    {
+        $_SESSION['c_category'] = intval($_REQUEST['catid']);
+    }
+    if ( isset($_REQUEST['category']) )
+    {
+        $_SESSION['c_category'] = intval($_REQUEST['category']);
+    }
+
+    // Priority
+    if ( isset($_REQUEST['priority']) )
+    {
+        $_SESSION['c_priority'] = intval($_REQUEST['priority']);
+    }
+
+    // Subject
+    if ( isset($_REQUEST['subject']) )
+    {
+        $_SESSION['c_subject'] = $_REQUEST['subject'];
+    }
+
+    // Message
+    if ( isset($_REQUEST['message']) )
+    {
+        $_SESSION['c_message'] = $_REQUEST['message'];
+    }
+
+    // Custom fields
+    foreach ($hesk_settings['custom_fields'] as $k=>$v)
+    {
+        if ($v['use'] && isset($_REQUEST[$k]) )
+        {
+            $_SESSION['c_'.$k] = $_REQUEST[$k];
+        }
+    }
+
+
+    // Variables for coloring the fields in case of errors
 	if ( ! isset($_SESSION['iserror']))
 	{
 		$_SESSION['iserror'] = array();
@@ -82,12 +141,18 @@ function print_add_ticket()
 		$_SESSION['isnotice'] = array();
 	}
 
-    if ( ! isset($_SESSION['c_category']))
+if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
     {
     	$_SESSION['c_category'] = 0;
     }
 
 	hesk_cleanSessionVars('already_submitted');
+
+    // Tell header to load reCaptcha API if needed
+    if ($hesk_settings['recaptcha_use'] == 2)
+    {
+        define('RECAPTCHA',1);
+    }
 
 	// Print header
 	$hesk_settings['tmp_title'] = $hesk_settings['hesk_title'] . ' - ' . $hesklang['submit_ticket'];
@@ -135,7 +200,7 @@ function print_add_ticket()
 		            <div class="form-group">
 			            <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: <font class="important">*</font></label>
 			            <div class="col-sm-9"> 
-                            <input type="text" class="form-control" id="email" name="email" size="40" maxlength="255" value="<?php if (isset($_SESSION['c_email'])) {echo stripslashes(hesk_input($_SESSION['c_email']));} ?>" <?php if (in_array('email',$_SESSION['iserror'])) {echo ' class="isError" ';} elseif (in_array('email',$_SESSION['isnotice'])) {echo ' class="isNotice" ';} ?> <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(0)"'; } ?> placeholder="<?php echo $hesklang['email']; ?>" />
+                            <input type="text" class="form-control" id="email" name="email" size="40" maxlength="1000" value="<?php if (isset($_SESSION['c_email'])) {echo stripslashes(hesk_input($_SESSION['c_email']));} ?>" <?php if (in_array('email',$_SESSION['iserror'])) {echo ' class="isError" ';} elseif (in_array('email',$_SESSION['isnotice'])) {echo ' class="isNotice" ';} ?> <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(0)"'; } ?> placeholder="<?php echo $hesklang['email']; ?>" />
 		                </div>
                     </div>
                     <?php
@@ -145,7 +210,7 @@ function print_add_ticket()
 		            <div class="form-group">
                         <label for="email2" class="col-sm-3 control-label"><?php echo $hesklang['confemail']; ?>: <font class="important">*</font></label>
                         <div class="col-sm-9">
-                            <input type="text" id="email2" class="form-control" name="email2" size="40" maxlength="255" value="<?php if (isset($_SESSION['c_email2'])) {echo stripslashes(hesk_input($_SESSION['c_email2']));} ?>" <?php if (in_array('email2',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> placeholder="<?php echo $hesklang['confemail']; ?>" />
+                            <input type="text" id="email2" class="form-control" name="email2" size="40" maxlength="1000" value="<?php if (isset($_SESSION['c_email2'])) {echo stripslashes(hesk_input($_SESSION['c_email2']));} ?>" <?php if (in_array('email2',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> placeholder="<?php echo $hesklang['confemail']; ?>" />
                         </div>
                     </div>
                     <?php
@@ -174,12 +239,6 @@ function print_add_ticket()
                         }
                         else
                         {
-		                    // Is the category ID preselected?
-		                    if ( ! empty($_GET['catid']) )
-		                    {
-			                    $_SESSION['c_category'] = intval( hesk_GET('catid') );
-		                    }
-
 		                    // List available categories
 		                    $is_table = 1;
 		            ?>
@@ -187,6 +246,12 @@ function print_add_ticket()
                         <label for="category" class="col-sm-3 control-label"><?php echo $hesklang['category']; ?>: <font class="important">*</font></label>
                         <div class="col-sm-9">
                             <select name="category" id="category" class="form-control" <?php if (in_array('category',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> ><?php
+                                // Show the "Click to select"?
+                                if ($hesk_settings['select_cat'])
+                                {
+                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                }
+                                // List categories
 		                        while ($row = hesk_dbFetchAssoc($res))
 		                        {
 			                        echo '<option value="' . $row['id'] . '"' . (($_SESSION['c_category'] == $row['id']) ? ' selected="selected"' : '') . '>' . $row['name'] . '</option>';
@@ -205,6 +270,13 @@ function print_add_ticket()
                         <label for="priority" class="col-sm-3 control-label"><?php echo $hesklang['priority']; ?>: <font class="important">*</font></label>
                         <div class="col-sm-9">   
                             <select id="priority" class="form-control" name="priority" <?php if (in_array('priority',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> >
+                                <?php
+                                // Show the "Click to select"?
+                                if ($hesk_settings['select_pri'])
+                                {
+                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                }
+                                ?>
 		                        <option value="3" <?php if(isset($_SESSION['c_priority']) && $_SESSION['c_priority']==3) {echo 'selected="selected"';} ?>><?php echo $hesklang['low']; ?></option>
 		                        <option value="2" <?php if(isset($_SESSION['c_priority']) && $_SESSION['c_priority']==2) {echo 'selected="selected"';} ?>><?php echo $hesklang['medium']; ?></option>
 		                        <option value="1" <?php if(isset($_SESSION['c_priority']) && $_SESSION['c_priority']==1) {echo 'selected="selected"';} ?>><?php echo $hesklang['high']; ?></option>
@@ -256,6 +328,10 @@ function print_add_ticket()
 	                    {
 	        	            /* Radio box */
 	        	            case 'radio':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
 					            echo '<div class="form-group"><label class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label><div align="left" class="col-sm-9">';
 
 	            	            $options = explode('#HESK#',$v['value']);
@@ -274,7 +350,7 @@ function print_add_ticket()
 	                    	            $checked = '';
 	                                }
 
-	                	            echo '<label style="font-weight: normal;"><input type="radio" id="'.$v['name'].'" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
+	                	            echo '<label style="font-weight: normal;"><input type="radio" id="'.$formattedId.'" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
 	                            }
 
                                 echo '</div></div>';
@@ -282,18 +358,28 @@ function print_add_ticket()
 
 	                        /* Select drop-down box */
 	                        case 'select':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
                 	            $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
 					            echo '<div class="form-group"><label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'" '.$cls.'>';
+                                <div class="col-sm-9"><select class="form-control" id="'.$formattedId.'" name="'.$k.'" '.$cls.'>';
 
-	            	            $options = explode('#HESK#',$v['value']);
+                                // Show "Click to select"?
+                                $v['value'] = str_replace('{HESK_SELECT}', '', $v['value'], $num);
+                                if ($num)
+                                {
+                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                }
+
+                                $options = explode('#HESK#',$v['value']);
 
 	                            foreach ($options as $option)
 	                            {
 
-		            	            if (strlen($k_value) == 0 || $k_value == $option)
+                                    if ($k_value == $option)
 		                            {
 	                    	            $k_value = $option;
 	                                    $selected = 'selected="selected"';
@@ -311,6 +397,10 @@ function print_add_ticket()
 
 	                        /* Checkbox */
 	        	            case 'checkbox':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
 					            echo '<div class="form-group"><label class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label><div align="left" class="col-sm-9">';
 
 	            	            $options = explode('#HESK#',$v['value']);
@@ -328,13 +418,17 @@ function print_add_ticket()
 	                    	            $checked = '';
 	                                }
 
-	                	            echo '<label style="font-weight: normal;"><input id="'.$v['name'].'" type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
+	                	            echo '<label style="font-weight: normal;"><input id="'.$formattedId.'" type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
 	                            }
                                 echo '</div></div>';
 	                        break;
 
 	                        /* Large text box */
 	                        case 'textarea':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
 	                            $size = explode('#',$v['value']);
                                 $size[0] = empty($size[0]) ? 5 : intval($size[0]);
                                 $size[1] = empty($size[1]) ? 30 : intval($size[1]);
@@ -343,22 +437,26 @@ function print_add_ticket()
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
                             case 'multiselect':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
                                 $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
                                 echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+                                <div class="col-sm-9"><select class="form-control" id="'.$formattedId.'" name="'.$k.'[]" '.$cls.' multiple>';
 
                                 $options = explode('#HESK#',$v['value']);
 
                                 foreach ($options as $option)
                                 {
 
-                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    if ($k_value == $option)
                                     {
                                         $k_value = $option;
                                         $selected = 'selected="selected"';
@@ -373,13 +471,17 @@ function print_add_ticket()
 
                                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
-                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$formattedId.'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$formattedId.'\')">Deselect All</button>
                                 </div>
                                 </div></div>';
                                 break;
 
                             case 'date':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
                                 if (strlen($k_value) != 0)
                                 {
                                     $v['value'] = $k_value;
@@ -391,15 +493,44 @@ function print_add_ticket()
                                 <div class="form-group">
                                     <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
                                         <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
                                 </div>';
                                 break;
 
+                            case 'email':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                if ($v['value'] == 'cc' || $v['value'] == 'bcc')
+                                {
+                                    // (b)cc isn't a valid email but is the "value" used by settings. Just remove it.
+                                    $v['value'] = '';
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group">
+                                <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+                                </div>';
+
+                                break;
+
 	                        /* Default text input */
 	                        default:
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
                 	            if (strlen($k_value) != 0)
                                 {
                     	            $v['value'] = $k_value;
@@ -409,7 +540,7 @@ function print_add_ticket()
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" id="'.$v['name'].'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
                                 </div>';
 	                    }
 	                }
@@ -496,6 +627,10 @@ function print_add_ticket()
 	                    {
 	        	            /* Radio box */
 	        	            case 'radio':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
 					            echo '<div class="form-group"><label class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label><div align="left" class="col-sm-9">';
 
 	            	            $options = explode('#HESK#',$v['value']);
@@ -514,7 +649,7 @@ function print_add_ticket()
 	                    	            $checked = '';
 	                                }
 
-	                	            echo '<label style="font-weight: normal;"><input type="radio" id="'.$v['name'].'" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
+	                	            echo '<label style="font-weight: normal;"><input type="radio" id="'.$formattedId.'" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
 	                            }
 
                                 echo '</div></div>';
@@ -522,18 +657,29 @@ function print_add_ticket()
 
 	                        /* Select drop-down box */
 	                        case 'select':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
                 	            $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
 					            echo '<div class="form-group"><label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'" '.$cls.'>';
+                                <div class="col-sm-9"><select class="form-control" id="'.$formattedId.'" name="'.$k.'" '.$cls.'>';
 
-	            	            $options = explode('#HESK#',$v['value']);
+                                // Show "Click to select"?
+                                $v['value'] = str_replace('{HESK_SELECT}', '', $v['value'], $num);
+                                if ($num)
+                                {
+                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                }
+
+
+                                $options = explode('#HESK#',$v['value']);
 
 	                            foreach ($options as $option)
 	                            {
 
-		            	            if (strlen($k_value) == 0 || $k_value == $option)
+		            	            if ($k_value == $option)
 		                            {
 	                    	            $k_value = $option;
 	                                    $selected = 'selected="selected"';
@@ -551,6 +697,10 @@ function print_add_ticket()
 
 	                        /* Checkbox */
 	        	            case 'checkbox':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
 					            echo '<div class="form-group"><label class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label><div align="left" class="col-sm-9">';
 
 	            	            $options = explode('#HESK#',$v['value']);
@@ -568,13 +718,17 @@ function print_add_ticket()
 	                    	            $checked = '';
 	                                }
 
-	                	            echo '<label style="font-weight: normal;"><input id="'.$v['name'].'" type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
+	                	            echo '<label style="font-weight: normal;"><input id="'.$formattedId.'" type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
 	                            }
                                 echo '</div></div>';
 	                        break;
 
 	                        /* Large text box */
 	                        case 'textarea':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
 	                            $size = explode('#',$v['value']);
                                 $size[0] = empty($size[0]) ? 5 : intval($size[0]);
                                 $size[1] = empty($size[1]) ? 30 : intval($size[1]);
@@ -583,22 +737,26 @@ function print_add_ticket()
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control" id="'.$v['name'].'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
                             case 'multiselect':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
                                 $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
                                 echo '<div class="form-group"><label for="'.$v['name'].'[]" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-                                <div class="col-sm-9"><select class="form-control" id="'.$v['name'].'" name="'.$k.'[]" '.$cls.' multiple>';
+                                <div class="col-sm-9"><select class="form-control" id="'.$formattedId.'" name="'.$k.'[]" '.$cls.' multiple>';
 
                                 $options = explode('#HESK#',$v['value']);
 
                                 foreach ($options as $option)
                                 {
 
-                                    if (strlen($k_value) == 0 || $k_value == $option)
+                                    if ($k_value == $option)
                                     {
                                         $k_value = $option;
                                         $selected = 'selected="selected"';
@@ -613,12 +771,16 @@ function print_add_ticket()
 
                                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$v['name'].'\')">Select All</button>
-                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$v['name'].'\')">Deselect All</button>
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\''.$formattedId.'\')">Select All</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\''.$formattedId.'\')">Deselect All</button>
                                 </div></div></div>';
                                 break;
 
                             case 'date':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
                                 if (strlen($k_value) != 0)
                                 {
                                     $v['value'] = $k_value;
@@ -630,15 +792,44 @@ function print_add_ticket()
                                 <div class="form-group">
                                     <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
                                         <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
                                 </div>';
                                 break;
 
+                            case 'email':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                if ($v['value'] == 'cc' || $v['value'] == 'bcc')
+                                {
+                                    // (b)cc isn't a valid email but is the "value" used by settings. Just remove it.
+                                    $v['value'] = '';
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group">
+                                <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+                                </div>';
+
+                                break;
+
 	                        /* Default text input */
 	                        default:
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
                 	            if (strlen($k_value) != 0)
                                 {
                     	            $v['value'] = $k_value;
@@ -648,7 +839,7 @@ function print_add_ticket()
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" id="'.$v['name'].'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
                                 </div>';
 	                    }
 	                }
@@ -715,7 +906,7 @@ function print_add_ticket()
 				                echo '<img src="'.HESK_PATH.'img/success.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" /> '.$hesklang['vrfy'];
 			                }
 			                // Not verified yet, should we use Recaptcha?
-			                elseif ($hesk_settings['recaptcha_use'])
+			                elseif ($hesk_settings['recaptcha_use'] == 1)
 			                {
 				                ?>
 				                <script type="text/javascript">
@@ -738,7 +929,14 @@ function print_add_ticket()
 				                </script>
 				                <?php
 				                require(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
-				                echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, $hesk_settings['recaptcha_ssl']);
+                                echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, true);
+                            }
+                            // Use reCaptcha API v2?
+                            elseif ($hesk_settings['recaptcha_use'] == 2)
+                            {
+                                ?>
+                                <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>"></div>
+                            <?php
 			                }
 			                // At least use some basic PHP generated image (better than nothing)
 			                else
@@ -794,6 +992,13 @@ function print_add_ticket()
 	                <?php
                 } // End ELSE submit_notice
                 ?>
+
+                <!-- Do not delete or modify the code below, it is used to detect simple SPAM bots -->
+                <input type="hidden" name="hx" value="3" /><input type="hidden" name="hy" value="" />
+                <!-- >
+                <input type="text" name="phone" value="3" />
+                < -->
+
                 </form>
             </div>
                  <!-- END FORM -->
@@ -814,9 +1019,11 @@ function print_start()
 	if ($hesk_settings['kb_enable'])
 	{
         require(HESK_PATH . 'inc/knowledgebase_functions.inc.php');
-		hesk_load_database_functions();
-	    hesk_dbConnect();
 	}
+
+    // Connect to database
+    hesk_load_database_functions();
+    hesk_dbConnect();
 
 	/* Print header */
 	require_once(HESK_PATH . 'inc/header.inc.php');
@@ -827,6 +1034,23 @@ function print_start()
   <li><a href="<?php echo $hesk_settings['site_url']; ?>"><?php echo $hesk_settings['site_title']; ?></a></li>
   <li class="active"><?php echo $hesk_settings['hesk_title']; ?></li>
 </ol>
+    <?php
+    // Service messages
+    $res = hesk_dbQuery('SELECT `title`, `message`, `style` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` WHERE `type`='0' ORDER BY `order` ASC");
+    if (hesk_dbNumRows($res) > 0)
+    {
+    ?>
+    <div class="row">
+        <div class="col-md-12">
+            <?php
+            while ($sm=hesk_dbFetchAssoc($res))
+            {
+                hesk_service_message($sm);
+            }
+            ?>
+        </div>
+    </div>
+    <?php } ?>
 	<div class="row">
 		<div class="col-md-4">
             <div class="panel panel-default">
@@ -937,24 +1161,27 @@ function forgot_tid()
 
 	require(HESK_PATH . 'inc/email_functions.inc.php');
 
+    /* Get ticket(s) from database */
+    hesk_load_database_functions();
+    hesk_dbConnect();
+
 	$email = hesk_validateEmail( hesk_POST('email'), 'ERR' ,0) or hesk_process_messages($hesklang['enter_valid_email'],'ticket.php?remind=1');
 
-	/* Prepare ticket statuses */
-	$my_status = array(
-	    0 => $hesklang['open'],
-	    1 => $hesklang['wait_staff_reply'],
-	    2 => $hesklang['wait_cust_reply'],
-	    3 => $hesklang['closed'],
-	    4 => $hesklang['in_progress'],
-	    5 => $hesklang['on_hold'],
-	);
+    if ( isset($_POST['open_only']) )
+    {
+        $hesk_settings['open_only'] = $_POST['open_only'] == 1 ? 1 : 0;
+    }
 
-	/* Get ticket(s) from database */
-	hesk_load_database_functions();
-	hesk_dbConnect();
+	/* Prepare ticket statuses */
+    $myStatusSQL = hesk_dbQuery("SELECT `ID`, `TicketViewContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+    $my_status = array();
+    while ($myStatusRow = hesk_dbFetchAssoc($myStatusSQL))
+    {
+        $my_status[$myStatusRow['ID']] = $hesklang[$myStatusRow['TicketViewContentKey']];
+    }
 
     // Get tickets from the database
-	$res = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` FORCE KEY (`statuses`) WHERE ' . ($hesk_settings['open_only'] ? "`status` IN ('0','1','2','4','5') AND " : '') . ' ' . hesk_dbFormatEmail($email) . ' ORDER BY `status` ASC, `lastchange` DESC ');
+	$res = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'tickets` FORCE KEY (`statuses`) WHERE ' . ($hesk_settings['open_only'] ? "`status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 0) AND " : '') . ' ' . hesk_dbFormatEmail($email) . ' ORDER BY `status` ASC, `lastchange` DESC ');
 
 	$num = hesk_dbNumRows($res);
 	if ($num < 1)
@@ -987,16 +1214,17 @@ $hesk_settings[hesk_url]/ticket.php?track={$my_ticket['trackid']}{$email_param}
 
 	/* Get e-mail message for customer */
 	$msg = hesk_getEmailMessage('forgot_ticket_id','',0,0,1);
-	$msg = str_replace('%%NAME%%',			$name,												$msg);
-	$msg = str_replace('%%NUM%%',			$num,												$msg);
-	$msg = str_replace('%%LIST_TICKETS%%',	$tid_list,											$msg);
-	$msg = str_replace('%%SITE_TITLE%%',	hesk_msgToPlain($hesk_settings['site_title'], 1),	$msg);
-	$msg = str_replace('%%SITE_URL%%',		$hesk_settings['site_url'],							$msg);
+    $msg = processEmail($msg, $name, $num, $tid_list);
+
+    // Get HTML message for customer
+    $htmlMsg = hesk_getHtmlMessage('forgot_ticket_id','',0,0,1);
+    $htmlMsg = processEmail($htmlMsg, $name, $num, $tid_list);
+
 
     $subject = hesk_getEmailSubject('forgot_ticket_id');
 
 	/* Send e-mail */
-	hesk_mail($email, $subject, $msg);
+	hesk_mail($email, $subject, $msg, $htmlMsg);
 
 	/* Show success message */
 	$tmp  = '<b>'.$hesklang['tid_sent'].'!</b>';
@@ -1022,4 +1250,15 @@ $hesk_settings[hesk_url]/ticket.php?track={$my_ticket['trackid']}{$email_param}
 
     } // End forgot_tid()
 
+    function processEmail($msg, $name, $num, $tid_list)
+    {
+        global $hesk_settings;
+
+        $msg = str_replace('%%NAME%%',			$name,												$msg);
+        $msg = str_replace('%%NUM%%',			$num,												$msg);
+        $msg = str_replace('%%LIST_TICKETS%%',	$tid_list,											$msg);
+        $msg = str_replace('%%SITE_TITLE%%',	hesk_msgToPlain($hesk_settings['site_title'], 1),	$msg);
+        $msg = str_replace('%%SITE_URL%%',		$hesk_settings['site_url'],							$msg);
+        return $msg;
+    }
 ?>

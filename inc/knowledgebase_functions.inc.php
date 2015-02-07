@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -99,7 +99,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
 
 	<?php
     /* Get list of articles from the database */
-    $res = hesk_dbQuery("SELECT `t1`.* FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+    $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`views` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
 			LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
 			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
 			ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT ".intval($how_many));
@@ -116,7 +116,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
 
 	<?php
     /* Get list of articles from the database */
-    $res = hesk_dbQuery("SELECT `t1`.* FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+    $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`dt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
 			LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
 			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
 			ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT ".intval($how_many));

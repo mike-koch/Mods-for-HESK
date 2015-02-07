@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -39,6 +39,10 @@ define('HESK_NO_ROBOTS',1);
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+
+// Are we in maintenance mode?
+hesk_check_maintenance();
+
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -175,12 +179,12 @@ else
 }
 
 /* Get category name and ID */
-$result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='".intval($ticket['category'])."' LIMIT 1");
+$result = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='".intval($ticket['category'])."' LIMIT 1");
 
 /* If this category has been deleted use the default category with ID 1 */
 if (hesk_dbNumRows($result) != 1)
 {
-	$result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='1' LIMIT 1");
+    $result = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='1' LIMIT 1");
 }
 
 $category = hesk_dbFetchAssoc($result);
@@ -262,7 +266,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 <div class="col-md-2 col-md-offset-4 col-sm-12 close-ticket">
                     <p><?php $random=rand(10000,99999);
                         if ($ticket['isClosed'] == true && $ticket['locked'] != 1 && $hesk_settings['custopen']) {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=2&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['open_action'].'">'.$hesklang['open_action'].'</a>';}
-                        else {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=3&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['close_action'].'">'.$hesklang['close_action'].'</a>';} ?></p>
+                        elseif ($hesk_settings['custclose']) {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=3&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['close_action'].'">'.$hesklang['close_action'].'</a>';} ?></p>
                 </div>
             </div>
             <div class="row medLowPriority">
@@ -506,6 +510,20 @@ function print_form()
                     <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
                     <div class="col-sm-9">
                         <input type="text" id="email" class="form-control" name="email" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/><input type="hidden" name="a" value="forgot_tid" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="open_only" value="1" <?php echo $hesk_settings['open_only'] ? 'checked="checked"' : ''; ?> /><?php echo $hesklang['oon1']; ?>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="open_only" value="0" <?php echo ! $hesk_settings['open_only'] ? 'checked="checked"' : ''; ?> /><?php echo $hesklang['oon2']; ?>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -49,7 +49,11 @@ $query = hesk_REQUEST('q') or die('');
 hesk_dbConnect();
 
 /* Get relevant articles from the database */
-$res = hesk_dbQuery('SELECT t1.`id`, t1.`subject`, t1.`content` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'kb_articles` AS t1 LEFT JOIN `'.hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS t2 ON t1.`catid` = t2.`id`  WHERE t1.`type`='0' AND t2.`type`='0' AND MATCH(`subject`,`content`,`keywords`) AGAINST ('".hesk_dbEscape($query)."') LIMIT ".intval($hesk_settings['kb_search_limit']));
+$res = hesk_dbQuery("SELECT t1.`id`, t1.`subject`, LEFT(t1.`content`, ".max(200, $hesk_settings['kb_substrart'] * 2).") AS `content`, MATCH(`subject`,`content`,`keywords`) AGAINST ('".hesk_dbEscape($query)."') AS `score`
+					FROM `".hesk_dbEscape($hesk_settings['db_pfix']).'kb_articles` AS t1
+					LEFT JOIN `'.hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS t2 ON t1.`catid` = t2.`id`
+					WHERE t1.`type`='0' AND t2.`type`='0' AND MATCH(`subject`,`content`,`keywords`) AGAINST ('".hesk_dbEscape($query)."')
+					LIMIT ".intval($hesk_settings['kb_search_limit']));
 $num = hesk_dbNumRows($res);
 
 /* Solve some spacing issues */
@@ -69,9 +73,20 @@ if ( hesk_isREQUEST('p') )
 	}
     else
     {
+        $max_score = 0;
 		while ($article = hesk_dbFetchAssoc($res))
 		{
-			$txt = strip_tags($article['content']);
+            if ($article['score'] > $max_score)
+            {
+                $max_score = $article['score'];
+            }
+
+            if ($max_score && ($article['score'] / $max_score) < 0.25)
+            {
+                break;
+            }
+
+            $txt = strip_tags($article['content']);
 			if (strlen($txt) > $hesk_settings['kb_substrart'])
 			{
 				$txt = substr($txt, 0, $hesk_settings['kb_substrart']).'...';
@@ -79,6 +94,7 @@ if ( hesk_isREQUEST('p') )
 
 			echo '
 			<a href="knowledgebase.php?article='.$article['id'].'&amp;suggest=1" target="_blank">'.$article['subject'].'</a>
+			<input type="hidden" name="suggested[]" value="'.$article['id'].'|'.stripslashes( hesk_input($article['subject']) ).'">
 		    <br />'.$txt.'<br /><br />';
 		}
     }

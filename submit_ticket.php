@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -35,10 +35,24 @@
 define('IN_SCRIPT',1);
 define('HESK_PATH','./');
 
+// Try to detect some simple SPAM bots
+if ( ! isset($_POST['hx']) || $_POST['hx'] != 3 || ! isset($_POST['hy']) || $_POST['hy'] != '' || isset($_POST['phone']) )
+{
+    header('HTTP/1.1 403 Forbidden');
+    exit();
+}
+
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+
+// Are we in maintenance mode?
+hesk_check_maintenance();
+
+// Are we in "Knowledgebase only" mode?
+hesk_check_kb_only();
+
 hesk_load_database_functions();
 require(HESK_PATH . 'inc/email_functions.inc.php');
 require(HESK_PATH . 'inc/posting_functions.inc.php');
@@ -102,7 +116,7 @@ if ($hesk_settings['question_use'])
 if ($hesk_settings['secimg_use'] && ! isset($_SESSION['img_verified']))
 {
 	// Using ReCaptcha?
-	if ($hesk_settings['recaptcha_use'])
+	if ($hesk_settings['recaptcha_use'] == 1)
 	{
 		require(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
 
@@ -119,7 +133,31 @@ if ($hesk_settings['secimg_use'] && ! isset($_SESSION['img_verified']))
 		{
 			$hesk_error_buffer['mysecnum']=$hesklang['recaptcha_error'];
 		}
+
 	}
+    // Using ReCaptcha API v2?
+    elseif ($hesk_settings['recaptcha_use'] == 2)
+    {
+        require(HESK_PATH . 'inc/recaptcha/recaptchalib_v2.php');
+
+        $resp = null;
+        $reCaptcha = new ReCaptcha($hesk_settings['recaptcha_private_key']);
+
+        // Was there a reCAPTCHA response?
+        if ( isset($_POST["g-recaptcha-response"]) )
+        {
+            $resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], hesk_POST("g-recaptcha-response") );
+        }
+
+        if ($resp != null && $resp->success)
+        {
+            $_SESSION['img_verified']=true;
+        }
+        else
+        {
+            $hesk_error_buffer['mysecnum']=$hesklang['recaptcha_error'];
+        }
+    }
 	// Using PHP generated image
 	else
 	{
@@ -167,12 +205,39 @@ if ($hesk_settings['confirm_email'])
 }
 
 $tmpvar['category'] = intval( hesk_POST('category') ) or $hesk_error_buffer['category']=$hesklang['sel_app_cat'];
-$tmpvar['priority'] = $hesk_settings['cust_urgency'] ? intval( hesk_POST('priority') ) : 3;
 
-// Is priority a valid choice?
-if ($tmpvar['priority'] < 1 || $tmpvar['priority'] > 3)
+// Do we allow customer to select priority?
+if ($hesk_settings['cust_urgency'])
 {
-	$hesk_error_buffer['priority'] = $hesklang['sel_app_priority'];
+    $tmpvar['priority'] = intval( hesk_POST('priority') );
+
+    // We don't allow customers select "Critical". If priority is not valid set it to "low".
+    if ($tmpvar['priority'] < 1 || $tmpvar['priority'] > 3)
+    {
+        // If we are showing "Click to select" priority needs to be selected
+        if ($hesk_settings['select_pri'])
+        {
+            $tmpvar['priority'] = -1;
+            $hesk_error_buffer['priority'] = $hesklang['select_priority'];
+        }
+        else
+        {
+            $tmpvar['priority'] = 3;
+        }
+    }
+}
+// Priority will be selected based on the category selected
+else
+{
+    $res = hesk_dbQuery("SELECT `priority` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`=".intval($tmpvar['category']));
+    if ( hesk_dbNumRows($res) == 1 )
+    {
+        $tmpvar['priority'] = intval( hesk_dbResult($res) );
+    }
+    else
+    {
+        $tmpvar['priority'] = 3;
+    }
 }
 
 $tmpvar['subject']  = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer['subject']=$hesklang['enter_ticket_subject'];
@@ -223,10 +288,13 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
                 }
             	$_POST[$k] = '';
             }
+
+            $_SESSION["c_$k"]=hesk_POST_array($k);
         }
 		elseif ($v['req'])
         {
         	$tmpvar[$k]=hesk_makeURL(nl2br(hesk_input( hesk_POST($k) )));
+            $_SESSION["c_$k"]=hesk_POST($k);
             if (!strlen($tmpvar[$k]))
             {
             	$hesk_error_buffer[$k]=$hesklang['fill_all'].': '.$v['name'];
@@ -247,7 +315,6 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
                 $tmpvar[$k] = hesk_makeURL(nl2br(hesk_input(hesk_POST($k))));
             }
         }
-		$_SESSION["c_$k"]=hesk_POST($k);
 	}
     else
     {
@@ -255,11 +322,17 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
     }
 }
 
+// Check bans
+if ( ! isset($hesk_error_buffer['email']) && hesk_isBannedEmail($tmpvar['email']) || hesk_isBannedIP($_SERVER['REMOTE_ADDR']) )
+{
+    hesk_error($hesklang['baned_e']);
+}
+
 // Check maximum open tickets limit
 $below_limit = true;
 if ($hesk_settings['max_open'] && ! isset($hesk_error_buffer['email']) )
 {
-	$res = hesk_dbQuery("SELECT COUNT(*) FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `status` IN ('0', '1', '2', '4', '5') AND " . hesk_dbFormatEmail($tmpvar['email']));
+	$res = hesk_dbQuery("SELECT COUNT(*) FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 0) AND " . hesk_dbFormatEmail($tmpvar['email']));
 	$num = hesk_dbResult($res);
 
 	if ($num >= $hesk_settings['max_open'])
@@ -326,6 +399,12 @@ if (count($hesk_error_buffer))
 $tmpvar['message']=hesk_makeURL($tmpvar['message']);
 $tmpvar['message']=nl2br($tmpvar['message']);
 
+// Track suggested knowledgebase articles
+if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && isset($_POST['suggested']) && is_array($_POST['suggested']) )
+{
+    $tmpvar['articles'] = implode(',', array_unique( array_map('intval', $_POST['suggested']) ) );
+}
+
 // All good now, continue with ticket creation
 $tmpvar['owner']   = 0;
 $tmpvar['history'] = sprintf($hesklang['thist15'], hesk_date(), $tmpvar['name']);
@@ -378,7 +457,10 @@ if ($createTicket)
     $ticket = hesk_newTicket($tmpvar);
 
     // Notify the customer
-    hesk_notifyCustomer();
+    if ($hesk_settings['notify_new'])
+    {
+        hesk_notifyCustomer();
+    }
 
     // Need to notify staff?
     // --> From autoassign?
@@ -431,9 +513,9 @@ require_once(HESK_PATH . 'inc/header.inc.php');
         hesk_show_success(
 
             $hesklang['ticket_submitted'] . '<br /><br />' .
-            $hesklang['ticket_submitted_success'] . ': <b>' . $ticket['trackid'] . '</b><br /><br />
-        <a href="' . $hesk_settings['hesk_url'] . '/ticket.php?track=' . $ticket['trackid'] . '">' . $hesklang['view_your_ticket'] . '</a>'
-
+            $hesklang['ticket_submitted_success'] . ': <b>' . $ticket['trackid'] . '</b><br /><br /> ' .
+            ($hesk_settings['notify_new'] && $hesk_settings['spam_notice'] ? $hesklang['spam_inbox'] . '<br /><br />' : '') .
+            '<a href="' . $hesk_settings['hesk_url'] . '/ticket.php?track=' . $ticket['trackid'] . '">' . $hesklang['view_your_ticket'] . '</a>'
         );
     } else
     {

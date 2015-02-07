@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -35,7 +35,6 @@
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
-
 /* Get includes for SMTP */
 if ($hesk_settings['smtp'])
 {
@@ -58,11 +57,29 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
     // Format email subject and message
     $subject = hesk_getEmailSubject($email_template, $ticket);
     $message = hesk_getEmailMessage($email_template, $ticket);
+    $htmlMessage = hesk_getHtmlMessage($email_template, $ticket);
     $activationUrl = $hesk_settings['hesk_url'] . '/verifyemail.php?key=%%ACTIVATIONKEY%%';
     $message = str_replace('%%VERIFYURL%%', $activationUrl, $message);
     $message = str_replace('%%ACTIVATIONKEY%%', $activationKey, $message);
 
-    hesk_mail($ticket['email'], $subject, $message);
+    // Add Cc / Bcc recipents if needed
+    $ccEmails = array();
+    $bccEmails = array();
+    foreach ($hesk_settings['custom_fields'] as $k=>$v) {
+        if ($v['use']) {
+            if ($v['type'] == 'email' && !empty($ticket[$k])) {
+                if ($v['value'] == 'cc') {
+                    $emails = explode(',',$ticket[$k]);
+                    array_push($ccEmails, $emails);
+                } elseif ($v['value'] == 'bcc') {
+                    $emails = explode(',',$ticket[$k]);
+                    array_push($bccEmails, $emails);
+                }
+            }
+        }
+    }
+
+    hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $ccEmails, $bccEmails);
 }
 
 
@@ -76,12 +93,42 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
 		return true;
 	}
 
+    $changedLanguage = false;
+    //Set the user's language according to the ticket.
+    if ($ticket['language'] !== NULL)
+    {
+        hesk_setLanguage($ticket['language']);
+        $changedLanguage = true;
+    }
+
 	// Format email subject and message
 	$subject = hesk_getEmailSubject($email_template,$ticket);
 	$message = hesk_getEmailMessage($email_template,$ticket);
+    $htmlMessage = hesk_getHtmlMessage($email_template,$ticket);
+
+    // Add Cc / Bcc recipents if needed
+    $ccEmails = array();
+    $bccEmails = array();
+    foreach ($hesk_settings['custom_fields'] as $k=>$v) {
+        if ($v['use']) {
+            if ($v['type'] == 'email' && !empty($ticket[$k])) {
+                if ($v['value'] == 'cc') {
+                    array_push($ccEmails, $ticket[$k]);
+                } elseif ($v['value'] == 'bcc') {
+                    array_push($bccEmails, $ticket[$k]);
+                }
+            }
+        }
+    }
 
 	// Send e-mail
-	hesk_mail($ticket['email'], $subject, $message);
+	hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $ccEmails, $bccEmails);
+
+    // Reset the language if it was changed
+    if ($changedLanguage)
+    {
+        hesk_resetLanguage();
+    }
 
     return true;
 
@@ -121,9 +168,10 @@ function hesk_notifyAssignedStaff($autoassign_owner, $email_template, $type = 'n
 	/* Format email subject and message for staff */
     $subject = hesk_getEmailSubject($email_template,$ticket);
 	$message = hesk_getEmailMessage($email_template,$ticket,1);
+    $htmlMessage = hesk_getHtmlMessage($email_template,$ticket,1);
 
 	/* Send email to staff */
-	hesk_mail($autoassign_owner['email'], $subject, $message);
+	hesk_mail($autoassign_owner['email'], $subject, $message, $htmlMessage);
 
     /* Reset language to original one */
     hesk_resetLanguage();
@@ -191,7 +239,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
                 if ($current_language != 'NONE')
                 {
 					/* Send e-mail to staff */
-					hesk_mail(implode(',',$recipients), $subject, $message );
+					hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage );
 
                     /* Reset list of email addresses */
                     $recipients = array();
@@ -203,6 +251,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
 				/* Format staff email subject and message for this language */
                 $subject = hesk_getEmailSubject($email_template,$ticket);
 				$message = hesk_getEmailMessage($email_template,$ticket,$is_ticket);
+                $htmlMessage = hesk_getHtmlMessage($email_template,$ticket,$is_ticket);
 
 				/* Add email to the recipients list */
 				$recipients[] = $admin['email'];
@@ -213,7 +262,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
         }
 
         /* Send email messages to the remaining staff */
-		hesk_mail(implode(',',$recipients), $subject, $message );
+		hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage);
 
 		/* Reset language to original one */
 		hesk_resetLanguage();
@@ -244,6 +293,9 @@ function hesk_validEmails()
         // --> Verify email
         'verify_email' => $hesklang['verify_email'],
 
+        // --> Ticket closed
+        'ticket_closed' => $hesklang['ticket_closed'],
+
 
 		/*** Emails sent to STAFF ***/
 
@@ -265,13 +317,16 @@ function hesk_validEmails()
 		// --> New note by someone to a ticket assigned to you
 		'new_note' => $hesklang['new_note'],
 
+        // --> Staff password reset email
+        'reset_password' => $hesklang['reset_password'],
+
     );
 } // END hesk_validEmails()
 
 
-function hesk_mail($to,$subject,$message)
+function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
 	// Demo mode
 	if ( defined('HESK_DEMO') )
@@ -296,15 +351,93 @@ function hesk_mail($to,$subject,$message)
 	# echo "<p>TO: $to<br >SUBJECT: $subject<br >MSG: $message</p>";
 	# return true;
 
+    // Use mailgun
+    if ($modsForHesk_settings['use_mailgun'])
+    {
+        ob_start();
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://api.mailgun.net/v2/".$modsForHesk_settings['mailgun_domain']."/messages");
+
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, 'api:' . $modsForHesk_settings['mailgun_api_key']);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+        curl_setopt($ch, CURLOPT_POST, true);
+
+        $postfields = array(
+            'from'      => $hesk_settings['from_header'],
+            'to'        => $to,
+            'h:Reply-To'=> $hesk_settings['from_header'],
+            'subject'   => $subject,
+            'text'      => $message
+        );
+        if (count($cc) > 0)
+        {
+            $postfields['cc'] = implode(',',$cc);
+        }
+        if (count($bcc) > 0)
+        {
+            $postfields['bcc'] = implode(',',$bcc);
+        }
+        if ($modsForHesk_settings['html_emails'])
+        {
+            $postfields['html'] = $htmlMessage;
+        }
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $tmp = trim(ob_get_contents());
+        ob_end_clean();
+
+        return (strlen($tmp)) ? $tmp : true;
+    }
+
+    $boundary = sha1(uniqid());
+    //Prepare the message for HTML or non-html
+    if ($modsForHesk_settings['html_emails'])
+    {
+        $plaintextMessage = $message;
+        $message = "--".$boundary."\n";
+        $message .= "Content-Type: text/plain; charset=".$hesklang['ENCODING']."\n\n";
+        $message .= $plaintextMessage."\n\n";
+        $message .= "--".$boundary."\n";
+        $message .= "Content-Type: text/html; charset=".$hesklang['ENCODING']."\n\n";
+        $message .= $htmlMessage."\n\n";
+        $message .= "--".$boundary."--";
+    }
+
     // Use PHP's mail function
 	if ( ! $hesk_settings['smtp'])
     {
     	// Set additional headers
-		$headers = "From: $hesk_settings[from_header]\n";
+        $headers = '';
+        if ($modsForHesk_settings['html_emails'])
+        {
+            $headers .= "MIME-Version: 1.0\n";
+        }
+		$headers .= "From: $hesk_settings[from_header]\n";
+        if (count($cc) > 0)
+        {
+            $headers .= "Cc: ".implode(',',$cc);
+        }
+        if (count($bcc) > 0)
+        {
+            $headers .= "Bcc: ".implode(',',$bcc);
+        }
 		$headers.= "Reply-To: $hesk_settings[from_header]\n";
 		$headers.= "Return-Path: $hesk_settings[webmaster_mail]\n";
 		$headers.= "Date: " . date(DATE_RFC2822) . "\n";
-		$headers.= "Content-Type: text/plain; charset=" . $hesklang['ENCODING'];
+        if ($modsForHesk_settings['html_emails'])
+        {
+            $headers.= "Content-Type: multipart/alternative;boundary=".$boundary;
+        }
 
 		// Send using PHP mail() function
         ob_start();
@@ -331,15 +464,34 @@ function hesk_mail($to,$subject,$message)
 
     // Send the e-mail using SMTP
     $to_arr = explode(',',$to);
-	if ( ! $smtp->SendMessage($hesk_settings['noreply_mail'], $to_arr, array(
-				"From: $hesk_settings[from_header]",
-				"To: $to",
-                "Reply-To: $hesk_settings[from_header]",
-                "Return-Path: $hesk_settings[webmaster_mail]",
-				"Subject: " . $subject,
-				"Date: " . date(DATE_RFC2822),
-                "Content-Type: text/plain; charset=" . $hesklang['ENCODING']
-			), $message))
+
+    $headersArray = array(
+        "From: $hesk_settings[from_header]",
+        "To: $to",
+        "Reply-To: $hesk_settings[from_header]",
+        "Return-Path: $hesk_settings[webmaster_mail]",
+        "Subject: " . $subject,
+        "Date: " . date(DATE_RFC2822)
+    );
+    if ($modsForHesk_settings['html_emails'])
+    {
+        array_push($headersArray,"MIME-Version: 1.0\n");
+        array_push($headersArray,"Content-Type: multipart/alternative;boundary=".$boundary."\n");
+    } else
+    {
+        array_push($headersArray,"Content-Type: text/plain; charset=" . $hesklang['ENCODING']);
+    }
+    if (count($cc) > 0)
+    {
+        array_push($headersArray,"Cc: ".implode(',',$cc));
+    }
+    if (count($bcc) > 0)
+    {
+        array_push($headersArray,"Bcc: ".implode(',',$bcc));
+    }
+
+
+	if ( ! $smtp->SendMessage($hesk_settings['noreply_mail'], $to_arr, $headersArray, $message))
     {
 		// Suppress errors unless we are in debug mode
 		if ($hesk_settings['debug_mode'])
@@ -425,26 +577,9 @@ function hesk_getEmailSubject($eml_file, $ticket='', $is_ticket=1, $strip=0)
 	}
 
     /* Set status */
-	switch ($ticket['status'])
-	{
-		case 1:
-			$ticket['status'] = $hesklang['wait_reply'];
-			break;
-		case 2:
-			$ticket['status'] = $hesklang['replied'];
-			break;
-		case 3:
-			$ticket['status'] = $hesklang['closed'];
-			break;
-		case 4:
-			$ticket['status'] = $hesklang['in_progress'];
-			break;
-		case 5:
-			$ticket['status'] = $hesklang['on_hold'];
-			break;
-		default:
-			$ticket['status'] = $hesklang['open'];
-	}
+    $statusRs = hesk_dbQuery("SELECT `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".$ticket['status']);
+    $row = hesk_dbFetchAssoc($statusRs);
+    $ticket['status'] = $hesklang[$row['ShortNameContentKey']];
 
 	/* Replace all special tags */
 	$msg = str_replace('%%SUBJECT%%',	$ticket['subject'],		$msg);
@@ -457,6 +592,40 @@ function hesk_getEmailSubject($eml_file, $ticket='', $is_ticket=1, $strip=0)
 
 } // hesk_getEmailSubject()
 
+function hesk_getHtmlMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $just_message=0)
+{
+    global $hesk_settings, $hesklang, $modsForHesk_settings;
+
+    // Demo mode
+    if ( defined('HESK_DEMO') || !$modsForHesk_settings['html_emails'])
+    {
+        return '';
+    }
+
+    // We won't do validation here, as hesk_getEmailMessage will be called which handles validation.
+
+    // Get email template
+    $original_eml_file = $eml_file;
+    $eml_file = 'language/'.$hesk_settings['languages'][$hesk_settings['language']]['folder'].'/emails/html/'.$original_eml_file.'.txt';
+    $plain_eml_file = 'language/'.$hesk_settings['languages'][$hesk_settings['language']]['folder'].'/emails/'.$original_eml_file.'.txt';
+
+    if (file_exists(HESK_PATH.$eml_file))
+    {
+        $msg = file_get_contents(HESK_PATH.$eml_file);
+    }
+    elseif (file_exists(HESK_PATH.$plain_eml_file))
+    {
+        $msg = file_get_contents(HESK_PATH.$plain_eml_file);
+    }
+    else
+    {
+        hesk_error($hesklang['emfm'].': '.$eml_file);
+    }
+
+    //Perform logic common between hesk_getEmailMessage and hesk_getHtmlMessage
+    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message);
+    return $msg;
+}
 
 function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $just_message=0)
 {
@@ -489,148 +658,140 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
     	hesk_error($hesklang['emfm'].': '.$eml_file);
     }
 
+    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message);
+    return $msg;
+
+} // END hesk_getEmailMessage
+
+function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message)
+{
+    global $hesk_settings, $hesklang;
+
     /* Return just the message without any processing? */
     if ($just_message)
     {
-    	return $msg;
+        return $msg;
     }
 
-	// Convert any entities in site title to plain text
-	$hesk_settings['site_title'] = hesk_msgToPlain($hesk_settings['site_title'], 1);
+    // Convert any entities in site title to plain text
+    $hesk_settings['site_title'] = hesk_msgToPlain($hesk_settings['site_title'], 1);
 
     /* If it's not a ticket-related mail (like "a new PM") just process quickly */
     if ( ! $is_ticket)
     {
-		$trackingURL = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/mail.php?a=read&id=' . intval($ticket['id']);
+        $trackingURL = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/mail.php?a=read&id=' . intval($ticket['id']);
 
-		$msg = str_replace('%%NAME%%',		$ticket['name']					,$msg);
-		$msg = str_replace('%%SUBJECT%%',	$ticket['subject']				,$msg);
-		$msg = str_replace('%%TRACK_URL%%',	$trackingURL					,$msg);
-		$msg = str_replace('%%SITE_TITLE%%',$hesk_settings['site_title']	,$msg);
-		$msg = str_replace('%%SITE_URL%%',	$hesk_settings['site_url']		,$msg);
+        $msg = str_replace('%%NAME%%',		$ticket['name']					,$msg);
+        $msg = str_replace('%%SUBJECT%%',	$ticket['subject']				,$msg);
+        $msg = str_replace('%%TRACK_URL%%',	$trackingURL					,$msg);
+        $msg = str_replace('%%SITE_TITLE%%',$hesk_settings['site_title']	,$msg);
+        $msg = str_replace('%%SITE_URL%%',	$hesk_settings['site_url']		,$msg);
 
-		if ( isset($ticket['message']) )
-		{
-			return str_replace('%%MESSAGE%%', $ticket['message'], $msg);
-		}
-		else
-		{
-			return $msg;
-		}
+        if ( isset($ticket['message']) )
+        {
+            return str_replace('%%MESSAGE%%', $ticket['message'], $msg);
+        }
+        else
+        {
+            return $msg;
+        }
     }
 
     // Is email required to view ticket (for customers only)?
-	$hesk_settings['e_param'] = $hesk_settings['email_view_ticket'] ? '&e=' . rawurlencode($ticket['email']) : '';
+    $hesk_settings['e_param'] = $hesk_settings['email_view_ticket'] ? '&e=' . rawurlencode($ticket['email']) : '';
 
     /* Generate the ticket URLs */
     $trackingURL = $hesk_settings['hesk_url'];
-	$trackingURL.= $is_admin ? '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php' : '/ticket.php';
+    $trackingURL.= $is_admin ? '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php' : '/ticket.php';
     $trackingURL.= '?track='.$ticket['trackid'].($is_admin ? '' : $hesk_settings['e_param']).'&Refresh='.rand(10000,99999);
 
- 	/* Set category title */
-	$ticket['category'] = hesk_msgToPlain(hesk_getCategoryName($ticket['category']), 1);
+    /* Set category title */
+    $ticket['category'] = hesk_msgToPlain(hesk_getCategoryName($ticket['category']), 1);
 
-	/* Set priority title */
-	switch ($ticket['priority'])
-	{
-		case 0:
-			$ticket['priority'] = $hesklang['critical'];
-			break;
-		case 1:
-			$ticket['priority'] = $hesklang['high'];
-			break;
-		case 2:
-			$ticket['priority'] = $hesklang['medium'];
-			break;
-		default:
-			$ticket['priority'] = $hesklang['low'];
-	}
+    /* Set priority title */
+    switch ($ticket['priority'])
+    {
+        case 0:
+            $ticket['priority'] = $hesklang['critical'];
+            break;
+        case 1:
+            $ticket['priority'] = $hesklang['high'];
+            break;
+        case 2:
+            $ticket['priority'] = $hesklang['medium'];
+            break;
+        default:
+            $ticket['priority'] = $hesklang['low'];
+    }
 
     /* Get owner name */
     $ticket['owner'] = hesk_msgToPlain( hesk_getOwnerName($ticket['owner']), 1);
 
     /* Set status */
-	switch ($ticket['status'])
-	{
-		case 1:
-			$ticket['status'] = $hesklang['wait_reply'];
-			break;
-		case 2:
-			$ticket['status'] = $hesklang['replied'];
-			break;
-		case 3:
-			$ticket['status'] = $hesklang['closed'];
-			break;
-		case 4:
-			$ticket['status'] = $hesklang['in_progress'];
-			break;
-		case 5:
-			$ticket['status'] = $hesklang['on_hold'];
-			break;
-		default:
-			$ticket['status'] = $hesklang['open'];
-	}
+    $statusRs = hesk_dbQuery("SELECT `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".$ticket['status']);
+    $row = hesk_dbFetchAssoc($statusRs);
+    $ticket['status'] = $hesklang[$row['ShortNameContentKey']];
 
-	/* Replace all special tags */
-	$msg = str_replace('%%NAME%%',		$ticket['name']				,$msg);
-	$msg = str_replace('%%SUBJECT%%',	$ticket['subject']			,$msg);
-	$msg = str_replace('%%TRACK_ID%%',	$ticket['trackid']			,$msg);
-	$msg = str_replace('%%TRACK_URL%%',	$trackingURL				,$msg);
-	$msg = str_replace('%%SITE_TITLE%%',$hesk_settings['site_title'],$msg);
-	$msg = str_replace('%%SITE_URL%%',	$hesk_settings['site_url']	,$msg);
-	$msg = str_replace('%%CATEGORY%%',	$ticket['category']			,$msg);
-	$msg = str_replace('%%PRIORITY%%',	$ticket['priority']			,$msg);
+    /* Replace all special tags */
+    $msg = str_replace('%%NAME%%',		$ticket['name']				,$msg);
+    $msg = str_replace('%%SUBJECT%%',	$ticket['subject']			,$msg);
+    $msg = str_replace('%%TRACK_ID%%',	$ticket['trackid']			,$msg);
+    $msg = str_replace('%%TRACK_URL%%',	$trackingURL				,$msg);
+    $msg = str_replace('%%SITE_TITLE%%',$hesk_settings['site_title'],$msg);
+    $msg = str_replace('%%SITE_URL%%',	$hesk_settings['site_url']	,$msg);
+    $msg = str_replace('%%CATEGORY%%',	$ticket['category']			,$msg);
+    $msg = str_replace('%%PRIORITY%%',	$ticket['priority']			,$msg);
     $msg = str_replace('%%OWNER%%',		$ticket['owner']			,$msg);
     $msg = str_replace('%%STATUS%%',	$ticket['status']			,$msg);
     $msg = str_replace('%%EMAIL%%',		$ticket['email']			,$msg);
     $msg = str_replace('%%CREATED%%',	$ticket['dt']				,$msg);
     $msg = str_replace('%%UPDATED%%',	$ticket['lastchange']		,$msg);
+    $msg = str_replace('%%ID%%',		$ticket['id']				,$msg);
 
-	/* All custom fields */
-	foreach ($hesk_settings['custom_fields'] as $k=>$v)
-	{
-		if ($v['use'])
-		{
-        	if ($v['type'] == 'checkbox')
+    /* All custom fields */
+    foreach ($hesk_settings['custom_fields'] as $k=>$v)
+    {
+        if ($v['use'])
+        {
+            if ($v['type'] == 'checkbox')
             {
-            	$ticket[$k] = str_replace("<br />","\n",$ticket[$k]);
+                $ticket[$k] = str_replace("<br />","\n",$ticket[$k]);
             }
 
-			$msg = str_replace('%%'.strtoupper($k).'%%',stripslashes($ticket[$k]),$msg);
-		}
+            $msg = str_replace('%%'.strtoupper($k).'%%',stripslashes($ticket[$k]),$msg);
+        }
         else
         {
-        	$msg = str_replace('%%'.strtoupper($k).'%%','',$msg);
+            $msg = str_replace('%%'.strtoupper($k).'%%','',$msg);
         }
-	}
+    }
 
-	// Is message tag in email template?
-	if (strpos($msg, '%%MESSAGE%%') !== false)
-	{
-		// Replace message
-		$msg = str_replace('%%MESSAGE%%',$ticket['message'],$msg);
+    // Is message tag in email template?
+    if (strpos($msg, '%%MESSAGE%%') !== false)
+    {
+        // Replace message
+        $msg = str_replace('%%MESSAGE%%',$ticket['message'],$msg);
 
-		// Add direct links to any attachments at the bottom of the email message
-		if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) )
-		{
-			$msg .= "\n\n\n" . $hesklang['fatt'];
+        // Add direct links to any attachments at the bottom of the email message
+        if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) )
+        {
+            $msg .= "\n\n\n" . $hesklang['fatt'];
 
-			$att = explode(',', substr($ticket['attachments'], 0, -1));
-			foreach ($att as $myatt)
-			{
-				list($att_id, $att_name) = explode('#', $myatt);
-				$msg .= "\n\n" . $att_name . "\n" . $hesk_settings['hesk_url'] . '/download_attachment.php?att_id='.$att_id.'&track='.$ticket['trackid'].$hesk_settings['e_param'];
-			}
-		}
+            $att = explode(',', substr($ticket['attachments'], 0, -1));
+            foreach ($att as $myatt)
+            {
+                list($att_id, $att_name) = explode('#', $myatt);
+                $msg .= "\n\n" . $att_name . "\n" . $hesk_settings['hesk_url'] . '/download_attachment.php?att_id='.$att_id.'&track='.$ticket['trackid'].$hesk_settings['e_param'];
+            }
+        }
 
-		// For customer notifications: if we allow email piping/pop 3 fetching and
-		// stripping quoted replies add an "reply above this line" tag
-		if ( ! $is_admin && ($hesk_settings['email_piping'] || $hesk_settings['pop3']) && $hesk_settings['strip_quoted'])
-		{
-			$msg = $hesklang['EMAIL_HR'] . "\n\n" . $msg;
-		}
-	}
+        // For customer notifications: if we allow email piping/pop 3 fetching and
+        // stripping quoted replies add an "reply above this line" tag
+        if ( ! $is_admin && ($hesk_settings['email_piping'] || $hesk_settings['pop3']) && $hesk_settings['strip_quoted'])
+        {
+            $msg = $hesklang['EMAIL_HR'] . "\n\n" . $msg;
+        }
+    }
 
     return $msg;
-
-} // END hesk_getEmailMessage
+}

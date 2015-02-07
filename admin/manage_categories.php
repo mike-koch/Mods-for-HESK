@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -48,6 +48,14 @@ hesk_isLoggedIn();
 /* Check permissions for this feature */
 hesk_checkPermission('can_man_cat');
 
+// Possible priorities
+$priorities = array(
+    3 => array('value' => 3, 'text' => $hesklang['low'],		'formatted' => $hesklang['low']),
+    2 => array('value' => 2, 'text' => $hesklang['medium'],		'formatted' => '<font class="medium">'.$hesklang['medium'].'</font>'),
+    1 => array('value' => 1, 'text' => $hesklang['high'],		'formatted' => '<font class="important">'.$hesklang['high'].'</font>'),
+    0 => array('value' => 0, 'text' => $hesklang['critical'],	'formatted' => '<font class="critical">'.$hesklang['critical'].'</font>'),
+);
+
 /* What should we do? */
 if ( $action = hesk_REQUEST('a') )
 {
@@ -59,6 +67,7 @@ if ( $action = hesk_REQUEST('a') )
 	elseif ($action == 'order')      {order_cat();}
 	elseif ($action == 'autoassign') {toggle_autoassign();}
 	elseif ($action == 'type')       {toggle_type();}
+    elseif ($action == 'priority')   {change_priority();}
 }
 
 /* Print header */
@@ -71,7 +80,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <script language="Javascript" type="text/javascript"><!--
 function confirm_delete()
 {
-if (confirm('<?php echo addslashes($hesklang['confirm_del_cat']); ?>')) {return true;}
+    if (confirm('<?php echo hesk_makeJsString($hesklang['confirm_del_cat']); ?>')) {return true;}
 else {return false;}
 }
 //-->
@@ -92,6 +101,7 @@ else {return false;}
         <ul class="nav nav-tabs">
             <li class="active"><a href="#addCat" data-toggle="tab"><?php echo $hesklang['add_cat']; ?></a></li>
             <li><a href="#renameCat" data-toggle="tab"><?php echo $hesklang['ren_cat']; ?></a></li>
+            <li><a href="#changePriority" data-toggle="tab"><?php echo $hesklang['ch_cat_pri']; ?></a></li>
         </ul>
         <div class="tab-content summaryList tabPadding">
             <div class="tab-pane fade in active" id="addCat">
@@ -111,6 +121,27 @@ else {return false;}
                                 ?>
                             />    
                         </div>   
+                    </div>
+                    <div class="form-group">
+                        <label for="priority" class="col-sm-4 control-label" style="font-size: .87em"><?php echo $hesklang['def_pri']; ?> <a href="#" onclick="alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i> </a> </label>
+                        <div class="col-sm-8">
+                                <select name="priority" class="form-control">
+                                    <?php
+                                    // Default priority: low
+                                    if ( ! isset($_SESSION['cat_priority']) )
+                                    {
+                                        $_SESSION['cat_priority'] = 3;
+                                    }
+
+                                    // List possible priorities
+                                    foreach ($priorities as $value => $info)
+                                    {
+                                        echo '<option value="'.$value.'"'.($_SESSION['cat_priority'] == $value ? ' selected="selected"' : '').'>'.$info['text'].'</option>';
+                                    }
+                                    ?>
+                                </select></p>
+
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="options" class="col-sm-4 control-label"><?php echo $hesklang['opt']; ?>:</label>
@@ -160,6 +191,45 @@ else {return false;}
                     </div>
                 </form>
             </div>
+            <div class="tab-pane fade" id="changePriority">
+                <form action="manage_categories.php" method="post" role="form" class="form-horizontal">
+                    <h4><?php echo $hesklang['ch_cat_pri']; ?></h4>
+                    <div class="footerWithBorder blankSpace"></div>
+                    <div class="form-group">
+                        <label for="catid" class="col-sm-4 control-label"><?php echo $hesklang['category']; ?></label>
+                        <div class="col-sm-8">
+                            <select name="catid" class="form-control"><?php echo $options; ?></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="priority" class="col-sm-4 control-label"><?php echo $hesklang['priority']; ?></label>
+                        <div class="col-sm-8">
+                            <select name="priority" class="form-control">
+                                <?php
+                                // Default priority: low
+                                if ( ! isset($_SESSION['cat_ch_priority']) )
+                                {
+                                    $_SESSION['cat_ch_priority'] = 3;
+                                }
+
+                                // List possible priorities
+                                foreach ($priorities as $value => $info)
+                                {
+                                    echo '<option value="'.$value.'"'.($_SESSION['cat_ch_priority'] == $value ? ' selected="selected"' : '').'>'.$info['text'].'</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-4">
+                            <input type="hidden" name="a" value="priority" />
+                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                            <input type="submit" value="<?php echo $hesklang['ch_cat_pri']; ?>" class="btn btn-default">
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <script>
@@ -173,6 +243,11 @@ else {return false;}
         <?php
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
+
+            if ($hesk_settings['cust_urgency'])
+            {
+                hesk_show_notice($hesklang['cat_pri_info'] . ' ' . $hesklang['cpri']);
+            }
         ?>
         <h3><?php echo $hesklang['manage_cat']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['cat_intro']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h3>
         <div class="footerWithBorder blankSpace"></div>
@@ -180,6 +255,7 @@ else {return false;}
             <tr>
                 <th><?php echo $hesklang['id']; ?></th>
                 <th><?php echo $hesklang['cat_name']; ?></th>
+                <th><?php echo $hesklang['priority']; ?></th>
                 <th><?php echo $hesklang['not']; ?></th>
                 <th><?php echo $hesklang['graph']; ?></th>
                 <th><?php echo $hesklang['opt']; ?></th>
@@ -271,10 +347,13 @@ else {return false;}
                 <tr>
                 <td>'.$mycat['id'].'</td>
                 <td>'.$mycat['name'].'</td>
-                <td>'.$all.'</td>
+                <td width="1" style="white-space: nowrap;">'.$priorities[$mycat['priority']]['formatted'].'</td>
+                <td><a href="show_tickets.php?category='.$mycat['id'].'&amp;s_all=1&amp;s_my=1&amp;s_ot=1&amp;s_un=1" alt="'.$hesklang['list_tickets_cat'].'" title="'.$hesklang['list_tickets_cat'].'">'.$all.'</a></td>
                 <td>
-                <div class="progress-container" style="width: 160px" title="'.sprintf($hesklang['perat'],$width_all.'%').'">
-                <div style="width: '.$width_all.'%;float:left;"></div>
+                <div class="progress" style="width: 160px; margin-bottom: 0" title="'.sprintf($hesklang['perat'],$width_all.'%').'">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: '.$width_all.'%">
+                        <span class="sr-only">40% Complete (success)</span>
+                    </div>
                 </div>
                 </td>
                 <td>
@@ -318,6 +397,33 @@ exit();
 
 
 /*** START FUNCTIONS ***/
+
+
+function change_priority()
+{
+    global $hesk_settings, $hesklang, $priorities;
+
+    /* A security check */
+    hesk_token_check('POST');
+
+    $_SERVER['PHP_SELF'] = 'manage_categories.php?catid='.intval( hesk_POST('catid') );
+
+    $catid = hesk_isNumber( hesk_POST('catid'), $hesklang['choose_cat_ren'], $_SERVER['PHP_SELF']);
+    $_SESSION['selcat'] = $catid;
+    $_SESSION['selcat2'] = $catid;
+
+    $priority = intval( hesk_POST('priority', 3));
+    if ( ! array_key_exists($priority, $priorities) )
+    {
+        $priority = 3;
+    }
+
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` SET `priority`='{$priority}' WHERE `id`='".intval($catid)."' LIMIT 1");
+
+    hesk_cleanSessionVars('cat_ch_priority');
+
+    hesk_process_messages($hesklang['cat_pri_ch'].' '.$priorities[$priority]['formatted'],$_SERVER['PHP_SELF'],'SUCCESS');
+} // END change_priority()
 
 
 function generate_link_code() {
@@ -397,6 +503,13 @@ function new_cat()
     $_SESSION['cat_autoassign'] = hesk_POST('autoassign') == 'Y' ? 1 : 0;
     $_SESSION['cat_type'] = hesk_POST('type') == 'Y' ? 1 : 0;
 
+    // Default priority
+    $_SESSION['cat_priority'] = intval( hesk_POST('priority', 3) );
+    if ($_SESSION['cat_priority'] < 0 || $_SESSION['cat_priority'] > 3)
+    {
+        $_SESSION['cat_priority'] = 3;
+    }
+
     /* Category name */
 	$catname = hesk_input( hesk_POST('name') , $hesklang['enter_cat_name'], 'manage_categories.php');
 
@@ -413,11 +526,12 @@ function new_cat()
 	$row = hesk_dbFetchRow($res);
 	$my_order = $row[0]+10;
 
-	hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` (`name`,`cat_order`,`autoassign`,`type`) VALUES ('".hesk_dbEscape($catname)."','".intval($my_order)."','".intval($_SESSION['cat_autoassign'])."','".intval($_SESSION['cat_type'])."')");
+    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` (`name`,`cat_order`,`autoassign`,`type`, `priority`) VALUES ('".hesk_dbEscape($catname)."','".intval($my_order)."','".intval($_SESSION['cat_autoassign'])."','".intval($_SESSION['cat_type'])."','{$_SESSION['cat_priority']}')");
 
     hesk_cleanSessionVars('catname');
     hesk_cleanSessionVars('cat_autoassign');
     hesk_cleanSessionVars('cat_type');
+    hesk_cleanSessionVars('cat_priority');
 
     $_SESSION['selcat2'] = hesk_dbInsertID();
 

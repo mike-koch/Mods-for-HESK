@@ -1,0 +1,8 @@
+<p>Dear %%NAME%%,</p>
+<p>Your support ticket "%%SUBJECT%%" has been updated to a closed/resolved status.</p>
+<p>Ticket tracking ID: %%TRACK_ID%%</p>
+<p>You can view the status of your ticket here:
+%%TRACK_URL%%</p>
+<p>Sincerely,</p>
+%%SITE_TITLE%% <br>
+%%SITE_URL%%

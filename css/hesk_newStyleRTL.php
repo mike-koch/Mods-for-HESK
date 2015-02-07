@@ -119,10 +119,12 @@
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
     color: <?php echo $navbarItemTextSelectedColor; ?>;
     background-color: <?php echo $navbarItemSelectedBackgroundColor; ?>;
+    background-image: none;
 }
 .settingsquestionmark {
     color: <?php echo $questionMarkColor; ?>;
     font-size: 14px;
+    cursor: pointer;
 }
 .settingsquestionmark:hover {
     text-decoration: underline;
@@ -356,4 +358,33 @@ div.setupButtons {
     margin-right: auto;
     margin-left: auto;
     width: 90%;
+}
+.white-readonly {
+    cursor: text !important;
+    background-color: #fff !important;
+}
+button.btn.dropdown-toggle {
+    height: 34px;
+}
+button.dropdown-submit {
+    background:none!important;
+    border:none;
+}
+
+.file-attachment {
+min-height: 100px;
+max-height: 100px;
+text-align: center;
+}
+
+.file-attachment > i {
+padding-top: 10px;
+color: #ddd;
+text-shadow: 2px 2px #ccc;
+}
+
+.file-attachment > img {
+margin: -15px;
+height: 100px;
+cursor: pointer;
 }

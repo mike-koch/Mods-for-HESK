@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -39,6 +39,11 @@ define('HESK_PATH','./');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/knowledgebase_functions.inc.php');
+
+// Are we in maintenance mode?
+hesk_check_maintenance();
+
+// Load Knowledgebase-related functions
 hesk_load_database_functions();
 
 /* Is Knowledgebase enabled? */
@@ -182,7 +187,7 @@ function hesk_kb_search($query) {
 	require_once(HESK_PATH . 'inc/header.inc.php');
 	hesk_kb_header($hesk_settings['kb_link']);
 
-	$res = hesk_dbQuery('SELECT t1.`id`, t1.`subject`, t1.`content`, t1.`rating` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'kb_articles` AS t1
+    $res = hesk_dbQuery('SELECT t1.`id`, t1.`subject`, LEFT(`t1`.`content`, '.max(200, $hesk_settings['kb_substrart'] * 2).') AS `content`, t1.`rating` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'kb_articles` AS t1
     					LEFT JOIN `'.hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS t2 ON t1.`catid` = t2.`id`
 						WHERE t1.`type`='0' AND t2.`type`='0' AND  MATCH(`subject`,`content`,`keywords`) AGAINST ('".hesk_dbEscape($query)."') LIMIT " . intval($hesk_settings['kb_search_limit']));
     $num = hesk_dbNumRows($res);
@@ -269,7 +274,7 @@ function hesk_show_kb_article($artid)
     // Update views by 1 - exclude known bots and reloads because of ratings
     if ( ! isset($_GET['rated']) && ! hesk_detect_bots())
     {
-		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `views`=`views`+1 WHERE `id`='".intval($artid)."' LIMIT 1");
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `views`=`views`+1 WHERE `id`={$artid} LIMIT 1");
     }
 
     echo '<h3 class="text-left">'.$article['subject'].'</h3>
@@ -290,6 +295,7 @@ function hesk_show_kb_article($artid)
 		echo '</p>';
     }
 
+    // Article rating
 	if ($hesk_settings['kb_rating'] && strpos( hesk_COOKIE('hesk_kb_rate'),'a'.$artid.'%')===false )
 	{
 		echo '
@@ -299,6 +305,53 @@ function hesk_show_kb_article($artid)
 	    </div>
         ';
 	}
+
+    // Related articles
+    if ($hesk_settings['kb_related'])
+    {
+        $showRelated = false;
+        $column = 'col-md-12';
+        require(HESK_PATH . 'inc/mail/email_parser.php');
+
+        $query = hesk_dbEscape( $article['subject'] . ' ' . convert_html_to_text($article['content']) );
+
+        // Get relevant articles from the database
+        $res = hesk_dbQuery("SELECT t1.`id`, t1.`subject`, MATCH(`subject`,`content`,`keywords`) AGAINST ('{$query}') AS `score` FROM `".hesk_dbEscape($hesk_settings['db_pfix']).'kb_articles` AS t1 LEFT JOIN `'.hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS t2 ON t1.`catid` = t2.`id` WHERE t1.`type`='0' AND t2.`type`='0' AND MATCH(`subject`,`content`,`keywords`) AGAINST ('{$query}') LIMIT ".intval($hesk_settings['kb_related']+1));
+
+        // Array with related articles
+        $related_articles = array();
+
+        while ($related = hesk_dbFetchAssoc($res))
+        {
+            // Get base match score from the first article
+            if ( ! isset($base_score) )
+            {
+                $base_score = $related['score'];
+            }
+
+            // Ignore this article
+            if ( $related['id'] == $artid )
+            {
+                continue;
+            }
+
+            // Stop when articles reach less than 10% of base score
+            if ($related['score'] / $base_score < 0.10)
+            {
+                break;
+            }
+
+            // This is a valid related article
+            $related_articles[$related['id']] = $related['subject'];
+        }
+
+        // Print related articles if we have any valid matches
+        if ( count($related_articles) )
+        {
+            $column = 'col-md-6';
+            $showRelated = true;
+        }
+    }
 
     if ($article['catid']==1)
     {
@@ -310,36 +363,53 @@ function hesk_show_kb_article($artid)
     }
     ?>
 
-    
-    <h4 class="text-left"><?php echo $hesklang['ad']; ?></h4>
-    <div class="text-left">
-        <p><?php echo $hesklang['aid']; ?>: <?php echo $article['id']; ?></p>
-        <p><?php echo $hesklang['category']; ?>: <a href="<?php echo $link; ?>"><?php echo $article['cat_name']; ?></a></p>
+    <div class="row">
+        <div class="<?php echo $column; ?> col-sm-12">
+            <h4 class="text-left"><?php echo $hesklang['ad']; ?></h4>
+            <div class="text-left">
+                <p><?php echo $hesklang['aid']; ?>: <?php echo $article['id']; ?></p>
+                <p><?php echo $hesklang['category']; ?>: <a href="<?php echo $link; ?>"><?php echo $article['cat_name']; ?></a></p>
 
-        <?php
-        if ($hesk_settings['kb_date'])
-        {
-        ?>
-        <p><?php echo $hesklang['dta']; ?>: <?php echo hesk_date($article['dt'], true); ?></p>
-        <?php
-        }
+                <?php
+                if ($hesk_settings['kb_date'])
+                {
+                    ?>
+                    <p><?php echo $hesklang['dta']; ?>: <?php echo hesk_date($article['dt'], true); ?></p>
+                <?php
+                }
 
-        if ($hesk_settings['kb_views'])
-        {
-        ?>
-        <p><?php echo $hesklang['views']; ?>: <?php echo (isset($_GET['rated']) ? $article['views'] : $article['views']+1); ?></p>
-        <?php
-        }
+                if ($hesk_settings['kb_views'])
+                {
+                    ?>
+                    <p><?php echo $hesklang['views']; ?>: <?php echo (isset($_GET['rated']) ? $article['views'] : $article['views']+1); ?></p>
+                <?php
+                }
 
-	    if ($hesk_settings['kb_rating'])
-	    {
-		    $alt = $article['rating'] ? sprintf($hesklang['kb_rated'], sprintf("%01.1f", $article['rating'])) : $hesklang['kb_not_rated'];
-		    echo '
+                if ($hesk_settings['kb_rating'])
+                {
+                    $alt = $article['rating'] ? sprintf($hesklang['kb_rated'], sprintf("%01.1f", $article['rating'])) : $hesklang['kb_not_rated'];
+                    echo '
             <p>'.$hesklang['rating'].' ('.$hesklang['votes'].'): <img src="img/star_'.(hesk_round_to_half($article['rating'])*10).'.png" width="85" height="16" alt="'.$alt.'" title="'.$alt.'" border="0" style="vertical-align:text-bottom" /> ('.$article['votes'].')</p>
             ';
-	    }
-	    ?>
+                }
+                ?>
+            </div>
+        </div>
+        <?php if ($showRelated) { ?>
+            <div class="col-md-6 col-sm-12">
+                <h4 class="text-left"><?php echo $hesklang['relart']; ?></h4>
+                <div class="text-left">
+                    <?php
+                    foreach ($related_articles as $id => $subject)
+                    {
+                        echo '<span class="glyphicon glyphicon-file" style="font-size: 16px"></span> <a href="knowledgebase.php?article='.$id.'">'.$subject.'</a><br />';
+                    }
+                    ?>
+                </div>
+            </div>
+        <?php } ?>
     </div>
+
 
     <?php
     if (!isset($_GET['suggest']))
@@ -361,7 +431,7 @@ function hesk_show_kb_article($artid)
 function hesk_show_kb_category($catid, $is_search = 0) {
 	global $hesk_settings, $hesklang;
 
-	$res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `id`='{$catid}' AND `type`='0' LIMIT 1");
+    $res = hesk_dbQuery("SELECT `name`,`parent` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `id`='{$catid}' AND `type`='0' LIMIT 1");
     $thiscat = hesk_dbFetchAssoc($res) or hesk_error($hesklang['kb_cat_inv']);
 
     if ($is_search == 0)
@@ -370,6 +440,17 @@ function hesk_show_kb_category($catid, $is_search = 0) {
         $hesk_settings['tmp_title'] = $hesk_settings['hesk_title'] . ' - ' . hesk_htmlspecialchars($thiscat['name']); 
 		require_once(HESK_PATH . 'inc/header.inc.php');
 		hesk_kb_header($hesk_settings['kb_link']);
+    }
+
+    // If we are in "Knowledgebase only" mode show system messages
+    if ($catid == 1 && hesk_check_kb_only(false) )
+    {
+        // Service messages
+        $res = hesk_dbQuery('SELECT `title`, `message`, `style` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` WHERE `type`='0' ORDER BY `order` ASC");
+        while ($sm=hesk_dbFetchAssoc($res))
+        {
+            hesk_service_message($sm);
+        }
     }
 
 	if ($thiscat['parent'])
@@ -382,7 +463,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 		';
 	}
 
-	$result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `parent`='{$catid}' AND `type`='0' ORDER BY `parent` ASC, `cat_order` ASC");
+    $result = hesk_dbQuery("SELECT `id`,`name`,`articles` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `parent`='{$catid}' AND `type`='0' ORDER BY `cat_order` ASC");
 	if (hesk_dbNumRows($result) > 0)
 	{
         ?>
@@ -486,7 +567,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 	<td>
 
 	<?php
-	$res = hesk_dbQuery("SELECT `id`, `subject`, `content`, `rating` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$catid}' AND `type`='0' ORDER BY `sticky` DESC, `art_order` ASC");
+    $res = hesk_dbQuery("SELECT `id`, `subject`, LEFT(`content`, ".max(200, $hesk_settings['kb_substrart'] * 2).") AS `content`, `rating` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$catid}' AND `type`='0' ORDER BY `sticky` DESC, `art_order` ASC");
 	if (hesk_dbNumRows($res) == 0)
 	{
 		echo '<p><i>'.$hesklang['noac'].'</i></p>';

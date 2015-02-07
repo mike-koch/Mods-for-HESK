@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -36,8 +36,10 @@
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 // We will be installing this HESK version:
-define('HESK_NEW_VERSION','2.5.5');
-define('MODS_FOR_HESK_NEW_VERSION','1.7.0');
+define('HESK_NEW_VERSION','2.6.0 beta 1');
+define('MODS_FOR_HESK_NEW_VERSION','2.0.0');
+define('REQUIRE_PHP_VERSION','5.0.0');
+define('REQUIRE_MYSQL_VERSION','5.0.7');
 
 // Other required files and settings
 define('INSTALL',1);
@@ -134,6 +136,13 @@ function hesk_iTestDatabaseConnection()
 		hesk_iDatabase(1);
     }
 
+    // Check MySQL version
+    define('MYSQL_VERSION', hesk_dbResult( hesk_dbQuery('SELECT VERSION() AS version') ) );
+    if ( version_compare(MYSQL_VERSION,REQUIRE_MYSQL_VERSION,'<') )
+    {
+        hesk_iDatabase(5);
+    }
+
     return $hesk_db_link;
 } // END hesk_iTestDatabaseConnection()
 
@@ -187,19 +196,23 @@ $hesk_settings[\'reply_top\']=' . $set['reply_top'] . ';
 // --> Features
 $hesk_settings[\'autologin\']=' . $set['autologin'] . ';
 $hesk_settings[\'autoassign\']=' . $set['autoassign'] . ';
+$hesk_settings[\'custclose\']=' . $set['custclose'] . ';
 $hesk_settings[\'custopen\']=' . $set['custopen'] . ';
 $hesk_settings[\'rating\']=' . $set['rating'] . ';
 $hesk_settings[\'cust_urgency\']=' . $set['cust_urgency'] . ';
 $hesk_settings[\'sequential\']=' . $set['sequential'] . ';
+$hesk_settings[\'time_worked\']=' . $set['time_worked'] . ';
+$hesk_settings[\'spam_notice\']=' . $set['spam_notice'] . ';
 $hesk_settings[\'list_users\']=' . $set['list_users'] . ';
 $hesk_settings[\'debug_mode\']=' . $set['debug_mode'] . ';
 $hesk_settings[\'short_link\']=' . $set['short_link'] . ';
+$hesk_settings[\'select_cat\']=' . $set['select_cat'] . ';
+$hesk_settings[\'select_pri\']=' . $set['select_pri'] . ';
 
 // --> SPAM Prevention
 $hesk_settings[\'secimg_use\']=' . $set['secimg_use'] . ';
 $hesk_settings[\'secimg_sum\']=\'' . $set['secimg_sum'] . '\';
 $hesk_settings[\'recaptcha_use\']=' . $set['recaptcha_use'] . ';
-$hesk_settings[\'recaptcha_ssl\']=' . $set['recaptcha_ssl'] . ';
 $hesk_settings[\'recaptcha_public_key\']=\'' . $set['recaptcha_public_key'] . '\';
 $hesk_settings[\'recaptcha_private_key\']=\'' . $set['recaptcha_private_key'] . '\';
 $hesk_settings[\'question_use\']=' . $set['question_use'] . ';
@@ -209,6 +222,7 @@ $hesk_settings[\'question_ans\']=\'' . $set['question_ans'] . '\';
 // --> Security
 $hesk_settings[\'attempt_limit\']=' . $set['attempt_limit'] . ';
 $hesk_settings[\'attempt_banmin\']=' . $set['attempt_banmin'] . ';
+$hesk_settings[\'reset_pass\']=' . $set['reset_pass'] . ';
 $hesk_settings[\'email_view_ticket\']=' . $set['email_view_ticket'] . ';
 
 // --> Attachments
@@ -238,6 +252,7 @@ $hesk_settings[\'kb_popart\']=' . $set['kb_popart'] . ';
 $hesk_settings[\'kb_latest\']=' . $set['kb_latest'] . ';
 $hesk_settings[\'kb_index_popart\']=' . $set['kb_index_popart'] . ';
 $hesk_settings[\'kb_index_latest\']=' . $set['kb_index_latest'] . ';
+$hesk_settings[\'kb_related\']=' . $set['kb_related'] . ';
 
 
 // ==> EMAIL
@@ -257,6 +272,7 @@ $hesk_settings[\'email_piping\']=' . $set['email_piping'] . ';
 
 // --> POP3 Fetching
 $hesk_settings[\'pop3\']=' . $set['pop3'] . ';
+$hesk_settings[\'pop3_job_wait\']=' . $set['pop3_job_wait'] . ';
 $hesk_settings[\'pop3_host_name\']=\'' . $set['pop3_host_name'] . '\';
 $hesk_settings[\'pop3_host_port\']=' . $set['pop3_host_port'] . ';
 $hesk_settings[\'pop3_tls\']=' . $set['pop3_tls'] . ';
@@ -272,12 +288,27 @@ $hesk_settings[\'loop_time\']=' . $set['loop_time'] . ';
 $hesk_settings[\'detect_typos\']=' . $set['detect_typos'] . ';
 $hesk_settings[\'email_providers\']=array(' . $set['email_providers'] . ');
 
+// --> Notify customer when
+$hesk_settings[\'notify_new\']=' . $set['notify_new'] . ';
+$hesk_settings[\'notify_skip_spam\']=' . $set['notify_skip_spam'] . ';
+$hesk_settings[\'notify_spam_tags\']=array(' . $set['notify_spam_tags'] . ');
+$hesk_settings[\'notify_closed\']=' . $set['notify_closed'] . ';
+
 // --> Other
 $hesk_settings[\'strip_quoted\']=' . $set['strip_quoted'] . ';
+$hesk_settings[\'eml_req_msg\']=' . $set['eml_req_msg'] . ';
 $hesk_settings[\'save_embedded\']=' . $set['save_embedded'] . ';
 $hesk_settings[\'multi_eml\']=' . $set['multi_eml'] . ';
 $hesk_settings[\'confirm_email\']=' . $set['confirm_email'] . ';
 $hesk_settings[\'open_only\']=' . $set['open_only'] . ';
+
+
+// ==> TICKET LIST
+
+$hesk_settings[\'ticket_list\']=array(\'' . implode('\',\'',$set['ticket_list']) . '\');
+
+// --> Other
+$hesk_settings[\'updatedformat\']=\'' . $set['updatedformat'] . '\';
 
 
 // ==> MISC
@@ -289,6 +320,8 @@ $hesk_settings[\'daylight\']=' . $set['daylight'] . ';
 $hesk_settings[\'timeformat\']=\'' . $set['timeformat'] . '\';
 
 // --> Other
+$hesk_settings[\'ip_whois\']=\'' . $set['ip_whois'] . '\';
+$hesk_settings[\'maintenance_mode\']=' . $set['maintenance_mode'] . ';
 $hesk_settings[\'alink\']=' . $set['alink'] . ';
 $hesk_settings[\'submit_notice\']=' . $set['submit_notice'] . ';
 $hesk_settings[\'online\']=' . $set['online'] . ';
@@ -388,6 +421,12 @@ function hesk_iDatabase($problem=0)
                         To install a new copy of HESK use the <a href="index.php">New install</a> option instead.';
                 echo '</div>';
             }
+            elseif ($problem == 5)
+            {
+                hesk_show_error('MySQL version <b>'.REQUIRE_MYSQL_VERSION.'+</b> required, you are using: <b>' . MYSQL_VERSION . '</b><br /><br />
+		            You are using and old and insecure MySQL version with known bugs, security issues and outdated functionality.<br /><br />
+		            Ask your hosting company to update your MySQL version.');
+            }
             ?>
         
             <div class="form-group">
@@ -446,10 +485,10 @@ function hesk_iCheckSetup()
     $correct_these = array();
 
     // 1. PHP 5+ required
-    if ( function_exists('version_compare') && version_compare(PHP_VERSION,'5.0.0','<') )
+    if ( function_exists('version_compare') && version_compare(PHP_VERSION,REQUIRE_PHP_VERSION,'<') )
     {
 		$correct_these[] = '
-		PHP version <b>5.0+</b> required, you are using: <b>' . PHP_VERSION . '</b><br /><br />
+		PHP version <b>'.REQUIRE_PHP_VERSION.'+</b> required, you are using: <b>' . PHP_VERSION . '</b><br /><br />
 		You are using and old and insecure PHP version with known bugs, security issues and outdated functionality.<br /><br />
 		Ask your hosting company to update your PHP version.
 		';
@@ -548,16 +587,19 @@ function hesk_iCheckSetup()
 		'emails/','language/english.php',
 
 	    // pre-2.3 files
-	    'secimg.inc.php','hesk_style.css',
+        'secimg.inc.php',
 
 	    // pre-2.4 files
-	    'hesk_style_v23.css','hesk_javascript.js','help_files/','TreeMenu.js',
+        'hesk_style_v23.css','help_files/','TreeMenu.js',
 
         // malicious files that were found on some websites illegally redistributing HESK
         'inc/tiny_mce/utils/r00t10.php', 'language/en/help_files/r00t10.php',
 
         // pre-2.5 files
         'hesk_style_v24.css', 'hesk_javascript_v24.js',
+
+        // pre-2.6 files
+        'hesk_style_v25.css', 'hesk_javascript_v25.js',
 	    );
 
 	sort($old_files);
@@ -780,13 +822,13 @@ function hesk_iHeader()
 	<head>
 	<title>HESK <?php echo HESK_NEW_VERSION; ?> Setup</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<link rel="stylesheet" href="../css/bootstrap.css">
+    <link href="../hesk_style.css?<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../css/bootstrap-theme.css">
-	<link href="../css/hesk_style_v25.css" type="text/css" rel="stylesheet" />
-	<link href="../css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+    <link href="../css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="../js/jquery-1.10.2.min.js"></script>
-	<script language="Javascript" type="text/javascript" src="../hesk_javascript_v25.js"></script>
+    <script language="Javascript" type="text/javascript" src="../hesk_javascript.js?<?php echo HESK_NEW_VERSION; ?>"></script>
 	<script language="Javascript" type="text/javascript" src="../js/bootstrap.min.js"></script>
 	
 	

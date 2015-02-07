@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -75,7 +75,42 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <?php
 
 // This SQL code will be used to retrieve results
-$sql_final = "SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE ";
+$sql_final = "SELECT
+`id`,
+`trackid`,
+`name`,
+`email`,
+`category`,
+`priority`,
+`subject`,
+LEFT(`message`, 400) AS `message`,
+`dt`,
+`lastchange`,
+`firstreply`,
+`closedat`,
+`status`,
+`openedby`,
+`firstreplyby`,
+`closedby`,
+`replies`,
+`staffreplies`,
+`owner`,
+`time_worked`,
+`lastreplier`,
+`replierid`,
+`archive`,
+`locked`
+";
+
+foreach ($hesk_settings['custom_fields'] as $k=>$v)
+{
+    if ($v['use'])
+    {
+        $sql_final .= ", `".$k."`";
+    }
+}
+
+$sql_final.= " FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE ";
 
 // This code will be used to count number of results
 $sql_count = "SELECT COUNT(*) FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE ";
@@ -187,6 +222,18 @@ if ( ! $no_query)
 	}
 }
 
+// Owner
+if ( $tmp = intval( hesk_GET('owner', 0) ) )
+{
+    $sql .= " AND `owner`={$tmp} ";
+    $owner_input = $tmp;
+    $hesk_error_buffer = str_replace($hesklang['fsq'],'',$hesk_error_buffer);
+}
+else
+{
+    $owner_input = 0;
+}
+
 /* Date */
 /* -> Check for compatibility with old date format */
 if (preg_match("/(\d{4})-(\d{2})-(\d{2})/", hesk_GET('dt'), $m))
@@ -207,7 +254,7 @@ if (strlen($dt) == 8)
 		$hesk_error_buffer = str_replace($hesklang['fsq'],'',$hesk_error_buffer);
 	}
 
-	$sql .= " AND (`dt` LIKE '".hesk_dbEscape($date)."%' OR `lastchange` LIKE '".hesk_dbEscape($date)."%') ";
+    $sql .= " AND `dt` BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59' ";
 }
 else
 {

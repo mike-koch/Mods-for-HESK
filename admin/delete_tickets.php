@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.3 from 16th March 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -114,14 +114,70 @@ elseif ( ! isset($_POST['a']) )
 
 $i=0;
 
+// Possible priorities
+$priorities = array(
+    'critical'	=> array('value' => 0, 'text' => $hesklang['critical'],	'formatted' => '<font class="critical">'.$hesklang['critical'].'</font>'),
+    'high'		=> array('value' => 1, 'text' => $hesklang['high'],		'formatted' => '<font class="important">'.$hesklang['high'].'</font>'),
+    'medium'	=> array('value' => 2, 'text' => $hesklang['medium'],	'formatted' => '<font class="medium">'.$hesklang['medium'].'</font>'),
+    'low'		=> array('value' => 3, 'text' => $hesklang['low'],		'formatted' => $hesklang['low']),
+);
+
+// Change priority
+if ( array_key_exists($_POST['a'], $priorities) )
+{
+    // A security check
+    hesk_token_check('POST');
+
+    // Priority info
+    $priority = $priorities[$_POST['a']];
+
+    foreach ($_POST['id'] as $this_id)
+    {
+        if ( is_array($this_id) )
+        {
+            continue;
+        }
+
+        $this_id = intval($this_id) or hesk_error($hesklang['id_not_valid']);
+        $result = hesk_dbQuery("SELECT `priority`, `category` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `id`={$this_id} LIMIT 1");
+        if (hesk_dbNumRows($result) != 1)
+        {
+            continue;
+        }
+        $ticket = hesk_dbFetchAssoc($result);
+
+        if ($ticket['priority'] == $priority['value'])
+        {
+            continue;
+        }
+
+        hesk_okCategory($ticket['category']);
+
+        $revision = sprintf($hesklang['thist8'],hesk_date(),$priority['formatted'],$_SESSION['name'].' ('.$_SESSION['user'].')');
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `priority`='{$priority['value']}', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`={$this_id} LIMIT 1");
+
+        $i++;
+    }
+
+    hesk_process_messages($hesklang['pri_set_to'].' '.$priority['formatted'],$referer,'SUCCESS');
+}
+
 /* DELETE */
-if ($_POST['a']=='delete')
+elseif ($_POST['a']=='delete')
 {
     /* Check permissions for this feature */
 	hesk_checkPermission('can_del_tickets');
 
 	/* A security check */
 	hesk_token_check('POST');
+
+    // Will we need ticket notifications?
+    if ($hesk_settings['notify_closed'])
+    {
+        require(HESK_PATH . 'inc/email_functions.inc.php');
+    }
+
+    $revision = sprintf($hesklang['thist3'],hesk_date(),$_SESSION['name'].' ('.$_SESSION['user'].')');
 
     foreach ($_POST['id'] as $this_id)
     {
@@ -246,8 +302,16 @@ else
         $closedStatusRS = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsStaffClosedOption` = 1");
         $closedStatus = hesk_dbFetchAssoc($closedStatusRS);
 
-		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='".$closedStatus['ID']."', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($this_id)."' LIMIT 1");
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='".$closedStatus['ID']."', `closedat`=NOW(), `closedby`=".intval($_SESSION['id']).", `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($this_id)."' LIMIT 1");
 		$i++;
+
+        // Notify customer of closed ticket?
+        if ($hesk_settings['notify_closed'])
+        {
+            $ticket['dt'] = hesk_date($ticket['dt'], true);
+            $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
+            hesk_notifyCustomer('ticket_closed');
+        }
 	}
 
     hesk_process_messages(sprintf($hesklang['num_tickets_closed'],$i),$referer,'SUCCESS');
@@ -284,6 +348,9 @@ function hesk_fullyDeleteTicket()
 
     /* Delete ticket notes */
 	hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` WHERE `ticket`='".intval($ticket['id'])."'");
+
+    /* Delete ticket reply drafts */
+    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."reply_drafts` WHERE `ticket`=".intval($ticket['id']));
 
     return true;
 }

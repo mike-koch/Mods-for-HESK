@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.0 beta 1 from 30th December 2014
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -54,7 +54,7 @@ hesk_iHeader();
 	<a class="btn btn-default btn-lg" href="update.php?" role="button">Upgrade</a>
 	<p><br/>Upgrade existing HESK installation to version <?php echo HESK_NEW_VERSION; ?></p>
     <br/><br/>
-    <a class="btn btn-default btn-lg" href="updateModsForHesk.php" role="button">Install / Upgrade Mods for HESK</a>
+    <a class="btn btn-default btn-lg" href="mods-for-hesk/modsForHesk.php" role="button">Install / Upgrade Mods for HESK</a>
     <p><br/>Install or upgrade existing Mods for HESK installation to version <?php echo MODS_FOR_HESK_NEW_VERSION; ?></p>
 </div>
 
