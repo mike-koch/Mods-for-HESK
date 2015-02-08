@@ -1165,7 +1165,7 @@ function hesk_getLanguage()
 function hesk_returnLanguage()
 {
 	global $hesk_settings, $hesklang;
-	require(HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/text.php');
+	require(HESK_PATH . 'language' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/text.php');
     $customLanguagePath = HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/custom-text.php';
     if (file_exists($customLanguagePath)) {
         include($customLanguagePath);
