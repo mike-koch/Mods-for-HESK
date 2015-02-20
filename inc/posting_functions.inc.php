@@ -43,10 +43,15 @@ function hesk_newTicket($ticket)
 
 	// If language is not set or default, set it to NULL.
     if (!isset($ticket['language']) || empty($ticket['language'])) {
-        $language = (!$hesk_settings['can_sel_lang'] || $hesklang['LANGUAGE'] == HESK_DEFAULT_LANGUAGE) ? "NULL" : "'" . hesk_dbEscape($hesklang['LANGUAGE']) . "'";
+        $language = (!$hesk_settings['can_sel_lang']) ? HESK_DEFAULT_LANGUAGE : "'" . hesk_dbEscape($hesklang['LANGUAGE']) . "'";
     } else {
         $language = $ticket['language'];
     }
+
+    // Get the default ticket status for new tickets and set it accordingly
+    $defaultNewTicketRs = hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsNewTicketStatus` = 1");
+    $defaultNewTicket = hesk_dbFetchAssoc($defaultNewTicketRs);
+    $ticket['status'] = $defaultNewTicket['ID'];
 
 	// Insert ticket into database
 	hesk_dbQuery("
@@ -88,7 +93,8 @@ function hesk_newTicket($ticket)
 		`custom17`,
 		`custom18`,
 		`custom19`,
-		`custom20`
+		`custom20`,
+		`status`
 	)
 	VALUES
 	(
@@ -128,7 +134,8 @@ function hesk_newTicket($ticket)
 		'".hesk_dbEscape($ticket['custom17'])."',
 		'".hesk_dbEscape($ticket['custom18'])."',
 		'".hesk_dbEscape($ticket['custom19'])."',
-		'".hesk_dbEscape($ticket['custom20'])."'
+		'".hesk_dbEscape($ticket['custom20'])."',
+		'".intval($ticket['status'])."'
 	)
 	");
 
@@ -139,7 +146,7 @@ function hesk_newTicket($ticket)
 	'priority'		=> $ticket['priority'],
 	'owner'			=> $ticket['owner'],
 	'trackid'		=> $ticket['trackid'],
-	'status'		=> 0,
+	'status'		=> $ticket['status'],
 	'name'			=> $ticket['name'],
 	'lastreplier'	=> $ticket['name'],
 	'subject'		=> $ticket['subject'],
