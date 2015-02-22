@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -97,6 +97,7 @@ if ($statusRow['IsClosed']) // Closed
         $ticket = hesk_dbFetchAssoc($result);
         $ticket['dt'] = hesk_date($ticket['dt'], true);
         $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
+        $ticket = hesk_ticketToPlain($ticket, 1, 0);
 
         // Notify customer
         require(HESK_PATH . 'inc/email_functions.inc.php');
