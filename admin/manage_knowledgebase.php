@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -106,6 +106,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 /* This will handle error, success and notice messages */
 #hesk_handle_messages();
 
+// Total number of KB articles
+$total_articles = 0;
+
 // Get number of sub-categories for each parent category
 $parent = array(0 => 1);
 $result = hesk_dbQuery('SELECT `parent`, COUNT(*) AS `num` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'kb_categories` GROUP BY `parent`');
@@ -185,6 +188,8 @@ while (count($kb_cat) > 0)
             $text = str_replace('\\','\\\\','<span id="c_'.$my.'"'.$cls.'><a href="manage_knowledgebase.php?a=manage_cat&catid='.$my.'">'.$cat['name'].'</a>').$type.'</span> (<span class="kb_published">'.$cat['articles'].'</span>, <span class="kb_private">'.$cat['articles_private'].'</span>, <span class="kb_draft">'.$cat['articles_draft'].'</span>) ';                  /* ' */
 
             $text_short = $cat['name'].$type.' ('.$cat['articles'].', '.$cat['articles_private'].', '.$cat['articles_draft'].')';
+
+            $total_articles += $cat['articles'];
 
 			// Generate KB menu icons
 			$menu_icons =
@@ -269,6 +274,13 @@ if (!isset($_SESSION['hide']['treemenu']))
 	<!-- SUB NAVIGATION -->
    <?php show_subnav(); ?>
 	<!-- SUB NAVIGATION -->
+    <?php
+    // Show a notice if total public articles is less than 5
+    if ($total_articles < 5)
+    {
+        hesk_show_notice($hesklang['nkba']);
+    }
+    ?>
 
 	<!-- SHOW THE CATEGORY TREE -->
 	<?php show_treeMenu(); ?>
@@ -367,7 +379,7 @@ if (!isset($_SESSION['hide']['new_article']))
                         <div class="form-group">
                             <label for="sticky" class="control-label"><?php echo $hesklang['opt']; ?></label>
                             <div class="checkbox">
-                                <label><input type="checkbox" name="sticky" value="Y" <?php if ( ! empty($_SESSION['new_article']['sticky'])) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?></label>
+                                <label><input type="checkbox" name="sticky" value="Y" <?php if ( ! empty($_SESSION['new_article']['sticky'])) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['saa']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             </div>
                         </div>
                     </div>
@@ -1335,7 +1347,7 @@ function edit_article()
                         <div class="form-group">
                             <label for="options" class="control-label"><?php echo $hesklang['opt']; ?></label>
                             <div class="checkbox">
-                                <label><input type="checkbox" name="sticky" value="Y" <?php if ($article['sticky']) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?></label>
+                                <label><input type="checkbox" name="sticky" value="Y" <?php if ($article['sticky']) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['saa']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             </div>
                             <div class="checkbox">
                                 <label><input type="checkbox" name="resetviews" value="Y" <?php if (isset($_SESSION['edit_article']['resetviews']) && $_SESSION['edit_article']['resetviews'] == 'Y') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['rv']; ?></label>
