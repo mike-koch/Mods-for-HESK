@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -120,7 +120,7 @@ if ( defined('HESK_DEMO') )
                             elseif ($latest != -1)
                             {
                                 // Is this a beta/dev version?
-                                if ( strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev') )
+                                if ( strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev')  || strpos($hesk_settings['hesk_version'], 'RC') )
                                 {
                                     echo ' <span style="color:darkorange">' . $hesklang['beta'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                                 }
@@ -1827,7 +1827,19 @@ if ( defined('HESK_DEMO') )
                   </div>
                   <div class="blankSpace"></div>
                   <div class="form-group">
-                      <label for="s_open_only" class="col-sm-3 control-label"><?php echo $hesklang['lcf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                      <label for="s_submittedformat" class="col-sm-3 control-label"><?php echo $hesklang['sdf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                      <div class="col-sm-9 form-inline">
+                          <?php
+                          $off = $hesk_settings['new_top'] ? '' : 'checked="checked"';
+                          echo '
+                            <div class="radio"><label><input type="radio" name="s_submittedformat" value="2" '.($hesk_settings['submittedformat'] == 2 ? 'checked="checked"' : '').' /> '.$hesklang['lcf2'].'</label></div><br>
+                            <div class="radio"><label><input type="radio" name="s_submittedformat" value="1" '.($hesk_settings['submittedformat'] == 1 ? 'checked="checked"' : '').' /> '.$hesklang['lcf1'].'</label></div><br>
+                            <div class="radio"><label><input type="radio" name="s_submittedformat" value="0" '.($hesk_settings['submittedformat'] == 0 ? 'checked="checked"' : '').' /> '.$hesklang['lcf0'].'</label></div>';
+                          ?>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="s_updatedformat" class="col-sm-3 control-label"><?php echo $hesklang['lcf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                       <div class="col-sm-9 form-inline">
                           <?php
 
