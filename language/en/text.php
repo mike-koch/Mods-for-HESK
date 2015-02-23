@@ -2,7 +2,7 @@
 /*
 * Language file for Help Desk Software HESK (www.hesk.com)
 * Language: ENGLISH
-* Version: 2.6.0 beta 1 from 30th December 2014
+* Version: 2.6.0
 * Author: Klemen Stirn (http://www.hesk.com)
 *
 * !!! This file must be saved in UTF-8 encoding without byte order mark (BOM) !!!
@@ -1349,7 +1349,8 @@ $hesklang['ms09']='Sep';
 $hesklang['ms10']='Oct';
 $hesklang['ms11']='Nov';
 $hesklang['ms12']='Dec';
-$hesklang['lcf']='List date format';
+$hesklang['sdf']='Submitted date format';
+$hesklang['lcf']='Updated date format';
 $hesklang['lcf0']='Short descriptive';
 $hesklang['lcf1']='Date and time';
 $hesklang['lcf2']='HESK style';
@@ -1367,8 +1368,8 @@ $hesklang['ticket_tpl_saved']='Your ticket template has been saved for future us
 $hesklang['ticket_tpl_removed']='Selected ticket template has been removed from the database';
 $hesklang['ticket_tpl_not_found']='Ticket template not found';
 $hesklang['sel_ticket_tpl']='Select the ticket template you would like to edit';
-$hesklang['ent_ticket_tpl_title']='Please enter reply title';
-$hesklang['ent_ticket_tpl_msg']='Please enter reply message';
+$hesklang['ent_ticket_tpl_title']='Please enter template title';
+$hesklang['ent_ticket_tpl_msg']='Please enter template message';
 $hesklang['ticket_tpl_id']='Missing ticket template ID';
 $hesklang['select_ticket_tpl']='Select a ticket template';
 $hesklang['list_tickets_cat']='List all tickets in this category';
@@ -1397,7 +1398,7 @@ $hesklang['ednote2']='Note message saved';
 $hesklang['perm_deny']='Permission denied';
 $hesklang['mis_note']='Missing note ID';
 $hesklang['no_note']='Note with this ID not found';
-$hesklang['save_reply']='Save and continue later';
+$hesklang['sacl']='Save and continue later';
 $hesklang['reply_saved']='Your reply message has been saved for later.';
 $hesklang['submit_as']='Submit as:';
 $hesklang['sasc']='Submit as Customer reply';
@@ -1428,7 +1429,7 @@ $hesklang['email_unbanned']='Email ban deleted';
 $hesklang['banby']='Banned by';
 $hesklang['delban']='Delete ban';
 $hesklang['delban_confirm']='Delete this ban?';
-$hesklang['baned_e']='You have been banned from submiting new support tickets.';
+$hesklang['baned_e']='You have been banned from submitting new support tickets.';
 $hesklang['baned_ip']='You have been banned from this help desk';
 $hesklang['can_ban_emails']='Can ban emails';
 $hesklang['can_unban_emails']='Can unban emails (enables Can ban emails)';
@@ -1527,6 +1528,9 @@ $hesklang['anyown']='Any owner';
 $hesklang['pfr']='Another POP3 fetching task is still in progress.';
 $hesklang['pjt']='Task timeout';
 $hesklang['pjt2']='minutes after start';
+$hesklang['nkba']='Knowledgebase search requires enough unique articles to work properly.<br /><br />Consider adding more articles to the knowledgebase to improve search and article suggestion results.';
+$hesklang['saa']='Sticky articles are displayed at the top of articles list';
+$hesklang['yhbr']='You have been locked out the system for %s minutes because of too many replies to a ticket.';
 $hesklang['sir']='ReCaptcha V1 API (old)';
 $hesklang['sir2']='ReCaptcha V2 API (recommended)';
 $hesklang['rcpb']='Site key (Public key)';
