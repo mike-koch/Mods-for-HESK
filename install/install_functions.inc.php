@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -36,7 +36,7 @@
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 // We will be installing this HESK version:
-define('HESK_NEW_VERSION','2.6.0 beta 1');
+define('HESK_NEW_VERSION','2.6.0');
 define('MODS_FOR_HESK_NEW_VERSION','2.0.0');
 define('REQUIRE_PHP_VERSION','5.0.0');
 define('REQUIRE_MYSQL_VERSION','5.0.7');
@@ -308,6 +308,7 @@ $hesk_settings[\'open_only\']=' . $set['open_only'] . ';
 $hesk_settings[\'ticket_list\']=array(\'' . implode('\',\'',$set['ticket_list']) . '\');
 
 // --> Other
+$hesk_settings[\'submittedformat\']=\'' . $set['submittedformat'] . '\';
 $hesk_settings[\'updatedformat\']=\'' . $set['updatedformat'] . '\';
 
 
@@ -721,7 +722,7 @@ Under no circumstance is the removal of copyright headers from the script source
 
 TRADEMARK POLICY
 
-HESK is a US registered trademark of Klemen Stirn. Certain usages of the Trademark are fine and no specific permission from the author is needed:
+HESK is a US and EU registered trademark of Klemen Stirn. Certain usages of the Trademark are fine and no specific permission from the author is needed:
 
 - there is no commercial intent behind the use
 
@@ -887,7 +888,7 @@ function hesk_iFooter()
 	global $hesk_settings;
 	?>
 
-	<p style="text-align:center"><span class="smaller">&nbsp;<br />Powered by <a href="http://www.hesk.com" title="Free PHP Help Desk Software">Help Desk Software</a> <b>HESK</b> - brought to you by <a href="http://www.ilient.com">Help Desk Software</a> SysAid</span></p>
+	<p style="text-align:center"><span class="smaller">&nbsp;<br />Powered by <a href="http://www.hesk.com" class="smaller" title="Free PHP Help Desk Software">Help Desk Software</a> <b>HESK</b>, brought to you by <a href="https://www.sysaid.com/?utm_source=Hesk&utm_medium=cpc&utm_campaign=HeskProduct_To_HP">SysAid</a></span></p>
 	
 	</div>
 	</body>
