@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -480,7 +480,7 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` (
   `language` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` enum('0','1','2','3','4','5') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   `openedby` smallint(5) unsigned DEFAULT '0',
-  `firstreplyby` smallint(5) unsigned DEFAULT NULL,
+  `firstreplyby` smallint(8) unsigned DEFAULT NULL,
   `closedby` smallint(5) unsigned DEFAULT NULL,
   `replies` smallint(5) unsigned NOT NULL DEFAULT '0',
   `staffreplies` smallint(5) unsigned NOT NULL DEFAULT '0',
