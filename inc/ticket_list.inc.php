@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -327,7 +327,7 @@ if ($total > 0)
         // Print date submitted
         if ( hesk_show_column('dt') )
         {
-            switch ($hesk_settings['updatedformat'])
+            switch ($hesk_settings['submittedformat'])
             {
                 case 1:
                     $ticket['dt'] = hesk_formatDate($ticket['dt']);
