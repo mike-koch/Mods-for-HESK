@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -107,7 +107,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
 
-            if ( isset($_SESSION['new_sm']) )
+            if ( isset($_SESSION['new_sm']) && ! isset($_SESSION['edit_sm']) )
             {
                 $_SESSION['new_sm'] = hesk_stripArray($_SESSION['new_sm']);
             }
@@ -280,7 +280,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4><a name="new_article"></a><?php echo $hesklang['new_sm']; ?></h4>
+                    <h4><a name="new_article"></a><?php echo $hesklang['new_sm']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['sm_intro']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h4>
                 </div>
                 <div class="panel-body">
                     <form action="service_messages.php" method="post" name="form1" role="form" class="form-horizontal">

@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -472,7 +472,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                       <?php
                       if ($hesk_settings['time_worked'])
                       {
-                          echo '<td>'.$totals['worked'].'</td>';
+                          echo '<td><b>'.$totals['worked'].'</b></td>';
                       }
                       ?>
                   </tr>
@@ -511,7 +511,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                       <?php
                       if ($hesk_settings['time_worked'])
                       {
-                          echo '<td>'.$totals['worked'].'</td>';
+                          echo '<td><b>'.$totals['worked'].'</b></td>';
                       }
                       ?>
                   </tr>
@@ -940,7 +940,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                       <?php
                       if ($hesk_settings['time_worked'])
                       {
-                          echo '<td>'.$totals['worked'].'</td>';
+                          echo '<td><b>'.$totals['worked'].'</b></td>';
                       }
                       ?>
                   </tr>

@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -446,6 +446,7 @@ if ( ! in_array('id', $set['ticket_list']) && ! in_array('trackid', $set['ticket
 $set['ticket_list'] = count($set['ticket_list']) ?  "'" . implode("','", $set['ticket_list']) . "'" : 'trackid';
 
 /* --> Other */
+$set['submittedformat']	= hesk_checkMinMax( intval( hesk_POST('s_submittedformat') ) , 0, 2, 2);
 $set['updatedformat']	= hesk_checkMinMax( intval( hesk_POST('s_updatedformat') ) , 0, 2, 2);
 
 /*** MISC ***/
@@ -827,6 +828,7 @@ $hesk_settings[\'open_only\']=' . $set['open_only'] . ';
 $hesk_settings[\'ticket_list\']=array(' . $set['ticket_list'] . ');
 
 // --> Other
+$hesk_settings[\'submittedformat\']=\'' . $set['submittedformat'] . '\';
 $hesk_settings[\'updatedformat\']=\'' . $set['updatedformat'] . '\';
 
 
