@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -136,6 +136,17 @@ if (count($hesk_error_buffer)!=0)
 /* Connect to database */
 hesk_dbConnect();
 
+// Check if this IP is temporarily locked out
+$res = hesk_dbQuery("SELECT `number` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` WHERE `ip`='".hesk_dbEscape($_SERVER['REMOTE_ADDR'])."' AND `last_attempt` IS NOT NULL AND DATE_ADD(`last_attempt`, INTERVAL ".intval($hesk_settings['attempt_banmin'])." MINUTE ) > NOW() LIMIT 1");
+if (hesk_dbNumRows($res) == 1)
+{
+    if (hesk_dbResult($res) >= $hesk_settings['attempt_limit'])
+    {
+        unset($_SESSION);
+        hesk_error( sprintf($hesklang['yhbb'],$hesk_settings['attempt_banmin']) , 0);
+    }
+}
+
 /* Get details about the original ticket */
 $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `trackid`='{$trackingID}' LIMIT 1");
 if (hesk_dbNumRows($res) != 1)
@@ -152,6 +163,22 @@ if ($ticket['locked'])
 {
 	hesk_process_messages($hesklang['tislock2'],'ticket.php?track='.$trackingID.$hesk_settings['e_param'].'&Refresh='.rand(10000,99999));
 	exit();
+}
+
+// Prevent flooding ticket replies
+$res = hesk_dbQuery("SELECT `staffid` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='{$ticket['id']}' AND `dt` > DATE_SUB(NOW(), INTERVAL 10 MINUTE) ORDER BY `id` ASC");
+if (hesk_dbNumRows($res) > 0)
+{
+    $sequential_customer_replies = 0;
+    while ($tmp = hesk_dbFetchAssoc($res))
+    {
+        $sequential_customer_replies = $tmp['staffid'] ? 0 : $sequential_customer_replies + 1;
+    }
+    if ($sequential_customer_replies > 10)
+    {
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` (`ip`, `number`) VALUES ('".hesk_dbEscape($_SERVER['REMOTE_ADDR'])."', ".intval($hesk_settings['attempt_limit'] + 1).")");
+        hesk_error( sprintf($hesklang['yhbr'],$hesk_settings['attempt_banmin']) , 0);
+    }
 }
 
 /* Insert attachments */
