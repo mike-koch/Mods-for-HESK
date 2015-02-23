@@ -1,11 +1,11 @@
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 beta 1 from 30th December 2014
+*  Version: 2.6.0 from 22nd February 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -323,7 +323,7 @@ function hesk_checkPassword(password)
     var numbers = "0123456789";
     var lowercase = "abcdefghijklmnopqrstuvwxyz";
     var uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    var punctuation = "!.@$L#*()%~<>{}[]";
+    var punctuation = "!.@$#*()%~<>{}[]";
 
     var combinations = 0;
 
@@ -346,7 +346,7 @@ function hesk_checkPassword(password)
     var totalCombinations = Math.pow(combinations, password.length);
     var timeInSeconds = (totalCombinations / 200) / 2;
     var timeInDays = timeInSeconds / 86400
-    var lifetime = 3650;
+    var lifetime = 365000;
     var percentage = timeInDays / lifetime;
 
     var friendlyPercentage = hesk_cap(Math.round(percentage * 100), 98);
