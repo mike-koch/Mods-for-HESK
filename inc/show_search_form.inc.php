@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.0 beta 1 from 30th December 2014
+ *  Version: 2.6.0 from 22nd February 2015
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
  *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+ *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
  *  HESK is a registered trademark of Klemen Stirn.
 
  *  The HESK may be used and modified free of charge by anyone
@@ -444,9 +444,9 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                             <select class="form-control" name="owner">
                                                 <option value="0" ><?php echo $hesklang['anyown']; ?></option>
                                                 <?php
-                                                foreach ($admins as $id => $name)
+                                                foreach ($admins as $staff_id => $staff_name)
                                                 {
-                                                    echo '<option value="'.$id.'" '.($owner_input == $id ? 'selected="selected"' : '').'>'.$name.'</option>';
+                                                    echo '<option value="'.$staff_id.'" '.($owner_input == $staff_id ? 'selected="selected"' : '').'>'.$staff_name.'</option>';
                                                 }
                                                 ?>
                                             </select>
