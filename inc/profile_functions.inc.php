@@ -349,7 +349,9 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                     <?php
                     if ($action == 'profile_page')
                     { ?>
-                        <input type="submit" class="btn btn-default" value="<?php echo $hesklang['update_profile']; ?>" />
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                        <input type="submit" class="btn btn-default" value="<?php echo $hesklang['update_profile']; ?>">
                     <?php
                     } elseif ($action == 'create_user')
                     { ?>
@@ -363,6 +365,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                         <input type="hidden" name="a" value="save" />
                         <input type="hidden" name="userid" value="<?php echo intval( hesk_GET('id') ); ?>" />
                         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                        <input type="hidden" name="active" value="<?php echo $_SESSION[$session_array]['active']; ?>">
                         <input class="btn btn-default" type="submit" value="<?php echo $hesklang['save_changes']; ?>" />
                         <a class="btn btn-danger" href="manage_users.php"><?php echo $hesklang['dich']; ?></a>
                     <?php

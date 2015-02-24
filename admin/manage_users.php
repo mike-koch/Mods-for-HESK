@@ -835,11 +835,25 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     /* Any errors */
     if (strlen($hesk_error_buffer))
     {
-    	$hesk_error_buffer = $hesklang['rfm'].'<br /><br /><ul>'.$hesk_error_buffer.'</ul>';
-    	hesk_process_messages($hesk_error_buffer,$redirect_to);
+        if ($myuser['isadmin'])
+        {
+            // Preserve default staff data for the form
+            global $default_userdata;
+            $_SESSION['userdata']['features'] = $default_userdata['features'];
+            $_SESSION['userdata']['categories'] = $default_userdata['categories'];
+        }
+
+        $hesk_error_buffer = $hesklang['rfm'].'<br /><br /><ul>'.$hesk_error_buffer.'</ul>';
+        hesk_process_messages($hesk_error_buffer,$redirect_to);
     }
 
-	return $myuser;
+    // "can_unban_emails" feature also enables "can_ban_emails"
+    if ( in_array('can_unban_emails', $myuser['features']) && ! in_array('can_ban_emails', $myuser['features']) )
+    {
+        $myuser['features'][] = 'can_ban_emails';
+    }
+
+    return $myuser;
 
 } // End hesk_validateUserInfo()
 
