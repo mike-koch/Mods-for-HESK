@@ -813,6 +813,13 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
         }
 	}
 
+    /* After reply */
+    $myuser['afterreply'] = intval( hesk_POST('afterreply') );
+    if ($myuser['afterreply'] != 1 && $myuser['afterreply'] != 2)
+    {
+    	$myuser['afterreply'] = 0;
+    }
+
     // Defaults
     $myuser['autostart']				= isset($_POST['autostart']) ? 1 : 0;
     $myuser['notify_customer_new']		= isset($_POST['notify_customer_new']) ? 1 : 0;
