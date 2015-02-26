@@ -475,8 +475,8 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
     );
     if ($modsForHesk_settings['html_emails'])
     {
-        array_push($headersArray,"MIME-Version: 1.0\n");
-        array_push($headersArray,"Content-Type: multipart/alternative;boundary=".$boundary."\n");
+        array_push($headersArray,"MIME-Version: 1.0");
+        array_push($headersArray,"Content-Type: multipart/alternative;boundary=".$boundary);
     } else
     {
         array_push($headersArray,"Content-Type: text/plain; charset=" . $hesklang['ENCODING']);
