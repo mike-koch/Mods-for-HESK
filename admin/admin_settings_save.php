@@ -306,7 +306,7 @@ $set['pop3'] = empty($_POST['s_pop3']) ? 0 : 1;
 if ($set['pop3'])
 {
     // Get POP3 fetching timeout
-    $set['pop3_job_wait'] = hesk_checkMinMax( intval( hesk_POST('s_pop3_job_wait') ) , 1, 1440, 15);
+    $set['pop3_job_wait'] = hesk_checkMinMax( intval( hesk_POST('s_pop3_job_wait') ) , 0, 1440, 15);
 
 	// Test POP3 connection
     $pop3_OK = hesk_testPOP3(true);

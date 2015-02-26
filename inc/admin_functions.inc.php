@@ -400,18 +400,20 @@ function hesk_autoLogin($noredirect=0)
 	}
 
 	$res=hesk_dbFetchAssoc($result);
-	foreach ($res as $k=>$v)
+	
+	/* Check password */
+	if ($hash != hesk_Pass2Hash($res['pass'] . strtolower($user) . $res['pass']) )
 	{
-	    $_SESSION[$k]=$v;
+        setcookie('hesk_username', '');
+		setcookie('hesk_p', '');
+		header('Location: index.php?a=login&notice=1');
+		exit();
 	}
 
-	/* Check password */
-	if ($hash != hesk_Pass2Hash($_SESSION['pass'] . strtolower($user) . $_SESSION['pass']) )
-    {
-        setcookie('hesk_username', '');
-        setcookie('hesk_p', '');
-        header('Location: index.php?a=login&notice=1');
-        exit();
+    // Set user details
+	foreach ($res as $k=>$v)
+	{
+		$_SESSION[$k]=$v;
 	}
 
     /* Check if default password */
