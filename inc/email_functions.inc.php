@@ -35,6 +35,12 @@
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
+// Include modsForHesk_settings.inc.php if it hasn't been included already
+if ($modsForHesk_settings === NULL)
+{
+    include(HESK_PATH . 'inc/modsForHesk_settings.inc.php');
+}
+
 /* Get includes for SMTP */
 if ($hesk_settings['smtp'])
 {
