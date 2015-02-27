@@ -161,17 +161,17 @@ myField.value += myValue;
                         {
                             if ($j == 1)
                             {
-                                echo'<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green"></i></a>';
+                                echo'<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"></i></a>';
                             }
                             elseif ($j == $num)
                             {
-                                echo'<a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
+                                echo'<a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                             }
                             else
                             {
                                 echo'
-                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green"></i></a>
-                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green"></i></a>
+                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"></i></a>
+                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"></i></a>
                                 ';
                             }
                         }
@@ -181,7 +181,7 @@ myField.value += myValue;
                         }
 
                         echo '
-                        <a href="manage_canned.php?a=remove&amp;id='.$mysaved['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"><i class="fa fa-times" style="font-size: 14px; color: #FF0000"></i></a>&nbsp;</td>
+                        <a href="manage_canned.php?a=remove&amp;id='.$mysaved['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i class="fa fa-times" style="font-size: 14px; color: #FF0000" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"></i></a>&nbsp;</td>
                         </tr>
                         ';
                     } // End while

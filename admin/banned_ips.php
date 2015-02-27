@@ -175,12 +175,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             {
                                 echo '
                                     <td>
-                                        <a href="banned_ips.php?a=ban&amp;ip='.urlencode($ban['ip']).'&amp;token='.hesk_token_echo(0).'"
-                                            data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['ippermban'].'">
-                                            <i class="fa fa-ban" style="color: red; font-size: 16px"></i></a>
-                                        <a href="banned_ips.php?a=unbantemp&amp;ip='.urlencode($ban['ip']).'&amp;token='.hesk_token_echo(0).'"
-                                            data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'" onclick="return confirm_delete();">
-                                            <i class="fa fa-times" style="color: red; font-size: 16px"></i></a>
+                                        <a href="banned_ips.php?a=ban&amp;ip='.urlencode($ban['ip']).'&amp;token='.hesk_token_echo(0).'">
+                                            <i class="fa fa-ban" style="color: red; font-size: 16px" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['ippermban'].'"></i></a>
+                                        <a href="banned_ips.php?a=unbantemp&amp;ip='.urlencode($ban['ip']).'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();">
+                                            <i class="fa fa-times" style="color: red; font-size: 16px"data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'"></i></a>
                                     </td>
                                     ';
                             }
@@ -261,9 +259,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         {
                             echo '
                                 <td class="'.$color.'" style="text-align:left;">
-                                    <a href="banned_ips.php?a=unban&amp;id='.$ban['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"
-                                        data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'">
-                                        <i class="fa fa-times" style="color: red; font-size: 16px"></i></a>
+                                    <a href="banned_ips.php?a=unban&amp;id='.$ban['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();">
+                                        <i class="fa fa-times" style="color: red; font-size: 16px" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'"></i></a>
                                 </td>
                             ';
                         }

@@ -289,7 +289,7 @@ while ($myuser = hesk_dbFetchAssoc($res))
         $edit_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
     } else
     {
-    	$edit_code = '<a href="manage_users.php?a=edit&amp;id='.$myuser['id'].'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['edit'].'"><i style="font-size: 16px" class="fa fa-pencil"></i></a>';
+    	$edit_code = '<a href="manage_users.php?a=edit&amp;id='.$myuser['id'].'"><i style="font-size: 16px" class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="'.$hesklang['edit'].'"></i></a>';
     }
 
     if ($myuser['isadmin'])
@@ -307,7 +307,7 @@ while ($myuser = hesk_dbFetchAssoc($res))
         $remove_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
     } else
     {
-        $remove_code = ' <a href="manage_users.php?a=remove&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"><i style="font-size: 16px; color: red" class="fa fa-times"></i></a>';
+        $remove_code = ' <a href="manage_users.php?a=remove&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i style="font-size: 16px; color: red" class="fa fa-times" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"></i></a>';
     }
 
 	/* Is auto assign enabled? */
@@ -315,11 +315,11 @@ while ($myuser = hesk_dbFetchAssoc($res))
     {
     	if ($myuser['autoassign'])
         {
-			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaon'].'"><i style="color: orange; font-size: 16px" class="fa fa-bolt"></i></a>';
+			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'"><i style="color: orange; font-size: 16px" class="fa fa-bolt" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaon'].'"></i></a>';
         }
         else
         {
-			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=1&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaoff'].'"><i style="color: gray; font-size: 16px" class="fa fa-bolt"></i></a>';
+			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=1&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'"><i style="color: gray; font-size: 16px" class="fa fa-bolt" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaoff'].'"></i></a>';
         }
     }
     else
@@ -331,9 +331,9 @@ while ($myuser = hesk_dbFetchAssoc($res))
     if ($myuser['id'] != $_SESSION['id'] && $myuser['id'] != 1) {
         /* Is the user active? */
         if ($myuser['active']) {
-            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" data-toggle="tooltip" data-placement="top" title="' . $hesklang['disable_user'] . '"><i style="color: green; font-size: 16px" class="fa fa-user"></i></a>';
+            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i style="color: green; font-size: 16px" class="fa fa-user" data-toggle="tooltip" data-placement="top" title="' . $hesklang['disable_user'] . '"></i></a>';
         } else {
-            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" data-toggle="tooltip" data-placement="top" title="' . $hesklang['enable_user'] . '"><i style="color: gray; font-size: 16px" class="fa fa-user"></i></a>';
+            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i style="color: gray; font-size: 16px" class="fa fa-user" data-toggle="tooltip" data-placement="top" title="' . $hesklang['enable_user'] . '"></i></a>';
         }
     }
 
