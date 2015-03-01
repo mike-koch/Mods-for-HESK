@@ -2008,7 +2008,6 @@ if ( defined('HESK_DEMO') )
                   </div>
                   <div class="form-group">
                       <label for="html_emails" class="col-sm-4 col-xs-12 control-label">
-                          <span class="label label-warning"><?php echo $hesklang['beta_text']; ?></span>
                           <?php echo $hesklang['html_emails']; ?>
                           <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
                              title="<?php echo $hesklang['html_emails']; ?>"
