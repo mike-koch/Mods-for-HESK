@@ -97,6 +97,7 @@ $default_userdata = array(
     'active' => 1,
 	'categories' => array('1'),
 	'features' => array('can_view_tickets','can_reply_tickets','can_change_cat','can_assign_self','can_view_unassigned','can_view_online'),
+    'can_manage_settings' => 0,
 
     // Preferences
     'afterreply' => 0,

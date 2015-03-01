@@ -92,13 +92,13 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                 <div class="form-group">
                     <label for="pass" class="col-md-3 control-label"><?php echo $is_profile_page ? $hesklang['new_pass'] : $hesklang['pass']; ?>: <span class="important" style="<?php echo $passwordRequiredSpan; ?>">*</span></label>
                     <div class="col-md-9">
-                        <input type="password" class="form-control" name="newpass" autocomplete="off" size="40" placeholder="<?php echo $hesklang['pass']; ?>" value="<?php echo $_SESSION[$session_array]['cleanpass']; ?>" onkeyup="javascript:hesk_checkPassword(this.value)" />
+                        <input type="password" class="form-control" name="newpass" autocomplete="off" size="40" placeholder="<?php echo $hesklang['pass']; ?>" value="<?php echo isset($_SESSION[$session_array]['cleanpass']) ? $_SESSION[$session_array]['cleanpass'] : ''; ?>" onkeyup="javascript:hesk_checkPassword(this.value)" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="confirmPass" class="col-md-3 control-label"><?php echo $hesklang['confirm_pass']; ?>: <span class="important" style="<?php echo $passwordRequiredSpan; ?>">*</span></label>
                     <div class="col-md-9">
-                        <input type="password" name="newpass2" class="form-control" autocomplete="off" placeholder="<?php echo $hesklang['confirm_pass']; ?>" size="40" value="<?php echo $_SESSION[$session_array]['cleanpass']; ?>" />
+                        <input type="password" name="newpass2" class="form-control" autocomplete="off" placeholder="<?php echo $hesklang['confirm_pass']; ?>" size="40" value="<?php echo isset($_SESSION[$session_array]['cleanpass']) ? $_SESSION[$session_array]['cleanpass'] : ''; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
