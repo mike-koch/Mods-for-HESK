@@ -963,31 +963,43 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
                 {
 	                ?>
 
-	                <b><?php echo $hesklang['before_submit']; ?></b>
-	                <ul>
-	                <li><?php echo $hesklang['all_info_in']; ?>.</li>
-		            <li><?php echo $hesklang['all_error_free']; ?>.</li>
-	                </ul>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <b><?php echo $hesklang['before_submit']; ?></b>
+                                <ul>
+                                    <li><?php echo $hesklang['all_info_in']; ?>.</li>
+                                    <li><?php echo $hesklang['all_error_free']; ?>.</li>
+                                </ul>
 
 
-		            <b><?php echo $hesklang['we_have']; ?>:</b>
-	                <ul>
-	                <li><?php echo hesk_htmlspecialchars($_SERVER['REMOTE_ADDR']).' '.$hesklang['recorded_ip']; ?></li>
-		            <li><?php echo $hesklang['recorded_time']; ?></li>
-		            </ul>
+                                <b><?php echo $hesklang['we_have']; ?>:</b>
+                                <ul>
+                                    <li><?php echo hesk_htmlspecialchars($_SERVER['REMOTE_ADDR']).' '.$hesklang['recorded_ip']; ?></li>
+                                    <li><?php echo $hesklang['recorded_time']; ?></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
-		            <p align="center"><input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-	                <input type="submit" value="<?php echo $hesklang['sub_ticket']; ?>" class="orangebutton"  onmouseover="hesk_btn(this,'orangebuttonover');" onmouseout="hesk_btn(this,'orangebutton');" /></p>
+                    <div class="row">
+                        <div class="col-md-9 col-md-offset-3">
+                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                            <input type="submit" value="<?php echo $hesklang['sub_ticket']; ?>" class="btn btn-default">
+                        </div>
+                    </div>
 
 	                <?php
                 } // End IF submit_notice
                 else
                 {
 	                ?>
-                    &nbsp;<br />&nbsp;<br />
-		            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-	                <input class="btn btn-default" type="submit" value="<?php echo $hesklang['sub_ticket']; ?>" /><br />
-	                &nbsp;<br />&nbsp;
+                    <div class="row">
+                        <div class="col-md-9 col-md-offset-3">
+                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                            <input class="btn btn-default" type="submit" value="<?php echo $hesklang['sub_ticket']; ?>">
+                        </div>
+                    </div>
 
 	                <?php
                 } // End ELSE submit_notice
