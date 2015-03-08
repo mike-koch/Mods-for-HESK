@@ -34,6 +34,9 @@ function echoInitialVersionRows($version) {
     if ($version < 200) {
         printRow('v2.0.0');
     }
+    if ($version < 201) {
+        printRow('v2.0.1');
+    }
 }
 
 function printRow($version) {
@@ -81,20 +84,22 @@ function printRow($version) {
                                 <?php echoInitialVersionRows($startingVersion); ?>
                                 </tbody>
                             </table>
-                            <table class="table table-striped" style="table-layout: fixed">
-                                <thead>
-                                <tr>
-                                    <th>Task</th>
-                                    <th>Status</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr id="row-banmigrate">
-                                    <td>Migrate IP / Email Bans</td>
-                                    <td><i id="spinner-banmigrate" class="fa fa-spinner"></i> <span id="span-banmigrate">Waiting...</span></td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <?php if ($startingVersion < 200) { ?>
+                                <table class="table table-striped" style="table-layout: fixed">
+                                    <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr id="row-banmigrate">
+                                        <td>Migrate IP / Email Bans</td>
+                                        <td><i id="spinner-banmigrate" class="fa fa-spinner"></i> <span id="span-banmigrate">Waiting...</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>

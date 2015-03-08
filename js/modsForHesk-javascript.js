@@ -160,6 +160,11 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 200) {
         startVersionUpgrade('200');
         executeUpdate(200, '200');
+    } else if (startingVersion < 201) {
+        startVersionUpgrade('201');
+        executeUpdate(201, '201');
+    } else {
+        installationFinished();
     }
 }
 
@@ -209,7 +214,7 @@ function migrateIpEmailBans(version, cssclass) {
 function installationFinished() {
     var output = '<div class="panel-body">' +
         '<div class="col-md-12 text-center">' +
-        '<i class="fa fa-check fa-4x" style="color: #008000"></i><br><br>' +
+        '<i class="fa fa-check-circle fa-4x" style="color: #008000"></i><br><br>' +
         '<h4>Awesome! The installation / upgrade has completed. Please delete the <code>install</code> directory and then proceed to your helpdesk!</h4>' +
         '</div>' +
         '</div>';
@@ -261,7 +266,7 @@ function runMigration() {
 function migrateComplete() {
     $('#attention-row').hide();
     markUpdateAsSuccess('banmigrate');
-    installationFinished();
+    processUpdates(200);
 }
 
 jQuery(document).ready(loadJquery);
