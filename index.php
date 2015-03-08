@@ -1209,6 +1209,7 @@ function forgot_tid()
 	}
 
 	$tid_list = '';
+    $html_tid_list = '<ul>';
 	$name = '';
 
     $email_param = $hesk_settings['email_view_ticket'] ? '&e='.rawurlencode($email) : '';
@@ -1216,13 +1217,21 @@ function forgot_tid()
 	while ($my_ticket=hesk_dbFetchAssoc($res))
 	{
 		$name = $name ? $name : hesk_msgToPlain($my_ticket['name'], 1, 0);
-$tid_list .= "
-$hesklang[trackID]: "	. $my_ticket['trackid'] . "
-$hesklang[subject]: "	. hesk_msgToPlain($my_ticket['subject'], 1, 0) . "
-$hesklang[status]: "	. $my_status[$my_ticket['status']] . "
-$hesk_settings[hesk_url]/ticket.php?track={$my_ticket['trackid']}{$email_param}
-";
+        $tid_list .= "
+        $hesklang[trackID]: "	. $my_ticket['trackid'] . "
+        $hesklang[subject]: "	. hesk_msgToPlain($my_ticket['subject'], 1, 0) . "
+        $hesklang[status]: "	. $my_status[$my_ticket['status']] . "
+        $hesk_settings[hesk_url]/ticket.php?track={$my_ticket['trackid']}{$email_param}
+        ";
+
+        $html_tid_list .= "<li>
+        $hesklang[trackID]: "   . $my_ticket['trackid'] . " <br>
+        $hesklang[subject]: "   . hesk_msgToPlain($my_ticket['subject'], 1, 0) . " <br>
+        $hesklang[status]: "    . $my_status[$my_ticket['status']] . " <br>
+        $hesk_settings[hesk_url]/ticket.php?track={$my_ticket['trackid']}{$email_param}
+        </li>";
 	}
+    $html_tid_list .= '</ul>';
 
 	/* Get e-mail message for customer */
 	$msg = hesk_getEmailMessage('forgot_ticket_id','',0,0,1);
@@ -1230,7 +1239,7 @@ $hesk_settings[hesk_url]/ticket.php?track={$my_ticket['trackid']}{$email_param}
 
     // Get HTML message for customer
     $htmlMsg = hesk_getHtmlMessage('forgot_ticket_id','',0,0,1);
-    $htmlMsg = processEmail($htmlMsg, $name, $num, $tid_list);
+    $htmlMsg = processEmail($htmlMsg, $name, $num, $html_tid_list);
 
 
     $subject = hesk_getEmailSubject('forgot_ticket_id');
