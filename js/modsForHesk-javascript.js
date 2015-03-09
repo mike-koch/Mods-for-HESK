@@ -68,4 +68,15 @@ function toggleContainers(showIds, hideIds) {
     });
 }
 
+function disableIfEmpty(sourceId, destinationId) {
+    if ($('#' + sourceId).val().length > 0) {
+        $('#' + destinationId).attr('disabled', false);
+    } else {
+        if ($('#' + destinationId).is(':checkbox')) {
+            $('#' + destinationId).attr('checked', false);
+        }
+        $('#' + destinationId).attr('disabled', true);
+    }
+}
+
 jQuery(document).ready(loadJquery);

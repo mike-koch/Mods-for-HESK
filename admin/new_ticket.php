@@ -186,10 +186,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="form-group">
                     <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: </label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="email" size="40" maxlength="1000"
+                        <input type="text" class="form-control" name="email" size="40" maxlength="1000" id="email-input"
                                value="<?php if (isset($_SESSION['as_email'])) {echo stripslashes(hesk_input($_SESSION['as_email']));}
                                    else if (isset($_GET['email'])) {echo hesk_GET('email');} ?>" <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(1)"'; } ?>
-                               placeholder="<?php echo $hesklang['email']; ?>">
+                               placeholder="<?php echo $hesklang['email']; ?>"
+                               onkeyup="disableIfEmpty('email-input','notify-email')">
                     </div>
                 
                 </div>
@@ -942,7 +943,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><?php echo $hesklang['addop']; ?>:</label>
                     <div class="col-sm-9">
-                        <label><input type="checkbox" name="notify" value="1" <?php echo empty($_SESSION['as_notify']) ? '' : 'checked="checked"'; ?> /> <?php echo $hesklang['seno']; ?></label><br />
+                        <label><input type="checkbox" id="notify-email" name="notify" value="1" <?php echo empty($_SESSION['as_notify']) ? '' : 'checked="checked"'; ?> /> <?php echo $hesklang['seno']; ?></label><br />
                         <label><input type="checkbox" name="show" value="1" <?php echo (!isset($_SESSION['as_show']) || !empty($_SESSION['as_show'])) ? 'checked="checked"' : ''; ?> /> <?php echo $hesklang['otas']; ?></label><br />
                         <hr />     
                     </div>
