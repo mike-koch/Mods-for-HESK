@@ -457,7 +457,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 	{
 		$link = ($thiscat['parent'] == 1) ? 'knowledgebase.php' : 'knowledgebase.php?category='.$thiscat['parent'];
 		echo '<h3 class="text-left">'.$hesklang['kb_cat'].': '.$thiscat['name'].' </h3>
-        <p class="text-left"><a href="javascript:history.go(-1)" title="'.$hesklang['back'].'"><span class="glyphicon glyphicon-circle-arrow-left"></span> Go back</a></p>
+        <p class="text-left"><a href="javascript:history.go(-1)" title="'.$hesklang['back'].'"><span class="glyphicon glyphicon-circle-arrow-left"></span>'.$hesklang['back'].'</a></p>
         <div class="footerWithBorder blankSpace"></div>
         <div class="blankSpace"></div>
 		';
