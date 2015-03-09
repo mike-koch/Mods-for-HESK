@@ -101,106 +101,132 @@ if ( defined('HESK_DEMO') )
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $hesklang['installation_information']; ?></div>
-            <div class="panel-body">
-                <table>
-                    <tr><td class="text-right">
-                        <?php echo $hesklang['v']; ?>:
-                        </td>
-                        <td style="padding-left: 10px">     
-                        <?php echo $hesk_settings['hesk_version']; ?>
-                        <?php
-                        if ($hesk_settings['check_updates'])
-                        {
-                            $latest = hesk_checkVersion();
+            <table class="table table-striped">
+                <tr><td class="text-right">
+                    <?php echo $hesklang['v']; ?>:
+                    </td>
+                    <td style="padding-left: 10px">
+                    <?php echo $hesk_settings['hesk_version']; ?>
+                    <?php
+                    if ($hesk_settings['check_updates'])
+                    {
+                        $latest = hesk_checkVersion();
 
-                            if ($latest === true)
+                        if ($latest === true)
+                        {
+                            echo ' - <span style="color:green">' . $hesklang['hud'] . '</span> ';
+                        }
+                        elseif ($latest != -1)
+                        {
+                            // Is this a beta/dev version?
+                            if ( strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev')  || strpos($hesk_settings['hesk_version'], 'RC') )
                             {
-                                echo ' - <span style="color:green">' . $hesklang['hud'] . '</span> ';
-                            }
-                            elseif ($latest != -1)
-                            {
-                                // Is this a beta/dev version?
-                                if ( strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev')  || strpos($hesk_settings['hesk_version'], 'RC') )
-                                {
-                                    echo ' <span style="color:darkorange">' . $hesklang['beta'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
-                                }
-                                else
-                                {
-                                    echo ' - <span style="color:darkorange;font-weight:bold">' . $hesklang['hnw'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['getup']; ?></a><?php
-                                }
+                                echo ' <span style="color:darkorange">' . $hesklang['beta'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                             }
                             else
                             {
-                                ?> - <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
+                                echo ' - <span style="color:darkorange;font-weight:bold">' . $hesklang['hnw'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['getup']; ?></a><?php
                             }
                         }
                         else
                         {
                             ?> - <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                         }
+                    }
+                    else
+                    {
+                        ?> - <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
+                    }
+                    ?>
+                </td></tr>
+                <tr>
+                    <td class="text-right" style="padding-bottom: 5px">
+                        <?php echo $hesklang['mods_for_hesk_version']; ?>:
+                    </td>
+                    <td style="padding-left: 10px; padding-bottom: 5px">
+                        <?php echo $modsForHeskVersion; ?>
+                    </td>
+                </tr>
+                <tr><td class="text-right">
+                    <?php echo $hesklang['phpv']; ?>:
+                    </td><td style="padding-left: 10px">
+                    <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : PHP_VERSION . ' ' . (function_exists('mysqli_connect') ? '(MySQLi)' : '(MySQL)'); ?>
+                </td></tr>
+                <tr><td class="text-right" style="padding-bottom: 5px">
+                    <?php echo $hesklang['mysqlv']; ?>:
+                </td><td style="padding-left: 10px; padding-bottom: 5px">
+                    <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : hesk_dbResult( hesk_dbQuery('SELECT VERSION() AS version') ); ?>
+                </td></tr>
+                <tr>
+                    <td class="text-right">
+                        /hesk_settings.inc.php
+                    </td>
+                    <?php
+                    $heskSettingsWritable = is_writable(HESK_PATH . 'hesk_settings.inc.php');
+                    $cellClass = $heskSettingsWritable ? 'success' : 'danger';
+                    ?>
+                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
+                        <?php
+                        if ($heskSettingsWritable) {
+                            $enable_save_settings=1;
+                            echo '<font class="success">'.$hesklang['exists'].'</font>, <font class="success">'.$hesklang['writable'].'</font>';
+                        } else {
+                            echo '<font class="success">'.$hesklang['exists'].'</font>, <font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_settings'];
+                        }
                         ?>
-                    </td></tr>
-                    <tr>
-                        <td class="text-right" style="padding-bottom: 5px">
-                            <?php echo $hesklang['mods_for_hesk_version']; ?>:
-                        </td>
-                        <td style="padding-left: 10px; padding-bottom: 5px">
-                            <?php echo $modsForHeskVersion; ?>
-                        </td>
-                    </tr>
-                    <tr><td class="text-right">
-                        <?php echo $hesklang['phpv']; ?>:
-                        </td><td style="padding-left: 10px">
-                        <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : PHP_VERSION . ' ' . (function_exists('mysqli_connect') ? '(MySQLi)' : '(MySQL)'); ?>
-                    </td></tr>
-                    <tr><td class="text-right" style="padding-bottom: 5px">
-                        <?php echo $hesklang['mysqlv']; ?>:
-                    </td><td style="padding-left: 10px; padding-bottom: 5px">
-                        <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : hesk_dbResult( hesk_dbQuery('SELECT VERSION() AS version') ); ?>
-                    </td></tr>
-                    <tr>
-                        <td class="text-right">
-                            /hesk_settings.inc.php
-                        </td>
-                        <td style="padding-left: 10px">
-                            <?php
-                            if (is_writable(HESK_PATH . 'hesk_settings.inc.php')) {
-                                $enable_save_settings=1;
-                                echo '<font class="success">'.$hesklang['exists'].'</font>, <font class="success">'.$hesklang['writable'].'</font>';
-                            } else {
-                                echo '<font class="success">'.$hesklang['exists'].'</font>, <font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_settings'];
-                            }
-                            ?>    
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-right">
-                            /<?php echo $hesk_settings['attach_dir']; ?>
-                        </td>
-                        <td style="padding-left: 10px">
-                            <?php
-                            if (is_dir(HESK_PATH . $hesk_settings['attach_dir']))
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right">
+                        /<?php echo $hesk_settings['attach_dir']; ?>
+                    </td>
+                    <?php
+                    $attachmentsExist = is_dir(HESK_PATH . $hesk_settings['attach_dir']);
+                    $attachmentsWritable = is_writable(HESK_PATH . $hesk_settings['attach_dir']);
+                    $cellClass = $attachmentsExist && $attachmentsWritable ? 'success' : 'danger';
+                    ?>
+                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
+                        <?php
+                        if ($attachmentsExist)
+                        {
+                            echo '<font class="success">'.$hesklang['exists'].'</font>, ';
+                            if (is_writable(HESK_PATH . $hesk_settings['attach_dir']))
                             {
-                                echo '<font class="success">'.$hesklang['exists'].'</font>, ';
-                                if (is_writable(HESK_PATH . $hesk_settings['attach_dir']))
-                                {
-                                    $enable_use_attachments=1;
-                                    echo '<font class="success">'.$hesklang['writable'].'</font>';
-                                }
-                                else
-                                {
-                                    echo '<font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_attdir'];
-                                }
+                                $enable_use_attachments=1;
+                                echo '<font class="success">'.$hesklang['writable'].'</font>';
                             }
                             else
                             {
-                                echo '<font class="error">'.$hesklang['no_exists'].'</font>, <font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_attdir'];
+                                echo '<font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_attdir'];
                             }
-                            ?>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                        }
+                        else
+                        {
+                            echo '<font class="error">'.$hesklang['no_exists'].'</font>, <font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_attdir'];
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right">
+                        /modsForHesk_settings.inc.php
+                    </td>
+                    <?php
+                    $modsForHeskIsWritable = is_writable(HESK_PATH . 'modsForHesk_settings.inc.php');
+                    $cellClass = $modsForHeskIsWritable ? 'success' : 'danger';
+                    ?>
+                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
+                        <?php
+                        if ($modsForHeskIsWritable) {
+                            $enable_save_settings=1;
+                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="success">'.$hesklang['writable'].'</span>';
+                        } else {
+                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="error">'.$hesklang['not_writable'].'</span><br />'.$hesklang['e_mfh_settings'];
+                        }
+                        ?>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
     <div class="col-md-8">

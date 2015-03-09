@@ -21,6 +21,9 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.1.0
+$hesklang['e_mfh_settings']='You will not be able to save your settings unless this file is writable by the script (CHMOD to 666)!';
+
 // ADDED OR MODIFIED IN Mods For HESK 2.0.0
 $hesklang['saved_ticket_tpl'] = 'Saved Templates';
 $hesklang['new_ticket_tpl']='Add or Edit a Ticket Template';
