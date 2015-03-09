@@ -17,6 +17,8 @@ hesk_dbConnect();
         <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
         <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
         <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
+        <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>install/mods-for-hesk/js/ui-scripts.js"></script>
+        <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>install/mods-for-hesk/js/version-scripts.js"></script>
         <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
     </head>
     <body>
