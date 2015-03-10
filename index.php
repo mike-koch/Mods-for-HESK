@@ -879,7 +879,7 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 	                {
 			            ?>
 			            <div class="form-group">
-			            <label for="question"><?php echo $hesklang['verify_q']; ?> <font class="important">*</font></label>
+			            <label for="question" class="col-sm-3 control-label"><?php echo $hesklang['verify_q']; ?> <span class="important">*</span></label>
 			
                         <?php
         	            $value = '';
@@ -888,7 +888,7 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 	        	            $value = stripslashes(hesk_input($_SESSION['c_question']));
                         }
                         $cls = in_array('question',$_SESSION['iserror']) ? ' class="isError" ' : '';
-		                echo $hesk_settings['question_ask'].'<br /><input class="form-control" id="question" type="text" name="question" size="20" value="'.$value.'" '.$cls.' />';
+		                echo '<div class="col-md-9">'.$hesk_settings['question_ask'].'<br /><input class="form-control" id="question" type="text" name="question" size="20" value="'.$value.'" '.$cls.' /></div>';
                         ?>
                         </div>
                     <?php
@@ -927,15 +927,21 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 				                     }
 				                };
 				                </script>
+                                <div class="col-md-9">
 				                <?php
 				                require(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
                                 echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, true);
+                                ?>
+                                </div>
+                            <?php
                             }
                             // Use reCaptcha API v2?
                             elseif ($hesk_settings['recaptcha_use'] == 2)
                             {
                                 ?>
-                                <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>"></div>
+                                <div class="col-md-9">
+                                    <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>"></div>
+                                </div>
                             <?php
 			                }
 			                // At least use some basic PHP generated image (better than nothing)
