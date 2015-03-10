@@ -326,171 +326,185 @@ function print_login()
 	            hesk_handle_messages();
 	        ?></div>
     <div>
-        <form class="form-signin form-horizontal" role="form" action="index.php" method="post" name="form1">
-            
-            <h2 class="form-signin-heading"><span <?php echo $iconDisplay; ?>><span class="mega-octicon octicon-sign-in"></span>&nbsp;</span><?php echo $hesklang['admin_login']; ?></a></h2><br/>
-            <?php if (in_array('pass',$_SESSION['a_iserror'])) { echo '<div class="form-group has-error">';} else { echo '<div class="form-group">';}?>
-                <label for="user" class="col-sm-3 control-label"><?php echo $hesklang['username']; ?>:</label>
-                <div class="col-sm-9">
+    <div class="panel panel-default form-signin">
+        <div class="panel-heading">
+            <h4><span <?php echo $iconDisplay; ?>><span class="mega-octicon octicon-sign-in"></span>&nbsp;</span><?php echo $hesklang['admin_login']; ?></a></h4>
+        </div>
+        <div class="panel-body">
+            <form class="form-signin form-horizontal" role="form" action="index.php" method="post" name="form1">
+                <?php if (in_array('pass',$_SESSION['a_iserror'])) { echo '<div class="form-group has-error">';} else { echo '<div class="form-group">';}?>
+                <label for="user" class="col-sm-4 control-label"><?php echo $hesklang['username']; ?>:</label>
+                <div class="col-sm-8">
                     <?php
 
-				    if (defined('HESK_USER'))
-				    {
-					    $savedUser = HESK_USER;
-				    }
-				    else
-				    {
-					    $savedUser = hesk_htmlspecialchars( hesk_COOKIE('hesk_username') );
-				    }
+                    if (defined('HESK_USER'))
+                    {
+                        $savedUser = HESK_USER;
+                    }
+                    else
+                    {
+                        $savedUser = hesk_htmlspecialchars( hesk_COOKIE('hesk_username') );
+                    }
 
-		            $is_1 = '';
-		            $is_2 = '';
-		            $is_3 = '';
+                    $is_1 = '';
+                    $is_2 = '';
+                    $is_3 = '';
 
-				    $remember_user = hesk_POST('remember_user');
+                    $remember_user = hesk_POST('remember_user');
 
-				    if ($hesk_settings['autologin'] && (isset($_COOKIE['hesk_p']) || $remember_user == 'AUTOLOGIN') )
-		            {
-		        	    $is_1 = 'checked="checked"';
-		            }
-		            elseif (isset($_COOKIE['hesk_username']) || $remember_user == 'JUSTUSER' )
-		            {
-		        	    $is_2 = 'checked="checked"';
-		            }
-		            else
-		            {
-		        	    $is_3 = 'checked="checked"';
-		            }
+                    if ($hesk_settings['autologin'] && (isset($_COOKIE['hesk_p']) || $remember_user == 'AUTOLOGIN') )
+                    {
+                        $is_1 = 'checked="checked"';
+                    }
+                    elseif (isset($_COOKIE['hesk_username']) || $remember_user == 'JUSTUSER' )
+                    {
+                        $is_2 = 'checked="checked"';
+                    }
+                    else
+                    {
+                        $is_3 = 'checked="checked"';
+                    }
 
-				    if ($hesk_settings['list_users'])
-				    {
-				        echo '<select class="form-control" name="user">';
+                    if ($hesk_settings['list_users'])
+                    {
+                        echo '<select class="form-control" name="user">';
                         $res = hesk_dbQuery('SELECT `user` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` ORDER BY `user` ASC');
-				        while ($row=hesk_dbFetchAssoc($res))
-				        {
-				            $sel = (strtolower($savedUser) == strtolower($row['user'])) ? 'selected="selected"' : '';
-				            echo '<option value="'.$row['user'].'" '.$sel.'>'.$row['user'].'</option>';
-				        }
-				        echo '</select>';
+                        while ($row=hesk_dbFetchAssoc($res))
+                        {
+                            $sel = (strtolower($savedUser) == strtolower($row['user'])) ? 'selected="selected"' : '';
+                            echo '<option value="'.$row['user'].'" '.$sel.'>'.$row['user'].'</option>';
+                        }
+                        echo '</select>';
 
-				    }
-				    else
-				    {
-				        echo '<input class="form-control" type="text" name="user" size="35" placeholder="'.$hesklang['username'].'" value="'.$savedUser.'" />';
-				    }
-				    ?>
+                    }
+                    else
+                    {
+                        echo '<input class="form-control" type="text" name="user" size="35" placeholder="'.$hesklang['username'].'" value="'.$savedUser.'" />';
+                    }
+                    ?>
                 </div>
             </div>
             <?php if (in_array('pass',$_SESSION['a_iserror'])) { echo '<div class="form-group has-error">';} else { echo '<div class="form-group">';}?>
-                <label for="pass" class="col-sm-3 control-label"><?php echo $hesklang['pass']; ?>:</label>
-                <div class="col-sm-9">
-                    <input type="password" class="form-control" id="pass" name="pass" size="35" placeholder="<?php echo $hesklang['pass']; ?>"  />
-                </div>
+            <label for="pass" class="col-sm-4 control-label"><?php echo $hesklang['pass']; ?>:</label>
+            <div class="col-sm-8">
+                <input type="password" class="form-control" id="pass" name="pass" size="35" placeholder="<?php echo $hesklang['pass']; ?>"  />
             </div>
-		<?php
-		if ($hesk_settings['secimg_use'] == 2)
-	    {
-		
-				// SPAM prevention verified for this session
-				if (isset($_SESSION['img_a_verified']))
-				{
-					echo '<img src="'.HESK_PATH.'img/success.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" /> '.$hesklang['vrfy'];
-				}
-				// Not verified yet, should we use Recaptcha?
-				elseif ($hesk_settings['recaptcha_use'] == 1)
-				{
-					?>
-					<script type="text/javascript">
-					var RecaptchaOptions = {
-					theme : '<?php echo ( isset($_SESSION['a_iserror']) && in_array('mysecnum',$_SESSION['a_iserror']) ) ? 'red' : 'white'; ?>',
-					custom_translations : {
-						visual_challenge : "<?php echo hesk_slashJS($hesklang['visual_challenge']); ?>",
-						audio_challenge : "<?php echo hesk_slashJS($hesklang['audio_challenge']); ?>",
-						refresh_btn : "<?php echo hesk_slashJS($hesklang['refresh_btn']); ?>",
-						instructions_visual : "<?php echo hesk_slashJS($hesklang['instructions_visual']); ?>",
-						instructions_context : "<?php echo hesk_slashJS($hesklang['instructions_context']); ?>",
-						instructions_audio : "<?php echo hesk_slashJS($hesklang['instructions_audio']); ?>",
-						help_btn : "<?php echo hesk_slashJS($hesklang['help_btn']); ?>",
-						play_again : "<?php echo hesk_slashJS($hesklang['play_again']); ?>",
-						cant_hear_this : "<?php echo hesk_slashJS($hesklang['cant_hear_this']); ?>",
-						incorrect_try_again : "<?php echo hesk_slashJS($hesklang['incorrect_try_again']); ?>",
-						image_alt_text : "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>"
-					}
-					};
-					</script>
-					<?php
-					require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
+        </div>
+            <?php
+            if ($hesk_settings['secimg_use'] == 2)
+            {
+
+                // SPAM prevention verified for this session
+                if (isset($_SESSION['img_a_verified']))
+                {
+                    echo '<img src="'.HESK_PATH.'img/success.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" /> '.$hesklang['vrfy'];
+                }
+                // Not verified yet, should we use Recaptcha?
+                elseif ($hesk_settings['recaptcha_use'] == 1)
+                {
+                    ?>
+                    <script type="text/javascript">
+                        var RecaptchaOptions = {
+                            theme : '<?php echo ( isset($_SESSION['a_iserror']) && in_array('mysecnum',$_SESSION['a_iserror']) ) ? 'red' : 'white'; ?>',
+                            custom_translations : {
+                                visual_challenge : "<?php echo hesk_slashJS($hesklang['visual_challenge']); ?>",
+                                audio_challenge : "<?php echo hesk_slashJS($hesklang['audio_challenge']); ?>",
+                                refresh_btn : "<?php echo hesk_slashJS($hesklang['refresh_btn']); ?>",
+                                instructions_visual : "<?php echo hesk_slashJS($hesklang['instructions_visual']); ?>",
+                                instructions_context : "<?php echo hesk_slashJS($hesklang['instructions_context']); ?>",
+                                instructions_audio : "<?php echo hesk_slashJS($hesklang['instructions_audio']); ?>",
+                                help_btn : "<?php echo hesk_slashJS($hesklang['help_btn']); ?>",
+                                play_again : "<?php echo hesk_slashJS($hesklang['play_again']); ?>",
+                                cant_hear_this : "<?php echo hesk_slashJS($hesklang['cant_hear_this']); ?>",
+                                incorrect_try_again : "<?php echo hesk_slashJS($hesklang['incorrect_try_again']); ?>",
+                                image_alt_text : "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>"
+                            }
+                        };
+                    </script>
+                    <?php
+                    require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
+                    echo '<div class="form-group"><div class="col-md-8 col-md-offset-4">';
                     echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, true);
+                    echo '</div></div>';
                 }
                 // Use reCaptcha API v2?
                 elseif ($hesk_settings['recaptcha_use'] == 2)
                 {
                     ?>
-                    <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>"></div>
+                    <div class="form-group">
+                        <div class="col-md-8 col-md-offset-4">
+                            <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>"></div>
+                        </div>
+                    </div>
                 <?php
-				}
-				// At least use some basic PHP generated image (better than nothing)
-				else
-				{
-					$cls = in_array('mysecnum',$_SESSION['a_iserror']) ? ' class="isError" ' : '';
+                }
+                // At least use some basic PHP generated image (better than nothing)
+                else
+                {
+                    echo '<div class="form-group"><div class="col-md-8 col-md-offset-4">';
+                    $cls = in_array('mysecnum',$_SESSION['a_iserror']) ? ' class="isError" ' : '';
 
-					echo $hesklang['sec_enter'].'<br />&nbsp;<br /><img src="'.HESK_PATH.'print_sec_img.php?'.rand(10000,99999).'" width="150" height="40" alt="'.$hesklang['sec_img'].'" title="'.$hesklang['sec_img'].'" border="1" name="secimg" style="vertical-align:text-bottom" /> '.
-					'<a href="javascript:void(0)" onclick="javascript:document.form1.secimg.src=\''.HESK_PATH.'print_sec_img.php?\'+ ( Math.floor((90000)*Math.random()) + 10000);"><img src="'.HESK_PATH.'img/reload.png" height="24" width="24" alt="'.$hesklang['reload'].'" title="'.$hesklang['reload'].'" border="0" style="vertical-align:text-bottom" /></a>'.
-					'<br />&nbsp;<br /><input type="text" name="mysecnum" size="20" maxlength="5" '.$cls.' />';
-				}
-		} // End if $hesk_settings['secimg_use'] == 2
+                    echo $hesklang['sec_enter'].'<br />&nbsp;<br /><img src="'.HESK_PATH.'print_sec_img.php?'.rand(10000,99999).'" width="150" height="40" alt="'.$hesklang['sec_img'].'" title="'.$hesklang['sec_img'].'" border="1" name="secimg" style="vertical-align:text-bottom" /> '.
+                        '<a href="javascript:void(0)" onclick="javascript:document.form1.secimg.src=\''.HESK_PATH.'print_sec_img.php?\'+ ( Math.floor((90000)*Math.random()) + 10000);"><img src="'.HESK_PATH.'img/reload.png" height="24" width="24" alt="'.$hesklang['reload'].'" title="'.$hesklang['reload'].'" border="0" style="vertical-align:text-bottom" /></a>'.
+                        '<br />&nbsp;<br /><input type="text" name="mysecnum" size="20" maxlength="5" '.$cls.' />';
+                    echo '</div></div>';
+                }
+            } // End if $hesk_settings['secimg_use'] == 2
 
-		if ($hesk_settings['autologin'])
-		{
-			?>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-                    <div class="radio">
-				        <label><input type="radio" name="remember_user" value="AUTOLOGIN" <?php echo $is_1; ?> /> <?php echo $hesklang['autologin']; ?></label>
-                    </div>
-                    <div class="radio">
-				        <label><input type="radio" name="remember_user" value="JUSTUSER" <?php echo $is_2; ?> /> <?php echo $hesklang['just_user']; ?></label>
-                    </div>
-                    <div class="radio">
-				        <label><input type="radio" name="remember_user" value="NOTHANKS" <?php echo $is_3; ?> /> <?php echo $hesklang['nothx']; ?></label>
+            if ($hesk_settings['autologin'])
+            {
+                ?>
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-8">
+                        <div class="radio">
+                            <label><input type="radio" name="remember_user" value="AUTOLOGIN" <?php echo $is_1; ?> /> <?php echo $hesklang['autologin']; ?></label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="remember_user" value="JUSTUSER" <?php echo $is_2; ?> /> <?php echo $hesklang['just_user']; ?></label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="remember_user" value="NOTHANKS" <?php echo $is_3; ?> /> <?php echo $hesklang['nothx']; ?></label>
+                        </div>
                     </div>
                 </div>
-			</div>
-			<?php
-		}
-		else
-		{
-			?>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-				    <div class="checkbox">
-                        <label><input type="checkbox" name="remember_user" value="JUSTUSER" <?php echo $is_2; ?> /> <?php echo $hesklang['remember_user']; ?></label>
+            <?php
+            }
+            else
+            {
+                ?>
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-8">
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="remember_user" value="JUSTUSER" <?php echo $is_2; ?> /> <?php echo $hesklang['remember_user']; ?></label>
+                        </div>
                     </div>
-			    </div>
-            </div>
-			<?php
-		} // End if $hesk_settings['autologin']
-		?>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <input type="submit" value="<?php echo $hesklang['click_login']; ?>" class="btn btn-default" />
-                <input type="hidden" name="a" value="do_login" />
-		        <?php
-		        if ( hesk_isREQUEST('goto') && $url=hesk_REQUEST('goto') )
-		        {
-			        echo '<input type="hidden" name="goto" value="'.$url.'" />';
-		        }
+                </div>
+            <?php
+            } // End if $hesk_settings['autologin']
+            ?>
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-8">
+                    <input type="submit" value="<?php echo $hesklang['click_login']; ?>" class="btn btn-default" />
+                    <input type="hidden" name="a" value="do_login" />
+                    <?php
+                    if ( hesk_isREQUEST('goto') && $url=hesk_REQUEST('goto') )
+                    {
+                        echo '<input type="hidden" name="goto" value="'.$url.'" />';
+                    }
 
-                // Do we allow staff password reset?
-                if ($hesk_settings['reset_pass'])
-                {
-                    echo '<br />&nbsp;<br /><a href="password.php" class="smaller">'.$hesklang['fpass'].'</a>';
-                }
-		        ?>
+                    // Do we allow staff password reset?
+                    if ($hesk_settings['reset_pass'])
+                    {
+                        echo '<br />&nbsp;<br /><a href="password.php" class="smaller">'.$hesklang['fpass'].'</a>';
+                    }
+                    ?>
+                </div>
             </div>
+
+            </form>
         </div>
+    </div>
 
-        </form>
     </div>
 
     <p>&nbsp;</p>

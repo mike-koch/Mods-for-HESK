@@ -134,13 +134,12 @@
     text-decoration: underline;
 }
 .form-signin {
-    max-width: 330px;
-    padding: 15px;
+    max-width: 800px;
     margin: 0 auto;
 }
 .loginError {
-    width: 40%;
-    padding: 20px;
+    max-width: 800px;
+    padding-top: 20px;
     margin-left: auto;
     margin-right: auto;
 }
