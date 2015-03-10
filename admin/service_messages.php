@@ -148,7 +148,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="panel-body">
                     <?php
 
-                    // Get banned ips from database
+                    // Get service messages from database
                     $res = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'service_messages` ORDER BY `order` ASC');
                     $num = hesk_dbNumRows($res);
 
@@ -265,12 +265,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 ?>
                             </tbody>
                         </table>
-                        <div align="center">
-                            <table border="0" cellspacing="1" cellpadding="3" class="white" width="100%">
-
-
-                            </table>
-                        </div>
                     <?php
                     }
 
@@ -330,6 +324,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <?php echo $hesklang['sm_error']; ?>
                                     </label>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="icon" class="col-md-2 control-label"><?php echo $hesklang['sm_icon']; ?></label>
+                            <?php
+                            //
+                            ?>
+                            <div class="col-md-10">
+                                <button name="icon" class="btn btn-default iconpicker-container" data-icon="<?php echo $icon; ?>"></button>
+                                <input type="checkbox" name="dont-use-icon"> Don't use icon
                             </div>
                         </div>
                         <div class="form-group">

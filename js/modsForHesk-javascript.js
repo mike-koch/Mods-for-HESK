@@ -25,9 +25,14 @@ var loadJquery = function()
             todayBtn: "linked",
             clearBtn: true,
             autoclose: true,
+            autoclose: true,
             todayHighlight: true,
             format: "yyyy-mm-dd"
         });
+    });
+
+    $('.iconpicker-container').iconpicker({
+        iconset: 'fontawesome'
     });
 };
 
