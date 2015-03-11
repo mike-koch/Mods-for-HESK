@@ -66,7 +66,9 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
     $htmlMessage = hesk_getHtmlMessage($email_template, $ticket);
     $activationUrl = $hesk_settings['hesk_url'] . '/verifyemail.php?key=%%ACTIVATIONKEY%%';
     $message = str_replace('%%VERIFYURL%%', $activationUrl, $message);
+    $htmlMessage = str_replace('%%VERIFYURL%%', $activationUrl, $message);
     $message = str_replace('%%ACTIVATIONKEY%%', $activationKey, $message);
+    $htmlMessage = str_replace('%%ACTIVATIONKEY%%', $activationKey, $message);
 
     // Add Cc / Bcc recipents if needed
     $ccEmails = array();
