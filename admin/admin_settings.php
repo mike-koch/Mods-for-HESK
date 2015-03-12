@@ -102,49 +102,96 @@ if ( defined('HESK_DEMO') )
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $hesklang['installation_information']; ?></div>
             <table class="table table-striped">
-                <tr><td class="text-right">
-                    <?php echo $hesklang['v']; ?>:
+                <tr>
+                    <td class="text-right">
+                        <?php echo $hesklang['v']; ?>:
                     </td>
-                    <td style="padding-left: 10px">
-                    <?php echo $hesk_settings['hesk_version']; ?>
                     <?php
+                    $cellClass = '';
                     if ($hesk_settings['check_updates'])
                     {
                         $latest = hesk_checkVersion();
 
                         if ($latest === true)
                         {
-                            echo ' - <span style="color:green">' . $hesklang['hud'] . '</span> ';
-                        }
-                        elseif ($latest != -1)
+                            $cellClass = 'class="success"';
+                        } elseif ($latest != -1)
                         {
-                            // Is this a beta/dev version?
-                            if ( strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev')  || strpos($hesk_settings['hesk_version'], 'RC') )
+                            $cellClass = 'class="warning"';
+                        }
+                    }
+                    ?>
+                    <td style="padding-left: 10px" <?php echo $cellClass; ?>>
+                        <?php echo $hesk_settings['hesk_version']; ?>
+                        <?php
+                        if ($hesk_settings['check_updates'])
+                        {
+
+                            if ($latest === true)
                             {
-                                echo ' <span style="color:darkorange">' . $hesklang['beta'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
+                                echo ' - <span style="color:green">' . $hesklang['hud'] . '</span> ';
+                            }
+                            elseif ($latest != -1)
+                            {
+                                // Is this a beta/dev version?
+                                if ( strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev')  || strpos($hesk_settings['hesk_version'], 'RC') )
+                                {
+                                    echo ' <span style="color:darkorange">' . $hesklang['beta'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
+                                }
+                                else
+                                {
+                                    echo ' - <span style="color:darkorange;font-weight:bold">' . $hesklang['hnw'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['getup']; ?></a><?php
+                                }
                             }
                             else
                             {
-                                echo ' - <span style="color:darkorange;font-weight:bold">' . $hesklang['hnw'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['getup']; ?></a><?php
+                                ?> - <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                             }
                         }
                         else
                         {
                             ?> - <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                         }
-                    }
-                    else
-                    {
-                        ?> - <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
-                    }
-                    ?>
-                </td></tr>
+                        ?>
+                    </td>
+                </tr>
                 <tr>
                     <td class="text-right" style="padding-bottom: 5px">
                         <?php echo $hesklang['mods_for_hesk_version']; ?>:
                     </td>
-                    <td style="padding-left: 10px; padding-bottom: 5px">
+                    <?php
+                    $cellClass = '';
+                    if ($hesk_settings['check_updates'])
+                    {
+                        $latest = hesk_checkMfhVersion($modsForHeskVersion);
+                        if ($latest === true)
+                        {
+                            $cellClass = 'class="success"';
+                        } elseif ($latest != -1)
+                        {
+                            $cellClass = 'class="warning"';
+                        }
+                    }
+                    ?>
+                    <td <?php echo $cellClass; ?> style="padding-left: 10px; padding-bottom: 5px">
                         <?php echo $modsForHeskVersion; ?>
+                        <?php
+                        if ($hesk_settings['check_updates'])
+                        {
+                            if ($latest === true)
+                            {
+                                echo ' - <span style="color:green">' . $hesklang['mfh_up_to_date'] . '</span>';
+                            } else
+                            {
+                                ?> - <a href="http://mods-for-hesk.mkochcs.com" target="_blank" style="color:orange;font-weight:bold"><?php echo $hesklang['hnw']; ?></a>
+                           <?php
+                            }
+                        } else
+                        {
+                            ?> - <a href="http://mods-for-hesk.mkochcs.com?checkVersion.php?v=<?php echo $modsForHeskVersion; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a>
+                        <?php
+                        }
+                        ?>
                     </td>
                 </tr>
                 <tr><td class="text-right">
@@ -2481,16 +2528,86 @@ function hesk_getLatestVersion()
 
 } // END hesk_getLatestVersion()
 
-
 function hesk_cacheLatestVersion($latest)
 {
-	global $hesk_settings;
+    global $hesk_settings;
 
-	@file_put_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest.txt', time() . '|' . $latest);
+    @file_put_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest.txt', time() . '|' . $latest);
 
-	return $latest;
+    return $latest;
 
 } // END hesk_cacheLatestVersion()
+
+function hesk_checkMfhVersion($currentVersion)
+{
+    if ($latest = hesk_getMfhLatestVersion() )
+    {
+        if ( strlen($latest) > 12 )
+        {
+            return -1;
+        }
+        elseif ($latest == $currentVersion)
+        {
+            return true;
+        }
+        else
+        {
+            return $latest;
+        }
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+function hesk_getMfhLatestVersion()
+{
+    global $hesk_settings;
+
+    // Do we have a cached version file?
+    if ( file_exists(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest-mfh.txt') )
+    {
+        if ( preg_match('/^(\d+)\|([\d.]+)+$/', @file_get_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest-mfh.txt'), $matches) && (time() - intval($matches[1])) < 3600  )
+        {
+            return $matches[2];
+        }
+    }
+
+    // No cached file or older than 3600 seconds, try to get an update
+    $hesk_version_url = 'http://mods-for-hesk.mkochcs.com/latestversion.php';
+
+    // Try using cURL
+    if ( function_exists('curl_init') )
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $hesk_version_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
+        $latest = curl_exec($ch);
+        curl_close($ch);
+        return hesk_cacheMfhLatestVersion($latest);
+    }
+
+    // Try using a simple PHP function instead
+    if ($latest = file_get_contents($hesk_version_url) )
+    {
+        return hesk_cacheMfhLatestVersion($latest);
+    }
+
+    // Can't check automatically, will need a manual check
+    return false;
+}
+
+function hesk_cacheMfhLatestVersion($latest)
+{
+    global $hesk_settings;
+
+    @file_put_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest-mfh.txt', time() . '|' . $latest);
+
+    return $latest;
+
+}
 
 
 function hesk_testLanguage($return_options = 0)
