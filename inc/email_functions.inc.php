@@ -631,7 +631,7 @@ function hesk_getHtmlMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $jus
     }
 
     //Perform logic common between hesk_getEmailMessage and hesk_getHtmlMessage
-    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message);
+    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, true);
     return $msg;
 }
 
@@ -671,7 +671,7 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
 
 } // END hesk_getEmailMessage
 
-function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message)
+function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, $isForHtml = 0)
 {
     global $hesk_settings, $hesklang;
 
@@ -697,6 +697,11 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
 
         if ( isset($ticket['message']) )
         {
+            if ($isForHtml)
+            {
+                $htmlMessage = nl2br($ticket['message']);
+                return str_replace('%%MESSAGE%%', $htmlMessage, $msg);
+            }
             return str_replace('%%MESSAGE%%', $ticket['message'], $msg);
         }
         else
@@ -778,7 +783,14 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     if (strpos($msg, '%%MESSAGE%%') !== false)
     {
         // Replace message
-        $msg = str_replace('%%MESSAGE%%',$ticket['message'],$msg);
+        if ($isForHtml)
+        {
+            $htmlMessage = nl2br($ticket['message']);
+            $msg = str_replace('%%MESSAGE%%', $htmlMessage, $msg);
+        } else
+        {
+            $msg = str_replace('%%MESSAGE%%',$ticket['message'],$msg);
+        }
 
         // Add direct links to any attachments at the bottom of the email message
         if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) )
