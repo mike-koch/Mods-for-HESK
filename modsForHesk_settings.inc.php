@@ -32,3 +32,6 @@ $modsForHesk_settings['html_emails'] = 1;
 $modsForHesk_settings['use_mailgun'] = 0;
 $modsForHesk_settings['mailgun_api_key'] = '';
 $modsForHesk_settings['mailgun_domain'] = '';
+
+//-- Set this to 1 to enable bootstrap-theme.css
+$modsForHesk_settings['use_bootstrap_theme'] = 1;

@@ -24,6 +24,8 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 // ADDED OR MODIFIED IN Mods for HESK 2.1.0
 $hesklang['e_mfh_settings'] = 'You will not be able to save your settings unless this file is writable by the script (CHMOD to 666)!';
 $hesklang['mfh_up_to_date'] = 'Mods for HESK is up to date';
+$hesklang['use_bootstrap_theme'] = 'Use Boostrap Theme CSS';
+$hesklang['use_bootstrap_theme_help'] = 'Enable this to use the <code>bootstrap-theme.css</code> file. Use this for a more 3D look and feel, or disable it for a flatter look.';
 
 // ADDED OR MODIFIED IN Mods For HESK 2.0.0
 $hesklang['saved_ticket_tpl'] = 'Saved Templates';

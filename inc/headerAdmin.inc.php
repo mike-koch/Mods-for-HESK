@@ -50,7 +50,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
     <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" <?php if ($modsForHesk_settings['use_bootstrap_theme'] == 0) {echo 'disabled';} ?>>
     <?php if ($modsForHesk_settings['rtl']) { ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />

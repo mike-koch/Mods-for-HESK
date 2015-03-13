@@ -2094,6 +2094,21 @@ if ( defined('HESK_DEMO') )
                           </div>
                       </div>
                   </div>
+                  <div class="form-group">
+                      <label for="use_bootstrap_theme" class="col-sm-4 col-xs-12 control-label">
+                          <?php echo $hesklang['use_bootstrap_theme']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                             title="<?php echo $hesklang['use_bootstrap_theme']; ?>"
+                             data-content="<?php echo $hesklang['use_bootstrap_theme_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input id="use_boostrap_theme" name="use_bootstrap_theme" type="checkbox" <?php if ($modsForHesk_settings['use_bootstrap_theme']) {echo 'checked';} ?>> <?php echo $hesklang['use_bootstrap_theme']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
                   <div class="blankSpace"></div>
                   <h6 style="font-weight: bold"><?php echo $hesklang['tab_4']; ?></h6>
                   <div class="footerWithBorder blankSpace"></div>
