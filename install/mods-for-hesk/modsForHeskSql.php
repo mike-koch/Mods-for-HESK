@@ -216,7 +216,7 @@ function execute170FileUpdate() {
     $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
 
     //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, 'custom_field_setting') !== true)
+    if (strpos($file, 'custom_field_setting') === false)
     {
         $file .= '
 
@@ -255,7 +255,7 @@ function execute200FileUpdate() {
     $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
 
     //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, 'html_emails') !== true)
+    if (strpos($file, 'html_emails') === false)
     {
         $file .= '
 
