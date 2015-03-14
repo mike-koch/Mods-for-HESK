@@ -2,8 +2,7 @@
 require(HESK_PATH . 'hesk_settings.inc.php');
 
 function executeQuery($sql) {
-    global $hesk_last_query;
-    global $hesk_db_link;
+    global $hesk_last_query, $hesk_db_link, $hesk_settings;
     if ( function_exists('mysqli_connect') ) {
 
         if ( ! $hesk_db_link && ! hesk_dbConnect())
@@ -12,13 +11,16 @@ function executeQuery($sql) {
         }
 
         $hesk_last_query = $sql;
+        if ($hesk_settings['debug_mode']) {
+            logMessage('DEBUG', 'Executing SQL: '.$sql);
+        }
 
         if ($res = @mysqli_query($hesk_db_link, $sql))
         {
             return $res;
         } else
         {
-            print "Could not execute query: $sql. MySQL said: ".mysqli_error($hesk_db_link);
+            logMessage('ERROR', 'Could not execute query: '.$sql.' | MySQL said: '.mysqli_error($hesk_db_link));
             http_response_code(500);
             die();
         }
@@ -42,11 +44,33 @@ function executeQuery($sql) {
     }
 }
 
+function setUp() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    //-- Create the installLog table
+    executeQuery('CREATE TABLE `'.hesk_dbEscape($hesk_settings).'installLog` (
+        `ID` INT NOT NULL AUTO_INCREMENT,
+        `dt` DATETIME NOT NULL,
+        `Severity` VARCHAR(10) NOT NULL,
+        `Message` VARCHAR(500) NOT NULL)');
+
+    logMessage('INFO', 'Created the database table for installation logging');
+}
+
+function logMessage($severity, $message) {
+    global $hesk_settings;
+
+    executeQuery('INSERT INTO `'.hesk_dbEscape($hesk_settings).'installLog` (`dt`, `Severity`, `Message`) VALUES
+        (NOW(), '.hesk_dbEscape($severity).', '.hesk_dbEscape($message).')');
+}
+
 // Version 1.0.0 - <1.4.0
 function executePre140Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('INFO', 'Starting v1.0.0 - pre-v1.4.0 update scripts');
     //-- Need to do this since we are no longer restricted on IDs and we want an INT for proper INNER JOINs
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `status_int` INT NOT NULL DEFAULT 0 AFTER `status`;");
 
@@ -92,6 +116,8 @@ function executePre140Scripts() {
     executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (ID, ShortNameContentKey, TicketViewContentKey, TextColor, IsNewTicketStatus, IsClosed, IsClosedByClient, IsCustomerReplyStatus,
 		IsStaffClosedOption, IsStaffReopenedStatus, IsDefaultStaffReplyStatus, LockedTicketStatus)
 	VALUES (5, 'on_hold', 'on_hold', '#000000', 0, 0, 0, 0, 0, 0, 0, 0);");
+
+    logMessage('SUCCESS', 'v1.0.0 to v1.4.0 scripts executed with no errors');
 }
 
 // Version 1.4.0
@@ -99,12 +125,15 @@ function execute140Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('INFO', 'Starting v1.4.0 update scripts');
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `autorefresh` BIGINT NOT NULL DEFAULT 0 AFTER `replies`;");
 
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_ips` (
 	  `ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	  `RangeStart` VARCHAR(100) NOT NULL,
 	  `RangeEnd` VARCHAR(100) NOT NULL)");
+
+    logMessage('SUCCESS', 'v1.4.0 scripts executed with no errors');
 }
 
 // Version 1.4.1
@@ -112,8 +141,11 @@ function execute141Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('INFO', 'Starting v1.4.1 update scripts');
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Email VARCHAR(100) NOT NULL);");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `parent` MEDIUMINT(8) NULL AFTER `custom20`;");
+
+    logMessage('SUCCESS', 'v1.4.1 scripts executed with no errors');
 }
 
 // Version 1.5.0
@@ -121,9 +153,12 @@ function execute150Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('INFO', 'Starting v1.5.0 update scripts');
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `active` ENUM('0', '1') NOT NULL DEFAULT '1'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `can_manage_settings` ENUM('0', '1') NOT NULL DEFAULT '1'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `default_notify_customer_email` ENUM ('0', '1') NOT NULL DEFAULT '1'");
+
+    logMessage('SUCCESS', 'v1.5.0 scripts executed with no errors');
 }
 
 // Version 1.6.0
@@ -131,6 +166,7 @@ function execute160Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('INFO', 'Starting v1.6.0 update scripts');
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `notify_note_unassigned` ENUM('0', '1') NOT NULL DEFAULT '0'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `can_change_notification_settings` ENUM('0', '1') NOT NULL DEFAULT '1'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` ADD COLUMN `edit_date` DATETIME NULL");
@@ -139,6 +175,8 @@ function execute160Scripts() {
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` MODIFY COLUMN `ticket_id` VARCHAR(13) NULL");
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key` NVARCHAR(200) NOT NULL, `Value` NVARCHAR(200) NOT NULL)");
     executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`) VALUES ('modsForHeskVersion', '1.6.0')");
+
+    logMessage('SUCCESS', 'v1.6.0 scripts executed with no errors');
 }
 
 // Version 1.6.1
@@ -146,7 +184,10 @@ function execute161Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('INFO', 'Starting v1.6.1 update scripts');
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '1.6.1' WHERE `Key` = 'modsForHeskVersion'");
+
+    logMessage('SUCCESS', 'v1.6.1 scripts executed with no errors');
 }
 
 // BEGIN Version 1.7.0
@@ -154,6 +195,7 @@ function execute170Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('INFO', 'Starting v1.7.0 update scripts');
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."verified_emails` (`Email` VARCHAR(255) NOT NULL)");
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email` VARCHAR(255) NOT NULL, `ActivationKey` VARCHAR(500) NOT NULL)");
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` (
@@ -208,16 +250,19 @@ function execute170Scripts() {
       KEY `owner` (`owner`)
     )");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '1.7.0' WHERE `Key` = 'modsForHeskVersion'");
+
+    logMessage('SUCCESS', 'v1.7.0 scripts executed with no errors');
 }
 
 function execute170FileUpdate() {
-
     //-- Add the new custom field property to modsForHesk_settings.inc.php
     $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
 
     //-- Only add the additional settings if they aren't already there.
     if (strpos($file, 'custom_field_setting') !== true)
     {
+        hesk_dbConnect();
+        logMessage('INFO', 'Updating modsForHesk_settings.inc.php for v1.7.0');
         $file .= '
 
         //-- Set this to 1 to enable custom field names as keys
@@ -236,6 +281,7 @@ function execute200Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('INFO', 'Starting v2.0.0 update scripts');
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` DROP COLUMN `note_id`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` DROP COLUMN `edit_date`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` DROP COLUMN `number_of_edits`");
@@ -248,6 +294,8 @@ function execute200Scripts() {
         //-- Add the key
         executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD KEY `statuses` (`status`)");
     }
+
+    logMessage('SUCCESS', 'v2.0.0 scripts executed with no errors');
 }
 
 function execute200FileUpdate() {
@@ -257,6 +305,8 @@ function execute200FileUpdate() {
     //-- Only add the additional settings if they aren't already there.
     if (strpos($file, 'html_emails') !== true)
     {
+        hesk_dbConnect();
+        logMessage('INFO', 'Updating modsForHesk_settings.inc.php for v2.0.0');
         $file .= '
 
         //-- Set this to 1 to enable HTML-formatted emails.
@@ -275,6 +325,7 @@ function checkForIpOrEmailBans() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('INFO', 'Checking to see if IP / email bans need to be migrated from Mods for HESK to HESK');
     $banRS = executeQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails`
                         UNION ALL SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_ips`");
 
@@ -285,6 +336,7 @@ function getUsers() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    logMessage('WARNING', 'IP/Email bans from Mods for HESK detected. Follow the instructions above to continue.');
     $users = array();
     $usersRS = executeQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `active` = '1' ORDER BY `name`");
     while ($row = hesk_dbFetchAssoc($usersRS)) {
@@ -298,7 +350,7 @@ function migrateBans($creator) {
     global $hesk_settings;
 
     hesk_dbConnect();
-
+    logMessage('INFO', 'Migrating bans');
     // Insert the email bans
     $emailBanRS = executeQuery("SELECT `Email` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails`");
     while ($row = hesk_dbFetchAssoc($emailBanRS)) {
@@ -315,17 +367,68 @@ function migrateBans($creator) {
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."banned_ips` (`ip_from`, `ip_to`, `ip_display`, `banned_by`, `dt`)
                 VALUES (".$row['RangeStart'].", ".$row['RangeEnd'].", '".$ipDisplay."', ".$creator.", NOW())");
     }
-    // Migration Complete. Drop Tables.
+    // Migration Complete. Drop Tables
     executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_ips`");
     executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails`");
+    logMessage('INFO', 'IP/Email address bans were migrated with no errors.');
 }
 // END Version 2.0.0
 
-// BEGIN Version 2.0.1
+// Version 2.0.1
 function execute201Scripts() {
     global $hesk_settings;
     
     hesk_dbConnect();
+    logMessage('INFO', 'Starting v2.0.1 update scripts');
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.0.1' WHERE `Key` = 'modsForHeskVersion'");
+
+    logMessage('SUCCESS', 'v2.0.1 scripts executed with no errors');
 }
-// END Version 2.0.1
+
+// BEGIN Version 2.1.0
+function execute210Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    logMessage('INFO', 'Starting v2.1.0 update scripts');
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.1.0' WHERE `Key` = 'modsForHeskVersion'");
+
+    logMessage('SUCCESS', 'v2.1.0 scripts executed with no errors');
+}
+
+function execute210FileUpdate() {
+    //-- Add the new Bootstrap theme property to modsForHesk_settings.inc.php
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    //-- Only add the additional settings if they aren't already there.
+    if (strpos($file, 'use_bootstrap_theme') !== true)
+    {
+        logMessage('INFO', 'Updating modsForHesk_settings.inc.php for v2.1.0');
+        $file .= '
+
+        //-- Set this to 1 to enable bootstrap-theme.css
+        $modsForHesk_settings[\'use_bootstrap_theme\'] = 1;';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
+// END Version 2.1.0
+
+function cleanUp() {
+    global $hesk_settings;
+
+    // Export install table to install.log
+    hesk_dbConnect();
+    logMessage('INFO', 'Exporting install log');
+    $file = '';
+    $queryResult = executeQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings).'installLog` ORDER BY `ID` ASC');
+    while ($row = hesk_dbFetchAssoc($queryResult)) {
+        $file .= $row['dt'] . '  ' . $row['Severity'] . ' - ' . $row['Message'].'\n';
+    }
+    $fileName = HESK_PATH . $hesk_settings['attach_dir'] . '/install.log';
+    file_put_contents($fileName, $file);
+    logMessage('SUCCESS', 'Install log has been saved to install.log in your attachments directory (/'.$hesk_settings['attach_dir'].')');
+
+    // Drop the install table.
+    executeQuery('DROP TABLE `'.hesk_dbEscape($hesk_settings['db_pfix']).'installLog`');
+}
