@@ -27,6 +27,9 @@ if ($version == 1) {
     execute200FileUpdate();
 } elseif ($version == 201) {
     execute201Scripts();
+} elseif ($version == 210) {
+    execute210Scripts();
+    execute210FileUpdate();
 } else {
     $response = 'The version "'.$version.'" was not recognized. Check the value submitted and try again.';
     print $response;

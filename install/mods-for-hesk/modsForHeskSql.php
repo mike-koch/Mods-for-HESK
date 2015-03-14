@@ -321,11 +321,35 @@ function migrateBans($creator) {
 }
 // END Version 2.0.0
 
-// BEGIN Version 2.0.1
+// Version 2.0.1
 function execute201Scripts() {
     global $hesk_settings;
     
     hesk_dbConnect();
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.0.1' WHERE `Key` = 'modsForHeskVersion'");
 }
-// END Version 2.0.1
+
+// BEGIN Version 2.1.0
+function execute210Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.1.0' WHERE `Key` = 'modsForHeskVersion'");
+}
+
+function execute210FileUpdate() {
+    //-- Add the boostrap theme property to modsForHesk_settings.inc.php
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    //-- Only add the additional settings if they aren't already there.
+    if (strpos($file, 'use_bootstrap_theme') === false)
+    {
+        $file .= '
+
+        //-- Set this to 1 to enable bootstrap-theme.css
+        $modsForHesk_settings[\'use_bootstrap_theme\'] = 1;';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
+// END Version 2.1.0
