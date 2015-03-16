@@ -1,6 +1,5 @@
-## [Mods for HESK](http://mods-for-hesk.mkochcs.com) v2.1.0
+## [Mods for HESK](http://mods-for-hesk.mkochcs.com) [![Current Release](https://img.shields.io/github/release/mkoch227/Mods-for-HESK.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases)
 [![Stories in Ready](https://badge.waffle.io/mkoch227/Mods-For-Hesk.png?label=waffle:ready&title=Ready)](https://waffle.io/mkoch227/Mods-For-Hesk)
-[![Current Release](https://img.shields.io/github/release/mkoch227/Mods-for-HESK.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases)
 [![Current Issues](https://img.shields.io/github/issues-raw/mkoch227/Mods-for-HESK.svg)](https://www.github.com/mkoch227/Mods-for-HESK/issues)
 [![License](https://img.shields.io/badge/license-CC--A--SA-blue.svg)](https://github.com/mkoch227/Mods-for-HESK/blob/master/LICENSE)
 [![Join the chat at https://gitter.im/mkoch227/Mods-for-HESK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mkoch227/Mods-for-HESK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
