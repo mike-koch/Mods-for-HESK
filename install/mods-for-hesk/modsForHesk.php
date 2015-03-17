@@ -221,11 +221,34 @@ hesk_dbConnect();
                                 <br>
                                 <div class="row">
                                     <div class="col-sm-12">
+                                        <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#uninstallModal"><i class="fa fa-trash"></i> Uninstall Mods for HESK</button>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-sm-12">
                                         By proceeding, you agree to the terms of the <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License.</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="uninstallModal" tabindex="-1" role="dialog" aria-labelledby="uninstallModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="uninstallModalTitle"><i class="fa fa-trash"></i> Uninstall Mods for HESK</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to uninstall Mods for HESK?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-success" href="uninstallModsForHesk.php"><i class="fa fa-check"></i> Yes</a>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> No</button>
                     </div>
                 </div>
             </div>
