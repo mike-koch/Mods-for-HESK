@@ -4,7 +4,7 @@ define('HESK_PATH','../../../');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
-require('../modsForHeskSql.php');
+require('../sql/installSql.php');
 
 $task = $_POST['task'];
 if ($task == 'ip-email-bans') {

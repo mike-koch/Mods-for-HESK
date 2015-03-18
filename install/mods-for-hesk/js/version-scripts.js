@@ -39,7 +39,7 @@ function executeUpdate(version, cssclass, formattedVersion) {
     appendToInstallConsole('<tr><td><span class="label label-info">INFO</span></td><td>Starting updates for ' + formattedVersion + '</td></tr>');
     $.ajax({
         type: 'POST',
-        url: 'ajax/database-ajax.php',
+        url: 'ajax/install-database-ajax.php',
         data: { version: version },
         success: function(data) {
             markUpdateAsSuccess(cssclass, formattedVersion);
