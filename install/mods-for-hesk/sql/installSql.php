@@ -335,6 +335,10 @@ function execute210Scripts() {
 
     hesk_dbConnect();
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.1.0' WHERE `Key` = 'modsForHeskVersion'");
+
+    // Some old tables may not have been dropped during the 2.0.0 upgrade. Check and drop if necessary
+    executeQuery("DROP TABLE IF EXISTS `".hesk_dbEscape($hesk['db_pfix'])."denied_ips`");
+    executeQuery("DROP TABLE IF EXISTS `".hesk_dbEscape($hesk['db_pfix'])."denied_emails`");
 }
 
 function execute210FileUpdate() {

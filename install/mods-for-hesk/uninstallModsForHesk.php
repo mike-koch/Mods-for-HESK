@@ -16,10 +16,11 @@ function echoTaskRows() {
     printUninstallRow('Remove verified emails table', 'verified-emails-table');
     printUninstallRow('Remove pending verification emails table', 'pending-verification-emails-table');
     printUninstallRow('Remove tickets pending verification table', 'pending-verification-tickets-table');
+    printUninstallRow('Miscellaneous database cleanup changes', 'miscellaneous');
 }
 
 function printUninstallRow($text, $id) {
-    echo '<tr id="'.$id.'">';
+    echo '<tr id="row-'.$id.'">';
     echo '<td>'.$text.'</td>';
     echo '<td><i id="spinner-'.$id.'" class="fa fa-spinner"></i> <span id="span-'.$id.'">Waiting...</span></td>';
     echo '</tr>';
@@ -50,11 +51,29 @@ function printUninstallRow($text, $id) {
                 <div class="col-sm-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">Uninstallation Progress</div>
-                        <div class="uninstall-information">
+                        <div id="uninstall-information">
                             <table class="table table-striped" style="table-layout:fixed;">
                                 <thead>
                                 <?php echoTaskRows(); ?>
                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Console</div>
+                        <div style="max-height: 400px; overflow: auto;">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Severity</th>
+                                    <th>Message</th>
+                                </tr>
+                                </thead>
+                                <tbody id="consoleBody"></tbody>
                             </table>
                         </div>
                     </div>
