@@ -345,6 +345,9 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
     // Encode subject to UTF-8
     $subject = "=?UTF-8?B?" . base64_encode( hesk_html_entity_decode($subject) ) . "?=";
 
+    // Auto-generate URLs for HTML-formatted emails
+    $htmlMessage = hesk_makeURL($htmlMessage, '', false);
+
     // Setup "name <email>" for headers
     if ($hesk_settings['noreply_name'])
     {
