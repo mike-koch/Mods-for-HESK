@@ -614,6 +614,7 @@ $set['custom-field-setting'] = empty($_POST['custom-field-setting']) ? 0 : 1;
 $set['customer-email-verification-required'] = empty($_POST['email-verification']) ? 0 : 1;
 $set['html_emails'] = empty($_POST['html_emails']) ? 0 : 1;
 $set['use_bootstrap_theme'] = empty($_POST['use_bootstrap_theme']) ? 0 : 1;
+$set['new_kb_article_visibility'] = hesk_checkMinMax( intval( hesk_POST('new_kb_article_visibility') ) , 0, 2, 2);
 
 if ($set['customer-email-verification-required'])
 {
@@ -667,7 +668,10 @@ $modsForHesk_settings[\'mailgun_api_key\'] = \''.$set['mailgun_api_key'].'\';
 $modsForHesk_settings[\'mailgun_domain\'] = \''.$set['mailgun_domain'].'\';
 
 //-- Set this to 1 to enable bootstrap-theme.css
-$modsForHesk_settings[\'use_bootstrap_theme\'] = '.$set['use_bootstrap_theme'].';';
+$modsForHesk_settings[\'use_bootstrap_theme\'] = '.$set['use_bootstrap_theme'].';
+
+//-- Default value for new Knowledgebase article: 0 = Published, 1 = Private, 2 = Draft
+$modsForHesk_settings[\'new_kb_article_visibility\'] = '.$set['new_kb_article_visibility'].';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )

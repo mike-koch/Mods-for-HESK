@@ -35,3 +35,6 @@ $modsForHesk_settings['mailgun_domain'] = '';
 
 //-- Set this to 1 to enable bootstrap-theme.css
 $modsForHesk_settings['use_bootstrap_theme'] = 1;
+
+//-- Default value for new Knowledgebase article: 0 = Published, 1 = Private, 2 = Draft
+$modsForHesk_settings['new_kb_article_visibility'] = 0;

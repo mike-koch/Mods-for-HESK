@@ -2127,6 +2127,46 @@ if ( defined('HESK_DEMO') )
                           </div>
                       </div>
                   </div>
+                  <div class="blankSpace"></div>
+                  <h6 style="font-weight: bold"><?php echo $hesklang['menu_kb']; ?></h6>
+                  <div class="footerWithBorder blankSpace"></div>
+                  <div class="form-group">
+                      <label for="knowledgebase-visibility-setting" class="col-sm-4 col-xs-12 control-label">
+                          <?php echo $hesklang['new_article_default_type']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                             title="<?php echo $hesklang['new_article_default_type']; ?>"
+                             data-content="<?php echo $hesklang['new_article_default_type_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="new_kb_article_visibility" value="0" <?php echo $modsForHesk_settings['new_kb_article_visibility'] == 0 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['kb_published']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                     title="<?php echo $hesklang['kb_published']; ?>"
+                                     data-content="<?php echo $hesklang['kb_published2']; ?>"></i>
+                              </label>
+                          </div>
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="new_kb_article_visibility" value="1" <?php echo $modsForHesk_settings['new_kb_article_visibility'] == 1 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['kb_private']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                     title="<?php echo $hesklang['kb_private']; ?>"
+                                     data-content="<?php echo $hesklang['kb_private2']; ?>"></i>
+                              </label>
+                          </div>
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="new_kb_article_visibility" value="2" <?php echo $modsForHesk_settings['new_kb_article_visibility'] == 2 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['kb_draft']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                     title="<?php echo $hesklang['kb_draft']; ?>"
+                                     data-content="<?php echo $hesklang['kb_draft3']; ?>"></i>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
               </div>
               <!-- Mods For Hesk: Statuses -->
               <div class="tab-pane fade in" id="statuses">

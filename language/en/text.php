@@ -21,6 +21,12 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.2.0
+$hesklang['new_article_default_type'] = 'Default Type for New Articles';
+$hesklang['new_article_default_type_help'] = 'Choose the default type for new knowledgebase articles.';
+$hesklang['kb_draft3'] = 'The article is saved but not yet published. It can only be read by staff who has permission to
+ manage knowledgebase articles.'; // This is exactly the same as kb_draft2 with all HTML removed
+
 // ADDED OR MODIFIED IN Mods for HESK 2.1.0
 $hesklang['e_mfh_settings'] = 'You will not be able to save your settings unless this file is writable by the script (CHMOD to 666)!';
 $hesklang['mfh_up_to_date'] = 'Mods for HESK is up to date';
