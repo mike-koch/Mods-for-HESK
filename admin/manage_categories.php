@@ -112,7 +112,7 @@ else {return false;}
                     <div class="form-group">
                         <p class="col-sm-4 control-label" style="font-size: .87em"><b><?php echo $hesklang['cat_name']; ?>:</b> (<?php echo $hesklang['max_chars']; ?>)</p>
                         <div class="col-sm-8">
-                            <input class="form-control" placeholder="<?php echo $hesklang['cat_name']; ?>" type="text" name="name" size="40" maxlength="40"
+                            <input class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['cat_name']); ?>" type="text" name="name" size="40" maxlength="40"
                                 <?php
                                     if (isset($_SESSION['catname']))
                                     {
@@ -181,7 +181,7 @@ else {return false;}
                     <div class="form-group">
                         <label for="name" class="col-sm-4 control-label"><?php echo $hesklang['nen']; ?></label>
                         <div class="col-sm-8">
-                            <input class="form-control" placeholder="<?php echo $hesklang['cat_name']; ?>" type="text" name="name" size="40" maxlength="40" <?php if (isset($_SESSION['catname2'])) {echo ' value="'.hesk_input($_SESSION['catname2']).'" ';} ?> />     
+                            <input class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['cat_name']); ?>" type="text" name="name" size="40" maxlength="40" <?php if (isset($_SESSION['catname2'])) {echo ' value="'.hesk_input($_SESSION['catname2']).'" ';} ?> />
                         </div>
                     </div>
                     <div class="form-group" style="text-align: center">

@@ -379,7 +379,7 @@ function print_login()
                     }
                     else
                     {
-                        echo '<input class="form-control" type="text" name="user" size="35" placeholder="'.$hesklang['username'].'" value="'.$savedUser.'" />';
+                        echo '<input class="form-control" type="text" name="user" size="35" placeholder="'.htmlspecialchars($hesklang['username']).'" value="'.$savedUser.'" />';
                     }
                     ?>
                 </div>
@@ -387,7 +387,7 @@ function print_login()
             <?php if (in_array('pass',$_SESSION['a_iserror'])) { echo '<div class="form-group has-error">';} else { echo '<div class="form-group">';}?>
             <label for="pass" class="col-sm-4 control-label"><?php echo $hesklang['pass']; ?>:</label>
             <div class="col-sm-8">
-                <input type="password" class="form-control" id="pass" name="pass" size="35" placeholder="<?php echo $hesklang['pass']; ?>"  />
+                <input type="password" class="form-control" id="pass" name="pass" size="35" placeholder="<?php echo htmlspecialchars($hesklang['pass']); ?>"  />
             </div>
         </div>
             <?php

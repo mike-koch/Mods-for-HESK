@@ -1830,7 +1830,7 @@ function hesk_printReplyForm() {
                 <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>: <font class="important">*</font></label>
                 <div class="col-sm-9">
                     <span id="HeskMsg">
-                        <textarea class="form-control" name="message" id="message" rows="12" placeholder="<?php echo $hesklang['message']; ?>" cols="72"><?php
+                        <textarea class="form-control" name="message" id="message" rows="12" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" cols="72"><?php
 
                             // Do we have any message stored in session?
                             if ( isset($_SESSION['ticket_message']) )

@@ -293,7 +293,7 @@ function hesk_kbSearchLarge($admin = '')
 	<div style="text-align:center">
 		<form role="form" action="<?php echo $action; ?>" method="get" style="display: inline; margin: 0;" name="searchform">
 			<div class="input-group">
-				<input type="text" class="form-control" placeholder="<?php echo $hesklang['search_the_knowledgebase']; ?>" name="search">
+				<input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['search_the_knowledgebase']); ?>" name="search">
 				<span class="input-group-btn">
 					<button class="btn btn-default" type="submit" value="<?php echo $hesklang['search']; ?>" title="<?php echo $hesklang['search']; ?>"><?php echo $hesklang['search']; ?></button>
 				</span>

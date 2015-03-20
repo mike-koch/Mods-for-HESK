@@ -64,13 +64,13 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                 <div class="form-group">
                     <label for="name" class="col-md-3 control-label"><?php echo $hesklang['real_name']; ?>: <font class="important">*</font></label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" name="name" size="40" maxlength="50" value="<?php echo $_SESSION[$session_array]['name']; ?>" placeholder="<?php echo $hesklang['real_name']; ?>" />
+                        <input type="text" class="form-control" name="name" size="40" maxlength="50" value="<?php echo $_SESSION[$session_array]['name']; ?>" placeholder="<?php echo htmlspecialchars($hesklang['real_name']); ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="email" class="col-md-3 control-label"><?php echo $hesklang['email']; ?>: <font class="important">*</font></label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" name="email" size="40" maxlength="255" placeholder="<?php echo $hesklang['email']; ?>" value="<?php echo $_SESSION[$session_array]['email']; ?>" />
+                        <input type="text" class="form-control" name="email" size="40" maxlength="255" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>" value="<?php echo $_SESSION[$session_array]['email']; ?>" />
                     </div>
                 </div>
                 <?php
@@ -82,7 +82,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                         <div class="col-md-9">
                             <input type="text" class="form-control" name="user" size="40" maxlength="20"
                                    value="<?php echo $_SESSION[$session_array]['user']; ?>"
-                                   placeholder="<?php echo $hesklang['username']; ?>"/>
+                                   placeholder="<?php echo htmlspecialchars($hesklang['username']); ?>"/>
                         </div>
                     </div>
                 <?php
@@ -92,13 +92,13 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                 <div class="form-group">
                     <label for="pass" class="col-md-3 control-label"><?php echo $is_profile_page ? $hesklang['new_pass'] : $hesklang['pass']; ?>: <span class="important" style="<?php echo $passwordRequiredSpan; ?>">*</span></label>
                     <div class="col-md-9">
-                        <input type="password" class="form-control" name="newpass" autocomplete="off" size="40" placeholder="<?php echo $hesklang['pass']; ?>" value="<?php echo isset($_SESSION[$session_array]['cleanpass']) ? $_SESSION[$session_array]['cleanpass'] : ''; ?>" onkeyup="javascript:hesk_checkPassword(this.value)" />
+                        <input type="password" class="form-control" name="newpass" autocomplete="off" size="40" placeholder="<?php echo htmlspecialchars($hesklang['pass']); ?>" value="<?php echo isset($_SESSION[$session_array]['cleanpass']) ? $_SESSION[$session_array]['cleanpass'] : ''; ?>" onkeyup="javascript:hesk_checkPassword(this.value)" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="confirmPass" class="col-md-3 control-label"><?php echo $hesklang['confirm_pass']; ?>: <span class="important" style="<?php echo $passwordRequiredSpan; ?>">*</span></label>
                     <div class="col-md-9">
-                        <input type="password" name="newpass2" class="form-control" autocomplete="off" placeholder="<?php echo $hesklang['confirm_pass']; ?>" size="40" value="<?php echo isset($_SESSION[$session_array]['cleanpass']) ? $_SESSION[$session_array]['cleanpass'] : ''; ?>" />
+                        <input type="password" name="newpass2" class="form-control" autocomplete="off" placeholder="<?php echo htmlspecialchars($hesklang['confirm_pass']); ?>" size="40" value="<?php echo isset($_SESSION[$session_array]['cleanpass']) ? $_SESSION[$session_array]['cleanpass'] : ''; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -210,7 +210,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                     <label for="signature" class="col-md-3 control-label"><?php echo $hesklang['signature_max']; ?>:</label>
 
                     <div class="col-md-9">
-                        <textarea class="form-control" name="signature" rows="6" placeholder="<?php echo $hesklang['sig']; ?>" cols="40"><?php echo $_SESSION[$session_array]['signature']; ?></textarea>
+                        <textarea class="form-control" name="signature" rows="6" placeholder="<?php echo htmlspecialchars($hesklang['sig']); ?>" cols="40"><?php echo $_SESSION[$session_array]['signature']; ?></textarea>
                         <?php echo $hesklang['sign_extra']; ?>
                     </div>
                 </div>

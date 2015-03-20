@@ -294,7 +294,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             <div class="form-group <?php echo in_array('email',$_SESSION['a_iserror']) ? 'has-error' : ''; ?>">
                 <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
                 <div class="col-sm-9">
-                    <input type="text" name="email" size="35" value="<?php if (isset($email)) {echo stripslashes(hesk_input($email));} ?>" class="form-control" placeholder="<?php echo $hesklang['email']; ?>">
+                    <input type="text" name="email" size="35" value="<?php if (isset($email)) {echo stripslashes(hesk_input($email));} ?>" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>">
                 </div>
             </div>
             <?php

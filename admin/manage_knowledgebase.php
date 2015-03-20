@@ -398,7 +398,7 @@ if (!isset($_SESSION['hide']['new_article']))
                 </span>
                 <div class="form-group">
                     <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
-                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['kb_subject']; ?>" name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> />
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> />
                 </div>
                 <p><textarea class="form-control" name="content" rows="25" cols="70" id="content"><?php if (isset($_SESSION['new_article']['content'])) {echo $_SESSION['new_article']['content'];} ?></textarea></p>
             </div>
@@ -1399,9 +1399,9 @@ function edit_article()
                 </span>
                 <div class="form-group">
                     <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
-                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['kb_subject']; ?>" name="subject" size="70" maxlength="255" value="<?php echo $article['subject']; ?>" />
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" name="subject" size="70" maxlength="255" value="<?php echo $article['subject']; ?>" />
                 </div>
-                <textarea name="content" class="form-control" placeholder="<?php echo $hesklang['kb_content']; ?>" rows="25" cols="70" id="content"><?php echo $article['content']; ?></textarea>
+                <textarea name="content" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_content']); ?>" rows="25" cols="70" id="content"><?php echo $article['content']; ?></textarea>
             </div>
             <div class="col-md-3">
                 <div class="panel panel-default" style="margin-right:10px">
@@ -1409,7 +1409,7 @@ function edit_article()
                         <div class="form-group">
                             <label for="keywords" class="control-label"><?php echo $hesklang['kw']; ?></label>
                             <p style="font-size: .9em" class="form-control-static"><?php echo $hesklang['kw1']; ?></p><br>
-                            <textarea name="keywords" class="form-control" placeholder="<?php echo $hesklang['kw']; ?>" rows="3" cols="70" id="keywords"><?php echo $article['keywords']; ?></textarea>
+                            <textarea name="keywords" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kw']); ?>" rows="3" cols="70" id="keywords"><?php echo $article['keywords']; ?></textarea>
                         </div>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>

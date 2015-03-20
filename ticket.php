@@ -468,7 +468,7 @@ function print_form()
             <div class="form-group">
                 <label for="track" class="col-sm-3 control-label"><?php echo $hesklang['ticket_trackID']; ?></label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" name="track" id="track" maxlength="20" size="35" value="<?php echo $trackingID; ?>" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
+                    <input type="text" class="form-control" name="track" id="track" maxlength="20" size="35" value="<?php echo $trackingID; ?>" placeholder="<?php echo htmlspecialchars($hesklang['ticket_trackID']); ?>">
                 </div>
             </div>
             <?php
@@ -480,7 +480,7 @@ function print_form()
             <div class="form-group">
                 <label for="e" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" id="e" name="e" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>" />
+                    <input type="text" class="form-control" id="e" name="e" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>" />
                 </div>
             </div>
             <div align="left" class="form-group">
@@ -509,7 +509,7 @@ function print_form()
                 <div class="form-group">
                     <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
                     <div class="col-sm-9">
-                        <input type="text" id="email" class="form-control" name="email" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/><input type="hidden" name="a" value="forgot_tid" />
+                        <input type="text" id="email" class="form-control" name="email" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/><input type="hidden" name="a" value="forgot_tid" />
                     </div>
                 </div>
                 <div class="form-group">

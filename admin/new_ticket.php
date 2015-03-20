@@ -180,7 +180,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <input type="text" class="form-control" name="name" size="40" maxlength="30"
                                value="<?php if (isset($_SESSION['as_name'])) {echo stripslashes(hesk_input($_SESSION['as_name']));}
                                    else if (isset($_GET['name'])) {echo hesk_GET('name');} ?>"
-                               placeholder="<?php echo $hesklang['name']; ?>">
+                               placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>">
                     </div>
                 </div>
                 <div class="form-group">
@@ -189,7 +189,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <input type="text" class="form-control" name="email" size="40" maxlength="1000" id="email-input"
                                value="<?php if (isset($_SESSION['as_email'])) {echo stripslashes(hesk_input($_SESSION['as_email']));}
                                    else if (isset($_GET['email'])) {echo hesk_GET('email');} ?>" <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(1)"'; } ?>
-                               placeholder="<?php echo $hesklang['email']; ?>"
+                               placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
                                onkeyup="disableIfEmpty('email-input','notify-email')">
                     </div>
                 
@@ -442,7 +442,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
@@ -462,7 +462,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="form-group">
                                     <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40"
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
                                         <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
@@ -489,7 +489,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                 echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
                                 </div>';
 
                                 break;
@@ -509,7 +509,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
                                 </div>';
 	                    }
 	                }
@@ -642,13 +642,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <?php if (in_array('subject',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} else {echo '<div class="form-group">';} ?>
                     <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>: <font class="important">*</font></label>
                     <div class="col-sm-9">
-                        <span id="HeskSub"><input class="form-control" type="text" name="subject" id="subject" size="40" maxlength="40" value="<?php if (isset($_SESSION['as_subject']) || isset($_GET['subject'])) {echo stripslashes(hesk_input($_SESSION['as_subject']));} ?>" placeholder="<?php echo $hesklang['subject']; ?>" /></span>
+                        <span id="HeskSub"><input class="form-control" type="text" name="subject" id="subject" size="40" maxlength="40" value="<?php if (isset($_SESSION['as_subject']) || isset($_GET['subject'])) {echo stripslashes(hesk_input($_SESSION['as_subject']));} ?>" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>" /></span>
                     </div>         
                 </div>
                 <?php if (in_array('message',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} else {echo '<div class="form-group">';} ?>
                     <div class="col-sm-12">
                         <span id="HeskMsg">
-                            <textarea class="form-control" name="message" id="message" rows="12" cols="60" placeholder="<?php echo $hesklang['message']; ?>" ><?php if (isset($_SESSION['as_message'])) {echo stripslashes(hesk_input($_SESSION['as_message']));} ?></textarea>
+                            <textarea class="form-control" name="message" id="message" rows="12" cols="60" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" ><?php if (isset($_SESSION['as_message'])) {echo stripslashes(hesk_input($_SESSION['as_message']));} ?></textarea>
                         </span>
                     </div>
                 </div>
@@ -804,7 +804,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
@@ -824,7 +824,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="form-group">
                                     <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40"
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
                                         <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
@@ -886,7 +886,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                 echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
                                 </div>';
 
                                 break;
@@ -906,7 +906,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
                                 </div>';
 	                    }
 	                }

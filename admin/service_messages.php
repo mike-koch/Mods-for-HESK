@@ -356,7 +356,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group">
                             <label for="title" class="col-md-2 control-label"><?php echo $hesklang['sm_mtitle']; ?></label>
                             <div class="col-md-10">
-                                <input class="form-control" placeholder="<?php echo $hesklang['sm_mtitle']; ?>"
+                                <input class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['sm_mtitle']); ?>"
                                        type="text" name="title" size="70" maxlength="255"
                                     <?php if (isset($_SESSION['new_sm']['title'])) {echo 'value="'.$_SESSION['new_sm']['title'].'"';} ?>>
                             </div>
@@ -364,7 +364,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group">
                             <label for="message" class="col-md-2 control-label"><?php echo $hesklang['sm_msg']; ?></label>
                             <div class="col-md-10">
-                                <textarea placeholder="<?php echo $hesklang['sm_msg']; ?>" class="form-control" name="message" rows="25" cols="70" id="content">
+                                <textarea placeholder="<?php echo htmlspecialchars($hesklang['sm_msg']); ?>" class="form-control" name="message" rows="25" cols="70" id="content">
                                     <?php if (isset($_SESSION['new_sm']['message'])) {echo $_SESSION['new_sm']['message'];} ?>
                                 </textarea>
                             </div>

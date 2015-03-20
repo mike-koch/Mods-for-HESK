@@ -111,7 +111,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div class="form-group">
                         <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['bananemail']; ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="email" size="30" maxlength="255" placeholder="<?php echo $hesklang['email']; ?>">
+                            <input type="text" class="form-control" name="email" size="30" maxlength="255" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>">
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                             <input type="hidden" name="a" value="ban" />
                         </div>

@@ -688,7 +688,7 @@ function show_new_form()
         <div class="form-group">
             <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['m_sub']; ?></label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" placeholder="<?php echo $hesklang['subject']; ?>" name="subject" size="40" maxlength="50"
+                <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>" name="subject" size="40" maxlength="50"
 				<?php
 				if (isset($_SESSION['mail']['subject']))
 				{
@@ -701,7 +701,7 @@ function show_new_form()
         <div class="form-group">
             <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
             <div class="col-sm-9">
-                <textarea name="message" class="form-control" placeholder="<?php echo $hesklang['message']; ?>" rows="15" cols="70"><?php
+                <textarea name="message" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" rows="15" cols="70"><?php
                 if (isset($_SESSION['mail']['message']))
                 {
                     echo stripslashes($_SESSION['mail']['message']);
