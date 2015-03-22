@@ -37,7 +37,7 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 /*** FUNCTIONS ***/
 
-function hesk_newTicket($ticket)
+function hesk_newTicket($ticket, $isVerified = true)
 {
 	global $hesk_settings, $hesklang, $hesk_db_link;
 
@@ -52,10 +52,11 @@ function hesk_newTicket($ticket)
     $defaultNewTicketRs = hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsNewTicketStatus` = 1");
     $defaultNewTicket = hesk_dbFetchAssoc($defaultNewTicketRs);
     $ticket['status'] = $defaultNewTicket['ID'];
+    $tableName = $isVerified ? 'tickets' : 'stage_tickets';
 
 	// Insert ticket into database
 	hesk_dbQuery("
-	INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets`
+	INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix']).$tableName."`
 	(
 		`trackid`,
 		`name`,
