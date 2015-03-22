@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.1 from 26th February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -525,8 +525,8 @@ if (isset($_GET['w']))
 		}
 
 		$ticket['archive'] = !($ticket['archive']) ? $hesklang['no'] : $hesklang['yes'];
-		$ticket['message'] = hesk_msgToPlain($ticket['message'], 1);
-        $ticket['subject'] = hesk_msgToPlain($ticket['subject'], 1);
+        $ticket['message'] = hesk_msgToPlain($ticket['message'], 1, 0);
+        $ticket['subject'] = hesk_msgToPlain($ticket['subject'], 1, 0);
         $ticket['owner'] = isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] : '';
         $ticket['category'] = isset($my_cat[$ticket['category']]) ? $my_cat[$ticket['category']] : '';
         
@@ -556,7 +556,7 @@ if (isset($_GET['w']))
 		{
 			if ($v['use'])
 			{
-				$tmp .= '<Cell><Data ss:Type="String"><![CDATA['.hesk_msgToPlain($ticket[$k], 1).']]></Data></Cell>  ' . "\n";
+                $tmp .= '<Cell><Data ss:Type="String"><![CDATA['.hesk_msgToPlain($ticket[$k], 1, 0).']]></Data></Cell>  ' . "\n";
 			}
 		}
 
