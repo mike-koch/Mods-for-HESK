@@ -391,6 +391,6 @@ button.dropdown-submit {
 .file-attachment > img {
     margin: -15px;
     height: 100px;
-    max-width: 173.391px
+    max-width: 173.391px;
     cursor: pointer;
 }
