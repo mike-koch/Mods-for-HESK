@@ -196,7 +196,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                                 }
                                 ?>
                                 <div class="checkbox">
-                                    <label><input type="checkbox" name="can_change_notification_settings" checked> <?php echo $hesklang['can_change_notification_settings']; ?> </label>
+                                    <label><input type="checkbox" name="can_change_notification_settings" <?php if (!isset($_SESSION[$session_array]['can_change_notification_settings']) || $_SESSION[$session_array]['can_change_notification_settings']) { echo 'checked'; } ?>> <?php echo $hesklang['can_change_notification_settings']; ?> </label>
                                 </div>
                             </div>
                         </div>
