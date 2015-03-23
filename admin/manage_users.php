@@ -577,7 +577,8 @@ function new_user()
         `notify_assigned`,
         `notify_pm`,
         `notify_note`,
-        `notify_note_unassigned`) VALUES (
+        `notify_note_unassigned`,
+        `autorefresh`) VALUES (
 	'".hesk_dbEscape($myuser['user'])."',
 	'".hesk_dbEscape($myuser['pass'])."',
 	'".intval($myuser['isadmin'])."',
@@ -601,8 +602,8 @@ function new_user()
 	'".($myuser['notify_assigned'])."' ,
 	'".($myuser['notify_pm'])."',
 	'".($myuser['notify_note'])."',
-	'".($myuser['notify_note_unassigned'])."'
-	)" );
+	'".($myuser['notify_note_unassigned'])."',
+	".intval($myuser['autorefresh']).")" );
 
     $_SESSION['seluser'] = hesk_dbInsertID();
 
@@ -707,7 +708,8 @@ function update_user()
 	`notify_assigned`='".($myuser['notify_assigned'])."' ,
 	`notify_pm`='".($myuser['notify_pm'])."',
 	`notify_note`='".($myuser['notify_note'])."',
-	`notify_note_unassigned`='".($myuser['notify_note_unassigned'])."'
+	`notify_note_unassigned`='".($myuser['notify_note_unassigned'])."',
+	`autorefresh`=".intval($myuser['autorefresh'])."
     WHERE `id`='".intval($myuser['id'])."' LIMIT 1");
 
     unset($_SESSION['save_userdata']);
@@ -820,6 +822,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     {
     	$myuser['afterreply'] = 0;
     }
+    $myuser['autorefresh'] = intval(hesk_POST('autorefresh'));
 
     // Defaults
     $myuser['autostart']				= isset($_POST['autostart']) ? 1 : 0;
