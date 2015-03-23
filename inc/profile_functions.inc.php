@@ -111,7 +111,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                     </div>
                 </div>
                 <?php
-                if ( ! $is_profile_page && $hesk_settings['autoassign']) {
+                if (!$is_profile_page) {
                     ?>
                     <div class="blankSpace"></div>
                     <div class="form-group">
