@@ -1892,13 +1892,23 @@ function hesk_printReplyForm() {
                    $staffClosedOptionStatus['ID'] = $statusRow['ID'];
 
 	                ?>
-	                <div class="form-inline"><label><input type="checkbox" name="set_priority" value="1" /> <?php echo $hesklang['change_priority']; ?> </label>
-	                <select class="form-control" name="priority">
-	                <?php echo implode('',$options); ?>
-	                </select></div><br />
-	                <label><input type="checkbox" name="signature" value="1" checked="checked" /> <?php echo $hesklang['attach_sign']; ?></label>
-	                (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)<br />
-                    <label><input type="checkbox" name="no_notify" value="1" <?php echo ($_SESSION['notify_customer_reply'] && !empty($ticket['email'])) ? '' : 'checked="checked" '; ?> <?php if (empty($ticket['email'])) { echo 'disabled'; } ?>> <?php echo $hesklang['dsen']; ?></label><br/><br/>
+	                <div class="form-inline">
+                        <label>
+                            <input type="checkbox" name="set_priority" value="1" /> <?php echo $hesklang['change_priority']; ?>
+                        </label>
+	                    <select class="form-control" name="priority">
+	                        <?php echo implode('',$options); ?>
+	                    </select>
+                    </div>
+                    <br />
+	                <label>
+                        <input type="checkbox" name="signature" value="1" checked="checked" /> <?php echo $hesklang['attach_sign']; ?>
+                    </label>
+	                (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)
+                    <br />
+                    <label>
+                        <input type="checkbox" name="no_notify" value="1" <?php echo ($_SESSION['notify_customer_reply'] && !empty($ticket['email'])) ? '' : 'checked="checked" '; ?> <?php if (empty($ticket['email'])) { echo 'disabled'; } ?>> <?php echo $hesklang['dsen']; ?>
+                    </label><br/><br/>
                     <?php if (empty($ticket['email'])) {
                         echo '<input type="hidden" name="no_notify" value="1">';
                     } ?>
@@ -1936,9 +1946,8 @@ function hesk_printReplyForm() {
                         </ul>
                     </div>
                     <input class="btn btn-default" type="submit" name="save_reply" value="<?php echo $hesklang['sacl']; ?>"
-   
                 </div>
-            </div>
+            </div></div>
         </form>
 
 <!-- END REPLY FORM -->
