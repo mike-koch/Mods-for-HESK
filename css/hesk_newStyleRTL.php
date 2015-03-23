@@ -382,9 +382,8 @@ color: #ddd;
 text-shadow: 2px 2px #ccc;
 }
 
-.file-attachment > img {
+.attachment-image {
 margin: -15px;
-height: 100px;
-max-width: 173.391px;
+display:inline-block;
 cursor: pointer;
 }

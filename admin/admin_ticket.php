@@ -1389,7 +1389,7 @@ function hesk_listAttachments($attachments='', $reply=0, $white=1)
                     if ($path == '') {
                         echo '<i class="fa fa-ban fa-4x"></i>';
                     } else {
-                        echo '<img src="'.$path.'" alt="'.$hesklang['image'].'" data-toggle="modal" data-target="#modal-attachment-'.$att_id.'">';
+                        echo '<img class="img-responsive attachment-image" src="'.$path.'" alt="'.$hesklang['image'].'" data-toggle="modal" data-target="#modal-attachment-'.$att_id.'">';
                         echo '<div class="modal fade" id="modal-attachment-'.$att_id.'" tabindex="-1" role="dialog" aria-hidden="true">
                                   <div class="modal-dialog">
                                       <div class="modal-content">
