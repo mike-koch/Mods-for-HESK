@@ -376,20 +376,17 @@ button.dropdown-submit {
     border:none;
 }
 
-.file-attachment {
-    min-height: 100px;
-    max-height: 100px;
-    text-align: center;
-}
-
-.file-attachment > i {
-    padding-top: 10px;
+.attachment-table > tbody > tr > td > i {
     color: #ddd;
     text-shadow: 2px 2px #ccc;
 }
 
-.attachment-image {
-    margin: -15px;
-    display:inline-block;
+.attachment-table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.attachment-table > tbody > tr > td > span > img {
+    max-height: 80px;
+    max-width: 80px;
     cursor: pointer;
 }

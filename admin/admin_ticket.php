@@ -1355,41 +1355,33 @@ function hesk_listAttachments($attachments='', $reply=0, $white=1)
     	return false;
     }
 
-    /* Style and mousover/mousout */
-    $tmp = $white ? 'White' : 'Blue';
-    $style = 'class="option'.$tmp.'OFF" onmouseover="this.className=\'option'.$tmp.'ON\'" onmouseout="this.className=\'option'.$tmp.'OFF\'"';
-
 	/* List attachments */
-	echo '<p><b>'.$hesklang['attachments'].':</b><br />';
+	echo '<p><b>'.$hesklang['attachments'].':</b></p><br />';
 	$att=explode(',',substr($attachments, 0, -1));
-    $columnNumber = 0;
-    echo '<div class="row">';
+    echo '<div class="table-responsive">';
+    echo '<table class="table table-striped attachment-table">';
+    echo '<thead><tr><th>&nbsp;</th><th>'.$hesklang['file_name'].'</th><th>'.$hesklang['action'].'</th></tr></thead>';
+    echo '<tbody>';
 	foreach ($att as $myatt)
 	{
-        $columnNumber++;
-        if ($columnNumber > 4)
-        {
-            echo '</div><div class="row">';
-            $columnNumber = 1;
-        }
-		list($att_id, $att_name) = explode('#', $myatt);
 
-        echo '<div class="col-md-3 col-sm-6 col-xs-12">';
-
+        list($att_id, $att_name) = explode('#', $myatt);
         $fileparts = pathinfo($att_name);
         $fontAwesomeIcon = hesk_getFontAwesomeIconForFileExtension($fileparts['extension']);
         echo '
-        <div class="panel panel-default file-attachment-panel">
-            <div class="panel-body file-attachment">';
+        <tr>
+            <td>';
                 //-- File is an image
                 if ($fontAwesomeIcon == 'fa fa-file-image-o') {
 
                     //-- Get the actual image location and display a thumbnail. It will be linked to a modal to view a larger size.
                     $path = hesk_getSavedNameUrlForAttachment($att_id);
                     if ($path == '') {
-                        echo '<i class="fa fa-ban fa-4x"></i>';
+                        echo '<i class="fa fa-ban fa-4x" data-toggle="tooltip" title="'.$hesklang['attachment_removed'].'"></i>';
                     } else {
-                        echo '<img class="img-responsive attachment-image" src="'.$path.'" alt="'.$hesklang['image'].'" data-toggle="modal" data-target="#modal-attachment-'.$att_id.'">';
+                        echo '<span data-toggle="tooltip" title="'.$hesklang['click_to_preview'].'">
+                                  <img src="'.$path.'" alt="'.$hesklang['image'].'" data-toggle="modal" data-target="#modal-attachment-'.$att_id.'">
+                              </span>';
                         echo '<div class="modal fade" id="modal-attachment-'.$att_id.'" tabindex="-1" role="dialog" aria-hidden="true">
                                   <div class="modal-dialog">
                                       <div class="modal-content">
@@ -1412,25 +1404,28 @@ function hesk_listAttachments($attachments='', $reply=0, $white=1)
                     //-- Display the FontAwesome icon in the panel's body
                     echo '<i class="'.$fontAwesomeIcon.' fa-4x"></i>';
                 }
-            echo '</div>
-            <div class="panel-footer">
+        echo'
+            </td>
+            <td>
+                <p>'.$att_name.'</p>
+            </td>
+            <td>
                 <div class="btn-group">';
                 /* Can edit and delete tickets? */
                 if ($can_edit && $can_delete)
                 {
                     echo '<a class="btn btn-danger" href="admin_ticket.php?delatt='.$att_id.'&amp;reply='.$reply.'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delete'].'"><i class="fa fa-times"></i></a> ';
                 }
-                echo '
-                <a class="btn btn-success" href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['dnl'].'"><i class="fa fa-arrow-down"></i></a>
-                </div>
-                <p><br>'.$att_name.'</p>
-                ';
-            echo '</div>
-        </div>
+                echo '<a class="btn btn-success" href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'"
+                        data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['dnl'].'">
+                            <i class="fa fa-arrow-down"></i>
+                      </a>';
+        echo   '</div>
+            </td>
+        </tr>
         ';
-        echo '</div>';
 	}
-    echo '</div>';
+    echo '</tbody></table></div>';
 
     return true;
 } // End hesk_listAttachments()
