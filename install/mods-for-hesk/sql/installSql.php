@@ -379,3 +379,20 @@ function execute211Scripts() {
 					ADD INDEX(`dt`)");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.1.1' WHERE `Key` = 'modsForHeskVersion'");
 }
+
+function execute211FileUpdate() {
+    //-- Add the boostrap theme property to modsForHesk_settings.inc.php
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    //-- Only add the additional settings if they aren't already there.
+    if (strpos($file, 'new_kb_article_visibility') === false)
+    {
+        $file .= '
+        
+        //-- Default value for new Knowledgebase article: 0 = Published, 1 = Private, 2 = Draft
+$modsForHesk_settings[\'new_kb_article_visibility\'] = 0;';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
+// END Version 2.1.1
