@@ -40,6 +40,9 @@ function echoInitialVersionRows($version) {
     if ($version < 210) {
         printRow('v2.1.0');
     }
+    if ($version < 211) {
+        printRow('v2.1.1');
+    }
 }
 
 function printRow($version) {
