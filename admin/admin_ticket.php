@@ -1016,7 +1016,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="col-md-12 alert-warning">
                     <div class="row" style="padding-top: 10px; padding-bottom: 10px">
                         <div class="col-md-8">
-                            <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt']); ?></p>
+                            <p><i><?php echo $hesklang['noteby']; ?> <b><?php echo ($note['name'] ? $note['name'] : $hesklang['e_udel']); ?></b></i> - <?php echo hesk_date($note['dt'], true); ?></p>
                             <?php
                             // Message
                             echo $note['message'];
