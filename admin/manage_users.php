@@ -634,7 +634,7 @@ function update_user()
 	$myuser = hesk_validateUserInfo(0,$_SERVER['PHP_SELF']);
     $myuser['id'] = $tmp;
 
-    /* Only active users can be assigned tickets */
+    /* Only active users can be assigned tickets. Also turn off all notifications */
     if (!$myuser['active']) {
         $myuser['autoassign'] = 0;
         $myuser['notify_new_unassigned'] = 0;
@@ -955,12 +955,15 @@ function toggle_active()
     {
         $active = 1;
         $tmp = $hesklang['user_activated'];
+        $notificationSql = "";
     } else
     {
         $active = 0;
         $tmp = $hesklang['user_deactivated'];
+        $notificationSql = ", `autoassign` = 0, `notify_new_unassigned` = 0, `notify_new_my` = 0, `notify_reply_unassigned` = 0,
+        `notify_reply_my` = 0, `notify_assigned` = 0, `notify_pm` = 0, `notify_note` = 0, `notify_note_unassigned` = 0";
     }
-    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `active` = '".$active."' WHERE `id` = '".intval($myuser)."'");
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `active` = '".$active."'".$notificationSql." WHERE `id` = '".intval($myuser)."'");
 
     if (hesk_dbAffectedRows() != 1) {
         hesk_process_messages($hesklang['int_error'].': '.$hesklang['user_not_found'],'./manage_users.php');
