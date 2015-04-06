@@ -57,7 +57,7 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 ?>
-
+<div class="row">
 <div class="col-md-10 col-md-offset-1" style="margin-top: 20px">
     <?php
     /* This will handle error, success and notice messages */
@@ -75,17 +75,20 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         /* Update staff default settings? */
         if ( ! empty($_GET['def']))
         {
-	        hesk_updateStaffDefaults();
+            hesk_updateStaffDefaults();
         }
-    
+
         /* Print forms for listing and searching tickets */
         require_once(HESK_PATH . 'inc/show_search_form.inc.php');
-
-        /* Print footer */
-        require_once(HESK_PATH . 'inc/footer.inc.php');
-        exit();
-
     ?>
 </div>
+</div>
+<?php
+
+
+/* Print footer */
+require_once(HESK_PATH . 'inc/footer.inc.php');
+exit();
+?>
 
 
