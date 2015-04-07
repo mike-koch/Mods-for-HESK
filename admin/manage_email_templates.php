@@ -1,36 +1,4 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.2 from 18th March 2015
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
-
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
-
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
-
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
-
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
 
 define('IN_SCRIPT',1);
 define('HESK_PATH','../');
@@ -88,14 +56,73 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     </ul>
     <div class="tab-content summaryList tabPadding">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-12">
                 <br><br>
                 <?php
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
+
+                // Output list of templates, and provide links to edit the plaintext and HTML versions for each language
+                // First get list of languages
+                $languages = array();
+                foreach ($hesk_settings['languages'] as $key => $value) {
+                    $languages[$key] = $hesk_settings['languages'][$key]['folder'];
+                }
+
+                // Get all files, but don't worry about index.htm, .., ., or the html folder as we'll assume they both exist
+                // We'll also assume the template file exists in all language folders
+                reset($languages);
+                $firstKey = key($languages);
+                $firstDirectory = HESK_PATH . 'language/'.$languages[$firstKey].'/emails';
+                $directoryListing = preg_grep('/^([^.])/', scandir($firstDirectory));
+                $emailTemplates = array_diff($directoryListing, array('html', 'index.htm'));
+
                 ?>
+                <table class="table table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <th><?php echo $hesklang['file_name']; ?></th>
+                            <?php foreach ($languages as $key=>$value): ?>
+                                <th><?php echo $key; ?></th>
+                            <?php endforeach; ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($emailTemplates as $template): ?>
+                            <tr>
+                                <td><?php echo $template; ?></td>
+                                <td>
+                                    <?php
+                                    echo getTemplateMarkup($template, 'en');
+                                    echo '&nbsp;&nbsp;&nbsp;';
+                                    echo getTemplateMarkup($template, 'en', true);
+                                    ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <!-- Output list of templates, and provide links to edit the plaintext and HTML versions -->
 
             </div>
         </div>
     </div>
 </div>
+
+<?php
+    function getTemplateMarkup($template, $languageCode, $html = false) {
+        global $hesklang;
+
+        $linkPlaintext = HESK_PATH . 'language/%s/emails/%s'; // First %s: language code, second: template file
+        $linkHtml = HESK_PATH . 'language/%s/emails/html/%s'; // First %s: language code, second: template file
+
+        if ($html) {
+            $link = sprintf($linkHtml, $languageCode, $template);
+            return
+                '<a href="'.$link.'"><i class="fa fa-html5" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_html_template'].'"></i></a>';
+        } else {
+            $link = sprintf($linkPlaintext, $languageCode, $template);
+            return
+                '<a href="'.$link.'"><i class="fa fa-file-text-o" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_plain_text_template'].'"></i></a>';
+        }
+    }

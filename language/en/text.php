@@ -24,6 +24,8 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 // ADDED OR MODIFIED IN Mods for HESK 2.2.0
 $hesklang['email_templates'] = 'Email templates';
 $hesklang['email_templates_intro'] = 'You can edit your plaintext and HTML email templates here.';
+$hesklang['edit_plain_text_template'] = 'Edit plain text template';
+$hesklang['edit_html_template'] = 'Edit HTML template';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.1.1
 $hesklang['new_article_default_type'] = 'Default Type for New Articles';
