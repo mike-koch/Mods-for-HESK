@@ -15,8 +15,31 @@ hesk_isLoggedIn();
 
 // TODO Check permissions for this feature
 
+define('WYSIWYG',1);
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
+
+if ($modsForHesk_settings['html_emails']) {
+    echo '<script type="text/javascript">
+        tinyMCE.init({
+                        mode : "textareas",
+                        editor_selector : "htmlEditor",
+                        elements : "content",
+                        theme : "advanced",
+                        convert_urls : false,
+                        gecko_spellcheck: true,
+
+                        theme_advanced_buttons1 : "cut,copy,paste,|,undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
+                        theme_advanced_buttons2 : "sub,sup,|,charmap,|,bullist,numlist,|,outdent,indent,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,link,unlink,anchor,image,cleanup,code",
+                        theme_advanced_buttons3 : "",
+
+                        theme_advanced_toolbar_location : "top",
+                        theme_advanced_toolbar_align : "left",
+                        theme_advanced_statusbar_location : "bottom",
+                        theme_advanced_resizing : true
+                    });
+                </script>';
+}
 
 /* Print main manage users page */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
@@ -57,7 +80,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <div class="tab-content summaryList tabPadding">
         <div class="row">
             <div class="col-md-12">
-                <br><br>
                 <?php
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
@@ -69,8 +91,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     $languages[$key] = $hesk_settings['languages'][$key]['folder'];
                 }
 
-                // Get all files, but don't worry about index.htm, .., ., or the html folder as we'll assume they both exist
-                // We'll also assume the template file exists in all language folders
+                // Get all files, but don't worry about index.htm, items beginning with '.', or the html folder
+                // We'll also assume the template file exists in all language folders and in the html folder
                 reset($languages);
                 $firstKey = key($languages);
                 $firstDirectory = HESK_PATH . 'language/'.$languages[$firstKey].'/emails';
@@ -95,34 +117,85 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <?php
                                     echo getTemplateMarkup($template, 'en');
                                     echo '&nbsp;&nbsp;&nbsp;';
-                                    echo getTemplateMarkup($template, 'en', true);
+                                    if ($modsForHesk_settings['html_emails']) {
+                                        echo getTemplateMarkup($template, 'en', true);
+                                    }
                                     ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <!-- Output list of templates, and provide links to edit the plaintext and HTML versions -->
-
             </div>
         </div>
     </div>
 </div>
+<!-- Output markup for the modals -->
+<?php foreach ($emailTemplates as $template) {
+    echo getModalMarkup($template, 'en');
+    if ($modsForHesk_settings['html_emails']) {
+        echo getModalMarkup($template, 'en', true);
+    }
+} ?>
 
 <?php
-    function getTemplateMarkup($template, $languageCode, $html = false) {
-        global $hesklang;
+require_once(HESK_PATH . 'inc/footer.inc.php');
+exit();
 
-        $linkPlaintext = HESK_PATH . 'language/%s/emails/%s'; // First %s: language code, second: template file
-        $linkHtml = HESK_PATH . 'language/%s/emails/html/%s'; // First %s: language code, second: template file
+function getTemplateMarkup($template, $languageCode, $html = false) {
+    global $hesklang;
 
-        if ($html) {
-            $link = sprintf($linkHtml, $languageCode, $template);
-            return
-                '<a href="'.$link.'"><i class="fa fa-html5" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_html_template'].'"></i></a>';
-        } else {
-            $link = sprintf($linkPlaintext, $languageCode, $template);
-            return
-                '<a href="'.$link.'"><i class="fa fa-file-text-o" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_plain_text_template'].'"></i></a>';
-        }
+    $templateId = str_replace('.', '-', $template);
+    $templateId = str_replace(' ', '-', $templateId);
+    $languageCodeId = str_replace('.', '-', $languageCode);
+    $languageCodeId = str_replace(' ', '-', $languageCodeId);
+    if ($html) {
+        $markup = '<a href="#" data-toggle="modal" data-target="#modal-html-'.$languageCodeId.'-'.$templateId.'">';
+        $markup .= '<i class="fa fa-html5" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_html_template'].'"></i>';
+        $markup .= '</a>';
+        return $markup;
+    } else {
+        $markup = '<a href="#" data-toggle="modal" data-target="#modal-'.$languageCodeId.'-'.$templateId.'">';
+        $markup .= '<i class="fa fa-file-text-o" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_plain_text_template'].'"></i>';
+        $markup .= '</a>';
+        return $markup;
     }
+}
+
+function getModalMarkup($template, $languageCode, $html = false) {
+    global $hesklang;
+
+    $templateId = str_replace('.', '-', $template);
+    $templateId = str_replace(' ', '-', $templateId);
+    $languageCodeId = str_replace('.', '-', $languageCode);
+    $languageCodeId = str_replace(' ', '-', $languageCodeId);
+    $id = 'modal-html-'.$languageCodeId.'-'.$templateId;
+    $class = '';
+
+    if ($html) {
+        $title = sprintf($hesklang['editing_html_template'], $template);
+        $content = file_get_contents(HESK_PATH . 'language/'.$languageCode.'/emails/html/'.$template);
+        $class = 'htmlEditor';
+    } else {
+        $id = str_replace('html-', '', $id);
+        $title = sprintf($hesklang['editing_template'], $template);
+        $content = file_get_contents(HESK_PATH . 'language/'.$languageCode.'/emails/'.$template);
+    }
+    return '
+        <div class="modal fade" id="'.$id.'" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="'.$id.'Label">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="'.$id.'Label">'.$title.'</h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="'.$class.' form-control">'.$content.'</textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>';
+}

@@ -26,6 +26,8 @@ $hesklang['email_templates'] = 'Email templates';
 $hesklang['email_templates_intro'] = 'You can edit your plaintext and HTML email templates here.';
 $hesklang['edit_plain_text_template'] = 'Edit plain text template';
 $hesklang['edit_html_template'] = 'Edit HTML template';
+$hesklang['editing_template'] = 'Editing plain text template <code>%s</code>'; // %s: The name of the template file (XXXX.txt)
+$hesklang['editing_html_template'] = 'Editing HTML template <code>%s</code>'; // %s: The name of the template file
 
 // ADDED OR MODIFIED IN Mods for HESK 2.1.1
 $hesklang['new_article_default_type'] = 'Default Type for New Articles';
