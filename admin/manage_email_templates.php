@@ -87,6 +87,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </li>
     </ul>
     <div class="tab-content summaryList tabPadding">
-        <!-- Content here -->
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <br><br>
+                <?php
+                /* This will handle error, success and notice messages */
+                hesk_handle_messages();
+                ?>
+
+            </div>
+        </div>
     </div>
 </div>
