@@ -137,11 +137,3 @@ function executeMiscellaneousSql() {
     executeQuery('DROP TABLE IF EXISTS `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_ips`');
     executeQuery('DROP TABLE IF EXISTS `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_emails`');
 }
-
-function removeEmailTemplatePermission() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
-
-    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `can_manage_email_templates`");
-}

@@ -402,8 +402,5 @@ function execute220Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
-
-    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `can_manage_email_templates` ENUM('0','1') NOT NULL DEFAULT '0'");
-    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `can_manage_email_templates` = '1' WHERE `isadmin` = '1'");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.2.0' WHERE `Key` = 'modsForHeskVersion'");
 }
