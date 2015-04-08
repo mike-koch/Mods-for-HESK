@@ -77,6 +77,7 @@ $hesk_settings['features'] = array(
 'can_ban_ips',			/* User can ban IP addresses */
 'can_unban_ips',		/* User can delete IP bans. Also enables "can_ban_ips" */
 'can_service_msg',		/* User can manage service messages shown in customer interface */
+'can_man_email_tpl',    /* User can manage email templates */
 );
 
 /* Set default values */

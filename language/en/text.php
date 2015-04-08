@@ -45,6 +45,7 @@ $hesklang['ticket_priority'] = 'Ticket priority';
 $hesklang['custom_field_x'] = 'Custom field %s'; // %s: Custom field #1-20
 $hesklang['email_template_saved'] = 'The email template <b>%s</b> has been saved.'; // %s: Template file name
 $hesklang['error_saving_template'] = 'An error occurred when trying to save the email template!';
+$hesklang['can_man_email_tpl'] = 'Edit email templates';
 $hesklang['email_template_directory_not_writable'] = 'The email template <b>%s</b> is not writable by HESK. Please CHMOD it to 0666.'; // %s: template file name
 
 
