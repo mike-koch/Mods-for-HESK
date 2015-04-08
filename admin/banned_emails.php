@@ -89,6 +89,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <a title="' . $hesklang['sm_title'] . '" href="service_messages.php">' . $hesklang['sm_title'] . '</a>
             </li>';
         }
+
+        // Show a link to email tpl management if user has permission to do so
+        if (hesk_checkPermission('can_man_email_tpl', 0)) {
+            echo '
+            <li role="presentation">
+                <a title="'.$hesklang['email_templates'].'" href="manage_email_templates.php">'.$hesklang['email_templates'].'</a>
+            </li>
+            ';
+        }
         ?>
     </ul>
     <div class="tab-content summaryList tabPadding">

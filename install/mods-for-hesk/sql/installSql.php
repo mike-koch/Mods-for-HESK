@@ -337,8 +337,8 @@ function execute210Scripts() {
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.1.0' WHERE `Key` = 'modsForHeskVersion'");
 
     // Some old tables may not have been dropped during the 2.0.0 upgrade. Check and drop if necessary
-    executeQuery("DROP TABLE IF EXISTS `".hesk_dbEscape($hesk['db_pfix'])."denied_ips`");
-    executeQuery("DROP TABLE IF EXISTS `".hesk_dbEscape($hesk['db_pfix'])."denied_emails`");
+    executeQuery("DROP TABLE IF EXISTS `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_ips`");
+    executeQuery("DROP TABLE IF EXISTS `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails`");
 }
 
 function execute210FileUpdate() {
@@ -396,3 +396,11 @@ $modsForHesk_settings[\'new_kb_article_visibility\'] = 0;';
     return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
 }
 // END Version 2.1.1
+
+// BEGIN Version 2.2.0
+function execute220Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.2.0' WHERE `Key` = 'modsForHeskVersion'");
+}

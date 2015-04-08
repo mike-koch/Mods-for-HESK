@@ -735,6 +735,18 @@ function hesk_checkPermission($feature,$showerror=1) {
         return true;
     }
 
+    if ($feature == 'can_manage_email_templates') {
+        if ($_SESSION['can_manage_email_templates']) {
+            return true;
+        } else {
+            if ($showerror) {
+                hesk_error($hesklang['no_permission'].'<p>&nbsp;</p><p align="center"><a href="index.php">'.$hesklang['click_login'].'</a>');
+            } else {
+                return false;
+            }
+        }
+    }
+
     /* Check other staff for permissions */
     if (strpos($_SESSION['heskprivileges'], $feature) === false)
     {
