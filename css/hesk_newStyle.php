@@ -390,3 +390,7 @@ button.dropdown-submit {
     max-width: 80px;
     cursor: pointer;
 }
+
+.plaintext-editor {
+    font-family: monospace;
+}

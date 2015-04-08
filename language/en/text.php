@@ -26,8 +26,27 @@ $hesklang['email_templates'] = 'Email templates';
 $hesklang['email_templates_intro'] = 'You can edit your plaintext and HTML email templates here.';
 $hesklang['edit_plain_text_template'] = 'Edit plain text template';
 $hesklang['edit_html_template'] = 'Edit HTML template';
-$hesklang['editing_template'] = 'Editing plain text template <code>%s</code>'; // %s: The name of the template file (XXXX.txt)
+$hesklang['editing_plain_text_template'] = 'Editing plain text template <code>%s</code>'; // %s: The name of the template file (XXXX.txt)
 $hesklang['editing_html_template'] = 'Editing HTML template <code>%s</code>'; // %s: The name of the template file
+$hesklang['show_special_tags'] = 'Show Special Tags';
+$hesklang['hide_special_tags'] = 'Hide Special Tags';
+$hesklang['special_tag'] = 'Special Tag';
+$hesklang['description'] = 'Description';
+$hesklang['customer_name'] = 'Customer name';
+$hesklang['customer_email'] = 'Customer email';
+$hesklang['ticket_subject'] = 'Ticket subject';
+$hesklang['ticket_message'] = 'Ticket/Reply message';
+$hesklang['ticket_created'] = 'Date and time of ticket submission';
+$hesklang['ticket_updated'] = 'Date and time of ticket last update';
+$hesklang['ticket_url'] = 'Ticket URL address';
+$hesklang['ticket_category'] = 'Ticket category';
+$hesklang['ticket_owner'] = 'Staff member assigned to the ticket';
+$hesklang['ticket_priority'] = 'Ticket priority';
+$hesklang['custom_field_x'] = 'Custom field %s'; // %s: Custom field #1-20
+$hesklang['email_template_saved'] = 'The email template <b>%s</b> has been saved.'; // %s: Template file name
+$hesklang['error_saving_template'] = 'An error occurred when trying to save the email template!';
+$hesklang['email_template_directory_not_writable'] = 'The email template <b>%s</b> is not writable by HESK. Please CHMOD it to 0666.'; // %s: template file name
+
 
 // ADDED OR MODIFIED IN Mods for HESK 2.1.1
 $hesklang['new_article_default_type'] = 'Default Type for New Articles';

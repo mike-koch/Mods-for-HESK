@@ -16,6 +16,21 @@ hesk_isLoggedIn();
 // TODO Check permissions for this feature
 
 define('WYSIWYG',1);
+
+// Are we performing an action?
+$showEditPanel = false;
+if (isset($_GET['action'])) {
+    if ($_GET['action'] == 'edit') {
+        $showEditPanel = true;
+    }
+}
+
+// Are we saving?
+if (isset($_POST['action'])) {
+    if ($_POST['action'] == 'save') {
+        save();
+    }
+}
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
@@ -78,6 +93,90 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </li>
     </ul>
     <div class="tab-content summaryList tabPadding">
+        <?php if ($showEditPanel): ?>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>
+                            <?php
+                            $isHtml = ($_GET['html'] == 'true');
+                            $class = 'plaintext-editor';
+                            if ($isHtml) {
+                                $class = 'htmlEditor';
+                                echo sprintf($hesklang['editing_html_template'], $_GET['template']);
+                            } else {
+                                echo sprintf($hesklang['editing_plain_text_template'], $_GET['template']);
+                            } ?>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                        $fileContent = '';
+                        if ($isHtml) {
+                            $fileContent = file_get_contents(HESK_PATH . 'language/'.urldecode($_GET['language']).'/emails/html/'.$_GET['template']);
+                        } else {
+                            $fileContent = file_get_contents(HESK_PATH . 'language/'.urldecode($_GET['language']).'/emails/'.$_GET['template']);
+                        }
+                        if ($fileContent === false) {
+                            //throw error
+                        }
+                        ?>
+                        <a href="#" id="showSpecialTags" onclick="toggleContainers(['specialTags'],['showSpecialTags'])">
+                            <?php echo $hesklang['show_special_tags']; ?>
+                        </a>
+                        <div id="specialTags" style="display: none">
+                            <a href="#" onclick="toggleContainers(['showSpecialTags'],['specialTags'])">
+                                <?php echo $hesklang['hide_special_tags']; ?>
+                            </a>
+                            <table class="table table-striped table-responsive table-condensed">
+                                <thead>
+                                <tr>
+                                    <th><?php echo $hesklang['special_tag']; ?></th>
+                                    <th><?php echo $hesklang['description'] ?></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                $tags = getSpecialTagMap();
+                                foreach ($tags as $tag => $text): ?>
+                                    <tr>
+                                        <td><?php echo $tag; ?></td>
+                                        <td><?php echo $text; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <form action="manage_email_templates.php" method="post">
+                            <textarea name="text" rows="15" class="form-control <?php echo $class; ?>"><?php echo $fileContent; ?></textarea>
+                            <input type="hidden" name="action" value="save">
+                            <input type="hidden" name="template" value="<?php echo htmlspecialchars($_GET['template']); ?>">
+                            <input type="hidden" name="language" value="<?php echo htmlspecialchars($_GET['language']); ?>">
+                            <input type="hidden" name="html" value="<?php echo $isHtml; ?>">
+                            <br>
+                            <?php
+                            $fileWritable = false;
+                            if ($isHtml) {
+                                $fileWritable = is_writable(HESK_PATH.'language/'.$_GET['language'].'/emails/html/'.$_GET['template']);
+                            } else {
+                                $fileWritable = is_writable(HESK_PATH.'language/'.$_GET['language'].'/emails'.$_GET['template']);
+                            }
+
+                            if (!$fileWritable) {
+                                echo '<div class="alert alert-danger">
+                                    <p>'.sprintf($hesklang['email_template_directory_not_writable'], $_GET['template']).'</p>
+                                    </div>';
+                            } else {
+                                echo '<input type="submit" class="btn btn-default" value="'.$hesklang['save'].'">';
+                            }
+                            ?>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
         <div class="row">
             <div class="col-md-12">
                 <?php
@@ -104,8 +203,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <thead>
                         <tr>
                             <th><?php echo $hesklang['file_name']; ?></th>
-                            <?php foreach ($languages as $key=>$value): ?>
-                                <th><?php echo $key; ?></th>
+                            <?php foreach ($languages as $language => $languageCode): ?>
+                                <th><?php echo $language; ?></th>
                             <?php endforeach; ?>
                         </tr>
                     </thead>
@@ -113,15 +212,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <?php foreach ($emailTemplates as $template): ?>
                             <tr>
                                 <td><?php echo $template; ?></td>
+                                <?php foreach ($languages as $language => $languageCode): ?>
                                 <td>
                                     <?php
-                                    echo getTemplateMarkup($template, 'en');
+                                    echo getTemplateMarkup($template, $languageCode);
                                     echo '&nbsp;&nbsp;&nbsp;';
                                     if ($modsForHesk_settings['html_emails']) {
-                                        echo getTemplateMarkup($template, 'en', true);
+                                        echo getTemplateMarkup($template, $languageCode, true);
                                     }
                                     ?>
                                 </td>
+                                <?php endforeach; ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -130,13 +231,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </div>
-<!-- Output markup for the modals -->
-<?php foreach ($emailTemplates as $template) {
-    echo getModalMarkup($template, 'en');
-    if ($modsForHesk_settings['html_emails']) {
-        echo getModalMarkup($template, 'en', true);
-    }
-} ?>
 
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
@@ -145,57 +239,64 @@ exit();
 function getTemplateMarkup($template, $languageCode, $html = false) {
     global $hesklang;
 
-    $templateId = str_replace('.', '-', $template);
-    $templateId = str_replace(' ', '-', $templateId);
-    $languageCodeId = str_replace('.', '-', $languageCode);
-    $languageCodeId = str_replace(' ', '-', $languageCodeId);
+    $templateUrl = urlencode($template);
+    $languageCodeUrl = urlencode($languageCode);
     if ($html) {
-        $markup = '<a href="#" data-toggle="modal" data-target="#modal-html-'.$languageCodeId.'-'.$templateId.'">';
+        $markup = '<a href="manage_email_templates.php?action=edit&template='.$templateUrl.'&language='.$languageCodeUrl.'&html=true">';
         $markup .= '<i class="fa fa-html5" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_html_template'].'"></i>';
         $markup .= '</a>';
         return $markup;
     } else {
-        $markup = '<a href="#" data-toggle="modal" data-target="#modal-'.$languageCodeId.'-'.$templateId.'">';
+        $markup = '<a href="manage_email_templates.php?action=edit&template='.$templateUrl.'&language='.$languageCodeUrl.'&html=false">';
         $markup .= '<i class="fa fa-file-text-o" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_plain_text_template'].'"></i>';
         $markup .= '</a>';
         return $markup;
     }
 }
 
-function getModalMarkup($template, $languageCode, $html = false) {
+function save() {
     global $hesklang;
 
-    $templateId = str_replace('.', '-', $template);
-    $templateId = str_replace(' ', '-', $templateId);
-    $languageCodeId = str_replace('.', '-', $languageCode);
-    $languageCodeId = str_replace(' ', '-', $languageCodeId);
-    $id = 'modal-html-'.$languageCodeId.'-'.$templateId;
-    $class = '';
-
-    if ($html) {
-        $title = sprintf($hesklang['editing_html_template'], $template);
-        $content = file_get_contents(HESK_PATH . 'language/'.$languageCode.'/emails/html/'.$template);
-        $class = 'htmlEditor';
-    } else {
-        $id = str_replace('html-', '', $id);
-        $title = sprintf($hesklang['editing_template'], $template);
-        $content = file_get_contents(HESK_PATH . 'language/'.$languageCode.'/emails/'.$template);
+    $filePath = HESK_PATH . 'language/'.$_POST['language'].'/emails/'.$_POST['template'];
+    if ($_POST['html'] == '1') {
+        $filePath = HESK_PATH . 'language/'.$_POST['language'].'/emails/html/'.$_POST['template'];
     }
-    return '
-        <div class="modal fade" id="'.$id.'" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="'.$id.'Label">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="'.$id.'Label">'.$title.'</h4>
-                    </div>
-                    <div class="modal-body">
-                        <textarea class="'.$class.' form-control">'.$content.'</textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>';
+
+    $success = file_put_contents($filePath, $_POST['text']);
+    if ($success === false) {
+        hesk_process_messages($hesklang[''], 'manage_email_templates.php');
+    } else {
+        $message = sprintf($hesklang['email_template_saved'], $_POST['template']);
+        hesk_process_messages($message,'manage_email_templates.php','SUCCESS');
+    }
+}
+
+function getSpecialTagMap() {
+    global $hesk_settings, $modsForHesk_settings, $hesklang;
+
+    $map = array();
+    $map['%%NAME%%'] = $hesklang['customer_name'];
+    $map['%%EMAIL%%'] = $hesklang['customer_email'];
+    $map['%%SUBJECT%%'] = $hesklang['ticket_subject'];
+    $map['%%MESSAGE%%'] = $hesklang['ticket_message'];
+    $map['%%CREATED%%'] = $hesklang['ticket_created'];
+    $map['%%UPDATED%%'] = $hesklang['ticket_updated'];
+    $map['%%TRACK_ID%%'] = $hesklang['ticket_trackID'];
+    $map['%%TRACK_URL%%'] = $hesklang['ticket_url'];
+    $map['%%SITE_TITLE%%'] = $hesklang['wbst_title'];
+    $map['%%SITE_URL%%'] = $hesklang['wbst_url'];
+    $map['%%CATEGORY%%'] = $hesklang['ticket_category'];
+    $map['%%OWNER%%'] = $hesklang['ticket_owner'];
+    $map['%%PRIORITY%%'] = $hesklang['ticket_priority'];
+    $map['%%STATUS%%'] = $hesklang['ticket_status'];
+
+    $i = 1;
+    foreach ($hesk_settings['custom_fields'] as $key => $value) {
+        if ($value['use']) {
+            $uppercaseKey = strtoupper($key);
+            $map['%%'.$uppercaseKey.'%%'] = sprintf($hesklang['custom_field_x'], $i++);
+        }
+    }
+
+    return $map;
 }
