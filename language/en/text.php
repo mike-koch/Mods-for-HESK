@@ -47,7 +47,17 @@ $hesklang['email_template_saved'] = 'The email template <b>%s</b> has been saved
 $hesklang['error_saving_template'] = 'An error occurred when trying to save the email template!';
 $hesklang['can_man_email_tpl'] = 'Edit email templates';
 $hesklang['email_template_directory_not_writable'] = 'The email template <b>%s</b> is not writable by HESK. Please CHMOD it to 0666.'; // %s: template file name
-
+$hesklang['closable_question'] = 'Closable?';
+$hesklang['closable_description'] = '<b><i>This setting is ignored if the &quot;Closed?&quot; checkbox is checked for this status</i></b>.
+    <br><br>Determines if the customer staff is able to close a ticket in this status.
+    <br><br><b>Yes:</b> Both customers and staff can close a ticket in this status.
+    <br><b>Customers only:</b> Customers can close a ticket in this status, but staff cannot.
+    <br><b>Staff only:</b> Staff can close a ticket in this status, but customers cannot.
+    <br><b>No:</b> No one is allowed to close a ticket in this status.'; // &quot; = "
+$hesklang['customers_only'] = 'Customers only';
+$hesklang['staff_only'] = 'Staff only';
+$hesklang['yes_title_case'] = 'Yes';
+$hesklang['no_title_case'] = 'No';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.1.1
 $hesklang['new_article_default_type'] = 'Default Type for New Articles';

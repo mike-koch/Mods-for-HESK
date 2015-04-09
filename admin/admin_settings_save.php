@@ -529,10 +529,10 @@ while ($row = $results->fetch_assoc())
     } else
     {
         //-- Update the information in the database with what is on the page
-        $query = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `ShortNameContentKey` = ?, `TicketViewContentKey` = ?, `TextColor` = ?, `IsClosed` = ? WHERE `ID` = ?";
+        $query = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `ShortNameContentKey` = ?, `TicketViewContentKey` = ?, `TextColor` = ?, `IsClosed` = ?, `Closable` = ? WHERE `ID` = ?";
         $stmt = hesk_dbConnect()->prepare($query);
         $isStatusClosed = (isset($_POST['s'.$row['ID'].'_isClosed']) ? 1 : 0);
-        $stmt->bind_param('sssii', $_POST['s'.$row['ID'].'_shortName'], $_POST['s'.$row['ID'].'_longName'], $_POST['s'.$row['ID'].'_textColor'], $isStatusClosed, $row['ID']);
+        $stmt->bind_param('sssisi', $_POST['s'.$row['ID'].'_shortName'], $_POST['s'.$row['ID'].'_longName'], $_POST['s'.$row['ID'].'_textColor'], $isStatusClosed, $_POST['s'.$row['ID'].'_closable'], $row['ID']);
         $stmt->execute();
     }
 }
@@ -555,7 +555,7 @@ if ($_POST['sN_shortName'] != null && $_POST['sN_longName'] != null && $_POST['s
     $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`ID`, `ShortNameContentKey`, `TicketViewContentKey`, `TextColor`, `IsClosed`) VALUES (?, ?, ?, ?, ?)";
     $stmt = hesk_dbConnect()->prepare($insert);
     $isClosed = isset($_POST['sN_isClosed']) ? 1 : 0;
-    $stmt->bind_param('isssi', $nextValue, $_POST['sN_shortName'], $_POST['sN_longName'], $_POST['sN_textColor'], $isClosed);
+    $stmt->bind_param('isssis', $nextValue, $_POST['sN_shortName'], $_POST['sN_longName'], $_POST['sN_textColor'], $isClosed, $_POST['sN_closable']);
     $stmt->execute();
 }
 

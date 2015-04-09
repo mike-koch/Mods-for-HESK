@@ -381,7 +381,7 @@ function execute211Scripts() {
 }
 
 function execute211FileUpdate() {
-    //-- Add the boostrap theme property to modsForHesk_settings.inc.php
+    //-- Add the new kb article visibility property to modsForHesk_settings.inc.php
     $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
 
     //-- Only add the additional settings if they aren't already there.
@@ -402,5 +402,8 @@ function execute220Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD COLUMN `Closable` VARCHAR(10) NOT NULL");
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `Closable` = 'yes'");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.2.0' WHERE `Key` = 'modsForHeskVersion'");
 }
+// END Version 2.2.0
