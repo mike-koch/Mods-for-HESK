@@ -2175,6 +2175,8 @@ if ( defined('HESK_DEMO') )
                   <?php
                   //-- We need to get all of the statuses and dump the information to the page.
                   $statusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
+                  $closedStatusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 1';
+                  $openStatusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0';
                   $statusesRS = hesk_dbQuery($statusesSql);
                   //Print header
                   ?>
@@ -2265,7 +2267,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="newTicket" class="form-control" id="newTicket">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($openStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsNewTicketStatus'] == 1) ? 'selected="selected"' : '';
@@ -2280,7 +2282,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="closedByClient" class="form-control" id="closedByClient">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($closedStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsClosedByClient'] == 1) ? 'selected="selected"' : '';
@@ -2295,7 +2297,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="replyFromClient" class="form-control" id="replyFromClient">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($openStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsCustomerReplyStatus'] == 1) ? 'selected="selected"' : '';
@@ -2310,7 +2312,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="staffClosedOption" class="form-control" id="staffClosedOption">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($closedStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsStaffClosedOption'] == 1) ? 'selected="selected"' : '';
@@ -2325,7 +2327,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="staffReopenedStatus" class="form-control" id="staffReopenedStatus">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($openStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsStaffReopenedStatus'] == 1) ? 'selected="selected"' : '';
@@ -2340,7 +2342,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="defaultStaffReplyStatus" class="form-control" id="defaultStaffReplyStatus">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($openStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsDefaultStaffReplyStatus'] == 1) ? 'selected="selected"' : '';
@@ -2370,7 +2372,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="autocloseTicketOption" class="form-control" id="autocloseTicketOption">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($closedStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsAutocloseOption'] == 1) ? 'selected' : '';
