@@ -672,7 +672,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <strong><?php echo $hesklang['owner']; ?></strong><br/>
                     <?php
                     echo isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] :
-        	             ($can_assign_self ? $hesklang['unas'].' [<a href="assign_owner.php?track='.$trackingID.'&amp;owner='.$_SESSION['id'].'&amp;token='.hesk_token_echo(0).'">'.$hesklang['asss'].'</a>]' : $hesklang['unas']);
+        	             ($can_assign_self ? $hesklang['unas'].' — <a href="assign_owner.php?track='.$trackingID.'&amp;owner='.$_SESSION['id'].'&amp;token='.hesk_token_echo(0).'">'.$hesklang['asss'].'</a>' : $hesklang['unas']);
                     ?>
                 </li>
                 <li class="list-group-item">
@@ -847,18 +847,19 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 }
                             }
 
-                            $isTicketClosedSql = 'SELECT `IsClosed` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.$ticket['status'];
+                            $isTicketClosedSql = 'SELECT `IsClosed`, `Closable` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.$ticket['status'];
                             $isTicketClosedRow = hesk_dbQuery($isTicketClosedSql)->fetch_assoc();
                             $isTicketClosed = $isTicketClosedRow['IsClosed'];
+                            $isClosable = $isTicketClosedRow['Closable'] == 'yes' || $isTicketClosedRow['Closable'] == 'sonly';
 
                             echo '<div class="btn-group" role="group">';
-                            if ($isTicketClosed == 0) // Ticket is still open
+                            if ($isTicketClosed == 0 && $isClosable) // Ticket is still open
                             {
                                 echo '<a
 		                        class="btn btn-default btn-sm" href="change_status.php?track='.$trackingID.'&amp;s='.$staffClosedOptionStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">
 		                            <i class="fa fa-check-circle"></i> '.$hesklang['close_action'].'</a>';
                             }
-                            else
+                            elseif ($isTicketClosed == 1)
                             {
                                 echo '<a
 		                        class="btn btn-default btn-sm" href="change_status.php?track='.$trackingID.'&amp;s='.$staffReopenedStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">

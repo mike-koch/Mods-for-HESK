@@ -2186,6 +2186,7 @@ if ( defined('HESK_DEMO') )
                                 <th><?php echo $hesklang['shortNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['shortNameKey']; ?>" data-content="<?php echo $hesklang['shortNameKeyDescr']; ?>"></i></th>
                                 <th><?php echo $hesklang['longNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['longNameKey']; ?>" data-content="<?php echo $hesklang['longNameKeyDescr']; ?>"></i></th>
                                 <th><?php echo $hesklang['textColor']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['textColor']; ?>" data-content="<?php echo $hesklang['textColorDescr']; ?>"></i></th>
+                                <th><?php echo $hesklang['closable_question']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover" data-placement="bottom" title="<?php echo $hesklang['closable_question']; ?>" data-content="<?php echo $hesklang['closable_description']; ?>"></i></th>
                                 <th><?php echo $hesklang['closedQuestionMark']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="top" title="<?php echo $hesklang['closedQuestionMark']; ?>" data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i></th>
                                 <th><?php echo $hesklang['delete']; ?></th>
                             </tr>
@@ -2198,17 +2199,31 @@ if ( defined('HESK_DEMO') )
                               $checkedEcho = ($row['IsClosed'] == 1) ? 'checked="checked"' : '';
                               $isDisabled = false;
                               if ($row['IsNewTicketStatus'] || $row['IsClosedByClient'] || $row['IsCustomerReplyStatus'] ||
-                                  $row['IsStaffClosedOption'] || $row['IsStaffReopenedStatus'] || $row['IsDefaultStaffReplyStatus']
-                                  || $row['LockedTicketStatus'])
+                                  $row['IsStaffClosedOption'] || $row['IsStaffReopenedStatus'] || $row['IsDefaultStaffReplyStatus'] ||
+                                  $row['LockedTicketStatus'] || $row['IsAutocloseOption'])
                               {
                                   $isDisabled = true;
                               }
+
+                              $yesSelected = $customersOnlySelected = $staffOnlySelected = $noSelected = '';
+                              if ($row['Closable'] == 'yes') { $yesSelected = 'selected'; }
+                              elseif ($row['Closable'] == 'conly') { $customersOnlySelected = 'selected'; }
+                              elseif ($row['Closable'] == 'sonly') { $staffOnlySelected = 'selected'; }
+                              else { $noSelected = 'selected'; }
 
                               echo '<tr id="s'.$row['ID'].'_row">';
                                 echo '<td>'.$hesklang[$row['ShortNameContentKey']].'</td>'; //Name
                                 echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_shortName" value="'.$row['ShortNameContentKey'].'" placeholder="'.htmlspecialchars($hesklang['shortNameKey']).'"></td>'; // Short Name Language File
                                 echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_longName" value="'.$row['TicketViewContentKey'].'" placeholder="'.htmlspecialchars($hesklang['longNameKey']).'"></td>'; // Long Name Language File
                                 echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_textColor" value="'.$row['TextColor'].'" placeholder="'.htmlspecialchars($hesklang['textColor']).'"></td>'; // Text Color
+                                echo '<td>
+                                          <select class="form-control" name="s'.$row['ID'].'_closable">
+                                              <option value="yes" '.$yesSelected.'>'.$hesklang['yes_title_case'].'</option>
+                                              <option value="conly" '.$customersOnlySelected.'>'.$hesklang['customers_only'].'</option>
+                                              <option value="sonly" '.$staffOnlySelected.'>'.$hesklang['staff_only'].'</option>
+                                              <option value="no" '.$noSelected.'>'.$hesklang['no_title_case'].'</option>
+                                          </select>
+                                      </td>';
                                 echo '<td><input type="checkbox" name="s'.$row['ID'].'_isClosed" value="1" '.$checkedEcho.'></td>'; // Resolved Status?
                                 echo '<td>';
                                 if ($isDisabled)
@@ -2228,6 +2243,14 @@ if ( defined('HESK_DEMO') )
                           echo '<td><input type="text" class="form-control" name="sN_shortName" value="" placeholder="'.htmlspecialchars($hesklang['shortNameKey']).'"></td>'; // Short Name Language File
                           echo '<td><input type="text" class="form-control" name="sN_longName" value="" placeholder="'.htmlspecialchars($hesklang['longNameKey']).'"></td>'; // Long Name Language File
                           echo '<td><input type="text" class="form-control" name="sN_textColor" value="" placeholder="'.htmlspecialchars($hesklang['textColor']).'"></td>'; // Text Color
+                          echo '<td>
+                                    <select class="form-control" name="sN_closable">
+                                        <option value="yes">'.$hesklang['yes_title_case'].'</option>
+                                        <option value="conly">'.$hesklang['customers_only'].'</option>
+                                        <option value="sonly">'.$hesklang['staff_only'].'</option>
+                                        <option value="no">'.$hesklang['no_title_case'].'</option>
+                                    </select>
+                                </td>';
                           echo '<td><input type="checkbox" name="sN_isClosed" value="1"></td>'; // Resolved Status?
                           echo '<td></td>'; //Empty placeholder where the delete row is.
                           echo '</tr>';
@@ -2336,6 +2359,21 @@ if ( defined('HESK_DEMO') )
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['LockedTicketStatus'] == 1) ? 'selected="selected"' : '';
+                                  echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                              }
+                              ?>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="autocloseTicketOption" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['autoclose_ticket_status']; ?></label>
+                      <div class="col-sm-4 col-xs-12">
+                          <select name="autocloseTicketOption" class="form-control" id="autocloseTicketOption">
+                              <?php
+                              $statusesRS = hesk_dbQuery($statusesSql);
+                              while ($row = $statusesRS->fetch_assoc())
+                              {
+                                  $selectedEcho = ($row['IsAutocloseOption'] == 1) ? 'selected' : '';
                                   echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
                               }
                               ?>
