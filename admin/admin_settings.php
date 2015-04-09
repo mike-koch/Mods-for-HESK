@@ -2199,8 +2199,8 @@ if ( defined('HESK_DEMO') )
                               $checkedEcho = ($row['IsClosed'] == 1) ? 'checked="checked"' : '';
                               $isDisabled = false;
                               if ($row['IsNewTicketStatus'] || $row['IsClosedByClient'] || $row['IsCustomerReplyStatus'] ||
-                                  $row['IsStaffClosedOption'] || $row['IsStaffReopenedStatus'] || $row['IsDefaultStaffReplyStatus']
-                                  || $row['LockedTicketStatus'])
+                                  $row['IsStaffClosedOption'] || $row['IsStaffReopenedStatus'] || $row['IsDefaultStaffReplyStatus'] ||
+                                  $row['LockedTicketStatus'] || $row['IsAutocloseOption'])
                               {
                                   $isDisabled = true;
                               }
@@ -2359,6 +2359,21 @@ if ( defined('HESK_DEMO') )
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['LockedTicketStatus'] == 1) ? 'selected="selected"' : '';
+                                  echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                              }
+                              ?>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="autocloseTicketOption" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['autoclose_ticket_status']; ?></label>
+                      <div class="col-sm-4 col-xs-12">
+                          <select name="autocloseTicketOption" class="form-control" id="autocloseTicketOption">
+                              <?php
+                              $statusesRS = hesk_dbQuery($statusesSql);
+                              while ($row = $statusesRS->fetch_assoc())
+                              {
+                                  $selectedEcho = ($row['IsAutocloseOption'] == 1) ? 'selected' : '';
                                   echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
                               }
                               ?>

@@ -402,6 +402,11 @@ function execute220Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD COLUMN `IsAutocloseOption` INT NOT NULL DEFAULT 0");
+
+    // There will only ever be one row
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `IsAutocloseOption` = 1 WHERE `IsStaffClosedOption` = 1");
+
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD COLUMN `Closable` VARCHAR(10) NOT NULL");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `Closable` = 'yes'");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.2.0' WHERE `Key` = 'modsForHeskVersion'");

@@ -287,7 +287,7 @@ function do_login()
             }
 
             // Update ticket statuses and history in database if we're allowed to do so
-            $defaultCloseRs = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsStaffClosedOption` = 1');
+            $defaultCloseRs = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsAutocloseOption` = 1');
             $defaultCloseStatus = hesk_dbFetchAssoc($defaultCloseRs);
             hesk_dbQuery("UPDATE `" . $hesk_settings['db_pfix'] . "tickets` SET `status`=".intval($defaultCloseStatus['ID']).", `closedat`=NOW(), `closedby`='-1', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `status` = '".$closedStatus['ID']."' AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
         }

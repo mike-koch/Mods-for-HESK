@@ -605,6 +605,12 @@ $stmt = hesk_dbConnect()->prepare($updateQuery);
 $stmt->bind_param('i', $_POST['lockedTicketStatus']);
 $stmt->execute();
 
+hesk_dbConnect()->query($defaultQuery . "`IsAutocloseOption` = 0");
+$updateQuery = $defaultQuery . "`IsAutocloseOption` = 1 WHERE `ID` = ?";
+$stmt = hesk_dbConnect()->prepare($updateQuery);
+$stmt->bind_param('i', $_POST['autocloseTicketOption']);
+$stmt->execute();
+
 $set['hesk_version'] = $hesk_settings['hesk_version'];
 
 // Save the modsForHesk_settings.inc.php file
