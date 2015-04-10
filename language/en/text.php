@@ -59,6 +59,8 @@ $hesklang['staff_only'] = 'Staff only';
 $hesklang['yes_title_case'] = 'Yes';
 $hesklang['no_title_case'] = 'No';
 $hesklang['autoclose_ticket_status'] = 'When a ticket is closed automatically, change the status to';
+$hesklang['recent_tickets'] = 'Recent tickets';
+$hesklang['current_status_colon'] = 'Current status: %s'; // %s: status name (i.e. "Resolved", "New", etc.)
 
 // ADDED OR MODIFIED IN Mods for HESK 2.1.1
 $hesklang['new_article_default_type'] = 'Default Type for New Articles';

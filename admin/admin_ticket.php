@@ -640,6 +640,32 @@ if ( defined('HESK_DEMO') )
 	$ticket['ip']	 = '127.0.0.1';
 }
 
+// If an email address is tied to this ticket, check if there are any others
+$recentTickets = NULL;
+if($ticket['email'] != '') {
+    $recentTicketsSql = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets`
+    WHERE `email` = '".hesk_dbEscape($ticket['email'])."' AND `trackid` <> '".hesk_dbEscape($trackingID)."' ORDER BY `lastchange` DESC LIMIT 5");
+    while ($recentRow = hesk_dbFetchAssoc($recentTicketsSql)) {
+        if ($recentTickets === NULL) {
+            $recentTickets = array();
+        }
+        array_push($recentTickets, $recentRow);
+    }
+
+    if ($recentTickets !== NULL) {
+        $recentTicketsWithStatuses = array();
+        foreach ($recentTickets as $recentTicket) {
+            $newRecentTicket = $recentTicket;
+            $thisTicketStatusRS = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `ID` = " . intval($recentTicket['status']));
+            $theStatusRow = hesk_dbFetchAssoc($thisTicketStatusRS);
+            $newRecentTicket['statusText'] = $hesklang[$theStatusRow['ShortNameContentKey']];
+            $newRecentTicket['statusColor'] = $theStatusRow['TextColor'];
+            array_push($recentTicketsWithStatuses, $newRecentTicket);
+        }
+        $recentTickets = $recentTicketsWithStatuses;
+    }
+}
+
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
@@ -789,6 +815,19 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>
                     <?php } ?>
                 </li>
+                <?php if ($recentTickets !== NULL): ?>
+                    <li class="list-group-item">
+                        <strong><?php echo $hesklang['recent_tickets']; ?></strong>
+                        <?php foreach ($recentTickets as $recentTicket): ?>
+                            <p style="margin: 0">
+                                <i class="fa fa-circle" data-toggle="tooltip" data-placement="top"
+                                   style="color: <?php echo $recentTicket['statusColor']; ?>"
+                                   title="<?php echo sprintf($hesklang['current_status_colon'], $recentTicket['statusText']); ?>"></i>
+                                <?php echo '<a href="admin_ticket.php?track='.$recentTicket['trackid'].'&amp;Refresh='.mt_rand(10000,99999).'">'.$recentTicket['trackid'].'</a>'; ?>
+                            </p>
+                        <?php endforeach; ?>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>
