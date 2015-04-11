@@ -411,13 +411,13 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
     }
 
     $boundary = sha1(uniqid());
+    $plaintextMessage = $message;
+    $message = "--".$boundary."\n";
+    $message .= "Content-Type: text/plain; charset=".$hesklang['ENCODING']."\n\n";
+    $message .= $plaintextMessage."\n\n";
     //Prepare the message for HTML or non-html
     if ($modsForHesk_settings['html_emails'])
     {
-        $plaintextMessage = $message;
-        $message = "--".$boundary."\n";
-        $message .= "Content-Type: text/plain; charset=".$hesklang['ENCODING']."\n\n";
-        $message .= $plaintextMessage."\n\n";
         $message .= "--".$boundary."\n";
         $message .= "Content-Type: text/html; charset=".$hesklang['ENCODING']."\n\n";
         $message .= $htmlMessage."\n\n";
@@ -429,10 +429,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
     {
     	// Set additional headers
         $headers = '';
-        if ($modsForHesk_settings['html_emails'])
-        {
-            $headers .= "MIME-Version: 1.0\n";
-        }
+        $headers .= "MIME-Version: 1.0\n";
 		$headers .= "From: $hesk_settings[from_header]\n";
         if (count($cc) > 0)
         {
@@ -445,10 +442,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
 		$headers.= "Reply-To: $hesk_settings[from_header]\n";
 		$headers.= "Return-Path: $hesk_settings[webmaster_mail]\n";
 		$headers.= "Date: " . date(DATE_RFC2822) . "\n";
-        if ($modsForHesk_settings['html_emails'])
-        {
-            $headers.= "Content-Type: multipart/alternative;boundary=".$boundary;
-        }
+        $headers.= "Content-Type: multipart/alternative;boundary=".$boundary;
 
 		// Send using PHP mail() function
         ob_start();
@@ -484,14 +478,9 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         "Subject: " . $subject,
         "Date: " . date(DATE_RFC2822)
     );
-    if ($modsForHesk_settings['html_emails'])
-    {
-        array_push($headersArray,"MIME-Version: 1.0");
-        array_push($headersArray,"Content-Type: multipart/alternative;boundary=".$boundary);
-    } else
-    {
-        array_push($headersArray,"Content-Type: text/plain; charset=" . $hesklang['ENCODING']);
-    }
+    array_push($headersArray,"MIME-Version: 1.0");
+    array_push($headersArray,"Content-Type: multipart/alternative;boundary=".$boundary);
+
     if (count($cc) > 0)
     {
         array_push($headersArray,"Cc: ".implode(',',$cc));
