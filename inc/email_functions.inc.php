@@ -334,7 +334,7 @@ function hesk_validEmails()
 
 function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
 {
-	global $hesk_settings, $hesklang, $modsForHesk_settings;
+	global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket;
 
 	// Demo mode
 	if ( defined('HESK_DEMO') )
@@ -399,6 +399,11 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         {
             $postfields['html'] = $htmlMessage;
         }
+        if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) && $ticket['attachments'] != '' )
+        {
+            processDirectAttachments('mailgun', $postfields);
+        }
+
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
 
         $result = curl_exec($ch);
@@ -421,7 +426,6 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         $message .= "--".$boundary."\n";
         $message .= "Content-Type: text/html; charset=".$hesklang['ENCODING']."\n\n";
         $message .= $htmlMessage."\n\n";
-        $message .= "--".$boundary."--";
     }
 
     // Use PHP's mail function
@@ -443,6 +447,15 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
 		$headers.= "Return-Path: $hesk_settings[webmaster_mail]\n";
 		$headers.= "Date: " . date(DATE_RFC2822) . "\n";
         $headers.= "Content-Type: multipart/alternative;boundary=".$boundary;
+
+        // Add attachments if necessary
+        if ($modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+        {
+            $message .= processDirectAttachments('phpmail', NULL, $boundary);
+        }
+
+        //-- Close the email
+        $message .= "--".$boundary."--";
 
 		// Send using PHP mail() function
         ob_start();
@@ -490,7 +503,14 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         array_push($headersArray,"Bcc: ".implode(',',$bcc));
     }
 
+    // Add attachments if necessary
+    if ($modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+    {
+        $message .= processDirectAttachments('smtp', NULL, $boundary);
+    }
 
+    //-- Close the email
+    $message .= "--".$boundary."--";
 	if ( ! $smtp->SendMessage($hesk_settings['noreply_mail'], $to_arr, $headersArray, $message))
     {
 		// Suppress errors unless we are in debug mode
@@ -665,7 +685,7 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
 
 function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, $isForHtml = 0)
 {
-    global $hesk_settings, $hesklang;
+    global $hesk_settings, $hesklang, $modsForHesk_settings;
 
     /* Return just the message without any processing? */
     if ($just_message)
@@ -784,26 +804,31 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
             $msg = str_replace('%%MESSAGE%%',$ticket['message'],$msg);
         }
 
-        // Add direct links to any attachments at the bottom of the email message
+        // Add direct links to any attachments at the bottom of the email message OR add them as attachments, depending on the settings
+        // if ($modsForHesk_settings['attachments'] == 'inline' (other is 'attachment') {...}
         if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) )
         {
-            if ($isForHtml) {
-                $msg .= "<br><br><br>" . $hesklang['fatt'];
-            } else {
-                $msg .= "\n\n\n" . $hesklang['fatt'];
+            if (!$modsForHesk_settings['attachments']) {
+                if ($isForHtml) {
+                    $msg .= "<br><br><br>" . $hesklang['fatt'];
+                } else {
+                    $msg .= "\n\n\n" . $hesklang['fatt'];
+                }
+
+                $att = explode(',', substr($ticket['attachments'], 0, -1));
+                foreach ($att as $myatt)
+                {
+                    list($att_id, $att_name, $saved_name) = explode('#', $myatt);
+                    if ($isForHtml) {
+                        $msg .= "<br><br>" . $att_name . "<br>";
+                    } else {
+                        $msg .= "\n\n" . $att_name . "\n";
+                    }
+                    $msg .= $hesk_settings['hesk_url'] . '/download_attachment.php?att_id='.$att_id.'&track='.$ticket['trackid'].$hesk_settings['e_param'];
+                }
             }
 
-            $att = explode(',', substr($ticket['attachments'], 0, -1));
-            foreach ($att as $myatt)
-            {
-                list($att_id, $att_name) = explode('#', $myatt);
-                if ($isForHtml) {
-                    $msg .= "<br><br>" . $att_name . "<br>";
-                } else {
-                    $msg .= "\n\n" . $att_name . "\n";
-                }
-                $msg .= $hesk_settings['hesk_url'] . '/download_attachment.php?att_id='.$att_id.'&track='.$ticket['trackid'].$hesk_settings['e_param'];
-            }
+            // If attachments setting is set to 1, we'll add the attachments separately later; otherwise we'll duplicate the number of attachments.
         }
 
         // For customer notifications: if we allow email piping/pop 3 fetching and
@@ -815,4 +840,34 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     }
 
     return $msg;
+}
+
+// $postfields is only required for mailgun.
+// $boundary is only required for PHP/SMTP
+function processDirectAttachments($emailMethod, $postfields = NULL, $boundary = '', $isHtml = false) {
+    global $hesk_settings, $ticket;
+
+    $att = explode(',', substr($ticket['attachments'], 0, -1));
+    // if using mailgun, add each attachment to the array
+    if ($emailMethod == 'mailgun') {
+        $i = 0;
+        foreach ($att as $myatt) {
+            list($att_id, $att_name, $saved_name) = explode('#', $myatt);
+            $postfields['attachment['.$i.']'] = '@'.HESK_PATH.$hesk_settings['attach_dir'].'/'.$saved_name;
+            $i++;
+        }
+    } else {
+        $attachments = '';
+        foreach ($att as $myatt) {
+            list($att_id, $att_name, $saved_name) = explode('#', $myatt);
+            $attachments .= "\n\n" . "--".$boundary."\n";
+            $attachments .= "Content-Type: application/octet-stream; name=\"".$att_name."\" \n";
+            $attachments .= "Content-Disposition: attachment\n";
+            $attachments .= "Content-Transfer-Encoding: base64\n\n";
+            $attachmentBinary = file_get_contents(HESK_PATH.$hesk_settings['attach_dir'].'/'.$saved_name);
+            $attcontents = chunk_split(base64_encode($attachmentBinary));
+            $attachments .= $attcontents."\n\n";
+        }
+        return $attachments;
+    }
 }
