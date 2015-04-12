@@ -399,9 +399,9 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         {
             $postfields['html'] = $htmlMessage;
         }
-        if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) && $ticket['attachments'] != '' )
+        if ($modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
         {
-            processDirectAttachments('mailgun', $postfields);
+            $postfields = processDirectAttachments('mailgun', $postfields);
         }
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
@@ -856,6 +856,7 @@ function processDirectAttachments($emailMethod, $postfields = NULL, $boundary = 
             $postfields['attachment['.$i.']'] = '@'.HESK_PATH.$hesk_settings['attach_dir'].'/'.$saved_name;
             $i++;
         }
+        return $postfields;
     } else {
         $attachments = '';
         foreach ($att as $myatt) {
