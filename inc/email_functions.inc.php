@@ -787,13 +787,22 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
         // Add direct links to any attachments at the bottom of the email message
         if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) )
         {
-            $msg .= "\n\n\n" . $hesklang['fatt'];
+            if ($isForHtml) {
+                $msg .= "<br><br><br>" . $hesklang['fatt'];
+            } else {
+                $msg .= "\n\n\n" . $hesklang['fatt'];
+            }
 
             $att = explode(',', substr($ticket['attachments'], 0, -1));
             foreach ($att as $myatt)
             {
                 list($att_id, $att_name) = explode('#', $myatt);
-                $msg .= "\n\n" . $att_name . "\n" . $hesk_settings['hesk_url'] . '/download_attachment.php?att_id='.$att_id.'&track='.$ticket['trackid'].$hesk_settings['e_param'];
+                if ($isForHtml) {
+                    $msg .= "<br><br>" . $att_name . "<br>";
+                } else {
+                    $msg .= "\n\n" . $att_name . "\n";
+                }
+                $msg .= $hesk_settings['hesk_url'] . '/download_attachment.php?att_id='.$att_id.'&track='.$ticket['trackid'].$hesk_settings['e_param'];
             }
         }
 
