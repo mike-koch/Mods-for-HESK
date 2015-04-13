@@ -844,7 +844,7 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
 
 // $postfields is only required for mailgun.
 // $boundary is only required for PHP/SMTP
-function processDirectAttachments($emailMethod, $postfields = NULL, $boundary = '', $isHtml = false) {
+function processDirectAttachments($emailMethod, $postfields = NULL, $boundary = '') {
     global $hesk_settings, $ticket;
 
     $att = explode(',', substr($ticket['attachments'], 0, -1));
