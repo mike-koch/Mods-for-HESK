@@ -415,18 +415,28 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         return (strlen($tmp)) ? $tmp : true;
     }
 
-    $boundary = sha1(uniqid());
+    $outerboundary = sha1(uniqid());
+    $innerboundary = sha1(uniqid());
+    if ($outerboundary == $innerboundary) {
+        $innerboundary .= '1';
+    }
     $plaintextMessage = $message;
-    $message = "--".$boundary."\n";
+    $message = "--".$outerboundary."\n";
+    $message .= "Content-Type: multipart/alternative; boundary=\"".$innerboundary."\"\n\n";
+
+    $message .= "--".$innerboundary."\n";
     $message .= "Content-Type: text/plain; charset=".$hesklang['ENCODING']."\n\n";
     $message .= $plaintextMessage."\n\n";
     //Prepare the message for HTML or non-html
     if ($modsForHesk_settings['html_emails'])
     {
-        $message .= "--".$boundary."\n";
+        $message .= "--".$innerboundary."\n";
         $message .= "Content-Type: text/html; charset=".$hesklang['ENCODING']."\n\n";
         $message .= $htmlMessage."\n\n";
     }
+
+    //-- Close the email
+    $message .= "--".$innerboundary."--";
 
     // Use PHP's mail function
 	if ( ! $hesk_settings['smtp'])
@@ -446,16 +456,13 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
 		$headers.= "Reply-To: $hesk_settings[from_header]\n";
 		$headers.= "Return-Path: $hesk_settings[webmaster_mail]\n";
 		$headers.= "Date: " . date(DATE_RFC2822) . "\n";
-        $headers.= "Content-Type: multipart/alternative;boundary=".$boundary;
+        $headers.= "Content-Type: multipart/mixed;boundary=\"".$outerboundary."\"";
 
         // Add attachments if necessary
         if ($modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
         {
-            $message .= processDirectAttachments('phpmail', NULL, $boundary);
+            $message .= processDirectAttachments('phpmail', NULL, $outerboundary);
         }
-
-        //-- Close the email
-        $message .= "--".$boundary."--";
 
 		// Send using PHP mail() function
         ob_start();
@@ -492,7 +499,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         "Date: " . date(DATE_RFC2822)
     );
     array_push($headersArray,"MIME-Version: 1.0");
-    array_push($headersArray,"Content-Type: multipart/alternative;boundary=".$boundary);
+    array_push($headersArray,"Content-Type: multipart/mixed;boundary=\"".$outerboundary."\"");
 
     if (count($cc) > 0)
     {
@@ -506,11 +513,9 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
     // Add attachments if necessary
     if ($modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
     {
-        $message .= processDirectAttachments('smtp', NULL, $boundary);
+        $message .= processDirectAttachments('smtp', NULL, $outerboundary);
     }
 
-    //-- Close the email
-    $message .= "--".$boundary."--";
 	if ( ! $smtp->SendMessage($hesk_settings['noreply_mail'], $to_arr, $headersArray, $message))
     {
 		// Suppress errors unless we are in debug mode
@@ -869,6 +874,7 @@ function processDirectAttachments($emailMethod, $postfields = NULL, $boundary = 
             $attcontents = chunk_split(base64_encode($attachmentBinary));
             $attachments .= $attcontents."\n\n";
         }
+        $attachments .= "--".$boundary."--";
         return $attachments;
     }
 }
