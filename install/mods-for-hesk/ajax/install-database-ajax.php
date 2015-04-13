@@ -33,6 +33,9 @@ if ($version == 1) {
 } elseif ($version == 211) {
     execute211Scripts();
     execute211FileUpdate();
+} elseif ($version == 220) {
+    execute220Scripts();
+    execute220FileUpdate();
 } else {
     $response = 'The version "'.$version.'" was not recognized. Check the value submitted and try again.';
     print $response;

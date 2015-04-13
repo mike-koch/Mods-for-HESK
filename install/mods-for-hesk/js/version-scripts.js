@@ -32,6 +32,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 211) {
         startVersionUpgrade('211');
         executeUpdate(211, '211', '2.1.1');
+    } else if (startingVersion < 220) {
+        startVersionUpgrade('220');
+        executeUpdate(220, '220', '2.2.0');
     } else {
         installationFinished();
     }
