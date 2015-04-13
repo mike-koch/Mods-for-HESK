@@ -411,4 +411,20 @@ function execute220Scripts() {
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `Closable` = 'yes'");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.2.0' WHERE `Key` = 'modsForHeskVersion'");
 }
+
+function execute220FileUpdate() {
+    //-- Add the new attachment property to modsForHesk_settings.inc.php
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    //-- Only add the additional settings if they aren't already there.
+    if (strpos($file, '$modsForHesk_settings[\'attachments\']') === false)
+    {
+        $file .= '
+
+        //-- Setting for adding attachments to email messages. Either 0 for default-HESK behavior, or 1 to send as attachments
+$modsForHesk_settings[\'attachments\'] = 0;';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
 // END Version 2.2.0
