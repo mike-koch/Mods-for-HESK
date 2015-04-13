@@ -61,6 +61,11 @@ $hesklang['no_title_case'] = 'No';
 $hesklang['autoclose_ticket_status'] = 'When a ticket is closed automatically, change the status to';
 $hesklang['recent_tickets'] = 'Recent tickets';
 $hesklang['current_status_colon'] = 'Current status: %s'; // %s: status name (i.e. "Resolved", "New", etc.)
+$hesklang['email_attachments'] = 'Email attachments';
+$hesklang['email_attachments_help'] = '<b>Show attachments as links:</b> Links to attachments will be appended at the end of the email.
+    <br><br><b>Attach directly to email:</b> Attachments will be embedded directly into emails.';
+$hesklang['show_attachments_as_links'] = 'Show attachments as links';
+$hesklang['attach_directly_to_email'] = 'Attach directly to email';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.1.1
 $hesklang['new_article_default_type'] = 'Default Type for New Articles';

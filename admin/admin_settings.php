@@ -2095,6 +2095,28 @@ if ( defined('HESK_DEMO') )
                       </div>
                   </div>
                   <div class="form-group">
+                      <label for="email_attachments" class="col-sm-4 col-xs-12 control-label">
+                          <?php echo $hesklang['email_attachments']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                             title="<?php echo $hesklang['email_attachments']; ?>"
+                             data-content="<?php echo $hesklang['email_attachments_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="email_attachments" value="0" <?php echo $modsForHesk_settings['attachments'] == 0 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['show_attachments_as_links']; ?>
+                              </label>
+                          </div>
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="email_attachments" value="1" <?php echo $modsForHesk_settings['attachments'] == 1 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['attach_directly_to_email']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
                       <label for="use_bootstrap_theme" class="col-sm-4 col-xs-12 control-label">
                           <?php echo $hesklang['use_bootstrap_theme']; ?>
                           <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
