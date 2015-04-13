@@ -1437,7 +1437,7 @@ function hesk_listAttachments($attachments='', $reply=0, $white=1)
                                           </div>
                                           <div class="modal-footer">
                                               <button type="button" class="btn btn-default" data-dismiss="modal">'.$hesklang['close_modal'].'</button>
-                                              <button type="button" class="btn btn-success">'.$hesklang['dnl'].'</button>
+                                              <a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'" class="btn btn-success">'.$hesklang['dnl'].'</a>
                                           </div>
                                       </div>
                                   </div>
