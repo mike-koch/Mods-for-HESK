@@ -140,13 +140,13 @@ hesk_dbConnect();
                                     <div class="col-md-3 col-sm-12">
                                         <?php
                                         if ($version == '2.1.1') {
-                                            $v210btn = 'btn-success';
+                                            $v211btn = 'btn-success';
                                             $disableAllExcept = '211';
                                         } else {
-                                            $v210btn = 'btn-default';
+                                            $v211btn = 'btn-default';
                                         }
                                         ?>
-                                        <a id="211" class="btn <?php echo $v210btn; ?> btn-block disablable" href="installModsForHesk.php?v=211">v2.1.1</a>
+                                        <a id="211" class="btn <?php echo $v211btn; ?> btn-block disablable" href="installModsForHesk.php?v=211">v2.1.1</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
                                         <?php
