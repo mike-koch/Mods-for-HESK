@@ -1,0 +1,9 @@
+<p>Hello,</p>
+<p>A support ticket assigned to you has been re-opened.</p>
+<p>%%NAME%% has just re-opened the ticket "%%SUBJECT%%".</p>
+<p>Tracking ID: %%TRACK_ID%%</p>
+<p>You can manage this ticket here:
+%%TRACK_URL%%</p>
+<p>Regards,</p>
+%%SITE_TITLE%% <br>
+%%SITE_URL%%

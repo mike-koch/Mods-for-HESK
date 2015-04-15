@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -48,7 +49,7 @@ hesk_isLoggedIn();
 
 /* List of staff */
 $admins = array();
-$res = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `id` ASC");
+$res = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `name` ASC");
 while ($row=hesk_dbFetchAssoc($res))
 {
 	$admins[$row['id']]=$row['name'];
@@ -353,9 +354,10 @@ function mail_send()
 			/* Format email subject and message for recipient */
 			$subject = hesk_getEmailSubject('new_pm',$pm,0);
 			$message = hesk_getEmailMessage('new_pm',$pm,1,0);
+            $htmlMessage = hesk_getHtmlMessage('new_pm',$pm,1,0);
 
 			/* Send e-mail */
-			hesk_mail($pm_recipient['email'], $subject, $message);
+			hesk_mail($pm_recipient['email'], $subject, $message, $htmlMessage);
         }
 
 		unset($_SESSION['mail']);
@@ -572,7 +574,7 @@ function mail_list_messages()
 		} // end PAGES > 1
 
 		// Get messages from the database
-		$res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` WHERE `".hesk_dbEscape($hesk_settings['mailtmp']['this'])."`='".intval($_SESSION['id'])."' AND `deletedby`!='".intval($_SESSION['id'])."' ORDER BY `id` DESC LIMIT ".intval($limit_down)." , ".intval($maxresults)." ");
+        $res = hesk_dbQuery("SELECT `id`, `from`, `to`, `subject`, `dt`, `read` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` WHERE `".hesk_dbEscape($hesk_settings['mailtmp']['this'])."`='".intval($_SESSION['id'])."' AND `deletedby`!='".intval($_SESSION['id'])."' ORDER BY `id` DESC LIMIT ".intval($limit_down)." , ".intval($maxresults)." ");
 		?>
 
 		<form action="mail.php<?php if ($hesk_settings['mailtmp']['folder'] == 'outbox') {echo '?folder=outbox';} ?>" name="form1" method="post">
@@ -686,7 +688,7 @@ function show_new_form()
         <div class="form-group">
             <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['m_sub']; ?></label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" placeholder="<?php echo $hesklang['subject']; ?>" name="subject" size="40" maxlength="50"
+                <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>" name="subject" size="40" maxlength="50"
 				<?php
 				if (isset($_SESSION['mail']['subject']))
 				{
@@ -699,7 +701,7 @@ function show_new_form()
         <div class="form-group">
             <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
             <div class="col-sm-9">
-                <textarea name="message" class="form-control" placeholder="<?php echo $hesklang['message']; ?>" rows="15" cols="70"><?php
+                <textarea name="message" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" rows="15" cols="70"><?php
                 if (isset($_SESSION['mail']['message']))
                 {
                     echo stripslashes($_SESSION['mail']['message']);

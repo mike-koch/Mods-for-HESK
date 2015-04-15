@@ -109,7 +109,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 <div class="form-group">
                     <label for="key" class="col-sm-3 control-label"><?php echo $hesklang['activation_key']; ?></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="key" name="key" placeholder="<?php echo $hesklang['activation_key']; ?>">
+                        <input type="text" class="form-control" id="key" name="key" placeholder="<?php echo htmlspecialchars($hesklang['activation_key']); ?>">
                     </div>
                 </div>
                 <div class="form-group">

@@ -3,8 +3,8 @@ body {
 	color: black;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	margin-right:0;
 	margin-left:0;
+	margin-right:0;
 	margin-top:0;
 	margin-bottom:0;
 }
@@ -14,7 +14,7 @@ table.enclosing {
 	color : #4a5571;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	width: 770px;
+	width: 960px;
 }
 
 
@@ -22,7 +22,7 @@ td {
 	color : #4a5571;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	text-align: right;
+	text-align: left;
 }
 
 a img {
@@ -116,7 +116,7 @@ table.white th {
 	border-collapse: collapse;
 	background-image: url(img/tableheader.jpg);
 	background-repeat: no-repeat;
-	background-position: right top;
+	background-position: left top;
 }
 
 table.white th a {
@@ -127,7 +127,7 @@ table.white th a {
 
 table.white td {
 	height: 25px;
-	padding-right: 5px;
+	padding-left: 5px;
 }
 
 .noborder {
@@ -190,7 +190,7 @@ header a img {border: none; text-decoration: none !important;}
 
 .rate {
 	color: #666666;
-	text-align: left;
+	text-align: right;
 	font-style: italic; 
 }
 
@@ -216,7 +216,7 @@ fieldset {
 	background-color:white;
 	position:relative;
 	display:block;
-	padding: 0px 10px 10px 10px;
+	padding: 15px 10px 10px 10px;
 	margin:20px 0px 20px 0px;
 }
 
@@ -229,13 +229,11 @@ legend {
 	font-size: 10px;
 	font-weight:bold;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-	background-position: right top;
+	background-position: left top;
 	display:block;
 	width: auto;
-	padding:4px 5px;
-	margin:0px 0px 10px 0px;
+	padding:5px 5px;
 	position:relative;
-	top: -12px;
 	width:130px;	
 }
 
@@ -274,14 +272,14 @@ color:#FFFFFF;
 	color : #ffffff;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	text-align: right;
+	text-align: left;
 	background-image: url(img/headerbgsm.jpg);
 	background-repeat: repeat-x;
 	height: 25px;
 	padding: 0px;
 	margin: 0px;
 	font-weight:bold;
-	padding-right: 20px;
+	padding-left: 20px;
 }
 
 hr {
@@ -302,12 +300,12 @@ hr {
 	font-size: 10px;
 	font-weight:bold;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-	background-position: right top;
+	background-position: left top;
 	height: 19px;
-	padding-right: 6px;
 	padding-left: 6px;
-	margin-right: 2px;
-	margin-left: 2px
+	padding-right: 6px;
+	margin-left: 2px;
+	margin-right: 2px
 }
 
 .greenbuttonover {
@@ -319,12 +317,12 @@ hr {
 	font-size: 10px;
 	font-weight:bold;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-	background-position: right top;
+	background-position: left top;
 	height: 19px;
-	padding-right: 6px;
 	padding-left: 6px;
-	margin-right: 2px;
-	margin-left: 2px
+	padding-right: 6px;
+	margin-left: 2px;
+	margin-right: 2px
 }
 
 .orangebutton {
@@ -337,11 +335,11 @@ hr {
 	font-size: 10px;
 	font-weight:bold;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-	background-position: right top;
-	padding-right: 6px;
+	background-position: left top;
 	padding-left: 6px;
-	margin-right: 2px;
+	padding-right: 6px;
 	margin-left: 2px;
+	margin-right: 2px;
 	text-decoration: none;
 	margin-top: 0px;	
 }
@@ -356,11 +354,11 @@ hr {
 	font-size: 10px;
 	font-weight:bold;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-	background-position: right top;
-	padding-right: 6px;
+	background-position: left top;
 	padding-left: 6px;
-	margin-right: 2px;
+	padding-right: 6px;
 	margin-left: 2px;
+	margin-right: 2px;
 	text-decoration: none;
 	margin-top: 0px;		
 }
@@ -375,12 +373,12 @@ hr {
 	font-size: 10px;
 	font-weight:bold;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-	background-position: right top;
-	padding-right: 6px;
+	background-position: left top;
 	padding-left: 6px;
-	margin-right: 2px;
-	text-decoration: none;
+	padding-right: 6px;
 	margin-left: 2px;
+	text-decoration: none;
+	margin-right: 2px;
 	padding-top: 2px;
 }
 
@@ -391,13 +389,13 @@ hr {
 	width: 7px;
 	background-image: url(img/roundcornerslm.jpg);
 	background-repeat: repeat-y;
-	background-position: right;
+	background-position: left;
 }
 .roundcornersright {
 	width: 7px;
 	background-image: url(img/roundcornersrm.jpg);
 	background-repeat: repeat-y;
-	background-position: left;
+	background-position: right;
 }
 .roundcornerstop {
 	height: 7px;
@@ -441,10 +439,10 @@ hr {
 	border-collapse: collapse;
 	background-image: url(img/tableheader.jpg);
 	background-repeat: no-repeat;
-	background-position: right top;
+	background-position: left top;
 	height: 25px;
-	padding-right: 20px;
 	padding-left: 20px;
+	padding-right: 20px;
 	padding-top: 5px;
 	}
 	
@@ -487,8 +485,8 @@ div.success {
 }
 
 div.notice {
-	border: 1px solid #fcefa1; 
-	background: #fbf9ee; 
+	border: 1px solid #fcefa1;
+    background: #fff9de;
 	color: #363636;
 	padding: 10px;
 	vertical-align: middle;
@@ -551,8 +549,23 @@ td.admin_critical {
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	border: 1px solid #ff66ff;
-	border-top: 2px dashed #ff66ff;
 	padding: 1px;
+}
+
+/* New styles in HESK version 2.6 */
+
+div.info {
+	border: 1px solid #9acfea; 
+	background: #d9edf7; 
+	color: #363636;
+	padding: 10px;
+	vertical-align: middle;
+}
+
+div.none {
+	color: #363636;
+	padding: 10px;
+	vertical-align: middle;
 }
 
 .isError {
@@ -614,9 +627,9 @@ td.admin_critical {
 div.progress-container {
 	border: 1px solid #ccc;
 	width: 100px;
-	margin: 2px 0 2px 5px;
+	margin: 2px 5px 2px 0;
 	padding: 1px;
-	float: right;
+	float: left;
 	background: white;
 }
 
@@ -654,11 +667,11 @@ span.online {
 	font-size: 10px;
 	font-weight:normal;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-	background-position: right top;
-	padding-right: 6px;
+	background-position: left top;
 	padding-left: 6px;
-	margin-right: 2px;
+	padding-right: 6px;
 	margin-left: 2px;
+	margin-right: 2px;
 	text-decoration: none;
 	margin-top: 0px;	
 }
@@ -673,11 +686,11 @@ span.online {
 	font-size: 10px;
 	font-weight:normal;
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-	background-position: right top;
-	padding-right: 6px;
+	background-position: left top;
 	padding-left: 6px;
-	margin-right: 2px;
+	padding-right: 6px;
 	margin-left: 2px;
+	margin-right: 2px;
 	text-decoration: none;
 	margin-top: 0px;		
 }

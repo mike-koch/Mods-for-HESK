@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -93,6 +93,8 @@ if ($_SESSION['step'] == 3 && isset($_POST['dbtest']))
     // Generate HESK table names
 	$hesk_tables = array(
 		$hesk_settings['db_pfix'].'attachments',
+        $hesk_settings['db_pfix'].'banned_emails',
+        $hesk_settings['db_pfix'].'banned_ips',
 		$hesk_settings['db_pfix'].'categories',
 		$hesk_settings['db_pfix'].'kb_articles',
 		$hesk_settings['db_pfix'].'kb_attachments',
@@ -103,8 +105,12 @@ if ($_SESSION['step'] == 3 && isset($_POST['dbtest']))
 		$hesk_settings['db_pfix'].'online',
 		$hesk_settings['db_pfix'].'pipe_loops',
 		$hesk_settings['db_pfix'].'replies',
+        $hesk_settings['db_pfix'].'reply_drafts',
+        $hesk_settings['db_pfix'].'reset_password',
+        $hesk_settings['db_pfix'].'service_messages',
 		$hesk_settings['db_pfix'].'std_replies',
 		$hesk_settings['db_pfix'].'tickets',
+        $hesk_settings['db_pfix'].'ticket_templates',
 		$hesk_settings['db_pfix'].'users',
 	);
 
@@ -170,7 +176,7 @@ function hesk_iFinish()
 		<div class="alert alert-success"><strong>Success!</strong> HESK Successfully installed</div>
 		<div class="h3">Next Steps:<br/><br/></div>
         <ol>
-            <li><span style="color:#ff0000">Don't forget to run the <a href="<?php echo HESK_PATH . 'install/updateModsForHesk.php'; ?>">Mods for HESK Installation</a>!</li>
+            <li><span style="color:#ff0000">Don't forget to run the <a href="<?php echo HESK_PATH . 'install/mods-for-hesk/modsForHesk.php'; ?>">Mods for HESK Installation</a>!</li>
             <li>Remember your login details:<br />
 
 <pre style="font-size: 1.17em">
@@ -204,30 +210,57 @@ function hesk_iTables()
 hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` (
   `att_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `ticket_id` varchar(13) NOT NULL DEFAULT '',
-  `saved_name` varchar(255) NOT NULL DEFAULT '',
-  `real_name` varchar(255) NOT NULL DEFAULT '',
+  `ticket_id` varchar(13) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `saved_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `real_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `size` int(10) unsigned NOT NULL DEFAULT '0',
+  `type` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   PRIMARY KEY (`att_id`),
   KEY `ticket_id` (`ticket_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+");
+
+// -> Banned emails
+    hesk_dbQuery("
+CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."banned_emails` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `banned_by` smallint(5) unsigned NOT NULL,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `email` (`email`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8
+");
+
+// -> Banned IPs
+    hesk_dbQuery("
+CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."banned_ips` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `ip_from` int(10) unsigned NOT NULL DEFAULT '0',
+  `ip_to` int(10) unsigned NOT NULL DEFAULT '0',
+  `ip_display` varchar(100) NOT NULL,
+  `banned_by` smallint(5) unsigned NOT NULL,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8
 ");
 
 // -> Categories
 hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(60) NOT NULL DEFAULT '',
+  `name` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `cat_order` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `autoassign` enum('0','1') NOT NULL DEFAULT '1',
-  `type` enum('0','1') NOT NULL DEFAULT '0',
+  `autoassign` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `type` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `priority` enum('0','1','2','3') COLLATE utf8_unicode_ci NOT NULL DEFAULT '3',
   PRIMARY KEY (`id`),
   KEY `type` (`type`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 ");
 
 // ---> Insert default category
-hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` (`id`, `name`, `cat_order`, `autoassign`, `type`) VALUES (1, 'General', 10, '1', '0')");
+hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` (`id`, `name`, `cat_order`) VALUES (1, 'General', 10)");
 
 // -> KB Articles
 hesk_dbQuery("
@@ -236,22 +269,22 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` (
   `catid` smallint(5) unsigned NOT NULL,
   `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author` smallint(5) unsigned NOT NULL,
-  `subject` varchar(255) NOT NULL,
-  `content` mediumtext NOT NULL,
-  `keywords` mediumtext NOT NULL,
+  `subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `content` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `keywords` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `rating` float NOT NULL DEFAULT '0',
   `votes` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `views` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `type` enum('0','1','2') NOT NULL DEFAULT '0',
-  `html` enum('0','1') NOT NULL DEFAULT '0',
-  `sticky` enum('0','1') NOT NULL DEFAULT '0',
+  `type` enum('0','1','2') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `html` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `sticky` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   `art_order` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `history` mediumtext NOT NULL,
-  `attachments` mediumtext NOT NULL,
+  `history` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `attachments` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `catid` (`catid`),
-  KEY `type` (`type`),
   KEY `sticky` (`sticky`),
+  KEY `type` (`type`),
   FULLTEXT KEY `subject` (`subject`,`content`,`keywords`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 ");
@@ -260,8 +293,8 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` (
 hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` (
   `att_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `saved_name` varchar(255) NOT NULL DEFAULT '',
-  `real_name` varchar(255) NOT NULL DEFAULT '',
+  `saved_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `real_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `size` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`att_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
@@ -271,13 +304,13 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` (
 hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `parent` smallint(5) unsigned NOT NULL,
   `articles` smallint(5) unsigned NOT NULL DEFAULT '0',
   `articles_private` smallint(5) unsigned NOT NULL DEFAULT '0',
   `articles_draft` smallint(5) unsigned NOT NULL DEFAULT '0',
   `cat_order` smallint(5) unsigned NOT NULL,
-  `type` enum('0','1') NOT NULL,
+  `type` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `type` (`type`),
   KEY `parent` (`parent`)
@@ -285,12 +318,12 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` (
 ");
 
 // ---> Insert default KB category
-hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` (`id`, `name`, `parent`, `articles`, `cat_order`, `type`) VALUES (1, 'Knowledgebase', 0, 0, 10, '0')");
+hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` (`id`, `name`, `parent`, `cat_order`, `type`) VALUES (1, 'Knowledgebase', 0, 10, '0')");
 
 // -> Login attempts
 hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` (
-  `ip` varchar(46) NOT NULL,
+  `ip` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
   `number` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `last_attempt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   UNIQUE KEY `ip` (`ip`)
@@ -303,14 +336,14 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `from` smallint(5) unsigned NOT NULL,
   `to` smallint(5) unsigned NOT NULL,
-  `subject` varchar(255) NOT NULL,
-  `message` mediumtext NOT NULL,
-  `dt` datetime NOT NULL,
-  `read` enum('0','1') NOT NULL DEFAULT '0',
+  `subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `message` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `read` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   `deletedby` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `to` (`to`,`read`,`deletedby`),
-  KEY `from` (`from`)
+  KEY `from` (`from`),
+  KEY `to` (`to`,`read`,`deletedby`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 ");
 
@@ -318,7 +351,7 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` (
 hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` (`id`, `from`, `to`, `subject`, `message`, `dt`, `read`, `deletedby`) VALUES (1, 9999, 1, 'Rate this script', '<div style=\"text-align:justify;padding:3px\">\r\n\r\n<p style=\"color:green;font-weight:bold\">Enjoy using HESK? Please let others know!</p>\r\n\r\n<p>You are invited to rate HESK or even write a short review here:<br />&nbsp;<br /><img src=\"../img/link.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" style=\"vertical-align:text-bottom\" /> <a href=\"http://www.hotscripts.com/Detailed/46973.html\" target=\"_blank\">Rate this script @ Hot Scripts</a><br />&nbsp;<br /><img src=\"../img/link.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" style=\"vertical-align:text-bottom\" /> <a href=\"http://php.resourceindex.com/detail/04946.html\" target=\"_blank\">Rate this script @ The PHP Resource Index</a></p>\r\n\r\n<p>Thank you,<br />&nbsp;<br />Klemen,<br />\r\n<a href=\"http://www.hesk.com/\" target=\"_blank\">www.hesk.com</a>\r\n\r\n<p>&nbsp;</p>', NOW(), '0', 9999)");
 
 // ---> Insert welcome email
-hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` (`id`, `from`, `to`, `subject`, `message`, `dt`, `read`, `deletedby`) VALUES (2, 9999, 1, 'Welcome to HESK!', '<div style=\"text-align:justify;padding:3px\">\r\n\r\n<p style=\"color:green;font-weight:bold\">Congratulations for installing HESK, a lightweight and easy-to-use ticket support system!</p>\r\n\r\n<p>I am sure you are eager to use your <b>HESK&trade;</b> helpdesk to improve your customer support and reduce your workload, so check the rest of this message for some quick  &quot;Getting Started&quot; tips.</p>\r\n\r\n<p>Once you have learned the power of <b>HESK&trade;</b>, please consider supporting its future enhancement by purchasing an <a href=\"https://www.hesk.com/buy.php\" target=\"_blank\">inexpensive license</a>. Having a site license will remove the &quot;Powered by Help Desk Software HESK&quot; links from the bottom of your screens to make it look even more professional.</p>\r\n\r\n<p>Enjoy using HESK&trade; - and I value receiving your constructive feedback and feature suggestions.</p>\r\n\r\n<p>Klemen Stirn,<br />\r\nHESK owner and author<br />\r\n<a href=\"http://www.hesk.com/\" target=\"_blank\">www.hesk.com</a>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p style=\"text-align:center;font-weight:bold\">*** Quick &quot;Getting Started&quot; Tips ***</p>\r\n\r\n<ul style=\"padding-left:20px;padding-right:10px\">\r\n<li>Click the profile link to set your Profile name, e-mail, signature, and *CHANGE YOUR PASSWORD*.<br />&nbsp;</li>\r\n<li>Click the settings link in the top menu to get to the Settings page. Take some time and get familiar with all the available settings. Most should be self-explanatory; for additional information about each setting, click the [?] link for help about the current setting.<br />&nbsp;</li>\r\n<li>Create new staff accounts on the Users page. The default user (Administrator) cannot be deleted, but you can change the password on the Profile page.<br />&nbsp;</li>\r\n<li>Add new categories (departments) on the Categories page. The default category cannot be deleted, but it can be renamed.<br />&nbsp;</li>\r\n<li>Use the integrated Knowledgebase - it is one of the most powerful support tools as it gives self-help resources to your customers. A comprehensive and well-written knowledgebase can drastically reduce the number of support tickets you receive and save a lot of your time in the long run. Arrange answers to frequently asked questions and articles into categories.<br />&nbsp;</li>\r\n<li>Create canned responses on the Canned Responses page. These are pre-written replies to common support questions. However, you should also contribute by adding answers to other typical questions in the Knowledgebase.<br />&nbsp;</li>\r\n<li>Subscribe to the <a href=\"http://www.hesk.com/newsletter.php\" target=\"_blank\">HESK Newsletter</a> to be notified of updates and new versions.<br />&nbsp;</li>\r\n<li><a href=\"https://www.hesk.com/buy.php\" target=\"_blank\">Buy a license</a> to remove the &quot;<span class=\"smaller\">Powered by Help Desk Software HESK</span>&quot; links from the bottom of your help desk.<br />&nbsp;</li></ul>\r\n\r\n</div>', NOW(), '0', 9999)");
+hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` (`id`, `from`, `to`, `subject`, `message`, `dt`, `read`, `deletedby`) VALUES (2, 9999, 1, 'Welcome to HESK! Here are some quick tips...', '<p style=\"color:green;font-weight:bold\">HESK quick &quot;Getting Started&quot; tips:<br />&nbsp;</p>\r\n\r\n<ol style=\"padding-left:20px;padding-right:10px;text-align:justify\">\r\n<li>Click the Profile link to set your name, email, signature and password.<br />&nbsp;</li>\r\n<li>Click the Settings link in the top menu to get to the Settings page. For additional information about each setting, click the [?] link.<br />&nbsp;</li>\r\n<li>Add new categories (departments) on the Categories page. The default category cannot be deleted, but it can be renamed.<br />&nbsp;</li>\r\n<li>Create new staff accounts on the Users page. You can give them unlimited (Administrator) or restricted (Staff) access.<br />&nbsp;</li>\r\n<li>Use the integrated Knowledgebase. A comprehensive and well-written knowledgebase can drastically reduce the number of support tickets you receive and save a lot of your time in the long run.<br />&nbsp;</li>\r\n<li>You can create response and new ticket templates on the Canned page.<br />&nbsp;</li>\r\n<li>Subscribe to the <a href=\"http://www.hesk.com/newsletter.php\" target=\"_blank\">HESK Newsletter</a> to be notified of updates and new versions.<br />&nbsp;</li>\r\n<li>You should follow HESK on Twitter <a href=\"https://twitter.com/HESKdotCOM\" target=\"_blank\">here</a>.<br />&nbsp;</li>\r\n<li>To remove the &quot;<span class=\"smaller\">Powered by Help Desk Software HESK</span>&quot; links from the bottom of your help desk <a href=\"https://www.hesk.com/buy.php\" target=\"_blank\">buy a license here</a>.<br />&nbsp;</li></ol>\r\n\r\n<p>Enjoy using HESK and please feel free to share your constructive feedback and feature suggestions.</p>\r\n\r\n<p>Klemen Stirn<br />\r\nHESK owner and author<br />\r\n<a href=\"http://www.hesk.com/\" target=\"_blank\">www.hesk.com</a>', NOW(), '0', 9999)");
 
 // -> Notes
 hesk_dbQuery("
@@ -326,8 +359,9 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."notes` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `ticket` mediumint(8) unsigned NOT NULL,
   `who` smallint(5) unsigned NOT NULL,
-  `dt` datetime NOT NULL,
-  `message` mediumtext NOT NULL,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `message` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `attachments` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ticketid` (`ticket`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
@@ -347,9 +381,9 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."online` (
 // -> Pipe loops
 hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."pipe_loops` (
-  `email` varchar(255) NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `hits` smallint(1) unsigned NOT NULL DEFAULT '0',
-  `message_hash` char(32) NOT NULL,
+  `message_hash` char(32) COLLATE utf8_unicode_ci NOT NULL,
   `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY `email` (`email`,`hits`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
@@ -360,24 +394,67 @@ hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `replyto` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(50) NOT NULL DEFAULT '',
-  `message` mediumtext NOT NULL,
-  `dt` datetime DEFAULT NULL,
-  `attachments` mediumtext,
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `message` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `attachments` mediumtext COLLATE utf8_unicode_ci,
   `staffid` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `rating` enum('0','1','5') NOT NULL DEFAULT '0',
-  `read` enum('0','1') NOT NULL DEFAULT '0',
+  `rating` enum('1','5') COLLATE utf8_unicode_ci DEFAULT NULL,
+  `read` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `replyto` (`replyto`)
+  KEY `replyto` (`replyto`),
+  KEY `dt` (`dt`),
+  KEY `staffid` (`staffid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+");
+
+// -> Reply drafts
+hesk_dbQuery("
+CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."reply_drafts` (
+  `owner` smallint(5) unsigned NOT NULL,
+  `ticket` mediumint(8) unsigned NOT NULL,
+  `message` mediumtext CHARACTER SET utf8 NOT NULL,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `owner` (`owner`),
+  KEY `ticket` (`ticket`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+");
+
+// -> Reset password
+    hesk_dbQuery("
+CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."reset_password` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `user` smallint(5) unsigned NOT NULL,
+  `hash` char(40) NOT NULL,
+  `ip` varchar(45) NOT NULL,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user` (`user`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+");
+
+// -> Service messages
+    hesk_dbQuery("
+CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `author` smallint(5) unsigned NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `message` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `style` enum('0','1','2','3','4') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `type` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `order` smallint(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `type` (`type`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ");
 
 // -> Canned Responses
 hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."std_replies` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) NOT NULL DEFAULT '',
-  `message` mediumtext NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `message` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `reply_order` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
@@ -387,80 +464,104 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."std_replies` (
 hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `trackid` varchar(13) NOT NULL,
-  `name` varchar(50) NOT NULL DEFAULT '',
-  `email` varchar(255) NOT NULL DEFAULT '',
+  `trackid` varchar(13) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `email` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `category` smallint(5) unsigned NOT NULL DEFAULT '1',
-  `priority` enum('0','1','2','3') NOT NULL DEFAULT '3',
-  `subject` varchar(70) NOT NULL DEFAULT '',
-  `message` mediumtext NOT NULL,
-  `dt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `priority` enum('0','1','2','3') COLLATE utf8_unicode_ci NOT NULL DEFAULT '3',
+  `subject` varchar(70) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `message` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `dt` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `lastchange` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `ip` varchar(46) NOT NULL DEFAULT '',
-  `language` varchar(50) DEFAULT NULL,
-  `status` enum('0','1','2','3','4','5') NOT NULL DEFAULT '0',
+  `firstreply` timestamp NULL DEFAULT NULL,
+  `closedat` timestamp NULL DEFAULT NULL,
+  `articles` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ip` varchar(45) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `language` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` enum('0','1','2','3','4','5') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `openedby` smallint(5) unsigned DEFAULT '0',
+  `firstreplyby` smallint(8) unsigned DEFAULT NULL,
+  `closedby` smallint(5) unsigned DEFAULT NULL,
+  `replies` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `staffreplies` smallint(5) unsigned NOT NULL DEFAULT '0',
   `owner` smallint(5) unsigned NOT NULL DEFAULT '0',
   `time_worked` time NOT NULL DEFAULT '00:00:00',
-  `lastreplier` enum('0','1') NOT NULL DEFAULT '0',
+  `lastreplier` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   `replierid` smallint(5) unsigned DEFAULT NULL,
-  `archive` enum('0','1') NOT NULL DEFAULT '0',
-  `locked` enum('0','1') NOT NULL DEFAULT '0',
-  `attachments` mediumtext NOT NULL,
-  `merged` mediumtext NOT NULL,
-  `history` mediumtext NOT NULL,
-  `custom1` mediumtext NOT NULL,
-  `custom2` mediumtext NOT NULL,
-  `custom3` mediumtext NOT NULL,
-  `custom4` mediumtext NOT NULL,
-  `custom5` mediumtext NOT NULL,
-  `custom6` mediumtext NOT NULL,
-  `custom7` mediumtext NOT NULL,
-  `custom8` mediumtext NOT NULL,
-  `custom9` mediumtext NOT NULL,
-  `custom10` mediumtext NOT NULL,
-  `custom11` mediumtext NOT NULL,
-  `custom12` mediumtext NOT NULL,
-  `custom13` mediumtext NOT NULL,
-  `custom14` mediumtext NOT NULL,
-  `custom15` mediumtext NOT NULL,
-  `custom16` mediumtext NOT NULL,
-  `custom17` mediumtext NOT NULL,
-  `custom18` mediumtext NOT NULL,
-  `custom19` mediumtext NOT NULL,
-  `custom20` mediumtext NOT NULL,
+  `archive` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `locked` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `attachments` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `merged` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `history` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom1` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom2` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom3` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom4` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom5` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom6` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom7` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom8` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom9` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom10` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom11` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom12` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom13` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom14` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom15` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom16` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom17` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom18` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom19` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `custom20` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `trackid` (`trackid`),
   KEY `archive` (`archive`),
   KEY `categories` (`category`),
   KEY `statuses` (`status`),
-  KEY `owner` (`owner`)
+  KEY `owner` (`owner`),
+  KEY `openedby` (`openedby`,`firstreplyby`,`closedby`),
+  KEY `dt` (`dt`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+");
+
+// -> Ticket templates
+    hesk_dbQuery("
+CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."ticket_templates` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `message` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `tpl_order` smallint(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 ");
 
 // -> Users
 hesk_dbQuery("
 CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `user` varchar(20) NOT NULL DEFAULT '',
-  `pass` char(40) NOT NULL,
-  `isadmin` enum('0','1') NOT NULL DEFAULT '0',
-  `name` varchar(50) NOT NULL DEFAULT '',
-  `email` varchar(255) NOT NULL DEFAULT '',
-  `signature` varchar(255) NOT NULL DEFAULT '',
-  `language` varchar(50) DEFAULT NULL,
-  `categories` varchar(255) NOT NULL DEFAULT '',
-  `afterreply` enum('0','1','2') NOT NULL DEFAULT '0',
-  `autostart` enum('0','1') NOT NULL DEFAULT '1',
-  `notify_new_unassigned` enum('0','1') NOT NULL DEFAULT '1',
-  `notify_new_my` enum('0','1') NOT NULL DEFAULT '1',
-  `notify_reply_unassigned` enum('0','1') NOT NULL DEFAULT '1',
-  `notify_reply_my` enum('0','1') NOT NULL DEFAULT '1',
-  `notify_assigned` enum('0','1') NOT NULL DEFAULT '1',
-  `notify_pm` enum('0','1') NOT NULL DEFAULT '1',
-  `notify_note` enum('0','1') NOT NULL DEFAULT '1',
-  `default_list` varchar(255) NOT NULL DEFAULT '',
-  `autoassign` enum('0','1') NOT NULL DEFAULT '1',
-  `heskprivileges` mediumtext NOT NULL,
+  `user` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `pass` char(40) COLLATE utf8_unicode_ci NOT NULL,
+  `isadmin` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `signature` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `language` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `categories` varchar(500) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `afterreply` enum('0','1','2') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `autostart` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `notify_customer_new` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `notify_customer_reply` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `show_suggested` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `notify_new_unassigned` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `notify_new_my` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `notify_reply_unassigned` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `notify_reply_my` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `notify_assigned` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `notify_pm` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `notify_note` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `default_list` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `autoassign` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `heskprivileges` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
   `ratingneg` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `ratingpos` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `rating` float NOT NULL DEFAULT '0',
@@ -470,7 +571,7 @@ CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 ");
 
-hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."users` (`id`, `user`, `pass`, `isadmin`, `name`, `email`, `signature`, `heskprivileges`) VALUES (1, '".hesk_dbEscape($_SESSION['admin_user'])."', '".hesk_dbEscape($_SESSION['admin_hash'])."', '1', 'Your name', 'you@me.com', 'Sincerely,\r\n\r\nYour name\r\nYour website\r\nhttp://www.yourwebsite.com', '')");
+    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."users` (`id`, `user`, `pass`, `isadmin`, `name`, `email`, `heskprivileges`) VALUES (1, '".hesk_dbEscape($_SESSION['admin_user'])."', '".hesk_dbEscape($_SESSION['admin_hash'])."', '1', 'Your name', 'you@me.com', '')");
 
 	return true;
 
@@ -512,11 +613,11 @@ function hesk_iSaveSettings()
 	}
 	$set['debug_mode'] = 0;
 
-	$set['email_providers'] = count($set['email_providers']) ?  "'" . implode("','", $set['email_providers']) . "'" : '';
+    $set['email_providers'] = count($set['email_providers']) ?  "'" . implode("','", $set['email_providers']) . "'" : '';
+    $set['notify_spam_tags'] = count($set['notify_spam_tags']) ?  "'" . implode("','", $set['notify_spam_tags']) . "'" : '';
 
-    // Check if PHP version is 5.2.3+ and MySQL is 5.0.7+
-	$res = hesk_dbQuery('SELECT VERSION() AS version');
-	$set['db_vrsn'] = (version_compare(PHP_VERSION, '5.2.3') >= 0 && version_compare( hesk_dbResult($res) , '5.0.7') >= 0) ? 1 : 0;
+    // Check if PHP version is 5.2.3+
+    $set['db_vrsn'] = (version_compare(PHP_VERSION, '5.2.3') >= 0) ? 1 : 0;
 
 	hesk_iSaveSettingsFile($set);
 

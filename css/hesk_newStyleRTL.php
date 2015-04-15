@@ -119,10 +119,12 @@
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
     color: <?php echo $navbarItemTextSelectedColor; ?>;
     background-color: <?php echo $navbarItemSelectedBackgroundColor; ?>;
+    background-image: none;
 }
 .settingsquestionmark {
     color: <?php echo $questionMarkColor; ?>;
     font-size: 14px;
+    cursor: pointer;
 }
 .settingsquestionmark:hover {
     text-decoration: underline;
@@ -135,13 +137,12 @@
     text-decoration: underline;
 }
 .form-signin {
-    max-width: 330px;
-    padding: 15px;
+    max-width: 800px;
     margin: 0 auto;
 }
 .loginError {
-    width: 40%;
-    padding: 20px;
+    max-width: 800px;
+    padding-top: 20px;
     margin-right: auto;
     margin-left: auto;
 }
@@ -357,9 +358,29 @@ div.setupButtons {
     margin-left: auto;
     width: 90%;
 }
+.white-readonly {
+    cursor: text !important;
+    background-color: #fff !important;
+}
+button.btn.dropdown-toggle {
+    height: 34px;
+}
+button.dropdown-submit {
+    background:none!important;
+    border:none;
+}
 
-@media (min-width: 768px) {
-    .float-right-sm {
-        float: left;
-    }
+.attachment-table > tbody > tr > td > i {
+color: #ddd;
+text-shadow: 2px 2px #ccc;
+}
+
+.attachment-table > tbody > tr > td {
+vertical-align: middle;
+}
+
+.attachment-table > tbody > tr > td > span > img {
+max-height: 80px;
+max-width: 80px;
+cursor: pointer;
 }

@@ -1,0 +1,9 @@
+<p>Dear %%NAME%%,</p>
+<p>Our staff has just replied to your ticket "%%SUBJECT%%".</p>
+<p>You can view the ticket here:</p>
+%%TRACK_URL%%
+<br><br>
+<p>Sincerely,</p>
+%%SITE_TITLE%%
+<br>
+%%SITE_URL%%

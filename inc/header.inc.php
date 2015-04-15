@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -35,35 +35,32 @@
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 require(HESK_PATH . 'modsForHesk_settings.inc.php');
-// Check to see if we're in maintenance mode before sending anything to the DOM
-if ($modsForHesk_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE') && !defined('ON_LOGIN_PAGE')) {
-    header('Location: '.HESK_PATH.'maintenance.php');
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title><?php echo (isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>" />
     <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="theme-color" content="<?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>">
     <?php if ($modsForHesk_settings['rtl']) { ?>
-    <link href="<?php echo HESK_PATH; ?>hesk_style_v25RTL.css" type="text/css" rel="stylesheet" />
+    <link href="<?php echo HESK_PATH; ?>hesk_style_RTL.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } else { ?>
-	<link href="<?php echo HESK_PATH; ?>hesk_style_v25.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" <?php if ($modsForHesk_settings['use_bootstrap_theme'] == 0) {echo 'disabled';} ?>>
     <?php if ($modsForHesk_settings['rtl']) { ?>
-    <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php" type="text/css" rel="stylesheet" />
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } else { ?>
-    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } ?>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
-	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript_v25.js"></script>
+	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
     <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
@@ -131,6 +128,12 @@ if ($modsForHesk_settings['maintenance_mode'] && !defined('ON_MAINTENANCE_PAGE')
 			$onload .= "ss();";
 		}
 	}
+
+    // Use ReCaptcha API v2?
+    if (defined('RECAPTCHA'))
+    {
+        echo '<script src="https://www.google.com/recaptcha/api.js?hl='.$hesklang['RECAPTCHA'].'" async defer></script>';
+    }
     ?>
 
 </head>

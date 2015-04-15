@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -39,6 +39,7 @@ define('HESK_PATH','../');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/profile_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -61,6 +62,7 @@ $hesk_settings['features'] = array(
 'can_man_users',		/* User can create and edit staff accounts */
 'can_man_cat',			/* User can manage categories/departments */
 'can_man_canned',		/* User can manage canned responses */
+'can_man_ticket_tpl',	/* User can manage ticket templates */
 'can_add_archive',		/* User can mark tickets as "Tagged" */
 'can_assign_self',		/* User can assign tickets to himself/herself */
 'can_assign_others',	/* User can assign tickets to other staff members */
@@ -70,20 +72,53 @@ $hesk_settings['features'] = array(
 'can_run_reports_full', /* User can run reports and see statistics (unrestricted) */
 'can_export',			/* User can export own tickets to Excel */
 'can_view_online',		/* User can view what staff members are currently online */
+'can_ban_emails',		/* User can ban email addresses */
+'can_unban_emails',		/* User can delete email address bans. Also enables "can_ban_emails" */
+'can_ban_ips',			/* User can ban IP addresses */
+'can_unban_ips',		/* User can delete IP bans. Also enables "can_ban_ips" */
+'can_service_msg',		/* User can manage service messages shown in customer interface */
+'can_man_email_tpl',    /* User can manage email templates */
 );
 
 /* Set default values */
 $default_userdata = array(
+
+    // Profile info
 	'name' => '',
 	'email' => '',
-	'user' => '',
+    'cleanpass' => '',
+    'user' => '',
+    'autoassign' => 'Y',
+
+    // Signature
 	'signature' => '',
+
+    // Permissions
 	'isadmin' => 1,
     'active' => 1,
 	'categories' => array('1'),
 	'features' => array('can_view_tickets','can_reply_tickets','can_change_cat','can_assign_self','can_view_unassigned','can_view_online'),
-	'signature' => '',
-	'cleanpass' => '',
+    'can_manage_settings' => 0,
+
+    // Preferences
+    'afterreply' => 0,
+    'autorefresh' => 0,
+
+    // Defaults
+    'autostart' => 1,
+    'notify_customer_new' => 1,
+    'notify_customer_reply' => 1,
+    'show_suggested' => 1,
+
+    // Notifications
+    'notify_new_unassigned' => 1,
+    'notify_new_my' => 1,
+    'notify_reply_unassigned' => 1,
+    'notify_reply_my' => 1,
+    'notify_assigned' => 1,
+    'notify_note' => 1,
+    'notify_pm' => 1,
+    'notify_note_unassigned' => 1,
 );
 
 /* A list of all categories */
@@ -101,7 +136,10 @@ while ($row=hesk_dbFetchAssoc($res))
 if ( ! $_SESSION['isadmin'])
 {
 	/* Can't create admin users */
-    $_POST['isadmin'] = 0;
+    if ( isset($_POST['isadmin']) )
+    {
+        unset($_POST['isadmin']);
+    }
 
     /* Can only add features he/she has access to */
 	$hesk_settings['features'] = array_intersect( explode(',', $_SESSION['heskprivileges']) , $hesk_settings['features']);
@@ -166,149 +204,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
 <div style="margin-top: 20px" class="row">
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading"><?php echo $hesklang['add_user']; ?></div>
-            <div class="panel-body">
-                <h6><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></h6>
-                <div class="footerWithBorder blankSpace"></div>
-
-                <form class="form-horizontal" name="form1" action="manage_users.php" method="post">
-                    <div class="form-group">
-                        <label for="name" class="col-sm-5 control-label"><?php echo $hesklang['real_name']; ?>: <font class="important">*</font></label>
-                        <div class="col-sm-7">
-                            <input type="text" class="form-control" name="name" size="40" maxlength="50" value="<?php echo $_SESSION['userdata']['name']; ?>" placeholder="<?php echo $hesklang['real_name']; ?>" />
-                        </div>     
-                    </div>
-                    <div class="form-group">
-                        <label for="email" class="col-sm-5 control-label"><?php echo $hesklang['email']; ?>: <font class="important">*</font></label>
-                        <div class="col-sm-7">
-                            <input type="text" class="form-control" name="email" size="40" maxlength="255" placeholder="<?php echo $hesklang['email']; ?>" value="<?php echo $_SESSION['userdata']['email']; ?>" />    
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="user" class="col-sm-5 control-label"><?php echo $hesklang['username']; ?>: <font class="important">*</font></label>
-                        <div class="col-sm-7">
-                            <input type="text" class="form-control" name="user" size="40" maxlength="20" value="<?php echo $_SESSION['userdata']['user']; ?>" placeholder="<?php echo $hesklang['username']; ?>" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="pass" class="col-sm-5 control-label"><?php echo $hesklang['pass']; ?>: <font class="important">*</font></label>
-                        <div class="col-sm-7">
-                            <input type="password" class="form-control" name="newpass" autocomplete="off" size="40" placeholder="<?php echo $hesklang['pass']; ?>" value="<?php echo $_SESSION['userdata']['cleanpass']; ?>" onkeyup="javascript:hesk_checkPassword(this.value)" />     
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPass" class="col-sm-5 control-label" style="font-size: .9em"><?php echo $hesklang['confirm_pass']; ?>: <font class="important">*</font></label>     
-                        <div class="col-sm-7">
-                            <input type="password" name="newpass2" class="form-control" autocomplete="off" placeholder="<?php echo $hesklang['confirm_pass']; ?>" size="40" value="<?php echo $_SESSION['userdata']['cleanpass']; ?>" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="pwStrength" class="col-sm-5 control-label" style="font-size: .9em"><?php echo $hesklang['pwdst']; ?>:</label>
-                        <div class="col-sm-7">
-                            <div style="border: 1px solid gray; width: 100px;">
-                                <div id="progressBar"
-                                    style="font-size: 1px; height: 22px; width: 0px; border: 1px solid white;">
-                                </div>
-                            </div> 
-                        </div>     
-                    </div>
-                    <div class="form-group">
-                        <label for="administrator" class="col-sm-5 control-label"><?php echo $hesklang['administrator']; ?>: <font class="important">*</font></label>
-                        <div class="col-sm-7">
-                            <?php
-                            /* Only administrators can create new administrator accounts */
-                            if ($_SESSION['isadmin'])
-                            {
-                                ?>
-                                <div class="radio"><label><input type="radio" name="isadmin" value="1" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if ($_SESSION['userdata']['isadmin']) echo 'checked="checked"'; ?> /> <?php echo $hesklang['yes'].' '.$hesklang['admin_can']; ?></label></div>
-                                <div class="radio"><label><input type="radio" name="isadmin" value="0" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if (!$_SESSION['userdata']['isadmin']) echo 'checked="checked"'; ?> /> <?php echo $hesklang['no'].' '.$hesklang['staff_can']; ?></label></div>
-                                <?php
-                            }
-                            else
-                            {
-                                echo $hesklang['no'].' '.$hesklang['staff_can'];
-                            }
-                            ?>
-                        </div>
-                    </div>
-                    <div id="options" style="display: <?php echo ($_SESSION['isadmin'] && $_SESSION['userdata']['isadmin']) ? 'none' : 'block'; ?>">
-                        <div class="form-group">
-                            <label for="categories" class="col-sm-5 control-label"><?php echo $hesklang['allowed_cat']; ?>: <font class="important">*</font></label>
-                            <div class="col-sm-7">
-                                 <?php
-                                    foreach ($hesk_settings['categories'] as $catid => $catname)
-                                    {
-                                        echo '<div class="checkbox"><label><input type="checkbox" name="categories[]" value="' . $catid . '" ';
-                                        if ( in_array($catid,$_SESSION['userdata']['categories']) )
-                                        {
-                                            echo ' checked="checked" ';
-                                        }
-                                        echo ' />' . $catname . '</label></div> ';
-                                    }
-                                ?>
-                            </div>     
-                        </div>
-                        <div class="form-group">
-                            <label for="permissions" class="col-sm-5 control-label"><?php echo $hesklang['allow_feat']; ?>: <font class="important">*</font></label>
-                            <div class="col-sm-7">
-                                 <?php
-                                    foreach ($hesk_settings['features'] as $k)
-                                    {
-                                        echo '<div class="checkbox"><label><input type="checkbox" name="features[]" value="' . $k . '" ';
-                                        if (in_array($k,$_SESSION['userdata']['features']))
-                                        {
-                                            echo ' checked="checked" ';
-                                        }
-                                        echo ' />' . $hesklang[$k] . '</label></div> ';
-                                    }
-                                ?>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" name="can_change_notification_settings" checked> <?php echo $hesklang['can_change_notification_settings']; ?> </label>
-                                </div>
-                            </div>     
-                        </div> 
-                    </div>
-                    <div class="form-group">
-                        <label for="auto-assign" class="col-sm-5 control-label"><?php echo $hesklang['opt']; ?>:</label>
-                        <div class="col-sm-7">
-                            <?php
-                            if ($hesk_settings['autoassign'])
-                            {
-                            ?>
-                            <div class="checkbox">
-                                <label><input type="checkbox" name="autoassign" value="Y" <?php if ( ! isset($_SESSION['userdata']['autoassign']) || $_SESSION['userdata']['autoassign'] == 1 ) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['user_aa']; ?></label>
-                            </div>
-                            <?php } if ($_SESSION['can_manage_settings']) { ?>
-                            <div class="checkbox">
-                                    <label><input type="checkbox" name="manage_settings"> <?php echo $hesklang['can_man_settings']; ?></label>
-                            </div>
-                            <?php } ?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="signature" class="col-sm-5 control-label"><?php echo $hesklang['signature_max']; ?>:</label>
-
-                        <div class="col-sm-7">
-                            <textarea class="form-control" name="signature" rows="6" placeholder="<?php echo $hesklang['sig']; ?>" cols="40"><?php echo $_SESSION['userdata']['signature']; ?></textarea>
-                            <?php echo $hesklang['sign_extra']; ?>
-                        </div>     
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-12 text-right">
-                            <input type="hidden" name="a" value="new" />
-                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                            <input type="submit" class="btn btn-default" value="<?php echo $hesklang['create_user']; ?>" />
-                            <a class="btn btn-default" href="manage_users.php?a=reset_form"><?php echo $hesklang['refi']; ?></a>     
-                        </div>     
-                    </div>
-
-                </form>
-            </div>
-        </div>
-	</div>
-    <div class="col-md-8">
+    <div class="col-md-10 col-md-offset-1">
          <script language="Javascript" type="text/javascript"><!--
             function confirm_delete()
             {
@@ -345,7 +241,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </tr>
 <!-- I can't get this block to tab over without breaking, so it will be awkwardly sticking out for now :( -->
 <?php
-$res = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` ORDER BY `id` ASC');
+$res = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` ORDER BY `name` ASC');
 
 $i=1;
 $cannot_manage = array();
@@ -395,7 +291,7 @@ while ($myuser = hesk_dbFetchAssoc($res))
         $edit_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
     } else
     {
-    	$edit_code = '<a href="manage_users.php?a=edit&amp;id='.$myuser['id'].'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['edit'].'"><i style="font-size: 16px" class="fa fa-pencil"></i></a>';
+    	$edit_code = '<a href="manage_users.php?a=edit&amp;id='.$myuser['id'].'"><i style="font-size: 16px" class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="'.$hesklang['edit'].'"></i></a>';
     }
 
     if ($myuser['isadmin'])
@@ -413,7 +309,7 @@ while ($myuser = hesk_dbFetchAssoc($res))
         $remove_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
     } else
     {
-        $remove_code = ' <a href="manage_users.php?a=remove&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"><i style="font-size: 16px; color: red" class="fa fa-times"></i></a>';
+        $remove_code = ' <a href="manage_users.php?a=remove&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i style="font-size: 16px; color: red" class="fa fa-times" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"></i></a>';
     }
 
 	/* Is auto assign enabled? */
@@ -421,11 +317,11 @@ while ($myuser = hesk_dbFetchAssoc($res))
     {
     	if ($myuser['autoassign'])
         {
-			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaon'].'"><i style="color: orange; font-size: 16px" class="fa fa-bolt"></i></a>';
+			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=0&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'"><i style="color: orange; font-size: 16px" class="fa fa-bolt" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaon'].'"></i></a>';
         }
         else
         {
-			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=1&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaoff'].'"><i style="color: gray; font-size: 16px" class="fa fa-bolt"></i></a>';
+			$autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=1&amp;id='.$myuser['id'].'&amp;token='.hesk_token_echo(0).'"><i style="color: gray; font-size: 16px" class="fa fa-bolt" data-toggle="tooltip" data-placement="top" title="'.$hesklang['aaoff'].'"></i></a>';
         }
     }
     else
@@ -437,9 +333,9 @@ while ($myuser = hesk_dbFetchAssoc($res))
     if ($myuser['id'] != $_SESSION['id'] && $myuser['id'] != 1) {
         /* Is the user active? */
         if ($myuser['active']) {
-            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" data-toggle="tooltip" data-placement="top" title="' . $hesklang['disable_user'] . '"><i style="color: green; font-size: 16px" class="fa fa-user"></i></a>';
+            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i style="color: green; font-size: 16px" class="fa fa-user" data-toggle="tooltip" data-placement="top" title="' . $hesklang['disable_user'] . '"></i></a>';
         } else {
-            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" data-toggle="tooltip" data-placement="top" title="' . $hesklang['enable_user'] . '"><i style="color: gray; font-size: 16px" class="fa fa-user"></i></a>';
+            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i style="color: gray; font-size: 16px" class="fa fa-user" data-toggle="tooltip" data-placement="top" title="' . $hesklang['enable_user'] . '"></i></a>';
         }
     }
 
@@ -470,7 +366,18 @@ EOC;
 {
     echo '&nbsp;&nbsp;&nbsp;<i style="color: green" class="fa fa-circle"></i> '.$hesklang['online'].' &nbsp;&nbsp;&nbsp; <i style="color: gray" class="fa fa-circle"></i> '.$hesklang['offline'];
 }?>
-    </div>     
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <h3><?php echo $hesklang['add_user']; ?></h3>
+        <h6><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></h6>
+        <div class="footerWithBorder blankSpace"></div>
+
+        <form name="form1" method="post" action="manage_users.php" class="form-horizontal" role="form">
+        <?php hesk_profile_tab('userdata', false, 'create_user'); ?>
+        </form>
+    </div>
 </div>
 
 <script language="Javascript" type="text/javascript"><!--
@@ -554,7 +461,7 @@ function edit_user()
 
     if ( ! isset($_SESSION['save_userdata']))
     {
-		$res = hesk_dbQuery("SELECT `user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges` AS `features`, `can_manage_settings`, `active`, `can_change_notification_settings`
+		$res = hesk_dbQuery("SELECT *,`heskprivileges` AS `features`, `can_manage_settings`, `active`, `can_change_notification_settings`
                             FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($id)."' LIMIT 1");
     	$_SESSION['userdata'] = hesk_dbFetchAssoc($res);
 
@@ -605,157 +512,7 @@ function edit_user()
             <div class="footerWithBorder blankSpace"></div>
             
             <form role="form" class="form-horizontal" name="form1" method="post" action="manage_users.php">
-                <!-- Contact info -->
-                <div class="form-group">
-                    <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['real_name']; ?>: <font class="important">*</font></label>
-                    <div class="col-sm-9">
-                        <input class="form-control" placeholder="<?php echo $hesklang['real_name']; ?>" type="text" name="name" size="40" maxlength="50" value="<?php echo $_SESSION['userdata']['name']; ?>" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: <font class="important">*</font></label>
-                    <div class="col-sm-9">
-                        <input class="form-control" placeholder="<?php echo $hesklang['email']; ?>"  type="text" name="email" size="40" maxlength="255" value="<?php echo $_SESSION['userdata']['email']; ?>" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="user" class="col-sm-3 control-label"><?php echo $hesklang['username']; ?>: <font class="important">*</font></label>
-                    <div class="col-sm-9">
-                        <input class="form-control" placeholder="<?php echo $hesklang['username']; ?>" type="text" name="user" size="40" maxlength="20" value="<?php echo $_SESSION['userdata']['user']; ?>" />
-                    </div>     
-                </div>
-                <div class="form-group">
-                    <label for="newpass" class="col-sm-3 control-label"><?php echo $hesklang['pass']; ?>:</label>
-                    <div class="col-sm-9">
-                        <input type="password" class="form-control" placeholder="<?php echo $hesklang['pass']; ?>"  name="newpass" autocomplete="off" size="40" value="<?php echo $_SESSION['userdata']['cleanpass']; ?>" onkeyup="javascript:hesk_checkPassword(this.value)" />         
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="newpass2" class="col-sm-3 control-label"><?php echo $hesklang['confirm_pass']; ?>:</label>
-                    <div class="col-sm-9">
-                        <input type="password" class="form-control" placeholder="<?php echo $hesklang['confirm_pass']; ?>"  name="newpass2" autocomplete="off" size="40" value="<?php echo $_SESSION['userdata']['cleanpass']; ?>" />
-                    </div>     
-                </div>
-                <div class="form-group">
-                    <label for="pwdst" class="col-sm-3 control-label"><?php echo $hesklang['pwdst']; ?>:</label>
-                    <div class="col-sm-9">
-                        <div style="border: 1px solid gray; width: 100px;">
-	                        <div id="progressBar"
-	                             style="font-size: 1px; height: 14px; width: 0px; border: 1px solid white;">
-	                        </div>
-                        </div>
-                    </div>   
-                </div>
-                <div class="form-group">
-                    <label for="isadmin" class="col-sm-3 control-label"><?php echo $hesklang['administrator']; ?>: <font class="important">*</font></label>
-                    <div class="col-sm-9">
-                        <?php
-	                    /* Only administrators can create new administrator accounts */
-	                    if ($_SESSION['isadmin'])
-	                    {
-		                    ?>
-	                        <div class="radio"><label><input type="radio" name="isadmin" value="1" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if ($_SESSION['userdata']['isadmin']) echo 'checked="checked"'; ?> /> <?php echo $hesklang['yes'].' '.$hesklang['admin_can']; ?></label></div>
-		                    <div class="radio"><label><input type="radio" name="isadmin" value="0" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if (!$_SESSION['userdata']['isadmin']) echo 'checked="checked"'; ?> /> <?php echo $hesklang['no'].' '.$hesklang['staff_can']; ?></label></div>
-	                        <?php
-	                    }
-	                    else
-	                    {
-		                    echo $hesklang['no'].' '.$hesklang['staff_can'];
-	                    }
-	                    ?>        
-                    </div>     
-                </div>
-                <div class="form-group" id="options" style="display: <?php echo ($_SESSION['isadmin'] && $_SESSION['userdata']['isadmin']) ? 'none' : ''; ?>">
-                   <div class="row">
-                        <label for="cats" class="control-label col-sm-3"><?php echo $hesklang['allowed_cat']; ?>: <font class="important">*</font></label>
-                        <div class="col-sm-6">
-                            <?php
-	                            foreach ($hesk_settings['categories'] as $catid => $catname)
-	                            {
-	        	                    echo '<div class="checkbox"><label><input type="checkbox" name="categories[]" value="' . $catid . '" ';
-	                                if ( in_array($catid,$_SESSION['userdata']['categories']) )
-	                                {
-	            	                    echo ' checked="checked" ';
-	                                }
-	                                echo ' />' . $catname . '</label></div> ';
-	                            }
-			                ?>         
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label for="feats" class="control-label col-sm-3"><?php echo $hesklang['allow_feat']; ?>: <font class="important">*</font></label>
-                        <div class="col-sm-6">
-                            <?php
-			                    foreach ($hesk_settings['features'] as $k)
-	                            {
-	        	                    echo '<div class="checkbox"><label><input type="checkbox" name="features[]" value="' . $k . '" ';
-	                                if (in_array($k,$_SESSION['userdata']['features']))
-	                                {
-	            	                    echo ' checked="checked" ';
-	                                }
-	                                echo ' />' . $hesklang[$k] . '</label></div> ';
-	                            }
-
-                                $manageNotificationCheckboxState = '';
-                                if (
-                                    isset($_SESSION['userdata']['can_change_notification_settings'])
-                                    && $_SESSION['userdata']['can_change_notification_settings'] == 1)
-                                {
-                                    $manageNotificationCheckboxState = 'checked';
-                                }
-
-	                        ?>
-                            <div class="checkbox">
-                                <label><input type="checkbox" name="can_change_notification_settings" <?php echo $manageNotificationCheckboxState; ?>>
-                                        <?php echo $hesklang['can_change_notification_settings']; ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="autoassign" class="col-sm-3 control-label"><?php echo $hesklang['opt']; ?>:</label>
-                    <div class="col-sm-9">
-                        <?php if ($hesk_settings['autoassign'])
-                        {    ?>
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="autoassign" value="Y" <?php if ( isset($_SESSION['userdata']['autoassign']) && $_SESSION['userdata']['autoassign'] == 1 ) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['user_aa']; ?></label>
-                        </div>
-                        <?php } if ($_GET['id'] != 1) { ?>
-                            <div class="checkbox">
-                                <?php if (isset($_SESSION['userdata']['can_manage_settings'])) { ?>
-                                    <label><input type="checkbox" name="manage_settings"
-                                            <?php if ($_SESSION['userdata']['can_manage_settings']) { echo 'checked="checked"';} ?>
-                                            <?php if (!$_SESSION['can_manage_settings']) { echo 'disabled'; } ?>> <?php echo $hesklang['can_man_settings']; ?></label>
-                                    <?php if (!$_SESSION['can_manage_settings'] && $_SESSION['userdata']['can_manage_settings']) {
-                                        echo '<input type="hidden" name="manage_settings" value="1">';
-                                    } ?>
-                                <?php } ?>
-                            </div>
-                        <?php } else { ?>
-                            <input type="hidden" name="manage_settings" value="1">
-                        <?php } ?>
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="active" <?php if ($_SESSION['userdata']['active']) { echo 'checked';} ?>> <?php echo $hesklang['active_user']; ?></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="signature" class="col-sm-3 control-label"><?php echo $hesklang['signature_max']; ?>:</label>
-                    <div class="col-sm-9">
-                        <textarea class="form-control" placeholder="<?php echo $hesklang['sig']; ?>" name="signature" rows="6" cols="40"><?php echo $_SESSION['userdata']['signature']; ?></textarea><br />
-	                    <?php echo $hesklang['sign_extra']; ?>    
-                    </div>    
-                </div>
-
-                <!-- Submit -->
-                <div class="form-group" style="text-align: center">
-                    <input type="hidden" name="a" value="save" />
-                    <input type="hidden" name="userid" value="<?php echo $id; ?>" />
-                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-	                <input class="btn btn-default" type="submit" value="<?php echo $hesklang['save_changes']; ?>" />
-                    <a class="btn btn-default" href="manage_users.php"><?php echo $hesklang['dich']; ?></a>         
-                </div>
+                <?php hesk_profile_tab('userdata',false,'edit_user'); ?>
             </form>
             <script language="Javascript" type="text/javascript"><!--
 	            hesk_checkPassword(document.form1.newpass.value);
@@ -779,18 +536,6 @@ function new_user()
 
 	$myuser = hesk_validateUserInfo();
 
-	/* Can view unassigned tickets? */
-	if ( in_array('can_view_unassigned', $myuser['features']) )
-	{
-		$sql_where = '';
-		$sql_what = '';
-	}
-	else
-	{
-		$sql_where = ' , `notify_new_unassigned`, `notify_reply_unassigned` ';
-		$sql_what = " , '0', '0' ";
-	}
-
     /* Categories and Features will be stored as a string */
     $myuser['categories'] = implode(',',$myuser['categories']);
     $myuser['features'] = implode(',',$myuser['features']);
@@ -810,7 +555,31 @@ function new_user()
     }
 
 	hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."users` (
-	    `user`,`pass`,`isadmin`,`name`,`email`,`signature`,`categories`,`autoassign`,`heskprivileges`, `can_manage_settings`, `can_change_notification_settings` $sql_where) VALUES (
+	    `user`,
+	    `pass`,
+	    `isadmin`,
+	    `name`,
+	    `email`,
+	    `signature`,
+	    `categories`,
+	    `autoassign`,
+	    `heskprivileges`,
+	    `can_manage_settings`,
+	    `can_change_notification_settings`,
+	    `afterreply`,
+        `autostart`,
+        `notify_customer_new`,
+        `notify_customer_reply`,
+        `show_suggested`,
+        `notify_new_unassigned`,
+        `notify_new_my`,
+        `notify_reply_unassigned`,
+        `notify_reply_my`,
+        `notify_assigned`,
+        `notify_pm`,
+        `notify_note`,
+        `notify_note_unassigned`,
+        `autorefresh`) VALUES (
 	'".hesk_dbEscape($myuser['user'])."',
 	'".hesk_dbEscape($myuser['pass'])."',
 	'".intval($myuser['isadmin'])."',
@@ -821,8 +590,21 @@ function new_user()
 	'".intval($myuser['autoassign'])."',
 	'".hesk_dbEscape($myuser['features'])."',
 	'".hesk_dbEscape($myuser['can_manage_settings'])."',
-	'".hesk_dbEscape($myuser['can_change_notification_settings'])."'
-	$sql_what )" );
+	'".hesk_dbEscape($myuser['can_change_notification_settings'])."',
+	'".($myuser['afterreply'])."' ,
+	'".($myuser['autostart'])."' ,
+	'".($myuser['notify_customer_new'])."' ,
+	'".($myuser['notify_customer_reply'])."' ,
+	'".($myuser['show_suggested'])."' ,
+	'".($myuser['notify_new_unassigned'])."' ,
+	'".($myuser['notify_new_my'])."' ,
+	'".($myuser['notify_reply_unassigned'])."' ,
+	'".($myuser['notify_reply_my'])."' ,
+	'".($myuser['notify_assigned'])."' ,
+	'".($myuser['notify_pm'])."',
+	'".($myuser['notify_note'])."',
+	'".($myuser['notify_note_unassigned'])."',
+	".intval($myuser['autorefresh']).")" );
 
     $_SESSION['seluser'] = hesk_dbInsertID();
 
@@ -853,17 +635,17 @@ function update_user()
 	$myuser = hesk_validateUserInfo(0,$_SERVER['PHP_SELF']);
     $myuser['id'] = $tmp;
 
-    /* Only active users can be assigned tickets */
-    if ($myuser['active']) {
-        /* If can't view assigned changes this */
-        if (in_array('can_view_unassigned', $myuser['features'])) {
-            $sql_where = "";
-        } else {
-            $sql_where = " , `notify_new_unassigned`='0', `notify_reply_unassigned`='0' ";
-        }
-    } else {
+    /* Only active users can be assigned tickets. Also turn off all notifications */
+    if (!$myuser['active']) {
         $myuser['autoassign'] = 0;
-        $sql_where = " , `notify_new_unassigned`='0', `notify_new_my`='0', `notify_reply_unassigned`='0', `notify_reply_my`='0', `notify_assigned`='0', `notify_pm`='0', `notify_note`='0' ";
+        $myuser['notify_new_unassigned'] = 0;
+        $myuser['notify_new_my'] = 0;
+        $myuser['notify_reply_unassigned'] = 0;
+        $myuser['notify_reply_my'] = 0;
+        $myuser['notify_assigned'] = 0;
+        $myuser['notify_pm'] = 0;
+        $myuser['notify_note'] = 0;
+        $myuser['notify_note_unassigned'] = 0;
     }
 
     /* Check for duplicate usernames */
@@ -914,8 +696,21 @@ function update_user()
     `autoassign`='".intval($myuser['autoassign'])."',
     `heskprivileges`='".hesk_dbEscape($myuser['features'])."',
     `can_manage_settings`='".hesk_dbEscape($myuser['can_manage_settings'])."',
-    `can_change_notification_settings`='".hesk_dbEscape($myuser['can_change_notification_settings'])."'
-    $sql_where
+    `can_change_notification_settings`='".hesk_dbEscape($myuser['can_change_notification_settings'])."',
+    `afterreply`='".($myuser['afterreply'])."' ,
+	`autostart`='".($myuser['autostart'])."' ,
+	`notify_customer_new`='".($myuser['notify_customer_new'])."' ,
+	`notify_customer_reply`='".($myuser['notify_customer_reply'])."' ,
+	`show_suggested`='".($myuser['show_suggested'])."' ,
+	`notify_new_unassigned`='".($myuser['notify_new_unassigned'])."' ,
+	`notify_new_my`='".($myuser['notify_new_my'])."' ,
+	`notify_reply_unassigned`='".($myuser['notify_reply_unassigned'])."' ,
+	`notify_reply_my`='".($myuser['notify_reply_my'])."' ,
+	`notify_assigned`='".($myuser['notify_assigned'])."' ,
+	`notify_pm`='".($myuser['notify_pm'])."',
+	`notify_note`='".($myuser['notify_note'])."',
+	`notify_note_unassigned`='".($myuser['notify_note_unassigned'])."',
+	`autorefresh`=".intval($myuser['autorefresh'])."
     WHERE `id`='".intval($myuser['id'])."' LIMIT 1");
 
     unset($_SESSION['save_userdata']);
@@ -1022,17 +817,55 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
         }
 	}
 
+    /* After reply */
+    $myuser['afterreply'] = intval( hesk_POST('afterreply') );
+    if ($myuser['afterreply'] != 1 && $myuser['afterreply'] != 2)
+    {
+    	$myuser['afterreply'] = 0;
+    }
+    $myuser['autorefresh'] = intval(hesk_POST('autorefresh'));
+
+    // Defaults
+    $myuser['autostart']				= isset($_POST['autostart']) ? 1 : 0;
+    $myuser['notify_customer_new']		= isset($_POST['notify_customer_new']) ? 1 : 0;
+    $myuser['notify_customer_reply']	= isset($_POST['notify_customer_reply']) ? 1 : 0;
+    $myuser['show_suggested']			= isset($_POST['show_suggested']) ? 1 : 0;
+
+    /* Notifications */
+    $myuser['notify_new_unassigned']	= empty($_POST['notify_new_unassigned']) ? 0 : 1;
+    $myuser['notify_new_my'] 			= empty($_POST['notify_new_my']) ? 0 : 1;
+    $myuser['notify_reply_unassigned']	= empty($_POST['notify_reply_unassigned']) ? 0 : 1;
+    $myuser['notify_reply_my']			= empty($_POST['notify_reply_my']) ? 0 : 1;
+    $myuser['notify_assigned']			= empty($_POST['notify_assigned']) ? 0 : 1;
+    $myuser['notify_note']				= empty($_POST['notify_note']) ? 0 : 1;
+    $myuser['notify_pm']				= empty($_POST['notify_pm']) ? 0 : 1;
+    $myuser['notify_note_unassigned']   = empty($_POST['notify_note_unassigned']) ? 0 : 1;
+
     /* Save entered info in session so we don't loose it in case of errors */
 	$_SESSION['userdata'] = $myuser;
 
     /* Any errors */
     if (strlen($hesk_error_buffer))
     {
-    	$hesk_error_buffer = $hesklang['rfm'].'<br /><br /><ul>'.$hesk_error_buffer.'</ul>';
-    	hesk_process_messages($hesk_error_buffer,$redirect_to);
+        if ($myuser['isadmin'])
+        {
+            // Preserve default staff data for the form
+            global $default_userdata;
+            $_SESSION['userdata']['features'] = $default_userdata['features'];
+            $_SESSION['userdata']['categories'] = $default_userdata['categories'];
+        }
+
+        $hesk_error_buffer = $hesklang['rfm'].'<br /><br /><ul>'.$hesk_error_buffer.'</ul>';
+        hesk_process_messages($hesk_error_buffer,$redirect_to);
     }
 
-	return $myuser;
+    // "can_unban_emails" feature also enables "can_ban_emails"
+    if ( in_array('can_unban_emails', $myuser['features']) && ! in_array('can_ban_emails', $myuser['features']) )
+    {
+        $myuser['features'][] = 'can_ban_emails';
+    }
+
+    return $myuser;
 
 } // End hesk_validateUserInfo()
 
@@ -1123,12 +956,15 @@ function toggle_active()
     {
         $active = 1;
         $tmp = $hesklang['user_activated'];
+        $notificationSql = "";
     } else
     {
         $active = 0;
         $tmp = $hesklang['user_deactivated'];
+        $notificationSql = ", `autoassign` = 0, `notify_new_unassigned` = 0, `notify_new_my` = 0, `notify_reply_unassigned` = 0,
+        `notify_reply_my` = 0, `notify_assigned` = 0, `notify_pm` = 0, `notify_note` = 0, `notify_note_unassigned` = 0";
     }
-    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `active` = '".$active."' WHERE `id` = '".intval($myuser)."'");
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `active` = '".$active."'".$notificationSql." WHERE `id` = '".intval($myuser)."'");
 
     if (hesk_dbAffectedRows() != 1) {
         hesk_process_messages($hesklang['int_error'].': '.$hesklang['user_not_found'],'./manage_users.php');

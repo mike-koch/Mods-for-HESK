@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -106,6 +106,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 /* This will handle error, success and notice messages */
 #hesk_handle_messages();
 
+// Total number of KB articles
+$total_articles = 0;
+
 // Get number of sub-categories for each parent category
 $parent = array(0 => 1);
 $result = hesk_dbQuery('SELECT `parent`, COUNT(*) AS `num` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'kb_categories` GROUP BY `parent`');
@@ -185,6 +188,8 @@ while (count($kb_cat) > 0)
             $text = str_replace('\\','\\\\','<span id="c_'.$my.'"'.$cls.'><a href="manage_knowledgebase.php?a=manage_cat&catid='.$my.'">'.$cat['name'].'</a>').$type.'</span> (<span class="kb_published">'.$cat['articles'].'</span>, <span class="kb_private">'.$cat['articles_private'].'</span>, <span class="kb_draft">'.$cat['articles_draft'].'</span>) ';                  /* ' */
 
             $text_short = $cat['name'].$type.' ('.$cat['articles'].', '.$cat['articles_private'].', '.$cat['articles_draft'].')';
+
+            $total_articles += $cat['articles'];
 
 			// Generate KB menu icons
 			$menu_icons =
@@ -269,6 +274,13 @@ if (!isset($_SESSION['hide']['treemenu']))
 	<!-- SUB NAVIGATION -->
    <?php show_subnav(); ?>
 	<!-- SUB NAVIGATION -->
+    <?php
+    // Show a notice if total public articles is less than 5
+    if ($total_articles < 5)
+    {
+        hesk_show_notice($hesklang['nkba']);
+    }
+    ?>
 
 	<!-- SHOW THE CATEGORY TREE -->
 	<?php show_treeMenu(); ?>
@@ -354,20 +366,29 @@ if (!isset($_SESSION['hide']['new_article']))
                         </div>
                         <div class="form-group">
                             <label for="type" class="control-label"><?php echo $hesklang['kb_type']; ?></label>
+                            <?php
+                            if (isset($_SESSION['new_article']['type']))
+                            {
+                                $selectedIndex = -1;
+                            } else
+                            {
+                                $selectedIndex = $modsForHesk_settings['new_kb_article_visibility'];
+                            }
+                            ?>
                             <div class="radio">
-                                <label><input type="radio" name="type" value="0" <?php if (!isset($_SESSION['new_article']['type']) || (isset($_SESSION['new_article']['type']) && $_SESSION['new_article']['type'] == 0) ) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['kb_published']; ?> &nbsp;<a href="javascript:void(0)" onclick="javascript:alert('<?php echo $hesklang['kb_published2']; ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                                <label><input type="radio" name="type" value="0" <?php if ((isset($_SESSION['new_article']['type']) && $_SESSION['new_article']['type'] == 0) || $selectedIndex == 0)  {echo 'checked="checked"';} ?> /> <?php echo $hesklang['kb_published']; ?> &nbsp;<a href="javascript:void(0)" onclick="javascript:alert('<?php echo $hesklang['kb_published2']; ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             </div>
                             <div class="radio">
-                                <label><input type="radio" name="type" value="1" <?php if (isset($_SESSION['new_article']['type']) && $_SESSION['new_article']['type'] == 1) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['kb_private']; ?>&nbsp;<a href="javascript:void(0)" onclick="javascript:alert('<?php echo $hesklang['kb_private2']; ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                                <label><input type="radio" name="type" value="1" <?php if ((isset($_SESSION['new_article']['type']) && $_SESSION['new_article']['type'] == 1) || $selectedIndex == 1) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['kb_private']; ?>&nbsp;<a href="javascript:void(0)" onclick="javascript:alert('<?php echo $hesklang['kb_private2']; ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             </div>
                             <div class="radio">
-                                <label><input type="radio" name="type" value="2" <?php if (isset($_SESSION['new_article']['type']) && $_SESSION['new_article']['type'] == 2) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['kb_draft']; ?>&nbsp;<a href="javascript:void(0)" onclick="javascript:alert('<?php echo $hesklang['kb_draft2']; ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                                <label><input type="radio" name="type" value="2" <?php if ((isset($_SESSION['new_article']['type']) && $_SESSION['new_article']['type'] == 2) || $selectedIndex == 2) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['kb_draft']; ?>&nbsp;<a href="javascript:void(0)" onclick="javascript:alert('<?php echo $hesklang['kb_draft2']; ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="sticky" class="control-label"><?php echo $hesklang['opt']; ?></label>
                             <div class="checkbox">
-                                <label><input type="checkbox" name="sticky" value="Y" <?php if ( ! empty($_SESSION['new_article']['sticky'])) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?></label>
+                                <label><input type="checkbox" name="sticky" value="Y" <?php if ( ! empty($_SESSION['new_article']['sticky'])) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['saa']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             </div>
                         </div>
                     </div>
@@ -386,7 +407,7 @@ if (!isset($_SESSION['hide']['new_article']))
                 </span>
                 <div class="form-group">
                     <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
-                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['kb_subject']; ?>" name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> />
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> />
                 </div>
                 <p><textarea class="form-control" name="content" rows="25" cols="70" id="content"><?php if (isset($_SESSION['new_article']['content'])) {echo $_SESSION['new_article']['content'];} ?></textarea></p>
             </div>
@@ -609,6 +630,12 @@ function list_draft() {
 				$color = $i ? 'admin_white' : 'admin_gray';
 			}
 
+            // Check for articles with no existing parent category
+            if ( ! isset($kb_cat[$article['catid']]) )
+            {
+                $article['catid'] = hesk_stray_article($article['id']);
+            }
+
 			$tmp   = $i ? 'White' : 'Blue';
 			$style = 'class="option'.$tmp.'OFF" onmouseover="this.className=\'option'.$tmp.'ON\'" onmouseout="this.className=\'option'.$tmp.'OFF\'"';
 			$i     = $i ? 0 : 1;
@@ -736,6 +763,12 @@ function list_private() {
 			{
 				$color = $i ? 'admin_white' : 'admin_gray';
 			}
+
+            // Check for articles with no existing parent category
+            if ( ! isset($kb_cat[$article['catid']]) )
+            {
+                $article['catid'] = hesk_stray_article($article['id']);
+            }
 
 			$tmp   = $i ? 'White' : 'Blue';
 			$style = 'class="option'.$tmp.'OFF" onmouseover="this.className=\'option'.$tmp.'ON\'" onmouseout="this.className=\'option'.$tmp.'OFF\'"';
@@ -1323,7 +1356,7 @@ function edit_article()
                         <div class="form-group">
                             <label for="options" class="control-label"><?php echo $hesklang['opt']; ?></label>
                             <div class="checkbox">
-                                <label><input type="checkbox" name="sticky" value="Y" <?php if ($article['sticky']) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?></label>
+                                <label><input type="checkbox" name="sticky" value="Y" <?php if ($article['sticky']) {echo 'checked="checked"';} ?> /> <?php echo $hesklang['sticky']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['saa']); ?>')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             </div>
                             <div class="checkbox">
                                 <label><input type="checkbox" name="resetviews" value="Y" <?php if (isset($_SESSION['edit_article']['resetviews']) && $_SESSION['edit_article']['resetviews'] == 'Y') {echo 'checked="checked"';} ?> /> <?php echo $hesklang['rv']; ?></label>
@@ -1375,9 +1408,9 @@ function edit_article()
                 </span>
                 <div class="form-group">
                     <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
-                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['kb_subject']; ?>" name="subject" size="70" maxlength="255" value="<?php echo $article['subject']; ?>" />
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" name="subject" size="70" maxlength="255" value="<?php echo $article['subject']; ?>" />
                 </div>
-                <textarea name="content" class="form-control" placeholder="<?php echo $hesklang['kb_content']; ?>" rows="25" cols="70" id="content"><?php echo $article['content']; ?></textarea>
+                <textarea name="content" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_content']); ?>" rows="25" cols="70" id="content"><?php echo $article['content']; ?></textarea>
             </div>
             <div class="col-md-3">
                 <div class="panel panel-default" style="margin-right:10px">
@@ -1385,7 +1418,7 @@ function edit_article()
                         <div class="form-group">
                             <label for="keywords" class="control-label"><?php echo $hesklang['kw']; ?></label>
                             <p style="font-size: .9em" class="form-control-static"><?php echo $hesklang['kw1']; ?></p><br>
-                            <textarea name="keywords" class="form-control" placeholder="<?php echo $hesklang['kw']; ?>" rows="3" cols="70" id="keywords"><?php echo $article['keywords']; ?></textarea>
+                            <textarea name="keywords" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kw']); ?>" rows="3" cols="70" id="keywords"><?php echo $article['keywords']; ?></textarea>
                         </div>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>
@@ -1540,8 +1573,6 @@ function manage_category() {
 
 	</td>
 	</tr>
-	<tr>
-	<td>
 
     <ol class="breadcrumb">
         <li><a href="manage_knowledgebase.php"><?php echo $hesklang['kb']; ?></a></li>
@@ -1728,21 +1759,21 @@ function manage_category() {
                         {
                         ?>
                             <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />
-                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_dn']; ?>"><i class="fa fa-arrow-down" style="color:green;font-size:16px"></i></a>
+                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-arrow-down" style="color:green;font-size:16px" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_dn']; ?>"></i></a>
                         <?php
                         }
                         elseif ($k == $num)
                         {
                         ?>
-                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_up']; ?>"><i class="fa fa-arrow-up" style="font-size:16px;color:green"></i></a>
+                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-arrow-up" style="font-size:16px;color:green" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_up']; ?>"></i></a>
                             <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />
                         <?php
                         }
                         else
                         {
                         ?>
-                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_up']; ?>"><i class="fa fa-arrow-up" style="font-size:16px;color:green"></i></a>
-                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_dn'] ?>"><i class="fa fa-arrow-down" style="color:green;font-size:16px"></i></a>
+                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-arrow-up" style="font-size:16px;color:green" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_up']; ?>"></i></a>
+                            <a href="manage_knowledgebase.php?a=order_article&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-arrow-down" style="color:green;font-size:16px" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['move_dn'] ?>"></i></a>
                         <?php
                         }
                     }
@@ -1751,10 +1782,10 @@ function manage_category() {
                         echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;vertical-align:text-bottom;" /> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;vertical-align:text-bottom;" />';
                     }
                     ?>
-                    <a href="manage_knowledgebase.php?a=sticky&amp;s=<?php echo $article['sticky'] ? 0 : 1 ?>&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;token=<?php hesk_token_echo(); ?>" data-toggle="tooltip" data-placement="top" title="<?php if (!$article['sticky']) {echo $hesklang['stickyon'];} else {echo $hesklang['stickyoff'];} ?>"><i class="fa fa-exclamation-triangle" style="font-size:16px;color:<?php if ( ! $article['sticky']) {echo 'gray';} else {echo 'orange';} ?>"></i></a>
-                    <a href="knowledgebase_private.php?article=<?php echo $article['id']; ?>&amp;back=1<?php if ($article['type'] == 2) {echo '&amp;draft=1';} ?>" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['viewart'] ?>"><i class="fa fa-file-o" style="font-size:16px"></i></a>
-                    <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['edit'] ?>"><i class="fa fa-pencil" style="color:orange;font-size:16px"></i></a>
-                    <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['delete'] ?>"><i class="fa fa-times" style="font-size:16px;color:red"></i></a>&nbsp;</td>
+                    <a href="manage_knowledgebase.php?a=sticky&amp;s=<?php echo $article['sticky'] ? 0 : 1 ?>&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;token=<?php hesk_token_echo(); ?>"><i class="fa fa-exclamation-triangle" style="font-size:16px;color:<?php if ( ! $article['sticky']) {echo 'gray';} else {echo 'orange';} ?>" data-toggle="tooltip" data-placement="top" title="<?php if (!$article['sticky']) {echo $hesklang['stickyon'];} else {echo $hesklang['stickyoff'];} ?>"></i></a>
+                    <a href="knowledgebase_private.php?article=<?php echo $article['id']; ?>&amp;back=1<?php if ($article['type'] == 2) {echo '&amp;draft=1';} ?>" target="_blank"><i class="fa fa-file-o" style="font-size:16px" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['viewart'] ?>"></i></a>
+                    <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>"><i class="fa fa-pencil" style="color:orange;font-size:16px" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['edit'] ?>"></i></a>
+                    <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times" style="font-size:16px;color:red" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['delete'] ?>"></i></a>&nbsp;</td>
                     </tr>
                     <?php
                     $j++;
@@ -2355,4 +2386,23 @@ function delete_kb_attachments($attachments)
     return true;
 
 } // delete_kb_attachments()
+
+
+function hesk_stray_article($id)
+{
+    global $hesk_settings, $hesklang, $article;
+
+    // Set article to category ID 1
+    $article['catid'] = 1;
+
+    // Update database
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `catid`=1 WHERE `id`='".intval($id)."' LIMIT 1");
+
+    // Update count of articles in categories
+    update_count();
+
+    // Return new category ID
+    return 1;
+
+} // END hesk_stray_article()
 ?>

@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -68,7 +68,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <script language="javascript" type="text/javascript"><!--
 function confirm_delete()
 {
-if (confirm('<?php echo addslashes($hesklang['delete_saved']); ?>')) {return true;}
+    if (confirm('<?php echo hesk_makeJsString($hesklang['delete_saved']); ?>')) {return true;}
 else {return false;}
 }
 
@@ -161,17 +161,17 @@ myField.value += myValue;
                         {
                             if ($j == 1)
                             {
-                                echo'<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green"></i></a>';
+                                echo'<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"></i></a>';
                             }
                             elseif ($j == $num)
                             {
-                                echo'<a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
+                                echo'<a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                             }
                             else
                             {
                                 echo'
-                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green"></i></a>
-                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green"></i></a>
+                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"></i></a>
+                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"></i></a>
                                 ';
                             }
                         }
@@ -181,7 +181,7 @@ myField.value += myValue;
                         }
 
                         echo '
-                        <a href="manage_canned.php?a=remove&amp;id='.$mysaved['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"><i class="fa fa-times" style="font-size: 14px; color: #FF0000"></i></a>&nbsp;</td>
+                        <a href="manage_canned.php?a=remove&amp;id='.$mysaved['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i class="fa fa-times" style="font-size: 14px; color: #FF0000" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"></i></a>&nbsp;</td>
                         </tr>
                         ';
                     } // End while
@@ -264,14 +264,14 @@ myField.value += myValue;
             <div class="form-group">
                 <label for="name" class="col-sm-2 control-label"><?php echo $hesklang['saved_title']; ?>:</label>
                 <div class="col-sm-10">
-                    <span id="HeskTitle"><input class="form-control" placeholder="<?php echo $hesklang['saved_title']; ?>" type="text" name="name" size="40" maxlength="50" <?php if (isset($_SESSION['canned']['name'])) {echo ' value="'.stripslashes($_SESSION['canned']['name']).'" ';} ?> /></span>     
+                    <span id="HeskTitle"><input class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['saved_title']); ?>" type="text" name="name" size="40" maxlength="50" <?php if (isset($_SESSION['canned']['name'])) {echo ' value="'.stripslashes($_SESSION['canned']['name']).'" ';} ?> /></span>
                 </div>
             </div>
             <div class="form-group">
                 <label for="msg" class="col-sm-2 control-label"><?php echo $hesklang['message']; ?>:</label>
                 <div class="col-sm-10">
                     <span id="HeskMsg">
-                        <textarea class="form-control" placeholder="<?php echo $hesklang['message']; ?>" name="msg" rows="15" cols="70"><?php
+                        <textarea class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="msg" rows="15" cols="70"><?php
                                 if (isset($_SESSION['canned']['msg']))
                                 {
                                     echo stripslashes($_SESSION['canned']['msg']);
@@ -299,7 +299,7 @@ myField.value += myValue;
             </div>
             <div class="form-group" style="text-align: center">
                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                <input type="submit" value="<?php echo $hesklang['save_reply']; ?>" class="btn btn-default" />   
+                <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default" />
             </div>          
         </form>
     </div>

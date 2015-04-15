@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -100,18 +100,32 @@ if ( defined('HESK_DEMO') )
 <div class="row" style="margin-top: 20px">
     <div class="col-md-4">
         <div class="panel panel-default">
-            <div class="panel-heading"><?php echo $hesklang['check_status']; ?></div>
-            <div class="panel-body">
-                <table>
-                    <tr><td class="text-right">
+            <div class="panel-heading"><?php echo $hesklang['installation_information']; ?></div>
+            <table class="table table-striped">
+                <tr>
+                    <td class="text-right">
                         <?php echo $hesklang['v']; ?>:
-                        </td>
-                        <td style="padding-left: 10px">     
+                    </td>
+                    <?php
+                    $cellClass = '';
+                    if ($hesk_settings['check_updates'])
+                    {
+                        $latest = hesk_checkVersion();
+
+                        if ($latest === true)
+                        {
+                            $cellClass = 'class="success"';
+                        } elseif ($latest != -1)
+                        {
+                            $cellClass = 'class="warning"';
+                        }
+                    }
+                    ?>
+                    <td style="padding-left: 10px" <?php echo $cellClass; ?>>
                         <?php echo $hesk_settings['hesk_version']; ?>
                         <?php
                         if ($hesk_settings['check_updates'])
                         {
-                            $latest = hesk_checkVersion();
 
                             if ($latest === true)
                             {
@@ -120,7 +134,7 @@ if ( defined('HESK_DEMO') )
                             elseif ($latest != -1)
                             {
                                 // Is this a beta/dev version?
-                                if ( strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev') )
+                                if ( strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev')  || strpos($hesk_settings['hesk_version'], 'RC') )
                                 {
                                     echo ' <span style="color:darkorange">' . $hesklang['beta'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                                 }
@@ -139,63 +153,127 @@ if ( defined('HESK_DEMO') )
                             ?> - <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                         }
                         ?>
-                    </td></tr>
-                    <tr>
-                        <td class="text-right">
-                            <?php echo $hesklang['mods_for_hesk_version']; ?>:
-                        </td>
-                        <td style="padding-left: 10px">
-                            <?php echo $modsForHeskVersion; ?>
-                        </td>
-                    </tr>
-                    <tr><td class="text-right">
-                        <?php echo $hesklang['phpv']; ?>:
-                        </td><td style="padding-left: 10px">
-                        <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : PHP_VERSION . ' ' . (function_exists('mysqli_connect') ? '(MySQLi)' : '(MySQL)'); ?>
-                    </td></tr>
-                    <tr>
-                        <td class="text-right">
-                            /hesk_settings.inc.php
-                        </td>
-                        <td style="padding-left: 10px">
-                            <?php
-                            if (is_writable(HESK_PATH . 'hesk_settings.inc.php')) {
-                                $enable_save_settings=1;
-                                echo '<font class="success">'.$hesklang['exists'].'</font>, <font class="success">'.$hesklang['writable'].'</font>';
-                            } else {
-                                echo '<font class="success">'.$hesklang['exists'].'</font>, <font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_settings'];
-                            }
-                            ?>    
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-right">
-                            /<?php echo $hesk_settings['attach_dir']; ?>
-                        </td>
-                        <td style="padding-left: 10px">
-                            <?php
-                            if (is_dir(HESK_PATH . $hesk_settings['attach_dir']))
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right" style="padding-bottom: 5px">
+                        <?php echo $hesklang['mods_for_hesk_version']; ?>:
+                    </td>
+                    <?php
+                    $cellClass = '';
+                    if ($hesk_settings['check_updates'])
+                    {
+                        $latest = hesk_checkMfhVersion($modsForHeskVersion);
+                        if ($latest === true)
+                        {
+                            $cellClass = 'class="success"';
+                        } elseif ($latest != -1)
+                        {
+                            $cellClass = 'class="warning"';
+                        }
+                    }
+                    ?>
+                    <td <?php echo $cellClass; ?> style="padding-left: 10px; padding-bottom: 5px">
+                        <?php echo $modsForHeskVersion; ?>
+                        <?php
+                        if ($hesk_settings['check_updates'])
+                        {
+                            if ($latest === true)
                             {
-                                echo '<font class="success">'.$hesklang['exists'].'</font>, ';
-                                if (is_writable(HESK_PATH . $hesk_settings['attach_dir']))
-                                {
-                                    $enable_use_attachments=1;
-                                    echo '<font class="success">'.$hesklang['writable'].'</font>';
-                                }
-                                else
-                                {
-                                    echo '<font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_attdir'];
-                                }
+                                echo ' - <span style="color:green">' . $hesklang['mfh_up_to_date'] . '</span>';
+                            } else
+                            {
+                                ?> - <a href="http://mods-for-hesk.mkochcs.com" target="_blank" style="color:orange;font-weight:bold"><?php echo $hesklang['hnw']; ?></a>
+                           <?php
+                            }
+                        } else
+                        {
+                            ?> - <a href="http://mods-for-hesk.mkochcs.com?checkVersion.php?v=<?php echo $modsForHeskVersion; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a>
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr><td class="text-right">
+                    <?php echo $hesklang['phpv']; ?>:
+                    </td><td style="padding-left: 10px">
+                    <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : PHP_VERSION . ' ' . (function_exists('mysqli_connect') ? '(MySQLi)' : '(MySQL)'); ?>
+                </td></tr>
+                <tr><td class="text-right" style="padding-bottom: 5px">
+                    <?php echo $hesklang['mysqlv']; ?>:
+                </td><td style="padding-left: 10px; padding-bottom: 5px">
+                    <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : hesk_dbResult( hesk_dbQuery('SELECT VERSION() AS version') ); ?>
+                </td></tr>
+                <tr>
+                    <td class="text-right">
+                        /hesk_settings.inc.php
+                    </td>
+                    <?php
+                    $heskSettingsWritable = is_writable(HESK_PATH . 'hesk_settings.inc.php');
+                    $cellClass = $heskSettingsWritable ? 'success' : 'danger';
+                    ?>
+                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
+                        <?php
+                        if ($heskSettingsWritable) {
+                            $enable_save_settings=1;
+                            echo '<font class="success">'.$hesklang['exists'].'</font>, <font class="success">'.$hesklang['writable'].'</font>';
+                        } else {
+                            echo '<font class="success">'.$hesklang['exists'].'</font>, <font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_settings'];
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right">
+                        /<?php echo $hesk_settings['attach_dir']; ?>
+                    </td>
+                    <?php
+                    $attachmentsExist = is_dir(HESK_PATH . $hesk_settings['attach_dir']);
+                    $attachmentsWritable = is_writable(HESK_PATH . $hesk_settings['attach_dir']);
+                    $cellClass = $attachmentsExist && $attachmentsWritable ? 'success' : 'danger';
+                    ?>
+                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
+                        <?php
+                        if ($attachmentsExist)
+                        {
+                            echo '<font class="success">'.$hesklang['exists'].'</font>, ';
+                            if (is_writable(HESK_PATH . $hesk_settings['attach_dir']))
+                            {
+                                $enable_use_attachments=1;
+                                echo '<font class="success">'.$hesklang['writable'].'</font>';
                             }
                             else
                             {
-                                echo '<font class="error">'.$hesklang['no_exists'].'</font>, <font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_attdir'];
+                                echo '<font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_attdir'];
                             }
-                            ?>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                        }
+                        else
+                        {
+                            echo '<font class="error">'.$hesklang['no_exists'].'</font>, <font class="error">'.$hesklang['not_writable'].'</font><br />'.$hesklang['e_attdir'];
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right">
+                        /modsForHesk_settings.inc.php
+                    </td>
+                    <?php
+                    $modsForHeskIsWritable = is_writable(HESK_PATH . 'modsForHesk_settings.inc.php');
+                    $cellClass = $modsForHeskIsWritable ? 'success' : 'danger';
+                    ?>
+                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
+                        <?php
+                        if ($modsForHeskIsWritable) {
+                            $enable_save_settings=1;
+                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="success">'.$hesklang['writable'].'</span>';
+                        } else {
+                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="error">'.$hesklang['not_writable'].'</span><br />'.$hesklang['e_mfh_settings'];
+                        }
+                        ?>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
     <div class="col-md-8">
@@ -390,44 +468,6 @@ if ( defined('HESK_DEMO') )
           }
         };
 
-
-        function setCookie(name, value, expires, path, domain, secure)
-        {
-            document.cookie= name + "=" + escape(value) +
-                ((expires) ? "; expires=" + expires.toGMTString() : "") +
-                ((path) ? "; path=" + path : "") +
-                ((domain) ? "; domain=" + domain : "") +
-                ((secure) ? "; secure" : "");
-        }
-
-        function getCookie(name)
-        {
-            var dc = document.cookie;
-            var prefix = name + "=";
-            var begin = dc.indexOf("; " + prefix);
-            if (begin == -1) {
-                begin = dc.indexOf(prefix);
-                if (begin != 0) return null;
-            } else {
-                begin += 2;
-            }
-            var end = document.cookie.indexOf(";", begin);
-            if (end == -1) {
-                end = dc.length;
-            }
-            return unescape(dc.substring(begin + prefix.length, end));
-        }
-
-        function deleteCookie(name, path, domain)
-        {
-            if (getCookie(name)) {
-                document.cookie = name + "=" +
-                    ((path) ? "; path=" + path : "") +
-                    ((domain) ? "; domain=" + domain : "") +
-                    "; expires=Thu, 01-Jan-70 00:00:01 GMT";
-            }
-        }
-
         var server_time = "<?php echo $server_time; ?>";
         var today = new Date();
         today.setHours(server_time.substr(0,server_time.indexOf(":")));
@@ -470,6 +510,7 @@ if ( defined('HESK_DEMO') )
               <li><a href="#knowledgebase" data-toggle="tab"><?php echo $hesklang['tab_3']; ?></a></li>
               <li><a href="#customFields" data-toggle="tab"><?php echo $hesklang['tab_4']; ?></a></li>
               <li><a href="#email" data-toggle="tab"><?php echo $hesklang['tab_6']; ?></a></li>
+              <li><a href="#ticket-list" data-toggle="tab"><?php echo $hesklang['tab_7']; ?></a></li>
               <li><a href="#misc" data-toggle="tab"><?php echo $hesklang['tab_5']; ?></a></li>
               <li class="dropdown">
                   <a href="#" id="modsForHeskDropdown" class="dropdown-toggle" data-toggle="dropdown">
@@ -479,7 +520,6 @@ if ( defined('HESK_DEMO') )
                       <li><a href="#mods-for-hesk-general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
                       <li><a href="#statuses" data-toggle="tab"><?php echo $hesklang['statuses']; ?></a></li>
                       <li><a href="#colors" data-toggle="tab"><?php echo $hesklang['uiColors']; ?></a></li>
-                      <li><a href="#ipEmailBans" data-toggle="tab"><?php echo $hesklang['ip_email_bans']; ?></a></li>
                   </ul>
               </li>
             </ul>
@@ -494,31 +534,31 @@ if ( defined('HESK_DEMO') )
                 <div class="form-group">
                     <label for="s_site_title" class="col-sm-3 control-label"><?php echo $hesklang['wbst_title']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#1','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="s_site_title" size="40" maxlength="255" value="<?php echo $hesk_settings['site_title']; ?>" placeholder="<?php echo $hesklang['wbst_title']; ?>" />    
+                        <input type="text" class="form-control" name="s_site_title" size="40" maxlength="255" value="<?php echo $hesk_settings['site_title']; ?>" placeholder="<?php echo htmlspecialchars($hesklang['wbst_title']); ?>" />
                     </div>     
                 </div>
                 <div class="form-group">
                     <label for="s_site_url" class="col-sm-3 control-label"><?php echo $hesklang['wbst_url']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="s_site_url" size="40" maxlength="255" value="<?php echo $hesk_settings['site_url']; ?>" placeholder="<?php echo $hesklang['wbst_url']; ?>" />         
+                        <input type="text" class="form-control" name="s_site_url" size="40" maxlength="255" value="<?php echo $hesk_settings['site_url']; ?>" placeholder="<?php echo htmlspecialchars($hesklang['wbst_url']); ?>" />
                     </div>    
                 </div>
                 <div class="form-group">
                     <label for="s_webmaster_email" class="col-sm-3 control-label"><?php echo $hesklang['email_wm']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#4','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="s_webmaster_mail" size="40" maxlength="255" value="<?php echo $hesk_settings['webmaster_mail']; ?>" placeholder="<?php echo $hesklang['email_wm']; ?>" />    
+                        <input type="text" class="form-control" name="s_webmaster_mail" size="40" maxlength="255" value="<?php echo $hesk_settings['webmaster_mail']; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email_wm']); ?>" />
                     </div>         
                 </div>
                 <div class="form-group">
                     <label for="s_noreply_mail" class="col-sm-3 control-label"><?php echo $hesklang['email_noreply']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#5','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="s_noreply_mail" size="40" maxlength="255" value="<?php echo $hesk_settings['noreply_mail']; ?>" placeholder="<?php echo $hesklang['email_noreply']; ?>" />    
+                        <input type="text" class="form-control" name="s_noreply_mail" size="40" maxlength="255" value="<?php echo $hesk_settings['noreply_mail']; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email_noreply']); ?>" />
                     </div> 
                 </div>
                 <div class="form-group">
                     <label for="s_noreply_name" class="col-sm-3 control-label"><?php echo $hesklang['email_name']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#6','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="s_noreply_name" size="40" maxlength="255" value="<?php echo $hesk_settings['noreply_name']; ?>" placeholder="<?php echo $hesklang['email_name']; ?>" />         
+                        <input type="text" class="form-control" name="s_noreply_name" size="40" maxlength="255" value="<?php echo $hesk_settings['noreply_name']; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email_name']); ?>" />
                     </div>    
                 </div>
 
@@ -553,31 +593,31 @@ if ( defined('HESK_DEMO') )
                 <div class="form-group">
                     <label for="s_db_host" class="col-sm-3 control-label"><?php echo $hesklang['db_host']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#32','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="<?php echo $hesklang['db_host']; ?>" type="text" name="s_db_host" id="m1" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_host']; ?>" autocomplete="off" />    
+                        <input class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['db_host']); ?>" type="text" name="s_db_host" id="m1" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_host']; ?>" autocomplete="off" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_db_name" class="col-sm-3 control-label"><?php echo $hesklang['db_name']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#33','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['db_name']; ?>" name="s_db_name" id="m2" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_name']; ?>" autocomplete="off" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['db_name']); ?>" name="s_db_name" id="m2" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_name']; ?>" autocomplete="off" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_db_user" class="col-sm-3 control-label"><?php echo $hesklang['db_user']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#34','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['db_user']; ?>" name="s_db_user" id="m3" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_user']; ?>" autocomplete="off" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['db_user']); ?>" name="s_db_user" id="m3" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_user']; ?>" autocomplete="off" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_db_pass" class="col-sm-3 control-label"><?php echo $hesklang['db_pass']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#35','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control" placeholder="<?php echo $hesklang['db_pass']; ?>" name="s_db_pass" id="m4" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_pass'] ; ?>" autocomplete="off" />    
+                        <input type="password" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['db_pass']); ?>" name="s_db_pass" id="m4" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_pass'] ; ?>" autocomplete="off" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_db_pfix" class="col-sm-3 control-label"><?php echo $hesklang['prefix']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#36','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['prefix']; ?>" name="s_db_pfix" id="m5" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_pfix']; ?>" autocomplete="off" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['prefix']); ?>" name="s_db_pfix" id="m5" size="40" maxlength="255" value="<?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : $hesk_settings['db_pfix']; ?>" autocomplete="off" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -642,49 +682,49 @@ if ( defined('HESK_DEMO') )
                 <div class="form-group">
                     <label for="s_hesk_title" class="col-sm-3 control-label"><?php echo $hesklang['hesk_title']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#6','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['hesk_title']; ?>" name="s_hesk_title" size="40" maxlength="255" value="<?php echo $hesk_settings['hesk_title']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['hesk_title']); ?>" name="s_hesk_title" size="40" maxlength="255" value="<?php echo $hesk_settings['hesk_title']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_hesk_url" class="col-sm-3 control-label"><?php echo $hesklang['hesk_url']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#7','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['hesk_url']; ?>" name="s_hesk_url" size="40" maxlength="255" value="<?php echo $hesk_settings['hesk_url']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['hesk_url']); ?>" name="s_hesk_url" size="40" maxlength="255" value="<?php echo $hesk_settings['hesk_url']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_admin_dir" class="col-sm-3 control-label"><?php echo $hesklang['adf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#61','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['adf']; ?>" name="s_admin_dir" size="40" maxlength="255" value="<?php echo $hesk_settings['admin_dir']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['adf']); ?>" name="s_admin_dir" size="40" maxlength="255" value="<?php echo $hesk_settings['admin_dir']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_attach_dir" class="col-sm-3 control-label"><?php echo $hesklang['atf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#62','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['atf']; ?>" name="s_attach_dir" size="40" maxlength="255" value="<?php echo $hesk_settings['attach_dir']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['atf']); ?>" name="s_attach_dir" size="40" maxlength="255" value="<?php echo $hesk_settings['attach_dir']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_max_listings" class="col-sm-3 control-label"><?php echo $hesklang['max_listings']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#10','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['max_listings']; ?>" name="s_max_listings" size="5" maxlength="30" value="<?php echo $hesk_settings['max_listings']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['max_listings']); ?>" name="s_max_listings" size="5" maxlength="30" value="<?php echo $hesk_settings['max_listings']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_print_font_size" class="col-sm-3 control-label"><?php echo $hesklang['print_size']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#11','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['print_size']; ?>" name="s_print_font_size" size="5" maxlength="3" value="<?php echo $hesk_settings['print_font_size']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['print_size']); ?>" name="s_print_font_size" size="5" maxlength="3" value="<?php echo $hesk_settings['print_font_size']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_autoclose" class="col-sm-3 control-label"><?php echo $hesklang['aclose']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#15','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['aclose']; ?>" name="s_autoclose" size="5" maxlength="3" value="<?php echo $hesk_settings['autoclose']; ?>" /><?php echo $hesklang['aclose2']; ?>    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['aclose']); ?>" name="s_autoclose" size="5" maxlength="3" value="<?php echo $hesk_settings['autoclose']; ?>" /><?php echo $hesklang['aclose2']; ?>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_max_open" class="col-sm-3 control-label"><?php echo $hesklang['mop']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#58','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['mop']; ?>" name="s_max_open" size="5" maxlength="3" value="<?php echo $hesk_settings['max_open']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['mop']); ?>" name="s_max_open" size="5" maxlength="3" value="<?php echo $hesk_settings['max_open']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -729,6 +769,18 @@ if ( defined('HESK_DEMO') )
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="s_custclose" class="col-sm-6 control-label"><?php echo $hesklang['ccct']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#67','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $hesk_settings['custclose'] ? 'checked="checked"' : '';
+                                $off = $hesk_settings['custclose'] ? '' : 'checked="checked"';
+                                echo '
+                                <div class="radio"><label><input type="radio" name="s_custclose" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_custclose" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="s_custopen" class="col-sm-6 control-label"><?php echo $hesklang['s_ucrt']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#16','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             <div class="col-sm-6 form-inline">
                                 <?php
@@ -753,6 +805,30 @@ if ( defined('HESK_DEMO') )
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="s_time_worked" class="col-sm-6 control-label"><?php echo $hesklang['ts']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#66','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $hesk_settings['time_worked'] ? 'checked="checked"' : '';
+                                $off = $hesk_settings['time_worked'] ? '' : 'checked="checked"';
+                                echo '
+                                <div class="radio"><label><input type="radio" name="s_time_worked" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_time_worked" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="s_spam_notice" class="col-sm-6 control-label"><?php echo $hesklang['spamn']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#68','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $hesk_settings['spam_notice'] ? 'checked="checked"' : '';
+                                $off = $hesk_settings['spam_notice'] ? '' : 'checked="checked"';
+                                echo '
+                                <div class="radio"><label><input type="radio" name="s_spam_notice" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_spam_notice" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="s_list_users" class="col-sm-6 control-label"><?php echo $hesklang['lu']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#14','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             <div class="col-sm-6 form-inline">
                                 <?php
@@ -762,18 +838,6 @@ if ( defined('HESK_DEMO') )
                                 <div class="radio"><label><input type="radio" name="s_list_users" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
                                 <div class="radio"><label><input type="radio" name="s_list_users" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
                                 ?>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="s_short_link" class="col-sm-6 control-label"><?php echo $hesklang['shu']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#63','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                            <div class="col-sm-6 form-inline">
-                                <?php
-                                $on = $hesk_settings['short_link'] ? 'checked="checked"' : '';
-                                $off = $hesk_settings['short_link'] ? '' : 'checked="checked"';
-                                echo '
-                                <div class="radio"><label><input type="radio" name="s_short_link" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
-                                <div class="radio"><label><input type="radio" name="s_short_link" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
-                                ?>    
                             </div>
                         </div>
                     </div>
@@ -827,6 +891,29 @@ if ( defined('HESK_DEMO') )
                                 ?>    
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="s_short_link" class="col-sm-6 control-label"><?php echo $hesklang['shu']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#63','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $hesk_settings['short_link'] ? 'checked="checked"' : '';
+                                $off = $hesk_settings['short_link'] ? '' : 'checked="checked"';
+                                echo '
+                                <div class="radio"><label><input type="radio" name="s_short_link" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_short_link" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label"><?php echo $hesklang['select']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#65','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="s_select_cat" value="1" <?php if ($hesk_settings['select_cat']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['category']; ?></label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="s_select_pri" value="1" <?php if ($hesk_settings['select_pri']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['priority']; ?></label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -858,12 +945,17 @@ if ( defined('HESK_DEMO') )
                         <?php
 
                         $on  = '';
+                        $on2 = '';
                         $off = '';
                         $div = 'block';
 
-                        if ($hesk_settings['recaptcha_use'])
+                        if ($hesk_settings['recaptcha_use'] == 1)
                         {
                             $on = 'checked="checked"';
+                        }
+                        elseif ($hesk_settings['recaptcha_use'] == 2)
+                        {
+                            $on2 = 'checked="checked"';
                         }
                         else
                         {
@@ -873,6 +965,7 @@ if ( defined('HESK_DEMO') )
                         ?>
 
                         <div class="radio"><label><input type="radio" name="s_recaptcha_use" value="0" onclick="javascript:hesk_toggleLayer('recaptcha','none')" <?php echo $off; ?> /> <?php echo $hesklang['sis']; ?></label></div><br/>
+                        <div class="radio"><label><input type="radio" name="s_recaptcha_use" value="2" onclick="javascript:hesk_toggleLayer('recaptcha','block')" <?php echo $on2; ?> /> <?php echo $hesklang['sir2']; ?></label> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#64','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></div> <br />
                         <div class="radio"><label><input type="radio" name="s_recaptcha_use" value="1" onclick="javascript:hesk_toggleLayer('recaptcha','block')" <?php echo $on; ?> /> <?php echo $hesklang['sir']; ?></label> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#64','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></div> <br />
 
                             <div id="recaptcha" style="display: <?php echo $div; ?>;">
@@ -880,24 +973,13 @@ if ( defined('HESK_DEMO') )
                                 &nbsp;<br />
 
                                 <label for="s_recaptcha_public_key" class="control-label"><?php echo $hesklang['rcpb']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#64','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                                <input type="text" class="form-control" placeholder="<?php echo $hesklang['rcpb']; ?>" name="s_recaptcha_public_key" size="40" maxlength="255" value="<?php echo $hesk_settings['recaptcha_public_key']; ?>" /><br />
+                                <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['rcpb']); ?>" name="s_recaptcha_public_key" size="50" maxlength="255" value="<?php echo $hesk_settings['recaptcha_public_key']; ?>" /><br />
                                 &nbsp;<br />
 
                                 <label for="s_recaptcha_private_key" class="control-label"><?php echo $hesklang['rcpv']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#64','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                                <input type="text" class="form-control" placeholder="<?php echo $hesklang['rcpv']; ?>" name="s_recaptcha_private_key" size="40" maxlength="255" value="<?php echo $hesk_settings['recaptcha_private_key']; ?>" /><br />
+                                <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['rcpv']); ?>" name="s_recaptcha_private_key" size="50" maxlength="255" value="<?php echo $hesk_settings['recaptcha_private_key']; ?>" /><br />
                                 &nbsp;<br />
-
-                                <label for="s_recaptcha_ssl" class="control-label"><?php echo $hesklang['rcsl']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#64','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                                <?php
-                                $on = $hesk_settings['recaptcha_ssl'] ? 'checked="checked"' : '';
-                                $off = $hesk_settings['recaptcha_ssl'] ? '' : 'checked="checked"';
-                                echo '
-                                <div class="radio"><label><input type="radio" name="s_recaptcha_ssl" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
-                                <div class="radio"><label><input type="radio" name="s_recaptcha_ssl" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
-                                ?>
-
                             </div>
-
                     </div>
                 </div>
             </div>
@@ -945,13 +1027,21 @@ if ( defined('HESK_DEMO') )
             <div class="form-group">
                 <label for="s_attempt_limit" class="col-sm-3 control-label"><?php echo $hesklang['banlim']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#47','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['banlim']; ?>" name="s_attempt_limit" size="5" maxlength="30" value="<?php echo ($hesk_settings['attempt_limit'] ? ($hesk_settings['attempt_limit']-1) : 0); ?>" />    
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['banlim']); ?>" name="s_attempt_limit" size="5" maxlength="30" value="<?php echo ($hesk_settings['attempt_limit'] ? ($hesk_settings['attempt_limit']-1) : 0); ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="s_attempt_banmin" class="col-sm-3 control-label"><?php echo $hesklang['banmin']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#47','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['banmin']; ?>" name="s_attempt_banmin" size="5" maxlength="3" value="<?php echo $hesk_settings['attempt_banmin']; ?>" />    
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['banmin']); ?>" name="s_attempt_banmin" size="5" maxlength="3" value="<?php echo $hesk_settings['attempt_banmin']; ?>" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="s_reset_pass" class="col-sm-3 control-label"><?php echo $hesklang['passr']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#69','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="s_reset_pass" value="1" <?php if ($hesk_settings['reset_pass']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['passa']; ?></label>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -1009,7 +1099,7 @@ if ( defined('HESK_DEMO') )
             <div class="form-group">
                 <label for="s_max_num" class="col-sm-3 control-label"><?php echo $hesklang['attach_num']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#38','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['attach_num']; ?>" name="s_max_number" size="5" maxlength="2" id="a1" value="<?php echo $hesk_settings['attachments']['max_number']; ?>" <?php echo $onload_status; ?> />    
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['attach_num']); ?>" name="s_max_number" size="5" maxlength="2" id="a1" value="<?php echo $hesk_settings['attachments']['max_number']; ?>" <?php echo $onload_status; ?> />
                 </div>
             </div>
             <div class="form-group">
@@ -1025,7 +1115,7 @@ if ( defined('HESK_DEMO') )
                 ?>
                 <label for="s_max_size" class="col-sm-3 control-label"><?php echo $hesklang['attach_size']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#39','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['attach_size']; ?>" name="s_max_size" size="5" maxlength="6" id="a2" value="<?php echo $size; ?>" <?php echo $onload_status; ?> />    
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['attach_size']); ?>" name="s_max_size" size="5" maxlength="6" id="a2" value="<?php echo $size; ?>" <?php echo $onload_status; ?> />
                 </div>
                 <div class="col-sm-6">
                     <select name="s_max_unit" class="form-control" id="a4" <?php echo $onload_status; ?> >
@@ -1048,25 +1138,26 @@ if ( defined('HESK_DEMO') )
             <div class="form-group">
                 <label for="s_allowed_types" class="col-sm-3 control-label"><?php echo $hesklang['attach_type']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#40','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" placeholder="<?php echo $hesklang['attach_type']; ?>" name="s_allowed_types" size="40" maxlength="255" id="a3" value="<?php echo implode(',',$hesk_settings['attachments']['allowed_types']); ?>" <?php echo $onload_status; ?> />    
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['attach_type']); ?>" name="s_allowed_types" size="40" maxlength="255" id="a3" value="<?php echo implode(',',$hesk_settings['attachments']['allowed_types']); ?>" <?php echo $onload_status; ?> />
                 </div>
             </div>
 
         </div>
 
               <div class="tab-pane fade in" id="knowledgebase">
-                <h6 style="font-weight: bold"><?php echo $hesklang['kb_text']; ?></h6>
+                <h6 style="font-weight: bold"><?php echo $hesklang['kb_set']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
-
                 <div class="form-group">
                     <label for="s_kb_enable" class="col-sm-3 control-label"><?php echo $hesklang['s_ekb']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#22','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9 form-inline">
                         <?php
-                        $on = $hesk_settings['kb_enable'] ? 'checked="checked"' : '';
+                        $on = $hesk_settings['kb_enable'] == 1 ? 'checked="checked"' : '';
                         $off = $hesk_settings['kb_enable'] ? '' : 'checked="checked"';
+                        $only = $hesk_settings['kb_enable'] == 2 ? 'checked="checked"' : '';
                         echo '
-                        <div class="radio"><label><input type="radio" name="s_kb_enable" value="0" '.$off.' /> '.$hesklang['disable'].'</label></div>&nbsp;&nbsp;&nbsp;
-                        <div class="radio"><label><input type="radio" name="s_kb_enable" value="1" '.$on.' /> '.$hesklang['enable'].'</label></div>';
+                        <div class="radio"><label><input type="radio" name="s_kb_enable" value="1" '.$on.' /> '.$hesklang['enable'].'</label></div>&nbsp;&nbsp;&nbsp;
+                        <div class="radio"><label><input type="radio" name="s_kb_enable" value="2" '.$only.' /> '.$hesklang['ekb_o'].'</label></div>&nbsp;&nbsp;&nbsp;
+                        <div class="radio"><label><input type="radio" name="s_kb_enable" value="0" '.$off.' /> '.$hesklang['ekb_n'].'</label></div>';
                         ?>
                     </div>
                 </div>
@@ -1077,8 +1168,8 @@ if ( defined('HESK_DEMO') )
                         $on = $hesk_settings['kb_wysiwyg'] ? 'checked="checked"' : '';
                         $off = $hesk_settings['kb_wysiwyg'] ? '' : 'checked="checked"';
                         echo '
-                        <div class="radio"><label><input type="radio" name="s_kb_wysiwyg" value="0" '.$off.' /> '.$hesklang['disable'].'</label></div>&nbsp;&nbsp;&nbsp;
-                        <div class="radio"><label><input type="radio" name="s_kb_wysiwyg" value="1" '.$on.' /> '.$hesklang['enable'].'</label></div>';
+                        <div class="radio"><label><input type="radio" name="s_kb_wysiwyg" value="0" '.$off.' /> '.$hesklang['no'].'</label></div>&nbsp;&nbsp;&nbsp;
+                        <div class="radio"><label><input type="radio" name="s_kb_wysiwyg" value="1" '.$on.' /> '.$hesklang['yes'].'</label></div>';
                         ?>
                     </div>
                 </div>
@@ -1149,31 +1240,31 @@ if ( defined('HESK_DEMO') )
                 <div class="form-group">
                     <label for="s_kb_search_limit" class="col-sm-3 control-label"><?php echo $hesklang['s_maxsr']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#26','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['s_maxsr']; ?>" name="s_kb_search_limit" size="5" maxlength="3" value="<?php echo $hesk_settings['kb_search_limit']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_maxsr']); ?>" name="s_kb_search_limit" size="5" maxlength="3" value="<?php echo $hesk_settings['kb_search_limit']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_kb_substrart" class="col-sm-3 control-label"><?php echo $hesklang['s_ptxt']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#27','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['s_ptxt']; ?>" name="s_kb_substrart" size="5" maxlength="5" value="<?php echo $hesk_settings['kb_substrart']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_ptxt']); ?>" name="s_kb_substrart" size="5" maxlength="5" value="<?php echo $hesk_settings['kb_substrart']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_kb_cols" class="col-sm-3 control-label"><?php echo $hesklang['s_scol']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#28','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['s_scol']; ?>" name="s_kb_cols" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_cols']; ?>" />        
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_scol']); ?>" name="s_kb_cols" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_cols']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_kb_numshow" class="col-sm-3 control-label"><?php echo $hesklang['s_psubart']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#29','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['s_psubart']; ?>" name="s_kb_numshow" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_numshow']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_psubart']); ?>" name="s_kb_numshow" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_numshow']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="s_kb_index_popart" class="col-sm-3 control-label"><?php echo $hesklang['s_spop']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#30','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['s_spop']; ?>" name="s_kb_index_popart" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_index_popart']; ?>" />
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_spop']); ?>" name="s_kb_index_popart" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_index_popart']; ?>" />
                     </div>
                     <div class="col-sm-6" style="padding-left:0px">
                         <p class="form-control-static"><?php echo $hesklang['s_onin']; ?></p>
@@ -1181,7 +1272,7 @@ if ( defined('HESK_DEMO') )
                 </div>
                 <div class="form-group">
                     <div class="col-sm-3 col-sm-offset-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['s_spop']; ?>" name="s_kb_popart" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_popart']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_spop']); ?>" name="s_kb_popart" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_popart']; ?>" />
                     </div>
                     <div class="col-sm-6" style="padding-left:0px">
                         <p class="form-control-static"><?php echo $hesklang['s_onkb']; ?></p>
@@ -1190,7 +1281,7 @@ if ( defined('HESK_DEMO') )
                 <div class="form-group">
                     <label for="s_kb_latest" class="col-sm-3 control-label"><?php echo $hesklang['s_slat']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#31','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['s_slat']; ?>" name="s_kb_index_latest" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_index_latest']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_slat']); ?>" name="s_kb_index_latest" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_index_latest']; ?>" />
                     </div>
                     <div class="col-sm-6" style="padding-left:0px">
                         <p class="form-control-static"><?php echo $hesklang['s_onin']; ?></p>    
@@ -1198,10 +1289,19 @@ if ( defined('HESK_DEMO') )
                 </div>
                 <div class="form-group">
                     <div class="col-sm-3 col-sm-offset-3">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['s_slat']; ?>" name="s_kb_latest" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_latest']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_slat']); ?>" name="s_kb_latest" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_latest']; ?>" />
                     </div>
                     <div class="col-sm-6" style="padding-left:0px">
                         <p class="form-control-static"><?php echo $hesklang['s_onkb']; ?></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="s_kb_related" class="col-sm-3 control-label"><?php echo $hesklang['s_relart']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#60','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_relart']); ?>" name="s_kb_related" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_related']; ?>" />
+                    </div>
+                    <div class="col-sm-6" style="padding-left:0px">
+                        <p class="form-control-static"><?php echo $hesklang['s_onin']; ?></p>
                     </div>
                 </div>
               </div>
@@ -1242,6 +1342,7 @@ if ( defined('HESK_DEMO') )
                         <option value="checkbox" '.($this_field['type'] == 'checkbox' ? 'selected="selected"' : '').'>'.$hesklang['scb'].'</option>
                         <option value="date" '.($this_field['type'] == 'date' ? 'selected="selected"' : '').'>'.$hesklang['date_custom_field'].'</option>
                         <option value="multiselect" '.($this_field['type'] == 'multiselect' ? 'selected="selected"' : '').'>'.$hesklang['multiple_select_custom_field'].'</option>
+                        <option value="email" '.($this_field['type'] == 'email' ? 'selected="selected"' : '').'>'.$hesklang['email_custom_field'].'</option>
                         </select>
                     </td>
                     <td><div class="checkbox"><label><input type="checkbox" name="s_custom'.$i.'_req" value="1" id="s_custom'.$i.'_req" '; if ($this_field['req']) {echo 'checked="checked"';} echo $onload_locally.' /> '.$hesklang['yes'].'</label></div></td>
@@ -1271,17 +1372,24 @@ if ( defined('HESK_DEMO') )
 
                 <div class="form-group">
                     <label for="s_smtp" class="col-sm-3 control-label"><?php echo $hesklang['emlsend2']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#55','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                    <div class="col-sm-9 form-inline">
+                    <div class="col-sm-9">
                         <?php
                         $on = '';
                         $off = '';
+                        $mailgunOn = '';
                         $onload_div = 'none';
+                        $onload_mailgun = 'none';
                         $onload_status = '';
 
                         if ($hesk_settings['smtp'])
                         {
                             $on = 'checked="checked"';
                             $onload_div = 'block';
+                        }
+                        elseif ($modsForHesk_settings['use_mailgun'])
+                        {
+                            $mailgunOn = 'checked="checked"';
+                            $onload_mailgun = 'block';
                         }
                         else
                         {
@@ -1290,8 +1398,9 @@ if ( defined('HESK_DEMO') )
                         }
 
                         echo '
-                        <div class="radio"><label><input type="radio" name="s_smtp" value="0" onclick="hesk_attach_disable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'))" onchange="hesk_toggleLayerDisplay(\'smtp_settings\');" '.$off.' /> '.$hesklang['phpmail'].'</label></div>&nbsp;&nbsp;&nbsp;
-                        <div class="radio"><label><input type="radio" name="s_smtp" value="1" onclick="hesk_attach_enable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'))"  onchange="hesk_toggleLayerDisplay(\'smtp_settings\');" '.$on.' /> '.$hesklang['smtp'].'</label></div>';
+                        <div class="radio"><label><input type="radio" name="s_smtp" value="0" onclick="hesk_attach_disable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'));toggleContainers([],[\'smtp_settings\',\'mailgun_settings\']);" '.$off.' /> '.$hesklang['phpmail'].'</label></div>
+                        <div class="radio"><label><input type="radio" name="s_smtp" value="1" onclick="hesk_attach_enable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'));toggleContainers([\'smtp_settings\'],[\'mailgun_settings\']);" '.$on.' /> '.$hesklang['smtp'].'</label></div>
+                        <div class="radio"><label><input type="radio" name="s_smtp" value="2" onclick="toggleContainers([\'mailgun_settings\'],[\'smtp_settings\']);" '.$mailgunOn.'>'.$hesklang['mailgun'].' <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="'.$hesklang['mailgun'].'" data-content="'.$hesklang['mailgun_help'].'"></i></label></div>';
                         ?>
                         <input type="hidden" name="tmp_smtp_host_name" value="<?php echo $hesk_settings['smtp_host_name']; ?>" />
                         <input type="hidden" name="tmp_smtp_host_port" value="<?php echo $hesk_settings['smtp_host_port']; ?>" />
@@ -1306,23 +1415,37 @@ if ( defined('HESK_DEMO') )
 
                     </div>
                 </div>
+                <div id="mailgun_settings" style="display:<?php echo $onload_mailgun; ?>">
+                    <div class="form-group">
+                        <label for="mailgun_api_key" class="col-sm-3 control-label"><?php echo $hesklang['mailgun_api_key']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['mailgun_api_key']; ?>" data-content="<?php echo $hesklang['mailgun_api_key_help']; ?>"></i></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['mailgun_api_key']); ?>" id="mailgun_api_key" name="mailgun_api_key" value="<?php echo $modsForHesk_settings['mailgun_api_key']; ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mailgun_domain" class="col-sm-3 control-label"><?php echo $hesklang['mailgun_domain']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['mailgun_domain']; ?>" data-content="<?php echo $hesklang['mailgun_domain_help']; ?>"></i></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['mailgun_domain']); ?>" id="mailgun_domain" name="mailgun_domain" value="<?php echo $modsForHesk_settings['mailgun_domain']; ?>">
+                        </div>
+                    </div>
+                </div>
                 <div id="smtp_settings" style="display:<?php echo $onload_div; ?>">
                     <div class="form-group">
                         <label for="s_smtp_host_name" class="col-sm-3 control-label"><?php echo $hesklang['smtph']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#55','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['smtph']; ?>" id="s1" name="s_smtp_host_name" size="40" maxlength="255" value="<?php echo $hesk_settings['smtp_host_name']; ?>" <?php echo $onload_status; ?> />    
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['smtph']); ?>" id="s1" name="s_smtp_host_name" size="40" maxlength="255" value="<?php echo $hesk_settings['smtp_host_name']; ?>" <?php echo $onload_status; ?> />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="s_smtp_host_port" class="col-sm-3 control-label"><?php echo $hesklang['smtpp']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#55','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['smtpp']; ?>" id="s2" name="s_smtp_host_port" size="5" maxlength="255" value="<?php echo $hesk_settings['smtp_host_port']; ?>" <?php echo $onload_status; ?> />    
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['smtpp']); ?>" id="s2" name="s_smtp_host_port" size="5" maxlength="255" value="<?php echo $hesk_settings['smtp_host_port']; ?>" <?php echo $onload_status; ?> />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="s_smtp_timeout" class="col-sm-3 control-label"><?php echo $hesklang['smtpt']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#55','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['smtpt']; ?>" id="s3" name="s_smtp_timeout" size="5" maxlength="255" value="<?php echo $hesk_settings['smtp_timeout']; ?>" <?php echo $onload_status; ?> />    
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['smtpt']); ?>" id="s3" name="s_smtp_timeout" size="5" maxlength="255" value="<?php echo $hesk_settings['smtp_timeout']; ?>" <?php echo $onload_status; ?> />
                         </div>
                     </div>
                     <div class="form-group">
@@ -1352,13 +1475,13 @@ if ( defined('HESK_DEMO') )
                     <div class="form-group">
                         <label for="s_smtp_user" class="col-sm-3 control-label"><?php echo $hesklang['smtpu']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#55','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['smtpu']; ?>" id="s4" name="s_smtp_user" size="40" maxlength="255" value="<?php echo $hesk_settings['smtp_user']; ?>" <?php echo $onload_status; ?> autocomplete="off" />    
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['smtpu']); ?>" id="s4" name="s_smtp_user" size="40" maxlength="255" value="<?php echo $hesk_settings['smtp_user']; ?>" <?php echo $onload_status; ?> autocomplete="off" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="s_smtp_password" class="col-sm-3 control-label"><?php echo $hesklang['smtpw']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#55','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-9">
-                            <input type="password" class="form-control" placeholder="<?php echo $hesklang['smtpw']; ?>" id="s5" name="s_smtp_password" size="40" maxlength="255" value="<?php echo $hesk_settings['smtp_password']; ?>" <?php echo $onload_status; ?> autocomplete="off" />    
+                            <input type="password" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['smtpw']); ?>" id="s5" name="s_smtp_password" size="40" maxlength="255" value="<?php echo $hesk_settings['smtp_password']; ?>" <?php echo $onload_status; ?> autocomplete="off" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -1462,8 +1585,8 @@ if ( defined('HESK_DEMO') )
                         }
 
                         echo '
-                        <div class="radio"><label><input type="radio" name="s_pop3" value="0" onclick="hesk_attach_disable(new Array(\'p1\',\'p2\',\'p3\',\'p4\',\'p5\',\'p6\',\'p7\',\'p8\'))" onchange="hesk_toggleLayerDisplay(\'pop3_settings\');" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
-                        <div class="radio"><label><input type="radio" name="s_pop3" value="1" onclick="hesk_attach_enable(new Array(\'p1\',\'p2\',\'p3\',\'p4\',\'p5\',\'p6\',\'p7\',\'p8\'))" onchange="hesk_toggleLayerDisplay(\'pop3_settings\');"  '.$on.' /> '.$hesklang['on'].'</label></div>';
+                        <div class="radio"><label><input type="radio" name="s_pop3" value="0" onclick="hesk_attach_disable(new Array(\'p0\',\'p1\',\'p2\',\'p3\',\'p4\',\'p5\',\'p6\',\'p7\',\'p8\'))" onchange="hesk_toggleLayerDisplay(\'pop3_settings\');" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+                        <div class="radio"><label><input type="radio" name="s_pop3" value="1" onclick="hesk_attach_enable(new Array(\'p0\',\'p1\',\'p2\',\'p3\',\'p4\',\'p5\',\'p6\',\'p7\',\'p8\'))" onchange="hesk_toggleLayerDisplay(\'pop3_settings\');"  '.$on.' /> '.$hesklang['on'].'</label></div>';
                         ?>
                         <input type="hidden" name="tmp_pop3_host_name" value="<?php echo $hesk_settings['pop3_host_name']; ?>" />
                         <input type="hidden" name="tmp_pop3_host_port" value="<?php echo $hesk_settings['pop3_host_port']; ?>" />
@@ -1475,15 +1598,21 @@ if ( defined('HESK_DEMO') )
                 </div>
                 <div id="pop3_settings" style="display:<?php echo $onload_div; ?>">
                     <div class="form-group">
+                        <label for="s_pop3_job_wait" class="col-sm-3 control-label"><?php echo $hesklang['pjt']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#59','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['pjt']); ?>" id="p0" name="s_pop3_job_wait" size="40" maxlength="255" value="<?php echo $hesk_settings['pop3_job_wait']; ?>" <?php echo $onload_status; ?> /> <?php echo $hesklang['pjt2']; ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="s_pop3_host_name" class="col-sm-3 control-label"><?php echo $hesklang['pop3h']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#59','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['pop3h']; ?>" id="p1" name="s_pop3_host_name" size="40" maxlength="255" value="<?php echo $hesk_settings['pop3_host_name']; ?>" <?php echo $onload_status; ?> />   
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['pop3h']); ?>" id="p1" name="s_pop3_host_name" size="40" maxlength="255" value="<?php echo $hesk_settings['pop3_host_name']; ?>" <?php echo $onload_status; ?> />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="s_pop3_host_port" class="col-sm-3 control-label"><?php echo $hesklang['pop3p']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#59','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['pop3p']; ?>" id="p2" name="s_pop3_host_port" size="5" maxlength="255" value="<?php echo $hesk_settings['pop3_host_port']; ?>" <?php echo $onload_status; ?> />    
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['pop3p']); ?>" id="p2" name="s_pop3_host_port" size="5" maxlength="255" value="<?php echo $hesk_settings['pop3_host_port']; ?>" <?php echo $onload_status; ?> />
                         </div>
                     </div>
                     <div class="form-group">
@@ -1513,13 +1642,13 @@ if ( defined('HESK_DEMO') )
                     <div class="form-group">
                         <label for="s_pop3_user" class="col-sm-3 control-label"><?php echo $hesklang['pop3u']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#59','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['pop3u']; ?>" id="p5" name="s_pop3_user" size="40" maxlength="255" value="<?php echo $hesk_settings['pop3_user']; ?>" <?php echo $onload_status; ?> autocomplete="off" />
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['pop3u']); ?>" id="p5" name="s_pop3_user" size="40" maxlength="255" value="<?php echo $hesk_settings['pop3_user']; ?>" <?php echo $onload_status; ?> autocomplete="off" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="s_pop3_password" class="col-sm-3 control-label"><?php echo $hesklang['pop3w']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#59','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-9">
-                            <input type="password" class="form-control" placeholder="<?php echo $hesklang['pop3w']; ?>" id="p6" name="s_pop3_password" size="40" maxlength="255" value="<?php echo $hesk_settings['pop3_password']; ?>" <?php echo $onload_status; ?> autocomplete="off" />    
+                            <input type="password" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['pop3w']); ?>" id="p6" name="s_pop3_password" size="40" maxlength="255" value="<?php echo $hesk_settings['pop3_password']; ?>" <?php echo $onload_status; ?> autocomplete="off" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -1595,20 +1724,20 @@ if ( defined('HESK_DEMO') )
                     <div class="form-group">
                         <label for="s_loop_hits" class="col-sm-3 control-label"><?php echo $hesklang['looph']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#60','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['looph']; ?>" name="s_loop_hits" size="5" maxlength="5" value="<?php echo $hesk_settings['loop_hits']; ?>" />    
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['looph']); ?>" name="s_loop_hits" size="5" maxlength="5" value="<?php echo $hesk_settings['loop_hits']; ?>" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="s_loop_time" class="col-sm-3 control-label"><?php echo $hesklang['loopt']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#60','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" placeholder="<?php echo $hesklang['loopt']; ?>" name="s_loop_time" size="5" maxlength="5" value="<?php echo $hesk_settings['loop_time']; ?>" />    
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['loopt']); ?>" name="s_loop_time" size="5" maxlength="5" value="<?php echo $hesk_settings['loop_time']; ?>" />
                         </div>
                         <div class="col-sm-6" style="padding-left: 0px">
                             <p class="form-control-static"><?php echo $hesklang['ss']; ?></p>
                         </div>
                     </div>
 
-                    <h6 syle="font-weight: bold"><?php echo $hesklang['suge']; ?></h6>
+                    <h6 style="font-weight: bold"><?php echo $hesklang['suge']; ?></h6>
                     <div class="footerWithBorder blankSpace"></div>
 
                     <div class="form-group">
@@ -1641,7 +1770,7 @@ if ( defined('HESK_DEMO') )
                         <div class="form-group">
                             <label for="s_email_providers" class="col-sm-3 control-label"><?php echo $hesklang['epro']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#63','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             <div class="col-sm-9">
-                                <textarea name="s_email_providers" class="form-control" placeholder="<?php echo $hesklang['epro']; ?>" id="d1" rows="5" cols="40"/><?php echo implode("\n", $hesk_settings['email_providers']); ?></textarea>    
+                                <textarea name="s_email_providers" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['epro']); ?>" id="d1" rows="5" cols="40"/><?php echo implode("\n", $hesk_settings['email_providers']); ?></textarea>
                             </div>
                         </div>
                         <table border="0"  width="100%">
@@ -1651,6 +1780,36 @@ if ( defined('HESK_DEMO') )
                         </tr>
                         </table>
                     </div>
+
+                    <h6 style="font-weight: bold"><?php echo $hesklang['custnot']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#65','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h6>
+                    <div class="footerWithBorder blankSpace"></div>
+                    <div class="form-group">
+                        <label for="s_notify_new" class="col-sm-3 control-label"><?php echo $hesklang['notnew']; ?></label>
+                        <div class="col-sm-9">
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="s_notify_new" value="1" onchange="hesk_toggleLayerDisplay('skip_notify');" <?php if ($hesk_settings['notify_new']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['enable']; ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="skip_notify" style="display:<?php echo $hesk_settings['notify_new'] ? 'block' : 'none'; ?>">
+                        <div class="form-group">
+                            <div class="col-sm-9 col-sm-offset-3">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="s_notify_new" value="1" <?php if ($hesk_settings['notify_skip_spam']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['enn']; ?></label>
+                                </div>
+                                <textarea name="s_notify_spam_tags" rows="5" cols="40" class="form-control" /><?php echo hesk_htmlspecialchars( implode("\n", $hesk_settings['notify_spam_tags']) ); ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="s_notify_closed" class="col-sm-3 control-label"><?php echo $hesklang['notclo']; ?></label>
+                        <div class="col-sm-9">
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="s_notify_closed" value="1" <?php if ($hesk_settings['notify_closed']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['enable']; ?></label>
+                            </div>
+                        </div>
+                    </div>
+
                     <h6 style="font-weight: bold"><?php echo $hesklang['other']; ?></h6>
                     <div class="footerWithBorder blankSpace"></div>
 
@@ -1660,6 +1819,14 @@ if ( defined('HESK_DEMO') )
                             <div class="checkbox">
                                 <label><input type="checkbox" name="s_strip_quoted" value="1" <?php if ($hesk_settings['strip_quoted']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['remqr2']; ?></label>
                             </div>    
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="s_eml_req_msg" class="col-sm-3 control-label"><?php echo $hesklang['emlreqmsg']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#66','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                        <div class="col-sm-9">
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="s_eml_req_msg" value="1" <?php if ($hesk_settings['eml_req_msg']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['emlreqmsg2']; ?></label>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -1713,6 +1880,51 @@ if ( defined('HESK_DEMO') )
                     </div>
               </div>
 
+              <!-- Ticket List Tab -->
+              <div class="tab-pane fade in" id="ticket-list">
+                  <div class="form-group">
+                      <label for="s_open_only" class="col-sm-3 control-label"><?php echo $hesklang['fitl']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#1','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                      <div class="col-sm-9">
+                          <?php
+                          // List available fields
+                          foreach ($hesk_settings['possible_ticket_list'] as $key => $title)
+                          {
+                              echo '
+                              <div class="checkbox">
+                                  <label><input type="checkbox" name="s_tl_'.$key.'" value="1" '.( in_array($key, $hesk_settings['ticket_list']) ? 'checked="checked"' : '' ).'/> '.$title.'</label>
+                              </div>
+                              ';
+                          }
+                          ?>
+                      </div>
+                  </div>
+                  <div class="blankSpace"></div>
+                  <div class="form-group">
+                      <label for="s_submittedformat" class="col-sm-3 control-label"><?php echo $hesklang['sdf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                      <div class="col-sm-9 form-inline">
+                          <?php
+                          $off = $hesk_settings['new_top'] ? '' : 'checked="checked"';
+                          echo '
+                            <div class="radio"><label><input type="radio" name="s_submittedformat" value="2" '.($hesk_settings['submittedformat'] == 2 ? 'checked="checked"' : '').' /> '.$hesklang['lcf2'].'</label></div><br>
+                            <div class="radio"><label><input type="radio" name="s_submittedformat" value="1" '.($hesk_settings['submittedformat'] == 1 ? 'checked="checked"' : '').' /> '.$hesklang['lcf1'].'</label></div><br>
+                            <div class="radio"><label><input type="radio" name="s_submittedformat" value="0" '.($hesk_settings['submittedformat'] == 0 ? 'checked="checked"' : '').' /> '.$hesklang['lcf0'].'</label></div>';
+                          ?>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="s_updatedformat" class="col-sm-3 control-label"><?php echo $hesklang['lcf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                      <div class="col-sm-9 form-inline">
+                          <?php
+
+                          echo '
+                          <div class="radio"><label><input type="radio" name="s_updatedformat" value="2" '.($hesk_settings['updatedformat'] == 2 ? 'checked="checked"' : '').' /> '.$hesklang['lcf2'].'</label></div><br>
+                          <div class="radio"><label><input type="radio" name="s_updatedformat" value="1" '.($hesk_settings['updatedformat'] == 1 ? 'checked="checked"' : '').' /> '.$hesklang['lcf1'].'</label></div><br>
+                          <div class="radio"><label><input type="radio" name="s_updatedformat" value="0" '.($hesk_settings['updatedformat'] == 0 ? 'checked="checked"' : '').' /> '.$hesklang['lcf0'].'</label></div>';
+                          ?>
+                      </div>
+                  </div>
+              </div>
+
                 <!-- Miscellaneous Tab -->
               <div class="tab-pane fade in" id="misc">
                 <h6 style="font-weight: bold"><?php echo $hesklang['dat']; ?></h6>
@@ -1761,13 +1973,28 @@ if ( defined('HESK_DEMO') )
                 <div class="form-group">
                     <label for="s_timeformat" class="col-sm-3 control-label"><?php echo $hesklang['tfor']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#20','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo $hesklang['tfor']; ?>" name="s_timeformat" size="40" maxlength="255" value="<?php echo $hesk_settings['timeformat']; ?>" />    
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['tfor']); ?>" name="s_timeformat" size="40" maxlength="255" value="<?php echo $hesk_settings['timeformat']; ?>" />
                     </div>
                 </div>
 
                 <h6 style="font-weight: bold"><?php echo $hesklang['other']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
+                <div class="form-group">
+                    <label for="s_ip_whois" class="col-sm-3 control-label"><?php echo $hesklang['ip_whois']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#61','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="s_ip_whois" size="40" maxlength="255" value="<?php echo $hesk_settings['ip_whois']; ?>" />
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="s_maintenance_mode" class="col-sm-3 control-label"><?php echo $hesklang['mms']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#62','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="s_maintenance_mode" value="1" <?php if ($hesk_settings['maintenance_mode']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['mmd']; ?></label>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="s_alink" class="col-sm-3 control-label"><?php echo $hesklang['al']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#21','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
@@ -1839,20 +2066,6 @@ if ( defined('HESK_DEMO') )
                       </div>
                   </div>
                   <div class="form-group">
-                      <label for="maintenance-mode" class="col-sm-4 col-xs-12 control-label"><?php echo $hesklang['maintenanceMode']; ?>
-                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                             title="<?php echo $hesklang['maintenanceMode']; ?>"
-                             data-content="<?php echo $hesklang['maintenanceModeHelp']; ?>"></i>
-                      </label>
-                      <div class="col-sm-8 col-xs-12">
-                          <div class="checkbox">
-                              <label>
-                                  <input id="maintenance-mode" name="maintenance-mode" type="checkbox" <?php if ($modsForHesk_settings['maintenance_mode']) {echo 'checked';} ?>> <?php echo $hesklang['enable_maintenance']; ?>
-                              </label>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="form-group"><!-- TODO -->
                       <label for="email-verification" class="col-sm-4 col-xs-12 control-label"><?php echo $hesklang['customer_email_verification']; ?>
                           <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
                              title="<?php echo $hesklang['customer_email_verification']; ?>"
@@ -1862,6 +2075,58 @@ if ( defined('HESK_DEMO') )
                           <div class="checkbox">
                               <label>
                                   <input id="email-verification" name="email-verification" type="checkbox" <?php if ($modsForHesk_settings['customer_email_verification_required']) {echo 'checked';} ?>> <?php echo $hesklang['require_customer_validate_email']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="html_emails" class="col-sm-4 col-xs-12 control-label">
+                          <?php echo $hesklang['html_emails']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                             title="<?php echo $hesklang['html_emails']; ?>"
+                             data-content="<?php echo $hesklang['html_emails_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input id="html_emails" name="html_emails" type="checkbox" <?php if ($modsForHesk_settings['html_emails']) {echo 'checked';} ?>> <?php echo $hesklang['html_emails_text']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="email_attachments" class="col-sm-4 col-xs-12 control-label">
+                          <?php echo $hesklang['email_attachments']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                             title="<?php echo $hesklang['email_attachments']; ?>"
+                             data-content="<?php echo $hesklang['email_attachments_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="email_attachments" value="0" <?php echo $modsForHesk_settings['attachments'] == 0 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['show_attachments_as_links']; ?>
+                              </label>
+                          </div>
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="email_attachments" value="1" <?php echo $modsForHesk_settings['attachments'] == 1 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['attach_directly_to_email']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="use_bootstrap_theme" class="col-sm-4 col-xs-12 control-label">
+                          <?php echo $hesklang['use_bootstrap_theme']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                             title="<?php echo $hesklang['use_bootstrap_theme']; ?>"
+                             data-content="<?php echo $hesklang['use_bootstrap_theme_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="checkbox">
+                              <label>
+                                  <input id="use_boostrap_theme" name="use_bootstrap_theme" type="checkbox" <?php if ($modsForHesk_settings['use_bootstrap_theme']) {echo 'checked';} ?>> <?php echo $hesklang['use_bootstrap_theme']; ?>
                               </label>
                           </div>
                       </div>
@@ -1884,6 +2149,46 @@ if ( defined('HESK_DEMO') )
                           </div>
                       </div>
                   </div>
+                  <div class="blankSpace"></div>
+                  <h6 style="font-weight: bold"><?php echo $hesklang['menu_kb']; ?></h6>
+                  <div class="footerWithBorder blankSpace"></div>
+                  <div class="form-group">
+                      <label for="knowledgebase-visibility-setting" class="col-sm-4 col-xs-12 control-label">
+                          <?php echo $hesklang['new_article_default_type']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                             title="<?php echo $hesklang['new_article_default_type']; ?>"
+                             data-content="<?php echo $hesklang['new_article_default_type_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8 col-xs-12">
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="new_kb_article_visibility" value="0" <?php echo $modsForHesk_settings['new_kb_article_visibility'] == 0 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['kb_published']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                     title="<?php echo $hesklang['kb_published']; ?>"
+                                     data-content="<?php echo $hesklang['kb_published2']; ?>"></i>
+                              </label>
+                          </div>
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="new_kb_article_visibility" value="1" <?php echo $modsForHesk_settings['new_kb_article_visibility'] == 1 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['kb_private']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                     title="<?php echo $hesklang['kb_private']; ?>"
+                                     data-content="<?php echo $hesklang['kb_private2']; ?>"></i>
+                              </label>
+                          </div>
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="new_kb_article_visibility" value="2" <?php echo $modsForHesk_settings['new_kb_article_visibility'] == 2 ? 'checked' : ''; ?>>
+                                  <?php echo $hesklang['kb_draft']; ?>
+                                  <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                     title="<?php echo $hesklang['kb_draft']; ?>"
+                                     data-content="<?php echo $hesklang['kb_draft3']; ?>"></i>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
               </div>
               <!-- Mods For Hesk: Statuses -->
               <div class="tab-pane fade in" id="statuses">
@@ -1892,6 +2197,8 @@ if ( defined('HESK_DEMO') )
                   <?php
                   //-- We need to get all of the statuses and dump the information to the page.
                   $statusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
+                  $closedStatusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 1';
+                  $openStatusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0';
                   $statusesRS = hesk_dbQuery($statusesSql);
                   //Print header
                   ?>
@@ -1903,6 +2210,7 @@ if ( defined('HESK_DEMO') )
                                 <th><?php echo $hesklang['shortNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['shortNameKey']; ?>" data-content="<?php echo $hesklang['shortNameKeyDescr']; ?>"></i></th>
                                 <th><?php echo $hesklang['longNameKey']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['longNameKey']; ?>" data-content="<?php echo $hesklang['longNameKeyDescr']; ?>"></i></th>
                                 <th><?php echo $hesklang['textColor']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['textColor']; ?>" data-content="<?php echo $hesklang['textColorDescr']; ?>"></i></th>
+                                <th><?php echo $hesklang['closable_question']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover" data-placement="bottom" title="<?php echo $hesklang['closable_question']; ?>" data-content="<?php echo $hesklang['closable_description']; ?>"></i></th>
                                 <th><?php echo $hesklang['closedQuestionMark']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="top" title="<?php echo $hesklang['closedQuestionMark']; ?>" data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i></th>
                                 <th><?php echo $hesklang['delete']; ?></th>
                             </tr>
@@ -1915,17 +2223,31 @@ if ( defined('HESK_DEMO') )
                               $checkedEcho = ($row['IsClosed'] == 1) ? 'checked="checked"' : '';
                               $isDisabled = false;
                               if ($row['IsNewTicketStatus'] || $row['IsClosedByClient'] || $row['IsCustomerReplyStatus'] ||
-                                  $row['IsStaffClosedOption'] || $row['IsStaffReopenedStatus'] || $row['IsDefaultStaffReplyStatus']
-                                  || $row['LockedTicketStatus'])
+                                  $row['IsStaffClosedOption'] || $row['IsStaffReopenedStatus'] || $row['IsDefaultStaffReplyStatus'] ||
+                                  $row['LockedTicketStatus'] || $row['IsAutocloseOption'])
                               {
                                   $isDisabled = true;
                               }
 
+                              $yesSelected = $customersOnlySelected = $staffOnlySelected = $noSelected = '';
+                              if ($row['Closable'] == 'yes') { $yesSelected = 'selected'; }
+                              elseif ($row['Closable'] == 'conly') { $customersOnlySelected = 'selected'; }
+                              elseif ($row['Closable'] == 'sonly') { $staffOnlySelected = 'selected'; }
+                              else { $noSelected = 'selected'; }
+
                               echo '<tr id="s'.$row['ID'].'_row">';
                                 echo '<td>'.$hesklang[$row['ShortNameContentKey']].'</td>'; //Name
-                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_shortName" value="'.$row['ShortNameContentKey'].'" placeholder="'.$hesklang['shortNameKey'].'"></td>'; // Short Name Language File
-                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_longName" value="'.$row['TicketViewContentKey'].'" placeholder="'.$hesklang['longNameKey'].'"></td>'; // Long Name Language File
-                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_textColor" value="'.$row['TextColor'].'" placeholder="'.$hesklang['textColor'].'"></td>'; // Text Color
+                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_shortName" value="'.$row['ShortNameContentKey'].'" placeholder="'.htmlspecialchars($hesklang['shortNameKey']).'"></td>'; // Short Name Language File
+                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_longName" value="'.$row['TicketViewContentKey'].'" placeholder="'.htmlspecialchars($hesklang['longNameKey']).'"></td>'; // Long Name Language File
+                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_textColor" value="'.$row['TextColor'].'" placeholder="'.htmlspecialchars($hesklang['textColor']).'"></td>'; // Text Color
+                                echo '<td>
+                                          <select class="form-control" name="s'.$row['ID'].'_closable">
+                                              <option value="yes" '.$yesSelected.'>'.$hesklang['yes_title_case'].'</option>
+                                              <option value="conly" '.$customersOnlySelected.'>'.$hesklang['customers_only'].'</option>
+                                              <option value="sonly" '.$staffOnlySelected.'>'.$hesklang['staff_only'].'</option>
+                                              <option value="no" '.$noSelected.'>'.$hesklang['no_title_case'].'</option>
+                                          </select>
+                                      </td>';
                                 echo '<td><input type="checkbox" name="s'.$row['ID'].'_isClosed" value="1" '.$checkedEcho.'></td>'; // Resolved Status?
                                 echo '<td>';
                                 if ($isDisabled)
@@ -1942,9 +2264,17 @@ if ( defined('HESK_DEMO') )
                           //Print out an additional blank space for adding a status
                           echo '<tr class="info">';
                           echo '<td><b>'.$hesklang['addNew'].'</b></td>';
-                          echo '<td><input type="text" class="form-control" name="sN_shortName" value="" placeholder="'.$hesklang['shortNameKey'].'"></td>'; // Short Name Language File
-                          echo '<td><input type="text" class="form-control" name="sN_longName" value="" placeholder="'.$hesklang['longNameKey'].'"></td>'; // Long Name Language File
-                          echo '<td><input type="text" class="form-control" name="sN_textColor" value="" placeholder="'.$hesklang['textColor'].'"></td>'; // Text Color
+                          echo '<td><input type="text" class="form-control" name="sN_shortName" value="" placeholder="'.htmlspecialchars($hesklang['shortNameKey']).'"></td>'; // Short Name Language File
+                          echo '<td><input type="text" class="form-control" name="sN_longName" value="" placeholder="'.htmlspecialchars($hesklang['longNameKey']).'"></td>'; // Long Name Language File
+                          echo '<td><input type="text" class="form-control" name="sN_textColor" value="" placeholder="'.htmlspecialchars($hesklang['textColor']).'"></td>'; // Text Color
+                          echo '<td>
+                                    <select class="form-control" name="sN_closable">
+                                        <option value="yes">'.$hesklang['yes_title_case'].'</option>
+                                        <option value="conly">'.$hesklang['customers_only'].'</option>
+                                        <option value="sonly">'.$hesklang['staff_only'].'</option>
+                                        <option value="no">'.$hesklang['no_title_case'].'</option>
+                                    </select>
+                                </td>';
                           echo '<td><input type="checkbox" name="sN_isClosed" value="1"></td>'; // Resolved Status?
                           echo '<td></td>'; //Empty placeholder where the delete row is.
                           echo '</tr>';
@@ -1959,7 +2289,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="newTicket" class="form-control" id="newTicket">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($openStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsNewTicketStatus'] == 1) ? 'selected="selected"' : '';
@@ -1974,7 +2304,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="closedByClient" class="form-control" id="closedByClient">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($closedStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsClosedByClient'] == 1) ? 'selected="selected"' : '';
@@ -1989,7 +2319,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="replyFromClient" class="form-control" id="replyFromClient">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($openStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsCustomerReplyStatus'] == 1) ? 'selected="selected"' : '';
@@ -2004,7 +2334,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="staffClosedOption" class="form-control" id="staffClosedOption">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($closedStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsStaffClosedOption'] == 1) ? 'selected="selected"' : '';
@@ -2019,7 +2349,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="staffReopenedStatus" class="form-control" id="staffReopenedStatus">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($openStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsStaffReopenedStatus'] == 1) ? 'selected="selected"' : '';
@@ -2034,7 +2364,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-4 col-xs-12">
                           <select name="defaultStaffReplyStatus" class="form-control" id="defaultStaffReplyStatus">
                               <?php
-                              $statusesRS = hesk_dbQuery($statusesSql);
+                              $statusesRS = hesk_dbQuery($openStatusesSql);
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['IsDefaultStaffReplyStatus'] == 1) ? 'selected="selected"' : '';
@@ -2053,6 +2383,21 @@ if ( defined('HESK_DEMO') )
                               while ($row = $statusesRS->fetch_assoc())
                               {
                                   $selectedEcho = ($row['LockedTicketStatus'] == 1) ? 'selected="selected"' : '';
+                                  echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                              }
+                              ?>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="autocloseTicketOption" class="col-sm-8 col-xs-12 control-label"><?php echo $hesklang['autoclose_ticket_status']; ?></label>
+                      <div class="col-sm-4 col-xs-12">
+                          <select name="autocloseTicketOption" class="form-control" id="autocloseTicketOption">
+                              <?php
+                              $statusesRS = hesk_dbQuery($closedStatusesSql);
+                              while ($row = $statusesRS->fetch_assoc())
+                              {
+                                  $selectedEcho = ($row['IsAutocloseOption'] == 1) ? 'selected' : '';
                                   echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
                               }
                               ?>
@@ -2209,77 +2554,6 @@ if ( defined('HESK_DEMO') )
                       </div>
                   </div>
               </div>
-              <!-- Mods For Hesk: IP/Email Bans -->
-              <div class="tab-pane fade in" id="ipEmailBans">
-                  <h6 style="font-weight: bold"><?php echo $hesklang['ip_bans']; ?></h6>
-                  <div class="footerWithBorder blankSpace"></div>
-                  <div class="table-responsive">
-                      <table class="table table-hover">
-                          <thead>
-                            <tr>
-                                <th><?php echo $hesklang['delete']; ?></th>
-                                <th><?php echo $hesklang['from']; ?></th>
-                                <th><?php echo $hesklang['ip_to']; ?></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          <?php
-                          $ipRs= hesk_dbQuery('SELECT * FROM `'.$hesk_settings['db_pfix'].'denied_ips`');
-                          while ($row = $ipRs->fetch_assoc()) {
-                              echo '<tr id="trIp'.$row['ID'].'">';
-                              echo '<td><input type="checkbox" name="ipDelete['.$row['ID'].']" onclick="toggleRow(\'trIp'.$row['ID'].'\')"></td>';
-                              echo '<td><input type="text" name="ipFrom['.$row['ID'].']" placeholder="'.$hesklang['from'].'" class="form-control" value="'.long2ip($row['RangeStart']).'"></td>';
-                              echo '<td><input type="text" name="ipTo['.$row['ID'].']" placeholder="'.$hesklang['ip_to'].'" class="form-control" value="'.long2ip($row['RangeEnd']).'"></td>';
-                              echo '</tr>';
-                          }
-
-                          ?>
-                            <tr class="info">
-                                <!-- Add new IP range -->
-                                <td><b><?php echo $hesklang['addNew']; ?></b></td>
-                                <td>
-                                    <input type="text" name="addIpFrom" placeholder="<?php echo $hesklang['from']; ?>" class="form-control">
-                                </td>
-                                <td>
-                                    <input type="text" name="addIpTo" placeholder="<?php echo $hesklang['ip_to']; ?>" class="form-control">
-                                </td>
-                            </tr>
-                          </tbody>
-                      </table>
-                  </div>
-                  <div class="blankSpace"></div>
-                  <h6 style="font-weight: bold"><?php echo $hesklang['email_bans']; ?></h6>
-                  <div class="footerWithBorder blankSpace"></div>
-                  <div class="table-responsive">
-                      <table class="table table-hover">
-                          <thead>
-                              <tr>
-                                  <th><?php echo $hesklang['delete']; ?></th>
-                                  <th><?php echo $hesklang['email']; ?></th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <?php
-                              $emailRs = hesk_dbQuery('SELECT * FROM `'.$hesk_settings['db_pfix'].'denied_emails`');
-                              while ($row = $emailRs->fetch_assoc()) {
-                                  echo '<tr id="trEmail'.$row['ID'].'">';
-                                  echo '<td><input type="checkbox" name="emailDelete['.$row['ID'].']" onclick="toggleRow(\'trEmail'.$row['ID'].'\')"></td>';
-                                  echo '<td><input type="text" name="email['.$row['ID'].']" class="form-control" placeholder="'.$hesklang['email'].'" value="'.$row['Email'].'"></td>';
-                                  echo '</tr>';
-                              }
-                              ?>
-
-                              <!-- Add new email -->
-                              <tr class="info">
-                                  <td><b><?php echo $hesklang['addNew']; ?></b></td>
-                                  <td>
-                                      <input type="text" name="addEmail" class="form-control" placeholder="<?php echo $hesklang['email']; ?>">
-                                  </td>
-                              </tr>
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <br/>
@@ -2293,7 +2567,7 @@ if ( defined('HESK_DEMO') )
                         {
                             echo '<input type="button" value="'.$hesklang['save_changes'].' ('.$hesklang['disabled'].')" class="btn btn-default"  disabled="disabled" /><br /><font class="error">'.$hesklang['e_save_settings'].'</font>';
                         }
-                        ?>    
+                        ?>
                     </div>
                 </div>
             </div>
@@ -2371,16 +2645,86 @@ function hesk_getLatestVersion()
 
 } // END hesk_getLatestVersion()
 
-
 function hesk_cacheLatestVersion($latest)
 {
-	global $hesk_settings;
+    global $hesk_settings;
 
-	@file_put_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest.txt', time() . '|' . $latest);
+    @file_put_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest.txt', time() . '|' . $latest);
 
-	return $latest;
+    return $latest;
 
 } // END hesk_cacheLatestVersion()
+
+function hesk_checkMfhVersion($currentVersion)
+{
+    if ($latest = hesk_getMfhLatestVersion() )
+    {
+        if ( strlen($latest) > 12 )
+        {
+            return -1;
+        }
+        elseif ($latest == $currentVersion)
+        {
+            return true;
+        }
+        else
+        {
+            return $latest;
+        }
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+function hesk_getMfhLatestVersion()
+{
+    global $hesk_settings;
+
+    // Do we have a cached version file?
+    if ( file_exists(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest-mfh.txt') )
+    {
+        if ( preg_match('/^(\d+)\|([\d.]+)+$/', @file_get_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest-mfh.txt'), $matches) && (time() - intval($matches[1])) < 3600  )
+        {
+            return $matches[2];
+        }
+    }
+
+    // No cached file or older than 3600 seconds, try to get an update
+    $hesk_version_url = 'http://mods-for-hesk.mkochcs.com/latestversion.php';
+
+    // Try using cURL
+    if ( function_exists('curl_init') )
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $hesk_version_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
+        $latest = curl_exec($ch);
+        curl_close($ch);
+        return hesk_cacheMfhLatestVersion($latest);
+    }
+
+    // Try using a simple PHP function instead
+    if ($latest = file_get_contents($hesk_version_url) )
+    {
+        return hesk_cacheMfhLatestVersion($latest);
+    }
+
+    // Can't check automatically, will need a manual check
+    return false;
+}
+
+function hesk_cacheMfhLatestVersion($latest)
+{
+    global $hesk_settings;
+
+    @file_put_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest-mfh.txt', time() . '|' . $latest);
+
+    return $latest;
+
+}
 
 
 function hesk_testLanguage($return_options = 0)
@@ -2448,7 +2792,7 @@ function hesk_testLanguage($return_options = 0)
 	            }
 
                 /* Check if language file is for current version */
-	            if (strpos($tmp,'$hesklang[\'recaptcha_error\']') === false)
+                if (strpos($tmp,'$hesklang[\'ms01\']') === false)
 	            {
 	            	$err .= "              |---->  WRONG VERSION (not ".$hesk_settings['hesk_version'].")\n";
 	            }

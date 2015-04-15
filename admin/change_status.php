@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -74,13 +74,6 @@ if ( ! isset($status_options[$status]))
 
 $locked = 0;
 
-// Ticket info
-$result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
-if (hesk_dbNumRows($result) != 1) {
-    hesk_error($hesklang['ticket_not_found']);
-}
-$ticket = hesk_dbFetchAssoc($result);
-
 $statusRow = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID`, `IsClosed` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$status));
 if ($statusRow['IsClosed']) // Closed
 {
@@ -92,36 +85,47 @@ if ($statusRow['IsClosed']) // Closed
     	$locked = 1;
     }
 
-    // Notify customer
-    require(HESK_PATH . 'inc/email_functions.inc.php');
-
-    if (!empty($ticket['email']))
+    // Notify customer of closed ticket?
+    if ($hesk_settings['notify_closed'])
     {
+        // Get ticket info
+        $result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
+        if (hesk_dbNumRows($result) != 1)
+        {
+            hesk_error($hesklang['ticket_not_found']);
+        }
+        $ticket = hesk_dbFetchAssoc($result);
+        $ticket['dt'] = hesk_date($ticket['dt'], true);
+        $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
+        $ticket = hesk_ticketToPlain($ticket, 1, 0);
+
+        // Notify customer
+        require(HESK_PATH . 'inc/email_functions.inc.php');
         hesk_notifyCustomer('ticket_closed');
     }
+
+    // Log who marked the ticket resolved
+    $closedby_sql = ' , `closedat`=NOW(), `closedby`='.intval($_SESSION['id']).' ';
 }
 elseif ($statusRow['ID'] != 0) //Ticket is still open, but not new
 {
 	$action = sprintf($hesklang['tsst'],$status_options[$status]);
     $revision = sprintf($hesklang['thist9'],hesk_date(),$status_options[$status],$_SESSION['name'].' ('.$_SESSION['user'].')');
+
+    // Ticket is not resolved
+    $closedby_sql = ' , `closedat`=NULL, `closedby`=NULL ';
 }
 else // Ticket is marked as "NEW"
 {
 	$action = $hesklang['ticket_been'] . ' ' . $hesklang['opened'];
     $revision = sprintf($hesklang['thist4'],hesk_date(),$_SESSION['name'].' ('.$_SESSION['user'].')');
+
+    // Ticket is not resolved
+    $closedby_sql = ' , `closedat`=NULL, `closedby`=NULL ';
 }
 
-//-- Notify staff after ticket re-open?
-$currentStatusRS = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.$ticket['status']);
-$currentStatus = hesk_dbFetchAssoc($currentStatusRS);
 
-if (intval($currentStatus['IsClosed']) == 1 && $statusRow['IsClosed'] == 0 && $ticket['owner'] != $_SESSION['id']) {
-    $ticket['name'] = $_SESSION['name'];
-    require(HESK_PATH . 'inc/email_functions.inc.php');
-    hesk_notifyAssignedStaff(false, 'ticket_reopen_assigned');
-}
-
-hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='{$status}', `locked`='{$locked}', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
+hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql , `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
 
 if (hesk_dbAffectedRows() != 1)
 {

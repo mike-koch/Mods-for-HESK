@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -38,8 +38,11 @@ define('HESK_PATH','./');
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
-hesk_load_database_functions();
 
+// Are we in maintenance mode?
+hesk_check_maintenance();
+
+hesk_load_database_functions();
 hesk_session_start();
 
 // A security check
@@ -58,6 +61,12 @@ hesk_dbConnect();
 
 if ($status == 3) // Closed
 {
+    // Is customer closing tickets enabled?
+    if ( ! $hesk_settings['custclose'])
+    {
+        hesk_error($hesklang['attempt']);
+    }
+
     //-- They want to close the ticket, so get the status that is the default for client-side closes
     $statusRow = hesk_dbFetchAssoc(hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosedByClient` = 1'));
 
@@ -69,6 +78,9 @@ if ($status == 3) // Closed
     {
     	$locked = 1;
     }
+
+    // Mark that customer resolved the ticket
+    $closedby_sql = ' , `closedat`=NOW(), `closedby`=0 ';
 }
 elseif ($status == 2) // Opened
 {
@@ -83,6 +95,9 @@ elseif ($status == 2) // Opened
 
 	// We will ask the customer why is the ticket being reopened
 	$_SESSION['force_form_top'] = true;
+
+    // Ticket is not resolved
+    $closedby_sql = ' , `closedat`=NULL, `closedby`=NULL ';
 }
 else
 {
@@ -96,7 +111,7 @@ hesk_dbConnect();
 hesk_verifyEmailMatch($trackingID);
 
 // Modify values in the database
-hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='{$status}', `locked`='{$locked}', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `trackid`='".hesk_dbEscape($trackingID)."' AND `locked` != '1' LIMIT 1");
+hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql , `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `trackid`='".hesk_dbEscape($trackingID)."' AND `locked` != '1' LIMIT 1");
 
 // Did we modify anything*
 if (hesk_dbAffectedRows() != 1)

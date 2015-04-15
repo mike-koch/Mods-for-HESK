@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -99,7 +99,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
 
 	<?php
     /* Get list of articles from the database */
-    $res = hesk_dbQuery("SELECT `t1`.* FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+    $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`views` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
 			LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
 			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
 			ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT ".intval($how_many));
@@ -116,7 +116,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
 
 	<?php
     /* Get list of articles from the database */
-    $res = hesk_dbQuery("SELECT `t1`.* FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+    $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`dt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
 			LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
 			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
 			ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT ".intval($how_many));
@@ -293,7 +293,7 @@ function hesk_kbSearchLarge($admin = '')
 	<div style="text-align:center">
 		<form role="form" action="<?php echo $action; ?>" method="get" style="display: inline; margin: 0;" name="searchform">
 			<div class="input-group">
-				<input type="text" class="form-control" placeholder="<?php echo $hesklang['search_the_knowledgebase']; ?>" name="search">
+				<input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['search_the_knowledgebase']); ?>" name="search">
 				<span class="input-group-btn">
 					<button class="btn btn-default" type="submit" value="<?php echo $hesklang['search']; ?>" title="<?php echo $hesklang['search']; ?>"><?php echo $hesklang['search']; ?></button>
 				</span>

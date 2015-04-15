@@ -2,7 +2,9 @@
 var loadJquery = function()
 {
     //-- Activate tooltips
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip({
+        container: 'body'
+    });
 
     //-- Activate popovers
     $('[data-toggle="popover"]').popover({
@@ -47,26 +49,6 @@ function toggleRow(id) {
     }
 }
 
-function toggleColumn(className) {
-    if ($('.' + className).css('display') == 'none') {
-        $('.' + className).show();
-    } else {
-        $('.' + className).hide();
-    }
-}
-
-function toggleFilterCheckboxes(show) {
-    if (show) {
-        $('#filterCheckboxes').show();
-        $('#showFiltersText').hide();
-        $('#hideFiltersText').show();
-    } else {
-        $('#filterCheckboxes').hide();
-        $('#showFiltersText').show();
-        $('#hideFiltersText').hide();
-    }
-}
-
 function toggleChildrenForm(show) {
     if (show) {
         $('#childrenForm').show();
@@ -77,14 +59,23 @@ function toggleChildrenForm(show) {
     }
 }
 
-function toggleNote(noteId, showForm) {
-    if (showForm) {
-        $('#note-' + noteId + '-p').hide();
-        $('#note-' + noteId + '-form').show();
+function toggleContainers(showIds, hideIds) {
+    showIds.forEach(function (entry) {
+        $('#' + entry).show();
+    });
+    hideIds.forEach(function (entry) {
+        $('#' + entry).hide();
+    });
+}
+
+function disableIfEmpty(sourceId, destinationId) {
+    if ($('#' + sourceId).val().length > 0) {
+        $('#' + destinationId).attr('disabled', false);
     } else {
-        $('#note-' + noteId + '-p').show();
-        $('#note-' + noteId + '-form').hide();
-        $('#note-' + noteId + '-textarea').val($('#note-' + noteId + '-p').text())
+        if ($('#' + destinationId).is(':checkbox')) {
+            $('#' + destinationId).attr('checked', false);
+        }
+        $('#' + destinationId).attr('disabled', true);
     }
 }
 

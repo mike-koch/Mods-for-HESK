@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -38,6 +38,10 @@ define('HESK_PATH','./');
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+
+// Are we in maintenance mode?
+hesk_check_maintenance();
+
 hesk_load_database_functions();
 require(HESK_PATH . 'inc/email_functions.inc.php');
 require(HESK_PATH . 'inc/posting_functions.inc.php');
@@ -132,6 +136,17 @@ if (count($hesk_error_buffer)!=0)
 /* Connect to database */
 hesk_dbConnect();
 
+// Check if this IP is temporarily locked out
+$res = hesk_dbQuery("SELECT `number` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` WHERE `ip`='".hesk_dbEscape($_SERVER['REMOTE_ADDR'])."' AND `last_attempt` IS NOT NULL AND DATE_ADD(`last_attempt`, INTERVAL ".intval($hesk_settings['attempt_banmin'])." MINUTE ) > NOW() LIMIT 1");
+if (hesk_dbNumRows($res) == 1)
+{
+    if (hesk_dbResult($res) >= $hesk_settings['attempt_limit'])
+    {
+        unset($_SESSION);
+        hesk_error( sprintf($hesklang['yhbb'],$hesk_settings['attempt_banmin']) , 0);
+    }
+}
+
 /* Get details about the original ticket */
 $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `trackid`='{$trackingID}' LIMIT 1");
 if (hesk_dbNumRows($res) != 1)
@@ -150,13 +165,29 @@ if ($ticket['locked'])
 	exit();
 }
 
+// Prevent flooding ticket replies
+$res = hesk_dbQuery("SELECT `staffid` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='{$ticket['id']}' AND `dt` > DATE_SUB(NOW(), INTERVAL 10 MINUTE) ORDER BY `id` ASC");
+if (hesk_dbNumRows($res) > 0)
+{
+    $sequential_customer_replies = 0;
+    while ($tmp = hesk_dbFetchAssoc($res))
+    {
+        $sequential_customer_replies = $tmp['staffid'] ? 0 : $sequential_customer_replies + 1;
+    }
+    if ($sequential_customer_replies > 10)
+    {
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` (`ip`, `number`) VALUES ('".hesk_dbEscape($_SERVER['REMOTE_ADDR'])."', ".intval($hesk_settings['attempt_limit'] + 1).")");
+        hesk_error( sprintf($hesklang['yhbr'],$hesk_settings['attempt_banmin']) , 0);
+    }
+}
+
 /* Insert attachments */
 if ($hesk_settings['attachments']['use'] && !empty($attachments))
 {
     foreach ($attachments as $myatt)
     {
         hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` (`ticket_id`,`saved_name`,`real_name`,`size`) VALUES ('{$trackingID}','".hesk_dbEscape($myatt['saved_name'])."','".hesk_dbEscape($myatt['real_name'])."','".intval($myatt['size'])."')");
-        $myattachments .= hesk_dbInsertID() . '#' . $myatt['real_name'] .',';
+        $myattachments .= hesk_dbInsertID() . '#' . $myatt['real_name'] . '#' . $myatt['saved_name'] .',';
     }
 }
 
@@ -169,7 +200,7 @@ $defaultNewTicketStatus = hesk_dbQuery($defaultNewTicketStatusQuery)->fetch_asso
 $ticket['status'] = $ticket['status'] == $defaultNewTicketStatus['ID'] ? $defaultNewTicketStatus['ID'] : $newStatus['ID'];
 
 /* Update ticket as necessary */
-$res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `status`='{$ticket['status']}',`lastreplier`='0' WHERE `id`='{$ticket['id']}' LIMIT 1");
+$res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `status`='{$ticket['status']}', `replies`=`replies`+1, `lastreplier`='0' WHERE `id`='{$ticket['id']}' LIMIT 1");
 
 // Insert reply into database
 hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`) VALUES ({$ticket['id']},'".hesk_dbEscape($ticket['name'])."','".hesk_dbEscape($message)."',NOW(),'".hesk_dbEscape($myattachments)."')");
@@ -194,6 +225,7 @@ $info = array(
 'attachments'	=> $myattachments,
 'dt'			=> hesk_date($ticket['dt'], true),
 'lastchange'	=> hesk_date($ticket['lastchange'], true),
+'id'			=> $ticket['id'],
 );
 
 // 2. Add custom fields to the array

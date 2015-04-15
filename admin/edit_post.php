@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -115,6 +115,7 @@ if (isset($_POST['save']))
     }
     else
     {
+        $tmpvar['language'] = hesk_POST('customerLanguage');
 		$tmpvar['name']    = hesk_input( hesk_POST('name') ) or $hesk_error_buffer[]=$hesklang['enter_your_name'];
 		$tmpvar['email']   = hesk_validateEmail( hesk_POST('email'), 'ERR', 0);
 		$tmpvar['subject'] = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer[]=$hesklang['enter_ticket_subject'];
@@ -191,7 +192,8 @@ if (isset($_POST['save']))
 		`custom17`='".hesk_dbEscape($tmpvar['custom17'])."',
 		`custom18`='".hesk_dbEscape($tmpvar['custom18'])."',
 		`custom19`='".hesk_dbEscape($tmpvar['custom19'])."',
-		`custom20`='".hesk_dbEscape($tmpvar['custom20'])."'
+		`custom20`='".hesk_dbEscape($tmpvar['custom20'])."',
+		`language`='".hesk_dbEscape($tmpvar['language'])."'
 		WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
     }
 
@@ -225,23 +227,33 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             /* If it's not a reply edit all the fields */
             if (!$is_reply)
             {
-		    ?>
+                if ($hesk_settings['can_sel_lang']) {
+            ?>
+                    <div class="form-group">
+                        <label for="customerLanguage" class="col-sm-3 control-label"><?php echo $hesklang['chol']; ?>:</label>
+                        <div class="col-sm-9">
+                            <select name="customerLanguage" id="customerLanguage" class="form-control">
+                                <?php hesk_listLanguages(); ?>
+                            </select>
+                        </div>
+                    </div>
+                <?php } ?>
                 <div class="form-group">
                     <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>:</label>
                     <div class="col-sm-9">
-                         <input class="form-control" type="text" name="subject" size="40" maxlength="40" value="<?php echo $ticket['subject'];?>" placeholder="<?php echo $hesklang['subject']; ?>" />
+                         <input class="form-control" type="text" name="subject" size="40" maxlength="40" value="<?php echo $ticket['subject'];?>" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>:</label>
                     <div class="col-sm-9">
-                        <input class="form-control" type="text" name="name" size="40" maxlength="30" value="<?php echo $ticket['name'];?>" placeholder="<?php echo $hesklang['name']; ?>" />
+                        <input class="form-control" type="text" name="name" size="40" maxlength="30" value="<?php echo $ticket['name'];?>" placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>" />
                     </div>     
                 </div>
                 <div class="form-group">
                     <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>:</label>
                     <div class="col-sm-9">
-                        <input class="form-control" type="text" name="email" size="40" maxlength="255" value="<?php echo $ticket['email'];?>" placeholder="<?php echo $hesklang['email']; ?>" />
+                        <input class="form-control" type="text" name="email" size="40" maxlength="1000" value="<?php echo $ticket['email'];?>" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>" />
                     </div>
                 </div>
                 <?php
@@ -299,6 +311,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 						        <div class="form-group">
 						        <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
 		                        <div class="col-sm-9"><select class="form-control" name="'.$k.'">';
+
+                                // Show "Click to select"?
+                                $v['value'] = str_replace('{HESK_SELECT}', '', $v['value'], $num);
+                                if ($num)
+                                {
+                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                }
 
 		            	        $options = explode('#HESK#',$v['value']);
 
@@ -363,7 +382,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 						        <div class="form-group">
 						            <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
 						            <div class="col-sm-9">
-                                        <textarea class="form-control" name="'.$k.'" rows="'.$size[0].'" placeholder="'.$v['name'].'" cols="'.$size[1].'">'.$k_value.'</textarea>
+                                        <textarea class="form-control" name="'.$k.'" rows="'.$size[0].'" placeholder="'.htmlspecialchars($v['name']).'" cols="'.$size[1].'">'.$k_value.'</textarea>
 						            </div>
 		                        </div>';
 		                    break;
@@ -377,7 +396,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="form-group">
                                     <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="datepicker form-control white-readonly" placeholder="'.$v['name'].'" id="'.$v['name'].'" name="'.$k.'" size="40"
+                                        <input type="text" class="datepicker form-control white-readonly" placeholder="'.htmlspecialchars($v['name']).'" id="'.$v['name'].'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.date('Y-m-d', $v['value']).'" readonly/>
                                     </div>
                                 </div>';
@@ -417,7 +436,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 						        <div class="form-group">
 						            <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
 						            <div class="col-sm-9">
-                                        <input type="text" class="form-control" placeholder="'.$v['name'].'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" />
+                                        <input type="text" class="form-control" placeholder="'.htmlspecialchars($v['name']).'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" />
                                     </div>
 						        </div>
 						        ';
@@ -430,7 +449,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="form-group">
                 <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" name="message" rows="12" placeholder="<?php echo $hesklang['message']; ?>" cols="60"><?php echo $ticket['message']; ?></textarea>
+                    <textarea class="form-control" name="message" rows="12" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" cols="60"><?php echo $ticket['message']; ?></textarea>
                 </div>
             </div>
             <div class="form-group">

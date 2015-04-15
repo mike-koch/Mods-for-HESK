@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2013 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -49,9 +49,13 @@ $trackingID = hesk_cleanID() or die("$hesklang[int_error]: $hesklang[no_trackID]
 /* Connect to database */
 hesk_dbConnect();
 
-/* Verify email address match if needed */
+// Perform additional checks for customers
 if ( empty($_SESSION['id']) )
 {
+    // Are we in maintenance mode?
+    hesk_check_maintenance();
+
+    // Verify email address match
 	hesk_verifyEmailMatch($trackingID);
 }
 

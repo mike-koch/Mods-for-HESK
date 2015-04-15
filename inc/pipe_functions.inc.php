@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -33,7 +33,7 @@
 *******************************************************************************/
 
 /* Check if this is a valid include */
-if (!defined('IN_SCRIPT')) {die('Invalid attempt');} 
+if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 // Include all functions needed for email piping
 hesk_load_database_functions();
@@ -42,33 +42,39 @@ require(HESK_PATH . 'inc/posting_functions.inc.php');
 require(HESK_PATH . 'inc/mail/rfc822_addresses.php');
 require(HESK_PATH . 'inc/mail/mime_parser.php');
 require(HESK_PATH . 'inc/mail/email_parser.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 
 /*** FUNCTIONS ***/
 
-function hesk_email2ticket($results, $pop3 = 0)
+function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority = -1)
 {
 	global $hesk_settings, $hesklang, $hesk_db_link, $ticket;
 
-	// Process "From:" email
-	$tmpvar['email'] = hesk_validateEmail($results['from'][0]['address'],'ERR',0);
+	// Process "Reply-To:" or "From:" email
+	$tmpvar['email'] = isset($results['reply-to'][0]['address']) ? hesk_validateEmail($results['reply-to'][0]['address'],'ERR',0) : hesk_validateEmail($results['from'][0]['address'],'ERR',0);
 
-	// "From:" email missing or invalid?
-	if ( ! $tmpvar['email'] )
+	// Email missing, invalid or banned?
+	if ( ! $tmpvar['email'] || hesk_isBannedEmail($tmpvar['email']) )
 	{
 		return hesk_cleanExit();
 	}
 
-    // Make sure the email isn't banned. If it is, just exit.
-    $emailSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_emails` WHERE Email = \''.hesk_dbEscape($tmpvar['email']).'\'';
-    if ($emailSql->num_rows > 0) {
-        return hesk_cleanExit();
-    }
-
-	// Process "From:" name, convert to UTF-8, set to "[Customer]" if not set
-	$tmpvar['name'] = isset($results['from'][0]['name']) ? $results['from'][0]['name'] : $hesklang['pde'];
-	if ( ! empty($results['from'][0]['encoding']) )
+	// Process "Reply-To:" or "From:" name, convert to UTF-8, set to "[Customer]" if not set
+	if ( isset($results['reply-to'][0]['name']) && strlen($results['reply-to'][0]['name']) )
 	{
-		$tmpvar['name'] = hesk_encodeUTF8($tmpvar['name'], $results['from'][0]['encoding']);
+   		$tmpvar['name'] = $results['reply-to'][0]['name'];
+		if ( ! empty($results['reply-to'][0]['encoding']) )
+		{
+			$tmpvar['name'] = hesk_encodeUTF8($tmpvar['name'], $results['reply-to'][0]['encoding']);
+		}
+	}
+	else
+	{
+   		$tmpvar['name'] = isset($results['from'][0]['name']) ? $results['from'][0]['name'] : $hesklang['pde'];
+		if ( ! empty($results['from'][0]['encoding']) )
+		{
+			$tmpvar['name'] = hesk_encodeUTF8($tmpvar['name'], $results['from'][0]['encoding']);
+		}
 	}
 	$tmpvar['name'] = hesk_input($tmpvar['name'],'','',1,50) or $tmpvar['name'] = $hesklang['pde'];
 
@@ -91,10 +97,24 @@ function hesk_email2ticket($results, $pop3 = 0)
 	}
 	$tmpvar['message'] = hesk_input($tmpvar['message'],'','',1);
 
-	// Message missing? We require it!
-	if ( ! $tmpvar['message'])
+	// Message missing?
+	if ( strlen($tmpvar['message']) == 0)
 	{
-		return hesk_cleanExit();
+		// Message required? Ignore this email.
+		if ($hesk_settings['eml_req_msg'])
+		{
+			return hesk_cleanExit();
+		}
+
+		// Message not required? Assign a default message
+		$tmpvar['message'] = $hesklang['def_msg'];
+
+		// Track duplicate emails based on subject
+		$message_hash = md5($tmpvar['subject']);
+	}
+	else
+	{
+    	$message_hash = md5($tmpvar['message']);
 	}
 
 	// Strip quoted reply from email
@@ -115,7 +135,7 @@ function hesk_email2ticket($results, $pop3 = 0)
 	}
 
 	// Check for email loops
-	if ( hesk_isEmailLoop($tmpvar['email'], md5($tmpvar['message']) ) )
+	if ( hesk_isEmailLoop($tmpvar['email'], $message_hash) )
 	{
 		return hesk_cleanExit();
 	}
@@ -167,8 +187,6 @@ function hesk_email2ticket($results, $pop3 = 0)
 	$num = 0;
 	if ($hesk_settings['attachments']['use'] && isset($results['attachments'][0]))
 	{
-    	#print_r($results['attachments']);
-
 	    foreach ($results['attachments'] as $k => $v)
 	    {
 
@@ -236,7 +254,10 @@ function hesk_email2ticket($results, $pop3 = 0)
 		$ticket['status'] = $ticket['status'] ? 1 : 0;
 
 		// Update ticket as necessary
-		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(),`status`='{$ticket['status']}',`lastreplier`='0' WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
+		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(),`status`='{$ticket['status']}',`replies`=`replies`+1,`lastreplier`='0' WHERE `id`='".intval($ticket['id'])."' LIMIT 1");
+
+		// If customer replied, we assume staff replies have been read (no way to be sure if ticket.php hasn't been opened)
+		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` SET `read` = '1' WHERE `replyto` = '".intval($ticket['id'])."' AND `staffid` != '0' ");
 
 		// Insert reply into database
 		hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`) VALUES ('".intval($ticket['id'])."','".hesk_dbEscape($ticket['lastreplier'])."','".hesk_dbEscape($tmpvar['message'])."',NOW(),'".hesk_dbEscape($tmpvar['attachments'])."')");
@@ -258,6 +279,7 @@ function hesk_email2ticket($results, $pop3 = 0)
 		'attachments'	=> $tmpvar['attachments'],
 		'dt'			=> hesk_date($ticket['dt'], true),
 		'lastchange'	=> hesk_date($ticket['lastchange'], true),
+        'id'			=> $ticket['id'],
 		);
 
 		// 2. Add custom fields to the array
@@ -291,13 +313,14 @@ function hesk_email2ticket($results, $pop3 = 0)
 	} // END REPLY
 
 	// Not a reply, but a new ticket. Add it to the database
-	$tmpvar['category'] 	= 1;
-	$tmpvar['priority'] 	= 3;
+	$tmpvar['category'] 	= $set_category;
+	$tmpvar['priority'] 	= $set_priority < 0 ? hesk_getCategoryPriority($tmpvar['category']) : $set_priority;
 	$_SERVER['REMOTE_ADDR'] = $hesklang['unknown'];
 
 	// Auto assign tickets if aplicable
 	$tmpvar['owner']   = 0;
 	$tmpvar['history'] = $pop3 ? sprintf($hesklang['thist16'], hesk_date()) : sprintf($hesklang['thist11'], hesk_date());
+	$tmpvar['openedby'] = $pop3 ? -2 : -1;
 
 	$autoassign_owner = hesk_autoAssignTicket($tmpvar['category']);
 
@@ -319,7 +342,29 @@ function hesk_email2ticket($results, $pop3 = 0)
 	$ticket = hesk_newTicket($tmpvar);
 
 	// Notify the customer
-	hesk_notifyCustomer();
+	if ($hesk_settings['notify_new'])
+	{
+		$possible_SPAM = false;
+
+		// Do we need to check subject for SPAM tags?
+		if ($hesk_settings['notify_skip_spam'])
+		{
+			foreach ($hesk_settings['notify_spam_tags'] as $tag)
+			{
+				if ( strpos($tmpvar['subject'], $tag) !== false )
+				{
+					$possible_SPAM = true;
+					break;
+				}
+			}
+		}
+
+		// SPAM tags not found or not checked, send email
+		if ($possible_SPAM === false)
+		{
+			hesk_notifyCustomer();
+		}
+	}
 
 	// Need to notify staff?
 	// --> From autoassign?

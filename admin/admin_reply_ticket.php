@@ -1,12 +1,12 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.5.5 from 5th August 2014
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
-*  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
+*  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
 *  HESK is a registered trademark of Klemen Stirn.
 
 *  The HESK may be used and modified free of charge by anyone
@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -83,10 +84,57 @@ $hesk_error_buffer = array();
 // Get the message
 $message = hesk_input(hesk_POST('message'));
 
+// Submit as customer?
+$submit_as_customer = isset($_POST['submit_as_customer']) ? true : false;
+
 if (strlen($message))
 {
-	// Attach signature to the message?
-	if ( ! empty($_POST['signature']))
+    // Save message for later and ignore the rest?
+    if ( isset($_POST['save_reply']) )
+    {
+        // Delete any existing drafts from this owner for this ticket
+        hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."reply_drafts` WHERE `owner`=".intval($_SESSION['id'])." AND `ticket`=".intval($ticket['id'])." LIMIT 1");
+
+        // Save the message draft
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."reply_drafts` (`owner`, `ticket`, `message`) VALUES (".intval($_SESSION['id']).", ".intval($ticket['id']).", '".hesk_dbEscape($message)."')");
+
+        /* Set reply submitted message */
+        $_SESSION['HESK_SUCCESS'] = TRUE;
+        $_SESSION['HESK_MESSAGE'] = $hesklang['reply_saved'];
+
+        /* What to do after reply? */
+        if ($_SESSION['afterreply'] == 1)
+        {
+            header('Location: admin_main.php');
+        }
+        elseif ($_SESSION['afterreply'] == 2)
+        {
+            /* Get the next open ticket that needs a reply */
+            $res  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('0','".intval($_SESSION['id'])."')
+                    AND " . hesk_myCategories() . " AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`
+                        WHERE `IsNewTicketStatus` = 1 OR `IsCustomerReplyStatus` = 1 OR `IsStaffReopenedStatus` = 1)
+                    ORDER BY `owner` DESC, `priority` ASC LIMIT 1");
+
+            if (hesk_dbNumRows($res) == 1)
+            {
+                $row = hesk_dbFetchAssoc($res);
+                $_SESSION['HESK_MESSAGE'] .= '<br /><br />'.$hesklang['rssn'];
+                header('Location: admin_ticket.php?track='.$row['trackid'].'&Refresh='.rand(10000,99999));
+            }
+            else
+            {
+                header('Location: admin_main.php');
+            }
+        }
+        else
+        {
+            header('Location: admin_ticket.php?track='.$ticket['trackid'].'&Refresh='.rand(10000,99999));
+        }
+        exit();
+    }
+
+    // Attach signature to the message?
+    if ( ! $submit_as_customer && ! empty($_POST['signature']))
 	{
 	    $message .= "\n\n" . addslashes($_SESSION['signature']) . "\n";
 	}
@@ -149,12 +197,19 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments))
     foreach ($attachments as $myatt)
     {
         hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` (`ticket_id`,`saved_name`,`real_name`,`size`) VALUES ('".hesk_dbEscape($trackingID)."','".hesk_dbEscape($myatt['saved_name'])."','".hesk_dbEscape($myatt['real_name'])."','".intval($myatt['size'])."')");
-        $myattachments .= hesk_dbInsertID() . '#' . $myatt['real_name'] .',';
+        $myattachments .= hesk_dbInsertID() . '#' . $myatt['real_name'] . '#' . $myatt['saved_name'] .',';
     }
 }
 
-/* Add reply */
-$result = hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`) VALUES ('".intval($replyto)."','".hesk_dbEscape(addslashes($_SESSION['name']))."','".hesk_dbEscape($message)."',NOW(),'".hesk_dbEscape($myattachments)."','".intval($_SESSION['id'])."')");
+// Add reply
+if ($submit_as_customer)
+{
+    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`) VALUES ('".intval($replyto)."','".hesk_dbEscape(addslashes($ticket['name']))."','".hesk_dbEscape($message."<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>")."',NOW(),'".hesk_dbEscape($myattachments)."')");
+}
+else
+{
+    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`) VALUES ('".intval($replyto)."','".hesk_dbEscape(addslashes($_SESSION['name']))."','".hesk_dbEscape($message)."',NOW(),'".hesk_dbEscape($myattachments)."','".intval($_SESSION['id'])."')");
+}
 
 /* Track ticket status changes for history */
 $revision = '';
@@ -189,15 +244,61 @@ $defaultStatusReplyStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID`, `IsClos
 $staffClosedCheckboxStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID`, `IsClosed` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsStaffClosedOption` = 1 LIMIT 1"));
 $lockedTicketStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `LockedTicketStatus` = 1 LIMIT 1"));
 
-$new_status = empty($_POST['close']) ? $defaultStatusReplyStatus['ID'] : $staffClosedCheckboxStatus['ID'];
-
-/* --> If a ticket is locked keep it closed */
+// Get new ticket status
+$sql_status = '';
+// -> If locked, keep it resolved
 if ($ticket['locked'])
 {
 	$new_status = $lockedTicketStatus['ID'];
 }
+elseif (isset($_POST['submit_as_status']))
+{
+    $new_status = $_POST['submit_as_status'];
 
-$sql = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='{$new_status}', `lastreplier`='1', `replierid`='".intval($_SESSION['id'])."' ";
+    if ($ticket['status'] != $new_status)
+    {
+        // Does this status close the ticket?
+        $newStatusRs = hesk_dbQuery('SELECT `IsClosed`, `ShortNameContentKey` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.hesk_dbEscape($new_status));
+        $newStatus = hesk_dbFetchAssoc($newStatusRs);
+
+        if ($newStatus['IsClosed'])
+        {
+            $revision   = sprintf($hesklang['thist3'],hesk_date(),$_SESSION['name'].' ('.$_SESSION['user'].')');
+            $sql_status = " , `closedat`=NOW(), `closedby`=".intval($_SESSION['id']).", `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') ";
+
+            // Lock the ticket if customers are not allowed to reopen tickets
+            if ($hesk_settings['custopen'] != 1)
+            {
+                $sql_status .= " , `locked`='1' ";
+            }
+        } else
+        {
+            // Ticket isn't being closed, just add the history to the sql query
+            $revision   = sprintf($hesklang['thist9'],hesk_date(),$hesklang[$newStatus['ShortNameContentKey']],$_SESSION['name'].' ('.$_SESSION['user'].')');
+            $sql_status = " , `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') ";
+        }
+    }
+}
+// -> Submit as Customer reply
+elseif ($submit_as_customer)
+{
+    //Get the status ID for customer replies
+    $customerReplyStatusRs = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsCustomerReplyStatus` = 1 LIMIT 1');
+    $customerReplyStatus = hesk_dbFetchAssoc($customerReplyStatusRs);
+    $new_status = $customerReplyStatus['ID'];
+}
+// -> Default: submit as "Replied by staff"
+else
+{
+    //Get the status ID for staff replies
+    $staffReplyStatusRs = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsDefaultStaffReplyStatus` = 1 LIMIT 1');
+    $staffReplyStatus = hesk_dbFetchAssoc($staffReplyStatusRs);
+    $new_status = $staffReplyStatus['ID'];
+}
+
+$sql = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='{$new_status}',";
+$sql.= $submit_as_customer ? "`lastreplier`='0', `replierid`='0' " : "`lastreplier`='1', `replierid`='".intval($_SESSION['id'])."' ";
+
 
 /* Update time_worked or force update lastchange */
 if ($time_worked == '00:00:00')
@@ -216,19 +317,19 @@ if ( ! empty($_POST['assign_self']) && hesk_checkPermission('can_assign_self',0)
 }
 
 $sql .= " $priority_sql ";
+$sql .= " $sql_status ";
 
 
-$isNewStatusClosed = empty($_POST['close']) ? $defaultStatusReplyStatus['IsClosed'] : $staffClosedCheckboxStatus['IsClosed'];
-if ($isNewStatusClosed)
+if ( ! $ticket['firstreplyby'] )
 {
-    $revision = sprintf($hesklang['thist3'],hesk_date(),$_SESSION['name'].' ('.$_SESSION['user'].')');
-    $sql .= " , `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') ";
-
-    if ($hesk_settings['custopen'] != 1)
-    {
-		$sql .= " , `locked`='1' ";
-    }
+    $sql .= " , `firstreply`=NOW(), `firstreplyby`=".intval($_SESSION['id'])." ";
 }
+
+// Keep track of replies to this ticket for easier reporting
+$sql .= " , `replies`=`replies`+1 ";
+$sql .= $submit_as_customer ? '' : " , `staffreplies`=`staffreplies`+1 ";
+
+// End and execute the query
 $sql .= " WHERE `id`='{$replyto}' LIMIT 1";
 hesk_dbQuery($sql);
 unset($sql);
@@ -247,12 +348,14 @@ $info = array(
 'trackid'		=> $ticket['trackid'],
 'status'		=> $new_status,
 'name'			=> $ticket['name'],
-'lastreplier'	=> $_SESSION['name'],
+'lastreplier'	=> ($submit_as_customer ? $ticket['name'] : $_SESSION['name']),
 'subject'		=> $ticket['subject'],
 'message'		=> stripslashes($message),
 'attachments'	=> $myattachments,
 'dt'			=> hesk_date($ticket['dt'], true),
 'lastchange'	=> hesk_date($ticket['lastchange'], true),
+'id'			=> $ticket['id'],
+'language'      => $ticket['language']
 );
 
 // 2. Add custom fields to the array
@@ -264,19 +367,26 @@ foreach ($hesk_settings['custom_fields'] as $k => $v)
 // 3. Make sure all values are properly formatted for email
 $ticket = hesk_ticketToPlain($info, 1, 0);
 
-// Notify the customer
-if ( ! isset($_POST['no_notify']) || intval( hesk_POST('no_notify') ) != 1)
+// Notify the assigned staff?
+if ($submit_as_customer)
+{
+    if ($ticket['owner'] && $ticket['owner'] != $_SESSION['id'])
+    {
+        hesk_notifyAssignedStaff(false, 'new_reply_by_customer', 'notify_reply_my');
+    }
+}
+// Notify customer?
+elseif ( ! isset($_POST['no_notify']) || intval( hesk_POST('no_notify') ) != 1)
 {
 	hesk_notifyCustomer('new_reply_by_staff');
 }
 
+// Delete any existing drafts from this owner for this ticket
+hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."reply_drafts` WHERE `owner`=".intval($_SESSION['id'])." AND `ticket`=".intval($ticket['id'])." LIMIT 1");
+
 /* Set reply submitted message */
 $_SESSION['HESK_SUCCESS'] = TRUE;
 $_SESSION['HESK_MESSAGE'] = $hesklang['reply_submitted'];
-if (!empty($_POST['close']))
-{
-    $_SESSION['HESK_MESSAGE'] .= '<br /><br />'.$hesklang['ticket_marked'].' <span class="resolved">'.$hesklang['closed'].'</span>';
-}
 
 /* What to do after reply? */
 if ($_SESSION['afterreply'] == 1)
@@ -286,7 +396,8 @@ if ($_SESSION['afterreply'] == 1)
 elseif ($_SESSION['afterreply'] == 2)
 {
 	/* Get the next open ticket that needs a reply */
-    $res  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('0','".intval($_SESSION['id'])."') AND " . hesk_myCategories() . " AND `status` IN ('0','1') ORDER BY `owner` DESC, `priority` ASC LIMIT 1");
+    $res  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `owner` IN ('0','".intval($_SESSION['id'])."') AND " . hesk_myCategories() . " AND `status` IN (SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`
+                        WHERE `IsNewTicketStatus` = 1 OR `IsCustomerReplyStatus` = 1 OR `IsStaffReopenedStatus` = 1) ORDER BY `owner` DESC, `priority` ASC LIMIT 1");
 
     if (hesk_dbNumRows($res) == 1)
     {
