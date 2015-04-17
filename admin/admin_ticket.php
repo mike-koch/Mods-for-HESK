@@ -1487,7 +1487,7 @@ function hesk_getSavedNameUrlForAttachment($att_id)
 
 function hesk_getFontAwesomeIconForFileExtension($fileExtension)
 {
-    $imageExtensions = array('jpg','png','bmp','gif');
+    $imageExtensions = array('jpg','jpeg','png','bmp','gif');
 
     //-- Word, Excel, and PPT file extensions: http://en.wikipedia.org/wiki/List_of_Microsoft_Office_filename_extensions
     $wordFileExtensions = array('doc','docx','dotm','dot','docm','docb');
@@ -1509,6 +1509,7 @@ function hesk_getFontAwesomeIconForFileExtension($fileExtension)
     $textFileExtensions = array('txt');
 
     $icon = 'fa fa-file-';
+    $fileExtension = strtolower($fileExtension);
     if (in_array($fileExtension, $imageExtensions)) {
         $icon.='image-o';
     } elseif (in_array($fileExtension, $wordFileExtensions)) {
