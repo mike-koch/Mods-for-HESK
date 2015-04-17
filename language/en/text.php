@@ -21,6 +21,10 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.2.1
+$hesklang['popart_no_colon']='Top Knowledgebase Articles';
+$hesklang['latart_no_colon']='Latest Knowledgebase Articles';
+
 // ADDED OR MODIFIED IN Mods for HESK 2.2.0
 $hesklang['email_templates'] = 'Email templates';
 $hesklang['email_templates_intro'] = 'You can edit your plaintext and HTML email templates here.';
