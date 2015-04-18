@@ -463,6 +463,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         {
             $message .= processDirectAttachments('phpmail', NULL, $outerboundary);
         }
+        $message .= "\n\n".'--'.$outerboundary.'--';
 
 		// Send using PHP mail() function
         ob_start();
@@ -515,6 +516,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
     {
         $message .= processDirectAttachments('smtp', NULL, $outerboundary);
     }
+    $message .= "\n\n".'--'.$outerboundary.'--';
 
 	if ( ! $smtp->SendMessage($hesk_settings['noreply_mail'], $to_arr, $headersArray, $message))
     {
@@ -874,7 +876,6 @@ function processDirectAttachments($emailMethod, $postfields = NULL, $boundary = 
             $attcontents = chunk_split(base64_encode($attachmentBinary));
             $attachments .= $attcontents."\n\n";
         }
-        $attachments .= "--".$boundary."--";
         return $attachments;
     }
 }
