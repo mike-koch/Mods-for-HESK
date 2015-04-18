@@ -384,3 +384,15 @@ max-height: 80px;
 max-width: 80px;
 cursor: pointer;
 }
+
+.plaintext-editor {
+font-family: monospace;
+}
+
+.table-fixed {
+table-layout: fixed;
+}
+
+.indent-15 {
+margin-right: 15px;
+}

@@ -94,10 +94,10 @@ function hesk_kbTopArticles($how_many, $index = 1)
         <div class="panel-heading">
             <h4 class="text-left"><?php echo $hesklang['popart_no_colon']; ?></h4>
         </div>
-        <table border="0" width="100%" class="table table-striped">
+        <table border="0" width="100%" class="table table-striped table-fixed">
             <thead>
             <tr>
-                <th>&nbsp;</th>
+                <th class="col-xs-8 col-sm-9">&nbsp;</th>
                 <?php
                 /* Get list of articles from the database */
                 $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`views` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
@@ -108,7 +108,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
                 /* Show number of views? */
                 if ($hesk_settings['kb_views'] && hesk_dbNumRows($res) != 0)
                 {
-                    echo '<th><i>' . $hesklang['views'] . '</i></th>';
+                    echo '<th class="col-xs-4 col-sm-3"><i>' . $hesklang['views'] . '</i></th>';
                 }
                 ?>
             </tr>
@@ -141,12 +141,12 @@ function hesk_kbTopArticles($how_many, $index = 1)
             {
                 echo '
                 <tr>
-                    <td '.$colspan.'>
-                        <i class="fa fa-file"></i> <a href="knowledgebase.php?article="'.$article['id'].'">'.$article['subject'].'</a>
+                    <td class="col-xs-8 col-sm-9" '.$colspan.'>
+                        <i class="fa fa-file"></i> <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
                     </td>
                     ';
                 if ($hesk_settings['kb_views']) {
-                    echo '<td>'.$article['views'].'</td>';
+                    echo '<td class="col-xs-4 col-sm-3">'.$article['views'].'</td>';
                 }
                 echo '</tr>';
             }
@@ -197,7 +197,7 @@ function hesk_kbLatestArticles($how_many, $index = 1)
         <div class="panel-heading">
             <h4 class="text-left"><?php echo $hesklang['latart_no_colon']; ?></h4>
         </div>
-        <table class="table table-striped">
+        <table class="table table-striped table-fixed">
             <thead>
             <tr>
             <?php
@@ -214,10 +214,10 @@ function hesk_kbLatestArticles($how_many, $index = 1)
             /* Show number of views? */
             if (hesk_dbNumRows($res) != 0)
             {
-                echo '<th '.$colspan.'>&nbsp;</th>';
+                echo '<th class="col-xs-9" '.$colspan.'>&nbsp;</th>';
                 if ($hesk_settings['kb_date'])
                 {
-                    echo '<th><i>' . $hesklang['dta'] . '</i></th>';
+                    echo '<th class="col-xs-3"><i>' . $hesklang['dta'] . '</i></th>';
                 }
             }
             ?>
@@ -248,14 +248,16 @@ function hesk_kbLatestArticles($how_many, $index = 1)
             {
                 echo '
                 <tr>
-                    <td '.$colspan.'>
+                    <td class="col-xs-9" '.$colspan.'>
                         <i class="fa fa-file"></i> <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
                     </td>';
                 if ($hesk_settings['kb_date']) {
-                    echo '<td>' . hesk_date($article['dt'], true) . '</td>';
+                    echo '<td class="col-xs-3">' . hesk_date($article['dt'], true) . '</td>';
                 }
                 echo '</tr>';
             } ?>
+            </tbody>
+        </table>
     </div>
     
     <?php

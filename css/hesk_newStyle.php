@@ -394,3 +394,11 @@ button.dropdown-submit {
 .plaintext-editor {
     font-family: monospace;
 }
+
+.table-fixed {
+    table-layout: fixed;
+}
+
+.indent-15 {
+    margin-left: 15px;
+}

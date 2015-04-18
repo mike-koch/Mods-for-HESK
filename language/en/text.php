@@ -22,8 +22,9 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
-$hesklang['popart_no_colon']='Top Knowledgebase Articles';
-$hesklang['latart_no_colon']='Latest Knowledgebase Articles';
+$hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
+$hesklang['latart_no_colon']='Latest Knowledgebase Articles'; // same as $hesklang['latart'] but without a colon (:)
+$hesklang['ac_no_colon']='Articles in this Category'; // same as $hesklang['ac'] but without a colon (:)
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.0
 $hesklang['email_templates'] = 'Email templates';
