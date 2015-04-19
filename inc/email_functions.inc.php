@@ -697,10 +697,10 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
 function hesk_doesTemplateHaveTag($eml_file, $tag)
 {
     global $hesk_settings, $modsForHesk_settings;
-    $path = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/'. $htmlPath . $eml_file . '.txt';
+    $path = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/'. $eml_file .'.txt';
     $htmlHasTag = false;
     if ($modsForHesk_settings['html_emails']) {
-        $htmlPath = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/html/'. $htmlPath . $eml_file . '.txt';
+        $htmlPath = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/html/'. $eml_file . '.txt';
         $htmlContents = file_get_contents(HESK_PATH.$htmlPath);
         $htmlHasTag = !(strpos($htmlContents, $tag) === false);
     }
