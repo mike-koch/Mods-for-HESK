@@ -448,10 +448,12 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST'))
             $subject = hesk_getEmailSubject('new_note',$ticket);
             $message = hesk_getEmailMessage('new_note',$ticket,1);
             $htmlMessage = hesk_getHtmlMessage('new_note',$ticket,1);
+            $hasMessage = hesk_doesTemplateHaveTag('new_note', '%%MESSAGE%%');
+
 
             /* Send email to staff */
             while ($user = hesk_dbFetchAssoc($users)) {
-                hesk_mail($user['email'], $subject, $message, $htmlMessage);
+                hesk_mail($user['email'], $subject, $message, $htmlMessage, array(), array(), $hasMessage);
             }
         }
     }
