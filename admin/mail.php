@@ -355,9 +355,10 @@ function mail_send()
 			$subject = hesk_getEmailSubject('new_pm',$pm,0);
 			$message = hesk_getEmailMessage('new_pm',$pm,1,0);
             $htmlMessage = hesk_getHtmlMessage('new_pm',$pm,1,0);
+            $hasMessage = hesk_doesTemplateHaveTag('new_pm','%%MESSAGE%%');
 
 			/* Send e-mail */
-			hesk_mail($pm_recipient['email'], $subject, $message, $htmlMessage);
+			hesk_mail($pm_recipient['email'], $subject, $message, $htmlMessage, array(), array(), $hasMessage);
         }
 
 		unset($_SESSION['mail']);
