@@ -43,7 +43,7 @@ function hesk_newTicket($ticket, $isVerified = true)
 
 	// If language is not set or default, set it to NULL.
     if (!isset($ticket['language']) || empty($ticket['language'])) {
-        $language = (!$hesk_settings['can_sel_lang']) ? HESK_DEFAULT_LANGUAGE : "'" . hesk_dbEscape($hesklang['LANGUAGE']) . "'";
+        $language = (!$hesk_settings['can_sel_lang']) ? HESK_DEFAULT_LANGUAGE : hesk_dbEscape($hesklang['LANGUAGE']);
     } else {
         $language = $ticket['language'];
     }
