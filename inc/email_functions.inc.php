@@ -332,7 +332,7 @@ function hesk_validEmails()
 } // END hesk_validEmails()
 
 
-function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
+function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$hasMessageTag = false)
 {
 	global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket;
 
@@ -399,7 +399,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         {
             $postfields['html'] = $htmlMessage;
         }
-        if ($modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+        if ($hasMessageTag && $modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
         {
             $postfields = processDirectAttachments('mailgun', $postfields);
         }
@@ -459,7 +459,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         $headers.= "Content-Type: multipart/mixed;boundary=\"".$outerboundary."\"";
 
         // Add attachments if necessary
-        if ($modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+        if ($hasMessageTag && $modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
         {
             $message .= processDirectAttachments('phpmail', NULL, $outerboundary);
         }
@@ -512,7 +512,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
     }
 
     // Add attachments if necessary
-    if ($modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+    if ($hasMessageTag && $modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
     {
         $message .= processDirectAttachments('smtp', NULL, $outerboundary);
     }
@@ -689,6 +689,15 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
     return $msg;
 
 } // END hesk_getEmailMessage
+
+function hesk_doesTemplateHaveTag($eml_file, $tag, $html = false)
+{
+    global $hesk_settings;
+    $htmlPath = $html ? 'html/' : '';
+    $path = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/'. $htmlPath . $eml_file . '.txt';
+    $emailContents = file_get_contents(HESK_PATH . $path);
+    return !(strpos($emailContents, $tag) === false);
+}
 
 function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, $isForHtml = 0)
 {
