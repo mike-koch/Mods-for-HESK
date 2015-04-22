@@ -552,11 +552,10 @@ if ($_POST['sN_shortName'] != null && $_POST['sN_longName'] != null && $_POST['s
 {
     //-- The next ID is equal to the number of rows, since the IDs are zero-indexed.
     $nextValue = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`')->num_rows;
-    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`ID`, `ShortNameContentKey`, `TicketViewContentKey`, `TextColor`, `IsClosed`) VALUES (?, ?, ?, ?, ?)";
-    $stmt = hesk_dbConnect()->prepare($insert);
     $isClosed = isset($_POST['sN_isClosed']) ? 1 : 0;
-    $stmt->bind_param('isssis', $nextValue, $_POST['sN_shortName'], $_POST['sN_longName'], $_POST['sN_textColor'], $isClosed, $_POST['sN_closable']);
-    $stmt->execute();
+    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`ID`, `ShortNameContentKey`, `TicketViewContentKey`, `TextColor`, `IsClosed`, `Closable`) 
+		VALUES (".$nextValue.", '".hesk_dbEscape($_POST['sN_shortName'])."', '".hesk_dbEscape($_POST['sN_longName'])."', '".hesk_dbEscape($_POST['sN_textColor'])."', ".$isClosed.", '".hesk_dbEscape($_POST['sN_closable'])."')";
+    hesk_dbQuery($insert);
 }
 
 //-- Update default status for actions
