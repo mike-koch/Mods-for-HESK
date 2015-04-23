@@ -428,3 +428,12 @@ $modsForHesk_settings[\'attachments\'] = 0;';
     return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
 }
 // END Version 2.2.0
+
+// BEGIN Version 2.2.1
+function execute221Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.2.1' WHERE `Key` = 'modsForHeskVersion'");
+}
+// END Version 2.2.1
