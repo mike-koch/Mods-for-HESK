@@ -146,7 +146,7 @@ hesk_dbConnect();
                                             $v220btn = 'btn-default';
                                         }
                                         ?>
-                                        <a id="220" class="btn <?php echo $v220btn; ?> btn-block disablable" href="installModsForHesk.php?v=211">v2.2.0</a>
+                                        <a id="220" class="btn <?php echo $v220btn; ?> btn-block disablable" href="installModsForHesk.php?v=220">v2.2.0</a>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
                                         <?php
