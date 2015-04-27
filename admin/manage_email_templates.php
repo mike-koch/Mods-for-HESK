@@ -160,7 +160,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             if ($isHtml) {
                                 $fileWritable = is_writable(HESK_PATH.'language/'.$_GET['language'].'/emails/html/'.$_GET['template']);
                             } else {
-                                $fileWritable = is_writable(HESK_PATH.'language/'.$_GET['language'].'/emails'.$_GET['template']);
+                                $fileWritable = is_writable(HESK_PATH.'language/'.$_GET['language'].'/emails/'.$_GET['template']);
                             }
 
                             if (!$fileWritable) {
