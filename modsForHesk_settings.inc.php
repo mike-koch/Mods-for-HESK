@@ -32,3 +32,12 @@ $modsForHesk_settings['html_emails'] = 1;
 $modsForHesk_settings['use_mailgun'] = 0;
 $modsForHesk_settings['mailgun_api_key'] = '';
 $modsForHesk_settings['mailgun_domain'] = '';
+
+//-- Set this to 1 to enable bootstrap-theme.css
+$modsForHesk_settings['use_bootstrap_theme'] = 1;
+
+//-- Default value for new Knowledgebase article: 0 = Published, 1 = Private, 2 = Draft
+$modsForHesk_settings['new_kb_article_visibility'] = 0;
+
+//-- Setting for adding attachments to email messages. Either 0 for default-HESK behavior, or 1 to send as attachments
+$modsForHesk_settings['attachments'] = 0;

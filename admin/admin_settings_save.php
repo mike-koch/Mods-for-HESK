@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -529,10 +529,10 @@ while ($row = $results->fetch_assoc())
     } else
     {
         //-- Update the information in the database with what is on the page
-        $query = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `ShortNameContentKey` = ?, `TicketViewContentKey` = ?, `TextColor` = ?, `IsClosed` = ? WHERE `ID` = ?";
+        $query = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `ShortNameContentKey` = ?, `TicketViewContentKey` = ?, `TextColor` = ?, `IsClosed` = ?, `Closable` = ? WHERE `ID` = ?";
         $stmt = hesk_dbConnect()->prepare($query);
         $isStatusClosed = (isset($_POST['s'.$row['ID'].'_isClosed']) ? 1 : 0);
-        $stmt->bind_param('sssii', $_POST['s'.$row['ID'].'_shortName'], $_POST['s'.$row['ID'].'_longName'], $_POST['s'.$row['ID'].'_textColor'], $isStatusClosed, $row['ID']);
+        $stmt->bind_param('sssisi', $_POST['s'.$row['ID'].'_shortName'], $_POST['s'.$row['ID'].'_longName'], $_POST['s'.$row['ID'].'_textColor'], $isStatusClosed, $_POST['s'.$row['ID'].'_closable'], $row['ID']);
         $stmt->execute();
     }
 }
@@ -552,11 +552,10 @@ if ($_POST['sN_shortName'] != null && $_POST['sN_longName'] != null && $_POST['s
 {
     //-- The next ID is equal to the number of rows, since the IDs are zero-indexed.
     $nextValue = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`')->num_rows;
-    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`ID`, `ShortNameContentKey`, `TicketViewContentKey`, `TextColor`, `IsClosed`) VALUES (?, ?, ?, ?, ?)";
-    $stmt = hesk_dbConnect()->prepare($insert);
     $isClosed = isset($_POST['sN_isClosed']) ? 1 : 0;
-    $stmt->bind_param('isssi', $nextValue, $_POST['sN_shortName'], $_POST['sN_longName'], $_POST['sN_textColor'], $isClosed);
-    $stmt->execute();
+    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`ID`, `ShortNameContentKey`, `TicketViewContentKey`, `TextColor`, `IsClosed`, `Closable`) 
+		VALUES (".$nextValue.", '".hesk_dbEscape($_POST['sN_shortName'])."', '".hesk_dbEscape($_POST['sN_longName'])."', '".hesk_dbEscape($_POST['sN_textColor'])."', ".$isClosed.", '".hesk_dbEscape($_POST['sN_closable'])."')";
+    hesk_dbQuery($insert);
 }
 
 //-- Update default status for actions
@@ -605,6 +604,12 @@ $stmt = hesk_dbConnect()->prepare($updateQuery);
 $stmt->bind_param('i', $_POST['lockedTicketStatus']);
 $stmt->execute();
 
+hesk_dbConnect()->query($defaultQuery . "`IsAutocloseOption` = 0");
+$updateQuery = $defaultQuery . "`IsAutocloseOption` = 1 WHERE `ID` = ?";
+$stmt = hesk_dbConnect()->prepare($updateQuery);
+$stmt->bind_param('i', $_POST['autocloseTicketOption']);
+$stmt->execute();
+
 $set['hesk_version'] = $hesk_settings['hesk_version'];
 
 // Save the modsForHesk_settings.inc.php file
@@ -613,6 +618,9 @@ $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
 $set['custom-field-setting'] = empty($_POST['custom-field-setting']) ? 0 : 1;
 $set['customer-email-verification-required'] = empty($_POST['email-verification']) ? 0 : 1;
 $set['html_emails'] = empty($_POST['html_emails']) ? 0 : 1;
+$set['use_bootstrap_theme'] = empty($_POST['use_bootstrap_theme']) ? 0 : 1;
+$set['new_kb_article_visibility'] = hesk_checkMinMax( intval( hesk_POST('new_kb_article_visibility') ) , 0, 2, 2);
+$set['mfh_attachments'] = empty($_POST['email_attachments']) ? 0 : 1;
 
 if ($set['customer-email-verification-required'])
 {
@@ -663,7 +671,16 @@ $modsForHesk_settings[\'html_emails\'] = '.$set['html_emails'].';
 //-- Mailgun Settings
 $modsForHesk_settings[\'use_mailgun\'] = '.$set['use_mailgun'].';
 $modsForHesk_settings[\'mailgun_api_key\'] = \''.$set['mailgun_api_key'].'\';
-$modsForHesk_settings[\'mailgun_domain\'] = \''.$set['mailgun_domain'].'\';';
+$modsForHesk_settings[\'mailgun_domain\'] = \''.$set['mailgun_domain'].'\';
+
+//-- Set this to 1 to enable bootstrap-theme.css
+$modsForHesk_settings[\'use_bootstrap_theme\'] = '.$set['use_bootstrap_theme'].';
+
+//-- Default value for new Knowledgebase article: 0 = Published, 1 = Private, 2 = Draft
+$modsForHesk_settings[\'new_kb_article_visibility\'] = '.$set['new_kb_article_visibility'].';
+
+//-- Setting for adding attachments to email messages. Either 0 for default-HESK behavior, or 1 to send as attachments
+$modsForHesk_settings[\'attachments\'] = '.$set['mfh_attachments'].';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )

@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -139,7 +139,7 @@ else
 {
 	hesk_show_kb_category($catid);
 }
-
+echo '</div>';
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
 
@@ -276,8 +276,15 @@ function hesk_show_kb_article($artid)
     {
         hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `views`=`views`+1 WHERE `id`={$artid} LIMIT 1");
     }
+    if (!isset($_GET['suggest'])) {
+        $historyNumber = isset($_GET['rated']) ? '-2' : '-1';
+        $goBackText = '<a href="javascript:history.go('.$historyNumber.')">
+            <i class="fa fa-arrow-circle-left" data-toggle="tooltip" data-placement="top" title="'.$hesklang['back'].'"></i></a>';
+    } else {
+        $goBackText = '';
+    }
 
-    echo '<h3 class="text-left">'.$article['subject'].'</h3>
+    echo '<h3 class="text-left">'.$goBackText.'&nbsp;'.$article['subject'].'</h3>
     <div class="footerWithBorder blankSpace"></div>
     <h4 class="text-left">'.$hesklang['as'].'</h4>
     <div class="kbContent">'
@@ -409,22 +416,7 @@ function hesk_show_kb_article($artid)
             </div>
         <?php } ?>
     </div>
-
-
-    <?php
-    if (!isset($_GET['suggest']))
-    {
-    	?>
-		<p><a href="javascript:history.go(<?php echo isset($_GET['rated']) ? '-2' : '-1'; ?>)"><span class="glyphicon glyphicon-circle-arrow-left"></span> <?php echo $hesklang['back']; ?></a></p>
-        <?php
-    }
-    else
-    {
-    	?>
-        <p>&nbsp;</p>
-        <?php
-    }
-
+<?php
 } // END hesk_show_kb_article()
 
 
@@ -456,8 +448,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 	if ($thiscat['parent'])
 	{
 		$link = ($thiscat['parent'] == 1) ? 'knowledgebase.php' : 'knowledgebase.php?category='.$thiscat['parent'];
-		echo '<h3 class="text-left">'.$hesklang['kb_cat'].': '.$thiscat['name'].' </h3>
-        <p class="text-left"><a href="javascript:history.go(-1)" title="'.$hesklang['back'].'"><span class="glyphicon glyphicon-circle-arrow-left"></span> Go back</a></p>
+		echo '<h3 class="text-left"><a href="javascript:history.go(-1)"><i class="fa fa-arrow-circle-left" data-toggle="tooltip" data-placement="top" title="'.$hesklang['back'].'"></i></a>&nbsp;'.$hesklang['kb_cat'].': '.$thiscat['name'].' </h3>
         <div class="footerWithBorder blankSpace"></div>
         <div class="blankSpace"></div>
 		';
@@ -468,153 +459,137 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 	{
         ?>
 
-		<h4 class="text-left"><?php echo $hesklang['kb_cat_sub']; ?></h4>
-        <div class="footerWithBorder blankSpace"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="text-left"><?php echo $hesklang['kb_cat_sub']; ?></h4>
+            </div>
+            <table class="table table-striped">
 
-		<table border="0" cellspacing="1" cellpadding="3" width="100%">
+                <?php
+                $per_col = $hesk_settings['kb_cols'];
+                $i = 1;
 
-		<?php
-		$per_col = $hesk_settings['kb_cols'];
-		$i = 1;
+                while ($cat = hesk_dbFetchAssoc($result))
+                {
 
-		while ($cat = hesk_dbFetchAssoc($result))
-		{
+                    if ($i == 1)
+                    {
+                        echo '<tr>';
+                    }
 
-			if ($i == 1)
-		    {
-				echo '<tr>';
-		    }
+                    echo '
+                    <td width="50%" valign="top">
+                    <table border="0">
+                    <tr><td><i class="fa fa-folder"></i>&nbsp;<a href="knowledgebase.php?category='.$cat['id'].'">'.$cat['name'].'</a></td></tr>
+                    ';
 
-			echo '
-		    <td width="50%" valign="top">
-			<table border="0">
-			<tr><td><span class="glyphicon glyphicon-folder-close"></span>&nbsp;<a href="knowledgebase.php?category='.$cat['id'].'">'.$cat['name'].'</a></td></tr>
-			';
-
-			/* Print most popular/sticky articles */
-			if ($hesk_settings['kb_numshow'] && $cat['articles'])
-		    {
-		        $res = hesk_dbQuery("SELECT `id`,`subject` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$cat['id']}' AND `type`='0' ORDER BY `sticky` DESC, `views` DESC, `art_order` ASC LIMIT " . (intval($hesk_settings['kb_numshow']) + 1) );
-		        $num = 1;
-				while ($art = hesk_dbFetchAssoc($res))
-				{
-					echo '
+                    /* Print most popular/sticky articles */
+                    if ($hesk_settings['kb_numshow'] && $cat['articles'])
+                    {
+                        $res = hesk_dbQuery("SELECT `id`,`subject` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$cat['id']}' AND `type`='0' ORDER BY `sticky` DESC, `views` DESC, `art_order` ASC LIMIT " . (intval($hesk_settings['kb_numshow']) + 1) );
+                        $num = 1;
+                        while ($art = hesk_dbFetchAssoc($res))
+                        {
+                            echo '
 		            <tr>
 		            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-file"></span>
 		            <a href="knowledgebase.php?article='.$art['id'].'" class="article">'.$art['subject'].'</a></td>
 		            </tr>';
 
-		            if ($num == $hesk_settings['kb_numshow'])
-		            {
-		            	break;
-		            }
-		            else
-		            {
-		            	$num++;
-		            }
-				}
-		        if (hesk_dbNumRows($res) > $hesk_settings['kb_numshow'])
-		        {
-		        	echo '<tr><td>&raquo; <a href="knowledgebase.php?category='.$cat['id'].'"><i>'.$hesklang['m'].'</i></a></td></tr>';
-		        }
-		    }
+                            if ($num == $hesk_settings['kb_numshow'])
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                $num++;
+                            }
+                        }
+                        if (hesk_dbNumRows($res) > $hesk_settings['kb_numshow'])
+                        {
+                            echo '<tr><td>&raquo; <a href="knowledgebase.php?category='.$cat['id'].'"><i>'.$hesklang['m'].'</i></a></td></tr>';
+                        }
+                    }
 
-			echo '
+                    echo '
 			</table>
 		    </td>
 			';
 
-			if ($i == $per_col)
-		    {
-				echo '</tr>';
-		        $i = 0;
-		    }
-			$i++;
-		}
-		/* Finish the table if needed */
-		if ($i != 1)
-		{
-			for ($j=1;$j<=$per_col;$j++)
-		    {
-				echo '<td width="50%">&nbsp;</td>';
-				if ($i == $per_col)
-			    {
-					echo '</tr>';
-			        break;
-			    }
-		        $i++;
-		    }
-		}
+                    if ($i == $per_col)
+                    {
+                        echo '</tr>';
+                        $i = 0;
+                    }
+                    $i++;
+                }
+                /* Finish the table if needed */
+                if ($i != 1)
+                {
+                    for ($j=1;$j<=$per_col;$j++)
+                    {
+                        echo '<td width="50%">&nbsp;</td>';
+                        if ($i == $per_col)
+                        {
+                            echo '</tr>';
+                            break;
+                        }
+                        $i++;
+                    }
+                }
 
-		?>
-		</table>
-
-	</td>
-	<td class="roundcornersright">&nbsp;</td>
-</tr>
-</table>
+                ?>
+            </table>
+        </div>
 
 	<?php
 	} // END if NumRows > 0
 	?>
 
-	<h4 class="text-left"><?php echo $hesklang['ac']; ?></h4>
-    <div class="footerWithBorder blankSpace"></div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="text-left"><?php echo $hesklang['ac_no_colon']; ?></h4>
+        </div>
+        <table class="table table-striped">
+            <tbody>
+            <?php
+            $res = hesk_dbQuery("SELECT `id`, `subject`, LEFT(`content`, ".max(200, $hesk_settings['kb_substrart'] * 2).") AS `content`, `rating` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$catid}' AND `type`='0' ORDER BY `sticky` DESC, `art_order` ASC");
+            if (hesk_dbNumRows($res) == 0)
+            {
+                echo '<tr><td><i>'.$hesklang['noac'].'</i></td></tr>';
+            }
+            else
+            {
+                while ($article = hesk_dbFetchAssoc($res))
+                {
+                    $txt = hesk_kbArticleContentPreview($article['content']);
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    if ($hesk_settings['kb_rating'])
+                    {
+                        $alt = $article['rating'] ? sprintf($hesklang['kb_rated'], sprintf("%01.1f", $article['rating'])) : $hesklang['kb_not_rated'];
+                        $rat = '<td><img src="img/star_'.(hesk_round_to_half($article['rating'])*10).'.png" width="85" height="16" alt="'.$alt.'" title="'.$alt.'" border="0" style="vertical-align:text-bottom" /></td>';
+                    }
+                    else
+                    {
+                        $rat = '';
+                    }
 
-<tr>
-	<td>
-
-	<?php
-    $res = hesk_dbQuery("SELECT `id`, `subject`, LEFT(`content`, ".max(200, $hesk_settings['kb_substrart'] * 2).") AS `content`, `rating` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$catid}' AND `type`='0' ORDER BY `sticky` DESC, `art_order` ASC");
-	if (hesk_dbNumRows($res) == 0)
-	{
-		echo '<p><i>'.$hesklang['noac'].'</i></p>';
-	}
-	else
-	{
-			echo '<div align="center"><table border="0" cellspacing="1" cellpadding="3" width="100%">';
-			while ($article = hesk_dbFetchAssoc($res))
-			{
-	            $txt = hesk_kbArticleContentPreview($article['content']);
-
-	            if ($hesk_settings['kb_rating'])
-	            {
-	            	$alt = $article['rating'] ? sprintf($hesklang['kb_rated'], sprintf("%01.1f", $article['rating'])) : $hesklang['kb_not_rated'];
-	                $rat = '<td width="1" valign="top"><img src="img/star_'.(hesk_round_to_half($article['rating'])*10).'.png" width="85" height="16" alt="'.$alt.'" title="'.$alt.'" border="0" style="vertical-align:text-bottom" /></td>';
-	            }
-	            else
-	            {
-	            	$rat = '';
-	            }
-
-				echo '
-				<tr>
-				<td>
-	                <table border="0" width="100%" cellspacing="0" cellpadding="1">
-	                <tr>
-	                <td width="1" valign="top"><span class="glyphicon glyphicon-file"></span></td>
-	                <td valign="top"><a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a></td>
-	                '.$rat.'
-                    </tr>
-	                </table>
-	                <table border="0" width="100%" cellspacing="0" cellpadding="1">
-	                <tr>
-	                <td width="1" valign="top"><img src="img/blank.gif" width="16" height="10" style="vertical-align:middle" alt="" /></td>
-	                <td><span class="article_list">'.$txt.'</span></td>
-                    </tr>
-	                </table>
-	            </td>
-				</tr>';
-			}
-		    echo '</table></div>';
-	}
-	?>
-
-	</td>
-</tr>
-</table>
+                    echo '
+                        <tr>
+                            <td>
+                                <i class="fa fa-file"></i>
+                                <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
+                                <br>
+                                <span class="indent-15">'.$txt.'</span>
+                            </td>
+                            '.$rat.'
+                        </tr>';
+                }
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
 
 	<?php
     /* On the main KB page print out top and latest articles if needed */
@@ -626,6 +601,5 @@ function hesk_show_kb_category($catid, $is_search = 0) {
         /* Get list of latest articles */
         hesk_kbLatestArticles($hesk_settings['kb_latest'], 0);
 	}
-
 } // END hesk_show_kb_category()
 ?>

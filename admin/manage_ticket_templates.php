@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -223,7 +223,7 @@ $num = hesk_dbNumRows($result);
                 <label for="name" class="col-sm-2 control-label"><?php echo $hesklang['ticket_tpl_title']; ?></label>
                 <div class="col-sm-10">
                     <span id="HeskTitle">
-                        <input class="form-control" type="text" name="name" size="40" maxlength="50" placeholder="<?php echo $hesklang['ticket_tpl_title']; ?>"
+                        <input class="form-control" type="text" name="name" size="40" maxlength="50" placeholder="<?php echo htmlspecialchars($hesklang['ticket_tpl_title']); ?>"
                             <?php if (isset($_SESSION['canned']['name'])) {echo ' value="'.stripslashes($_SESSION['canned']['name']).'" ';} ?>>
                     </span>
                 </div>
@@ -232,7 +232,7 @@ $num = hesk_dbNumRows($result);
                 <label for="msg" class="col-sm-2 control-label"><?php echo $hesklang['message']; ?></label>
                 <div class="col-sm-10">
                     <span id="HeskMsg">
-                        <textarea class="form-control" placeholder="<?php echo $hesklang['message']; ?>" name="msg" rows="15" cols="70"><?php
+                        <textarea class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="msg" rows="15" cols="70"><?php
                             if (isset($_SESSION['canned']['msg']))
                             {
                                 echo stripslashes($_SESSION['canned']['msg']);

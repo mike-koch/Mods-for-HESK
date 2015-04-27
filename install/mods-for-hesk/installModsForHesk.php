@@ -37,6 +37,18 @@ function echoInitialVersionRows($version) {
     if ($version < 201) {
         printRow('v2.0.1');
     }
+    if ($version < 210) {
+        printRow('v2.1.0');
+    }
+    if ($version < 211) {
+        printRow('v2.1.1');
+    }
+    if ($version < 220) {
+        printRow('v2.2.0');
+    }
+    if ($version < 221) {
+        printRow('v2.2.1');
+    }
 }
 
 function printRow($version) {
@@ -119,8 +131,16 @@ function printRow($version) {
                 <div class="col-sm-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">Console</div>
-                        <div class="panel-body" style="min-height: 400px;max-height: 400px; overflow: auto;">
-                            <p id="console-text" style="font-family: 'Courier New',monospace;"></p>
+                        <div style="max-height: 400px; overflow: auto;">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Severity</th>
+                                        <th>Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="consoleBody"></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

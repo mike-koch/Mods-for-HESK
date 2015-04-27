@@ -17,11 +17,12 @@ function startVersionUpgrade(version) {
     changeTextTo('span', version, 'In Progress');
 }
 
-function markUpdateAsSuccess(version) {
+function markUpdateAsSuccess(version, formattedVersion) {
     removeSpinner(version);
     $('#spinner-'+version).addClass('fa-check-circle');
     changeTextTo('span', version, 'Completed Successfully');
     changeRowTo('row', version, 'success');
+    appendToInstallConsole('<tr><td><span class="label label-success">SUCCESS</span></td><td>Updates for ' + formattedVersion + ' complete</td></tr>');
 }
 
 function removeSpinner(version) {
@@ -61,11 +62,11 @@ function changeRowTo(prefix, version, clazz) {
 }
 
 function appendToInstallConsole(text) {
-    var currentText = $('#console-text').text();
-    $('#console-text').append(text).append('<br>');
+    $('#consoleBody').append(text);
 }
 
 function installationFinished() {
+    appendToInstallConsole('<tr><td><span class="label label-success">SUCCESS</span></td><td>Installation complete</td></tr>');
     var output = '<div class="panel-body">' +
         '<div class="col-md-12 text-center">' +
         '<i class="fa fa-check-circle fa-4x" style="color: #008000"></i><br><br>' +

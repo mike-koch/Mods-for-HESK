@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -77,6 +77,7 @@ $hesk_settings['features'] = array(
 'can_ban_ips',			/* User can ban IP addresses */
 'can_unban_ips',		/* User can delete IP bans. Also enables "can_ban_ips" */
 'can_service_msg',		/* User can manage service messages shown in customer interface */
+'can_man_email_tpl',    /* User can manage email templates */
 );
 
 /* Set default values */
@@ -577,7 +578,8 @@ function new_user()
         `notify_assigned`,
         `notify_pm`,
         `notify_note`,
-        `notify_note_unassigned`) VALUES (
+        `notify_note_unassigned`,
+        `autorefresh`) VALUES (
 	'".hesk_dbEscape($myuser['user'])."',
 	'".hesk_dbEscape($myuser['pass'])."',
 	'".intval($myuser['isadmin'])."',
@@ -601,8 +603,8 @@ function new_user()
 	'".($myuser['notify_assigned'])."' ,
 	'".($myuser['notify_pm'])."',
 	'".($myuser['notify_note'])."',
-	'".($myuser['notify_note_unassigned'])."'
-	)" );
+	'".($myuser['notify_note_unassigned'])."',
+	".intval($myuser['autorefresh']).")" );
 
     $_SESSION['seluser'] = hesk_dbInsertID();
 
@@ -633,7 +635,7 @@ function update_user()
 	$myuser = hesk_validateUserInfo(0,$_SERVER['PHP_SELF']);
     $myuser['id'] = $tmp;
 
-    /* Only active users can be assigned tickets */
+    /* Only active users can be assigned tickets. Also turn off all notifications */
     if (!$myuser['active']) {
         $myuser['autoassign'] = 0;
         $myuser['notify_new_unassigned'] = 0;
@@ -707,7 +709,8 @@ function update_user()
 	`notify_assigned`='".($myuser['notify_assigned'])."' ,
 	`notify_pm`='".($myuser['notify_pm'])."',
 	`notify_note`='".($myuser['notify_note'])."',
-	`notify_note_unassigned`='".($myuser['notify_note_unassigned'])."'
+	`notify_note_unassigned`='".($myuser['notify_note_unassigned'])."',
+	`autorefresh`=".intval($myuser['autorefresh'])."
     WHERE `id`='".intval($myuser['id'])."' LIMIT 1");
 
     unset($_SESSION['save_userdata']);
@@ -820,6 +823,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     {
     	$myuser['afterreply'] = 0;
     }
+    $myuser['autorefresh'] = intval(hesk_POST('autorefresh'));
 
     // Defaults
     $myuser['autostart']				= isset($_POST['autostart']) ? 1 : 0;
@@ -952,12 +956,15 @@ function toggle_active()
     {
         $active = 1;
         $tmp = $hesklang['user_activated'];
+        $notificationSql = "";
     } else
     {
         $active = 0;
         $tmp = $hesklang['user_deactivated'];
+        $notificationSql = ", `autoassign` = 0, `notify_new_unassigned` = 0, `notify_new_my` = 0, `notify_reply_unassigned` = 0,
+        `notify_reply_my` = 0, `notify_assigned` = 0, `notify_pm` = 0, `notify_note` = 0, `notify_note_unassigned` = 0";
     }
-    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `active` = '".$active."' WHERE `id` = '".intval($myuser)."'");
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `active` = '".$active."'".$notificationSql." WHERE `id` = '".intval($myuser)."'");
 
     if (hesk_dbAffectedRows() != 1) {
         hesk_process_messages($hesklang['int_error'].': '.$hesklang['user_not_found'],'./manage_users.php');

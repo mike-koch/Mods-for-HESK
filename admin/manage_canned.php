@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -264,14 +264,14 @@ myField.value += myValue;
             <div class="form-group">
                 <label for="name" class="col-sm-2 control-label"><?php echo $hesklang['saved_title']; ?>:</label>
                 <div class="col-sm-10">
-                    <span id="HeskTitle"><input class="form-control" placeholder="<?php echo $hesklang['saved_title']; ?>" type="text" name="name" size="40" maxlength="50" <?php if (isset($_SESSION['canned']['name'])) {echo ' value="'.stripslashes($_SESSION['canned']['name']).'" ';} ?> /></span>     
+                    <span id="HeskTitle"><input class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['saved_title']); ?>" type="text" name="name" size="40" maxlength="50" <?php if (isset($_SESSION['canned']['name'])) {echo ' value="'.stripslashes($_SESSION['canned']['name']).'" ';} ?> /></span>
                 </div>
             </div>
             <div class="form-group">
                 <label for="msg" class="col-sm-2 control-label"><?php echo $hesklang['message']; ?>:</label>
                 <div class="col-sm-10">
                     <span id="HeskMsg">
-                        <textarea class="form-control" placeholder="<?php echo $hesklang['message']; ?>" name="msg" rows="15" cols="70"><?php
+                        <textarea class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="msg" rows="15" cols="70"><?php
                                 if (isset($_SESSION['canned']['msg']))
                                 {
                                     echo stripslashes($_SESSION['canned']['msg']);

@@ -137,13 +137,12 @@
     text-decoration: underline;
 }
 .form-signin {
-    max-width: 330px;
-    padding: 15px;
+    max-width: 800px;
     margin: 0 auto;
 }
 .loginError {
-    width: 40%;
-    padding: 20px;
+    max-width: 800px;
+    padding-top: 20px;
     margin-right: auto;
     margin-left: auto;
 }
@@ -371,20 +370,29 @@ button.dropdown-submit {
     border:none;
 }
 
-.file-attachment {
-min-height: 100px;
-max-height: 100px;
-text-align: center;
-}
-
-.file-attachment > i {
-padding-top: 10px;
+.attachment-table > tbody > tr > td > i {
 color: #ddd;
 text-shadow: 2px 2px #ccc;
 }
 
-.file-attachment > img {
-margin: -15px;
-height: 100px;
+.attachment-table > tbody > tr > td {
+vertical-align: middle;
+}
+
+.attachment-table > tbody > tr > td > span > img {
+max-height: 80px;
+max-width: 80px;
 cursor: pointer;
+}
+
+.plaintext-editor {
+font-family: monospace;
+}
+
+.table-fixed {
+table-layout: fixed;
+}
+
+.indent-15 {
+margin-right: 15px;
 }

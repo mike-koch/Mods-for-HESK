@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -255,6 +255,9 @@ function update_profile() {
     {
     	$_SESSION['new']['afterreply'] = 0;
     }
+    $_SESSION['new']['notify_customer_new'] = isset($_POST['notify_customer_new']) ? 1 : 0;
+    $_SESSION['new']['notify_customer_reply'] = isset($_POST['notify_customer_reply']) ? 1 : 0;
+    $_SESSION['new']['show_suggested'] = isset($_POST['show_suggested']) ? 1 : 0;
 
     /* Auto-start ticket timer */
     $_SESSION['new']['autostart'] = isset($_POST['autostart']) ? 1 : 0;
@@ -301,7 +304,10 @@ function update_profile() {
         `notify_assigned`='".intval($_SESSION['new']['notify_assigned'])."' ,
         `notify_pm`='".intval($_SESSION['new']['notify_pm'])."',
         `notify_note`='".intval($_SESSION['new']['notify_note'])."',
-        `notify_note_unassigned`='".intval($_SESSION['new']['notify_note_unassigned'])."'
+        `notify_note_unassigned`='".intval($_SESSION['new']['notify_note_unassigned'])."',
+        `notify_customer_new`='".$_SESSION['new']['notify_customer_new']."',
+        `notify_customer_reply`='".$_SESSION['new']['notify_customer_reply']."',
+        `show_suggested`='".$_SESSION['new']['show_suggested']."'
 	    WHERE `id`='".intval($_SESSION['id'])."' LIMIT 1"
         );
 

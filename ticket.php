@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -264,9 +264,17 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                     <p><?php echo $hesklang['last_update']; ?>: <?php echo hesk_date($ticket['lastchange'], true); ?></p>
                 </div>
                 <div class="col-md-2 col-md-offset-4 col-sm-12 close-ticket">
-                    <p><?php $random=rand(10000,99999);
-                        if ($ticket['isClosed'] == true && $ticket['locked'] != 1 && $hesk_settings['custopen']) {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=2&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['open_action'].'">'.$hesklang['open_action'].'</a>';}
-                        elseif ($hesk_settings['custclose']) {echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=3&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['close_action'].'">'.$hesklang['close_action'].'</a>';} ?></p>
+                    <p><?php
+                        $statusRS = hesk_dbQuery('SELECT `Closable` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.intval($ticket['status']));
+                        $status = hesk_dbFetchAssoc($statusRS);
+                        $isClosable = $status['Closable'] == 'yes' || $status['Closable'] == 'conly';
+                        $random=rand(10000,99999);
+                        if ($ticket['isClosed'] == true && $ticket['locked'] != 1 && $hesk_settings['custopen']) {
+                            echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=2&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['open_action'].'">'.$hesklang['open_action'].'</a>';
+                        }
+                        elseif ($hesk_settings['custclose'] && $isClosable) {
+                            echo '<a href="change_status.php?track='.$trackingID.$hesk_settings['e_query'].'&amp;s=3&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'" title="'.$hesklang['close_action'].'">'.$hesklang['close_action'].'</a>';
+                        } ?></p>
                 </div>
             </div>
             <div class="row medLowPriority">
@@ -468,7 +476,7 @@ function print_form()
             <div class="form-group">
                 <label for="track" class="col-sm-3 control-label"><?php echo $hesklang['ticket_trackID']; ?></label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" name="track" id="track" maxlength="20" size="35" value="<?php echo $trackingID; ?>" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
+                    <input type="text" class="form-control" name="track" id="track" maxlength="20" size="35" value="<?php echo $trackingID; ?>" placeholder="<?php echo htmlspecialchars($hesklang['ticket_trackID']); ?>">
                 </div>
             </div>
             <?php
@@ -480,7 +488,7 @@ function print_form()
             <div class="form-group">
                 <label for="e" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" id="e" name="e" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>" />
+                    <input type="text" class="form-control" id="e" name="e" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>" />
                 </div>
             </div>
             <div align="left" class="form-group">
@@ -509,7 +517,7 @@ function print_form()
                 <div class="form-group">
                     <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
                     <div class="col-sm-9">
-                        <input type="text" id="email" class="form-control" name="email" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/><input type="hidden" name="a" value="forgot_tid" />
+                        <input type="text" id="email" class="form-control" name="email" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/><input type="hidden" name="a" value="forgot_tid" />
                     </div>
                 </div>
                 <div class="form-group">

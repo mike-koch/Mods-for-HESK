@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -90,78 +90,70 @@ function hesk_kbTopArticles($how_many, $index = 1)
 	}
 	?>
 
-    
-	<h4 class="text-left"><?php echo $hesklang['popart']; ?></h4>
-    <div class="footerWithBorder blankSpace"></div>
-
-    <table border="0" width="100%">
-	<tr>
-
-	<?php
-    /* Get list of articles from the database */
-    $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`views` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="text-left"><?php echo $hesklang['popart_no_colon']; ?></h4>
+        </div>
+        <table border="0" width="100%" class="table table-striped table-fixed">
+            <thead>
+            <tr>
+                <th class="col-xs-8 col-sm-9">&nbsp;</th>
+                <?php
+                /* Get list of articles from the database */
+                $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`views` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
 			LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
 			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
 			ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT ".intval($how_many));
 
-    /* Show number of views? */
-	if ($hesk_settings['kb_views'] && hesk_dbNumRows($res) != 0)
-	{
-		echo '<td class="text-right"><i>' . $hesklang['views'] . '</i></td>';
-	}
-	?>
+                /* Show number of views? */
+                if ($hesk_settings['kb_views'] && hesk_dbNumRows($res) != 0)
+                {
+                    echo '<th class="col-xs-4 col-sm-3"><i>' . $hesklang['views'] . '</i></th>';
+                }
+                ?>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            /* Get list of articles from the database */
+            $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`dt`, `t1`.`views` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+            LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
+            WHERE `t1`.`type`='0' AND `t2`.`type`='0'
+            ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT ".intval($how_many));
 
-	</tr>
-	</table>
+            /* If no results found end here */
+            if (hesk_dbNumRows($res) == 0)
+            {
+                $colspan = '';
+                if (!$hesk_settings['kb_views']) {
+                    $colspan = 'colspan="2"';
+                }
+                echo '<tr><td '.$colspan.'><i>'.$hesklang['noa'].'</i></td></tr>';
+                return true;
+            }
 
-	<?php
-    /* Get list of articles from the database */
-    $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`dt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
-			LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
-			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
-			ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT ".intval($how_many));
-
-	/* If no results found end here */
-	if (hesk_dbNumRows($res) == 0)
-	{
-		echo '<p class="text-left"><i>'.$hesklang['noa'].'</i><br />&nbsp;</p>';
-        return true;
-	}
-
-	/* We have some results, print them out */
-	?>
-    <div align="left">
-    <table border="0" cellspacing="1" cellpadding="3" width="100%">
-    <?php
-
-	while ($article = hesk_dbFetchAssoc($res))
-	{
-		echo '
-		<tr>
-		<td>
-		<table border="0" width="100%" cellspacing="0" cellpadding="0">
-		<tr>
-		<td width="1" valign="top"><span class="glyphicon glyphicon-file"></span></td>
-		<td valign="top">&nbsp;<a href="knowledgebase.php?article=' . $article['id'] . '">' . $article['subject'] . '</a></td>
-		';
-
-		if ($hesk_settings['kb_views'])
-		{
-			echo '<td valign="top" class="text-right" width="200">' . $article['views'] . '</td>';
-		}
-
-		echo '
-		</tr>
-		</table>
-		</td>
-		</tr>
-		';
-	}
-	?>
-
-    </table>
+            /* We have some results, print them out */
+            $colspan = '';
+            if (!$hesk_settings['kb_views']) {
+                $colspan = 'colspan="2"';
+            }
+            while ($article = hesk_dbFetchAssoc($res))
+            {
+                echo '
+                <tr>
+                    <td class="col-xs-8 col-sm-9" '.$colspan.'>
+                        <i class="fa fa-file"></i> <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
+                    </td>
+                    ';
+                if ($hesk_settings['kb_views']) {
+                    echo '<td class="col-xs-4 col-sm-3">'.$article['views'].'</td>';
+                }
+                echo '</tr>';
+            }
+            ?>
+            </tbody>
+        </table>
     </div>
-    <br/>
     <?php
 } // END hesk_kbTopArticles()
 
@@ -201,78 +193,73 @@ function hesk_kbLatestArticles($how_many, $index = 1)
 	}
 	?>
 
-	<h4 class="text-left"><?php echo $hesklang['latart']; ?></h4>
-    <div class="footerWithBorder blankSpace"></div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="text-left"><?php echo $hesklang['latart_no_colon']; ?></h4>
+        </div>
+        <table class="table table-striped table-fixed">
+            <thead>
+            <tr>
+            <?php
+            $colspan = '';
+            if (!$hesk_settings['kb_date']) {
+                $colspan = 'colspan="2"';
+            }
+            /* Get list of articles from the database */
+            $res = hesk_dbQuery("SELECT `t1`.* FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+                LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
+                WHERE `t1`.`type`='0' AND `t2`.`type`='0'
+                ORDER BY `t1`.`dt` DESC LIMIT ".intval($how_many));
 
-    <table border="0" width="100%">
-    <tr>
-	<?php
-    /* Get list of articles from the database */
-    $res = hesk_dbQuery("SELECT `t1`.* FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+            /* Show number of views? */
+            if (hesk_dbNumRows($res) != 0)
+            {
+                echo '<th class="col-xs-9" '.$colspan.'>&nbsp;</th>';
+                if ($hesk_settings['kb_date'])
+                {
+                    echo '<th class="col-xs-3"><i>' . $hesklang['dta'] . '</i></th>';
+                }
+            }
+            ?>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            /* Get list of articles from the database */
+            $res = hesk_dbQuery("SELECT `t1`.* FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
 			LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
 			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
 			ORDER BY `t1`.`dt` DESC LIMIT ".intval($how_many));
 
-    /* Show number of views? */
-	if ($hesk_settings['kb_date'] && hesk_dbNumRows($res) != 0)
-	{
-		echo '<td class="text-right"><i>' . $hesklang['dta'] . '</i></td>';
-	}
-	?>
+            /* If no results found end here */
+            if (hesk_dbNumRows($res) == 0)
+            {
+                $colspan = '';
+                if ($hesk_settings['kb_date']) {
+                    $colspan = 'colspan="2"';
+                }
+                echo '<td '.$colspan.'><i>'.$hesklang['noa'].'</i></td>';
+                return true;
+            }
 
-	</tr>
-	</table>
-
-	<?php
-    /* Get list of articles from the database */
-    $res = hesk_dbQuery("SELECT `t1`.* FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
-			LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
-			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
-			ORDER BY `t1`.`dt` DESC LIMIT ".intval($how_many));
-
-	/* If no results found end here */
-	if (hesk_dbNumRows($res) == 0)
-	{
-		echo '<p class="text-left"><i>'.$hesklang['noa'].'</i><br />&nbsp;</p>';
-        return true;
-	}
-
-	/* We have some results, print them out */
-	?>
-    <div align="center">
-    <table border="0" cellspacing="1" cellpadding="3" width="100%">
-    <?php
-
-	while ($article = hesk_dbFetchAssoc($res))
-	{
-		echo '
-		<tr>
-		<td>
-		<table border="0" width="100%" cellspacing="0" cellpadding="0">
-		<tr>
-		<td width="1" valign="top"><span class="glyphicon glyphicon-file"></span></td>
-		<td valign="top">&nbsp;<a href="knowledgebase.php?article=' . $article['id'] . '">' . $article['subject'] . '</a></td>
-		';
-
-		if ($hesk_settings['kb_date'])
-		{
-			echo '<td valign="top" class="text-right" width="200">' . hesk_date($article['dt'], true) . '</td>';
-		}
-
-		echo '
-		</tr>
-		</table>
-		</td>
-		</tr>
-		';
-	}
-	?>
-
-    </table>
+            /* We have some results, print them out */
+            $colspan = $hesk_settings['kb_date'] ? '' : 'colspan="2"';
+            while ($article = hesk_dbFetchAssoc($res))
+            {
+                echo '
+                <tr>
+                    <td class="col-xs-9" '.$colspan.'>
+                        <i class="fa fa-file"></i> <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
+                    </td>';
+                if ($hesk_settings['kb_date']) {
+                    echo '<td class="col-xs-3">' . hesk_date($article['dt'], true) . '</td>';
+                }
+                echo '</tr>';
+            } ?>
+            </tbody>
+        </table>
     </div>
-
-    &nbsp;
-
+    
     <?php
 } // END hesk_kbLatestArticles()
 
@@ -293,7 +280,7 @@ function hesk_kbSearchLarge($admin = '')
 	<div style="text-align:center">
 		<form role="form" action="<?php echo $action; ?>" method="get" style="display: inline; margin: 0;" name="searchform">
 			<div class="input-group">
-				<input type="text" class="form-control" placeholder="<?php echo $hesklang['search_the_knowledgebase']; ?>" name="search">
+				<input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['search_the_knowledgebase']); ?>" name="search">
 				<span class="input-group-btn">
 					<button class="btn btn-default" type="submit" value="<?php echo $hesklang['search']; ?>" title="<?php echo $hesklang['search']; ?>"><?php echo $hesklang['search']; ?></button>
 				</span>

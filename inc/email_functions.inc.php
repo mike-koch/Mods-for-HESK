@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -66,7 +66,10 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
     $htmlMessage = hesk_getHtmlMessage($email_template, $ticket);
     $activationUrl = $hesk_settings['hesk_url'] . '/verifyemail.php?key=%%ACTIVATIONKEY%%';
     $message = str_replace('%%VERIFYURL%%', $activationUrl, $message);
+    $htmlMessage = str_replace('%%VERIFYURL%%', $activationUrl, $htmlMessage);
     $message = str_replace('%%ACTIVATIONKEY%%', $activationKey, $message);
+    $htmlMessage = str_replace('%%ACTIVATIONKEY%%', $activationKey, $htmlMessage);
+    $hasMessage = hesk_doesTemplateHaveTag($email_template, '%%MESSAGE%%');
 
     // Add Cc / Bcc recipents if needed
     $ccEmails = array();
@@ -85,7 +88,7 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
         }
     }
 
-    hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $ccEmails, $bccEmails);
+    hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $ccEmails, $bccEmails, $hasMessage);
 }
 
 
@@ -111,6 +114,7 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
 	$subject = hesk_getEmailSubject($email_template,$ticket);
 	$message = hesk_getEmailMessage($email_template,$ticket);
     $htmlMessage = hesk_getHtmlMessage($email_template,$ticket);
+    $hasMessage = hesk_doesTemplateHaveTag($email_template,'%%MESSAGE%%');
 
     // Add Cc / Bcc recipents if needed
     $ccEmails = array();
@@ -128,7 +132,7 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
     }
 
 	// Send e-mail
-	hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $ccEmails, $bccEmails);
+	hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $ccEmails, $bccEmails, $hasMessage);
 
     // Reset the language if it was changed
     if ($changedLanguage)
@@ -175,9 +179,10 @@ function hesk_notifyAssignedStaff($autoassign_owner, $email_template, $type = 'n
     $subject = hesk_getEmailSubject($email_template,$ticket);
 	$message = hesk_getEmailMessage($email_template,$ticket,1);
     $htmlMessage = hesk_getHtmlMessage($email_template,$ticket,1);
+    $hasMessage = hesk_doesTemplateHaveTag($email_template,'%%MESSAGE%%');
 
 	/* Send email to staff */
-	hesk_mail($autoassign_owner['email'], $subject, $message, $htmlMessage);
+	hesk_mail($autoassign_owner['email'], $subject, $message, $htmlMessage, array(), array(), $hasMessage);
 
     /* Reset language to original one */
     hesk_resetLanguage();
@@ -245,7 +250,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
                 if ($current_language != 'NONE')
                 {
 					/* Send e-mail to staff */
-					hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage );
+					hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage, array(), array(), $hasMessage);
 
                     /* Reset list of email addresses */
                     $recipients = array();
@@ -258,6 +263,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
                 $subject = hesk_getEmailSubject($email_template,$ticket);
 				$message = hesk_getEmailMessage($email_template,$ticket,$is_ticket);
                 $htmlMessage = hesk_getHtmlMessage($email_template,$ticket,$is_ticket);
+                $hasMessage = hesk_doesTemplateHaveTag($email_template, '%%MESSAGE%%');
 
 				/* Add email to the recipients list */
 				$recipients[] = $admin['email'];
@@ -268,7 +274,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
         }
 
         /* Send email messages to the remaining staff */
-		hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage);
+		hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage, array(), array(), $hasMessage);
 
 		/* Reset language to original one */
 		hesk_resetLanguage();
@@ -330,9 +336,9 @@ function hesk_validEmails()
 } // END hesk_validEmails()
 
 
-function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
+function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$hasMessageTag = false)
 {
-	global $hesk_settings, $hesklang, $modsForHesk_settings;
+	global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket;
 
 	// Demo mode
 	if ( defined('HESK_DEMO') )
@@ -342,6 +348,9 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
 
     // Encode subject to UTF-8
     $subject = "=?UTF-8?B?" . base64_encode( hesk_html_entity_decode($subject) ) . "?=";
+
+    // Auto-generate URLs for HTML-formatted emails
+    $htmlMessage = hesk_makeURL($htmlMessage, '', false);
 
     // Setup "name <email>" for headers
     if ($hesk_settings['noreply_name'])
@@ -394,6 +403,11 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         {
             $postfields['html'] = $htmlMessage;
         }
+        if ($hasMessageTag && $modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+        {
+            $postfields = processDirectAttachments('mailgun', $postfields);
+        }
+
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
 
         $result = curl_exec($ch);
@@ -405,29 +419,35 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         return (strlen($tmp)) ? $tmp : true;
     }
 
-    $boundary = sha1(uniqid());
+    $outerboundary = sha1(uniqid());
+    $innerboundary = sha1(uniqid());
+    if ($outerboundary == $innerboundary) {
+        $innerboundary .= '1';
+    }
+    $plaintextMessage = $message;
+    $message = "--".$outerboundary."\n";
+    $message .= "Content-Type: multipart/alternative; boundary=\"".$innerboundary."\"\n\n";
+
+    $message .= "--".$innerboundary."\n";
+    $message .= "Content-Type: text/plain; charset=".$hesklang['ENCODING']."\n\n";
+    $message .= $plaintextMessage."\n\n";
     //Prepare the message for HTML or non-html
     if ($modsForHesk_settings['html_emails'])
     {
-        $plaintextMessage = $message;
-        $message = "--".$boundary."\n";
-        $message .= "Content-Type: text/plain; charset=".$hesklang['ENCODING']."\n\n";
-        $message .= $plaintextMessage."\n\n";
-        $message .= "--".$boundary."\n";
+        $message .= "--".$innerboundary."\n";
         $message .= "Content-Type: text/html; charset=".$hesklang['ENCODING']."\n\n";
         $message .= $htmlMessage."\n\n";
-        $message .= "--".$boundary."--";
     }
+
+    //-- Close the email
+    $message .= "--".$innerboundary."--";
 
     // Use PHP's mail function
 	if ( ! $hesk_settings['smtp'])
     {
     	// Set additional headers
         $headers = '';
-        if ($modsForHesk_settings['html_emails'])
-        {
-            $headers .= "MIME-Version: 1.0\n";
-        }
+        $headers .= "MIME-Version: 1.0\n";
 		$headers .= "From: $hesk_settings[from_header]\n";
         if (count($cc) > 0)
         {
@@ -440,10 +460,14 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
 		$headers.= "Reply-To: $hesk_settings[from_header]\n";
 		$headers.= "Return-Path: $hesk_settings[webmaster_mail]\n";
 		$headers.= "Date: " . date(DATE_RFC2822) . "\n";
-        if ($modsForHesk_settings['html_emails'])
+        $headers.= "Content-Type: multipart/mixed;boundary=\"".$outerboundary."\"";
+
+        // Add attachments if necessary
+        if ($hasMessageTag && $modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
         {
-            $headers.= "Content-Type: multipart/alternative;boundary=".$boundary;
+            $message .= processDirectAttachments('phpmail', NULL, $outerboundary);
         }
+        $message .= "\n\n".'--'.$outerboundary.'--';
 
 		// Send using PHP mail() function
         ob_start();
@@ -479,14 +503,9 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         "Subject: " . $subject,
         "Date: " . date(DATE_RFC2822)
     );
-    if ($modsForHesk_settings['html_emails'])
-    {
-        array_push($headersArray,"MIME-Version: 1.0");
-        array_push($headersArray,"Content-Type: multipart/alternative;boundary=".$boundary);
-    } else
-    {
-        array_push($headersArray,"Content-Type: text/plain; charset=" . $hesklang['ENCODING']);
-    }
+    array_push($headersArray,"MIME-Version: 1.0");
+    array_push($headersArray,"Content-Type: multipart/mixed;boundary=\"".$outerboundary."\"");
+
     if (count($cc) > 0)
     {
         array_push($headersArray,"Cc: ".implode(',',$cc));
@@ -496,6 +515,12 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array())
         array_push($headersArray,"Bcc: ".implode(',',$bcc));
     }
 
+    // Add attachments if necessary
+    if ($hasMessageTag && $modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+    {
+        $message .= processDirectAttachments('smtp', NULL, $outerboundary);
+    }
+    $message .= "\n\n".'--'.$outerboundary.'--';
 
 	if ( ! $smtp->SendMessage($hesk_settings['noreply_mail'], $to_arr, $headersArray, $message))
     {
@@ -629,7 +654,7 @@ function hesk_getHtmlMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $jus
     }
 
     //Perform logic common between hesk_getEmailMessage and hesk_getHtmlMessage
-    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message);
+    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, true);
     return $msg;
 }
 
@@ -669,9 +694,23 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
 
 } // END hesk_getEmailMessage
 
-function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message)
+function hesk_doesTemplateHaveTag($eml_file, $tag)
 {
-    global $hesk_settings, $hesklang;
+    global $hesk_settings, $modsForHesk_settings;
+    $path = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/'. $eml_file .'.txt';
+    $htmlHasTag = false;
+    if ($modsForHesk_settings['html_emails']) {
+        $htmlPath = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/html/'. $eml_file . '.txt';
+        $htmlContents = file_get_contents(HESK_PATH.$htmlPath);
+        $htmlHasTag = !(strpos($htmlContents, $tag) === false);
+    }
+    $emailContents = file_get_contents(HESK_PATH . $path);
+    return !(strpos($emailContents, $tag) === false) || $htmlHasTag;
+}
+
+function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, $isForHtml = 0)
+{
+    global $hesk_settings, $hesklang, $modsForHesk_settings;
 
     /* Return just the message without any processing? */
     if ($just_message)
@@ -695,6 +734,11 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
 
         if ( isset($ticket['message']) )
         {
+            if ($isForHtml)
+            {
+                $htmlMessage = nl2br($ticket['message']);
+                return str_replace('%%MESSAGE%%', $htmlMessage, $msg);
+            }
             return str_replace('%%MESSAGE%%', $ticket['message'], $msg);
         }
         else
@@ -776,19 +820,40 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     if (strpos($msg, '%%MESSAGE%%') !== false)
     {
         // Replace message
-        $msg = str_replace('%%MESSAGE%%',$ticket['message'],$msg);
+        if ($isForHtml)
+        {
+            $htmlMessage = nl2br($ticket['message']);
+            $msg = str_replace('%%MESSAGE%%', $htmlMessage, $msg);
+        } else
+        {
+            $msg = str_replace('%%MESSAGE%%',$ticket['message'],$msg);
+        }
 
-        // Add direct links to any attachments at the bottom of the email message
+        // Add direct links to any attachments at the bottom of the email message OR add them as attachments, depending on the settings
+        // if ($modsForHesk_settings['attachments'] == 'inline' (other is 'attachment') {...}
         if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) )
         {
-            $msg .= "\n\n\n" . $hesklang['fatt'];
+            if (!$modsForHesk_settings['attachments']) {
+                if ($isForHtml) {
+                    $msg .= "<br><br><br>" . $hesklang['fatt'];
+                } else {
+                    $msg .= "\n\n\n" . $hesklang['fatt'];
+                }
 
-            $att = explode(',', substr($ticket['attachments'], 0, -1));
-            foreach ($att as $myatt)
-            {
-                list($att_id, $att_name) = explode('#', $myatt);
-                $msg .= "\n\n" . $att_name . "\n" . $hesk_settings['hesk_url'] . '/download_attachment.php?att_id='.$att_id.'&track='.$ticket['trackid'].$hesk_settings['e_param'];
+                $att = explode(',', substr($ticket['attachments'], 0, -1));
+                foreach ($att as $myatt)
+                {
+                    list($att_id, $att_name, $saved_name) = explode('#', $myatt);
+                    if ($isForHtml) {
+                        $msg .= "<br><br>" . $att_name . "<br>";
+                    } else {
+                        $msg .= "\n\n" . $att_name . "\n";
+                    }
+                    $msg .= $hesk_settings['hesk_url'] . '/download_attachment.php?att_id='.$att_id.'&track='.$ticket['trackid'].$hesk_settings['e_param'];
+                }
             }
+
+            // If attachments setting is set to 1, we'll add the attachments separately later; otherwise we'll duplicate the number of attachments.
         }
 
         // For customer notifications: if we allow email piping/pop 3 fetching and
@@ -800,4 +865,35 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     }
 
     return $msg;
+}
+
+// $postfields is only required for mailgun.
+// $boundary is only required for PHP/SMTP
+function processDirectAttachments($emailMethod, $postfields = NULL, $boundary = '') {
+    global $hesk_settings, $ticket;
+
+    $att = explode(',', substr($ticket['attachments'], 0, -1));
+    // if using mailgun, add each attachment to the array
+    if ($emailMethod == 'mailgun') {
+        $i = 0;
+        foreach ($att as $myatt) {
+            list($att_id, $att_name, $saved_name) = explode('#', $myatt);
+            $postfields['attachment['.$i.']'] = '@'.HESK_PATH.$hesk_settings['attach_dir'].'/'.$saved_name;
+            $i++;
+        }
+        return $postfields;
+    } else {
+        $attachments = '';
+        foreach ($att as $myatt) {
+            list($att_id, $att_name, $saved_name) = explode('#', $myatt);
+            $attachments .= "\n\n" . "--".$boundary."\n";
+            $attachments .= "Content-Type: application/octet-stream; name=\"".$att_name."\" \n";
+            $attachments .= "Content-Disposition: attachment\n";
+            $attachments .= "Content-Transfer-Encoding: base64\n\n";
+            $attachmentBinary = file_get_contents(HESK_PATH.$hesk_settings['attach_dir'].'/'.$saved_name);
+            $attcontents = chunk_split(base64_encode($attachmentBinary));
+            $attachments .= $attcontents."\n\n";
+        }
+        return $attachments;
+    }
 }

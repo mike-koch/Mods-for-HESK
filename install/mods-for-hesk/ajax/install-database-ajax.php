@@ -4,7 +4,7 @@ define('HESK_PATH','../../../');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
-require('../modsForHeskSql.php');
+require('../sql/installSql.php');
 
 $version = $_POST['version'];
 if ($version == 1) {
@@ -27,6 +27,17 @@ if ($version == 1) {
     execute200FileUpdate();
 } elseif ($version == 201) {
     execute201Scripts();
+} elseif ($version == 210) {
+    execute210Scripts();
+    execute210FileUpdate();
+} elseif ($version == 211) {
+    execute211Scripts();
+    execute211FileUpdate();
+} elseif ($version == 220) {
+    execute220Scripts();
+    execute220FileUpdate();
+} elseif ($version == 221) {
+    execute221Scripts();
 } else {
     $response = 'The version "'.$version.'" was not recognized. Check the value submitted and try again.';
     print $response;

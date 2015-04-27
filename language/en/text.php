@@ -2,7 +2,7 @@
 /*
 * Language file for Help Desk Software HESK (www.hesk.com)
 * Language: ENGLISH
-* Version: 2.6.0
+* Version: 2.6.1
 * Author: Klemen Stirn (http://www.hesk.com)
 *
 * !!! This file must be saved in UTF-8 encoding without byte order mark (BOM) !!!
@@ -21,8 +21,72 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.2.1
+$hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
+$hesklang['latart_no_colon']='Latest Knowledgebase Articles'; // same as $hesklang['latart'] but without a colon (:)
+$hesklang['ac_no_colon']='Articles in this Category'; // same as $hesklang['ac'] but without a colon (:)
+
+// ADDED OR MODIFIED IN Mods for HESK 2.2.0
+$hesklang['email_templates'] = 'Email templates';
+$hesklang['email_templates_intro'] = 'You can edit your plaintext and HTML email templates here.';
+$hesklang['edit_plain_text_template'] = 'Edit plain text template';
+$hesklang['edit_html_template'] = 'Edit HTML template';
+$hesklang['editing_plain_text_template'] = 'Editing plain text template <code>%s</code>'; // %s: The name of the template file, then language name
+$hesklang['editing_html_template'] = 'Editing HTML template <code>%s</code>'; // %s: The name of the template file, then language name
+$hesklang['show_special_tags'] = 'Show Special Tags';
+$hesklang['hide_special_tags'] = 'Hide Special Tags';
+$hesklang['special_tag'] = 'Special Tag';
+$hesklang['description'] = 'Description';
+$hesklang['customer_name'] = 'Customer name';
+$hesklang['customer_email'] = 'Customer email';
+$hesklang['ticket_subject'] = 'Ticket subject';
+$hesklang['ticket_message'] = 'Ticket/Reply message';
+$hesklang['ticket_created'] = 'Date and time of ticket submission';
+$hesklang['ticket_updated'] = 'Date and time of ticket last update';
+$hesklang['ticket_url'] = 'Ticket URL address';
+$hesklang['ticket_category'] = 'Ticket category';
+$hesklang['ticket_owner'] = 'Staff member assigned to the ticket';
+$hesklang['ticket_priority'] = 'Ticket priority';
+$hesklang['custom_field_x'] = 'Custom field %s'; // %s: Custom field #1-20
+$hesklang['email_template_saved'] = 'The email template <b>%s</b> has been saved.'; // %s: Template file name
+$hesklang['error_saving_template'] = 'An error occurred when trying to save the email template!';
+$hesklang['can_man_email_tpl'] = 'Edit email templates';
+$hesklang['email_template_directory_not_writable'] = 'The email template <b>%s</b> is not writable by HESK. Please CHMOD it to 0666.'; // %s: template file name
+$hesklang['closable_question'] = 'Closable?';
+$hesklang['closable_description'] = '<b><i>This setting is ignored if the &quot;Closed?&quot; checkbox is checked for this status</i></b>.
+    <br><br>Determines if the customer staff is able to close a ticket in this status.
+    <br><br><b>Yes:</b> Both customers and staff can close a ticket in this status.
+    <br><b>Customers only:</b> Customers can close a ticket in this status, but staff cannot.
+    <br><b>Staff only:</b> Staff can close a ticket in this status, but customers cannot.
+    <br><b>No:</b> No one is allowed to close a ticket in this status.'; // &quot; = "
+$hesklang['customers_only'] = 'Customers only';
+$hesklang['staff_only'] = 'Staff only';
+$hesklang['yes_title_case'] = 'Yes';
+$hesklang['no_title_case'] = 'No';
+$hesklang['autoclose_ticket_status'] = 'When a ticket is closed automatically, change the status to';
+$hesklang['recent_tickets'] = 'Recent tickets';
+$hesklang['current_status_colon'] = 'Current status: %s'; // %s: status name (i.e. "Resolved", "New", etc.)
+$hesklang['email_attachments'] = 'Email attachments';
+$hesklang['email_attachments_help'] = '<b>Show attachments as links:</b> Links to attachments will be appended at the end of the email.
+    <br><br><b>Attach directly to email:</b> Attachments will be embedded directly into emails.';
+$hesklang['show_attachments_as_links'] = 'Show attachments as links';
+$hesklang['attach_directly_to_email'] = 'Attach directly to email';
+
+// ADDED OR MODIFIED IN Mods for HESK 2.1.1
+$hesklang['new_article_default_type'] = 'Default Type for New Articles';
+$hesklang['new_article_default_type_help'] = 'Choose the default type for new knowledgebase articles.';
+$hesklang['kb_draft3'] = 'The article is saved but not yet published. It can only be read by staff who has permission to
+ manage knowledgebase articles.'; // This is exactly the same as kb_draft2 with all HTML removed
+$hesklang['file_name'] = 'File Name';
+$hesklang['action'] = 'Action';
+$hesklang['click_to_preview'] = 'Click to preview';
+$hesklang['attachment_removed'] = 'This attachment has been removed and cannot be viewed / downloaded';
+
 // ADDED OR MODIFIED IN Mods for HESK 2.1.0
 $hesklang['e_mfh_settings'] = 'You will not be able to save your settings unless this file is writable by the script (CHMOD to 666)!';
+$hesklang['mfh_up_to_date'] = 'Mods for HESK is up to date';
+$hesklang['use_bootstrap_theme'] = 'Use Boostrap Theme CSS';
+$hesklang['use_bootstrap_theme_help'] = 'Enable this to use the <code>bootstrap-theme.css</code> file. Use this for a more 3D look and feel, or disable it for a flatter look.';
 
 // ADDED OR MODIFIED IN Mods For HESK 2.0.0
 $hesklang['saved_ticket_tpl'] = 'Saved Templates';

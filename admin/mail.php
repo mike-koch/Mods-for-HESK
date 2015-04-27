@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -355,9 +355,10 @@ function mail_send()
 			$subject = hesk_getEmailSubject('new_pm',$pm,0);
 			$message = hesk_getEmailMessage('new_pm',$pm,1,0);
             $htmlMessage = hesk_getHtmlMessage('new_pm',$pm,1,0);
+            $hasMessage = hesk_doesTemplateHaveTag('new_pm','%%MESSAGE%%');
 
 			/* Send e-mail */
-			hesk_mail($pm_recipient['email'], $subject, $message, $htmlMessage);
+			hesk_mail($pm_recipient['email'], $subject, $message, $htmlMessage, array(), array(), $hasMessage);
         }
 
 		unset($_SESSION['mail']);
@@ -688,7 +689,7 @@ function show_new_form()
         <div class="form-group">
             <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['m_sub']; ?></label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" placeholder="<?php echo $hesklang['subject']; ?>" name="subject" size="40" maxlength="50"
+                <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>" name="subject" size="40" maxlength="50"
 				<?php
 				if (isset($_SESSION['mail']['subject']))
 				{
@@ -701,7 +702,7 @@ function show_new_form()
         <div class="form-group">
             <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
             <div class="col-sm-9">
-                <textarea name="message" class="form-control" placeholder="<?php echo $hesklang['message']; ?>" rows="15" cols="70"><?php
+                <textarea name="message" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" rows="15" cols="70"><?php
                 if (isset($_SESSION['mail']['message']))
                 {
                     echo stripslashes($_SESSION['mail']['message']);

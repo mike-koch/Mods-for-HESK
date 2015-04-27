@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -59,7 +59,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
 <div class="row">
-    <div class="col-md-10 col-md-offset-1" style="padding-top: 20px">
+    <div class="col-md-12" style="padding-top: 20px">
     <?php 
         /* This will handle error, success and notice messages */
         hesk_handle_messages();

@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -194,13 +194,13 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 		            <div class="form-group">
 			            <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>: <font class="important">*</font></label>
 			            <div class="col-sm-9">
-                            <input type="text" class="form-control" id="name" name="name" size="40" maxlength="30" value="<?php if (isset($_SESSION['c_name'])) {echo stripslashes(hesk_input($_SESSION['c_name']));} ?>" <?php if (in_array('name',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> placeholder="<?php echo $hesklang['name']; ?>" />
+                            <input type="text" class="form-control" id="name" name="name" size="40" maxlength="30" value="<?php if (isset($_SESSION['c_name'])) {echo stripslashes(hesk_input($_SESSION['c_name']));} ?>" <?php if (in_array('name',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>" />
 		                </div>
                     </div>
 		            <div class="form-group">
 			            <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: <font class="important">*</font></label>
 			            <div class="col-sm-9"> 
-                            <input type="text" class="form-control" id="email" name="email" size="40" maxlength="1000" value="<?php if (isset($_SESSION['c_email'])) {echo stripslashes(hesk_input($_SESSION['c_email']));} ?>" <?php if (in_array('email',$_SESSION['iserror'])) {echo ' class="isError" ';} elseif (in_array('email',$_SESSION['isnotice'])) {echo ' class="isNotice" ';} ?> <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(0)"'; } ?> placeholder="<?php echo $hesklang['email']; ?>" />
+                            <input type="text" class="form-control" id="email" name="email" size="40" maxlength="1000" value="<?php if (isset($_SESSION['c_email'])) {echo stripslashes(hesk_input($_SESSION['c_email']));} ?>" <?php if (in_array('email',$_SESSION['iserror'])) {echo ' class="isError" ';} elseif (in_array('email',$_SESSION['isnotice'])) {echo ' class="isNotice" ';} ?> <?php if($hesk_settings['detect_typos']) { echo ' onblur="Javascript:hesk_suggestEmail(0)"'; } ?> placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>" />
 		                </div>
                     </div>
                     <?php
@@ -210,7 +210,7 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 		            <div class="form-group">
                         <label for="email2" class="col-sm-3 control-label"><?php echo $hesklang['confemail']; ?>: <font class="important">*</font></label>
                         <div class="col-sm-9">
-                            <input type="text" id="email2" class="form-control" name="email2" size="40" maxlength="1000" value="<?php if (isset($_SESSION['c_email2'])) {echo stripslashes(hesk_input($_SESSION['c_email2']));} ?>" <?php if (in_array('email2',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> placeholder="<?php echo $hesklang['confemail']; ?>" />
+                            <input type="text" id="email2" class="form-control" name="email2" size="40" maxlength="1000" value="<?php if (isset($_SESSION['c_email2'])) {echo stripslashes(hesk_input($_SESSION['c_email2']));} ?>" <?php if (in_array('email2',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> placeholder="<?php echo htmlspecialchars($hesklang['confemail']); ?>" />
                         </div>
                     </div>
                     <?php
@@ -493,7 +493,7 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
                                 <div class="form-group">
                                     <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40"
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
                                         <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
@@ -557,13 +557,13 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 	            <div class="form-group">
                     <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>: <font class="important">*</font></label>
 	                <div class="col-sm-9">
-                        <input type="text" id="subject" class="form-control" name="subject" size="40" maxlength="40" value="<?php if (isset($_SESSION['c_subject'])) {echo stripslashes(hesk_input($_SESSION['c_subject']));} ?>" <?php if (in_array('subject',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> placeholder="<?php echo $hesklang['subject']; ?>"/>
+                        <input type="text" id="subject" class="form-control" name="subject" size="40" maxlength="40" value="<?php if (isset($_SESSION['c_subject'])) {echo stripslashes(hesk_input($_SESSION['c_subject']));} ?>" <?php if (in_array('subject',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"/>
 	                </div>
                 </div>
                 <div class="form-group">
                     
 	                <div class="col-sm-12">
-                        <textarea placeholder="<?php echo $hesklang['message']; ?>" name="message" id="message" class="form-control" rows="12" cols="60" <?php if (in_array('message',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> ><?php if (isset($_SESSION['c_message'])) {echo stripslashes(hesk_input($_SESSION['c_message']));} ?></textarea>
+                        <textarea placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="message" id="message" class="form-control" rows="12" cols="60" <?php if (in_array('message',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> ><?php if (isset($_SESSION['c_message'])) {echo stripslashes(hesk_input($_SESSION['c_message']));} ?></textarea>
                     </div>
                 </div>
 
@@ -792,7 +792,7 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
                                 <div class="form-group">
                                     <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.$v['name'].'" id="'.$formattedId.'" name="'.$k.'" size="40"
+                                        <input type="text" class="datepicker form-control white-readonly '.$cls.'" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" size="40"
                                             maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly/>
                                         <span class="help-block">'.$hesklang['date_format'].'</span>
                                     </div>
@@ -879,7 +879,7 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 	                {
 			            ?>
 			            <div class="form-group">
-			            <label for="question"><?php echo $hesklang['verify_q']; ?> <font class="important">*</font></label>
+			            <label for="question" class="col-sm-3 control-label"><?php echo $hesklang['verify_q']; ?> <span class="important">*</span></label>
 			
                         <?php
         	            $value = '';
@@ -888,7 +888,7 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 	        	            $value = stripslashes(hesk_input($_SESSION['c_question']));
                         }
                         $cls = in_array('question',$_SESSION['iserror']) ? ' class="isError" ' : '';
-		                echo $hesk_settings['question_ask'].'<br /><input class="form-control" id="question" type="text" name="question" size="20" value="'.$value.'" '.$cls.' />';
+		                echo '<div class="col-md-9">'.$hesk_settings['question_ask'].'<br /><input class="form-control" id="question" type="text" name="question" size="20" value="'.$value.'" '.$cls.' /></div>';
                         ?>
                         </div>
                     <?php
@@ -927,15 +927,21 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 				                     }
 				                };
 				                </script>
+                                <div class="col-md-9">
 				                <?php
 				                require(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
                                 echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, true);
+                                ?>
+                                </div>
+                            <?php
                             }
                             // Use reCaptcha API v2?
                             elseif ($hesk_settings['recaptcha_use'] == 2)
                             {
                                 ?>
-                                <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>"></div>
+                                <div class="col-md-9">
+                                    <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>"></div>
+                                </div>
                             <?php
 			                }
 			                // At least use some basic PHP generated image (better than nothing)
@@ -1072,7 +1078,7 @@ function print_start()
                         <div class="form-group">
                             <br/>
                             <label for="ticketID"><?php echo $hesklang['ticket_trackID']; ?>:</label>
-                            <input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value="" placeholder="<?php echo $hesklang['ticket_trackID']; ?>">
+                            <input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value="" placeholder="<?php echo htmlspecialchars($hesklang['ticket_trackID']); ?>">
                         </div>
                         <?php
                         $tmp = '';
@@ -1082,7 +1088,7 @@ function print_start()
                         ?>
                         <div class="form-group">
                             <label for="emailAddress"><?php echo $hesklang['email']; ?>:</label>
-                            <input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo $hesklang['email']; ?>"/>
+                            <input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/>
                         </div>
                         <div class="checkbox">
                             <input type="checkbox" name="r" value="Y" <?php echo $do_remember; ?> /> <?php echo $hesklang['rem_email']; ?></label>

@@ -216,7 +216,7 @@ function execute170FileUpdate() {
     $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
 
     //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, 'custom_field_setting') !== true)
+    if (strpos($file, 'custom_field_setting') === false)
     {
         $file .= '
 
@@ -255,7 +255,7 @@ function execute200FileUpdate() {
     $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
 
     //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, 'html_emails') !== true)
+    if (strpos($file, 'html_emails') === false)
     {
         $file .= '
 
@@ -321,11 +321,119 @@ function migrateBans($creator) {
 }
 // END Version 2.0.0
 
-// BEGIN Version 2.0.1
+// Version 2.0.1
 function execute201Scripts() {
     global $hesk_settings;
     
     hesk_dbConnect();
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.0.1' WHERE `Key` = 'modsForHeskVersion'");
 }
-// END Version 2.0.1
+
+// BEGIN Version 2.1.0
+function execute210Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.1.0' WHERE `Key` = 'modsForHeskVersion'");
+
+    // Some old tables may not have been dropped during the 2.0.0 upgrade. Check and drop if necessary
+    executeQuery("DROP TABLE IF EXISTS `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_ips`");
+    executeQuery("DROP TABLE IF EXISTS `".hesk_dbEscape($hesk_settings['db_pfix'])."denied_emails`");
+}
+
+function execute210FileUpdate() {
+    //-- Add the boostrap theme property to modsForHesk_settings.inc.php
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    //-- Only add the additional settings if they aren't already there.
+    if (strpos($file, 'use_bootstrap_theme') === false)
+    {
+        $file .= '
+
+        //-- Set this to 1 to enable bootstrap-theme.css
+        $modsForHesk_settings[\'use_bootstrap_theme\'] = 1;';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
+// END Version 2.1.0
+
+// BEGIN Version 2.1.1
+function execute211Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("ALTER IGNORE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` CHANGE `dt` `dt` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets`
+					CHANGE `email` `email` VARCHAR( 1000 ) NOT NULL DEFAULT '',
+					CHANGE `ip` `ip` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+					ADD `firstreply` TIMESTAMP NULL DEFAULT NULL AFTER `lastchange`,
+					ADD `closedat` TIMESTAMP NULL DEFAULT NULL AFTER `firstreply`,
+					ADD `articles` VARCHAR(255) NULL DEFAULT NULL AFTER `closedat`,
+					ADD `openedby` MEDIUMINT(8) DEFAULT '0' AFTER `status`,
+					ADD `firstreplyby` SMALLINT(5) UNSIGNED NULL DEFAULT NULL AFTER `openedby`,
+					ADD `closedby` MEDIUMINT(8) NULL DEFAULT NULL AFTER `firstreplyby`,
+					ADD `replies` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' AFTER `closedby`,
+					ADD `staffreplies` SMALLINT( 5 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `replies`,
+					ADD INDEX ( `openedby` , `firstreplyby` , `closedby` ),
+					ADD INDEX(`dt`)");
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.1.1' WHERE `Key` = 'modsForHeskVersion'");
+}
+
+function execute211FileUpdate() {
+    //-- Add the new kb article visibility property to modsForHesk_settings.inc.php
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    //-- Only add the additional settings if they aren't already there.
+    if (strpos($file, 'new_kb_article_visibility') === false)
+    {
+        $file .= '
+        
+        //-- Default value for new Knowledgebase article: 0 = Published, 1 = Private, 2 = Draft
+$modsForHesk_settings[\'new_kb_article_visibility\'] = 0;';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
+// END Version 2.1.1
+
+// BEGIN Version 2.2.0
+function execute220Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD COLUMN `IsAutocloseOption` INT NOT NULL DEFAULT 0");
+
+    // There will only ever be one row
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `IsAutocloseOption` = 1 WHERE `IsStaffClosedOption` = 1");
+
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD COLUMN `Closable` VARCHAR(10) NOT NULL");
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `Closable` = 'yes'");
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.2.0' WHERE `Key` = 'modsForHeskVersion'");
+}
+
+function execute220FileUpdate() {
+    //-- Add the new attachment property to modsForHesk_settings.inc.php
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    //-- Only add the additional settings if they aren't already there.
+    if (strpos($file, '$modsForHesk_settings[\'attachments\']') === false)
+    {
+        $file .= '
+
+        //-- Setting for adding attachments to email messages. Either 0 for default-HESK behavior, or 1 to send as attachments
+$modsForHesk_settings[\'attachments\'] = 0;';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
+// END Version 2.2.0
+
+// BEGIN Version 2.2.1
+function execute221Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.2.1' WHERE `Key` = 'modsForHeskVersion'");
+}
+// END Version 2.2.1

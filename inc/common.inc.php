@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -1247,7 +1247,7 @@ function hesk_array_fill_keys($keys, $value)
 *
 * Credits: derived from functions of www.phpbb.com
 */
-function hesk_makeURL($text, $class = '')
+function hesk_makeURL($text, $class = '', $shortenLinks = true)
 {
 	global $hesk_settings;
 
@@ -1266,7 +1266,7 @@ function hesk_makeURL($text, $class = '')
 		'#(^|[\n\t (>.])([a-z][a-z\d+]*:/{2}(?:(?:[a-z0-9\-._~!$&\'(*+,;=:@|]+|%[\dA-F]{2})+|[0-9.]+|\[[a-z0-9.]+:[a-z0-9.]+:[a-z0-9.:]+\])(?::\d*)?(?:/(?:[a-z0-9\-._~!$&\'(*+,;=:@|]+|%[\dA-F]{2})*)*(?:\?(?:[a-z0-9\-._~!$&\'(*+,;=:@/?|]+|%[\dA-F]{2})*)?(?:\#(?:[a-z0-9\-._~!$&\'(*+,;=:@/?|]+|%[\dA-F]{2})*)?)#i',
 		create_function(
 			"\$matches",
-			"return  make_clickable_callback(MAGIC_URL_FULL, \$matches[1], \$matches[2], '', '$class');"
+			"return  make_clickable_callback(MAGIC_URL_FULL, \$matches[1], \$matches[2], '', '$class', '$shortenLinks');"
 		),
 		$text
 	);
@@ -1276,7 +1276,7 @@ function hesk_makeURL($text, $class = '')
 		'#(^|[\n\t (>.])(www\.(?:[a-z0-9\-._~!$&\'(*+,;=:@|]+|%[\dA-F]{2})+(?::\d*)?(?:/(?:[a-z0-9\-._~!$&\'(*+,;=:@|]+|%[\dA-F]{2})*)*(?:\?(?:[a-z0-9\-._~!$&\'(*+,;=:@/?|]+|%[\dA-F]{2})*)?(?:\#(?:[a-z0-9\-._~!$&\'(*+,;=:@/?|]+|%[\dA-F]{2})*)?)#i',
 		create_function(
 			"\$matches",
-			"return  make_clickable_callback(MAGIC_URL_WWW, \$matches[1], \$matches[2], '', '$class');"
+			"return  make_clickable_callback(MAGIC_URL_WWW, \$matches[1], \$matches[2], '', '$class', '$shortenLinks');"
 		),
 		$text
 	);
@@ -1286,7 +1286,7 @@ function hesk_makeURL($text, $class = '')
         '/(^|[\n\t (>])(' . '(?:(?:(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|\x5c(?=[@,"\[\]\x5c\x00-\x20\x7f-\xff]))(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|(?<=\x5c)[@,"\[\]\x5c\x00-\x20\x7f-\xff]|\x5c(?=[@,"\[\]\x5c\x00-\x20\x7f-\xff])|\.(?=[^\.])){1,62}(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|(?<=\x5c)[@,"\[\]\x5c\x00-\x20\x7f-\xff])|[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]{1,2})|"(?:[^"]|(?<=\x5c)"){1,62}")@(?:(?!.{64})(?:[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.?|[a-zA-Z0-9]\.?)+\.(?:xn--[a-zA-Z0-9]+|[a-zA-Z]{2,6})|\[(?:[0-1]?\d?\d|2[0-4]\d|25[0-5])(?:\.(?:[0-1]?\d?\d|2[0-4]\d|25[0-5])){3}\])' . ')/iu',
 		create_function(
 			"\$matches",
-			"return  make_clickable_callback(MAGIC_URL_EMAIL, \$matches[1], \$matches[2], '', '$class');"
+			"return  make_clickable_callback(MAGIC_URL_EMAIL, \$matches[1], \$matches[2], '', '$class', '$shortenLinks');"
 		),
 		$text
 	);
@@ -1295,7 +1295,7 @@ function hesk_makeURL($text, $class = '')
 } // END hesk_makeURL()
 
 
-function make_clickable_callback($type, $whitespace, $url, $relative_url, $class)
+function make_clickable_callback($type, $whitespace, $url, $relative_url, $class, $shortenLinks)
 {
 	global $hesk_settings;
 
@@ -1373,7 +1373,7 @@ function make_clickable_callback($type, $whitespace, $url, $relative_url, $class
 		break;
 	}
 
-	$short_url = ($hesk_settings['short_link'] && strlen($url) > 70) ? substr($url, 0, 54) . ' ... ' . substr($url, -10) : $url;
+	$short_url = ($hesk_settings['short_link'] && strlen($url) > 70 && $shortenLinks) ? substr($url, 0, 54) . ' ... ' . substr($url, -10) : $url;
 
 	switch ($type)
 	{

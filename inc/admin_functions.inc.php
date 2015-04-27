@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -715,10 +715,36 @@ function hesk_okCategory($cat,$error=1,$user_isadmin=false,$user_cat=false)
 function hesk_checkPermission($feature,$showerror=1) {
 	global $hesklang;
 
+    /* Check if this is for managing settings */
+    if ($feature == 'can_manage_settings')
+    {
+        if ($_SESSION['can_manage_settings']) {
+            return true;
+        } else {
+            if ($showerror) {
+                hesk_error($hesklang['no_permission'].'<p>&nbsp;</p><p align="center"><a href="index.php">'.$hesklang['click_login'].'</a>');
+            } else {
+                return false;
+            }
+        }
+    }
+
     /* Admins have full access to all features */
     if ($_SESSION['isadmin'])
     {
         return true;
+    }
+
+    if ($feature == 'can_manage_email_templates') {
+        if ($_SESSION['can_manage_email_templates']) {
+            return true;
+        } else {
+            if ($showerror) {
+                hesk_error($hesklang['no_permission'].'<p>&nbsp;</p><p align="center"><a href="index.php">'.$hesklang['click_login'].'</a>');
+            } else {
+                return false;
+            }
+        }
     }
 
     /* Check other staff for permissions */

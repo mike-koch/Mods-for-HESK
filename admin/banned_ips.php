@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -92,6 +92,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <a title="' . $hesklang['sm_title'] . '" href="service_messages.php">' . $hesklang['sm_title'] . '</a>
             </li>';
         }
+
+        // Show a link to email tpl management if user has permission to do so
+        if (hesk_checkPermission('can_man_email_tpl', 0)) {
+            echo '
+            <li role="presentation">
+                <a title="'.$hesklang['email_templates'].'" href="manage_email_templates.php">'.$hesklang['email_templates'].'</a>
+            </li>
+            ';
+        }
         ?>
     </ul>
     <div class="tab-content summaryList tabPadding">
@@ -113,7 +122,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div class="form-group">
                         <label for="ip" class="col-sm-3 control-label"><?php echo $hesklang['bananip']; ?></label>
                         <div class="col-sm-9">
-                            <input type="text" name="ip" size="30" maxlength="255" class="form-control" placeholder="<?php echo $hesklang['iprange']; ?>">
+                            <input type="text" name="ip" size="30" maxlength="255" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['iprange']); ?>">
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                             <input type="hidden" name="a" value="ban" />
                         </div>

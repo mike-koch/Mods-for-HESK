@@ -8,7 +8,7 @@ hesk_dbConnect();
 ?>
 <html>
     <head>
-        <title>Mods For HESK 2.0.1 Install / Upgrade</title>
+        <title>Mods For HESK <?php echo MODS_FOR_HESK_NEW_VERSION; ?> Install / Upgrade</title>
         <link href="../../hesk_style.css?<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet" />
         <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
         <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
@@ -22,10 +22,10 @@ hesk_dbConnect();
         <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
     </head>
     <body>
-        <div class="headersm">Mods for HESK 2.0.1 Install / Upgrade</div>
+        <div class="headersm">Mods for HESK <?php echo MODS_FOR_HESK_NEW_VERSION; ?> Install / Upgrade</div>
         <div class="container">
             <div class="page-header">
-                <h1>Mods for HESK 2.0.1 Install / Upgrade</h1>
+                <h1>Mods for HESK <?php echo MODS_FOR_HESK_NEW_VERSION; ?> Install / Upgrade</h1>
             </div>
             <?php
             $allowInstallation = true;
@@ -139,6 +139,53 @@ hesk_dbConnect();
                                 <div class="row">
                                     <div class="col-md-3 col-sm-12">
                                         <?php
+                                        if ($version == '2.2.0') {
+                                            $v220btn = 'btn-success';
+                                            $disableAllExcept = '220';
+                                        } else {
+                                            $v220btn = 'btn-default';
+                                        }
+                                        ?>
+                                        <a id="220" class="btn <?php echo $v220btn; ?> btn-block disablable" href="installModsForHesk.php?v=220">v2.2.0</a>
+                                    </div>
+                                    <div class="col-md-3 col-sm-12">
+                                        <?php
+                                        if ($version == '2.1.1') {
+                                            $v211btn = 'btn-success';
+                                            $disableAllExcept = '211';
+                                        } else {
+                                            $v211btn = 'btn-default';
+                                        }
+                                        ?>
+                                        <a id="211" class="btn <?php echo $v211btn; ?> btn-block disablable" href="installModsForHesk.php?v=211">v2.1.1</a>
+                                    </div>
+                                    <div class="col-md-3 col-sm-12">
+                                        <?php
+                                        if ($version == '2.1.0') {
+                                            $v210btn = 'btn-success';
+                                            $disableAllExcept = '210';
+                                        } else {
+                                            $v210btn = 'btn-default';
+                                        }
+                                        ?>
+                                        <a id="210" class="btn <?php echo $v210btn; ?> btn-block disablable" href="installModsForHesk.php?v=210">v2.1.0</a>
+                                    </div>
+                                    <div class="col-md-3 col-sm-12">
+                                        <?php
+                                        if ($version == '2.0.1') {
+                                            $v201btn = 'btn-success';
+                                            $disableAllExcept = '201';
+                                        } else {
+                                            $v201btn = 'btn-default';
+                                        }
+                                        ?>
+                                        <a id="201" class="btn <?php echo $v201btn; ?> btn-block disablable" href="installModsForHesk.php?v=201">v2.0.1</a>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-12">
+                                        <?php
                                         if ($version == '2.0.0') {
                                             $v200btn = 'btn-success';
                                             $disableAllExcept = '200';
@@ -203,8 +250,14 @@ hesk_dbConnect();
                                     <div class="col-md-3 col-sm-12">
                                         <a id="124" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=124">v1.2.4</a>
                                     </div>
-                                    <div class="col-md-9 col-sm-12">
-                                        <a class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=0">No previous installation</a>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="btn-group-vertical" role="group" style="width: 100%">
+                                            <a class="btn btn-primary btn-block disablable" href="installModsForHesk.php?v=0">No previous installation</a>
+                                            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#uninstallModal"><i class="fa fa-trash"></i> Uninstall Mods for HESK</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <br>
@@ -215,6 +268,23 @@ hesk_dbConnect();
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="uninstallModal" tabindex="-1" role="dialog" aria-labelledby="uninstallModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="uninstallModalTitle"><i class="fa fa-trash"></i> Uninstall Mods for HESK</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to uninstall Mods for HESK?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-success" href="uninstallModsForHesk.php"><i class="fa fa-check"></i> Yes</a>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> No</button>
                     </div>
                 </div>
             </div>

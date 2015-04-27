@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.0 from 22nd February 2015
+*  Version: 2.6.2 from 18th March 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -92,6 +92,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <li role="presentation" class="active">
             <a href="#"><?php echo $hesklang['sm_title']; ?> <i class="fa fa-question-circle settingsquestionmark" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['sm_intro']); ?>')"></i></a>
         </li>
+        <?php
+        // Show a link to email tpl management if user has permission to do so
+        if (hesk_checkPermission('can_man_email_tpl', 0)) {
+            echo '
+            <li role="presentation">
+                <a title="'.$hesklang['email_templates'].'" href="manage_email_templates.php">'.$hesklang['email_templates'].'</a>
+            </li>
+            ';
+        }
+        ?>
     </ul>
     <div class="tab-content summaryList tabPadding">
         <script language="javascript" type="text/javascript"><!--
@@ -360,7 +370,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group">
                             <label for="title" class="col-md-2 control-label"><?php echo $hesklang['sm_mtitle']; ?></label>
                             <div class="col-md-10">
-                                <input class="form-control" placeholder="<?php echo $hesklang['sm_mtitle']; ?>"
+                                <input class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['sm_mtitle']); ?>"
                                        type="text" name="title" size="70" maxlength="255"
                                     <?php if (isset($_SESSION['new_sm']['title'])) {echo 'value="'.$_SESSION['new_sm']['title'].'"';} ?>>
                             </div>
@@ -368,7 +378,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group">
                             <label for="message" class="col-md-2 control-label"><?php echo $hesklang['sm_msg']; ?></label>
                             <div class="col-md-10">
-                                <textarea placeholder="<?php echo $hesklang['sm_msg']; ?>" class="form-control" name="message" rows="25" cols="70" id="content">
+                                <textarea placeholder="<?php echo htmlspecialchars($hesklang['sm_msg']); ?>" class="form-control" name="message" rows="25" cols="70" id="content">
                                     <?php if (isset($_SESSION['new_sm']['message'])) {echo $_SESSION['new_sm']['message'];} ?>
                                 </textarea>
                             </div>
