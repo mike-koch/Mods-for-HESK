@@ -23,8 +23,6 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.1.0
 $hesklang['e_mfh_settings'] = 'You will not be able to save your settings unless this file is writable by the script (CHMOD to 666)!';
-$hesklang['sm_icon'] = 'Icon';
-$hesklang['sm_icon_type'] = 'Icon Type';
 
 // ADDED OR MODIFIED IN Mods For HESK 2.0.0
 $hesklang['saved_ticket_tpl'] = 'Saved Templates';

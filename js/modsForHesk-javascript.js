@@ -30,10 +30,6 @@ var loadJquery = function()
             format: "yyyy-mm-dd"
         });
     });
-
-    $('.iconpicker-container').iconpicker({
-        iconset: 'fontawesome'
-    });
 };
 
 function selectAll(id) {
