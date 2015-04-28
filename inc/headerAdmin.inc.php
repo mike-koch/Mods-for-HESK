@@ -59,11 +59,14 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
     <?php } ?>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.fonticonpicker.min.css" type="text/css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.fonticonpicker.bootstrap.min.css" type="text/css">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
     <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
+    <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.fonticonpicker.min.js"></script>
 
     <?php
 	/* Prepare Javascript that browser should load on page load */
