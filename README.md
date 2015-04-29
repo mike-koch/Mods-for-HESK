@@ -29,7 +29,7 @@ You can download Mods for HESK via two ways:
 Visit [http://mods-for-hesk.mkochcs.com/download.php](http://mods-for-hesk.mkochcs.com/download.php) for installation instructions.
 
 ## Languages / Support
-Please visit http://developers.phpjunkyard.com/viewforum.php?f=19 for translation instructions and support
+Please visit http://developers.phpjunkyard.com/viewforum.php?f=19 for translation instructions and support.  
 Mods for HESK translations are available at http://mods-for-hesk.mkochcs.com.
 
 ## Browser Compatibility
@@ -39,7 +39,8 @@ This list may be incomplete. Please leave a note on the PHP Junkyard forums for 
  - **Internet Explorer 6/7:** *NOT* Compatible
  - **Internet Explorer 8:** *PARTIAL* Compatibility
  - **Internet Explorer 9+:** Compatible
-There are no intentions of making Mods for HESK compatible with Internet Explorer 6 or 7, or any browser that is 2 or more major revisions older than its latest version.
+ 
+_There are no intentions of making Mods for HESK compatible with Internet Explorer 6 or 7, or any browser that is 2 or more major revisions older than its latest version._
 
 ## Versioning
 Mods for HESK will be maintained under the Semantic Versioning guidelines as much as possible. Releases will be numbered with the following format:
