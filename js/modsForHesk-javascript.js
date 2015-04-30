@@ -30,11 +30,6 @@ var loadJquery = function()
             format: "yyyy-mm-dd"
         });
     });
-
-    //-- Activate jQuery iconpicker
-    $(function() {
-       $('[data-toggle="iconpicker"]').fontIconPicker();
-    });
 };
 
 function selectAll(id) {

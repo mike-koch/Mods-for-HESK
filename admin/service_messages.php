@@ -342,7 +342,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             //
                             ?>
                             <div class="col-md-10">
-                                <select class="form-control" name="icon" data-toggle="iconpicker"></select>
+                                <button name="icon" class="btn btn-default iconpicker-container" data-icon="<?php echo $icon; ?>"></button>
+                                <input type="checkbox" name="dont-use-icon"> Don't use icon
                             </div>
                         </div>
                         <div class="form-group">
