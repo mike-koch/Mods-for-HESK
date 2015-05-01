@@ -30,6 +30,10 @@ var loadJquery = function()
             format: "yyyy-mm-dd"
         });
     });
+
+    $('[data-toggle="iconpicker"]').iconpicker({
+        iconset: ['fontawesome', 'octicon']
+    });
 };
 
 function selectAll(id) {
