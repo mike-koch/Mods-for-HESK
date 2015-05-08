@@ -437,3 +437,13 @@ function execute221Scripts() {
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.2.1' WHERE `Key` = 'modsForHeskVersion'");
 }
 // END Version 2.2.1
+
+// BEGIN Version 2.3.0
+function execute230Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` ADD COLUMN `icon` VARCHAR(150)");
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.0' WHERE `Key` = 'modsForHeskVersion'");
+}
+// END Version 2.3.0

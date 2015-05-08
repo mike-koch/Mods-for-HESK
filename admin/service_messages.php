@@ -293,7 +293,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <div class="col-md-2">
                                 <div class="radio alert" style="box-shadow: none; padding: 5px; border-radius: 4px;">
                                     <label>
-                                        <input type="radio" name="style" value="0"
+                                        <input type="radio" name="style" value="0"  onclick="setIcon('')"
                                             <?php if (!isset($_SESSION['new_sm']['style']) || (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 0) ) {echo 'checked';} ?>>
                                         <?php echo $hesklang['sm_none']; ?>
                                     </label>
@@ -302,14 +302,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <div class="col-md-2">
                                 <div class="radio alert alert-success" style="padding: 5px;">
                                     <label style="margin-top: -5px">
-                                        <input type="radio" name="style" value="1"
+                                        <input type="radio" name="style" value="1" onclick="setIcon('fa fa-check-circle')"
                                             <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 1 ) {echo 'checked';} ?>>
                                         <?php echo $hesklang['sm_success']; ?>
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="radio alert alert-info" style="padding: 5px">
+                                <div class="radio alert alert-info" style="padding: 5px"  onclick="setIcon('fa fa-comment')">
                                     <label style="margin-top: -5px">
                                         <input type="radio" name="style" value="2"
                                             <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 2) {echo 'checked';} ?>>
@@ -318,7 +318,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="radio alert alert-warning" style="padding: 5px">
+                                <div class="radio alert alert-warning" style="padding: 5px" onclick="setIcon('fa fa-exclamation-triangle')">
                                     <label style="margin-top: -5px">
                                         <input type="radio" name="style" value="3"
                                             <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 3) {echo 'checked';} ?>>
@@ -327,7 +327,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="radio alert alert-danger" style="padding: 5px">
+                                <div class="radio alert alert-danger" style="padding: 5px" onclick="setIcon('fa fa-times-circle')">
                                     <label style="margin-top: -5px">
                                         <input type="radio" name="style" value="4"
                                             <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 4) {echo 'checked';} ?> >
@@ -339,10 +339,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group">
                             <label for="icon" class="col-md-2 control-label"><?php echo $hesklang['sm_icon']; ?></label>
                             <?php
-                            //
+                            $icon = '';
+                            if (isset($_SESSION['new_sm']['icon'])) { $icon = $_SESSION['new_sm']['icon']; }
                             ?>
                             <div class="col-md-10">
-                                <div name="icon" class="btn btn-default iconpicker-container" data-toggle="iconpicker" data-icon="<?php //echo $icon; ?>"></button>
+                                <p style="display:none" id="no-icon"><?php echo $hesklang['sm_no_icon']; ?></p>
+                                <p style="display:none" id="search-icon"><?php echo $hesklang['sm_search_icon']; ?></p>
+                                <p style="display:none" id="footer-icon"><?php echo $hesklang['sm_iconpicker_footer_label']; ?></p>
+                                <div name="icon" class="btn btn-default iconpicker-container" data-toggle="iconpicker" data-icon="<?php echo $icon; ?>"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -603,6 +607,7 @@ function new_sm()
 	}
 
     $type  = empty($_POST['type']) ? 0 : 1;
+    $icon = hesk_POST('icon');
     $title = hesk_input( hesk_POST('title') ) or $hesk_error_buffer[] = $hesklang['sm_e_title'];
 	$message = hesk_getHTML( hesk_POST('message') );
 
@@ -613,6 +618,7 @@ function new_sm()
 		'style' => $style,
 		'type' => $type,
 		'title' => $title,
+        'icon' => $icon,
 		'message' => hesk_input( hesk_POST('message') ),
 		);
 
@@ -636,6 +642,7 @@ function new_sm()
 		'style' => $style,
 		'type' => $type,
 		'title' => $title,
+        'icon' => $icon,
 		'message' => $message,
 		);
 
@@ -649,13 +656,14 @@ function new_sm()
 	$my_order = intval($row[0]) + 10;
 
     // Insert service message into database
-	hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` (`author`,`title`,`message`,`style`,`type`,`order`) VALUES (
+	hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` (`author`,`title`,`message`,`style`,`type`,`order`, `icon`) VALUES (
     '".intval($_SESSION['id'])."',
     '".hesk_dbEscape($title)."',
     '".hesk_dbEscape($message)."',
     '{$style}',
     '{$type}',
-    '{$my_order}'
+    '{$my_order}',
+    '{$icon}'
     )");
 
     $_SESSION['smord'] = hesk_dbInsertID();
