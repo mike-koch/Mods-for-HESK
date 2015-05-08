@@ -1054,7 +1054,7 @@ function print_start()
 </ol>
     <?php
     // Service messages
-    $res = hesk_dbQuery('SELECT `title`, `message`, `style` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` WHERE `type`='0' ORDER BY `order` ASC");
+    $res = hesk_dbQuery('SELECT `title`, `message`, `style`, `icon` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` WHERE `type`='0' ORDER BY `order` ASC");
     if (hesk_dbNumRows($res) > 0)
     {
     ?>

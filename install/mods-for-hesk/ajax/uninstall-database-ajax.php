@@ -29,6 +29,8 @@ if ($task == 'status-change') {
     removePendingVerificationEmailsTable();
 } elseif ($task == 'pending-verification-tickets-table') {
     removeTicketsPendingVerificationTable();
+} elseif ($task == 'service-message-icon') {
+    removeServiceMessageCustomIcon();
 } elseif ($task == 'miscellaneous') {
     executeMiscellaneousSql();
 } else {

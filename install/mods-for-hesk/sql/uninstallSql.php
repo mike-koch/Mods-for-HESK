@@ -129,6 +129,13 @@ function removeTicketsPendingVerificationTable() {
     executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets`");
 }
 
+function removeServiceMessageCustomIcon() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` DROP COLUMN `icon`");
+}
+
 function executeMiscellaneousSql() {
     global $hesk_settings;
 

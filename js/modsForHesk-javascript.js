@@ -1,4 +1,4 @@
-//-- Activate anything Hesk UI needs, such as tooltips.
+//-- Activate anything Mods for HESK needs, such as tooltips.
 var loadJquery = function()
 {
     //-- Activate tooltips
@@ -25,11 +25,24 @@ var loadJquery = function()
             todayBtn: "linked",
             clearBtn: true,
             autoclose: true,
+            autoclose: true,
             todayHighlight: true,
             format: "yyyy-mm-dd"
         });
     });
+
+    $('[data-toggle="iconpicker"]').iconpicker({
+        iconset: ['fontawesome', 'octicon'],
+        selectedClass: "btn-warning",
+        labelNoIcon: $('#no-icon').text(),
+        searchText: $('#search-icon').text(),
+        labelFooter: $('#footer-icon').text()
+    });
 };
+
+var setIcon = function(icon) {
+    $('[data-toggle="iconpicker"]').iconpicker('setIcon', icon);
+}
 
 function selectAll(id) {
     $('#' + id + ' option').prop('selected', true);

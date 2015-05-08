@@ -21,6 +21,13 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.3.0
+$hesklang['sm_icon'] = 'Icon';
+$hesklang['sm_icon_type'] = 'Icon Type';
+$hesklang['sm_no_icon'] = 'No Icon';
+$hesklang['sm_search_icon'] = 'Search Icon';
+$hesklang['sm_iconpicker_footer_label'] = '{0} - {1} of {2}'; // {0}: lower bound of page, {1}: upper bound of page, {2}: total number of icons
+
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
 $hesklang['latart_no_colon']='Latest Knowledgebase Articles'; // same as $hesklang['latart'] but without a colon (:)
