@@ -66,7 +66,8 @@
         search: true,
         searchText: 'Search icon',
         selectedClass: 'btn-warning',
-        unselectedClass: 'btn-default'
+        unselectedClass: 'btn-default',
+        resetButton: true
     };
 
     // ICONPICKER PRIVATE METHODS
@@ -240,7 +241,7 @@
             '   </td>',
             '</tr>'
         ];
-        op.table.find('tfoot').empty().append(icons_count.join(''));
+        op.table.find('tfoot').append(icons_count.join(''));
     };
 
     Iconpicker.prototype.updateLabels = function (page) {
@@ -287,6 +288,7 @@
         else {
             this.updatePagesCount();
             this.updateSearch();
+            this.addResetButton();
             this.updateIconsCount();
         }
     };
@@ -309,6 +311,24 @@
         }
         op.table.find('thead').append(search);
     };
+    
+    Iconpicker.prototype.addResetButton = function () {
+    	var op = this.options;
+    	var resetButton = [
+    		'<tr>',
+    			'<td colspan="' + op.cols + '">',
+    				'<button class="btn btn-danger" style="width: ' + op.cols * 39 + 'px;"><span class="glyphicon glyphicon-ban-circle"></span> Reset</button>',
+    			'</td>',
+    		'</tr>'
+    	];
+    	resetButton = $(resetButton.join(''));
+    	if (op.resetButton === true) {
+    		resetButton.show();
+    	} else {
+    		resetButton.hide();
+    	}
+    	op.table.find('tfoot').empty().append(resetButton);
+    }
 
     // ICONPICKER PUBLIC METHODS
     // ==============================    
