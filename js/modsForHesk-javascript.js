@@ -32,7 +32,8 @@ var loadJquery = function()
     });
 
     $('[data-toggle="iconpicker"]').iconpicker({
-        iconset: ['fontawesome', 'octicon']
+        iconset: ['fontawesome', 'octicon'],
+        selectedClass: "btn-success"
     });
 };
 
