@@ -68,7 +68,8 @@
         selectedClass: 'btn-warning',
         unselectedClass: 'btn-default',
         resetButton: true,
-		noIconSelectedClass: 'glyphicon glyphicon-ban-circle'
+		noIconSelectedClass: 'glyphicon glyphicon-ban-circle',
+        labelNoIcon: 'No Icon'
     };
 
     // ICONPICKER PRIVATE METHODS
@@ -329,7 +330,7 @@
     	var resetButton = [
     		'<tr>',
     			'<td colspan="' + op.cols + '">',
-    				'<button class="btn btn-danger btn-icon" style="width: ' + op.cols * 39 + 'px;" value=""><span class="glyphicon glyphicon-ban-circle"></span> No Icon</button>',
+    				'<button class="btn btn-danger btn-icon" style="width: ' + op.cols * 39 + 'px;" value=""><span class="glyphicon glyphicon-ban-circle"></span> ' + op.labelNoIcon + '</button>',
     			'</td>',
     		'</tr>'
     	];
