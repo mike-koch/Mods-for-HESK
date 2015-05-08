@@ -67,7 +67,8 @@
         searchText: 'Search icon',
         selectedClass: 'btn-warning',
         unselectedClass: 'btn-default',
-        resetButton: true
+        resetButton: true,
+		noIconSelectedClass: 'glyphicon glyphicon-ban-circle'
     };
 
     // ICONPICKER PRIVATE METHODS
@@ -133,6 +134,16 @@
     Iconpicker.prototype.select = function (icon) {
         var op = this.options;
         var el = this.$element;
+		if (icon === '') {
+			op.icon = '';
+			el.find('input').val('');
+			el.find('i').attr('class', op.noIconSelectedClass);
+			el.find('i').css('color', '#FF0000');
+			el.trigger({type:"change", icon: ''});
+			op.table.find('button.' + op.selectedClass).removeClass(op.selectedClass);
+			return;
+		}
+		
         for (var i = 0; i < op.icons.length; i++) {
             if (this.matchEx(op.icons[i], icon)) {
                 icon = op.icons[i];
@@ -155,6 +166,7 @@
 
             el.find('input').val(icoStr);
             el.find('i').attr('class', '').addClass(icon.iconClass).addClass(icon.iconClassFix + icon.icon);
+			el.find('i').css('color', '#000000');
             el.trigger({ type: "change", icon: icoStr });
             op.table.find('button.' + op.selectedClass).removeClass(op.selectedClass);
         }
@@ -220,7 +232,7 @@
                 if (pos < op.icons.length) {
                     var ico = op.icons[pos];
                     var v = ico.iconClassFix + ico.icon;
-                    btn.val(v).attr('title', v).append('<i class="' + ico.iconClass + ' ' + v + '"></i>').data('icon-picker-icon', ico).show();
+                    btn.val(v).attr('title', v).append('<i class="' + ico.iconClass + ' ' + v + '" style="text-shadow: none"></i>').data('icon-picker-icon', ico).show();
                     if (this.matchEx(ico, op.icon)) {
                         console.log('matched');
                         btn.addClass(op.selectedClass).addClass('btn-icon-selected');
@@ -317,7 +329,7 @@
     	var resetButton = [
     		'<tr>',
     			'<td colspan="' + op.cols + '">',
-    				'<button class="btn btn-danger" style="width: ' + op.cols * 39 + 'px;"><span class="glyphicon glyphicon-ban-circle"></span> Reset</button>',
+    				'<button class="btn btn-danger btn-icon" style="width: ' + op.cols * 39 + 'px;" value=""><span class="glyphicon glyphicon-ban-circle"></span> Reset</button>',
     			'</td>',
     		'</tr>'
     	];
