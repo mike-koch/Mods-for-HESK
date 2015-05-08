@@ -329,7 +329,7 @@
     	var resetButton = [
     		'<tr>',
     			'<td colspan="' + op.cols + '">',
-    				'<button class="btn btn-danger btn-icon" style="width: ' + op.cols * 39 + 'px;" value=""><span class="glyphicon glyphicon-ban-circle"></span> Reset</button>',
+    				'<button class="btn btn-danger btn-icon" style="width: ' + op.cols * 39 + 'px;" value=""><span class="glyphicon glyphicon-ban-circle"></span> No Icon</button>',
     			'</td>',
     		'</tr>'
     	];
