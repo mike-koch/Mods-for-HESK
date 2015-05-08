@@ -196,24 +196,20 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                 while ($sm=hesk_dbFetchAssoc($res))
                                 {
-                                    $faIcon = "";
+                                    $faIcon = $sm['icon'];
                                     switch ($sm['style'])
                                     {
                                         case 1:
                                             $sm_style = "alert alert-success";
-                                            $faIcon = "fa fa-check-circle";
                                             break;
                                         case 2:
                                             $sm_style = "alert alert-info";
-                                            $faIcon = "fa fa-comment";
                                             break;
                                         case 3:
                                             $sm_style = "alert alert-warning";
-                                            $faIcon = "fa fa-exclamation-triangle";
                                             break;
                                         case 4:
                                             $sm_style = "alert alert-danger";
-                                            $faIcon = "fa fa-times-circle";
                                             break;
                                         default:
                                             $sm_style = "none";
@@ -434,6 +430,7 @@ function save_sm()
 	}
 
     $type  = empty($_POST['type']) ? 0 : 1;
+    $icon = hesk_POST('icon');
     $title = hesk_input( hesk_POST('title') ) or $hesk_error_buffer[] = $hesklang['sm_e_title'];
 	$message = hesk_getHTML( hesk_POST('message') );
 
@@ -448,6 +445,7 @@ function save_sm()
 		'style' => $style,
 		'type' => $type,
 		'title' => $title,
+        'icon' => $icon,
 		'message' => hesk_input( hesk_POST('message') ),
 		);
 
@@ -475,6 +473,7 @@ function save_sm()
 		'type' => $type,
 		'title' => $title,
 		'message' => $message,
+        'icon' => $icon,
 		);
 
 		header('Location: service_messages.php');
@@ -487,7 +486,8 @@ function save_sm()
 	`title` = '".hesk_dbEscape($title)."',
 	`message` = '".hesk_dbEscape($message)."',
 	`style` = '{$style}',
-	`type` = '{$type}'
+	`type` = '{$type}',
+	`icon` = '{$icon}'
 	WHERE `id`={$id} LIMIT 1");
 
     $_SESSION['smord'] = $id;
