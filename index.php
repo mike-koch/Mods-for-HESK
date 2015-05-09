@@ -1019,6 +1019,7 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 
                 </form>
             </div>
+		</div>
                  <!-- END FORM -->
 
 
@@ -1118,10 +1119,10 @@ function print_start()
                 <a href="index.php?a=add">
                     <div class="block">
                         <div class="upper">
-                            <img src="img/newTicket.png" alt="<?php echo $hesklang['sub_support']; ?>" />
+                            <img src="img/newTicket.png" alt="<?php echo $hesklang['sub_ticket']; ?>" />
                         </div>
                         <div class="lower">
-                            <p><?php echo $hesklang['sub_support']; ?></p>
+                            <p><?php echo $hesklang['sub_ticket']; ?></p>
                         </div>
                     </div>
                 </a>

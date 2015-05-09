@@ -1155,8 +1155,8 @@ if ( defined('HESK_DEMO') )
                         $off = $hesk_settings['kb_enable'] ? '' : 'checked="checked"';
                         $only = $hesk_settings['kb_enable'] == 2 ? 'checked="checked"' : '';
                         echo '
-                        <div class="radio"><label><input type="radio" name="s_kb_enable" value="1" '.$on.' /> '.$hesklang['enable'].'</label></div>&nbsp;&nbsp;&nbsp;
-                        <div class="radio"><label><input type="radio" name="s_kb_enable" value="2" '.$only.' /> '.$hesklang['ekb_o'].'</label></div>&nbsp;&nbsp;&nbsp;
+                        <div class="radio"><label><input type="radio" name="s_kb_enable" value="1" '.$on.' /> '.$hesklang['ekb_y'].'</label></div><br>
+                        <div class="radio"><label><input type="radio" name="s_kb_enable" value="2" '.$only.' /> '.$hesklang['ekb_o'].'</label></div><br>
                         <div class="radio"><label><input type="radio" name="s_kb_enable" value="0" '.$off.' /> '.$hesklang['ekb_n'].'</label></div>';
                         ?>
                     </div>
