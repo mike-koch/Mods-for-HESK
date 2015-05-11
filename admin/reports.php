@@ -339,9 +339,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 hesk_ticketsByDay();
         }
 
-        require_once(HESK_PATH . 'inc/footer.inc.php');
-        exit();
-
 
         /*** START FUNCTIONS ***/
 
@@ -950,3 +947,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         ?>         
     </div>     
 </div>
+<?php
+
+require_once(HESK_PATH . 'inc/footer.inc.php');
+exit();

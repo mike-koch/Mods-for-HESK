@@ -97,7 +97,6 @@ function hesk_kbTopArticles($how_many, $index = 1)
         <table border="0" width="100%" class="table table-striped table-fixed">
             <thead>
             <tr>
-                <th class="col-xs-8 col-sm-9">&nbsp;</th>
                 <?php
                 /* Get list of articles from the database */
                 $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`views` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
@@ -108,6 +107,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
                 /* Show number of views? */
                 if ($hesk_settings['kb_views'] && hesk_dbNumRows($res) != 0)
                 {
+                    echo '<th class="col-xs-8 col-sm-9">&nbsp;</th>';
                     echo '<th class="col-xs-4 col-sm-3"><i>' . $hesklang['views'] . '</i></th>';
                 }
                 ?>
@@ -129,7 +129,6 @@ function hesk_kbTopArticles($how_many, $index = 1)
                     $colspan = 'colspan="2"';
                 }
                 echo '<tr><td '.$colspan.'><i>'.$hesklang['noa'].'</i></td></tr>';
-                return true;
             }
 
             /* We have some results, print them out */
@@ -155,6 +154,8 @@ function hesk_kbTopArticles($how_many, $index = 1)
         </table>
     </div>
     <?php
+
+    return true;
 } // END hesk_kbTopArticles()
 
 
@@ -239,7 +240,6 @@ function hesk_kbLatestArticles($how_many, $index = 1)
                     $colspan = 'colspan="2"';
                 }
                 echo '<td '.$colspan.'><i>'.$hesklang['noa'].'</i></td>';
-                return true;
             }
 
             /* We have some results, print them out */
@@ -261,6 +261,8 @@ function hesk_kbLatestArticles($how_many, $index = 1)
     </div>
     
     <?php
+
+    return true;
 } // END hesk_kbLatestArticles()
 
 

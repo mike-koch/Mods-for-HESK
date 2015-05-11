@@ -177,7 +177,10 @@ show_new_form();
 /* Clean unneeded session variables */
 hesk_cleanSessionVars('hide');
 hesk_cleanSessionVars('mail');
-
+?> 
+	</div>
+</div> 
+<?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
 
