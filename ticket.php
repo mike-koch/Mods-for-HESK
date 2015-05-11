@@ -265,7 +265,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 </div>
                 <div class="col-md-2 col-md-offset-4 col-sm-12 close-ticket">
                     <p><?php
-                        $statusRS = hesk_dbQuery('SELECT `Closable` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.intval($ticket['status']));
+                        $statusRS = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.intval($ticket['status']));
                         $status = hesk_dbFetchAssoc($statusRS);
                         $isClosable = $status['Closable'] == 'yes' || $status['Closable'] == 'conly';
                         $random=rand(10000,99999);
@@ -299,7 +299,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                     $repliesColumnWidth = 3;
                 }
                 echo '<div class="col-md-3 col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>';
-                    $ticketStatusKey = $ticket['statusKey'];
+                    $ticketStatusKey = $status['ShortNameContentKey'];
                      echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatusKey].'</p>';
                 echo '</div>';
                 echo '<div class="col-md-3 col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['last_replier'].'</p>
