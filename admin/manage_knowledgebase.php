@@ -151,7 +151,7 @@ $kb_cat[0]['name'] = $hesklang['kb_text'];
 
 require(HESK_PATH . 'inc/treemenu/TreeMenu.php');
 $icon         = 'folder.gif';
-$expandedIcon = 'fa-folder-open style="color:orange;font-size:17px';
+$expandedIcon = 'fa-folder-open" style="font-size:17px';
 $menu		  = new HTML_TreeMenu();
 
 $thislevel = array('0');
@@ -1252,7 +1252,7 @@ function edit_article()
 
 	require(HESK_PATH . 'inc/treemenu/TreeMenu.php');
 	$icon         = HESK_PATH . 'img/folder.gif';
-	$expandedIcon = 'fa-folder-open style="color:orange;font-size:17px';
+	$expandedIcon = 'fa-folder-open" style="font-size:17px';
     $menu		  = new HTML_TreeMenu();
 
 	$thislevel = array('0');
