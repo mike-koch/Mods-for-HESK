@@ -1596,7 +1596,67 @@ function manage_category() {
     <?php
 	$result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$catid}' ORDER BY `sticky` DESC, `art_order` ASC");
     $num    = hesk_dbNumRows($result);
-
+    $secondCol = $catid == 1 ? 'col-md-12' : 'col-md-8';
+    $secondStyle = $catid == 1 ? 'margin-left: 25px' : 'padding-right: 40px';
+    ?>
+    <div class="row">
+        <?php if ($catid != 1): ?>
+        <div class="col-md-4">
+            <div style="margin-left:25px">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><?php echo $hesklang['catset']; ?></div>
+                    <div class="panel-body">
+                        <form action="manage_knowledgebase.php" method="post" role="form" name="form1" onsubmit="Javascript:return hesk_deleteIfSelected('dodelete','<?php echo hesk_makeJsString($hesklang['kb_delcat']); ?>')">
+                            <div class="form-group">
+                                <label for="title" class="control-label"><?php echo $hesklang['kb_cat_title']; ?></label>
+                                <input type="text" class="form-control" name="title" size="70" maxlength="255" value="<?php echo $this_cat['name']; ?>" />
+                            </div>
+                            <div class="form-group">
+                                <label for="parent" class="control-label"><?php echo $hesklang['kb_cat_parent']; ?></label>
+                                <select name="parent" class="form-control"><?php $listBox->printMenu();  ?></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="type" class="control-label"><?php echo $hesklang['kb_type']; ?></label>
+                                <div class="radio">
+                                    <label><input type="radio" name="type" value="0" <?php if (!$this_cat['type']) {echo 'checked="checked"';} ?> /> <b><i><?php echo $hesklang['kb_published']; ?></i></b></label>
+                                    <p class="form-static-content"><?php echo $hesklang['kb_cat_published']; ?></p>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="type" value="1" <?php if ($this_cat['type']) {echo 'checked="checked"';} ?> /> <b><i><?php echo $hesklang['kb_private']; ?></i></b></label>
+                                    <p class="form-static-content"><?php echo $hesklang['kb_cat_private']; ?></p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dodelete" class="control-label"><?php echo $hesklang['opt']; ?></label>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="dodelete" id="dodelete" value="Y" onclick="Javascript:hesk_toggleLayerDisplay('deleteoptions')" /><?php echo $hesklang['delcat']; ?></label>
+                                </div>
+                            </div>
+                            <div id="deleteoptions" style="display: none;">
+                                <div class="form-group">
+                                    <div class="radio">
+                                        <label><input type="radio" name="movearticles" value="Y" checked="checked" /> <?php echo $hesklang['move1']; ?></label>
+                                    </div>
+                                    <div class="radio">
+                                        <label><input type="radio" name="movearticles" value="N" /> <?php echo $hesklang['move2']; ?></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="text-align:center">
+                                <input type="hidden" name="a" value="edit_category" />
+                                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                                <input type="hidden" name="catid" value="<?php echo $catid; ?>" />
+                                <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default" />
+                                <a class="btn btn-default" href="manage_knowledgebase.php?a=add_category&amp;parent='.$catid.'"><?php echo $hesklang['kb_i_cat2']; ?></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+        <div class="<?php echo $secondCol; ?>" style="<?php echo $secondStyle; ?>">
+    <?php
     if ($num == 0)
     {
     	echo '<p>'.$hesklang['kb_no_art'].' &nbsp; <a href="manage_knowledgebase.php?a=add_article&amp;catid='.$catid.'"><i class="fa fa-plus" style="color: green;font-size:16px"></i></a> <a href="manage_knowledgebase.php?a=add_article&amp;catid='.$catid.'"><b>'.$hesklang['kb_i_art2'].'</b></a></p>';
@@ -1610,63 +1670,6 @@ function manage_category() {
 		$num_nosticky = $num - $num_sticky;
 
     	?>
-
-
-        <div class="row">
-            <div class="col-md-4">
-                <div style="margin-left:25px">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><?php echo $hesklang['catset']; ?></div>
-                        <div class="panel-body">
-                            <form action="manage_knowledgebase.php" method="post" role="form" name="form1" onsubmit="Javascript:return hesk_deleteIfSelected('dodelete','<?php echo hesk_makeJsString($hesklang['kb_delcat']); ?>')">
-                                <div class="form-group">
-                                    <label for="title" class="control-label"><?php echo $hesklang['kb_cat_title']; ?></label>
-                                    <input type="text" class="form-control" name="title" size="70" maxlength="255" value="<?php echo $this_cat['name']; ?>" />
-                                </div>
-                                <div class="form-group">
-                                    <label for="parent" class="control-label"><?php echo $hesklang['kb_cat_parent']; ?></label>
-                                    <select name="parent" class="form-control"><?php $listBox->printMenu();  ?></select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="type" class="control-label"><?php echo $hesklang['kb_type']; ?></label>
-                                    <div class="radio">
-                                        <label><input type="radio" name="type" value="0" <?php if (!$this_cat['type']) {echo 'checked="checked"';} ?> /> <b><i><?php echo $hesklang['kb_published']; ?></i></b></label>
-                                        <p class="form-static-content"><?php echo $hesklang['kb_cat_published']; ?></p>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="type" value="1" <?php if ($this_cat['type']) {echo 'checked="checked"';} ?> /> <b><i><?php echo $hesklang['kb_private']; ?></i></b></label>
-                                        <p class="form-static-content"><?php echo $hesklang['kb_cat_private']; ?></p>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="dodelete" class="control-label"><?php echo $hesklang['opt']; ?></label>
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" name="dodelete" id="dodelete" value="Y" onclick="Javascript:hesk_toggleLayerDisplay('deleteoptions')" /><?php echo $hesklang['delcat']; ?></label>
-                                    </div>
-                                </div>
-                                <div id="deleteoptions" style="display: none;">
-                                    <div class="form-group">
-                                        <div class="radio">
-                                            <label><input type="radio" name="movearticles" value="Y" checked="checked" /> <?php echo $hesklang['move1']; ?></label>
-                                        </div>
-                                        <div class="radio">
-                                            <label><input type="radio" name="movearticles" value="N" /> <?php echo $hesklang['move2']; ?></label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group" style="text-align:center">
-                                    <input type="hidden" name="a" value="edit_category" />
-                                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                                    <input type="hidden" name="catid" value="<?php echo $catid; ?>" />
-                                    <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default" />
-                                    <a class="btn btn-default" href="manage_knowledgebase.php?a=add_category&amp;parent='.$catid.'"><?php echo $hesklang['kb_i_cat2']; ?></a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-8" style="padding-right:40px">
                 <h3><?php echo $hesklang['kb_cat_art']; ?> <small style="float:right"><?php echo '<a href="manage_knowledgebase.php?a=add_article&amp;catid='.$catid.'"><i class="fa fa-plus"></i></a> <a href="manage_knowledgebase.php?a=add_article&amp;catid='.$catid.'"><b>'.$hesklang['kb_i_art2'].'</b></a>'; ?></small></h3>
                 <div class="footerWithBorder blankSpace"></div>
 
@@ -1793,35 +1796,15 @@ function manage_category() {
                 } // End while
                 ?>
                 </table>
-            </div>
-        </div>
 
 		<?php
-    }
+    } ?>
 
-        } // END if hide article list
 
-        /* Manage Category (except the default one) */
-		if ($catid != 1)
-		{
-        ?>
+    </div>
+    </div>
 
-	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-		<td>
-
-		</td>
-		<td class="roundcornersright">&nbsp;</td>
-		</tr>
-		<tr>
-		<td><img src="../img/roundcornerslb.jpg" width="7" height="7" alt="" /></td>
-		<td class="roundcornersbottom"></td>
-		<td width="7" height="7"><img src="../img/roundcornersrb.jpg" width="7" height="7" alt="" /></td>
-		</tr>
-	</table>
-
-	<?php
-    } // END if $catid != 1
+     <?php   } // END if hide article list
 
     echo '&nbsp;<br />&nbsp;';
 
