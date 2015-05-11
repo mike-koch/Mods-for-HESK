@@ -1002,6 +1002,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>   
                 </div>       
             </form>
+        </div>
 
 <?php
 
