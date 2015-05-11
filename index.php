@@ -1092,7 +1092,9 @@ function print_start()
                             <input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/>
                         </div>
                         <div class="checkbox">
-                            <input type="checkbox" name="r" value="Y" <?php echo $do_remember; ?> /> <?php echo $hesklang['rem_email']; ?></label>
+                            <label for="r">
+                                <input type="checkbox" name="r" value="Y" /> <?php echo $hesklang['rem_email']; ?>
+                            </label>
                         </div>
                         <?php
                         }
