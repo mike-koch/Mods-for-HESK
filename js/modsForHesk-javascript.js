@@ -92,4 +92,12 @@ function disableIfEmpty(sourceId, destinationId) {
     }
 }
 
+function changeText(id, checkedValue, uncheckedValue, object) {
+    if (object.checked) {
+        $('#'+id).text(checkedValue);
+    } else {
+        $('#'+id).text(uncheckedValue);
+    }
+}
+
 jQuery(document).ready(loadJquery);
