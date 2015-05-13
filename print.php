@@ -60,7 +60,7 @@ if ( empty($_SESSION['id']) )
 }
 
 /* Get ticket info */
-$res = hesk_dbQuery("SELECT `t1`.* , `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`TicketViewContentKey` AS `statusKey`, `t2`.name AS `repliername`
+$res = hesk_dbQuery("SELECT `t1`.* , `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`Key` AS `statusKey`, `t2`.name AS `repliername`
 					FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1` LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS `t2` ON `t1`.`replierid` = `t2`.`id`
 					INNER JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` AS `ticketStatus` ON `t1`.`status` = `ticketStatus`.`ID`
 					WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");

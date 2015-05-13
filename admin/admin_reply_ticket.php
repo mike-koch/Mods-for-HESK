@@ -258,7 +258,7 @@ elseif (isset($_POST['submit_as_status']))
     if ($ticket['status'] != $new_status)
     {
         // Does this status close the ticket?
-        $newStatusRs = hesk_dbQuery('SELECT `IsClosed`, `ShortNameContentKey` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.hesk_dbEscape($new_status));
+        $newStatusRs = hesk_dbQuery('SELECT `IsClosed`, `Key` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.hesk_dbEscape($new_status));
         $newStatus = hesk_dbFetchAssoc($newStatusRs);
 
         if ($newStatus['IsClosed'])
@@ -274,7 +274,7 @@ elseif (isset($_POST['submit_as_status']))
         } else
         {
             // Ticket isn't being closed, just add the history to the sql query
-            $revision   = sprintf($hesklang['thist9'],hesk_date(),$hesklang[$newStatus['ShortNameContentKey']],$_SESSION['name'].' ('.$_SESSION['user'].')');
+            $revision   = sprintf($hesklang['thist9'],hesk_date(),$hesklang[$newStatus['Key']],$_SESSION['name'].' ('.$_SESSION['user'].')');
             $sql_status = " , `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') ";
         }
     }

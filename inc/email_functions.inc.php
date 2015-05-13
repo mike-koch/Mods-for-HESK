@@ -608,9 +608,9 @@ function hesk_getEmailSubject($eml_file, $ticket='', $is_ticket=1, $strip=0)
 	}
 
     /* Set status */
-    $statusRs = hesk_dbQuery("SELECT `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".$ticket['status']);
+    $statusRs = hesk_dbQuery("SELECT `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".$ticket['status']);
     $row = hesk_dbFetchAssoc($statusRs);
-    $ticket['status'] = $hesklang[$row['ShortNameContentKey']];
+    $ticket['status'] = $hesklang[$row['Key']];
 
 	/* Replace all special tags */
 	$msg = str_replace('%%SUBJECT%%',	$ticket['subject'],		$msg);
@@ -778,9 +778,9 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     $ticket['owner'] = hesk_msgToPlain( hesk_getOwnerName($ticket['owner']), 1);
 
     /* Set status */
-    $statusRs = hesk_dbQuery("SELECT `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".$ticket['status']);
+    $statusRs = hesk_dbQuery("SELECT `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".$ticket['status']);
     $row = hesk_dbFetchAssoc($statusRs);
-    $ticket['status'] = $hesklang[$row['ShortNameContentKey']];
+    $ticket['status'] = $hesklang[$row['Key']];
 
     /* Replace all special tags */
     $msg = str_replace('%%NAME%%',		$ticket['name']				,$msg);

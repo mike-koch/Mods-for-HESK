@@ -242,12 +242,12 @@ $fid = 1;
 require(HESK_PATH . 'inc/assignment_search.inc.php');
 
 // --> TICKET STATUS
-$possibleStatusSql = 'SELECT `ID`, `ShortNameContentKey` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
+$possibleStatusSql = 'SELECT `ID`, `Key` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
 $possibleStatusRS = hesk_dbQuery($possibleStatusSql);
 $possible_status = array();
 while ($row = $possibleStatusRS->fetch_assoc())
 {
-    $possible_status[$row['ID']] = $hesklang[$row['ShortNameContentKey']];
+    $possible_status[$row['ID']] = $hesklang[$row['Key']];
 }
 
 $status = $possible_status;
@@ -505,9 +505,9 @@ if (isset($_GET['w']))
     $result = hesk_dbQuery($sql);
 	while ($ticket=hesk_dbFetchAssoc($result))
 	{
-        $statusContentKeySql = 'SELECT `ShortNameContentKey` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.$ticket['status'];
+        $statusContentKeySql = 'SELECT `Key` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.$ticket['status'];
         $statusContentKeyRow = hesk_dbQuery($statusContentKeySql)->fetch_assoc();
-        $ticket['status'] = $hesklang[$statusContentKeyRow['ShortNameContentKey']];
+        $ticket['status'] = $hesklang[$statusContentKeyRow['Key']];
 
 		switch ($ticket['priority'])
 		{
@@ -779,14 +779,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <label for="status" class="control-label col-sm-2"><?php echo $hesklang['status']; ?>:</label>
                 <div class="col-sm-10">
                     <?php
-                        $getStatusCheckboxSql = 'SELECT `ID`, `ShortNameContentKey`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
+                        $getStatusCheckboxSql = 'SELECT `ID`, `Key`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
                         $getStatusCheckboxRS = hesk_dbQuery($getStatusCheckboxSql);
                         while ($row = $getStatusCheckboxRS->fetch_assoc())
                         {
                             ?>
                             <div class="col-xs-4">
                                 <div class="checkbox">
-                                    <label><input type="checkbox" name="s<?php echo $row['ID']; ?>" value="1" <?php if (isset($status[$row['ID']])) {echo 'checked="checked"';} ?> /> <span style="color: <?php echo $row['TextColor']; ?>"><?php echo $hesklang[$row['ShortNameContentKey']]; ?></span></label>
+                                    <label><input type="checkbox" name="s<?php echo $row['ID']; ?>" value="1" <?php if (isset($status[$row['ID']])) {echo 'checked="checked"';} ?> /> <span style="color: <?php echo $row['TextColor']; ?>"><?php echo $hesklang[$row['Key']]; ?></span></label>
                                 </div>
                             </div>
                             <?php

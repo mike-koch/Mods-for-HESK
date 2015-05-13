@@ -57,6 +57,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
     <?php } else { ?>
     <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } ?>
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
 	<script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
@@ -64,6 +65,9 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
 	<script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
     <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-fontawesome-4.3.0.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-iconpicker.js"></script>
 
     <?php
 

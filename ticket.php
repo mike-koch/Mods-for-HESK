@@ -106,7 +106,7 @@ hesk_dbConnect();
 hesk_limitBfAttempts();
 
 /* Get ticket info */
-$res = hesk_dbQuery( "SELECT `t1`.* , `t2`.name AS `repliername`, `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`TicketViewContentKey` AS `statusKey`  FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1` INNER JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` AS `ticketStatus` ON `t1`.`status` = `ticketStatus`.`ID` LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS `t2` ON `t1`.`replierid` = `t2`.`id` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
+$res = hesk_dbQuery( "SELECT `t1`.* , `t2`.name AS `repliername`, `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`Key` AS `statusKey`  FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` AS `t1` INNER JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` AS `ticketStatus` ON `t1`.`status` = `ticketStatus`.`ID` LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."users` AS `t2` ON `t1`.`replierid` = `t2`.`id` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1");
 
 /* Ticket found? */
 if (hesk_dbNumRows($res) != 1)
@@ -299,7 +299,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                     $repliesColumnWidth = 3;
                 }
                 echo '<div class="col-md-3 col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>';
-                    $ticketStatusKey = $status['ShortNameContentKey'];
+                    $ticketStatusKey = $status['Key'];
                      echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatusKey].'</p>';
                 echo '</div>';
                 echo '<div class="col-md-3 col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['last_replier'].'</p>

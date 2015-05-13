@@ -13,7 +13,7 @@ hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
 
-hesk_checkPermission('can_manage_email_templates');
+hesk_checkPermission('can_man_email_tpl');
 
 define('WYSIWYG',1);
 
@@ -91,6 +91,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <li role="presentation" class="active">
             <a href="#"><?php echo $hesklang['email_templates']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['email_templates']; ?>" data-content="<?php echo $hesklang['email_templates_intro']; ?>"></i></a>
         </li>
+        <?php
+        if (hesk_checkPermission('can_man_ticket_statuses',0))
+        {
+            echo '
+            <li role="presentation">
+                <a title="'.$hesklang['statuses'].'" href="manage_statuses.php">'.$hesklang['statuses'].'</a>
+            </li>
+            ';
+        }
+        ?>
     </ul>
     <div class="tab-content summaryList tabPadding">
         <?php if ($showEditPanel): ?>
@@ -264,7 +274,7 @@ function save() {
 
     $success = file_put_contents($filePath, $_POST['text']);
     if ($success === false) {
-        hesk_process_messages($hesklang[''], 'manage_email_templates.php');
+        hesk_process_messages($hesklang['email_template_not_saved'], 'manage_email_templates.php');
     } else {
         $message = sprintf($hesklang['email_template_saved'], $_POST['template']);
         hesk_process_messages($message,'manage_email_templates.php','SUCCESS');

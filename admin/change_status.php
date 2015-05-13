@@ -56,13 +56,13 @@ hesk_token_check();
 $trackingID = hesk_cleanID() or die($hesklang['int_error'].': '.$hesklang['no_trackID']);
 
 /* Valid statuses */
-$statusSql = "SELECT `ID`, `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`";
+$statusSql = "SELECT `ID`, `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`";
 $status_options = array();
 $results = hesk_dbQuery($statusSql);
 
 while ($row = $results->fetch_assoc())
 {
-    $status_options[$row['ID']] = $hesklang[$row['ShortNameContentKey']];
+    $status_options[$row['ID']] = $hesklang[$row['Key']];
 }
 
 /* New status */
