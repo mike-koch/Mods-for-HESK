@@ -1482,9 +1482,34 @@ if ( defined('HESK_DEMO') )
                         }
 
                         echo '
-                        <div class="radio"><label><input type="radio" name="s_smtp" value="0" onclick="hesk_attach_disable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'));toggleContainers([],[\'smtp_settings\',\'mailgun_settings\']);" '.$off.' /> '.$hesklang['phpmail'].'</label></div>
-                        <div class="radio"><label><input type="radio" name="s_smtp" value="1" onclick="hesk_attach_enable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'));toggleContainers([\'smtp_settings\'],[\'mailgun_settings\']);" '.$on.' /> '.$hesklang['smtp'].'</label></div>
-                        <div class="radio"><label><input type="radio" name="s_smtp" value="2" onclick="toggleContainers([\'mailgun_settings\'],[\'smtp_settings\']);" '.$mailgunOn.'>'.$hesklang['mailgun'].' <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="'.$hesklang['mailgun'].'" data-content="'.$hesklang['mailgun_help'].'"></i></label></div>';
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="s_smtp" value="0"
+                                    onclick="hesk_attach_disable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'));toggleContainers([],[\'smtp_settings\',\'mailgun_settings\']);" '.$off.' />
+                                    '.$hesklang['phpmail'].'
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="s_smtp" value="1"
+                                    onclick="hesk_attach_enable(new Array(\'s1\',\'s2\',\'s3\',\'s4\',\'s5\',\'s6\',\'s7\',\'s8\',\'s9\'));toggleContainers([\'smtp_settings\'],[\'mailgun_settings\']);" '.$on.' />
+                                    '.$hesklang['smtp'].'
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="s_smtp" value="2"
+                                    onclick="toggleContainers([\'mailgun_settings\'],[\'smtp_settings\']);" '.$mailgunOn.'>
+                                    <span class="label label-primary"
+                                        data-toggle="tooltip"
+                                        title="'.$hesklang['added_in_mods_for_hesk'].'">'.$hesklang['mods_for_hesk_acronym'].'</span>
+                                    '.$hesklang['mailgun'].'
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                        data-toggle="popover" title="'.$hesklang['mailgun'].'"
+                                        data-content="'.$hesklang['mailgun_help'].'">
+                                    </i>
+                            </label>
+                        </div>';
                         ?>
                         <input type="hidden" name="tmp_smtp_host_name" value="<?php echo $hesk_settings['smtp_host_name']; ?>" />
                         <input type="hidden" name="tmp_smtp_host_port" value="<?php echo $hesk_settings['smtp_host_port']; ?>" />
@@ -1501,13 +1526,27 @@ if ( defined('HESK_DEMO') )
                 </div>
                 <div id="mailgun_settings" style="display:<?php echo $onload_mailgun; ?>">
                     <div class="form-group">
-                        <label for="mailgun_api_key" class="col-sm-3 control-label"><?php echo $hesklang['mailgun_api_key']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['mailgun_api_key']; ?>" data-content="<?php echo $hesklang['mailgun_api_key_help']; ?>"></i></label>
+                        <label for="mailgun_api_key" class="col-sm-3 control-label">
+                            <span class="label label-primary"
+                                  data-toggle="tooltip"
+                                  title="<?php echo $hesklang['added_in_mods_for_hesk'] ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                            <?php echo $hesklang['mailgun_api_key']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                title="<?php echo $hesklang['mailgun_api_key']; ?>" data-content="<?php echo $hesklang['mailgun_api_key_help']; ?>">
+                            </i>
+                        </label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['mailgun_api_key']); ?>" id="mailgun_api_key" name="mailgun_api_key" value="<?php echo $modsForHesk_settings['mailgun_api_key']; ?>">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="mailgun_domain" class="col-sm-3 control-label"><?php echo $hesklang['mailgun_domain']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['mailgun_domain']; ?>" data-content="<?php echo $hesklang['mailgun_domain_help']; ?>"></i></label>
+                        <label for="mailgun_domain" class="col-sm-3 control-label">
+                            <span class="label label-primary"
+                                  data-toggle="tooltip"
+                                  title="<?php echo $hesklang['added_in_mods_for_hesk'] ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                            <?php echo $hesklang['mailgun_domain']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['mailgun_domain']; ?>" data-content="<?php echo $hesklang['mailgun_domain_help']; ?>"></i>
+                        </label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['mailgun_domain']); ?>" id="mailgun_domain" name="mailgun_domain" value="<?php echo $modsForHesk_settings['mailgun_domain']; ?>">
                         </div>
