@@ -1194,11 +1194,11 @@ function forgot_tid()
     }
 
 	/* Prepare ticket statuses */
-    $myStatusSQL = hesk_dbQuery("SELECT `ID`, `TicketViewContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+    $myStatusSQL = hesk_dbQuery("SELECT `ID`, `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
     $my_status = array();
     while ($myStatusRow = hesk_dbFetchAssoc($myStatusSQL))
     {
-        $my_status[$myStatusRow['ID']] = $hesklang[$myStatusRow['TicketViewContentKey']];
+        $my_status[$myStatusRow['ID']] = $hesklang[$myStatusRow['Key']];
     }
 
     // Get tickets from the database

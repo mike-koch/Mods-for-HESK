@@ -444,6 +444,10 @@ function execute230Scripts() {
 
     hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` ADD COLUMN `icon` VARCHAR(150)");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD COLUMN `Key` TEXT");
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `Key` = `ShortNameContentKey`");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` DROP COLUMN `ShortNameContentKey`");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` DROP COLUMN `TicketViewContentKey`");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.0' WHERE `Key` = 'modsForHeskVersion'");
 }
 // END Version 2.3.0

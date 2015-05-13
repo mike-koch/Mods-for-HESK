@@ -663,7 +663,7 @@ if($ticket['email'] != '') {
             $newRecentTicket = $recentTicket;
             $thisTicketStatusRS = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `ID` = " . intval($recentTicket['status']));
             $theStatusRow = hesk_dbFetchAssoc($thisTicketStatusRS);
-            $newRecentTicket['statusText'] = $hesklang[$theStatusRow['ShortNameContentKey']];
+            $newRecentTicket['statusText'] = $hesklang[$theStatusRow['Key']];
             $newRecentTicket['statusColor'] = $theStatusRow['TextColor'];
             array_push($recentTicketsWithStatuses, $newRecentTicket);
         }
@@ -876,7 +876,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <?php
                             $random=rand(10000,99999);
 
-                            $statusSql = 'SELECT `ID`, `ShortNameContentKey`, `IsStaffClosedOption`, `IsStaffReopenedStatus` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsStaffClosedOption` = 1 OR `IsStaffReopenedStatus` = 1';
+                            $statusSql = 'SELECT `ID`, `Key`, `IsStaffClosedOption`, `IsStaffReopenedStatus` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsStaffClosedOption` = 1 OR `IsStaffReopenedStatus` = 1';
                             $statusRs = hesk_dbQuery($statusSql);
                             $staffClosedOptionStatus = array();
                             $staffReopenedStatus = array();
@@ -976,11 +976,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                 echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>'; 
                     $status_options = array();
-                    $results = hesk_dbQuery("SELECT `ID`, `ShortNameContentKey` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+                    $results = hesk_dbQuery("SELECT `ID`, `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
                     while ($row = $results->fetch_assoc())
                     {
                         $selected = $ticket['status'] == $row['ID'] ? 'selected' : '';
-                        $status_options[$row['ID']] = '<option value="'.$row['ID'].'" '.$selected.'>'.$hesklang[$row['ShortNameContentKey']].'</option>';
+                        $status_options[$row['ID']] = '<option value="'.$row['ID'].'" '.$selected.'>'.$hesklang[$row['Key']].'</option>';
                     }
 
                     echo '
@@ -1969,7 +1969,7 @@ function hesk_printReplyForm() {
                             </a></li>
                             <li class="divider"></li>
                             <?php
-                            $allStatusesRs = hesk_dbQuery('SELECT `ID`, `ShortNameContentKey`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
+                            $allStatusesRs = hesk_dbQuery('SELECT `ID`, `Key`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
                             $statuses = array();
                             while ($row = hesk_dbFetchAssoc($allStatusesRs)) {
                                 array_push($statuses, $row);
@@ -1979,7 +1979,7 @@ function hesk_printReplyForm() {
                                 echo '<li><a>
                                         <button class="dropdown-submit" type="submit" name="submit_as_status" value="'.$status['ID'].'"">
                                             '.$hesklang['submit_reply'].' '.$hesklang['and_change_status_to'].' <b>
-                                            <span style="color:'.$status['TextColor'].'">'.$hesklang[$status['ShortNameContentKey']].'</span></b>
+                                            <span style="color:'.$status['TextColor'].'">'.$hesklang[$status['Key']].'</span></b>
                                         </button>
                                     </a></li>';
                             }

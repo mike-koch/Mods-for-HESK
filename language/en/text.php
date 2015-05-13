@@ -29,6 +29,10 @@ $hesklang['sm_search_icon'] = 'Search Icon';
 $hesklang['sm_iconpicker_footer_label'] = '{0} - {1} of {2}'; // {0}: lower bound of page, {1}: upper bound of page, {2}: total number of icons
 $hesklang['mods_for_hesk_acronym'] = 'MFH'; // THIS SHOULD NOT BE TRANSLATED
 $hesklang['added_in_mods_for_hesk'] = 'Added in Mods for HESK';
+$hesklang['statuses_intro'] = 'Here you can add, remove, and modify ticket statuses, as well as changing the default status for particular actions.';
+$hesklang['statuses_saved'] = 'Ticket statuses have been updated!';
+$hesklang['language_key'] = 'Language Key';
+$hesklang['language_key_description'] = 'This is the language file \'key\' that contains the text you want to display';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
@@ -226,10 +230,6 @@ $hesklang['changeLanguage'] = 'Change language to';
 // ADDED OR MODIFIED IN Mods For HESK 1.2
 $hesklang['statuses'] = 'Statuses';
 $hesklang['basicProperties'] = 'Basic Properties';
-$hesklang['shortNameKey'] = 'Short Name Key';
-$hesklang['shortNameKeyDescr'] = "This is the language file 'key' that contains the text you want to display on all pages that have statuses, except for the ticket view pages (ticket.php, admin_ticket.php, and print.php)";
-$hesklang['longNameKey'] = 'Long Name Key';
-$hesklang['longNameKeyDescr'] = "This is the language file 'key' that contains the text you want to display on ticket.php, print.php, and admin_ticket.php";
 $hesklang['textColor'] = 'Text Color';
 $hesklang['textColorDescr'] = 'This is the hex color code for the status that will be used on the ticket search page and export search page';
 $hesklang['closedQuestionMark'] = 'Closed?';
