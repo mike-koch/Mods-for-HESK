@@ -31,6 +31,7 @@ $hesklang['mods_for_hesk_acronym'] = 'MFH'; // THIS SHOULD NOT BE TRANSLATED
 $hesklang['added_in_mods_for_hesk'] = 'Added in Mods for HESK';
 $hesklang['statuses_intro'] = 'Here you can add, remove, and modify ticket statuses, as well as changing the default status for particular actions.';
 $hesklang['statuses_saved'] = 'Ticket statuses have been updated!';
+$hesklang['email_template_not_saved'] = 'The email template <b>%s</b> was NOT saved due to an error. Enable debug mode to see if an error message appears, and ensure that your file has CHMOD 0666'; // %s: Template file name
 $hesklang['language_key'] = 'Language Key';
 $hesklang['language_key_description'] = 'This is the language file \'key\' that contains the text you want to display';
 

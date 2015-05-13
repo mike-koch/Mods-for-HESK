@@ -264,7 +264,7 @@ function save() {
 
     $success = file_put_contents($filePath, $_POST['text']);
     if ($success === false) {
-        hesk_process_messages($hesklang[''], 'manage_email_templates.php');
+        hesk_process_messages($hesklang['email_template_not_saved'], 'manage_email_templates.php');
     } else {
         $message = sprintf($hesklang['email_template_saved'], $_POST['template']);
         hesk_process_messages($message,'manage_email_templates.php','SUCCESS');
