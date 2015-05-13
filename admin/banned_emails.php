@@ -98,6 +98,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </li>
             ';
         }
+        if (hesk_checkPermission('can_man_ticket_statuses',0))
+        {
+            echo '
+            <li role="presentation">
+                <a title="'.$hesklang['statuses'].'" href="manage_statuses.php">'.$hesklang['statuses'].'</a>
+            </li>
+            ';
+        }
         ?>
     </ul>
     <div class="tab-content summaryList tabPadding">

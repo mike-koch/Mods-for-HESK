@@ -13,8 +13,7 @@ hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
 
-// TODO Change to 'can_manage_ticket_statuses'
-//hesk_checkPermission('can_manage_ticket_statuses');
+hesk_checkPermission('can_man_ticket_statuses');
 
 define('WYSIWYG',1);
 

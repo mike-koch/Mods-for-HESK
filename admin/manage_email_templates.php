@@ -91,6 +91,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <li role="presentation" class="active">
             <a href="#"><?php echo $hesklang['email_templates']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['email_templates']; ?>" data-content="<?php echo $hesklang['email_templates_intro']; ?>"></i></a>
         </li>
+        <?php
+        if (hesk_checkPermission('can_man_ticket_statuses',0))
+        {
+            echo '
+            <li role="presentation">
+                <a title="'.$hesklang['statuses'].'" href="manage_statuses.php">'.$hesklang['statuses'].'</a>
+            </li>
+            ';
+        }
+        ?>
     </ul>
     <div class="tab-content summaryList tabPadding">
         <?php if ($showEditPanel): ?>

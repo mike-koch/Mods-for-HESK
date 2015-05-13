@@ -34,6 +34,7 @@ $hesklang['statuses_saved'] = 'Ticket statuses have been updated!';
 $hesklang['email_template_not_saved'] = 'The email template <b>%s</b> was NOT saved due to an error. Enable debug mode to see if an error message appears, and ensure that your file has CHMOD 0666'; // %s: Template file name
 $hesklang['language_key'] = 'Language Key';
 $hesklang['language_key_description'] = 'This is the language file \'key\' that contains the text you want to display';
+$hesklang['can_man_ticket_statuses'] = 'Can manage ticket statuses';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
