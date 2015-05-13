@@ -1089,11 +1089,20 @@ function print_start()
                         ?>
                         <div class="form-group">
                             <label for="emailAddress"><?php echo $hesklang['email']; ?>:</label>
+                            <?php
+                            $my_email = '';
+                            $do_remember = '';
+                            if (isset($_COOKIE['hesk_myemail']))
+                            {
+                                $my_email = $_COOKIE['hesk_myemail'];
+                                $do_remember = 'checked';
+                            }
+                            ?>
                             <input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/>
                         </div>
                         <div class="checkbox">
                             <label for="r">
-                                <input type="checkbox" name="r" value="Y" /> <?php echo $hesklang['rem_email']; ?>
+                                <input type="checkbox" name="r" value="Y" <?php echo $do_remember; ?>> <?php echo $hesklang['rem_email']; ?>
                             </label>
                         </div>
                         <?php
