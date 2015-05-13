@@ -105,6 +105,10 @@ if ( hesk_check_kb_only(false) )
                     echo '<li><a href="banned_ips.php"><i class="fa fa-wrench" '.$iconDisplay.'></i>&nbsp;'.$hesklang['tools'].'</a> </li>';
                 } elseif (hesk_checkPermission('can_service_msg',0)) {
                     echo '<li><a href="service_messages.php"><i class="fa fa-wrench" '.$iconDisplay.'></i>&nbsp;'.$hesklang['tools'].'</a> </li>';
+                } elseif (hesk_checkPermission('can_man_email_tpl',0)) {
+                    echo '<li><a href="manage_email_templates.php"><i class="fa fa-wrench" '.$iconDisplay.'></i>&nbsp;'.$hesklang['tools'].'</a> </li>';
+                } elseif (hesk_checkPermission('can_man_ticket_statuses',0)) {
+                    echo '<li><a href="manage_statuses.php"><i class="fa fa-wrench" '.$iconDisplay.'></i>&nbsp;'.$hesklang['tools'].'</a> </li>';
                 }
                 if (hesk_checkPermission('can_manage_settings',0)) {
                     echo '<li><a href="admin_settings.php"><i class="fa fa-cog" '.$iconDisplay.'></i>&nbsp;'.$hesklang['settings'].'</a></li>';

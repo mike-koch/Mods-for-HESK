@@ -13,7 +13,7 @@ hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
 
-hesk_checkPermission('can_manage_email_templates');
+hesk_checkPermission('can_man_email_tpl');
 
 define('WYSIWYG',1);
 

@@ -57,7 +57,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <a title="' . $hesklang['sm_title'] . '" href="service_messages.php">' . $hesklang['sm_title'] . '</a>
             </li>';
         }
-        if ( hesk_checkPermission('can_manage_email_templates',0) )
+        if ( hesk_checkPermission('can_man_email_tpl',0) )
         {
             echo '
             <li role="presentation">
