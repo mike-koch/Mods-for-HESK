@@ -60,22 +60,6 @@ if ( defined('HESK_DEMO') )
 	hesk_process_messages($hesklang['sdemo'], 'admin_settings.php');
 }
 
-//-- Before we do anything, make sure the statuses are valid.
-$rows = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
-while ($row = $rows->fetch_assoc())
-{
-    if (!isset($_POST['s'.$row['ID'].'_delete']))
-    {
-        validateStatus($_POST['s'.$row['ID'].'_shortName'], $_POST['s'.$row['ID'].'_longName'], $_POST['s'.$row['ID'].'_textColor']);
-    }
-}
-
-//-- Validate the new one if at least one of the fields are used / checked
-if ($_POST['sN_shortName'] != null || $_POST['sN_longName'] != null || $_POST['sN_textColor'] != null || isset($_POST['sN_isClosed']))
-{
-    validateStatus($_POST['sN_shortName'], $_POST['sN_longName'], $_POST['sN_textColor']);
-}
-
 $set=array();
 
 /*** GENERAL ***/
@@ -960,21 +944,3 @@ function hesk_formatUnits($size)
 
     return false;
 } // End hesk_formatBytes()
-
-function validateStatus($shortName, $longName, $textColor)
-{
-    global $hesklang;
-
-    //-- Validation logic
-    if ($shortName == '')
-    {
-        hesk_process_messages($hesklang['shortNameRequired'], 'admin_settings.php');
-    } elseif ($longName == '')
-    {
-        hesk_process_messages($hesklang['longNameRequired'], 'admin_settings.php');
-    } elseif ($textColor == '')
-    {
-        hesk_process_messages($hesklang['textColorRequired'], 'admin_settings.php');
-    }
-}
-?>

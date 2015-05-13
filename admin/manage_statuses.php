@@ -304,6 +304,22 @@ exit();
 function save() {
     global $hesklang, $hesk_settings;
 
+    //-- Before we do anything, make sure the statuses are valid.
+    $rows = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
+    while ($row = $rows->fetch_assoc())
+    {
+        if (!isset($_POST['s'.$row['ID'].'_delete']))
+        {
+            validateStatus($_POST['s'.$row['ID'].'_key'], $_POST['s'.$row['ID'].'_textColor']);
+        }
+    }
+
+    //-- Validate the new one if at least one of the fields are used / checked
+    if ($_POST['sN_key'] != null || $_POST['sN_textColor'] != null || isset($_POST['sN_isClosed']))
+    {
+        validateStatus($_POST['sN_shortName'], $_POST['sN_textColor']);
+    }
+
     hesk_dbConnect();
     $wasStatusDeleted = false;
     //-- Get all the status IDs
@@ -404,4 +420,18 @@ function save() {
     $stmt->execute();
 
     hesk_process_messages($hesklang['statuses_saved'],'manage_statuses.php','SUCCESS');
+}
+
+function validateStatus($key, $textColor)
+{
+    global $hesklang;
+
+    //-- Validation logic
+    if ($key == '')
+    {
+        hesk_process_messages($hesklang['key_required'], 'manage_statuses.php');
+    } elseif ($textColor == '')
+    {
+        hesk_process_messages($hesklang['textColorRequired'], 'manage_statuses.php');
+    }
 }

@@ -35,6 +35,7 @@ $hesklang['email_template_not_saved'] = 'The email template <b>%s</b> was NOT sa
 $hesklang['language_key'] = 'Language Key';
 $hesklang['language_key_description'] = 'This is the language file \'key\' that contains the text you want to display';
 $hesklang['can_man_ticket_statuses'] = 'Can manage ticket statuses';
+$hesklang['key_required'] = 'Keys are required for all statuses';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
@@ -243,8 +244,6 @@ $hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close tic
 $hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to';
 $hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to';
 $hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to';
-$hesklang['shortNameRequired'] = 'Short Name Key is required.';
-$hesklang['longNameRequired'] = 'Long Name Key is required.';
 $hesklang['textColorRequired'] = 'Text Color is required.';
 $hesklang['addNew'] = 'Add New';
 $hesklang['close_action']='Close Ticket'; // Close ACTION
