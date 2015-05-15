@@ -450,4 +450,20 @@ function execute230Scripts() {
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` DROP COLUMN `TicketViewContentKey`");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.0' WHERE `Key` = 'modsForHeskVersion'");
 }
+
+function execute230FileUpdate() {
+    //-- Add the new merged ticket property to modsForHesk_settings.inc.php
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    //-- Only add the additional settings if they aren't already there.
+    if (strpos($file, '$modsForHesk_settings[\'show_number_merged\']') === false)
+    {
+        $file .= '
+
+        //-- Setting for showing number of merged tickets in the ticket search screen. 0 = Disable, 1 = Enable
+$modsForHesk_settings[\'show_number_merged\'] = 1;';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
 // END Version 2.3.0
