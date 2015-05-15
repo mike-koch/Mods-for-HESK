@@ -1126,46 +1126,69 @@ function print_start()
 					echo '&nbsp;';
 				}
 				?>
-            <div class="blockRow">
-                <a href="index.php?a=add">
-                    <div class="block">
-                        <div class="upper">
-                            <img src="img/newTicket.png" alt="<?php echo $hesklang['sub_ticket']; ?>" />
+            <div class="row default-row-margins">
+                <div class="col-sm-6 col-xs-12">
+                    <a href="index.php?a=add" class="button-link">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-1">
+                                        <img src="img/newTicket.png" alt="<?php echo $hesklang['sub_support']; ?>">
+                                    </div>
+                                    <div class="col-xs-11">
+                                        <b><?php echo $hesklang['sub_support']; ?></b><br>
+                                        <?php echo $hesklang['open_ticket']; ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="lower">
-                            <p><?php echo $hesklang['sub_ticket']; ?></p>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-xs-12">
+                    <a href="ticket.php" class="button-link">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-1">
+                                        <img src="img/viewTicket.png" alt="<?php echo $hesklang['view_existing']; ?>">
+                                    </div>
+                                    <div class="col-xs-11">
+                                        <b><?php echo $hesklang['view_existing']; ?></b><br>
+                                        <?php echo $hesklang['vet']; ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </a>
-                <a href="ticket.php">
-                    <div class="block">
-                        <div class="upper">
-                            <img src="img/viewTicket.png" alt="<?php echo $hesklang['view_existing']; ?>" />
-                        </div>
-                        <div class="lower">
-                            <p><?php echo $hesklang['view_existing']; ?></p>
-                        </div>
-                    </div>
-                </a>
-                <?php
-                if ($hesk_settings['kb_enable'])
-                {
-                ?>
-                <a href="knowledgebase.php">
-                    <div class="block">
-                        <div class="upper">
-                            <img src="img/knowledgebase.png" alt="<?php echo $hesklang['kb_text']; ?>" />
-                        </div>
-                        <div class="lower">
-                            <p><?php echo $hesklang['kb_text']; ?></p>
-                        </div>
-                    </div>
-                </a>
-                <?php
-                }
-                include('custom/custom-blocks.php');
-                ?>
+                    </a>
+                </div>
             </div>
+            <?php
+            if ($hesk_settings['kb_enable'])
+            {
+                ?>
+                <div class="row default-row-margins">
+                    <div class="col-sm-6 col-xs-12">
+                        <a href="knowledgebase.php" class="button-link">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-1">
+                                            <img src="img/knowledgebase.png" alt="<?php echo $hesklang['kb_text']; ?>">
+                                        </div>
+                                        <div class="col-xs-11">
+                                            <b><?php echo $hesklang['kb_text']; ?></b><br>
+                                            <?php echo $hesklang['viewkb']; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            <?php
+                hesk_kbTopArticles($hesk_settings['kb_index_popart']);
+                hesk_kbLatestArticles($hesk_settings['kb_index_latest']);
+            }?>
 		</div>
 	</div>
 	<div class="blankSpace"></div>

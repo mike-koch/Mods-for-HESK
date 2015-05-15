@@ -402,3 +402,25 @@ button.dropdown-submit {
 .indent-15 {
     margin-left: 15px;
 }
+
+.button-link {
+    color: #4a5571;
+}
+
+.button-link:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+.button-link .col-xs-1 {
+    margin: 0 auto;
+    padding: 0;
+}
+
+.button-link .panel-body:hover {
+    background-color: #EEE;
+}
+
+.default-row-margins {
+    margin: 0 -15px;
+}

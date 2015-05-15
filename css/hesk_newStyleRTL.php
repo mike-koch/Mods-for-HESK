@@ -371,28 +371,50 @@ button.dropdown-submit {
 }
 
 .attachment-table > tbody > tr > td > i {
-color: #ddd;
-text-shadow: 2px 2px #ccc;
+    color: #ddd;
+    text-shadow: 2px 2px #ccc;
 }
 
 .attachment-table > tbody > tr > td {
-vertical-align: middle;
+    vertical-align: middle;
 }
 
 .attachment-table > tbody > tr > td > span > img {
-max-height: 80px;
-max-width: 80px;
-cursor: pointer;
+    max-height: 80px;
+    max-width: 80px;
+    cursor: pointer;
 }
 
 .plaintext-editor {
-font-family: monospace;
+    font-family: monospace;
 }
 
 .table-fixed {
-table-layout: fixed;
+    table-layout: fixed;
 }
 
 .indent-15 {
-margin-right: 15px;
+    margin-right: 15px;
+}
+
+.button-link {
+    color: #4a5571;
+}
+
+.button-link:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+.button-link .col-xs-1 {
+    margin: 0 auto;
+    padding: 0;
+}
+
+.button-link .panel-body:hover {
+    background-color: #EEE;
+}
+
+.default-row-margins {
+    margin: 0 -15px;
 }
