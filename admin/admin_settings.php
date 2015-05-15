@@ -2049,8 +2049,8 @@ if ( defined('HESK_DEMO') )
               <!-- Ticket List Tab -->
               <div class="tab-pane fade in" id="ticket-list">
                   <div class="form-group">
-                      <label for="s_open_only" class="col-sm-3 control-label"><?php echo $hesklang['fitl']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#1','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                      <div class="col-sm-9">
+                      <label for="s_open_only" class="col-sm-4 control-label"><?php echo $hesklang['fitl']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#1','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                      <div class="col-sm-8">
                           <?php
                           // List available fields
                           foreach ($hesk_settings['possible_ticket_list'] as $key => $title)
@@ -2064,10 +2064,28 @@ if ( defined('HESK_DEMO') )
                           ?>
                       </div>
                   </div>
+                  <div class="form-group">
+                      <label for="show_number_merged" class="col-sm-4 control-label">
+                          <span class="label label-primary"
+                              data-toggle="tooltip"
+                              title="<?php echo $hesklang['added_in_mods_for_hesk'] ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                          <?php echo $hesklang['show_number_merged']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                              title="<?php echo $hesklang['show_number_merged']; ?>"
+                              data-content="<?php echo $hesklang['show_number_merged_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8">
+                          <div class="checkbox">
+                              <label>
+                                  <input type="checkbox" name="show_number_merged" <?php if ($modsForHesk_settings['show_number_merged']) {echo 'checked';} ?>> <?php echo $hesklang['show_number_merged_descr']; ?>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
                   <div class="blankSpace"></div>
                   <div class="form-group">
-                      <label for="s_submittedformat" class="col-sm-3 control-label"><?php echo $hesklang['sdf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                      <div class="col-sm-9 form-inline">
+                      <label for="s_submittedformat" class="col-sm-4 control-label"><?php echo $hesklang['sdf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                      <div class="col-sm-8 form-inline">
                           <?php
                           $off = $hesk_settings['new_top'] ? '' : 'checked="checked"';
                           echo '
@@ -2078,8 +2096,8 @@ if ( defined('HESK_DEMO') )
                       </div>
                   </div>
                   <div class="form-group">
-                      <label for="s_updatedformat" class="col-sm-3 control-label"><?php echo $hesklang['lcf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
-                      <div class="col-sm-9 form-inline">
+                      <label for="s_updatedformat" class="col-sm-4 control-label"><?php echo $hesklang['lcf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                      <div class="col-sm-8 form-inline">
                           <?php
 
                           echo '

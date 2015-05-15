@@ -36,6 +36,11 @@ $hesklang['language_key'] = 'Language Key';
 $hesklang['language_key_description'] = 'This is the language file \'key\' that contains the text you want to display';
 $hesklang['can_man_ticket_statuses'] = 'Can manage ticket statuses';
 $hesklang['key_required'] = 'Keys are required for all statuses';
+$hesklang['x_merged'] = '(+%s merged)'; // %s number of tickets merged
+$hesklang['merged_tickets'] = 'Merged tickets: ';
+$hesklang['show_number_merged'] = 'Show number of tickets merged';
+$hesklang['show_number_merged_descr'] = 'Show number of tickets merged next to Tracking ID';
+$hesklang['show_number_merged_help'] = 'If enabled, the user will be able to see which tickets were merged into the other on the ticket serarch screen.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)

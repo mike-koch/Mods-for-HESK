@@ -19,6 +19,12 @@ var loadJquery = function()
         html: 'true'
     });
 
+    //-- Activate HTML on-click popovers
+    $('[data-toggle="htmlpopover-onclick"]').popover({
+        container: 'body',
+        html: 'true'
+    });
+
     //-- Activate jQuery's date picker
     $(function() {
         $('.datepicker').datepicker({
