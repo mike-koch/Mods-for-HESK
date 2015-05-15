@@ -244,46 +244,6 @@ div.blankSpace {
 div.footerWithBorder {
     border-top: 1px solid #cfd4d6;
 }
-
-.blockRow > a:hover {
-    text-decoration: none;
-}
-
-.block {
-    height: 114px;
-    width: 114px;
-    display: inline-block;
-    border: 1px solid #c9cfd7;
-    background-color: #fff;
-    border-radius: 4px;
-    font-size: .83em;
-    margin-left: 5px;
-    vertical-align: top;
-}
-
-.block > .upper {
-    height:57px;
-    padding-top:10px;
-}
-
-.block > .upper > img {
-    padding-top:5px;
-    padding-bottom:5px;
-    padding-right:41px;
-}
-
-.block > .lower {
-    height:57px;
-    text-align:center;
-}
-
-.block > .lower > p:hover {
-    text-decoration: underline;
-}
-
-div.block:hover {
-    background-color: #e9ecef;
-}
 div.rightSideDash {
     padding-right: 18px;
     padding-left: 18px;
@@ -371,28 +331,50 @@ button.dropdown-submit {
 }
 
 .attachment-table > tbody > tr > td > i {
-color: #ddd;
-text-shadow: 2px 2px #ccc;
+    color: #ddd;
+    text-shadow: 2px 2px #ccc;
 }
 
 .attachment-table > tbody > tr > td {
-vertical-align: middle;
+    vertical-align: middle;
 }
 
 .attachment-table > tbody > tr > td > span > img {
-max-height: 80px;
-max-width: 80px;
-cursor: pointer;
+    max-height: 80px;
+    max-width: 80px;
+    cursor: pointer;
 }
 
 .plaintext-editor {
-font-family: monospace;
+    font-family: monospace;
 }
 
 .table-fixed {
-table-layout: fixed;
+    table-layout: fixed;
 }
 
 .indent-15 {
-margin-right: 15px;
+    margin-right: 15px;
+}
+
+.button-link {
+    color: #4a5571;
+}
+
+.button-link:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+.button-link .col-xs-1 {
+    margin: 0 auto;
+    padding: 0;
+}
+
+.button-link .panel-body:hover {
+    background-color: #EEE;
+}
+
+.default-row-margins {
+    margin: 0 -15px;
 }

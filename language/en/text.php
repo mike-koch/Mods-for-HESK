@@ -40,7 +40,10 @@ $hesklang['x_merged'] = '(+%s merged)'; // %s number of tickets merged
 $hesklang['merged_tickets'] = 'Merged tickets: ';
 $hesklang['show_number_merged'] = 'Show number of tickets merged';
 $hesklang['show_number_merged_descr'] = 'Show number of tickets merged next to Tracking ID';
-$hesklang['show_number_merged_help'] = 'If enabled, the user will be able to see which tickets were merged into the other on the ticket serarch screen.';
+$hesklang['show_number_merged_help'] = 'If enabled, the user will be able to see which tickets were merged into the other on the ticket search screen.';
+$hesklang['latest_top_on_home'] = 'Latest/Top articles on home page';
+$hesklang['latest_top_on_home_help'] = 'Select YES to display the top and latest knowledgebase articles on the home page.
+    Otherwise, a link to the knowledgebase will appear on the home page.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)

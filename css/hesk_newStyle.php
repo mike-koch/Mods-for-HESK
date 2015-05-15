@@ -245,46 +245,6 @@ div.blankSpace {
 div.footerWithBorder {
     border-top: 1px solid #cfd4d6;
 }
-
-.blockRow > a:hover {
-    text-decoration: none;
-}
-
-.block {
-    height: 114px;
-    width: 114px;
-    display: inline-block;
-    border: 1px solid #c9cfd7;
-    background-color: #fff;
-    border-radius: 4px;
-    font-size: .83em;
-    margin-right: 5px;
-    vertical-align: top;
-}
-
-.block > .upper {
-    height:57px;
-    padding-top:10px;
-}
-
-.block > .upper > img {
-    padding-top:5px;
-    padding-bottom:5px;
-    padding-left:41px;
-}
-
-.block > .lower {
-    height:57px;
-    text-align:center;
-}
-
-.block > .lower > p:hover {
-    text-decoration: underline;
-}
-
-div.block:hover {
-    background-color: #e9ecef;
-}
 div.rightSideDash {
     padding-left: 18px;
     padding-right: 18px;
@@ -401,4 +361,26 @@ button.dropdown-submit {
 
 .indent-15 {
     margin-left: 15px;
+}
+
+.button-link {
+    color: #4a5571;
+}
+
+.button-link:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+.button-link .col-xs-1 {
+    margin: 0 auto;
+    padding: 0;
+}
+
+.button-link .panel-body:hover {
+    background-color: #EEE;
+}
+
+.default-row-margins {
+    margin: 0 -15px;
 }

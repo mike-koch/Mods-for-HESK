@@ -287,10 +287,7 @@ function hesk_kbSearchLarge($admin = '')
 					<button class="btn btn-default" type="submit" value="<?php echo $hesklang['search']; ?>" title="<?php echo $hesklang['search']; ?>"><?php echo $hesklang['search']; ?></button>
 				</span>
 			</div>
-			<!--<span class="largebold"><?php echo $hesklang['ask']; ?></span>
-			<input type="text" name="search" class="searchfield" />
-			<input type="submit" value="<?php echo $hesklang['search']; ?>" title="<?php echo $hesklang['search']; ?>" class="searchbutton" /><br />
-		--></form>
+        </form>
 	</div>
 
 	<br />
@@ -325,10 +322,14 @@ function hesk_kbSearchSmall()
 	<td class="text-right" valign="top" width="300">
 		<div style="display:inline;margin-left:auto;margin-right:auto">
 			<form action="knowledgebase.php" method="get" class="form-inline" style="display: inline; margin: 0;">
-			     <input type="text" name="search" class="form-control" />
-			     <button class="btn btn-default" type="submit" value="<?php echo $hesklang['search_the_knowledgebase']; ?>" title="<?php echo $hesklang['search_the_knowledgebase']; ?>">
-                     <?php echo $hesklang['search_the_knowledgebase']; ?>
-                 </button>
+                <div class="input-group" style="margin: 0 15px">
+                    <input type="text" name="search" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit" value="<?php echo $hesklang['search_the_knowledgebase']; ?>" title="<?php echo $hesklang['search_the_knowledgebase']; ?>">
+                            <?php echo $hesklang['search_the_knowledgebase']; ?>
+                        </button>
+                    </span>
+                </div>
 			</form>
             <br><br>
 		</div>
