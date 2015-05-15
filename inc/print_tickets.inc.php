@@ -60,7 +60,8 @@ LEFT(`message`, 400) AS `message`,
 `lastreplier`,
 `replierid`,
 `archive`,
-`locked`
+`locked`,
+`merged`
 ";
 
 foreach ($hesk_settings['custom_fields'] as $k=>$v)

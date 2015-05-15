@@ -41,3 +41,6 @@ $modsForHesk_settings['new_kb_article_visibility'] = 0;
 
 //-- Setting for adding attachments to email messages. Either 0 for default-HESK behavior, or 1 to send as attachments
 $modsForHesk_settings['attachments'] = 0;
+
+//-- Setting for showing number of merged tickets in the ticket search screen. 0 = Disable, 1 = Enable
+$modsForHesk_settings['show_number_merged'] = 1;

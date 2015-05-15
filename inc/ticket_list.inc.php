@@ -321,7 +321,24 @@ if ($total > 0)
         // Print tracking ID and link it to the ticket page
         if ( hesk_show_column('trackid') )
         {
-            echo '<td class="'.$color.'" style="text-align:left; white-space:nowrap;"><a href="admin_ticket.php?track='.$ticket['trackid'].'&amp;Refresh='.$random.'">'.$ticket['trackid'].'</a></td>';
+            echo '<td class="'.$color.'" style="text-align:left; white-space:nowrap;">
+                <a href="admin_ticket.php?track='.$ticket['trackid'].'&amp;Refresh='.$random.'">'.$ticket['trackid'].'</a>';
+            if ($modsForHesk_settings['show_number_merged'] && $ticket['merged'] != '') {
+                $tooltipMarkup = $hesklang['merged_tickets'];
+                $mergedIds = explode('#', $ticket['merged']);
+                $mergedTickets = '';
+                $numberOfTickets = 0;
+                foreach ($mergedIds as $mergeId) {
+                    if ($mergeId != '') {
+                        $numberOfTickets++;
+                        $mergedTickets .= '<li>' . $mergeId . '</li>';
+                    }
+                }
+                $tooltipMarkup .= '<ul>'.$mergedTickets.'</ul>';
+                $output = sprintf($hesklang['x_merged'], $numberOfTickets);
+                echo '&nbsp;&nbsp;<span data-toggle="htmlpopover-onclick" data-content="'.$tooltipMarkup.'" style="cursor: pointer;color: #666">'.$output.'</span>';
+            }
+            echo '</td>';
         }
 
         // Print date submitted
