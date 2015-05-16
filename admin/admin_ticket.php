@@ -861,6 +861,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         {
                             echo '<span class="fa fa-lock"></span>&nbsp;';
                         }
+                        $locationText = '';
+                        if (strpos($ticket['Location'], 'N/A') === false)
+                        {
+                            $locationText = $hesklang['click_for_map'];
+                        }
+                        else
+                        {
+                            $locationText = $hesklang['location_unavailable'];
+                        }
+                        echo '<i class="fa fa-crosshairs" data-toggle="tooltip" title="'.$locationText.'"></i>&nbsp;';
+                        // TODO ADD LOCATION CROSSHAIR
                         echo $ticket['subject'];
                         ?></h3>
                 </div>
