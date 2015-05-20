@@ -95,7 +95,9 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`custom18`,
 		`custom19`,
 		`custom20`,
-		`status`
+		`status`,
+		`latitude`,
+		`longitude`
 	)
 	VALUES
 	(
@@ -136,7 +138,9 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'".hesk_dbEscape($ticket['custom18'])."',
 		'".hesk_dbEscape($ticket['custom19'])."',
 		'".hesk_dbEscape($ticket['custom20'])."',
-		'".intval($ticket['status'])."'
+		'".intval($ticket['status'])."',
+		'".hesk_dbEscape($ticket['latitude'])."',
+		'".hesk_dbEscape($ticket['longitude'])."'
 	)
 	");
 

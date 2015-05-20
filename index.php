@@ -1002,6 +1002,8 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 	                ?>
                     <div class="row">
                         <div class="col-md-9 col-md-offset-3">
+                            <input type="hidden" id="latitude" name="latitude" value="E-0">
+                            <input type="hidden" id="longitude" name="longitude" value="E-0">
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
                             <input class="btn btn-default" type="submit" value="<?php echo $hesklang['sub_ticket']; ?>">
                         </div>
@@ -1024,6 +1026,16 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 
 
 <?php
+
+// Request for the users location if enabled
+if ($modsForHesk_settings['request_location'])
+{
+    echo '
+    <script>
+        requestUserLocation();
+    </script>
+    ';
+}
 
 hesk_cleanSessionVars('iserror');
 hesk_cleanSessionVars('isnotice');

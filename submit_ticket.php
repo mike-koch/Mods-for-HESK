@@ -427,6 +427,10 @@ if ($hesk_settings['attachments']['use'] && ! empty($attachments) )
     }
 }
 
+// Set latitude and longitude
+$tmpvar['latitude'] = hesk_POST('latitude');
+$tmpvar['longitude'] = hesk_POST('longitude');
+
 // Should the helpdesk validate emails?
 $createTicket = true;
 if ($modsForHesk_settings['customer_email_verification_required'])
