@@ -861,19 +861,38 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         {
                             echo '<span class="fa fa-lock"></span>&nbsp;';
                         }
-                        $locationText = '';
-                        if (strpos($ticket['Location'], 'N/A') === false)
-                        {
-                            $locationText = $hesklang['click_for_map'];
-                        }
-                        else
-                        {
-                            $locationText = $hesklang['location_unavailable'];
-                        }
                         if ($modsForHesk_settings['request_location'])
                         {
-                            echo '<i class="fa fa-crosshairs" data-toggle="tooltip" title="'.$locationText.'"></i>&nbsp;';
-                            // TODO ADD LOCATION CROSSHAIR
+                            $locationText = '';
+                            if (strpos($ticket['latitude'], 'E') === false)
+                            {
+                                $locationText = $hesklang['click_for_map'];
+                            }
+                            else
+                            {
+                                $locationText = $hesklang['location_unavailable'];
+                            }
+                            ?>
+                            <button class="btn btn-default" data-toggle="modal" data-target=".map-modal"><?php echo $locationText; ?></button>
+
+
+                            <div class="modal fade map-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <p>map modal!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="map" style="height: 150px"></div>
+                            <script>
+                               var map = L.map('map').setView([<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>], 13);
+                               L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                }).addTo(map);
+                                L.marker([<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>]).addTo(map)
+                                    .bindPopup('A pretty CSS3 popup. <br> Easily customizable.');
+                            </script>
+                        <?php
                         }
                         echo $ticket['subject'];
                         ?></h3>
