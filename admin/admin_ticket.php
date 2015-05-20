@@ -870,8 +870,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         {
                             $locationText = $hesklang['location_unavailable'];
                         }
-                        echo '<i class="fa fa-crosshairs" data-toggle="tooltip" title="'.$locationText.'"></i>&nbsp;';
-                        // TODO ADD LOCATION CROSSHAIR
+                        if ($modsForHesk_settings['request_location'])
+                        {
+                            echo '<i class="fa fa-crosshairs" data-toggle="tooltip" title="'.$locationText.'"></i>&nbsp;';
+                            // TODO ADD LOCATION CROSSHAIR
+                        }
                         echo $ticket['subject'];
                         ?></h3>
                 </div>
