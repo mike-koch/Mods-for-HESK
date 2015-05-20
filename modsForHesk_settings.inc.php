@@ -44,3 +44,6 @@ $modsForHesk_settings['attachments'] = 0;
 
 //-- Setting for showing number of merged tickets in the ticket search screen. 0 = Disable, 1 = Enable
 $modsForHesk_settings['show_number_merged'] = 1;
+
+//-- Setting for requesting user's location. 0 = Disable, 1 = Enable
+$modsForHesk_settings['request_location'] = 0;

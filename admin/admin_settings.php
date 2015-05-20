@@ -903,6 +903,26 @@ if ( defined('HESK_DEMO') )
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="request_location" class="col-sm-6 control-label">
+                                <span class="label label-primary"
+                                      data-toggle="tooltip"
+                                      title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                                            <?php echo $hesklang['request_user_location']; ?>
+                                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                               title="<?php echo $hesklang['request_user_location']; ?>"
+                                               data-content="<?php echo $hesklang['request_user_location_help']; ?>"></i>
+                            </label>
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $modsForHesk_settings['request_location'] ? 'checked' : '';
+                                $off = $modsForHesk_settings['request_location'] ? '' : 'checked';
+                                echo '
+                                <div class="radio"><label><input type="radio" name="request_location" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="request_location" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-6 control-label"><?php echo $hesklang['select']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#65','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                             <div class="col-sm-6">
                                 <div class="checkbox">
