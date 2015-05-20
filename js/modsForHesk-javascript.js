@@ -106,4 +106,34 @@ function changeText(id, checkedValue, uncheckedValue, object) {
     }
 }
 
+function requestUserLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            setLatLon(position.coords.latitude, position.coords.longitude);
+        }, function(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    setLatLon('E-1','E-1');
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    setLatLon('E-2','E-2');
+                    break;
+                case error.TIMEOUT:
+                    setLatLon('E-3','E-3');
+                    break;
+                case error.UNKNOWN_ERROR:
+                    setLatLon('E-4','E-4');
+                    break;
+            }
+        });
+    } else {
+        setLatLon('E-5','E-5');
+    }
+}
+
+function setLatLon(lat, lon) {
+    $('#latitude').val(lat);
+    $('#longitude').val(lon);
+}
+
 jQuery(document).ready(loadJquery);
