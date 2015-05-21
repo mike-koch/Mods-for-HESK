@@ -873,24 +873,36 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 $locationText = $hesklang['location_unavailable'];
                             }
                             ?>
-                            <button class="btn btn-default" data-toggle="modal" data-target=".map-modal"><?php echo $locationText; ?></button>
-
-
-                            <div class="modal fade map-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                            <span data-toggle="modal" data-target=".map-modal" style="cursor: pointer">
+                                <i class="fa fa-map-marker" data-toggle="tooltip" title="<?php echo $locationText; ?>"></i>
+                            </span>
+                            <div id="map-modal" class="modal fade map-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
-                                        <p>map modal!</p>
+                                        <div class="modal-header">
+                                            <h4><?php echo $hesklang['users_location']; ?></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="map" style="height: 500px"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div id="map" style="height: 150px"></div>
+
                             <script>
-                               var map = L.map('map').setView([<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>], 13);
-                               L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                                var map = L.map('map').setView([<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>], 15);
+                                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                                 }).addTo(map);
                                 L.marker([<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>]).addTo(map)
-                                    .bindPopup('A pretty CSS3 popup. <br> Easily customizable.');
+                                    .bindPopup("<?php echo $hesklang['users_location']; ?>");
+
+
+                                $('#map-modal').on('shown.bs.modal', function(){
+                                    setTimeout(function() {
+                                        map.invalidateSize();
+                                    }, 10);
+                                });
                             </script>
                         <?php
                         }

@@ -45,10 +45,11 @@ $hesklang['latest_top_on_home'] = 'Latest/Top articles on home page';
 $hesklang['latest_top_on_home_help'] = 'Select YES to display the top and latest knowledgebase articles on the home page.
     Otherwise, a link to the knowledgebase will appear on the home page.';
 $hesklang['location_unavailable'] = "Customer's location is unavailable. Click the crosshair for more information.";
-$hesklang['click_for_map'] = "Click the crosshair to see a map of the ticket's location";
+$hesklang['click_for_map'] = "View map of user's location";
 $hesklang['request_user_location'] = "Request Location";
 $hesklang['request_user_location_help'] = "If enabled, the help desk will ask for the customer's location, allowing staff to
  see a map of the customer's location when they created the ticket.";
+$hesklang['users_location'] = "User's Location";
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
