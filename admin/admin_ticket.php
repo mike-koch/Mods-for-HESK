@@ -864,17 +864,23 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         if ($modsForHesk_settings['request_location'])
                         {
                             $locationText = '';
+                            $iconColor = '';
+                            $hasLocation = true;
                             if (strpos($ticket['latitude'], 'E') === false)
                             {
                                 $locationText = $hesklang['click_for_map'];
+                                $iconColor = 'inherit';
                             }
                             else
                             {
+                                $hasLocation = false;
                                 $locationText = $hesklang['location_unavailable'];
+                                $iconColor = '#ccc';
                             }
                             ?>
                             <span data-toggle="modal" data-target=".map-modal" style="cursor: pointer">
-                                <i class="fa fa-map-marker" data-toggle="tooltip" title="<?php echo $locationText; ?>"></i>
+                                <i class="fa fa-map-marker" data-toggle="tooltip" title="<?php echo $locationText; ?>"
+                                   style="color: <?php echo $iconColor; ?>"></i>
                             </span>
                             <div id="map-modal" class="modal fade map-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
@@ -883,18 +889,34 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             <h4><?php echo $hesklang['users_location']; ?></h4>
                                         </div>
                                         <div class="modal-body">
-                                            <div id="map" style="height: 500px"></div>
+                                            <?php if ($hasLocation): ?>
+                                                <div id="map" style="height: 500px"></div>
+                                            <?php
+                                                else:
+                                                    $errorCode = explode('-', $ticket['latitude']);
+                                                    $key = 'location_unavailable_'.$errorCode[1];
+                                                    echo '<h5>'.$hesklang[$key].'</h5>';
+                                                endif;
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <?php
+                                // Only output JavaScript if we have coordinates
+                                if (strpos($ticket['latitude'], 'E') === false):
+                            ?>
                             <script>
-                                var map = L.map('map').setView([<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>], 15);
+                                var latitude = '';
+                                latitude = <?php echo $ticket['latitude']; ?>;
+                                var longitude = '';
+                                longitude = <?php echo $ticket['longitude']; ?>;
+                                var map = L.map('map').setView([latitude, longitude], 15);
                                 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                                 }).addTo(map);
-                                L.marker([<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>]).addTo(map)
+                                L.marker([latitude, longitude]).addTo(map)
                                     .bindPopup("<?php echo $hesklang['users_location']; ?>");
 
 
@@ -905,6 +927,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 });
                             </script>
                         <?php
+                            endif;
                         }
                         echo $ticket['subject'];
                         ?></h3>
