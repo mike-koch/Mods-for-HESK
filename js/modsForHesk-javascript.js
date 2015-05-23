@@ -136,4 +136,33 @@ function setLatLon(lat, lon) {
     $('#longitude').val(lon);
 }
 
+var marker;
+var map;
+function resetLatLon(lat, lon) {
+    map.setView([lat, lon], 15);
+    marker.setLatLng(L.latLng(lat, lon));
+}
+
+function initializeMapForStaff(latitude, longitude, usersLocationText) {
+    map = L.map('map').setView([latitude, longitude], 15);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    marker = L.marker([latitude, longitude], {draggable: true})
+        .addTo(map)
+        .bindPopup(usersLocationText);
+
+    marker.on('dragend', function(event) {
+        setLatLon(event.target.getLatLng().lat, event.target.getLatLng().lng);
+        $('#save-group').show();
+        $('#close-button').hide();
+    });
+
+    $('#map-modal').on('shown.bs.modal', function(){
+        setTimeout(function() {
+            map.invalidateSize();
+        }, 10);
+    });
+}
+
 jQuery(document).ready(loadJquery);

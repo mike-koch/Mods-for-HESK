@@ -588,6 +588,15 @@ if (isset($_GET['delatt']) && hesk_token_check())
 	hesk_process_messages($hesklang['kb_att_rem'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
 }
 
+//-- Update location action
+if (isset($_POST['latitude']) && isset($_POST['longitude'])) {
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `latitude` = '".hesk_dbEscape($_POST['latitude'])."',
+        `longitude` = '".hesk_dbEscape($_POST['longitude'])."' WHERE `ID` = ".intval($ticket['id']));
+
+    //redirect
+    hesk_process_messages($hesklang['ticket_location_updated'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
+}
+
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
@@ -886,11 +895,32 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                             <h4><?php echo $hesklang['users_location']; ?></h4>
                                         </div>
                                         <div class="modal-body">
                                             <?php if ($hasLocation): ?>
-                                                <div id="map" style="height: 500px"></div>
+                                                <div id="map" style="height: 500px"></div><br>
+                                                <div class="row">
+                                                    <form action="admin_ticket.php" method="post" role="form">
+                                                        <input type="hidden" name="track" value="<?php echo $trackingID; ?>">
+                                                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                                                        <input type="hidden" name="latitude" id="latitude" value="<?php echo $ticket['latitude']; ?>">
+                                                        <input type="hidden" name="longitude" id="longitude" value="<?php echo $ticket['longitude']; ?>">
+                                                        <div class="btn-group" style="display:none" id="save-group">
+                                                            <input type="submit" class="btn btn-success"
+                                                                   value="<?php echo $hesklang['save_location']; ?>">
+                                                            <button class="btn btn-default" data-dismiss="modal"
+                                                                    onclick="resetLatLon(<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>)">
+                                                                <?php echo $hesklang['close_modal_without_saving']; ?>
+                                                            </button>
+                                                        </div>
+                                                        <button id="close-button" class="btn btn-default"
+                                                                data-dismiss="modal"><?php echo $hesklang['close_modal']; ?></button>
+                                                    </form>
+                                                </div>
                                             <?php
                                                 else:
                                                     $errorCode = explode('-', $ticket['latitude']);
@@ -912,19 +942,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 latitude = <?php echo $ticket['latitude']; ?>;
                                 var longitude = '';
                                 longitude = <?php echo $ticket['longitude']; ?>;
-                                var map = L.map('map').setView([latitude, longitude], 15);
-                                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                                }).addTo(map);
-                                L.marker([latitude, longitude]).addTo(map)
-                                    .bindPopup("<?php echo $hesklang['users_location']; ?>");
-
-
-                                $('#map-modal').on('shown.bs.modal', function(){
-                                    setTimeout(function() {
-                                        map.invalidateSize();
-                                    }, 10);
-                                });
+                                initializeMapForStaff(latitude, longitude, "<?php echo $hesklang['users_location']; ?>");
                             </script>
                         <?php
                             endif;
