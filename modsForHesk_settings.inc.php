@@ -46,4 +46,4 @@ $modsForHesk_settings['attachments'] = 0;
 $modsForHesk_settings['show_number_merged'] = 1;
 
 //-- Setting for requesting user's location. 0 = Disable, 1 = Enable
-$modsForHesk_settings['request_location'] = 0;
+$modsForHesk_settings['request_location'] = 1;
