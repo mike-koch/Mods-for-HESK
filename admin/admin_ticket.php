@@ -903,6 +903,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <div class="modal-body">
                                             <?php if ($hasLocation): ?>
                                                 <div id="map" style="height: 500px"></div><br>
+                                                <address id="friendly-location" style="font-size: 13px"></address>
+                                                <p id="save-for-address" style="font-size: 13px;display:none"><?php echo $hesklang['save_to_see_updated_address']; ?></p>
+                                                <script>
+                                                    getFriendlyLocation(<?php echo $ticket['latitude']; ?>,
+                                                        <?php echo $ticket['longitude']; ?>);
+                                                </script>
                                                 <div class="row">
                                                     <form action="admin_ticket.php" method="post" role="form">
                                                         <input type="hidden" name="track" value="<?php echo $trackingID; ?>">

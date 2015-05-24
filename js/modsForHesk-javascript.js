@@ -182,12 +182,21 @@ function initializeMapForStaff(latitude, longitude, usersLocationText) {
         setLatLon(event.target.getLatLng().lat, event.target.getLatLng().lng);
         $('#save-group').show();
         $('#close-button').hide();
+        $('#friendly-location').hide();
+        $('#save-for-address').show();
     });
 
     $('#map-modal').on('shown.bs.modal', function(){
         setTimeout(function() {
             map.invalidateSize();
         }, 10);
+    });
+}
+
+function getFriendlyLocation(latitude, longitude) {
+    var URL = 'http://nominatim.openstreetmap.org/reverse?format=json&lat='+ latitude +'&lon='+ longitude +'&zoom=15&addressdetails=1';
+    $.getJSON(URL, function(data) {
+        $('#friendly-location').text(data.display_name);
     });
 }
 
