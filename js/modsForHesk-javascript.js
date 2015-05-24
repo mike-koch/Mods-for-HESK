@@ -152,6 +152,8 @@ function resetLatLon(lat, lon) {
 function closeAndReset(lat, lon) {
     $('#save-group').hide();
     $('#close-button').show();
+    $('#friendly-location').show();
+    $('#save-for-address').hide();
     resetLatLon(lat, lon);
 }
 
