@@ -31,6 +31,8 @@ if ($task == 'status-change') {
     removeTicketsPendingVerificationTable();
 } elseif ($task == 'service-message-icon') {
     removeServiceMessageCustomIcon();
+} elseif ($task == 'location') {
+    removeTicketLocation();
 } elseif ($task == 'miscellaneous') {
     executeMiscellaneousSql();
 } else {

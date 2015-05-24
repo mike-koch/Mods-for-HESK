@@ -17,6 +17,7 @@ function echoTaskRows() {
     printUninstallRow('Remove pending verification emails table', 'pending-verification-emails-table');
     printUninstallRow('Remove tickets pending verification table', 'pending-verification-tickets-table');
     printUninstallRow('Remove custom service messages icon', 'service-message-icon');
+    printUninstallRow('Remove ticket location', 'location');
     printUninstallRow('Miscellaneous database cleanup changes', 'miscellaneous');
 }
 

@@ -1,7 +1,8 @@
 function getTasks() {
     return ['status-change', 'autorefresh', 'parent-child', 'settings-access', 'activate-user',
         'notify-note-unassigned', 'user-manage-notification-settings', 'settings-table', 'verified-emails-table',
-        'pending-verification-emails-table', 'pending-verification-tickets-table', 'service-message-icon', 'miscellaneous'];
+        'pending-verification-emails-table', 'pending-verification-tickets-table', 'service-message-icon', 'location',
+        'miscellaneous'];
 }
 
 function processUninstallation() {
