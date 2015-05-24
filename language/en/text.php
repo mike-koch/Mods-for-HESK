@@ -44,6 +44,28 @@ $hesklang['show_number_merged_help'] = 'If enabled, the user will be able to see
 $hesklang['latest_top_on_home'] = 'Latest/Top articles on home page';
 $hesklang['latest_top_on_home_help'] = 'Select YES to display the top and latest knowledgebase articles on the home page.
     Otherwise, a link to the knowledgebase will appear on the home page.';
+$hesklang['location_unavailable'] = "Location unavailable. Click for more information.";
+$hesklang['click_for_map'] = "View map of user's location";
+$hesklang['request_user_location'] = "Request Location";
+$hesklang['request_user_location_help'] = "If enabled, the help desk will ask for the customer's location, allowing staff to
+ see a map of the customer's location when they created the ticket.";
+$hesklang['users_location'] = "User's Location";
+$hesklang['location_unavailable_0'] = "User's location is not available because the ticket was created before location tracking was enabled.";
+$hesklang['location_unavailable_1'] = "User's location is not available because the user refused to share it.";
+$hesklang['location_unavailable_2'] = "User's location is not available because the help desk was unable to determine the user's position.";
+$hesklang['location_unavailable_3'] = "User's location is not available because the help desk was not able to determine the user's position in
+ a reasonable amount of time.";
+$hesklang['location_unavailable_4'] = "An unknown error occurred when trying to obtain the user's location.";
+$hesklang['location_unavailable_5'] = "User's location is not available because the user's browser did not meet the minimum
+requirements for tracking their location when the ticket was submitted.";
+$hesklang['save_location'] = 'Save Location';
+$hesklang['close_modal_without_saving'] = 'Close without saving';
+$hesklang['ticket_location_updated'] = 'Ticket location has been updated!';
+$hesklang['location_colon'] = 'Location:';
+$hesklang['your_current_location'] = 'Your location';
+$hesklang['requesting_location_ellipsis'] = 'Requesting location...';
+$hesklang['unable_to_determine_location'] = 'Unable to determine your location, or you declined to share it.';
+$hesklang['save_to_see_updated_address'] = 'Save the new location to see the updated address';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)

@@ -506,6 +506,7 @@ $set['use_bootstrap_theme'] = empty($_POST['use_bootstrap_theme']) ? 0 : 1;
 $set['new_kb_article_visibility'] = hesk_checkMinMax( intval( hesk_POST('new_kb_article_visibility') ) , 0, 2, 2);
 $set['mfh_attachments'] = empty($_POST['email_attachments']) ? 0 : 1;
 $set['show_number_merged'] = empty($_POST['show_number_merged']) ? 0 : 1;
+$set['request_location'] = empty($_POST['request_location']) ? 0 : 1;
 
 if ($set['customer-email-verification-required'])
 {
@@ -568,7 +569,10 @@ $modsForHesk_settings[\'new_kb_article_visibility\'] = '.$set['new_kb_article_vi
 $modsForHesk_settings[\'attachments\'] = '.$set['mfh_attachments'].';
 
 //-- Setting for showing number of merged tickets in the ticket search screen. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'show_number_merged\'] = '.$set['show_number_merged'].';';
+$modsForHesk_settings[\'show_number_merged\'] = '.$set['show_number_merged'].';
+
+//-- Setting for requesting user\'s location. 0 = Disable, 1 = Enable
+$modsForHesk_settings[\'request_location\'] = '.$set['request_location'].';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )

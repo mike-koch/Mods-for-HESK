@@ -448,6 +448,10 @@ function execute230Scripts() {
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `Key` = `ShortNameContentKey`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` DROP COLUMN `ShortNameContentKey`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` DROP COLUMN `TicketViewContentKey`");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `latitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `longitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `latitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `longitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.0' WHERE `Key` = 'modsForHeskVersion'");
 }
 
@@ -462,6 +466,13 @@ function execute230FileUpdate() {
 
         //-- Setting for showing number of merged tickets in the ticket search screen. 0 = Disable, 1 = Enable
 $modsForHesk_settings[\'show_number_merged\'] = 1;';
+    }
+    if (strpos($file, '$modsForHesk_settings[\'request_location\']') === false)
+    {
+        $file .= '
+
+        //-- Setting for requesting user\'s location. 0 = Disable, 1 = Enable
+$modsForHesk_settings[\'request_location\'] = 0';
     }
 
     return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);

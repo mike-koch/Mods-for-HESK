@@ -588,6 +588,15 @@ if (isset($_GET['delatt']) && hesk_token_check())
 	hesk_process_messages($hesklang['kb_att_rem'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
 }
 
+//-- Update location action
+if (isset($_POST['latitude']) && isset($_POST['longitude'])) {
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `latitude` = '".hesk_dbEscape($_POST['latitude'])."',
+        `longitude` = '".hesk_dbEscape($_POST['longitude'])."' WHERE `ID` = ".intval($ticket['id']));
+
+    //redirect
+    hesk_process_messages($hesklang['ticket_location_updated'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'SUCCESS');
+}
+
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
@@ -860,6 +869,89 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         if ($ticket['locked'])
                         {
                             echo '<span class="fa fa-lock"></span>&nbsp;';
+                        }
+                        if ($modsForHesk_settings['request_location'])
+                        {
+                            $locationText = '';
+                            $iconColor = '';
+                            $hasLocation = true;
+                            if (strpos($ticket['latitude'], 'E') === false)
+                            {
+                                $locationText = $hesklang['click_for_map'];
+                                $iconColor = 'inherit';
+                            }
+                            else
+                            {
+                                $hasLocation = false;
+                                $locationText = $hesklang['location_unavailable'];
+                                $iconColor = '#ccc';
+                            }
+                            ?>
+                            <span data-toggle="modal" data-target=".map-modal" style="cursor: pointer">
+                                <i class="fa fa-map-marker" data-toggle="tooltip" title="<?php echo $locationText; ?>"
+                                   style="color: <?php echo $iconColor; ?>"></i>
+                            </span>
+                            <div id="map-modal" class="modal fade map-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4><?php echo $hesklang['users_location']; ?></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <?php if ($hasLocation): ?>
+                                                <div id="map" style="height: 500px"></div><br>
+                                                <address id="friendly-location" style="font-size: 13px"></address>
+                                                <p id="save-for-address" style="font-size: 13px;display:none"><?php echo $hesklang['save_to_see_updated_address']; ?></p>
+                                                <script>
+                                                    getFriendlyLocation(<?php echo $ticket['latitude']; ?>,
+                                                        <?php echo $ticket['longitude']; ?>);
+                                                </script>
+                                                <div class="row">
+                                                    <form action="admin_ticket.php" method="post" role="form">
+                                                        <input type="hidden" name="track" value="<?php echo $trackingID; ?>">
+                                                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                                                        <input type="hidden" name="latitude" id="latitude" value="<?php echo $ticket['latitude']; ?>">
+                                                        <input type="hidden" name="longitude" id="longitude" value="<?php echo $ticket['longitude']; ?>">
+                                                        <div class="btn-group" style="display:none" id="save-group">
+                                                            <input type="submit" class="btn btn-success"
+                                                                   value="<?php echo $hesklang['save_location']; ?>">
+                                                            <button class="btn btn-default" data-dismiss="modal"
+                                                                    onclick="closeAndReset(<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>)">
+                                                                <?php echo $hesklang['close_modal_without_saving']; ?>
+                                                            </button>
+                                                        </div>
+                                                        <button id="close-button" class="btn btn-default"
+                                                                data-dismiss="modal"><?php echo $hesklang['close_modal']; ?></button>
+                                                    </form>
+                                                </div>
+                                            <?php
+                                                else:
+                                                    $errorCode = explode('-', $ticket['latitude']);
+                                                    $key = 'location_unavailable_'.$errorCode[1];
+                                                    echo '<h5>'.$hesklang[$key].'</h5>';
+                                                endif;
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <?php
+                                // Only output JavaScript if we have coordinates
+                                if (strpos($ticket['latitude'], 'E') === false):
+                            ?>
+                            <script>
+                                var latitude = '';
+                                latitude = <?php echo $ticket['latitude']; ?>;
+                                var longitude = '';
+                                longitude = <?php echo $ticket['longitude']; ?>;
+                                initializeMapForStaff(latitude, longitude, "<?php echo $hesklang['users_location']; ?>");
+                            </script>
+                        <?php
+                            endif;
                         }
                         echo $ticket['subject'];
                         ?></h3>
