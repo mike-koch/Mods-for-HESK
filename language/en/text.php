@@ -61,6 +61,10 @@ requirements for tracking their location when the ticket was submitted.";
 $hesklang['save_location'] = 'Save Location';
 $hesklang['close_modal_without_saving'] = 'Close without saving';
 $hesklang['ticket_location_updated'] = 'Ticket location has been updated!';
+$hesklang['location_colon'] = 'Location:';
+$hesklang['your_current_location'] = 'Your location';
+$hesklang['requesting_location_ellipsis'] = 'Requesting location...';
+$hesklang['unable_to_determine_location'] = 'Unable to determine your location, or you declined to share it.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)

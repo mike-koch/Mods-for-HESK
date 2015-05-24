@@ -106,11 +106,17 @@ function changeText(id, checkedValue, uncheckedValue, object) {
     }
 }
 
-function requestUserLocation() {
+function requestUserLocation(yourLocationText, unableToDetermineText) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            setLatLon(position.coords.latitude, position.coords.longitude);
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            setLatLon(latitude, longitude);
+            $('#console').hide();
+            initializeMapForCustomer(latitude, longitude, yourLocationText);
         }, function(error) {
+            $('#map').hide();
+            $('#console').text(unableToDetermineText).show();
             switch(error.code) {
                 case error.PERMISSION_DENIED:
                     setLatLon('E-1','E-1');
@@ -147,6 +153,20 @@ function closeAndReset(lat, lon) {
     $('#save-group').hide();
     $('#close-button').show();
     resetLatLon(lat, lon);
+}
+
+function initializeMapForCustomer(latitude, longitude, yourLocationText) {
+    map = L.map('map').setView([latitude, longitude], 15);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    marker = L.marker([latitude, longitude], {draggable: true})
+        .addTo(map)
+        .bindPopup(yourLocationText);
+
+    marker.on('dragend', function(event) {
+        setLatLon(event.target.getLatLng().lat, event.target.getLatLng().lng);
+    });
 }
 
 function initializeMapForStaff(latitude, longitude, usersLocationText) {

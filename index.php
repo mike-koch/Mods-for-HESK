@@ -961,10 +961,23 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 
                 <?php
                 }
+
+                if ($modsForHesk_settings['request_location']):
 	            ?>
+
+                <div class="form-group">
+                    <label for="location" class="col-md-3 control-label"><?php echo $hesklang['location_colon']; ?></label>
+                    <div class="col-sm-9">
+                        <p id="console"><?php echo $hesklang['requesting_location_ellipsis']; ?></p>
+                        <div id="map" style="height: 300px">
+                        </div>
+                    </div>
+                </div>
 
 	            <!-- Submit -->
                 <?php
+                 endif;
+
                 if ($hesk_settings['submit_notice'])
                 {
 	                ?>
@@ -1032,7 +1045,7 @@ if ($modsForHesk_settings['request_location'])
 {
     echo '
     <script>
-        requestUserLocation();
+        requestUserLocation("'.$hesklang['your_current_location'].'", "'.$hesklang['unable_to_determine_location'].'");
     </script>
     ';
 }
