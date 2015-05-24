@@ -143,6 +143,12 @@ function resetLatLon(lat, lon) {
     marker.setLatLng(L.latLng(lat, lon));
 }
 
+function closeAndReset(lat, lon) {
+    $('#save-group').hide();
+    $('#close-button').show();
+    resetLatLon(lat, lon);
+}
+
 function initializeMapForStaff(latitude, longitude, usersLocationText) {
     map = L.map('map').setView([latitude, longitude], 15);
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {

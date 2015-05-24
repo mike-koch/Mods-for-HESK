@@ -913,7 +913,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                                             <input type="submit" class="btn btn-success"
                                                                    value="<?php echo $hesklang['save_location']; ?>">
                                                             <button class="btn btn-default" data-dismiss="modal"
-                                                                    onclick="resetLatLon(<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>)">
+                                                                    onclick="closeAndReset(<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>)">
                                                                 <?php echo $hesklang['close_modal_without_saving']; ?>
                                                             </button>
                                                         </div>
