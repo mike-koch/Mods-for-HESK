@@ -133,6 +133,8 @@ function requestUserLocation(yourLocationText, unableToDetermineText) {
             }
         });
     } else {
+        $('#map').hide();
+        $('#console').text(unableToDetermineText).show();
         setLatLon('E-5','E-5');
     }
 }
