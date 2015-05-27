@@ -272,6 +272,9 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments))
 $tmpvar['message']=hesk_makeURL($tmpvar['message']);
 $tmpvar['message']=nl2br($tmpvar['message']);
 
+$tmpvar['latitude'] = hesk_POST('latitude', 'E-4');
+$tmpvar['longitude'] = hesk_POST('longitude', 'E-4');
+
 // Insert ticket to database
 $ticket = hesk_newTicket($tmpvar);
 
