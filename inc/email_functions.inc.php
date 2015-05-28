@@ -228,6 +228,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
     	/* Make sure each user gets email in his/her preferred language */
         $current_language = 'NONE';
         $recipients = array();
+        $hasMessage = hesk_doesTemplateHaveTag($email_template,'%%MESSAGE%%');
 
 		/* Loop through staff */
         foreach ($admins as $admin)
