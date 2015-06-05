@@ -123,15 +123,21 @@ else
 }
 
 /* Get category name and ID */
-$result = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='".intval($ticket['category'])."' LIMIT 1");
+$result = hesk_dbQuery("SELECT `id`, `name`, `manager` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='".intval($ticket['category'])."' LIMIT 1");
 
 /* If this category has been deleted use the default category with ID 1 */
 if (hesk_dbNumRows($result) != 1)
 {
-    $result = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='1' LIMIT 1");
+    $result = hesk_dbQuery("SELECT `id`, `name`, `manager` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='1' LIMIT 1");
 }
 
 $category = hesk_dbFetchAssoc($result);
+$managerRS = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` WHERE `id` = '.intval($_SESSION['id']));
+$managerRow = hesk_dbFetchAssoc($managerRS);
+$isManager = $managerRow['id'] == $category['manager'];
+if ($isManager) {
+    $can_del_notes = $can_reply = $can_delete = $can_edit = $can_archive = $can_assign_self = $can_view_unassigned = $can_change_cat = true;
+}
 
 /* Is this user allowed to view tickets inside this category? */
 hesk_okCategory($category['id']);
