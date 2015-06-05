@@ -57,6 +57,7 @@ $priorities = array(
 );
 
 /* What should we do? */
+//TODO
 if ( $action = hesk_REQUEST('a') )
 {
 	if ($action == 'linkcode')       {generate_link_code();}
@@ -68,6 +69,7 @@ if ( $action = hesk_REQUEST('a') )
 	elseif ($action == 'autoassign') {toggle_autoassign();}
 	elseif ($action == 'type')       {toggle_type();}
     elseif ($action == 'priority')   {change_priority();}
+    elseif ($action == 'manager')    {change_manager();}
 }
 
 /* Print header */
@@ -238,7 +240,6 @@ else {return false;}
           })
         </script>
     </div>
-
     <div class="col-md-8">
         <?php
             /* This will handle error, success and notice messages */
@@ -258,6 +259,7 @@ else {return false;}
                 <th><?php echo $hesklang['priority']; ?></th>
                 <th><?php echo $hesklang['not']; ?></th>
                 <th><?php echo $hesklang['graph']; ?></th>
+                <th><?php echo $hesklang['manager'] ?></th>
                 <th><?php echo $hesklang['opt']; ?></th>
             </tr>
 
@@ -275,6 +277,11 @@ else {return false;}
 
             /* Get list of categories */
             $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `cat_order` ASC");
+            $usersRes = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `name` ASC");
+            $users = array();
+            while ($userRow = hesk_dbFetchAssoc($usersRes)) {
+                array_push($users, $userRow);
+            }
 
             $i=1;
             $j=0;
@@ -356,6 +363,7 @@ else {return false;}
                     </div>
                 </div>
                 </td>
+                <td>'.output_user_dropdown($mycat['id'], $mycat['manager'], $users).'</td>
                 <td>
                 <a href="Javascript:void(0)" onclick="Javascript:hesk_window(\'manage_categories.php?a=linkcode&amp;catid='.$mycat['id'].'&amp;p='.$mycat['type'].'\',\'200\',\'500\')" id="tooltip"><i class="fa fa-code" style="font-size: 14px; color: '. ($mycat['type'] ? 'gray' : 'green') . '" data-toggle="tooltip" data-placement="top" title="'.$hesklang['geco'].'"></i></a>
                 ' . $autoassign_code . '
@@ -702,4 +710,39 @@ function toggle_type()
     hesk_process_messages($tmp,'./manage_categories.php','SUCCESS');
 
 } // End toggle_type()
+
+function output_user_dropdown($catId, $selectId, $userArray) {
+    global $hesklang;
+
+    //TODO
+    $dropdownMarkup = '<select class="form-control input-sm" name="managerid">
+                <option value="0">'.$hesklang['select'].'</option>';
+    foreach ($userArray as $user) {
+        $select = $selectId == $user['id'] ? 'selected' : '';
+        $dropdownMarkup .= '<option value="'.$user['id'].'" '.$select.'>'.$user['name'].'</option>';
+    }
+    $dropdownMarkup .= '</select>';
+
+
+    return '<form role="form" id="manager_form_'.$catId.'" action="manage_categories.php" method="post" class="form-inline" onchange="document.getElementById(\'manager_form_'.$catId.'\').submit();">
+                <input type="hidden" name="a" value="manager">
+                <input type="hidden" name="catid" value="'.$catId.'">
+                '.$dropdownMarkup.'
+            </form>';
+}
+
+function change_manager() {
+    global $hesklang, $hesk_settings;
+
+    $catid = hesk_POST('catid');
+    $newManagerId = hesk_POST('managerid');
+
+    hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` SET `manager` = '.intval($newManagerId).' WHERE `id` = '.intval($catid));
+    if (hesk_dbAffectedRows() != 1)
+    {
+        hesk_process_messages($hesklang['int_error'].': '.$hesklang['cat_not_found'],'./manage_categories.php');
+    }
+
+    hesk_process_messages($hesklang['manager_updated'],'./manage_categories.php','SUCCESS');
+}
 ?>

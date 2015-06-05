@@ -66,6 +66,8 @@ $hesklang['your_current_location'] = 'Your location';
 $hesklang['requesting_location_ellipsis'] = 'Requesting location...';
 $hesklang['unable_to_determine_location'] = 'Unable to determine your location, or you declined to share it.';
 $hesklang['save_to_see_updated_address'] = 'Save the new location to see the updated address';
+$hesklang['manager'] = 'Manager';
+$hesklang['manager_updated'] = 'Category manager has been updated.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
