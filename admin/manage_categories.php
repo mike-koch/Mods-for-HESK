@@ -276,7 +276,7 @@ else {return false;}
 
             /* Get list of categories */
             $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `cat_order` ASC");
-            $usersRes = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `name` ASC");
+            $usersRes = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `isadmin` = '0' ORDER BY `name` ASC");
             $users = array();
             while ($userRow = hesk_dbFetchAssoc($usersRes)) {
                 array_push($users, $userRow);
