@@ -57,7 +57,6 @@ $priorities = array(
 );
 
 /* What should we do? */
-//TODO
 if ( $action = hesk_REQUEST('a') )
 {
 	if ($action == 'linkcode')       {generate_link_code();}
@@ -714,7 +713,6 @@ function toggle_type()
 function output_user_dropdown($catId, $selectId, $userArray) {
     global $hesklang;
 
-    //TODO
     $dropdownMarkup = '<select class="form-control input-sm" name="managerid">
                 <option value="0">'.$hesklang['select'].'</option>';
     foreach ($userArray as $user) {
