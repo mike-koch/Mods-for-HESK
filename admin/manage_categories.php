@@ -742,6 +742,17 @@ function change_manager() {
     {
         hesk_process_messages($hesklang['int_error'].': '.$hesklang['cat_not_found'],'./manage_categories.php');
     }
+    if ($newManagerId == 0) {
+        // There is no new manager.
+        return;
+    }
+    // Add the category to the user's categories list, if not already present
+    $currentCatRs = hesk_dbQuery('SELECT `categories` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` WHERE `id` = '.intval($newManagerId));
+    $currentCategories = hesk_dbFetchAssoc($currentCatRs);
+    $categories = explode(',', $currentCategories['categories']);
+    if (!in_array($catid, $categories)) {
+        hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` SET `categories` = \''.$currentCategories['categories'].','.$catid.'\' WHERE `id` = '.intval($newManagerId));
+    }
 
     hesk_process_messages($hesklang['manager_updated'],'./manage_categories.php','SUCCESS');
 }
