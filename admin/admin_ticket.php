@@ -859,7 +859,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         /* Do we need or have any canned responses? */
         $can_options = hesk_printCanned();
         
-        echo hesk_getAdminButtons();
+        echo hesk_getAdminButtons(0,1,$isManager);
         ?>   
         <div class="blankSpace"></div>
         <!-- BEGIN TICKET HEAD -->
@@ -1273,7 +1273,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <?php
 		    if ($hesk_settings['new_top'])
             {
-        	    $i = hesk_printTicketReplies() ? 0 : 1;
+        	    $i = hesk_printTicketReplies($isManager) ? 0 : 1;
             }
             else
             {
@@ -1353,7 +1353,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
                     <!-- Action Buttons -->
-                    <?php echo hesk_getAdminButtonsInTicket(0, $i); ?>
+                    <?php echo hesk_getAdminButtonsInTicket(0, $i, $isManager); ?>
                     
                     <!-- Date -->
                     <p><br/><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt'], true); ?>
@@ -1452,7 +1452,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <?php
 		if ( ! $hesk_settings['new_top'])
         {
-        	hesk_printTicketReplies();
+        	hesk_printTicketReplies($isManager);
         }
 		?>
 
@@ -1635,7 +1635,7 @@ function hesk_getFontAwesomeIconForFileExtension($fileExtension)
 }
 
 
-function hesk_getAdminButtons($reply=0,$white=1)
+function hesk_getAdminButtons($reply=0,$white=1,$isManager)
 {
 	global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete;
 
@@ -1686,7 +1686,8 @@ function hesk_getAdminButtons($reply=0,$white=1)
 	if ($can_edit)
 	{
     	$tmp = $reply ? '&amp;reply='.$reply['id'] : '';
-		$options .= '<a class="btn btn-default" href="edit_post.php?track='.$trackingID.$tmp.'"><i class="fa fa-pencil"></i> '.$hesklang['edtt'].'</a> ';
+        $mgr = $isManager ? '&amp;isManager=true' : '';
+		$options .= '<a class="btn btn-default" href="edit_post.php?track='.$trackingID.$tmp.$mgr.'"><i class="fa fa-pencil"></i> '.$hesklang['edtt'].'</a> ';
 	}
 
 
@@ -1716,7 +1717,7 @@ function hesk_getAdminButtons($reply=0,$white=1)
 
 } // END hesk_getAdminButtons()
 
-function hesk_getAdminButtonsInTicket($reply=0,$white=1)
+function hesk_getAdminButtonsInTicket($reply=0,$white=1,$isManager=false)
 {
 	global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete;
 
@@ -1730,7 +1731,8 @@ function hesk_getAdminButtonsInTicket($reply=0,$white=1)
 	if ($can_edit)
 	{
     	$tmp = $reply ? '&amp;reply='.$reply['id'] : '';
-		$options .= '<a class="btn btn-default" href="edit_post.php?track='.$trackingID.$tmp.'"><i class="fa fa-pencil"></i> '.$hesklang['edtt'].'</a> ';
+        $mgr = $isManager ? '&amp;isManager=true' : '';
+		$options .= '<a class="btn btn-default" href="edit_post.php?track='.$trackingID.$tmp.$mgr.'"><i class="fa fa-pencil"></i> '.$hesklang['edtt'].'</a> ';
 	}
 
 
@@ -1841,7 +1843,7 @@ function print_form()
 } // End print_form()
 
 
-function hesk_printTicketReplies() {
+function hesk_printTicketReplies($isManager) {
 	global $hesklang, $hesk_settings, $result, $reply;
 
 	$i = $hesk_settings['new_top'] ? 0 : 1;
@@ -1863,7 +1865,7 @@ function hesk_printTicketReplies() {
             </div>
             <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
-                    <?php echo hesk_getAdminButtonsInTicket(); ?>
+                    <?php echo hesk_getAdminButtonsInTicket(0,1,$isManager); ?>
                     <div class="blankSpace"></div>
                     <p><?php echo $hesklang['date']; ?>: <?php echo $reply['dt']; ?></p> 
                 </div>
