@@ -713,20 +713,29 @@ function toggle_type()
 function output_user_dropdown($catId, $selectId, $userArray) {
     global $hesklang;
 
-    $dropdownMarkup = '<select class="form-control input-sm" name="managerid">
-                <option value="0">'.$hesklang['select'].'</option>';
-    foreach ($userArray as $user) {
-        $select = $selectId == $user['id'] ? 'selected' : '';
-        $dropdownMarkup .= '<option value="'.$user['id'].'" '.$select.'>'.$user['name'].'</option>';
-    }
-    $dropdownMarkup .= '</select>';
+    if (!hesk_checkPermission('can_set_manager', 0)) {
+        foreach ($userArray as $user) {
+            if ($user['id'] == $selectId) {
+                return '<p>'.$user['name'].'</p>';
+            }
+        }
+        return '<p>'.$hesklang['no_manager'].'</p>';
+    } else {
+        $dropdownMarkup = '<select class="form-control input-sm" name="managerid">
+                <option value="0">'.$hesklang['no_manager'].'</option>';
+        foreach ($userArray as $user) {
+            $select = $selectId == $user['id'] ? 'selected' : '';
+            $dropdownMarkup .= '<option value="'.$user['id'].'" '.$select.'>'.$user['name'].'</option>';
+        }
+        $dropdownMarkup .= '</select>';
 
 
-    return '<form role="form" id="manager_form_'.$catId.'" action="manage_categories.php" method="post" class="form-inline" onchange="document.getElementById(\'manager_form_'.$catId.'\').submit();">
+        return '<form role="form" id="manager_form_'.$catId.'" action="manage_categories.php" method="post" class="form-inline" onchange="document.getElementById(\'manager_form_'.$catId.'\').submit();">
                 <input type="hidden" name="a" value="manager">
                 <input type="hidden" name="catid" value="'.$catId.'">
                 '.$dropdownMarkup.'
             </form>';
+    }
 }
 
 function change_manager() {

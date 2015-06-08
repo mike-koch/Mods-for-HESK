@@ -79,6 +79,7 @@ $hesk_settings['features'] = array(
 'can_service_msg',		/* User can manage service messages shown in customer interface */
 'can_man_email_tpl',    /* User can manage email templates */
 'can_man_ticket_statuses', /* User can manage ticket statuses */
+'can_set_manager', /* User can set category managers */
 );
 
 /* Set default values */
