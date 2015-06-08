@@ -79,6 +79,7 @@ $hesk_settings['features'] = array(
 'can_service_msg',		/* User can manage service messages shown in customer interface */
 'can_man_email_tpl',    /* User can manage email templates */
 'can_man_ticket_statuses', /* User can manage ticket statuses */
+'can_set_manager', /* User can set category managers */
 );
 
 /* Set default values */
@@ -685,6 +686,31 @@ function update_user()
         hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `owner`=0 WHERE `owner`='".intval($myuser['id'])."' AND `category` NOT IN (".$myuser['categories'].")");
     }
 
+    // Find the list of categories they are manager of. If they no longer have access to the category, revoke their manager permission.
+    if ($myuser['isadmin']) {
+        // Admins can't be managers
+        hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` SET `manager` = 0 WHERE `manager` = '.intval($myuser['id']));
+    } else {
+        $currentCatRs = hesk_dbQuery("SELECT `categories` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id` = '".intval($myuser['id'])."' LIMIT 1");
+        $rowOfCategories = hesk_dbFetchAssoc($currentCatRs);
+        $cats = $rowOfCategories['categories'];
+        $currentCategories = explode(',', $cats);
+        $newCategories = explode(',', $myuser['categories']);
+
+        // If any any elements are in current but not in new, add them to the revoke array
+        $revokeCats = array();
+        foreach ($currentCategories as $currentCategory) {
+            if (!in_array($currentCategory, $newCategories) && $currentCategory != '') {
+                array_push($revokeCats, $currentCategory);
+            }
+        }
+
+        if (count($revokeCats) > 0) {
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `manager` = 0 WHERE `id` IN (" . implode(',', $revokeCats) . ")");
+        }
+    }
+
+
 	hesk_dbQuery(
     "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET
     `user`='".hesk_dbEscape($myuser['user'])."',
@@ -713,6 +739,13 @@ function update_user()
 	`notify_note_unassigned`='".($myuser['notify_note_unassigned'])."',
 	`autorefresh`=".intval($myuser['autorefresh'])."
     WHERE `id`='".intval($myuser['id'])."' LIMIT 1");
+
+    // If they are now inactive, remove any manager rights
+    if (!$myuser['active']) {
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` SET `manager` = 0 WHERE `manager` = ".intval($myuser['id']));
+    }
+
+
 
     unset($_SESSION['save_userdata']);
     unset($_SESSION['userdata']);
@@ -892,6 +925,9 @@ function remove()
         hesk_process_messages($hesklang['cant_del_own'],'./manage_users.php');
     }
 
+    // Revoke manager rights
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` SET `manager` = 0 WHERE `manager` = ".intval($myuser));
+
     /* Un-assign all tickets for this user */
     $res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `owner`=0 WHERE `owner`='".intval($myuser)."'");
 
@@ -962,9 +998,14 @@ function toggle_active()
     {
         $active = 0;
         $tmp = $hesklang['user_deactivated'];
+
+        // Revoke any manager rights
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` SET `manager` = 0 WHERE `manager` = ".intval($myuser));
+
         $notificationSql = ", `autoassign` = 0, `notify_new_unassigned` = 0, `notify_new_my` = 0, `notify_reply_unassigned` = 0,
         `notify_reply_my` = 0, `notify_assigned` = 0, `notify_pm` = 0, `notify_note` = 0, `notify_note_unassigned` = 0";
     }
+
     hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `active` = '".$active."'".$notificationSql." WHERE `id` = '".intval($myuser)."'");
 
     if (hesk_dbAffectedRows() != 1) {

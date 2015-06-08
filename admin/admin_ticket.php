@@ -123,15 +123,21 @@ else
 }
 
 /* Get category name and ID */
-$result = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='".intval($ticket['category'])."' LIMIT 1");
+$result = hesk_dbQuery("SELECT `id`, `name`, `manager` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='".intval($ticket['category'])."' LIMIT 1");
 
 /* If this category has been deleted use the default category with ID 1 */
 if (hesk_dbNumRows($result) != 1)
 {
-    $result = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='1' LIMIT 1");
+    $result = hesk_dbQuery("SELECT `id`, `name`, `manager` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `id`='1' LIMIT 1");
 }
 
 $category = hesk_dbFetchAssoc($result);
+$managerRS = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'users` WHERE `id` = '.intval($_SESSION['id']));
+$managerRow = hesk_dbFetchAssoc($managerRS);
+$isManager = $managerRow['id'] == $category['manager'];
+if ($isManager) {
+    $can_del_notes = $can_reply = $can_delete = $can_edit = $can_archive = $can_assign_self = $can_view_unassigned = $can_change_cat = true;
+}
 
 /* Is this user allowed to view tickets inside this category? */
 hesk_okCategory($category['id']);
@@ -989,16 +995,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             $isClosable = $isTicketClosedRow['Closable'] == 'yes' || $isTicketClosedRow['Closable'] == 'sonly';
 
                             echo '<div class="btn-group" role="group">';
+                            $mgr = $isManager ? '&amp;isManager=1' : '';
                             if ($isTicketClosed == 0 && $isClosable) // Ticket is still open
                             {
                                 echo '<a
-		                        class="btn btn-default btn-sm" href="change_status.php?track='.$trackingID.'&amp;s='.$staffClosedOptionStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">
+		                        class="btn btn-default btn-sm" href="change_status.php?track='.$trackingID.$mgr.'&amp;s='.$staffClosedOptionStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">
 		                            <i class="fa fa-check-circle"></i> '.$hesklang['close_action'].'</a>';
                             }
                             elseif ($isTicketClosed == 1)
                             {
                                 echo '<a
-		                        class="btn btn-default btn-sm" href="change_status.php?track='.$trackingID.'&amp;s='.$staffReopenedStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">
+		                        class="btn btn-default btn-sm" href="change_status.php?track='.$trackingID.$mgr.'&amp;s='.$staffReopenedStatus['ID'].'&amp;Refresh='.$random.'&amp;token='.hesk_token_echo(0).'">
 		                            <i class="fa fa-check-circle"></i> '.$hesklang['open_action'].'</a>';
                             }
 
@@ -1059,8 +1066,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </select>
 
                     <input type="submit" style="display: none" value="'.$hesklang['go'].'" /><input type="hidden" name="track" value="'.$trackingID.'" />
-                    <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />
-                    </span>
+                    <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />';
+                    if ($isManager) {
+                        echo '<input type="hidden" name="isManager" value="1">';
+                    }
+                    echo '</span>
 
                     </form>
 
@@ -1083,13 +1093,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </select>
 
                             <input type="submit" style="display:none;" value="'.$hesklang['go'].'" class="btn btn-default" /><input type="hidden" name="track" value="'.$trackingID.'" />
-                            <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />
-                        </span>
+                            <input type="hidden" name="token" value="'.hesk_token_echo(0).'" />';
+                            if ($isManager) {
+                                echo '<input type="hidden" name="isManager" value="1">';
+                            }
+                        echo '</span>
                     </form>
                     </div>';
                 echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticketPropertyTitle">'.$hesklang['owner'].'</p>';
 
-                        if (hesk_checkPermission('can_assign_others',0))
+                        if (hesk_checkPermission('can_assign_others',0) || $isManager)
                         {
                             echo'
                             <form style="margin-bottom:0;" id="changeOwnerForm" action="assign_owner.php" method="post">
@@ -1631,7 +1644,7 @@ function hesk_getFontAwesomeIconForFileExtension($fileExtension)
 
 function hesk_getAdminButtons($reply=0,$white=1)
 {
-	global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete;
+	global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
 
 	$options = '<div class="btn-group" style="width: 100%">';
 
@@ -1680,7 +1693,8 @@ function hesk_getAdminButtons($reply=0,$white=1)
 	if ($can_edit)
 	{
     	$tmp = $reply ? '&amp;reply='.$reply['id'] : '';
-		$options .= '<a class="btn btn-default" href="edit_post.php?track='.$trackingID.$tmp.'"><i class="fa fa-pencil"></i> '.$hesklang['edtt'].'</a> ';
+        $mgr = $isManager ? '&amp;isManager=true' : '';
+		$options .= '<a class="btn btn-default" href="edit_post.php?track='.$trackingID.$tmp.$mgr.'"><i class="fa fa-pencil"></i> '.$hesklang['edtt'].'</a> ';
 	}
 
 
@@ -1712,7 +1726,7 @@ function hesk_getAdminButtons($reply=0,$white=1)
 
 function hesk_getAdminButtonsInTicket($reply=0,$white=1)
 {
-	global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete;
+	global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
 
 	$options = '<div class="btn-group text-right" style="width: 70%; margin-left: auto; margin-right: auto">';
 
@@ -1724,7 +1738,8 @@ function hesk_getAdminButtonsInTicket($reply=0,$white=1)
 	if ($can_edit)
 	{
     	$tmp = $reply ? '&amp;reply='.$reply['id'] : '';
-		$options .= '<a class="btn btn-default" href="edit_post.php?track='.$trackingID.$tmp.'"><i class="fa fa-pencil"></i> '.$hesklang['edtt'].'</a> ';
+        $mgr = $isManager ? '&amp;isManager=true' : '';
+		$options .= '<a class="btn btn-default" href="edit_post.php?track='.$trackingID.$tmp.$mgr.'"><i class="fa fa-pencil"></i> '.$hesklang['edtt'].'</a> ';
 	}
 
 
@@ -1761,74 +1776,30 @@ function print_form()
     global $trackingID;
 
 	/* Print header */
-	require_once(HESK_PATH . 'inc/header.inc.php');
+	require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
 	/* Print admin navigation */
 	require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
-	?>
 
-	</td>
-	</tr>
-	<tr>
-	<td>
-
-    &nbsp;<br />
-
-	<?php
 	/* This will handle error, success and notice messages */
 	hesk_handle_messages();
 	?>
-
-	<div align="center">
-	<table border="0" cellspacing="0" cellpadding="0" width="50%">
-	<tr>
-		<td width="7" height="7"><img src="../img/roundcornerslt.jpg" width="7" height="7" alt="" /></td>
-		<td class="roundcornerstop"></td>
-		<td><img src="../img/roundcornersrt.jpg" width="7" height="7" alt="" /></td>
-	</tr>
-	<tr>
-		<td class="roundcornersleft">&nbsp;</td>
-		<td>
-
-	        <form action="admin_ticket.php" method="get">
-
-	        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-	        <tr>
-	                <td width="1"><img src="../img/existingticket.png" alt="" width="60" height="60" /></td>
-	                <td>
-	                <p><b><?php echo $hesklang['view_existing']; ?></a></b></p>
-	                </td>
-	        </tr>
-	        <tr>
-	                <td width="1">&nbsp;</td>
-	                <td>&nbsp;</td>
-	        </tr>
-	        <tr>
-	                <td width="1">&nbsp;</td>
-	                <td>
-	                <?php echo $hesklang['ticket_trackID']; ?>: <br /><input type="text" name="track" maxlength="20" size="35" value="<?php echo $trackingID; ?>" /><br />&nbsp;
-	                </td>
-	        </tr>
-	        <tr>
-	                <td width="1">&nbsp;</td>
-	                <td><input type="submit" value="<?php echo $hesklang['view_ticket']; ?>" class="orangebutton" onmouseover="hesk_btn(this,'orangebuttonover');" onmouseout="hesk_btn(this,'orangebutton');" /><input type="hidden" name="Refresh" value="<?php echo rand(10000,99999); ?>"></td>
-	        </tr>
-	        </table>
-
-	        </form>
-
-		</td>
-		<td class="roundcornersright">&nbsp;</td>
-	</tr>
-	<tr>
-		<td><img src="../img/roundcornerslb.jpg" width="7" height="7" alt="" /></td>
-		<td class="roundcornersbottom"></td>
-		<td width="7" height="7"><img src="../img/roundcornersrb.jpg" width="7" height="7" alt="" /></td>
-	</tr>
-	</table>
-	</div>
-
-	<p>&nbsp;</p>
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <h3 align="left"><?php echo $hesklang['view_existing']; ?></a></h3>
+            <form action="admin_ticket.php" method="get" class="form-horizontal">
+                <div class="form-group">
+                    <label for="track" class="control-label col-sm-3"><?php echo $hesklang['ticket_trackID']; ?></label>
+                    <div class="col-sm-9">
+                        <input type="text" name="track" maxlength="20" size="35" value="<?php echo $trackingID; ?>"
+                               placeholder="<?php echo $hesklang['ticket_trackID']; ?>" class="form-control"><br>
+                        <input type="submit" value="<?php echo $hesklang['view_ticket']; ?>" class="btn btn-default">
+                        <input type="hidden" name="Refresh" value="<?php echo rand(10000,99999); ?>">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 	<?php
 	require_once(HESK_PATH . 'inc/footer.inc.php');
 	exit();
@@ -1836,7 +1807,7 @@ function print_form()
 
 
 function hesk_printTicketReplies() {
-	global $hesklang, $hesk_settings, $result, $reply;
+	global $hesklang, $hesk_settings, $result, $reply, $isManager;
 
 	$i = $hesk_settings['new_top'] ? 0 : 1;
 
@@ -1898,7 +1869,7 @@ function hesk_printTicketReplies() {
 
 
 function hesk_printReplyForm() {
-	global $hesklang, $hesk_settings, $ticket, $admins, $can_options, $options, $can_assign_self;
+	global $hesklang, $hesk_settings, $ticket, $admins, $can_options, $options, $can_assign_self, $isManager;
 ?>
 <!-- START REPLY FORM -->
 
@@ -2078,9 +2049,11 @@ function hesk_printReplyForm() {
                             ?>
                         </ul>
                     </div>
-                    <input class="btn btn-default" type="submit" name="save_reply" value="<?php echo $hesklang['sacl']; ?>"
+                    <input class="btn btn-default" type="submit" name="save_reply" value="<?php echo $hesklang['sacl']; ?>">
+                    <?php if ($isManager): ?>
+                        <input type="hidden" name="isManager" value="1">
+                    <?php endif; ?>
                 </div>
-            </div></div>
         </form>
 
 <!-- END REPLY FORM -->
