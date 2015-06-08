@@ -89,10 +89,12 @@ if ( hesk_check_kb_only(false) )
                 } elseif (hesk_checkPermission('can_man_ticket_tpl',0)) {
                     echo '<li><a href="manage_ticket_templates.php"><i class="fa fa-file-text-o" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_can'].'</a></li>';
                 }
-                if (hesk_checkPermission('can_man_kb',0)) {
-                    echo '<li><a href="manage_knowledgebase.php"><i class="fa fa-book" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_kb'].'</a></li>';
-                } else {
-                    echo '<li><a href="knowledgebase_private.php"><i class="fa fa-book" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_kb'].'</a></li>';
+                if ($hesk_settings['kb_enable']) {
+                    if (hesk_checkPermission('can_man_kb', 0)) {
+                        echo '<li><a href="manage_knowledgebase.php"><i class="fa fa-book" ' . $iconDisplay . '></i>&nbsp;' . $hesklang['menu_kb'] . '</a></li>';
+                    } else {
+                        echo '<li><a href="knowledgebase_private.php"><i class="fa fa-book" ' . $iconDisplay . '></i>&nbsp;' . $hesklang['menu_kb'] . '</a></li>';
+                    }
                 }
                 if (hesk_checkPermission('can_run_reports',0)) {
                     echo '<li><a href="reports.php"><i class="fa fa-line-chart" '.$iconDisplay.'></i>&nbsp;'.$hesklang['reports'].'</a></li>';
