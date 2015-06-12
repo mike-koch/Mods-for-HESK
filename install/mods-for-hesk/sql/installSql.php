@@ -453,6 +453,11 @@ function execute230Scripts() {
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `latitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `longitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ADD COLUMN `manager` INT NOT NULL DEFAULT 0");
+    executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` (`id` INT NOT NULL AUTO_INCREMENT,
+                    `name` VARCHAR(255) NOT NULL,
+                    `heskprivileges` VARCHAR(1000),
+                    `categories` VARCHAR(500))");
+
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.0' WHERE `Key` = 'modsForHeskVersion'");
 }
 
