@@ -453,6 +453,7 @@ function execute230Scripts() {
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `latitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `longitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ADD COLUMN `manager` INT NOT NULL DEFAULT 0");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `permission_template` INT");
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     `name` VARCHAR(255) NOT NULL,
                     `heskprivileges` VARCHAR(1000),
@@ -461,6 +462,7 @@ function execute230Scripts() {
         VALUES ('Administrator', 'ALL', 'ALL')");
     executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` (`name`, `heskprivileges`, `categories`)
         VALUES ('Staff', 'can_view_tickets,can_reply_tickets,can_change_cat,can_assign_self,can_view_unassigned,can_view_online', '1')");
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `permission_template` = 1 WHERE `isadmin` = '1'");
 
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.0' WHERE `Key` = 'modsForHeskVersion'");
 }
