@@ -70,6 +70,10 @@ $hesklang['manager'] = 'Manager';
 $hesklang['manager_updated'] = 'Category manager has been updated.';
 $hesklang['can_set_manager'] = 'Can set category managers';
 $hesklang['no_manager'] = 'No manager';
+$hesklang['manage_permission_templates'] = 'Manage Permission Templates';
+$hesklang['number_of_users'] = 'Number of Users';
+$hesklang['actions'] = 'Actions';
+$hesklang['view_permissions_for_this_template'] = 'View permissions for this template';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)

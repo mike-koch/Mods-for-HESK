@@ -46,6 +46,7 @@ hesk_dbConnect();
 hesk_isLoggedIn();
 
 /* Check permissions for this feature */
+//TODO Create and use new permission here
 hesk_checkPermission('can_man_cat');
 
 /* What should we do? */
@@ -73,16 +74,36 @@ else {return false;}
 
 <?php 
     $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` ORDER BY `name` ASC");
-    $options='';
-    while ($mycat=hesk_dbFetchAssoc($res))
-    {
-        $options .= '<option value="'.$mycat['id'].'" ';
-        $options .= (isset($_SESSION['selcat']) && $mycat['id'] == $_SESSION['selcat']) ? ' selected="selected" ' : '';
-        $options .= '>'.$mycat['name'].'</option>';
-    }
+    $featureArray = hesk_getFeatureArray();
 ?>
 <div class="row" style="margin-top: 20px">
     <div class="col-md-10 col-md-offset-1">
+            <h3><?php echo $hesklang['manage_permission_templates']; ?> <i class="fa fa-question-circle settingsquestionmark"></i></h3>
+            <div class="footerWithBorder blankSpace"></div>
+            <table class="table table-striped">
+                <thead>
+                <th><?php echo $hesklang['name']; ?></th>
+                <th><?php echo $hesklang['number_of_users']; ?></th>
+                <th><?php echo $hesklang['actions']; ?></th>
+                </thead>
+                <tbody>
+                <?php while ($row = hesk_dbFetchAssoc($res)): ?>
+                <tr>
+                    <td><?php echo $row['name']; ?></td>
+                    <td><?php echo getNumberOfUsersWithPermissionGroup($row['id']); ?></td>
+                    <td>
+                        <i class="fa fa-search icon-link" data-toggle="tooltip"
+                           title="<?php echo $hesklang['view_permissions_for_this_template'] ?>"></i>
+                        <i class="fa fa-pencil icon-link orange" data-toggle="tooltip"
+                           title="<?php echo $hesklang['edit']; ?>"></i>
+                        <i class="fa fa-times icon-link red" data-toggle="tooltip"
+                           title="<?php echo $hesklang['delete']; ?>"></i>
+                    </td>
+                </tr>
+                <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -92,5 +113,10 @@ exit();
 
 
 /*** START FUNCTIONS ***/
+function getNumberOfUsersWithPermissionGroup($templateId) {
+    global $hesk_settings;
 
+    $res = hesk_dbQuery("SELECT 1 FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `permission_template` = ".intval($templateId));
+    return hesk_dbNumRows($res);
+}
 ?>

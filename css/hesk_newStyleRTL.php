@@ -378,3 +378,15 @@ button.dropdown-submit {
 .default-row-margins {
     margin: 0 -15px;
 }
+
+.icon-link {
+    font-size: 16px;
+}
+
+.orange {
+    color: orange;
+}
+
+.red {
+    color: #FF0000;
+}
