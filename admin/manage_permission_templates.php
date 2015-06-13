@@ -72,7 +72,7 @@ else {return false;}
 </script>
 
 <?php 
-    $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` ORDER BY `cat_order` ASC");
+    $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` ORDER BY `name` ASC");
     $options='';
     while ($mycat=hesk_dbFetchAssoc($res))
     {
