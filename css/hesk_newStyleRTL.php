@@ -390,3 +390,7 @@ button.dropdown-submit {
 .red {
     color: #FF0000;
 }
+
+.gray {
+    color: gray;
+}

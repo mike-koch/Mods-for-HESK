@@ -104,6 +104,13 @@ else {return false;}
                         <a href="#" data-toggle="modal" data-target="#modal-template-<?php echo $row['id'] ?>">
                             <i class="fa fa-pencil icon-link" data-toggle="tooltip"
                                 title="<?php echo $hesklang['view_permissions_for_this_template'] ?>"></i></a>
+                        <?php if ($row['heskprivileges'] == 'ALL' && $row['categories'] == 'ALL'): ?>
+                            <i class="fa fa-star icon-link orange" data-toggle="tooltip"
+                                title="<?php echo $hesklang['template_has_admin_privileges']; ?>"></i>
+                        <?php else: ?>
+                            <i class="fa fa-star-o icon-link gray" data-toggle="tooltip"
+                               title="<?php echo $hesklang['template_has_no_admin_privileges']; ?>"></i>
+                        <?php endif; ?>
                         <i class="fa fa-times icon-link red" data-toggle="tooltip"
                            title="<?php echo $hesklang['delete']; ?>"></i>
                     </td>
@@ -133,38 +140,70 @@ function getNumberOfUsersWithPermissionGroup($templateId) {
 
 function createModal($template, $features, $categories) {
     global $hesklang;
+
+    $showNotice = true;
+    $disabled = 'checked="checked" disabled';
+    $enabledFeatures = array();
+    $enabledCategories = array();
+    if ($template['heskprivileges'] != 'ALL') {
+        $showNotice = false;
+        $disabled = '';
+        $enabledFeatures = explode(',', $template['heskprivileges']);
+        $enabledCategories = explode(',', $template['categories']);
+    }
     ?>
     <div class="modal fade" id="modal-template-<?php echo $template['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"><?php echo sprintf($hesklang['permissions_for_template'], $template['name']); ?></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <h4><?php echo $hesklang['menu_cat']; ?></h4>
-                            <div class="footerWithBorder blankSpace"></div>
-                            <?php foreach ($categories as $category): ?>
-                                <p><?php echo $category['name']; ?></p>
-                            <?php endforeach; ?>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <h4><?php echo $hesklang['allow_feat']; ?></h4>
-                            <div class="footerWithBorder blankSpace"></div>
-                            <?php foreach ($features as $feature): ?>
-                                <p><?php echo $feature; ?></p>
-                            <?php endforeach; ?>
+                <form action="manage_permission_templates.php" role="form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><?php echo sprintf($hesklang['permissions_for_template'], $template['name']); ?></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <?php if ($showNotice): ?>
+                                <div class="alert alert-info">
+                                    <i class="fa fa-info-circle"></i> <?php echo $hesklang['template_is_admin_cannot_change']; ?>
+                                </div>
+                            <?php endif; ?>
+                            <div class="col-md-6 col-sm-12">
+                                <h4><?php echo $hesklang['menu_cat']; ?></h4>
+                                <div class="footerWithBorder blankSpace"></div>
+                                <?php foreach ($categories as $category): ?>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="cat-<?php echo $category['id']; ?>" <?php echo $disabled; ?>>
+                                                <?php echo $category['name']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <h4><?php echo $hesklang['allow_feat']; ?></h4>
+                                <div class="footerWithBorder blankSpace"></div>
+                                <?php foreach ($features as $feature): ?>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="<?php echo $feature; ?>" <?php echo $disabled; ?>>
+                                                <?php echo $hesklang[$feature]; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary"><?php echo $hesklang['save_changes']; ?></button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['close_modal']; ?></button>
+                    <div class="modal-footer">
+                        <div class="btn-group">
+                            <input type="submit" class="btn btn-primary" value="<?php echo $hesklang['save_changes']; ?>">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['close_modal']; ?></button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
