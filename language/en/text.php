@@ -79,6 +79,7 @@ $hesklang['permissions_for_template'] = 'Permissions for template <code>%s</code
 $hesklang['template_has_admin_privileges'] = 'Permission template has admin privileges. Click to set as non-admin';
 $hesklang['template_has_no_admin_privileges'] = 'Permission template does not have admin privileges. Click to set as admin';
 $hesklang['template_is_admin_cannot_change'] = 'The permission group currently has admin privileges, so you cannot set specific permissions here.';
+$hesklang['permission_template_updated'] = 'Permission template has been updated!';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
