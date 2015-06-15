@@ -98,6 +98,9 @@ $hesklang['permission_template_no_longer_admin'] = 'Permission template is no lo
 $hesklang['cannot_change_admin_staff'] = 'You cannot change admin/non-admin status for the <b>Administrator</b> and <b>Staff</b> templates!';
 $hesklang['permission_tpl_man'] = 'Manage permission templates'; // Menu link
 $hesklang['permission_templates'] = 'Permission Templates';
+$hesklang['can_man_permission_tpl'] = 'Can manage permission templates';
+$hesklang['permission_template_colon'] = 'Permission Template:';
+$hesklang['custom'] = 'Custom';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)

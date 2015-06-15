@@ -125,15 +125,6 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                                             echo 'checked="checked"';
                                         } ?> /> <?php echo $hesklang['user_aa']; ?></label>
                                 </div>
-                            <?php }
-                            if ($_SESSION['can_manage_settings']) { ?>
-                                <div class="checkbox">
-                                    <label><input type="checkbox"
-                                                  name="manage_settings" <?php if (!isset($_SESSION[$session_array]['autoassign']) || $_SESSION[$session_array]['can_manage_settings'] == 1) {
-                                            echo 'checked="checked"';
-                                        } ?>> <?php echo $hesklang['can_man_settings']; ?>
-                                    </label>
-                                </div>
                             <?php } ?>
                         </div>
                     </div>
@@ -146,25 +137,25 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                 ?>
                 <div role="tabpanel" class="tab-pane fade" id="permissions">
                     <div class="form-group">
-                        <label for="administrator" class="col-md-3 control-label"><?php echo $hesklang['administrator']; ?>: <font class="important">*</font></label>
+                        <label for="administrator" class="col-md-3 control-label"><?php echo $hesklang['permission_template_colon']; ?></label>
                         <div class="col-md-9">
                             <?php
-                            /* Only administrators can create new administrator accounts */
-                            if ($_SESSION['isadmin'])
-                            {
-                                ?>
-                                <div class="radio"><label><input type="radio" name="isadmin" value="1" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if ($_SESSION[$session_array]['isadmin']) echo 'checked="checked"'; ?> /> <b><?php echo $hesklang['administrator'].'</b> '.$hesklang['admin_can']; ?></label></div>
-                                <div class="radio"><label><input type="radio" name="isadmin" value="0" onchange="Javascript:hesk_toggleLayerDisplay('options')" <?php if (!$_SESSION[$session_array]['isadmin']) echo 'checked="checked"'; ?> /> <b><?php echo $hesklang['astaff'].'</b> '.$hesklang['staff_can']; ?></label></div>
-                            <?php
+                            // Get list of permission templates. If current user is not admin, exclude permission tpl 1
+                            $excludeSql = $_SESSION['isadmin'] ? '' : " WHERE `heskprivileges` <> 'ALL'";
+                            $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`".$excludeSql);
+                            $templates = array();
+                            echo '<select name="template" class="form-control" onchange="updateCheckboxes()">';
+                            while ($row = hesk_dbFetchAssoc($res)) {
+                                array_push($templates, $row);
+                                echo '<option value="'.$row['id'].'">'.htmlspecialchars($row['name']).'</option>';
                             }
-                            else
-                            {
-                                echo '<b>'.$hesklang['astaff'].'</b> '.$hesklang['staff_can'];
-                            }
+                            echo '<option value="N" disabled>'.htmlspecialchars($hesklang['custom']).'</option>';
+                            echo '</select>';
+                            outputCheckboxJavascript();
                             ?>
                         </div>
                     </div>
-                    <div id="options" style="display: <?php echo ($_SESSION['isadmin'] && $_SESSION[$session_array]['isadmin']) ? 'none' : 'block'; ?>">
+                    <div id="options">
                         <div class="form-group">
                             <label for="categories" class="col-md-3 control-label"><?php echo $hesklang['allowed_cat']; ?>: <font class="important">*</font></label>
                             <div class="col-md-9">
@@ -383,3 +374,24 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
 
 	<?php
 } // END hesk_profile_tab()
+
+function outputCheckboxJavascript() {
+    global $hesk_settings, $hesklang;
+
+    // Get categories and features for each template
+    $res = hesk_dbQuery("SELECT `categories`, `heskprivileges`, `id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`");
+    $templates = array();
+    $javascriptMarkup = '';
+    while ($row = hesk_dbFetchAssoc($res)) {
+        $templates[$row['id']]['features'] = $row['heskprivileges'];
+        $templates[$row['id']]['categories'] = $row['categories'];
+        $javascriptMarkup .= "var tpl".$row['id']."Features = [".$row['heskprivileges']."];\n";
+        $javascriptMarkup .= "var tpl".$row['id']."Categories = [".$row['categories']."];\n";
+    }
+
+    echo "<script>
+    function updateCheckboxes() {
+        ".$javascriptMarkup."
+    }
+    </script>";
+}
