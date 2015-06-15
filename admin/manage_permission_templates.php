@@ -53,6 +53,10 @@ hesk_checkPermission('can_man_cat');
 if ( $action = hesk_REQUEST('a') )
 {
 	if ($action == 'save')       {save();}
+    elseif ($action == 'create') {create();}
+    elseif ($action == 'delete') {deleteTemplate();}
+    elseif ($action == 'addadmin') {toggleAdmin(true);}
+    elseif ($action == 'deladmin') {toggleAdmin(false);}
 }
 
 /* Print header */
@@ -91,6 +95,9 @@ else {return false;}
         <?php
         hesk_handle_messages();
         ?>
+        <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success">
+            <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new_template']; ?>
+        </a>
         <table class="table table-striped">
             <thead>
             <th><?php echo $hesklang['name']; ?></th>
@@ -106,18 +113,29 @@ else {return false;}
                     <a href="#" data-toggle="modal" data-target="#modal-template-<?php echo $row['id'] ?>">
                         <i class="fa fa-pencil icon-link" data-toggle="tooltip"
                             title="<?php echo $hesklang['view_permissions_for_this_template'] ?>"></i></a>
-                    <?php if ($row['heskprivileges'] == 'ALL' && $row['categories'] == 'ALL'): ?>
+                    <?php if ($row['id'] == 1) { ?>
                         <i class="fa fa-star icon-link orange" data-toggle="tooltip"
-                            title="<?php echo $hesklang['template_has_admin_privileges']; ?>"></i>
-                    <?php else: ?>
-                        <i class="fa fa-star-o icon-link gray" data-toggle="tooltip"
-                           title="<?php echo $hesklang['template_has_no_admin_privileges']; ?>"></i>
+                           title="<?php echo $hesklang['admin_cannot_be_staff']; ?>"></i></a>
+                    <?php } elseif ($row['heskprivileges'] == 'ALL' && $row['categories'] == 'ALL'){ ?>
+                        <a href="manage_permission_templates.php?a=deladmin&amp;id=<?php echo $row['id']; ?>">
+                            <i class="fa fa-star icon-link orange" data-toggle="tooltip"
+                                title="<?php echo $hesklang['template_has_admin_privileges']; ?>"></i></a>
+                    <?php } elseif ($row['id'] != 2) { ?>
+                        <a href="manage_permission_templates.php?a=addadmin&amp;id=<?php echo $row['id']; ?>">
+                            <i class="fa fa-star-o icon-link gray" data-toggle="tooltip"
+                               title="<?php echo $hesklang['template_has_no_admin_privileges']; ?>"></i></a>
                     <?php
-                        endif;
+                        } else {
+                    ?>
+                        <i class="fa fa-star-o icon-link gray" data-toggle="tooltip"
+                         title="<?php echo $hesklang['staff_cannot_be_admin']; ?>"></i>
+                    <?php
+                        }
                         if ($row['id'] != 1 && $row['id'] != 2):
                     ?>
+                    <a href="manage_permission_templates.php?a=delete&amp;id=<?php echo $row['id']; ?>">
                     <i class="fa fa-times icon-link red" data-toggle="tooltip"
-                       title="<?php echo $hesklang['delete']; ?>"></i>
+                       title="<?php echo $hesklang['delete']; ?>"></i></a>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -130,6 +148,7 @@ else {return false;}
 foreach ($templates as $template) {
     createEditModal($template, $featureArray, $categories);
 }
+buildCreateModal($featureArray, $categories);
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
@@ -216,9 +235,9 @@ function createEditModal($template, $features, $categories) {
                         <input type="hidden" name="template_id" value="<?php echo $template['id']; ?>">
                         <div class="btn-group">
                             <?php if (!$showNotice): ?>
-                                <input type="submit" class="btn btn-primary" value="<?php echo $hesklang['save_changes']; ?>">
+                                <input type="submit" class="btn btn-success" value="<?php echo $hesklang['save_changes']; ?>">
                             <?php endif; ?>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['close_modal']; ?></button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['close_modal_without_saving']; ?></button>
                         </div>
                     </div>
                 </form>
@@ -228,11 +247,86 @@ function createEditModal($template, $features, $categories) {
     <?php
 }
 
+function buildCreateModal($features, $categories) {
+    global $hesklang;
+?>
+<div class="modal fade" id="modal-template-new" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="manage_permission_templates.php" role="form" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><?php echo $hesklang['create_new_template_title']; ?></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="name" class="control-label"><?php echo $hesklang['template_name']; ?></label>
+                        </div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="name" placeholder="<?php echo $hesklang['template_name']; ?>">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <h4><?php echo $hesklang['menu_cat']; ?></h4>
+                            <div class="footerWithBorder blankSpace"></div>
+                            <?php foreach ($categories as $category): ?>
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="categories[]" value="<?php echo $category['id']; ?>">
+                                            <?php echo $category['name']; ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <h4><?php echo $hesklang['allow_feat']; ?></h4>
+                            <div class="footerWithBorder blankSpace"></div>
+                            <?php foreach ($features as $feature): ?>
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="features[]" value="<?php echo $feature; ?>">
+                                            <?php echo $hesklang[$feature]; ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="a" value="create">
+                    <div class="btn-group">
+                        <input type="submit" class="btn btn-success" value="<?php echo $hesklang['save_changes']; ?>">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['close_modal_without_saving']; ?></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php
+}
+
 function save() {
     global $hesk_settings, $hesklang;
 
-    $categories = implode(',', hesk_POST_array('categories'));
-    $features = implode(',', hesk_POST_array('features'));
+    // Add 'can ban emails' if 'can unban emails' is set (but not added). Same with 'can ban ips'
+    $catArray = hesk_POST_array('categories');
+    $featArray = hesk_POST_array('features');
+    validate($featArray, $catArray);
+    if (in_array('can_unban_emails', $featArray) && !in_array('can_ban_emails', $featArray)) {
+        array_push($catArray, 'can_ban_emails');
+    }
+    if (in_array('can_unban_ips', $featArray) && !in_array('can_ban_ips', $featArray)) {
+        array_push($featArray, 'can_ban_ips');
+    }
+    $categories = implode(',', $catArray);
+    $features = implode(',', $featArray);
     $templateId = hesk_POST('template_id');
 
     hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
@@ -240,5 +334,95 @@ function save() {
         `id` = ".intval($templateId));
 
     hesk_process_messages( $hesklang['permission_template_updated'],$_SERVER['PHP_SELF'],'SUCCESS');
+}
+
+function create() {
+    global $hesk_settings, $hesklang;
+
+    // Add 'can ban emails' if 'can unban emails' is set (but not added). Same with 'can ban ips'
+    $catArray = hesk_POST_array('categories');
+    $featArray = hesk_POST_array('features');
+    $name = hesk_POST('name');
+    validate($featArray, $catArray, true, $name);
+    if (in_array('can_unban_emails', $featArray) && !in_array('can_ban_emails', $featArray)) {
+        array_push($catArray, 'can_ban_emails');
+    }
+    if (in_array('can_unban_ips', $featArray) && !in_array('can_ban_ips', $featArray)) {
+        array_push($featArray, 'can_ban_ips');
+    }
+
+    $categories = implode(',', $catArray);
+    $features = implode(',', $featArray);
+
+    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` (`name`, `heskprivileges`, `categories`)
+        VALUES ('".hesk_dbEscape($name)."', '".hesk_dbEscape($features)."', '".hesk_dbEscape($categories)."')");
+
+    hesk_process_messages( $hesklang['template_created'],$_SERVER['PHP_SELF'],'SUCCESS');
+}
+
+function validate($features, $categories, $create = false, $name = '') {
+    global $hesklang;
+
+    $errorMarkup = '<ul>';
+    $isValid = true;
+    if ($create && $name == '') {
+        $errorMarkup .= '<li>'.$hesklang['template_name_required'].'</li>';
+        $isValid = false;
+    }
+    if (count($features) == 0) {
+        $errorMarkup .= '<li>'.$hesklang['you_must_select_a_feature'].'</li>';
+        $isValid = false;
+    }
+    if (count($categories) == 0) {
+        $errorMarkup .= '<li>'.$hesklang['you_must_select_a_category'].'</li>';
+        $isValid = false;
+    }
+    $errorMarkup .= '</ul>';
+
+    if (!$isValid) {
+        $error = sprintf($hesklang['permission_template_error'], $errorMarkup);
+        hesk_process_messages($error, $_SERVER['PHP_SELF']);
+    }
+    return true;
+}
+
+function deleteTemplate() {
+    global $hesk_settings, $hesklang;
+
+    $id = hesk_GET('id');
+
+    // Admin/Staff templates cannot be deleted!
+    if ($id == 1 || $id == 2) {
+        hesk_process_messages($hesklang['cannot_delete_admin_or_staff'], $_SERVER['PHP_SELF']);
+    }
+
+    // Otherwise delete the template
+    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` WHERE `id` = ".intval($id));
+    if (hesk_dbAffectedRows() != 1) {
+        hesk_process_messages($hesklang['no_templates_were_deleted'], $_SERVER['PHP_SELF']);
+    }
+    hesk_process_messages($hesklang['permission_template_deleted'], $_SERVER['PHP_SELF'],'SUCCESS');
+}
+
+function toggleAdmin($admin) {
+    global $hesk_settings, $hesklang;
+
+    $id = hesk_GET('id');
+
+    if ($admin) {
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` SET `heskprivileges` = 'ALL',
+            `categories` = 'ALL' WHERE `id` = ".intval($id));
+        hesk_process_messages($hesklang['permission_template_now_admin'], $_SERVER['PHP_SELF'],'SUCCESS');
+    } else {
+        // Get default privileges
+        $res = hesk_dbQuery("SELECT `heskprivileges`, `categories` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
+            WHERE `id` = 2");
+        $row = hesk_dbFetchAssoc($res);
+
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
+            SET `heskprivileges` = '".hesk_dbEscape($row['heskprivileges'])."',
+             `categories` = '".hesk_dbEscape($row['categories'])."' WHERE `id` = ".intval($id));
+        hesk_process_messages($hesklang['permission_template_no_longer_admin'], $_SERVER['PHP_SELF'],'SUCCESS');
+    }
 }
 ?>

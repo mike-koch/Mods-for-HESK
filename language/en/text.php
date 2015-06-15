@@ -78,8 +78,23 @@ $hesklang['permission'] = 'Permission';
 $hesklang['permissions_for_template'] = 'Permissions for template <code>%s</code>'; // %s template name
 $hesklang['template_has_admin_privileges'] = 'Permission template has admin privileges. Click to set as non-admin';
 $hesklang['template_has_no_admin_privileges'] = 'Permission template does not have admin privileges. Click to set as admin';
+$hesklang['staff_cannot_be_admin'] = 'Staff permission group does not have admin access, and cannot be set as an admin';
+$hesklang['admin_cannot_be_staff'] = 'Administrator permission group has admin access, and cannot be set as non-admin';
 $hesklang['template_is_admin_cannot_change'] = 'The permission group currently has admin privileges, so you cannot set specific permissions here.';
 $hesklang['permission_template_updated'] = 'Permission template has been updated!';
+$hesklang['create_new_template'] = 'Create new permission template';
+$hesklang['create_new_template_title'] = 'Create New Permission Template'; // same as create_new_template, but in Title Case
+$hesklang['template_name'] = 'Template name';
+$hesklang['template_name_required'] = 'Template name required.';
+$hesklang['you_must_select_a_category'] = 'You must select at least one category.';
+$hesklang['you_must_select_a_feature'] = 'You must select at least one feature.';
+$hesklang['permission_template_error'] = 'The permission template could not be completed due to the following error(s): %s'; // %s: error list
+$hesklang['template_created'] = 'Permission template successfully created!';
+$hesklang['cannot_delete_admin_or_staff'] = 'The Administrator and Staff permission groups cannot be deleted!';
+$hesklang['no_templates_were_deleted'] = 'No templates were deleted!';
+$hesklang['permission_template_deleted'] = 'Permission template deleted!';
+$hesklang['permission_template_now_admin'] = 'Permission template is now designed as an admin template';
+$hesklang['permission_template_no_longer_admin'] = 'Permission template is no longer designated as an admin template';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
