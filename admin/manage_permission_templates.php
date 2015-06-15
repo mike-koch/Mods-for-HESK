@@ -324,6 +324,11 @@ function buildCreateModal($features, $categories) {
 function save() {
     global $hesk_settings, $hesklang;
 
+    $templateId = hesk_POST('template_id');
+    $res = hesk_dbQuery("SELECT `heskprivileges`, `categories` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
+        WHERE `id` = ".intval($templateId));
+    $row = hesk_dbFetchAssoc($res);
+
     // Add 'can ban emails' if 'can unban emails' is set (but not added). Same with 'can ban ips'
     $catArray = hesk_POST_array('categories');
     $featArray = hesk_POST_array('features');
@@ -336,13 +341,18 @@ function save() {
     }
     $categories = implode(',', $catArray);
     $features = implode(',', $featArray);
-    $templateId = hesk_POST('template_id');
     $name = hesk_POST('name');
 
     hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
         SET `categories` = '".hesk_dbEscape($categories)."', `heskprivileges` = '".hesk_dbEscape($features)."',
             `name` = '".hesk_dbEscape($name)."'
         WHERE `id` = ".intval($templateId));
+
+    if ($row['categories'] != $categories || $row['heskprivileges'] != $features) {
+        // Any users with this template should be switched to "custom"
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `permission_template` = NULL
+            WHERE `permission_template` = ".intval($templateId));
+    }
 
     hesk_process_messages( $hesklang['permission_template_updated'],$_SERVER['PHP_SELF'],'SUCCESS');
 }
