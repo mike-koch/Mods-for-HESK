@@ -68,8 +68,21 @@ if ( hesk_check_kb_only(false) )
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a href="admin_main.php"><i class="fa fa-home" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?></a></li>
-          <?php if (hesk_checkPermission('can_man_users',0)) {
+          <?php if (hesk_checkPermission('can_man_users', 0) && hesk_checkPermission('can_man_permission_tpl', 0)) {
+                    echo '<li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                  <i class="fa fa-users" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_users'].'<span class="caret"></span>
+                              </a>
+                              <ul class="dropdown-menu" role="menu">
+                                  <li><a href="manage_users.php">'.$hesklang['manage_users'].'</a></li>
+                                  <li><a href="manage_permission_templates.php">'.$hesklang['permission_tpl_man'].'</a></li>
+                              </ul>
+                          </li>';
+                } elseif (hesk_checkPermission('can_man_users',0)) {
                     echo '<li><a href="manage_users.php"><i class="fa fa-users" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_users'].'</a></li>';
+                } elseif (hesk_checkPermission('can_man_permission_tpl', 0)) {
+                    echo '<li><a href="manage_permission_templates.php">
+                            <i class="fa fa-users" '.$iconDisplay.'></i>&nbsp;'.$hesklang['permission_templates'].'</a></li>';
                 }
                 if (hesk_checkPermission('can_man_cat',0))  {
                     echo '<li><a href="manage_categories.php"><i class="fa fa-pie-chart" '.$iconDisplay.'></i>&nbsp;'.$hesklang['menu_cat'].'</a></li>';

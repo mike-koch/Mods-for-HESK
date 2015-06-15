@@ -46,8 +46,7 @@ hesk_dbConnect();
 hesk_isLoggedIn();
 
 /* Check permissions for this feature */
-//TODO Create and use new permission here
-hesk_checkPermission('can_man_cat');
+hesk_checkPermission('can_man_permission_tpl');
 
 /* What should we do? */
 if ( $action = hesk_REQUEST('a') )

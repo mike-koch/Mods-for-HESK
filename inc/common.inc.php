@@ -1943,5 +1943,6 @@ function hesk_getFeatureArray() {
         'can_man_email_tpl',    /* User can manage email templates */
         'can_man_ticket_statuses', /* User can manage ticket statuses */
         'can_set_manager', /* User can set category managers */
+        'can_man_permission_tpl', /* User can manage permission templates */
     );
 }
