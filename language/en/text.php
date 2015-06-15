@@ -90,11 +90,12 @@ $hesklang['you_must_select_a_category'] = 'You must select at least one category
 $hesklang['you_must_select_a_feature'] = 'You must select at least one feature.';
 $hesklang['permission_template_error'] = 'The permission template could not be completed due to the following error(s): %s'; // %s: error list
 $hesklang['template_created'] = 'Permission template successfully created!';
-$hesklang['cannot_delete_admin_or_staff'] = 'The Administrator and Staff permission groups cannot be deleted!';
+$hesklang['cannot_delete_admin_or_staff'] = 'The <b>Administrator</b> and <b>Staff</b> permission groups cannot be deleted!';
 $hesklang['no_templates_were_deleted'] = 'No templates were deleted!';
 $hesklang['permission_template_deleted'] = 'Permission template deleted!';
 $hesklang['permission_template_now_admin'] = 'Permission template is now designed as an admin template';
 $hesklang['permission_template_no_longer_admin'] = 'Permission template is no longer designated as an admin template';
+$hesklang['cannot_change_admin_staff'] = 'You cannot change admin/non-admin status for the <b>Administrator</b> and <b>Staff</b> templates!';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.1
 $hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)

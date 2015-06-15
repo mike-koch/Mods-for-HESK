@@ -409,6 +409,10 @@ function toggleAdmin($admin) {
 
     $id = hesk_GET('id');
 
+    if ($id == 1 || $id == 2) {
+        hesk_process_messages($hesklang['cannot_change_admin_staff'], $_SERVER['PHP_SELF']);
+    }
+
     if ($admin) {
         hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` SET `heskprivileges` = 'ALL',
             `categories` = 'ALL' WHERE `id` = ".intval($id));
