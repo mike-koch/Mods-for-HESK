@@ -186,6 +186,15 @@ function createEditModal($template, $features, $categories) {
                     </div>
                     <div class="modal-body">
                         <div class="row">
+                            <div class="col-sm-2">
+                                <label for="name" class="control-label"><?php echo $hesklang['template_name']; ?></label>
+                            </div>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="name" value="<?php echo $template['name']; ?>"
+                                       placeholder="<?php echo $hesklang['template_name']; ?>">
+                            </div>
+                        </div>
+                        <div class="row">
                             <?php if ($showNotice): ?>
                                 <div class="alert alert-info">
                                     <i class="fa fa-info-circle"></i> <?php echo $hesklang['template_is_admin_cannot_change']; ?>
@@ -328,10 +337,12 @@ function save() {
     $categories = implode(',', $catArray);
     $features = implode(',', $featArray);
     $templateId = hesk_POST('template_id');
+    $name = hesk_POST('name');
 
     hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
-        SET `categories` = '".hesk_dbEscape($categories)."', `heskprivileges` = '".hesk_dbEscape($features)."' WHERE
-        `id` = ".intval($templateId));
+        SET `categories` = '".hesk_dbEscape($categories)."', `heskprivileges` = '".hesk_dbEscape($features)."',
+            `name` = '".hesk_dbEscape($name)."'
+        WHERE `id` = ".intval($templateId));
 
     hesk_process_messages( $hesklang['permission_template_updated'],$_SERVER['PHP_SELF'],'SUCCESS');
 }
