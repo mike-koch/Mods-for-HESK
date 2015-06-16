@@ -125,7 +125,7 @@ if ( hesk_check_kb_only(false) )
                 } elseif (hesk_checkPermission('can_man_ticket_statuses',0)) {
                     echo '<li><a href="manage_statuses.php"><i class="fa fa-wrench" '.$iconDisplay.'></i>&nbsp;'.$hesklang['tools'].'</a> </li>';
                 }
-                if (hesk_checkPermission('can_manage_settings',0)) {
+                if (hesk_checkPermission('can_man_settings',0)) {
                     echo '<li><a href="admin_settings.php"><i class="fa fa-cog" '.$iconDisplay.'></i>&nbsp;'.$hesklang['settings'].'</a></li>';
                 }
           ?>

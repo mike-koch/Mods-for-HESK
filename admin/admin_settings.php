@@ -56,7 +56,7 @@ hesk_dbConnect();
 hesk_isLoggedIn();
 
 // Check permissions for this feature
-hesk_checkPermission('can_manage_settings');
+hesk_checkPermission('can_man_settings');
 
 // Test languages function
 if (isset($_GET['test_languages']))
