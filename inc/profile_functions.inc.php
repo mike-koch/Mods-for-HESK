@@ -150,7 +150,8 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                                 $selected = $_SESSION[$session_array]['permission_template'] == $row['id'] ? 'selected' : '';
                                 echo '<option value="'.$row['id'].'" '.$selected.'>'.htmlspecialchars($row['name']).'</option>';
                             }
-                            echo '<option value="N" disabled>'.htmlspecialchars($hesklang['custom']).'</option>';
+                            $selected = $_SESSION[$session_array]['permission_template'] == '-1' ? 'selected' : '';
+                            echo '<option value="-1" '.$selected.'>'.htmlspecialchars($hesklang['custom']).'</option>';
                             echo '</select>';
                             outputCheckboxJavascript();
                             ?>
@@ -436,7 +437,7 @@ function outputCheckboxJavascript() {
         });
     }
     function setTemplateToCustom() {
-        $('#permission-tpl').val('N');
+        $('#permission-tpl').val('-1');
     }
     </script>";
 }
