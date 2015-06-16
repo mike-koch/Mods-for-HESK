@@ -550,7 +550,8 @@ function new_user()
         `notify_pm`,
         `notify_note`,
         `notify_note_unassigned`,
-        `autorefresh`) VALUES (
+        `autorefresh`,
+        `permission_template`) VALUES (
 	'".hesk_dbEscape($myuser['user'])."',
 	'".hesk_dbEscape($myuser['pass'])."',
 	'".intval($myuser['isadmin'])."',
@@ -575,7 +576,8 @@ function new_user()
 	'".($myuser['notify_pm'])."',
 	'".($myuser['notify_note'])."',
 	'".($myuser['notify_note_unassigned'])."',
-	".intval($myuser['autorefresh']).")" );
+	".intval($myuser['autorefresh']).",
+	".intval($myuser['template']).")" );
 
     $_SESSION['seluser'] = hesk_dbInsertID();
 
@@ -691,7 +693,6 @@ function update_user()
     `active`='".intval($myuser['active'])."',
     `autoassign`='".intval($myuser['autoassign'])."',
     `heskprivileges`='".hesk_dbEscape($myuser['features'])."',
-    `can_manage_settings`='".hesk_dbEscape($myuser['can_manage_settings'])."',
     `can_change_notification_settings`='".hesk_dbEscape($myuser['can_change_notification_settings'])."',
     `afterreply`='".($myuser['afterreply'])."' ,
 	`autostart`='".($myuser['autostart'])."' ,
@@ -706,7 +707,8 @@ function update_user()
 	`notify_pm`='".($myuser['notify_pm'])."',
 	`notify_note`='".($myuser['notify_note'])."',
 	`notify_note_unassigned`='".($myuser['notify_note_unassigned'])."',
-	`autorefresh`=".intval($myuser['autorefresh'])."
+	`autorefresh`=".intval($myuser['autorefresh']).",
+	`permission_template`=".intval($myuser['template'])."
     WHERE `id`='".intval($myuser['id'])."' LIMIT 1");
 
     // If they are now inactive, remove any manager rights
@@ -732,8 +734,8 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
 	$myuser['name']		  = hesk_input( hesk_POST('name') ) or $hesk_error_buffer .= '<li>' . $hesklang['enter_real_name'] . '</li>';
 	$myuser['email']	  = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer .= '<li>' . $hesklang['enter_valid_email'] . '</li>';
 	$myuser['user']		  = hesk_input( hesk_POST('user') ) or $hesk_error_buffer .= '<li>' . $hesklang['enter_username'] . '</li>';
-	$myuser['isadmin']	  = empty($_POST['isadmin']) ? 0 : 1;
-    $myuser['can_manage_settings'] = isset($_POST['manage_settings']) ? 1 : 0;
+	$myuser['isadmin']	  = hesk_POST('template') == '1' ? 1 : 0;
+    $myuser['template']   = hesk_POST('template') != 'N' ? hesk_POST('template') : -1;
 	$myuser['signature']  = hesk_input( hesk_POST('signature') );
     $myuser['autoassign'] = hesk_POST('autoassign') == 'Y' ? 1 : 0;
     $myuser['active'] = empty($_POST['active']) ? 0 : 1;

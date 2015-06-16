@@ -147,7 +147,8 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                             echo '<select name="template" id="permission-tpl" class="form-control" onchange="updateCheckboxes()">';
                             while ($row = hesk_dbFetchAssoc($res)) {
                                 array_push($templates, $row);
-                                echo '<option value="'.$row['id'].'">'.htmlspecialchars($row['name']).'</option>';
+                                $selected = $_SESSION[$session_array]['permission_template'] == $row['id'] ? 'selected' : '';
+                                echo '<option value="'.$row['id'].'" '.$selected.'>'.htmlspecialchars($row['name']).'</option>';
                             }
                             echo '<option value="N" disabled>'.htmlspecialchars($hesklang['custom']).'</option>';
                             echo '</select>';
@@ -157,7 +158,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                     </div>
                     <div id="options">
                         <div class="form-group">
-                            <label for="categories" class="col-md-3 control-label"><?php echo $hesklang['allowed_cat']; ?>: <font class="important">*</font></label>
+                            <label for="categories[]" class="col-md-3 control-label"><?php echo $hesklang['allowed_cat']; ?>: <font class="important">*</font></label>
                             <div class="col-md-9">
                                 <?php
                                 foreach ($hesk_settings['categories'] as $catid => $catname)
@@ -174,7 +175,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="permissions" class="col-md-3 control-label"><?php echo $hesklang['allow_feat']; ?>: <font class="important">*</font></label>
+                            <label for="features[]" class="col-md-3 control-label"><?php echo $hesklang['allow_feat']; ?>: <font class="important">*</font></label>
                             <div class="col-md-9">
                                 <?php
                                 foreach ($hesk_settings['features'] as $k)
