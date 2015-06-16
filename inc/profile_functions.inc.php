@@ -144,7 +144,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                             $excludeSql = $_SESSION['isadmin'] ? '' : " WHERE `heskprivileges` <> 'ALL'";
                             $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`".$excludeSql);
                             $templates = array();
-                            echo '<select name="template" class="form-control" onchange="updateCheckboxes()">';
+                            echo '<select name="template" id="permission-tpl" class="form-control" onchange="updateCheckboxes()">';
                             while ($row = hesk_dbFetchAssoc($res)) {
                                 array_push($templates, $row);
                                 echo '<option value="'.$row['id'].'">'.htmlspecialchars($row['name']).'</option>';
@@ -162,7 +162,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                                 <?php
                                 foreach ($hesk_settings['categories'] as $catid => $catname)
                                 {
-                                    echo '<div class="checkbox"><label><input type="checkbox" name="categories[]" value="' . $catid . '" ';
+                                    echo '<div class="checkbox"><label><input id="cat-'.$catid.'" class="cat-checkbox" type="checkbox" name="categories[]" value="' . $catid . '" ';
                                     if ( in_array($catid,$_SESSION[$session_array]['categories']) )
                                     {
                                         echo ' checked="checked" ';
@@ -178,7 +178,7 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                                 <?php
                                 foreach ($hesk_settings['features'] as $k)
                                 {
-                                    echo '<div class="checkbox"><label><input type="checkbox" name="features[]" value="' . $k . '" ';
+                                    echo '<div class="checkbox"><label><input id="feat-'.$k.'" class="feat-checkbox" type="checkbox" name="features[]" value="' . $k . '" ';
                                     if (in_array($k,$_SESSION[$session_array]['features']))
                                     {
                                         echo ' checked="checked" ';
@@ -381,17 +381,56 @@ function outputCheckboxJavascript() {
     // Get categories and features for each template
     $res = hesk_dbQuery("SELECT `categories`, `heskprivileges`, `id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`");
     $templates = array();
-    $javascriptMarkup = '';
+    $finalCatMarkup = "var categories = [];\n";
+    $finalFeatMarkup = "var features = [];\n";
     while ($row = hesk_dbFetchAssoc($res)) {
-        $templates[$row['id']]['features'] = $row['heskprivileges'];
-        $templates[$row['id']]['categories'] = $row['categories'];
-        $javascriptMarkup .= "var tpl".$row['id']."Features = [".$row['heskprivileges']."];\n";
-        $javascriptMarkup .= "var tpl".$row['id']."Categories = [".$row['categories']."];\n";
+        $templates[$row['id']]['features'] = explode(',', $row['heskprivileges']);
+        $templates[$row['id']]['categories'] = explode(',', $row['categories']);
+        $jsFeatureArray = array();
+        $jsCategoryArray = array();
+        foreach ($templates[$row['id']]['features'] as $array) {
+            $goodText = "'".$array."'";
+            array_push($jsFeatureArray, $goodText);
+        }
+        foreach ($templates[$row['id']]['categories'] as $array) {
+            $goodText = "'".$array."'";
+            array_push($jsCategoryArray, $goodText);
+        }
+        $builtFeatureArray = implode(',', $jsFeatureArray);
+        $builtCategoryArray = implode(',', $jsCategoryArray);
+        $finalCatMarkup .= "categories[".$row['id']."] = [".$builtCategoryArray."];\n";
+        $finalFeatMarkup .= "features[".$row['id']."] = [".$builtFeatureArray."];\n";
     }
 
     echo "<script>
+    ".$finalCatMarkup."
+    ".$finalFeatMarkup."
     function updateCheckboxes() {
-        ".$javascriptMarkup."
+        // Get the value from the dropdown
+        var dropdownValue = $('#permission-tpl').val();
+        updateCategoriesAndFeatures(dropdownValue);
+    }
+    function updateCategoriesAndFeatures(dropdownValue) {
+        // Get the category array
+        var newCats = categories[dropdownValue];
+        var newFeats = features[dropdownValue];
+        // Uncheck everything
+        $('.cat-checkbox').prop('checked', false);
+        $('.feat-checkbox').prop('checked', false);
+        newCats.forEach(function(entry) {
+            if (entry == 'ALL') {
+                $('.cat-checkbox').prop('checked', true);
+            } else {
+                $('#cat-'+entry).prop('checked', true);
+            }
+        });
+        newFeats.forEach(function(entry) {
+            if (entry == 'ALL') {
+                $('.feat-checkbox').prop('checked', true);
+            } else {
+                $('#feat-'+entry).prop('checked', true);
+            }
+        });
     }
     </script>";
 }
