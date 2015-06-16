@@ -432,7 +432,7 @@ function edit_user()
 
     if ( ! isset($_SESSION['save_userdata']))
     {
-		$res = hesk_dbQuery("SELECT *,`heskprivileges` AS `features`, `can_manage_settings`, `active`, `can_change_notification_settings`
+		$res = hesk_dbQuery("SELECT *,`heskprivileges` AS `features`, `active`
                             FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($id)."' LIMIT 1");
     	$_SESSION['userdata'] = hesk_dbFetchAssoc($res);
 
@@ -535,8 +535,6 @@ function new_user()
 	    `categories`,
 	    `autoassign`,
 	    `heskprivileges`,
-	    `can_manage_settings`,
-	    `can_change_notification_settings`,
 	    `afterreply`,
         `autostart`,
         `notify_customer_new`,
@@ -561,8 +559,6 @@ function new_user()
 	'".hesk_dbEscape($myuser['categories'])."',
 	'".intval($myuser['autoassign'])."',
 	'".hesk_dbEscape($myuser['features'])."',
-	'".hesk_dbEscape($myuser['can_manage_settings'])."',
-	'".hesk_dbEscape($myuser['can_change_notification_settings'])."',
 	'".($myuser['afterreply'])."' ,
 	'".($myuser['autostart'])."' ,
 	'".($myuser['notify_customer_new'])."' ,
@@ -693,7 +689,6 @@ function update_user()
     `active`='".intval($myuser['active'])."',
     `autoassign`='".intval($myuser['autoassign'])."',
     `heskprivileges`='".hesk_dbEscape($myuser['features'])."',
-    `can_change_notification_settings`='".hesk_dbEscape($myuser['can_change_notification_settings'])."',
     `afterreply`='".($myuser['afterreply'])."' ,
 	`autostart`='".($myuser['autostart'])."' ,
 	`notify_customer_new`='".($myuser['notify_customer_new'])."' ,
@@ -740,10 +735,6 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     $myuser['autoassign'] = hesk_POST('autoassign') == 'Y' ? 1 : 0;
     $myuser['active'] = empty($_POST['active']) ? 0 : 1;
     $myuser['can_change_notification_settings'] = empty($_POST['can_change_notification_settings']) ? 0 : 1;
-    if ($myuser['isadmin'])
-    {
-        $myuser['can_change_notification_settings'] = 1;
-    }
 
     /* If it's not admin at least one category and fature is required */
     $myuser['categories']	= array();

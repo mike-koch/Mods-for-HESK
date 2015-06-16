@@ -1945,5 +1945,6 @@ function hesk_getFeatureArray() {
         'can_set_manager', /* User can set category managers */
         'can_man_permission_tpl', /* User can manage permission templates */
         'can_man_settings', /* User can manage helpdesk settings */
+        'can_change_notification_settings', /* User can change notification settings */
     );
 }

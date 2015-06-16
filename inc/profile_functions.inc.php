@@ -190,9 +190,6 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                                     echo ' />' . $hesklang[$k] . '</label></div> ';
                                 }
                                 ?>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" name="can_change_notification_settings" <?php if (!isset($_SESSION[$session_array]['can_change_notification_settings']) || $_SESSION[$session_array]['can_change_notification_settings']) { echo 'checked'; } ?>> <?php echo $hesklang['can_change_notification_settings']; ?> </label>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -263,7 +260,9 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="notifications">
-                <?php $disabledText = isset($_SESSION[$session_array]['can_change_notification_settings']) && $_SESSION[$session_array]['can_change_notification_settings'] ? '' : 'disabled';
+                <?php $disabledText =
+                    (!$_SESSION[$session_array]['isadmin'] && strpos($_SESSION[$session_array]['heskprivileges'],'can_change_notification_settings') === false)
+                        ? 'disabled' : '';
                 if (!$is_profile_page) {
                     $disabledText = '';
                 }
