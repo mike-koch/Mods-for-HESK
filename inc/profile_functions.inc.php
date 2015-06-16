@@ -162,7 +162,8 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                                 <?php
                                 foreach ($hesk_settings['categories'] as $catid => $catname)
                                 {
-                                    echo '<div class="checkbox"><label><input id="cat-'.$catid.'" class="cat-checkbox" type="checkbox" name="categories[]" value="' . $catid . '" ';
+                                    echo '<div class="checkbox"><label><input id="cat-'.$catid.'" class="cat-checkbox"
+                                    type="checkbox" name="categories[]" onchange="setTemplateToCustom()" value="' . $catid . '" ';
                                     if ( in_array($catid,$_SESSION[$session_array]['categories']) )
                                     {
                                         echo ' checked="checked" ';
@@ -178,7 +179,8 @@ function hesk_profile_tab($session_array='new',$is_profile_page=true,$action='pr
                                 <?php
                                 foreach ($hesk_settings['features'] as $k)
                                 {
-                                    echo '<div class="checkbox"><label><input id="feat-'.$k.'" class="feat-checkbox" type="checkbox" name="features[]" value="' . $k . '" ';
+                                    echo '<div class="checkbox"><label><input id="feat-'.$k.'" class="feat-checkbox"
+                                    type="checkbox" name="features[]" onchange="setTemplateToCustom()" value="' . $k . '" ';
                                     if (in_array($k,$_SESSION[$session_array]['features']))
                                     {
                                         echo ' checked="checked" ';
@@ -431,6 +433,9 @@ function outputCheckboxJavascript() {
                 $('#feat-'+entry).prop('checked', true);
             }
         });
+    }
+    function setTemplateToCustom() {
+        $('#permission-tpl').val('N');
     }
     </script>";
 }
