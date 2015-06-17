@@ -50,37 +50,7 @@ hesk_isLoggedIn();
 hesk_checkPermission('can_man_users');
 
 /* Possible user features */
-$hesk_settings['features'] = array(
-'can_view_tickets',		/* User can read tickets */
-'can_reply_tickets',	/* User can reply to tickets */
-'can_del_tickets',		/* User can delete tickets */
-'can_edit_tickets',		/* User can edit tickets */
-'can_merge_tickets',	/* User can merge tickets */
-'can_del_notes',		/* User can delete ticket notes posted by other staff members */
-'can_change_cat',		/* User can move ticke to a new category/department */
-'can_man_kb',			/* User can manage knowledgebase articles and categories */
-'can_man_users',		/* User can create and edit staff accounts */
-'can_man_cat',			/* User can manage categories/departments */
-'can_man_canned',		/* User can manage canned responses */
-'can_man_ticket_tpl',	/* User can manage ticket templates */
-'can_add_archive',		/* User can mark tickets as "Tagged" */
-'can_assign_self',		/* User can assign tickets to himself/herself */
-'can_assign_others',	/* User can assign tickets to other staff members */
-'can_view_unassigned',	/* User can view unassigned tickets */
-'can_view_ass_others',	/* User can view tickets that are assigned to other staff */
-'can_run_reports',		/* User can run reports and see statistics (only allowed categories and self) */
-'can_run_reports_full', /* User can run reports and see statistics (unrestricted) */
-'can_export',			/* User can export own tickets to Excel */
-'can_view_online',		/* User can view what staff members are currently online */
-'can_ban_emails',		/* User can ban email addresses */
-'can_unban_emails',		/* User can delete email address bans. Also enables "can_ban_emails" */
-'can_ban_ips',			/* User can ban IP addresses */
-'can_unban_ips',		/* User can delete IP bans. Also enables "can_ban_ips" */
-'can_service_msg',		/* User can manage service messages shown in customer interface */
-'can_man_email_tpl',    /* User can manage email templates */
-'can_man_ticket_statuses', /* User can manage ticket statuses */
-'can_set_manager', /* User can set category managers */
-);
+$hesk_settings['features'] = hesk_getFeatureArray();
 
 /* Set default values */
 $default_userdata = array(
@@ -100,7 +70,6 @@ $default_userdata = array(
     'active' => 1,
 	'categories' => array('1'),
 	'features' => array('can_view_tickets','can_reply_tickets','can_change_cat','can_assign_self','can_view_unassigned','can_view_online'),
-    'can_manage_settings' => 0,
 
     // Preferences
     'afterreply' => 0,
@@ -229,7 +198,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <th><b><i><?php echo $hesklang['name']; ?></i></b></th>
             <th><b><i><?php echo $hesklang['email']; ?></i></b></th>
             <th><b><i><?php echo $hesklang['username']; ?></i></b></th>
-            <th><b><i><?php echo $hesklang['administrator']; ?></i></b></th>
+            <th><b><i><?php echo $hesklang['permission_template']; ?></i></b></th>
                 <?php
                 /* Is user rating enabled? */
                 if ($hesk_settings['rating'])
@@ -341,12 +310,20 @@ while ($myuser = hesk_dbFetchAssoc($res))
         }
     }
 
+    $templateName = $hesklang['custom'];
+    if ($myuser['permission_template'] != -1) {
+        $result = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` WHERE `id` = ".intval($myuser['permission_template']));
+        $row = hesk_dbFetchAssoc($result);
+        $templateName = $row['name'];
+    }
+
+
 echo <<<EOC
 <tr>
 <td>$myuser[name]</td>
 <td><a href="mailto:$myuser[email]">$myuser[email]</a></td>
 <td>$myuser[user]</td>
-<td>$myuser[isadmin]</td>
+<td>$templateName</td>
 
 EOC;
 
@@ -463,7 +440,7 @@ function edit_user()
 
     if ( ! isset($_SESSION['save_userdata']))
     {
-		$res = hesk_dbQuery("SELECT *,`heskprivileges` AS `features`, `can_manage_settings`, `active`, `can_change_notification_settings`
+		$res = hesk_dbQuery("SELECT *,`heskprivileges` AS `features`, `active`
                             FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='".intval($id)."' LIMIT 1");
     	$_SESSION['userdata'] = hesk_dbFetchAssoc($res);
 
@@ -566,8 +543,6 @@ function new_user()
 	    `categories`,
 	    `autoassign`,
 	    `heskprivileges`,
-	    `can_manage_settings`,
-	    `can_change_notification_settings`,
 	    `afterreply`,
         `autostart`,
         `notify_customer_new`,
@@ -581,7 +556,8 @@ function new_user()
         `notify_pm`,
         `notify_note`,
         `notify_note_unassigned`,
-        `autorefresh`) VALUES (
+        `autorefresh`,
+        `permission_template`) VALUES (
 	'".hesk_dbEscape($myuser['user'])."',
 	'".hesk_dbEscape($myuser['pass'])."',
 	'".intval($myuser['isadmin'])."',
@@ -591,8 +567,6 @@ function new_user()
 	'".hesk_dbEscape($myuser['categories'])."',
 	'".intval($myuser['autoassign'])."',
 	'".hesk_dbEscape($myuser['features'])."',
-	'".hesk_dbEscape($myuser['can_manage_settings'])."',
-	'".hesk_dbEscape($myuser['can_change_notification_settings'])."',
 	'".($myuser['afterreply'])."' ,
 	'".($myuser['autostart'])."' ,
 	'".($myuser['notify_customer_new'])."' ,
@@ -606,7 +580,8 @@ function new_user()
 	'".($myuser['notify_pm'])."',
 	'".($myuser['notify_note'])."',
 	'".($myuser['notify_note_unassigned'])."',
-	".intval($myuser['autorefresh']).")" );
+	".intval($myuser['autorefresh']).",
+	".intval($myuser['template']).")" );
 
     $_SESSION['seluser'] = hesk_dbInsertID();
 
@@ -722,8 +697,6 @@ function update_user()
     `active`='".intval($myuser['active'])."',
     `autoassign`='".intval($myuser['autoassign'])."',
     `heskprivileges`='".hesk_dbEscape($myuser['features'])."',
-    `can_manage_settings`='".hesk_dbEscape($myuser['can_manage_settings'])."',
-    `can_change_notification_settings`='".hesk_dbEscape($myuser['can_change_notification_settings'])."',
     `afterreply`='".($myuser['afterreply'])."' ,
 	`autostart`='".($myuser['autostart'])."' ,
 	`notify_customer_new`='".($myuser['notify_customer_new'])."' ,
@@ -737,7 +710,8 @@ function update_user()
 	`notify_pm`='".($myuser['notify_pm'])."',
 	`notify_note`='".($myuser['notify_note'])."',
 	`notify_note_unassigned`='".($myuser['notify_note_unassigned'])."',
-	`autorefresh`=".intval($myuser['autorefresh'])."
+	`autorefresh`=".intval($myuser['autorefresh']).",
+	`permission_template`=".intval($myuser['template'])."
     WHERE `id`='".intval($myuser['id'])."' LIMIT 1");
 
     // If they are now inactive, remove any manager rights
@@ -763,16 +737,12 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
 	$myuser['name']		  = hesk_input( hesk_POST('name') ) or $hesk_error_buffer .= '<li>' . $hesklang['enter_real_name'] . '</li>';
 	$myuser['email']	  = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer .= '<li>' . $hesklang['enter_valid_email'] . '</li>';
 	$myuser['user']		  = hesk_input( hesk_POST('user') ) or $hesk_error_buffer .= '<li>' . $hesklang['enter_username'] . '</li>';
-	$myuser['isadmin']	  = empty($_POST['isadmin']) ? 0 : 1;
-    $myuser['can_manage_settings'] = isset($_POST['manage_settings']) ? 1 : 0;
+	$myuser['isadmin']	  = hesk_POST('template') == '1' ? 1 : 0;
+    $myuser['template']   = hesk_POST('template');
 	$myuser['signature']  = hesk_input( hesk_POST('signature') );
     $myuser['autoassign'] = hesk_POST('autoassign') == 'Y' ? 1 : 0;
     $myuser['active'] = empty($_POST['active']) ? 0 : 1;
     $myuser['can_change_notification_settings'] = empty($_POST['can_change_notification_settings']) ? 0 : 1;
-    if ($myuser['isadmin'])
-    {
-        $myuser['can_change_notification_settings'] = 1;
-    }
 
     /* If it's not admin at least one category and fature is required */
     $myuser['categories']	= array();

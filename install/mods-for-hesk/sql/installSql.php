@@ -453,6 +453,49 @@ function execute230Scripts() {
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `latitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `longitude` VARCHAR(100) NOT NULL DEFAULT 'E-0'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ADD COLUMN `manager` INT NOT NULL DEFAULT 0");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ADD COLUMN `permission_template` INT");
+    executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    `name` VARCHAR(255) NOT NULL,
+                    `heskprivileges` VARCHAR(1000),
+                    `categories` VARCHAR(500))");
+    executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` (`name`, `heskprivileges`, `categories`)
+        VALUES ('Administrator', 'ALL', 'ALL')");
+    executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` (`name`, `heskprivileges`, `categories`)
+        VALUES ('Staff', 'can_view_tickets,can_reply_tickets,can_change_cat,can_assign_self,can_view_unassigned,can_view_online', '1')");
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `permission_template` = 1 WHERE `isadmin` = '1'");
+
+    // Move can_manage_settings and can_change_notification_settings into the heskprivileges list
+    $res = executeQuery("SELECT `id`, `heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `isadmin` = '0'
+        AND `can_manage_settings` = '1'");
+    while ($row = hesk_dbFetchAssoc($res)) {
+        if ($row['heskprivileges'] != '') {
+            $currentPrivileges = explode(',', $row['heskprivileges']);
+            array_push($currentPrivileges, 'can_man_settings');
+            $newPrivileges = implode(',', $currentPrivileges);
+            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges = '".hesk_dbEscape($newPrivileges)."'
+            WHERE `id` = ".intval($row['id']));
+        } else {
+            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges = 'can_man_settings'
+            WHERE `id` = ".intval($row['id']));
+        }
+    }
+    $res = executeQuery("SELECT `id`, `heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `isadmin` = '0'
+        AND `can_change_notification_settings` = '1'");
+    while ($row = hesk_dbFetchAssoc($res)) {
+        if ($row['heskprivileges'] != '') {
+            $currentPrivileges = explode(',', $row['heskprivileges']);
+            array_push($currentPrivileges, 'can_change_notification_settings');
+            $newPrivileges = implode(',', $currentPrivileges);
+            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges = '".hesk_dbEscape($newPrivileges)."'
+            WHERE `id` = ".intval($row['id']));
+        } else {
+            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges = 'can_change_notification_settings'
+            WHERE `id` = ".intval($row['id']));
+        }
+    }
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `can_manage_settings`");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `can_change_notification_settings`");
+
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.0' WHERE `Key` = 'modsForHeskVersion'");
 }
 
