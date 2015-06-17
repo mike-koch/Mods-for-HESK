@@ -5,20 +5,8 @@ require(HESK_PATH . 'install/install_functions.inc.php');
 require(HESK_PATH . 'hesk_settings.inc.php');
 
 function echoTaskRows() {
-    printUninstallRow('Change status column to default HESK values', 'status-change');
-    printUninstallRow('Remove autorefresh feature', 'autorefresh');
-    printUninstallRow('Remove parent-child ticket relationships', 'parent-child');
-    printUninstallRow('Remove explicit help desk settings permission', 'settings-access');
-    printUninstallRow('Remove activate/deactivate users settings', 'activate-user');
-    printUninstallRow('Remove Mods for HESK-added notification settings', 'notify-note-unassigned');
-    printUninstallRow('Remove "user can manage notification settings" feature', 'user-manage-notification-settings');
-    printUninstallRow('Remove settings table', 'settings-table');
-    printUninstallRow('Remove verified emails table', 'verified-emails-table');
-    printUninstallRow('Remove pending verification emails table', 'pending-verification-emails-table');
-    printUninstallRow('Remove tickets pending verification table', 'pending-verification-tickets-table');
-    printUninstallRow('Remove custom service messages icon', 'service-message-icon');
-    printUninstallRow('Remove ticket location', 'location');
-    printUninstallRow('Miscellaneous database cleanup changes', 'miscellaneous');
+    printUninstallRow('Remove custom statuses', 'status-change');
+    printUninstallRow('Reset other tables', 'drop-columns');
 }
 
 function printUninstallRow($text, $id) {

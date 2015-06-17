@@ -59,97 +59,27 @@ function replaceStatusColumn() {
     executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
 }
 
-function removeAutorefresh() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
+function removeOtherColumns() {
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `autorefresh`");
-}
-
-function removeParentColumn() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` DROP COLUMN `parent`");
-}
-
-function removeHelpDeskSettingsPermission() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `can_manage_settings`");
-}
-
-function removeActiveColumn() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `active`");
-}
-
-function removeNotifyNoteUnassigned() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `notify_note_unassigned`");
-}
-
-function removeUserManageOwnNotificationSettingsColumn() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `can_change_notification_settings`");
-}
-
-function removeSettingsTable() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings`");
-}
-
-function removeVerifiedEmailsTable() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."verified_emails`");
-}
-
-function removePendingVerificationEmailsTable() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails`");
-}
-
-function removeTicketsPendingVerificationTable() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets`");
-}
-
-function removeServiceMessageCustomIcon() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` DROP COLUMN `icon`");
-}
-
-function removeTicketLocation() {
-    global $hesk_settings;
-
-    hesk_dbConnect();
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` DROP COLUMN `latitude`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` DROP COLUMN `longitude`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` DROP COLUMN `latitude`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` DROP COLUMN `longitude`");
-}
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` DROP COLUMN `manager`");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` DROP COLUMN `permission_template`");
+    executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`");
 
-function executeMiscellaneousSql() {
-    global $hesk_settings;
 
-    hesk_dbConnect();
     // These queries are ran in case someone used an unfortunate installation they may have not properly cleaned up tables
     executeQuery('DROP TABLE IF EXISTS `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_ips`');
     executeQuery('DROP TABLE IF EXISTS `'.hesk_dbEscape($hesk_settings['db_pfix']).'denied_emails`');
