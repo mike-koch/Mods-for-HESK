@@ -198,7 +198,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <th><b><i><?php echo $hesklang['name']; ?></i></b></th>
             <th><b><i><?php echo $hesklang['email']; ?></i></b></th>
             <th><b><i><?php echo $hesklang['username']; ?></i></b></th>
-            <th><b><i><?php echo $hesklang['administrator']; ?></i></b></th>
+            <th><b><i><?php echo $hesklang['permission_template']; ?></i></b></th>
                 <?php
                 /* Is user rating enabled? */
                 if ($hesk_settings['rating'])
@@ -310,12 +310,20 @@ while ($myuser = hesk_dbFetchAssoc($res))
         }
     }
 
+    $templateName = $hesklang['custom'];
+    if ($myuser['permission_template'] != -1) {
+        $result = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` WHERE `id` = ".intval($myuser['permission_template']));
+        $row = hesk_dbFetchAssoc($result);
+        $templateName = $row['name'];
+    }
+
+
 echo <<<EOC
 <tr>
 <td>$myuser[name]</td>
 <td><a href="mailto:$myuser[email]">$myuser[email]</a></td>
 <td>$myuser[user]</td>
-<td>$myuser[isadmin]</td>
+<td>$templateName</td>
 
 EOC;
 
