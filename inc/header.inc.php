@@ -170,7 +170,7 @@ if ($modsForHesk_settings['show_icons']) {
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['ticket'] ?><b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i class="fa fa-plus-circle" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['sub_ticket'] ?></a></li>
+              <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i class="fa fa-plus-circle" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['sub_support'] ?></a></li>
               <li><a href="<?php echo HESK_PATH; ?>ticket.php"><i class="fa fa-search" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['view_ticket_nav'] ?></a></li>
             </ul>
           </li>
