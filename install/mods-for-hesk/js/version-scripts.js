@@ -38,6 +38,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 221) {
         startVersionUpgrade('221');
         executeUpdate(221, '221', '2.2.1');
+    } else if (startingVersion < 230) {
+        startVersionUpgrade('230');
+        executeUpdate(230, '230', '2.3.0');
     } else {
         installationFinished();
     }
