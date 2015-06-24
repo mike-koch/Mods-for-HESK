@@ -274,7 +274,7 @@ hesk_dbConnect();
                                 <br>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        By proceeding, you agree to the terms of the <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License.</a>
+                                        By proceeding, you agree to the terms of the <a href="http://opensource.org/licenses/MIT" target="_blank">MIT License.</a>
                                     </div>
                                 </div>
                             </div>

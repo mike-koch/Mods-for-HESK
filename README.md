@@ -1,9 +1,9 @@
 ## [Mods for HESK](http://mods-for-hesk.mkochcs.com) [![Current Release](https://img.shields.io/github/release/mkoch227/Mods-for-HESK.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases) [![Project Status](http://stillmaintained.com/mkoch227/Mods-for-HESK.png)](https://www.github.com/mkoch227/Mods-for-HESK)
 [![Stories in Ready](https://badge.waffle.io/mkoch227/Mods-For-Hesk.png?label=waffle:ready&title=Ready)](https://waffle.io/mkoch227/Mods-For-Hesk)
-[![License](https://img.shields.io/badge/license-CC--A--SA-blue.svg)](https://github.com/mkoch227/Mods-for-HESK/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mkoch227/Mods-for-HESK/blob/master/LICENSE)
 [![Join the chat at https://gitter.im/mkoch227/Mods-for-HESK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mkoch227/Mods-for-HESK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Mods for HESK is a set of modifications for [HESK](http://www.hesk.com) v2.6.2, a free and popular helpdesk solution.
+Mods for HESK is a set of modifications for [HESK](http://www.hesk.com) v2.6.4, a free and popular helpdesk solution.
 
 ## Features
  - A new, responsive user interface
