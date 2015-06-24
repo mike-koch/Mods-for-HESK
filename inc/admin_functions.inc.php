@@ -380,7 +380,7 @@ function hesk_activeSessionValidate($username, $password_hash, $tag)
     list($salt, $hash) = explode('|', $tag, 2);
 
     // Make sure the hash matches existing username and password
-    if ($hash == sha1($salt . $username . $password_hash) )
+    if ($hash == sha1($salt . strtolower($username) . $password_hash) )
     {
         return true;
     }
@@ -392,7 +392,7 @@ function hesk_activeSessionValidate($username, $password_hash, $tag)
 function hesk_activeSessionCreateTag($username, $password_hash)
 {
     $salt = uniqid(mt_rand(), true);
-    return $salt . '|' . sha1($salt . $username . $password_hash);
+    return $salt . '|' . sha1($salt . strtolower($username) . $password_hash);
 } // END hesk_activeSessionCreateTag()
 
 
