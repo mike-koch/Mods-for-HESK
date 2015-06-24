@@ -328,6 +328,12 @@ function mail_send()
 	/* Message */
 	$_SESSION['mail']['message'] = hesk_input( hesk_POST('message') ) or $hesk_error_buffer .= '<li>' . $hesklang['enter_message'] . '</li>';
 
+    // Attach signature to the message?
+    if ( ! empty($_POST['signature']))
+    {
+    	$_SESSION['mail']['message'] .= "\n\n" . addslashes($_SESSION['signature']) . "\n";
+    }
+
 	/* Any errors? */
 	if (strlen($hesk_error_buffer))
 	{
@@ -711,6 +717,12 @@ function show_new_form()
                     echo stripslashes($_SESSION['mail']['message']);
                 }
                 ?></textarea>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="signature" value="1" checked>
+                        <?php echo $hesklang['attach_sign']; ?>
+                    </label> (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)
+                </div>
             </div>
         </div>
         <div class="form-group">

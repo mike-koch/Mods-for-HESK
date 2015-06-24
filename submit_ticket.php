@@ -188,15 +188,30 @@ $tmpvar['email'] = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_er
 
 if ($hesk_settings['confirm_email'])
 {
-	$tmpvar['email2'] = hesk_input( hesk_POST('email2') ) or $hesk_error_buffer['email2']=$hesklang['confemail2'];
+    $tmpvar['email2'] = hesk_validateEmail( hesk_POST('email2'), 'ERR', 0) or $hesk_error_buffer['email2']=$hesklang['confemail2'];
 
-	if (strlen($tmpvar['email2']) && ( strtolower($tmpvar['email']) != strtolower($tmpvar['email2']) ))
+    // Anything entered as email confirmation?
+    if ( strlen($tmpvar['email2']) )
 	{
-	    $tmpvar['email2'] = '';
-	    $_POST['email2'] = '';
-        $_SESSION['c_email2'] = '';
-        $_SESSION['isnotice'][] = 'email';
-	    $hesk_error_buffer['email2']=$hesklang['confemaile'];
+        // Do we have multiple emails?
+        if ($hesk_settings['multi_eml'] && count( array_diff( explode(',', strtolower($tmpvar['email']) ), explode(',', strtolower($tmpvar['email2']) ) ) ) == 0)
+        {
+            $_SESSION['c_email2'] = $_POST['email2'];
+        }
+        // Single email address match
+        elseif ( ! $hesk_settings['multi_eml'] && strtolower($tmpvar['email']) == strtolower($tmpvar['email2']) )
+        {
+            $_SESSION['c_email2'] = $_POST['email2'];
+        }
+        else
+        {
+            // Invalid match
+            $tmpvar['email2'] = '';
+            $_POST['email2'] = '';
+            $_SESSION['c_email2'] = '';
+            $_SESSION['isnotice'][] = 'email';
+            $hesk_error_buffer['email2']=$hesklang['confemaile'];
+        }
 	}
 	else
 	{

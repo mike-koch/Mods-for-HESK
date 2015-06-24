@@ -239,12 +239,12 @@ function update_profile() {
 			}
             else
             {
-				$v = hesk_Pass2Hash($newpass);
-				if ($v == '499d74967b28a841c98bb4baaabaad699ff3c079')
+                $newpass_hash = hesk_Pass2Hash($newpass);
+                if ($newpass_hash == '499d74967b28a841c98bb4baaabaad699ff3c079')
 				{
 					define('WARN_PASSWORD',true);
 				}
-				$sql_pass = ',`pass`=\''.$v.'\'';
+                $sql_pass = ',`pass`=\''.$newpass_hash.'\'';
             }
         }
 	}
@@ -313,6 +313,21 @@ function update_profile() {
 
 		/* Process the session variables */
 		$_SESSION['new'] = hesk_stripArray($_SESSION['new']);
+
+        // Do we need a new session_verify tag?
+        if ( strlen($sql_username) && strlen($sql_pass) )
+        {
+        	$_SESSION['session_verify'] = hesk_activeSessionCreateTag($_SESSION['new']['user'], $newpass_hash);
+        }
+        elseif ( strlen($sql_pass) )
+    	{
+			$_SESSION['session_verify'] = hesk_activeSessionCreateTag($_SESSION['user'], $newpass_hash);
+		}
+		elseif ( strlen($sql_username) )
+	    {
+			$res = hesk_dbQuery('SELECT `pass` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id` = '".intval($_SESSION['id'])."' LIMIT 1");
+			$_SESSION['session_verify'] = hesk_activeSessionCreateTag($_SESSION['new']['user'], hesk_dbResult($res) );
+		}
 
         /* Update session variables */
         foreach ($_SESSION['new'] as $k => $v)

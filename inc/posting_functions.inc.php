@@ -176,18 +176,34 @@ function hesk_newTicket($ticket, $isVerified = true)
 
 function hesk_cleanFileName($filename)
 {
-	$filename = str_replace( array( '%20', '+' ), '-', $filename );
+    $parts = pathinfo($filename);
+
+    if ( isset($parts['filename']) )
+    {
+        $filename = $parts['filename'];
+    }
+    // PHP < 5.2 needs special care
+    elseif ( version_compare(PHP_VERSION, '5.2','<') )
+    {
+        $filename = rtrim( str_ireplace($parts['extension'], '', $filename), '.');
+    }
+    else
+    {
+        $filename = '';
+    }
+
+    $filename = str_replace( array( '%20', '+' ), '-', $filename );
 	$filename = preg_replace('/[\s-]+/', '-', $filename);
 	$filename = remove_accents($filename);
 	$filename = preg_replace('/[^A-Za-z0-9\.\-_]/','', $filename);
-	$filename = trim($filename, '.-_');
+    $filename = trim($filename, '-_');
 
-	if ( strlen($filename) < 1 )
+    if ( strlen($filename) < 1 || strpos($filename, '.') === 0 )
 	{
-		$filename = mt_rand(10000,99999);
+        $filename = mt_rand(10000,99999) . $filename;
 	}
 
-	return $filename;
+    return $filename . '.' . $parts['extension'];
 } // END hesk_cleanFileName()
 
 

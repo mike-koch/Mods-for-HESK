@@ -53,11 +53,17 @@ $trackingID = hesk_cleanID() or die("$hesklang[int_error]: $hesklang[no_trackID]
 
 // Get new status
 $status = intval( hesk_GET('s', 0) );
+$oldStatus = $status;
 
 $locked = 0;
 
 // Connect to database
 hesk_dbConnect();
+
+// Get the close status. It'll be used later on
+$statusRes = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosedByClient` = 1');
+$statusRow = hesk_dbFetchAssoc($statusRes);
+$closedStatus = $statusRow['ID'];
 
 if ($status == 3) // Closed
 {
@@ -66,11 +72,7 @@ if ($status == 3) // Closed
     {
         hesk_error($hesklang['attempt']);
     }
-
-    //-- They want to close the ticket, so get the status that is the default for client-side closes
-    $statusRow = hesk_dbFetchAssoc(hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosedByClient` = 1'));
-
-    $status = $statusRow['ID'];
+    $status = $closedStatus;
 	$action = $hesklang['closed'];
     $revision = sprintf($hesklang['thist3'],hesk_date(),$hesklang['customer']);
 
@@ -89,6 +91,11 @@ elseif ($status == 2) // Opened
 	{
 		hesk_error($hesklang['attempt']);
 	}
+
+    //-- They want to close the ticket, so get the status that is the default for client-side closes
+    $statusRes = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsDefaultStaffReplyStatus` = 1');
+    $statusRow = hesk_dbFetchAssoc($statusRes);
+    $status = $statusRow['ID'];
 
 	$action = $hesklang['opened'];
     $revision = sprintf($hesklang['thist4'],hesk_date(),$hesklang['customer']);
@@ -110,6 +117,30 @@ hesk_dbConnect();
 // Verify email address match if needed
 hesk_verifyEmailMatch($trackingID);
 
+// Lets make status assignment a bit smarter when reopening tickets
+if ($oldStatus == 2)
+{
+	// Get number of replies and last replier (customer or staff)
+	$ticket = hesk_dbFetchAssoc( hesk_dbQuery( "SELECT `staffreplies`, `lastreplier` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1") );
+
+	// If ticket has no staff replies set the status to "New"
+	if ($ticket['staffreplies'] < 1)
+	{
+        $statusRes = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsNewTicketStatus` = 1');
+        $statusRow = hesk_dbFetchAssoc($statusRes);
+        $status = $statusRow['ID'];
+	}
+    // If last reply was by customer set status to "Waiting reply from staff"
+    elseif ($ticket['lastreplier'] == 0)
+    {
+        $statusRes = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsCustomerReplyStatus` = 1');
+        $statusRow = hesk_dbFetchAssoc($statusRes);
+        $status = $statusRow['ID'];
+	}
+	// If nothing matches: last reply was from staff, keep status "Waiting reply from customer"
+}
+
+
 // Modify values in the database
 hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql , `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `trackid`='".hesk_dbEscape($trackingID)."' AND `locked` != '1' LIMIT 1");
 
@@ -120,7 +151,7 @@ if (hesk_dbAffectedRows() != 1)
 }
 
 // Show success message
-if ($status == 2)
+if ($status != $closedStatus)
 {
 	hesk_process_messages($hesklang['wrepo'],'ticket.php?track='.$trackingID.$hesk_settings['e_param'].'&Refresh='.rand(10000,99999),'NOTICE');
 }

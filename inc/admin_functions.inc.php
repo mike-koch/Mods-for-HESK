@@ -368,6 +368,34 @@ function hesk_getHTML($in)
 } // END hesk_getHTML()
 
 
+function hesk_activeSessionValidate($username, $password_hash, $tag)
+{
+    // Salt and hash need to be separated by a |
+    if ( ! strpos($tag, '|') )
+    {
+        return false;
+    }
+
+    // Get two parts of the tag
+    list($salt, $hash) = explode('|', $tag, 2);
+
+    // Make sure the hash matches existing username and password
+    if ($hash == sha1($salt . $username . $password_hash) )
+    {
+        return true;
+    }
+
+    return false;
+} // hesk_activeSessionValidate
+
+
+function hesk_activeSessionCreateTag($username, $password_hash)
+{
+    $salt = uniqid(mt_rand(), true);
+    return $salt . '|' . sha1($salt . $username . $password_hash);
+} // END hesk_activeSessionCreateTag()
+
+
 function hesk_autoLogin($noredirect=0)
 {
 	global $hesk_settings, $hesklang, $hesk_db_link;
@@ -422,6 +450,10 @@ function hesk_autoLogin($noredirect=0)
     	hesk_process_messages($hesklang['chdp'],'NOREDIRECT','NOTICE');
     }
 
+    // Set a tag that will be used to expire sessions after username or password change
+    $_SESSION['session_verify'] = hesk_activeSessionCreateTag($user, $_SESSION['pass']);
+
+    // We don't need the password hash anymore
 	unset($_SESSION['pass']);
 
 	/* Login successful, clean brute force attempts */
@@ -494,7 +526,7 @@ function hesk_isLoggedIn()
 	$referer = hesk_input($_SERVER['REQUEST_URI']);
 	$referer = str_replace('&amp;','&',$referer);
 
-    if (empty($_SESSION['id']))
+    if ( empty($_SESSION['id']) || empty($_SESSION['session_verify']) )
     {
     	if ($hesk_settings['autologin'] && hesk_autoLogin(1) )
         {
@@ -508,6 +540,7 @@ function hesk_isLoggedIn()
         	return true;
         }
 
+        hesk_session_stop();
         $url = 'index.php?a=login&notice=1&goto='.urlencode($referer);
         header('Location: '.$url);
         exit();
@@ -516,32 +549,41 @@ function hesk_isLoggedIn()
     {
         hesk_session_regenerate_id();
 
-        // Need to update permissions?
-		if ( empty($_SESSION['isadmin']) )
-		{
-			$res = hesk_dbQuery("SELECT `isadmin`, `categories`, `heskprivileges` FROM `".$hesk_settings['db_pfix']."users` WHERE `id` = '".intval($_SESSION['id'])."' LIMIT 1");
-			if (hesk_dbNumRows($res) == 1)
-			{
-				$me = hesk_dbFetchAssoc($res);
-				foreach ($me as $k => $v)
-				{
-					$_SESSION[$k]=$v;
-				}
+        // Let's make sure access data is up-to-date
+        $res = hesk_dbQuery( "SELECT `user`, `pass`, `isadmin`, `categories`, `heskprivileges` FROM `".$hesk_settings['db_pfix']."users` WHERE `id` = '".intval($_SESSION['id'])."' LIMIT 1" );
 
-				// Get allowed categories
-				if  (empty($_SESSION['isadmin']) )
-				{
-					$_SESSION['categories']=explode(',',$_SESSION['categories']);
-				}
-			}
-            else
-            {
-				hesk_session_stop();
-				$url = 'index.php?a=login&notice=1&goto='.urlencode($referer);
-				header('Location: '.$url);
-				exit();
-            }
-		}
+        // Exit if user not found
+        if (hesk_dbNumRows($res) != 1)
+		{
+            hesk_session_stop();
+            $url = 'index.php?a=login&notice=1&goto='.urlencode($referer);
+            header('Location: '.$url);
+            exit();
+        }
+
+        // Fetch results from database
+        $me = hesk_dbFetchAssoc($res);
+
+        // Verify this session is still valid
+        if ( ! hesk_activeSessionValidate($me['user'], $me['pass'], $_SESSION['session_verify']) )
+        {
+            hesk_session_stop();
+            $url = 'index.php?a=login&notice=1&goto='.urlencode($referer);
+            header('Location: '.$url);
+            exit();
+        }
+
+        // Update session variables as needed
+        if ($me['isadmin'] == 1)
+        {
+            $_SESSION['isadmin'] = 1;
+        }
+        else
+        {
+            $_SESSION['isadmin'] = 0;
+            $_SESSION['categories'] = explode(',', $me['categories']);
+            $_SESSION['heskprivileges'] = $me['heskprivileges'];
+        }
 
 		// Users online
 		if ($hesk_settings['online'])

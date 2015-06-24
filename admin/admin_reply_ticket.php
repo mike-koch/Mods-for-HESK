@@ -288,6 +288,12 @@ elseif ($submit_as_customer)
     $customerReplyStatusRs = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsCustomerReplyStatus` = 1 LIMIT 1');
     $customerReplyStatus = hesk_dbFetchAssoc($customerReplyStatusRs);
     $new_status = $customerReplyStatus['ID'];
+
+    if ($ticket['status'] != $new_status)
+	{
+		$revision   = sprintf($hesklang['thist9'],hesk_date(),$hesklang['wait_reply'],$_SESSION['name'].' ('.$_SESSION['user'].')');
+		$sql_status = " , `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') ";
+	}
 }
 // -> Default: submit as "Replied by staff"
 else

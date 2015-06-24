@@ -278,8 +278,11 @@ myField.value += myValue;
                                 }
                             ?></textarea>
                         <?php echo $hesklang['insert_special']; ?>:
+                        <a href="javascript:void(0)" onclick="hesk_insertTag('HESK_ID')"><?php echo $hesklang['seqid']; ?></a> |
+                        <a href="javascript:void(0)" onclick="hesk_insertTag('HESK_TRACK_ID')"><?php echo $hesklang['trackID']; ?></a> |
                         <a href="javascript:void(0)" onclick="hesk_insertTag('HESK_NAME')"><?php echo $hesklang['name']; ?></a> |
-                        <a href="javascript:void(0)" onclick="hesk_insertTag('HESK_EMAIL')"><?php echo $hesklang['email']; ?></a>
+                        <a href="javascript:void(0)" onclick="hesk_insertTag('HESK_EMAIL')"><?php echo $hesklang['email']; ?></a> |
+                        <a href="javascript:void(0)" onclick="hesk_insertTag('HESK_OWNER')"><?php echo $hesklang['owner']; ?></a>
                         <?php
                             foreach ($hesk_settings['custom_fields'] as $k=>$v)
                             {

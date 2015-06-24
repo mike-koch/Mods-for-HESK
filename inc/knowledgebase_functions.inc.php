@@ -270,12 +270,19 @@ function hesk_kbSearchLarge($admin = '')
 {
 	global $hesk_settings, $hesklang;
 
-	if ($hesk_settings['kb_search'] != 2)
-	{
+    $action = 'knowledgebase.php';
+    if ($admin)
+    {
+        if ( ! $hesk_settings['kb_search'])
+        {
+            return '';
+        }
+        $action = 'knowledgebase_private.php';
+    }
+    elseif ($hesk_settings['kb_search'] != 2)
+    {
 		return '';
 	}
-
-    $action = $admin ? 'knowledgebase_private.php' : 'knowledgebase.php';
 
 	?>
 

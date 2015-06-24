@@ -217,6 +217,10 @@ function do_login()
     	hesk_process_messages($hesklang['chdp'],'NOREDIRECT','NOTICE');
     }
 
+    // Set a tag that will be used to expire sessions after username or password change
+    $_SESSION['session_verify'] = hesk_activeSessionCreateTag($user, $_SESSION['pass']);
+
+    // We don't need the password hash anymore
 	unset($_SESSION['pass']);
 
 

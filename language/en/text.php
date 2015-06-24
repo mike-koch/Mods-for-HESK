@@ -2,7 +2,7 @@
 /*
 * Language file for Help Desk Software HESK (www.hesk.com)
 * Language: ENGLISH
-* Version: 2.6.1
+* Version: 2.6.3
 * Author: Klemen Stirn (http://www.hesk.com)
 *
 * !!! This file must be saved in UTF-8 encoding without byte order mark (BOM) !!!
@@ -865,7 +865,7 @@ $hesklang['nhid']='Notes are hidden from customers!';
 $hesklang['delt']='Delete this post';
 $hesklang['edtt']='Edit post';
 $hesklang['edt1']='Post modified';
-$hesklang['edt2']='Changes to the selecting post have been saved';
+$hesklang['edt2']='Changes to the selected post have been saved';
 $hesklang['dele']='Delete this ticket';
 $hesklang['repd']='Post deleted';
 $hesklang['repl']='Selected post has been deleted';
@@ -1098,7 +1098,7 @@ $hesklang['nwts']='A new ticket is submitted with owner:';
 $hesklang['ncrt']='Client responds to a ticket with owner:';
 $hesklang['ntam']='A ticket is assigned to me';
 $hesklang['npms']='A private message is sent to me';
-$hesklang['support_remove']='A lot of time and effort went into developing HESK. Support HESK, buy a license that will also remove the credits links <i>Powered by Help Desk Software HESK</i> from your helpdesk';
+$hesklang['support_remove']='A lot of time and effort went into developing HESK. Support HESK by purchasing a license that will remove the credits links <i>Powered by Help Desk Software HESK</i> from your helpdesk';
 $hesklang['ycvtao']='You are not allowed to view tickets assigned to others';
 $hesklang['password_not_valid']='Password must be at least 5 chars long';
 $hesklang['lkbs']='Loading knowledgebase suggestions...';
