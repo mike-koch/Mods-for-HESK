@@ -1003,6 +1003,8 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 
                     <div class="row">
                         <div class="col-md-9 col-md-offset-3">
+                            <input type="hidden" id="latitude" name="latitude" value="E-0">
+                            <input type="hidden" id="longitude" name="longitude" value="E-0">
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
                             <input type="submit" value="<?php echo $hesklang['sub_ticket']; ?>" class="btn btn-default">
                         </div>
