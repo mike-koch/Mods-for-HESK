@@ -71,6 +71,8 @@ $hesklang['manager_updated'] = 'Category manager has been updated.';
 $hesklang['can_set_manager'] = 'Can set category managers';
 $hesklang['no_manager'] = 'No manager';
 $hesklang['manage_permission_templates'] = 'Manage Permission Templates';
+$hesklang['manage_permission_templates_help'] = 'Here you can create and edit permission templates. These templates will appear when creating/editing a user.
+Please note that if you change the permission template\'s settings, it will NOT change the permissions of any users that are set to this permission template.';
 $hesklang['number_of_users'] = 'Number of Users';
 $hesklang['actions'] = 'Actions';
 $hesklang['view_permissions_for_this_template'] = 'View/edit permissions for this template';

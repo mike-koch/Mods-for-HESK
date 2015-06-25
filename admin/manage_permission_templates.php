@@ -89,7 +89,10 @@ else {return false;}
 ?>
 <div class="row" style="margin-top: 20px">
     <div class="col-md-10 col-md-offset-1">
-        <h3><?php echo $hesklang['manage_permission_templates']; ?> <i class="fa fa-question-circle settingsquestionmark"></i></h3>
+        <h3><?php echo $hesklang['manage_permission_templates']; ?> 
+			<i class="fa fa-question-circle settingsquestionmark" data-toggle="tooltip" data-placement="right" 
+			title="<?php echo $hesklang['manage_permission_templates_help']; ?>"></i>
+		</h3>
         <div class="footerWithBorder blankSpace"></div>
         <?php
         hesk_handle_messages();
@@ -185,6 +188,11 @@ function createEditModal($template, $features, $categories) {
                     </div>
                     <div class="modal-body">
                         <div class="row">
+							<?php if ($showNotice): ?>
+                                <div class="alert alert-info">
+                                    <i class="fa fa-info-circle"></i> <?php echo $hesklang['template_is_admin_cannot_change']; ?>
+                                </div>
+                            <?php endif; ?>
                             <div class="col-sm-2">
                                 <label for="name" class="control-label"><?php echo $hesklang['template_name']; ?></label>
                             </div>
@@ -194,11 +202,6 @@ function createEditModal($template, $features, $categories) {
                             </div>
                         </div>
                         <div class="row">
-                            <?php if ($showNotice): ?>
-                                <div class="alert alert-info">
-                                    <i class="fa fa-info-circle"></i> <?php echo $hesklang['template_is_admin_cannot_change']; ?>
-                                </div>
-                            <?php endif; ?>
                             <div class="col-md-6 col-sm-12">
                                 <h4><?php echo $hesklang['menu_cat']; ?></h4>
                                 <div class="footerWithBorder blankSpace"></div>
@@ -241,10 +244,11 @@ function createEditModal($template, $features, $categories) {
                     <div class="modal-footer">
                         <input type="hidden" name="a" value="save">
                         <input type="hidden" name="template_id" value="<?php echo $template['id']; ?>">
+						<?php if ($showNotice): ?>
+						<input type="hidden" name="name_only" value="1">
+						<?php endif; ?>
                         <div class="btn-group">
-                            <?php if (!$showNotice): ?>
-                                <input type="submit" class="btn btn-success" value="<?php echo $hesklang['save_changes']; ?>">
-                            <?php endif; ?>
+							<input type="submit" class="btn btn-success" value="<?php echo $hesklang['save_changes']; ?>">
                             <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['close_modal_without_saving']; ?></button>
                         </div>
                     </div>
@@ -327,31 +331,39 @@ function save() {
     $res = hesk_dbQuery("SELECT `heskprivileges`, `categories` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
         WHERE `id` = ".intval($templateId));
     $row = hesk_dbFetchAssoc($res);
+	
+	if (hesk_POST('name_only', 0)) {
+		// We are only able to update the name
+		$name = hesk_POST('name');
 
-    // Add 'can ban emails' if 'can unban emails' is set (but not added). Same with 'can ban ips'
-    $catArray = hesk_POST_array('categories');
-    $featArray = hesk_POST_array('features');
-    validate($featArray, $catArray);
-    if (in_array('can_unban_emails', $featArray) && !in_array('can_ban_emails', $featArray)) {
-        array_push($catArray, 'can_ban_emails');
-    }
-    if (in_array('can_unban_ips', $featArray) && !in_array('can_ban_ips', $featArray)) {
-        array_push($featArray, 'can_ban_ips');
-    }
-    $categories = implode(',', $catArray);
-    $features = implode(',', $featArray);
-    $name = hesk_POST('name');
+		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
+        SET `name` = '".hesk_dbEscape($name)."' WHERE `id` = ".intval($templateId));
+	} else {
+		// Add 'can ban emails' if 'can unban emails' is set (but not added). Same with 'can ban ips'
+		$catArray = hesk_POST_array('categories');
+		$featArray = hesk_POST_array('features');
+		validate($featArray, $catArray);
+		if (in_array('can_unban_emails', $featArray) && !in_array('can_ban_emails', $featArray)) {
+			array_push($catArray, 'can_ban_emails');
+		}
+		if (in_array('can_unban_ips', $featArray) && !in_array('can_ban_ips', $featArray)) {
+			array_push($featArray, 'can_ban_ips');
+		}
+		$categories = implode(',', $catArray);
+		$features = implode(',', $featArray);
+		$name = hesk_POST('name');
 
-    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
-        SET `categories` = '".hesk_dbEscape($categories)."', `heskprivileges` = '".hesk_dbEscape($features)."',
-            `name` = '".hesk_dbEscape($name)."'
-        WHERE `id` = ".intval($templateId));
+		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates`
+			SET `categories` = '".hesk_dbEscape($categories)."', `heskprivileges` = '".hesk_dbEscape($features)."',
+				`name` = '".hesk_dbEscape($name)."'
+			WHERE `id` = ".intval($templateId));
 
-    if ($row['categories'] != $categories || $row['heskprivileges'] != $features) {
-        // Any users with this template should be switched to "custom"
-        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `permission_template` = NULL
-            WHERE `permission_template` = ".intval($templateId));
-    }
+		if ($row['categories'] != $categories || $row['heskprivileges'] != $features) {
+			// Any users with this template should be switched to "custom"
+			hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `permission_template` = NULL
+				WHERE `permission_template` = ".intval($templateId));
+		}
+	}
 
     hesk_process_messages( $hesklang['permission_template_updated'],$_SERVER['PHP_SELF'],'SUCCESS');
 }
