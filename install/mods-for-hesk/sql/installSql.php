@@ -472,10 +472,10 @@ function execute230Scripts() {
             $currentPrivileges = explode(',', $row['heskprivileges']);
             array_push($currentPrivileges, 'can_man_settings');
             $newPrivileges = implode(',', $currentPrivileges);
-            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges = '".hesk_dbEscape($newPrivileges)."'
+            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges` = '".hesk_dbEscape($newPrivileges)."'
             WHERE `id` = ".intval($row['id']));
         } else {
-            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges = 'can_man_settings'
+            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges` = 'can_man_settings'
             WHERE `id` = ".intval($row['id']));
         }
     }
@@ -486,10 +486,10 @@ function execute230Scripts() {
             $currentPrivileges = explode(',', $row['heskprivileges']);
             array_push($currentPrivileges, 'can_change_notification_settings');
             $newPrivileges = implode(',', $currentPrivileges);
-            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges = '".hesk_dbEscape($newPrivileges)."'
+            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges` = '".hesk_dbEscape($newPrivileges)."'
             WHERE `id` = ".intval($row['id']));
         } else {
-            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges = 'can_change_notification_settings'
+            executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."users` SET `heskprivileges` = 'can_change_notification_settings'
             WHERE `id` = ".intval($row['id']));
         }
     }
