@@ -516,7 +516,7 @@ $modsForHesk_settings[\'show_number_merged\'] = 1;';
         $file .= '
 
         //-- Setting for requesting user\'s location. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'request_location\'] = 0';
+$modsForHesk_settings[\'request_location\'] = 0;';
     }
 
     return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
