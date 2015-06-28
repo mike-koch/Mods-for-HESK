@@ -6,19 +6,40 @@
 Mods for HESK is a set of modifications for [HESK](http://www.hesk.com) v2.6.4, a free and popular helpdesk solution.
 
 ## Features
- - A new, responsive user interface
- - Ability to create custom ticket statuses
- - Right-to-left text direction
- - Designate parent/child relationships for tickets
- - Ticket dashboard automatic refresh
- - HTML-formatted e-mails
- - Mailgun API support
- - Customer email verifications
- - Custom fields in multiple languages
- - Create new ticket based on previous ticket
- - Admins can restrict users from modifying notification settings
- - More-restricted settings page access
- - Enable / disable staff members
+<table>
+    <tr>
+        <td>
+            <ul>
+                <li>A new, responsive user interface</li>
+                <li>Ability to create custom ticket statuses</li>
+                <li>Right-to-left text direction</li>
+                <li>Designate parent/child relationships for tickets</li>
+                <li>Ticket dashboard automatic refresh</li>
+                <li>HTML-formatted e-mails</li>
+                <li>Mailgun API support</li>
+                <li>Customer email verifications</li>
+                <li>Custom fields in multiple languages</li>
+                <li>Create new ticket based on previous ticket</li>
+                <li>Admins can restrict users from modifying notification settings</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li>Email template editor</li>
+                <li>Ticket attachments directly in emails</li>
+                <li>Recent tickets for contact when viewing another ticket</li>
+                <li>Restrict statuses from being closable</li>
+                <li>Custom service message icons</li>
+                <li>Permission templates</li>
+                <li>Request users location in tickets</li>
+                <li>Category managers</li>
+                <li>Show number of merged tickets in ticket search view</li>
+                <li>Enable / disable staff members</li>
+                <li>More-restricted settings page access</li>
+            </ul>
+        </td>
+    </tr>
+</table>
 
 ## Download
 You can download Mods for HESK via two ways:
