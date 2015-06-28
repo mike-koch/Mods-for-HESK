@@ -113,9 +113,9 @@ function requestUserLocation(yourLocationText, unableToDetermineText) {
             var longitude = position.coords.longitude;
             setLatLon(latitude, longitude);
             $('#console').hide();
+            $('#map').show();
             initializeMapForCustomer(latitude, longitude, yourLocationText);
         }, function(error) {
-            $('#map').hide();
             $('#console').text(unableToDetermineText).show();
             switch(error.code) {
                 case error.PERMISSION_DENIED:
@@ -133,7 +133,6 @@ function requestUserLocation(yourLocationText, unableToDetermineText) {
             }
         });
     } else {
-        $('#map').hide();
         $('#console').text(unableToDetermineText).show();
         setLatLon('E-5','E-5');
     }

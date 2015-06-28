@@ -1001,7 +1001,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <label for="location" class="col-md-3 control-label"><?php echo $hesklang['location_colon']; ?></label>
                     <div class="col-sm-9">
                         <p id="console"><?php echo $hesklang['requesting_location_ellipsis']; ?></p>
-                        <div id="map" style="height: 300px">
+                        <div id="map" style="height: 300px; display:none">
                         </div>
                     </div>
                 </div>
