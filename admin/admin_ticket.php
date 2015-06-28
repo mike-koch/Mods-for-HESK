@@ -2054,6 +2054,7 @@ function hesk_printReplyForm() {
                         <input type="hidden" name="isManager" value="1">
                     <?php endif; ?>
                 </div>
+            </div>
         </form>
 
 <!-- END REPLY FORM -->
