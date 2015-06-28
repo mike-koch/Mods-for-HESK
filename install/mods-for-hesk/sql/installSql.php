@@ -522,3 +522,12 @@ $modsForHesk_settings[\'request_location\'] = 0;';
     return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
 }
 // END Version 2.3.0
+
+
+// BEGIN Version 2.3.1
+function execute231Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.1' WHERE `Key` = 'modsForHeskVersion'");
+}
