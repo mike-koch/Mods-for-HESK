@@ -262,12 +262,12 @@ if (!isset($_SESSION['hide']))
 		'new_category' => 1,
 	);
 }
-
+echo '';
 /* Hide tree menu? */
 if (!isset($_SESSION['hide']['treemenu']))
 {
 	?>
-<div class="col-md-10 col-md-offset-1">
+    <div class="row"><div class="col-md-10 col-md-offset-1">
 	<h3><?php echo $hesklang['kb']; ?> <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['kb_intro']); ?>')"><i class="fa fa-question-circle settingsquestionmark" style="font-size:20px"></i></a></h3>
     <div class="footerWithBorder blankSpace"></div>
 
@@ -297,6 +297,7 @@ if (!isset($_SESSION['hide']['treemenu']))
 
 	&nbsp;<br />
 
+        </div><div class="col-md-1">&nbsp;</div></div>
 	<?php
 } // END hide treemenu
 
@@ -547,9 +548,6 @@ if (!isset($_SESSION['hide']['new_category']))
 /* Clean unneeded session variables */
 hesk_cleanSessionVars(array('hide','new_article','new_category','KB_CATEGORY','manage_cat','edit_article','newcat'));
 ?>
-
-<p>&nbsp;</p>
-
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
