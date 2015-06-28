@@ -531,3 +531,13 @@ function execute231Scripts() {
     hesk_dbConnect();
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.1' WHERE `Key` = 'modsForHeskVersion'");
 }
+// END Verison 2.3.1
+
+// BEGIN Version 2.3.2
+function execute232Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.2' WHERE `Key` = 'modsForHeskVersion'");
+}
+// END Version 2.3.2
