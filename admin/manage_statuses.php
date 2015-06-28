@@ -317,7 +317,7 @@ function save() {
     //-- Validate the new one if at least one of the fields are used / checked
     if ($_POST['sN_key'] != null || $_POST['sN_textColor'] != null || isset($_POST['sN_isClosed']))
     {
-        validateStatus($_POST['sN_shortName'], $_POST['sN_textColor']);
+        validateStatus($_POST['sN_key'], $_POST['sN_textColor']);
     }
 
     hesk_dbConnect();
