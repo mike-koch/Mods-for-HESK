@@ -99,7 +99,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
             <tr>
                 <?php
                 /* Get list of articles from the database */
-                $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`views` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+                $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`views`,`t1`.`sticky` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
 			LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
 			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
 			ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT ".intval($how_many));
@@ -116,7 +116,7 @@ function hesk_kbTopArticles($how_many, $index = 1)
             <tbody>
             <?php
             /* Get list of articles from the database */
-            $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`dt`, `t1`.`views` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+            $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`dt`, `t1`.`views`,`t1`.`sticky` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
             LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
             WHERE `t1`.`type`='0' AND `t2`.`type`='0'
             ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT ".intval($how_many));
@@ -138,10 +138,18 @@ function hesk_kbTopArticles($how_many, $index = 1)
             }
             while ($article = hesk_dbFetchAssoc($res))
             {
+                $icon = 'fa fa-file';
+                $style = '';
+
+                if ($article['sticky']) {
+                    $icon = 'glyphicon glyphicon-pushpin';
+                    $style = 'style="color: #FF0000"';
+                }
+
                 echo '
                 <tr>
                     <td class="col-xs-8 col-sm-9" '.$colspan.'>
-                        <i class="fa fa-file"></i> <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
+                        <i class="'.$icon.'" '.$style.'></i> <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
                     </td>
                     ';
                 if ($hesk_settings['kb_views']) {
@@ -246,10 +254,18 @@ function hesk_kbLatestArticles($how_many, $index = 1)
             $colspan = $hesk_settings['kb_date'] ? '' : 'colspan="2"';
             while ($article = hesk_dbFetchAssoc($res))
             {
+                $icon = 'fa fa-file';
+                $style = '';
+
+                if ($article['sticky']) {
+                    $icon = 'glyphicon glyphicon-pushpin';
+                    $style = 'style="color: #FF0000"';
+                }
+
                 echo '
                 <tr>
                     <td class="col-xs-9" '.$colspan.'>
-                        <i class="fa fa-file"></i> <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
+                        <i class="'.$icon.'" '.$style.'></i> <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
                     </td>';
                 if ($hesk_settings['kb_date']) {
                     echo '<td class="col-xs-3">' . hesk_date($article['dt'], true) . '</td>';
