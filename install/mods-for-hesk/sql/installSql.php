@@ -541,3 +541,39 @@ function execute232Scripts() {
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.3.2' WHERE `Key` = 'modsForHeskVersion'");
 }
 // END Version 2.3.2
+
+// BEGIN Version 2.4.0
+function execute240Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+    executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` (
+      `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `location` VARCHAR(100) NOT NULL,
+      `show` ENUM('0','1') NOT NULL
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+
+    executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
+      VALUES ('create_ticket', '1')");
+    executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
+      VALUES ('view_ticket_form', '1')");
+    executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
+      VALUES ('view_ticket', '1')");
+    executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
+      VALUES ('knowledgebase', '1')");
+}
+
+function execute240FileUpdate() {
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    //-- Only add the additional settings if they aren't already there.
+    if (strpos($file, '$modsForHesk_settings[\'category_order_column\']') === false)
+    {
+        $file .= '
+
+        //-- Column to sort categories by. Can be either \'name\' or \'cat_order\'
+$modsForHesk_settings[\'category_order_column\'] = \'cat_order\';';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
