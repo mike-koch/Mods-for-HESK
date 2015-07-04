@@ -36,6 +36,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/reporting_functions.inc.php');
@@ -326,7 +327,8 @@ $can_view_unassigned = hesk_checkPermission('can_view_unassigned',0);
 // Category options
 $category_options = '';
 $my_cat = array();
-$res2 = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE " . hesk_myCategories('id') . " ORDER BY `cat_order` ASC");
+$orderBy = $modsForHesk_settings['category_order_column'];
+$res2 = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE " . hesk_myCategories('id') . " ORDER BY `".$orderBy."` ASC");
 while ($row=hesk_dbFetchAssoc($res2))
 {
 	$my_cat[$row['id']] = hesk_msgToPlain($row['name'], 1);

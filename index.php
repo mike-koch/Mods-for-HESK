@@ -224,7 +224,8 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 
                         // Get categories
 	                    hesk_dbConnect();
-	                    $res = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `type`='0' ORDER BY `cat_order` ASC");
+                        $orderBy = $modsForHesk_settings['category_order_column'];
+	                    $res = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `type`='0' ORDER BY `".$orderBy."` ASC");
 
                         if (hesk_dbNumRows($res) == 1)
                         {

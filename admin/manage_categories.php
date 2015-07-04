@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -87,8 +88,9 @@ else {return false;}
 //-->
 </script>
 
-<?php 
-    $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `cat_order` ASC");
+<?php
+    $orderBy = $modsForHesk_settings['category_order_column'];
+    $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `".$orderBy."` ASC");
     $options='';
     while ($mycat=hesk_dbFetchAssoc($res))
     {
@@ -275,7 +277,7 @@ else {return false;}
             }
 
             /* Get list of categories */
-            $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `cat_order` ASC");
+            $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `".$orderBy."` ASC");
             $usersRes = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `isadmin` = '0' ORDER BY `name` ASC");
             $users = array();
             while ($userRow = hesk_dbFetchAssoc($usersRes)) {
@@ -368,7 +370,7 @@ else {return false;}
                 ' . $autoassign_code . '
                 ' . $type_code . ' ';
 
-                if ($num > 1)
+                if ($orderBy != 'name' && $num > 1)
                 {
                     if ($j == 1)
                     {

@@ -47,8 +47,9 @@ if (!isset($admins))
 }
 
 /* List of categories */
+$orderBy = $modsForHesk_settings['category_order_column'];
 $hesk_settings['categories'] = array();
-$res2 = hesk_dbQuery('SELECT `id`, `name` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` WHERE ' . hesk_myCategories('id') . ' ORDER BY `cat_order` ASC');
+$res2 = hesk_dbQuery('SELECT `id`, `name` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` WHERE ' . hesk_myCategories('id') . ' ORDER BY `'.$orderBy.'` ASC');
 while ($row=hesk_dbFetchAssoc($res2))
 {
 	$hesk_settings['categories'][$row['id']] = $row['name'];

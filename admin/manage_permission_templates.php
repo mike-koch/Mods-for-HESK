@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -81,7 +82,8 @@ else {return false;}
         array_push($templates, $row);
     }
     $featureArray = hesk_getFeatureArray();
-    $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `name` ASC");
+    $orderBy = $modsForHesk_settings['category_order_column'];
+    $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `".$orderBy."` ASC");
     $categories = array();
     while ($row = hesk_dbFetchAssoc($res)) {
         array_push($categories, $row);
