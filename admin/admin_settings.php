@@ -839,6 +839,27 @@ if ( defined('HESK_DEMO') )
                                 ?>
                             </div>
                         </div>
+						<div class="form-group">
+							<label for="category_order_column" class="col-sm-6 control-label">
+                                <span class="label label-primary"
+                                      data-toggle="tooltip"
+                                      title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                                            <?php echo $hesklang['category_sort']; ?>
+                                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                               title="<?php echo $hesklang['category_sort']; ?>"
+                                               data-content="<?php echo $hesklang['category_sort_help']; ?>"></i>
+                            </label>
+							<div class="col-sm-6">
+								<?php
+								$on = $modsForHesk_settings['category_order_column'] == 'name' ? 'checked' : '';
+								$off = $modsForHesk_settings['category_order_column'] == 'name' ? '' : 'checked';
+								echo '
+								<div class="radio"><label><input type="radio" name="category_order_column" value="0" '.$off.'>'.$hesklang['sort_by_user_defined_order'].'</label></div>
+								<div class="radio"><label><input type="radio" name="category_order_column" value="1" '.$on.'>'.$hesklang['sort_alphabetically'].'</label></div>
+								'; 
+								?>
+							</div>
+						</div>
                     </div>
                     <!-- Second column -->
                     <div class="col-md-6">

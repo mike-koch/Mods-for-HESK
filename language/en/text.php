@@ -21,6 +21,13 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.4.0
+$hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';
+$hesklang['sort_alphabetically'] = 'Sort alphabetically';
+$hesklang['category_sort'] = 'Category Sorting';
+$hesklang['category_sort_help'] = 'Determines if categories shown on the manage categories page and all dropdowns are sorted by the user-defined order (default), or
+sorted alphabetically.';
+
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';
 $hesklang['sm_icon_type'] = 'Icon Type';

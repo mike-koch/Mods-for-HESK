@@ -507,6 +507,7 @@ $set['new_kb_article_visibility'] = hesk_checkMinMax( intval( hesk_POST('new_kb_
 $set['mfh_attachments'] = empty($_POST['email_attachments']) ? 0 : 1;
 $set['show_number_merged'] = empty($_POST['show_number_merged']) ? 0 : 1;
 $set['request_location'] = empty($_POST['request_location']) ? 0 : 1;
+$set['category_order_column'] = empty($_POST['category_order_column']) ? 'cat_order' : 'name';
 
 if ($set['customer-email-verification-required'])
 {
@@ -572,7 +573,10 @@ $modsForHesk_settings[\'attachments\'] = '.$set['mfh_attachments'].';
 $modsForHesk_settings[\'show_number_merged\'] = '.$set['show_number_merged'].';
 
 //-- Setting for requesting user\'s location. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'request_location\'] = '.$set['request_location'].';';
+$modsForHesk_settings[\'request_location\'] = '.$set['request_location'].';
+
+//-- Column to sort categories by. Can be either \'name\' or \'cat_order\'
+$modsForHesk_settings[\'category_order_column\'] = \''.$set['category_order_column'].'\';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )
