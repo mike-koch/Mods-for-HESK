@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/profile_functions.inc.php');
@@ -93,8 +94,9 @@ $default_userdata = array(
 );
 
 /* A list of all categories */
+$orderBy = $modsForHesk_settings['category_order_column'];
 $hesk_settings['categories'] = array();
-$res = hesk_dbQuery('SELECT `id`,`name` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` ORDER BY `cat_order` ASC');
+$res = hesk_dbQuery('SELECT `id`,`name` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` ORDER BY `'.$orderBy.'` ASC');
 while ($row=hesk_dbFetchAssoc($res))
 {
 	if ( hesk_okCategory($row['id'], 0) )

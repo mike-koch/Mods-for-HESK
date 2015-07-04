@@ -209,7 +209,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	                            }
 
                                 // List categories
-	                            $result = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` ORDER BY `cat_order` ASC');
+                                $orderByColumn = $modsForHesk_settings['category_order_column'];
+	                            $result = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` ORDER BY `'.$orderByColumn.'` ASC');
 	                            while ($row=hesk_dbFetchAssoc($result))
 	                            {
 	                                if (isset($_SESSION['as_category']) && $_SESSION['as_category'] == $row['id']) {$selected = ' selected="selected"';}

@@ -607,7 +607,8 @@ if (isset($_POST['latitude']) && isset($_POST['longitude'])) {
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
 /* List of categories */
-$result = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `cat_order` ASC");
+$orderBy = $modsForHesk_settings['category_order_column'];
+$result = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `".$orderBy."` ASC");
 $categories_options='';
 while ($row=hesk_dbFetchAssoc($result))
 {
