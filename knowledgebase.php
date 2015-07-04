@@ -486,15 +486,22 @@ function hesk_show_kb_category($catid, $is_search = 0) {
                     /* Print most popular/sticky articles */
                     if ($hesk_settings['kb_numshow'] && $cat['articles'])
                     {
-                        $res = hesk_dbQuery("SELECT `id`,`subject` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$cat['id']}' AND `type`='0' ORDER BY `sticky` DESC, `views` DESC, `art_order` ASC LIMIT " . (intval($hesk_settings['kb_numshow']) + 1) );
+                        $res = hesk_dbQuery("SELECT `id`,`subject`, `sticky` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$cat['id']}' AND `type`='0' ORDER BY `sticky` DESC, `views` DESC, `art_order` ASC LIMIT " . (intval($hesk_settings['kb_numshow']) + 1) );
                         $num = 1;
                         while ($art = hesk_dbFetchAssoc($res))
                         {
+                            $icon = 'glyphicon glyphicon-file';
+                            $style = '';
+                            if ($art['sticky'])
+                            {
+                                $icon = 'glyphicon glyphicon-pushpin';
+                                $style = 'style="color: #FF0000"';
+                            }
                             echo '
-		            <tr>
-		            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-file"></span>
-		            <a href="knowledgebase.php?article='.$art['id'].'" class="article">'.$art['subject'].'</a></td>
-		            </tr>';
+                            <tr>
+                            <td '.$style.'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="'.$icon.'"></span>
+                            <a href="knowledgebase.php?article='.$art['id'].'" class="article">'.$art['subject'].'</a></td>
+                            </tr>';
 
                             if ($num == $hesk_settings['kb_numshow'])
                             {
@@ -553,7 +560,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
         <table class="table table-striped">
             <tbody>
             <?php
-            $res = hesk_dbQuery("SELECT `id`, `subject`, LEFT(`content`, ".max(200, $hesk_settings['kb_substrart'] * 2).") AS `content`, `rating` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$catid}' AND `type`='0' ORDER BY `sticky` DESC, `art_order` ASC");
+            $res = hesk_dbQuery("SELECT `id`, `subject`, `sticky`, LEFT(`content`, ".max(200, $hesk_settings['kb_substrart'] * 2).") AS `content`, `rating` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='{$catid}' AND `type`='0' ORDER BY `sticky` DESC, `art_order` ASC");
             if (hesk_dbNumRows($res) == 0)
             {
                 echo '<tr><td><i>'.$hesklang['noac'].'</i></td></tr>';
@@ -562,7 +569,17 @@ function hesk_show_kb_category($catid, $is_search = 0) {
             {
                 while ($article = hesk_dbFetchAssoc($res))
                 {
+                    $icon = 'fa fa-file';
+                    $color = '';
+                    $style = '';
+
                     $txt = hesk_kbArticleContentPreview($article['content']);
+
+                    if ($article['sticky'])
+                    {
+                        $icon = 'glyphicon glyphicon-pushpin';
+                        $style = 'style="color: #FF0000"';
+                    }
 
                     if ($hesk_settings['kb_rating'])
                     {
@@ -577,7 +594,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
                     echo '
                         <tr>
                             <td>
-                                <i class="fa fa-file"></i>
+                                <i class="'.$icon.'" '.$style.'></i>
                                 <a href="knowledgebase.php?article='.$article['id'].'">'.$article['subject'].'</a>
                                 <br>
                                 <span class="indent-15">'.$txt.'</span>
