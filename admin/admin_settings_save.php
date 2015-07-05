@@ -496,6 +496,14 @@ for ($i=1;$i<=20;$i++)
 
 $set['hesk_version'] = $hesk_settings['hesk_version'];
 
+// Process quick help sections
+hesk_dbConnect();
+hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` SET `show` = '0'");
+$postArray = hesk_POST_array('quick_help_sections');
+foreach ($postArray as $value) {
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` SET `show` = '1' WHERE `id` = '".intval($value)."'");
+}
+
 // Save the modsForHesk_settings.inc.php file
 $set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
