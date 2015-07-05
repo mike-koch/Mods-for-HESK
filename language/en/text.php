@@ -27,6 +27,11 @@ $hesklang['sort_alphabetically'] = 'Sort alphabetically';
 $hesklang['category_sort'] = 'Category Sorting';
 $hesklang['category_sort_help'] = 'Determines if categories shown on the manage categories page and all dropdowns are sorted by the user-defined order (default), or
 sorted alphabetically.';
+$hesklang['quick_help_sections'] = 'Quick Help Sections';
+$hesklang['quick_help_sections_help'] = 'Check the checkbox to show the "Quick Help" sections on the left-hand side, or uncheck to not show.';
+$hesklang['create_ticket'] = 'Create ticket';
+$hesklang['view_ticket_form'] = 'View ticket form';
+$hesklang['knowledgebase'] = 'Knowledgebase section';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';

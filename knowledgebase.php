@@ -155,7 +155,16 @@ function hesk_kb_header($kb_link) {
       <li class="active"><?php echo $hesklang['kb_text']; ?></li>
     </ol>
 
+<?php
+$columnWidth = 'col-md-8';
+$showRs = hesk_dbQuery("SELECT `show` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` WHERE `id` = 4");
+$show = hesk_dbFetchAssoc($showRs);
+if (!$show['show']) {
+    $columnWidth = 'col-md-10 col-md-offset-1';
+}
+?>
     <div class="row">
+        <?php if ($columnWidth == 'col-md-8'): ?>
         <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -166,7 +175,8 @@ function hesk_kb_header($kb_link) {
                 </div>
             </div>   
         </div>
-        <div class="col-md-8">
+        <?php endif; ?>
+        <div class="<?php echo $columnWidth; ?>">
             <?php
                 /* Print small search box */
                 hesk_kbSearchSmall();
@@ -417,6 +427,7 @@ function hesk_show_kb_article($artid)
         <?php } ?>
     </div>
 <?php
+    hesk_kbFooter();
 } // END hesk_show_kb_article()
 
 
@@ -618,5 +629,16 @@ function hesk_show_kb_category($catid, $is_search = 0) {
         /* Get list of latest articles */
         hesk_kbLatestArticles($hesk_settings['kb_latest'], 0);
 	}
+    hesk_kbFooter();
 } // END hesk_show_kb_category()
+
+function hesk_kbFooter() {
+    global $hesk_settings;
+
+    $showRs = hesk_dbQuery("SELECT `show` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` WHERE `id` = 4");
+    $show = hesk_dbFetchAssoc($showRs);
+    if (!$show['show']) {
+        echo '<div class="col-md-1">&nbsp;</div></div>';
+    }
+}
 ?>
