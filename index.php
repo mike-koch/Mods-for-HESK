@@ -42,6 +42,7 @@ require(HESK_PATH . 'inc/common.inc.php');
 
 // Are we in maintenance mode?
 hesk_check_maintenance();
+hesk_load_database_functions();
 
 // Are we in "Knowledgebase only" mode?
 hesk_check_kb_only();
@@ -166,7 +167,17 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
 </ol>	
 
 <!-- START MAIN LAYOUT -->
+<?php
+$columnWidth = 'col-md-8';
+hesk_dbConnect();
+$showRs = hesk_dbQuery("SELECT `show` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` WHERE `id` = 1");
+$show = hesk_dbFetchAssoc($showRs);
+if (!$show['show']) {
+    $columnWidth = 'col-md-10 col-md-offset-1';
+}
+?>
     <div class="row">
+        <?php if ($columnWidth == 'col-md-8'): ?>
         <div align="left" class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading"><?php echo $hesklang['quick_help']; ?></div>
@@ -175,7 +186,8 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
                 </div>
             </div>
 	    </div>
-        <div class="col-md-8">
+        <?php endif; ?>
+        <div class="<?php echo $columnWidth; ?>">
             <?php
                 // This will handle error, success and notice messages
                 hesk_handle_messages();
@@ -219,8 +231,6 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
                     <!-- Department and priority -->
                     <?php
                         $is_table = 0;
-
-	                    hesk_load_database_functions();
 
                         // Get categories
 	                    hesk_dbConnect();
@@ -1038,6 +1048,9 @@ if ( ! isset($_SESSION['c_category']) && ! $hesk_settings['select_cat'])
                 </form>
             </div>
 		</div>
+        <?php if ($columnWidth == 'col-md-10 col-md-offset-1'): ?>
+            <div class="col-md-1">&nbsp;</div></div>
+        <?php endif; ?>
                  <!-- END FORM -->
 
 
@@ -1069,7 +1082,6 @@ function print_start()
 	}
 
     // Connect to database
-    hesk_load_database_functions();
     hesk_dbConnect();
 
 	/* Print header */
@@ -1243,7 +1255,6 @@ function forgot_tid()
 	require(HESK_PATH . 'inc/email_functions.inc.php');
 
     /* Get ticket(s) from database */
-    hesk_load_database_functions();
     hesk_dbConnect();
 
 	$email = hesk_validateEmail( hesk_POST('email'), 'ERR' ,0) or hesk_process_messages($hesklang['enter_valid_email'],'ticket.php?remind=1');
