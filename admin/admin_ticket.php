@@ -1394,7 +1394,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="ticketMessageBottom">
                      <!-- Message -->
                     <p><b><?php echo $hesklang['message']; ?>:</b></p>
-		            <p class="message"><?php echo $ticket['message']; ?><br />&nbsp;</p>
+		            <p class="message"><?php echo hesk_html_entity_decode($ticket['message']); ?><br />&nbsp;</p>
                 </div>
                 <div class="ticketMessageTop">
                          <!-- Custom Fields after Message -->
@@ -1835,7 +1835,7 @@ function hesk_printTicketReplies() {
                 </div>
                 <div class="ticketMessageBottom">
                     <p><b><?php echo $hesklang['message']; ?>:</b></p>
-			        <p><?php echo $reply['message']; ?></p> 
+			        <p><?php echo hesk_html_entity_decode($reply['message']); ?></p>
                 </div>
                 <div class="ticketMessageTop pushMargin">
                      <?php hesk_listAttachments($reply['attachments'],$reply['id']);

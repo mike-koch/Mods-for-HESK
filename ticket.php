@@ -370,7 +370,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 <div class="ticketMessageBottom">
                      <!-- Message -->
                      <p><b><?php echo $hesklang['message']; ?>:</b></p>
-                     <p class="message"><?php echo $ticket['message']; ?><br />&nbsp;</p>
+                     <p class="message"><?php echo hesk_html_entity_decode($ticket['message']); ?><br />&nbsp;</p>
                 </div>
                 <div class="ticketMessageTop">
                      <!-- Custom Fields after Message -->
@@ -676,7 +676,7 @@ function hesk_printCustomerTicketReplies()
                 <div class="ticketMessageBottom">
                      <!-- Message -->
                      <p><b><?php echo $hesklang['message']; ?>:</b></p>
-			         <p class="message"><?php echo $reply['message']; ?></p> 
+			         <p class="message"><?php echo hesk_html_entity_decode($reply['message']); ?></p>
                 </div>
                 <div class="ticketMessageTop">
                      <?php hesk_listAttachments($reply['attachments'],$i);?>
