@@ -574,6 +574,13 @@ function execute240FileUpdate() {
         //-- Column to sort categories by. Can be either \'name\' or \'cat_order\'
 $modsForHesk_settings[\'category_order_column\'] = \'cat_order\';';
     }
+    if (strpos($file, '$modsForHesk_settings[\'rich_text_for_tickets\']') === false)
+    {
+        $file .= '
+
+        //-- Setting for using rich-text editor for tickets. 0 = Disable, 1 = Enable
+$modsForHesk_settings[\'rich_text_for_tickets\'] = 0;';
+    }
 
     return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
 }

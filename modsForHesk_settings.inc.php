@@ -50,3 +50,6 @@ $modsForHesk_settings['request_location'] = 0;
 
 //-- Column to sort categories by. Can be either 'name' or 'cat_order'
 $modsForHesk_settings['category_order_column'] = 'cat_order';
+
+//-- Setting for using rich-text editor for tickets. 0 = Disable, 1 = Enable
+$modsForHesk_settings['rich_text_for_tickets'] = 0;
