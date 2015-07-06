@@ -217,7 +217,16 @@ require_once(HESK_PATH . 'inc/header.inc.php');
   <li class="active"><?php hesk_showTopBar($hesklang['cid'].': '.$trackingID); ?></li>
 </ol>
 
+<?php
+$columnWidth = 'col-md-8';
+$showRs = hesk_dbQuery("SELECT `show` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` WHERE `id` = 3");
+$show = hesk_dbFetchAssoc($showRs);
+if (!$show['show']) {
+    $columnWidth = 'col-md-10 col-md-offset-1';
+}
+?>
 <div class="row">
+<?php if ($columnWidth == 'col-md-8'): ?>
     <div align="left" class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $hesklang['quick_help']; ?></div>
@@ -226,7 +235,8 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             </div>
         </div>
     </div>
-    <div class="col-md-8">
+<?php endif; ?>
+    <div class="<?php echo $columnWidth; ?>">
         <?php
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
@@ -457,9 +467,19 @@ function print_form()
   <li><a href="<?php echo $hesk_settings['site_url']; ?>"><?php echo $hesk_settings['site_title']; ?></a></li>
   <li><a href="<?php echo $hesk_settings['hesk_url']; ?>"><?php echo $hesk_settings['hesk_title']; ?></a></li>
   <li class="active"><?php echo $hesklang['view_ticket_nav']; ?></li>
-</ol>	
+</ol>
 
+<?php
+    hesk_dbConnect();
+    $columnWidth = 'col-md-8';
+    $showRs = hesk_dbQuery("SELECT `show` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` WHERE `id` = 2");
+    $show = hesk_dbFetchAssoc($showRs);
+    if (!$show['show']) {
+        $columnWidth = 'col-md-10 col-md-offset-1';
+    }
+?>
 <div class="row">
+    <?php if ($columnWidth == 'col-md-8'): ?>
     <div align="left" class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -470,7 +490,8 @@ function print_form()
             </div>
         </div>
     </div>
-    <div class="col-md-8">
+    <?php endif; ?>
+    <div class="<?php echo $columnWidth; ?>">
         <?php
             /* This will handle error, success and notice messages */
             hesk_handle_messages();

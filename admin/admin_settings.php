@@ -954,6 +954,32 @@ if ( defined('HESK_DEMO') )
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="quick_help_sections[]" class="col-sm-6 control-label">
+                                <span class="label label-primary"
+                                      data-toggle="tooltip"
+                                      title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                                <?php echo $hesklang['quick_help_sections']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                   title="<?php echo $hesklang['quick_help_sections']; ?>"
+                                   data-content="<?php echo htmlspecialchars($hesklang['quick_help_sections_help']); ?>"></i>
+                            </label>
+                            <div class="col-sm-6">
+                                <?php
+                                $quickHelpRs = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections`");
+                                while ($row = hesk_dbFetchAssoc($quickHelpRs)): ?>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="quick_help_sections[]"
+                                                   value="<?php echo $row['id']; ?>" <?php if ($row['show']) { echo 'checked'; } ?>>
+                                            <?php echo $hesklang[$row['location']]; ?>
+                                        </label>
+                                    </div>
+                                <?php
+                                endwhile;
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
