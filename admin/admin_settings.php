@@ -860,6 +860,27 @@ if ( defined('HESK_DEMO') )
 								?>
 							</div>
 						</div>
+                        <div class="form-group">
+                            <label for="rich_text_for_tickets" class="col-sm-6 control-label">
+                                <span class="label label-primary"
+                                      data-toggle="tooltip"
+                                      title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                                <?php echo $hesklang['allow_rich_text_for_tickets']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                   title="<?php echo $hesklang['allow_rich_text_for_tickets']; ?>"
+                                   data-content="<?php echo $hesklang['allow_rich_text_for_tickets_help']; ?>"></i>
+                            </label>
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $modsForHesk_settings['rich_text_for_tickets'] ? 'checked' : '';
+                                $off = $modsForHesk_settings['rich_text_for_tickets'] ? '' : 'checked';
+                                echo '
+								<div class="radio"><label><input type="radio" name="rich_text_for_tickets" value="0" '.$off.'> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+								<div class="radio"><label><input type="radio" name="rich_text_for_tickets" value="1" '.$on.'> '.$hesklang['on'].'</label></div>
+								';
+                                ?>
+                            </div>
+                        </div>
                     </div>
                     <!-- Second column -->
                     <div class="col-md-6">

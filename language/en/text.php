@@ -32,6 +32,8 @@ $hesklang['quick_help_sections_help'] = 'Check the checkbox to show the "Quick H
 $hesklang['create_ticket'] = 'Create ticket';
 $hesklang['view_ticket_form'] = 'View ticket form';
 $hesklang['knowledgebase'] = 'Knowledgebase section';
+$hesklang['allow_rich_text_for_tickets'] = 'Allow rich text for tickets';
+$hesklang['allow_rich_text_for_tickets_help'] = 'Allow staff and customers to use rich text formatting when writing ticket messages / replies.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';
