@@ -34,6 +34,7 @@
 
 define('IN_SCRIPT',1);
 define('HESK_PATH','../');
+define('WYSIWYG',1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -1870,9 +1871,31 @@ function hesk_printTicketReplies() {
 
 
 function hesk_printReplyForm() {
-	global $hesklang, $hesk_settings, $ticket, $admins, $can_options, $options, $can_assign_self, $isManager;
+	global $hesklang, $hesk_settings, $ticket, $admins, $can_options, $options, $can_assign_self, $isManager, $modsForHesk_settings;
 ?>
 <!-- START REPLY FORM -->
+    <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        tinyMCE.init({
+            mode : "textareas",
+            editor_selector : "htmlEditor",
+            elements : "content",
+            theme : "advanced",
+            convert_urls : false,
+
+            theme_advanced_buttons1 : "cut,copy,paste,|,undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
+            theme_advanced_buttons2 : "sub,sup,|,charmap,|,bullist,numlist,|,outdent,indent,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,link,unlink,anchor,image,cleanup,code",
+            theme_advanced_buttons3 : "",
+
+            theme_advanced_toolbar_location : "top",
+            theme_advanced_toolbar_align : "left",
+            theme_advanced_statusbar_location : "bottom",
+            theme_advanced_resizing : true
+        });
+        /* ]]> */
+    </script>
+    <?php endif; ?>
 
         <h3 class="text-left"><?php echo $hesklang['add_reply']; ?></h3>
         <div class="footerWithBorder"></div>
@@ -1935,7 +1958,7 @@ function hesk_printReplyForm() {
                 <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>: <font class="important">*</font></label>
                 <div class="col-sm-9">
                     <span id="HeskMsg">
-                        <textarea class="form-control" name="message" id="message" rows="12" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" cols="72"><?php
+                        <textarea class="form-control htmlEditor" name="message" id="message" rows="12" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" cols="72"><?php
 
                             // Do we have any message stored in session?
                             if ( isset($_SESSION['ticket_message']) )

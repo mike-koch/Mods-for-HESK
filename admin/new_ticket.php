@@ -34,6 +34,7 @@
 
 define('IN_SCRIPT',1);
 define('HESK_PATH','../');
+define('WYSIWYG',1);
 
 // Auto-focus first empty or error field
 define('AUTOFOCUS', true);
@@ -162,6 +163,28 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="footerWithBorder blankSpace"></div>
 
             <!-- START FORM -->
+            <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+                <script type="text/javascript">
+                    /* <![CDATA[ */
+                    tinyMCE.init({
+                        mode : "textareas",
+                        editor_selector : "htmlEditor",
+                        elements : "content",
+                        theme : "advanced",
+                        convert_urls : false,
+
+                        theme_advanced_buttons1 : "cut,copy,paste,|,undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
+                        theme_advanced_buttons2 : "sub,sup,|,charmap,|,bullist,numlist,|,outdent,indent,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,link,unlink,anchor,image,cleanup,code",
+                        theme_advanced_buttons3 : "",
+
+                        theme_advanced_toolbar_location : "top",
+                        theme_advanced_toolbar_align : "left",
+                        theme_advanced_statusbar_location : "bottom",
+                        theme_advanced_resizing : true
+                    });
+                    /* ]]> */
+                </script>
+            <?php endif; ?>
             <form role="form" class="form-horizontal" method="post" action="admin_submit_ticket.php" name="form1" enctype="multipart/form-data">
                 <?php if ($hesk_settings['can_sel_lang']) { ?>
                     <div class="form-group">
@@ -443,7 +466,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control htmlEditor" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
@@ -548,6 +571,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                         function setMessage(msgid)
                         {
+                            var useHtmlEditor = <?php echo $modsForHesk_settings['rich_text_for_tickets']; ?>;
                             var myMsg=myMsgTxt[msgid];
                             var mySubject=mySubjectTxt[msgid];
 
@@ -555,7 +579,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             {
                                 if (document.form1.mode[1].checked)
                                 {
-                                    document.getElementById('message').value = '';
+                                    if (useHtmlEditor) {
+                                        tinymce.get("message").setContent('');
+                                        tinymce.get("message").execCommand('mceInsertRawHTML', false, '');
+                                    }
+                                    else {
+                                        document.getElementById('message').value = '';
+                                    }
                                     document.getElementById('subject').value = '';
                                 }
                                 return true;
@@ -564,16 +594,27 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             {
                                 if (document.getElementById('moderep').checked)
                                 {
-                                    document.getElementById('HeskMsg').innerHTML='<textarea class="form-control" name="message" id="message" rows="12" cols="60">'+myMsg+'</textarea>';
-                                    document.getElementById('HeskSub').innerHTML='<input class="form-control" type="text" name="subject" id="subject" size="40" maxlength="40" value="'+mySubject+'" />';
+                                    if (useHtmlEditor) {
+                                        tinymce.get("message").setContent('');
+                                        tinymce.get("message").execCommand('mceInsertRawHTML', false, myMsg);
+                                    } else {
+                                        document.getElementById('message').value = myMsg;
+                                    }
+                                    document.getElementById('subject').value = mySubject;
                                 }
                                 else
                                 {
-                                    var oldMsg = document.getElementById('message').value;
-                                    document.getElementById('HeskMsg').innerHTML='<textarea class="form-control" name="message" id="message" rows="12" cols="60">'+oldMsg+myMsg+'</textarea>';
+                                    if (useHtmlEditor) {
+                                        var oldMsg = tinymce.get("message").getContent();
+                                        tinymce.get("message").setContent('');
+                                        tinymce.get("message").execCommand('mceInsertRawHTML', false, oldMsg + myMsg);
+                                    } else {
+                                        var oldMsg = document.getElementById('message').value;
+                                        document.getElementById('message').value = oldMsg + myMsg;
+                                    }
                                     if (document.getElementById('subject').value == '')
                                     {
-                                        document.getElementById('HeskSub').innerHTML='<input class="form-control" type="text" name="subject" id="subject" size="40" maxlength="40" value="'+mySubject+'" />';
+                                        document.getElementById('subject').value = mySubject;
                                     }
                                 }
                             }
@@ -649,7 +690,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <?php if (in_array('message',$_SESSION['iserror'])) {echo '<div class="form-group has-error">';} else {echo '<div class="form-group">';} ?>
                     <div class="col-sm-12">
                         <span id="HeskMsg">
-                            <textarea class="form-control" name="message" id="message" rows="12" cols="60" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" ><?php if (isset($_SESSION['as_message'])) {echo stripslashes(hesk_input($_SESSION['as_message']));} ?></textarea>
+                            <textarea class="form-control htmlEditor" name="message" id="message" rows="12" cols="60" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" ><?php if (isset($_SESSION['as_message'])) {echo stripslashes(hesk_input($_SESSION['as_message']));} ?></textarea>
                         </span>
                     </div>
                 </div>
@@ -805,7 +846,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control htmlEditor" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
