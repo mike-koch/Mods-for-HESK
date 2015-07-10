@@ -466,7 +466,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control htmlEditor" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
@@ -846,7 +846,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 					            echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
-					            <div class="col-sm-9"><textarea class="form-control htmlEditor" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" rows="'.$size[0].'" cols="'.$size[1].'" '.$cls.'>'.$k_value.'</textarea></div>
                                 </div>';
 	                        break;
 
