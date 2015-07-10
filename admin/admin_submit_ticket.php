@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -269,8 +270,10 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments))
     }
 }
 
-$tmpvar['message']=hesk_makeURL($tmpvar['message']);
-$tmpvar['message']=nl2br($tmpvar['message']);
+if (!$modsForHesk_settings['rich_text_for_tickets']) {
+    $tmpvar['message']=hesk_makeURL($tmpvar['message']);
+    $tmpvar['message']=nl2br($tmpvar['message']);
+}
 
 $tmpvar['latitude'] = hesk_POST('latitude', 'E-4');
 $tmpvar['longitude'] = hesk_POST('longitude', 'E-4');

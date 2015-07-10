@@ -138,14 +138,20 @@ if (strlen($message))
     // Attach signature to the message?
     if ( ! $submit_as_customer && ! empty($_POST['signature']))
 	{
-	    $message .= "\n\n" . addslashes($_SESSION['signature']) . "\n";
+        if ($modsForHesk_settings['rich_text_for_tickets']) {
+            $message .= "<br><br>" . nl2br($_SESSION['signature']) . "<br>";
+        } else {
+            $message .= "\n\n" . addslashes($_SESSION['signature']) . "\n";
+        }
 	}
 
-    // Make links clickable
-	$message = hesk_makeURL($message);
+    if (!$modsForHesk_settings['rich_text_for_tickets']) {
+        // Make links clickable
+        $message = hesk_makeURL($message);
 
-    // Turn newlines into <br /> tags
-	$message = nl2br($message);
+        // Turn newlines into <br /> tags
+        $message = nl2br($message);
+    }
 }
 else
 {
