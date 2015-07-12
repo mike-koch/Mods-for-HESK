@@ -277,7 +277,8 @@ myField.value += myValue;
                                     echo stripslashes($_SESSION['canned']['msg']);
                                 }
                             ?></textarea>
-                        <?php echo $hesklang['insert_special']; ?>:
+                    </span>
+                    <?php echo $hesklang['insert_special']; ?>:
                         <a href="javascript:void(0)" onclick="hesk_insertTag('HESK_ID')"><?php echo $hesklang['seqid']; ?></a> |
                         <a href="javascript:void(0)" onclick="hesk_insertTag('HESK_TRACK_ID')"><?php echo $hesklang['trackID']; ?></a> |
                         <a href="javascript:void(0)" onclick="hesk_insertTag('HESK_NAME')"><?php echo $hesklang['name']; ?></a> |
@@ -296,8 +297,7 @@ myField.value += myValue;
                                     echo '| <a href="javascript:void(0)" onclick="hesk_insertTag(\'HESK_'.$k.'\')">'.$v['name'].'</a> ';
                                 }
                             }
-                        ?> 
-                    </span>         
+                        ?>
                 </div>     
             </div>
             <div class="form-group" style="text-align: center">
