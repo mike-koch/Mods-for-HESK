@@ -159,7 +159,7 @@ $random=mt_rand(10000,99999);
 
 // Print ticket head
 echo '
-<h3>'.$ticket[subject].'</h3>
+<h3>'.$ticket['subject'].'</h3>
 <hr/>
 <table border="1" bordercolor="#FFFFFF" cellspacing="0" cellpadding="2" width="100%">
 
