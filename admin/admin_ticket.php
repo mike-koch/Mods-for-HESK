@@ -1815,7 +1815,7 @@ function print_form()
 
 
 function hesk_printTicketReplies() {
-	global $hesklang, $hesk_settings, $result, $reply, $isManager;
+	global $hesklang, $hesk_settings, $result, $reply, $isManager, $modsForHesk_settings;
 
 	$i = $hesk_settings['new_top'] ? 0 : 1;
 
