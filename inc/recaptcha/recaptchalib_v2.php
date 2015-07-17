@@ -91,6 +91,27 @@ class ReCaptcha
     private function _submitHTTPGet($path, $data)
     {
         $req = $this->_encodeQS($data);
+        // Try using cURL first. If that fails, fallback to file_get_contents
+        if (function_exists('curl_init')) {
+            $handle = curl_init($path);
+            $queryString = http_build_query($data, '', '&');
+            $options = array(
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $queryString,
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/x-www-form-urlencoded'
+                ),
+                CURLINFO_HEADER_OUT => false,
+                CURLOPT_HEADER => false,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_SSL_VERIFYPEER => true
+            );
+            curl_setopt_array($handle, $options);
+            $response = curl_exec($handle);
+            curl_close($handle);
+            return $response;
+        }
+
         $response = file_get_contents($path . $req);
         return $response;
     }
