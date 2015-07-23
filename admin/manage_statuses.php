@@ -86,88 +86,61 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <form class="form-horizontal" method="post" action="manage_statuses.php" role="form">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h4><?php echo $hesklang['basicProperties']; ?></h4>
+                            <h4><?php echo $hesklang['statuses']; ?></h4>
                         </div>
                         <table class="table table-hover">
                             <thead>
                             <tr>
                                 <th><?php echo $hesklang['name']; ?></th>
-                                <th><?php echo $hesklang['textColor']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['textColor']; ?>" data-content="<?php echo $hesklang['textColorDescr']; ?>"></i></th>
-                                <th><?php echo $hesklang['closable_question']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover" data-placement="bottom" title="<?php echo $hesklang['closable_question']; ?>" data-content="<?php echo $hesklang['closable_description']; ?>"></i></th>
-                                <th><?php echo $hesklang['closedQuestionMark']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="top" title="<?php echo $hesklang['closedQuestionMark']; ?>" data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i></th>
-                                <th><?php echo $hesklang['delete']; ?></th>
+                                <th><?php echo $hesklang['closable_question']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="htmlpopover" data-placement="bottom"
+                                       title="<?php echo $hesklang['closable_question']; ?>"
+                                       data-content="<?php echo $hesklang['closable_description']; ?>"> </i>
+                                </th>
+                                <th><?php echo $hesklang['closedQuestionMark']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                       data-placement="top" title="<?php echo $hesklang['closedQuestionMark']; ?>"
+                                       data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i>
+                                </th>
+                                <th><?php echo $hesklang['actions']; ?></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php
-                            //Print each status
-                            while ($row = $statusesRS->fetch_assoc())
-                            {
-                                $checkedEcho = ($row['IsClosed'] == 1) ? 'checked="checked"' : '';
-                                $isDisabled = false;
-                                if ($row['IsNewTicketStatus'] || $row['IsClosedByClient'] || $row['IsCustomerReplyStatus'] ||
-                                    $row['IsStaffClosedOption'] || $row['IsStaffReopenedStatus'] || $row['IsDefaultStaffReplyStatus'] ||
-                                    $row['LockedTicketStatus'] || $row['IsAutocloseOption'])
-                                {
-                                    $isDisabled = true;
-                                }
-
-                                $yesSelected = $customersOnlySelected = $staffOnlySelected = $noSelected = '';
-                                if ($row['Closable'] == 'yes') { $yesSelected = 'selected'; }
-                                elseif ($row['Closable'] == 'conly') { $customersOnlySelected = 'selected'; }
-                                elseif ($row['Closable'] == 'sonly') { $staffOnlySelected = 'selected'; }
-                                else { $noSelected = 'selected'; }
-                                ?>
+                            <?php while ($row = hesk_dbFetchAssoc($statusesRS)): ?>
                                 <tr id="s<?php echo $row['ID']; ?>_row">
-                                    <td>
-                                    <span style="color: <?php echo $row['TextColor']; ?>; font-weight: bold">
+                                    <td style="color: <?php echo $row['TextColor']; ?>; font-weight: bold">
                                         <?php echo $hesklang[$row['Key']]; ?>
-                                    </span>
-                                        <i class="fa fa-pencil" data-toggle="tooltip" title="<?php echo $hesklang['click_to_edit_name']; ?>"></i>
-                                    </td>
-                                    <td><input type="text" class="form-control" name="s<?php echo $row['ID']; ?>_textColor"
-                                               value="<?php echo $row['TextColor']; ?>"
-                                               placeholder="<?php echo htmlspecialchars($hesklang['textColor']); ?>"></td>
-                                    <td>
-                                        <select class="form-control" name="s<?php echo $row['ID']; ?>_closable">
-                                            <option value="yes" <?php echo $yesSelected; ?>><?php echo $hesklang['yes_title_case']; ?></option>
-                                            <option value="conly" <?php echo $customersOnlySelected; ?>><?php echo $hesklang['customers_only']; ?></option>
-                                            <option value="sonly" <?php echo $staffOnlySelected; ?>><?php echo $hesklang['staff_only']; ?></option>
-                                            <option value="no" <?php echo $noSelected; ?>><?php echo $hesklang['no_title_case']; ?></option>
-                                        </select>
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="s<?php echo $row['ID']; ?>_isClosed" value="1" <?php echo $checkedEcho; ?>
+                                        <?php
+                                        if ($row['Closable'] == 'yes') {
+                                            echo $hesklang['yes_title_case'];
+                                        } elseif ($row['Closable'] == 'conly') {
+                                            echo $hesklang['customers_only'];
+                                        } elseif ($row['Closable'] == 'sonly') {
+                                            echo $hesklang['staff_only'];
+                                        } elseif ($row['Closable'] == 'no') {
+                                            echo $hesklang['no_title_case'];
+                                        }
+                                        ?>
                                     </td>
                                     <td>
-                                        <?php if ($isDisabled): ?>
-                                            <i class="fa fa-ban" style="color: red; font-size: 1.2em; font-weight: bold"
-                                               data-toggle="popover" data-placement="left" title="<?php echo $hesklang['whyCantIDeleteThisStatus']; ?>"
-                                               data-content="<?php echo $hesklang['whyCantIDeleteThisStatusReason']; ?>"></i>
-                                        <?php else: ?>
-                                            <input type="checkbox" onclick="toggleRow('s<?php echo $row['ID']; ?>_row')" name="s<?php echo $row['ID']; ?>_delete" value="1">
-                                        <?php endif; ?>
+                                        <?php
+                                        if ($row['IsClosed']) {
+                                            echo $hesklang['yes_title_case'];
+                                        }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <!-- TODO Localize this -->
+                                        <a href="#"><i class="fa fa-pencil" data-toggle="tooltip" title="Edit"></i></a>
+                                        <a href="#"><i class="fa fa-times" data-toggle="tooltip" title="Delete"></i></a>
+                                        <a href="#"><i class="fa fa-arrow-down" data-toggle="tooltip" title="Move Down"></i></a>
+                                        <a href="#"><i class="fa fa-arrow-up" data-toggle="tooltip" title="Move Up"></i></a>
                                     </td>
                                 </tr>
-                                <?php
-                            }
-
-                            //Print out an additional blank space for adding a status
-                            echo '<tr class="info">';
-                            echo '<td><b>'.$hesklang['addNew'].'</b></td>';
-                            echo '<td><input type="text" class="form-control" name="sN_textColor" value="" placeholder="'.htmlspecialchars($hesklang['textColor']).'"></td>'; // Text Color
-                            echo '<td>
-                                    <select class="form-control" name="sN_closable">
-                                        <option value="yes">'.$hesklang['yes_title_case'].'</option>
-                                        <option value="conly">'.$hesklang['customers_only'].'</option>
-                                        <option value="sonly">'.$hesklang['staff_only'].'</option>
-                                        <option value="no">'.$hesklang['no_title_case'].'</option>
-                                    </select>
-                                </td>';
-                            echo '<td><input type="checkbox" name="sN_isClosed" value="1"></td>'; // Resolved Status?
-                            echo '<td></td>'; // Placeholder where delete is 
-                            echo '</tr>';
-                            ?>
+                            <?php endwhile; ?>
                             </tbody>
                         </table>
                     </div>
