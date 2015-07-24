@@ -303,134 +303,40 @@ function echoArrows($index, $numberOfStatuses) {
 function save() {
     global $hesklang, $hesk_settings;
 
-    //-- Before we do anything, make sure the statuses are valid.
-    $rows = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
-    while ($row = $rows->fetch_assoc())
-    {
-        if (!isset($_POST['s'.$row['ID'].'_delete']))
-        {
-            validateStatus($_POST['s'.$row['ID'].'_key'], $_POST['s'.$row['ID'].'_textColor']);
-        }
-    }
-
-    //-- Validate the new one if at least one of the fields are used / checked
-    if ($_POST['sN_key'] != null || $_POST['sN_textColor'] != null || isset($_POST['sN_isClosed']))
-    {
-        validateStatus($_POST['sN_key'], $_POST['sN_textColor']);
-    }
-
-    hesk_dbConnect();
-    $wasStatusDeleted = false;
-    //-- Get all the status IDs
-    $statusesSql = 'SELECT * FROM `'.$hesk_settings['db_pfix'].'statuses`';
-    $results = hesk_dbQuery($statusesSql);
-    while ($row = $results->fetch_assoc())
-    {
-        //-- If the status is marked for deletion, delete it and skip everything below.
-        if (isset($_POST['s'.$row['ID'].'_delete']))
-        {
-            $delete = "DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ?";
-            $stmt = hesk_dbConnect()->prepare($delete);
-            $stmt->bind_param('i', $row['ID']);
-            $stmt->execute();
-            $wasStatusDeleted = true;
-        } else
-        {
-            //-- Update the information in the database with what is on the page
-            $query = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `Key` = ?, `TextColor` = ?, `IsClosed` = ?, `Closable` = ? WHERE `ID` = ?";
-            $stmt = hesk_dbConnect()->prepare($query);
-            $isStatusClosed = (isset($_POST['s'.$row['ID'].'_isClosed']) ? 1 : 0);
-            $stmt->bind_param('sssisi', $_POST['s'.$row['ID'].'_key'], $_POST['s'.$row['ID'].'_textColor'], $isStatusClosed, $_POST['s'.$row['ID'].'_closable'], $row['ID']);
-            $stmt->execute();
-        }
-    }
-
-    //-- If any statuses were deleted, re-index them before adding a new one
-    if ($wasStatusDeleted) {
-        //-- First drop and re-add the ID column
-        hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` DROP COLUMN `ID`");
-        hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD `ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
-
-        //-- Since statuses should be zero-based, but are now one-based, subtract one from each ID
-        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `ID` = `ID`-1");
-    }
-
-    //-- Insert the addition if there is anything to add
-    if ($_POST['sN_key'] != null && $_POST['sN_textColor'] != null)
-    {
-        //-- The next ID is equal to the number of rows, since the IDs are zero-indexed.
-        $nextValue = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`')->num_rows;
-        $isClosed = isset($_POST['sN_isClosed']) ? 1 : 0;
-        $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`ID`, `Key`, `TextColor`, `IsClosed`, `Closable`)
-		VALUES (".$nextValue.", '".hesk_dbEscape($_POST['sN_key'])."', '".hesk_dbEscape($_POST['sN_textColor'])."', ".$isClosed.", '".hesk_dbEscape($_POST['sN_closable'])."')";
-        hesk_dbQuery($insert);
-    }
-
     //-- Update default status for actions
     $defaultQuery = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET ";
 
-    hesk_dbConnect()->query($defaultQuery . "`IsNewTicketStatus` = 0");
-    $updateQuery = $defaultQuery . "`IsNewTicketStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['newTicket']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsNewTicketStatus` = 0");
+    $updateQuery = $defaultQuery . "`IsNewTicketStatus` = 1 WHERE `ID` = ".intval($_POST['newTicket']);
+    hesk_dbQuery($updateQuery);
 
+    hesk_dbQuery($defaultQuery . "`IsClosedByClient` = 0");
+    $updateQuery = $defaultQuery . "`IsClosedByClient` = 1 WHERE `ID` = ".intval($_POST['closedByClient']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsClosedByClient` = 0");
-    $updateQuery = $defaultQuery . "`IsClosedByClient` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['closedByClient']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsCustomerReplyStatus` = 0");
+    $updateQuery = $defaultQuery . "`IsCustomerReplyStatus` = 1 WHERE `ID` = ".intval($_POST['replyFromClient']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsCustomerReplyStatus` = 0");
-    $updateQuery = $defaultQuery . "`IsCustomerReplyStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['replyFromClient']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsStaffClosedOption` = 0");
+    $updateQuery = $defaultQuery . "`IsStaffClosedOption` = 1 WHERE `ID` = ".intval($_POST['staffClosedOption']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsStaffClosedOption` = 0");
-    $updateQuery = $defaultQuery . "`IsStaffClosedOption` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['staffClosedOption']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsStaffReopenedStatus` = 0");
+    $updateQuery = $defaultQuery . "`IsStaffReopenedStatus` = 1 WHERE `ID` = ".intval($_POST['staffReopenedStatus']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsStaffReopenedStatus` = 0");
-    $updateQuery = $defaultQuery . "`IsStaffReopenedStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['staffReopenedStatus']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsDefaultStaffReplyStatus` = 0");
+    $updateQuery = $defaultQuery . "`IsDefaultStaffReplyStatus` = 1 WHERE `ID` = ".intval($_POST['defaultStaffReplyStatus']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsDefaultStaffReplyStatus` = 0");
-    $updateQuery = $defaultQuery . "`IsDefaultStaffReplyStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['defaultStaffReplyStatus']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`LockedTicketStatus` = 0");
+    $updateQuery = $defaultQuery . "`LockedTicketStatus` = 1 WHERE `ID` = ".intval($_POST['lockedTicketStatus']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`LockedTicketStatus` = 0");
-    $updateQuery = $defaultQuery . "`LockedTicketStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['lockedTicketStatus']);
-    $stmt->execute();
-
-    hesk_dbConnect()->query($defaultQuery . "`IsAutocloseOption` = 0");
-    $updateQuery = $defaultQuery . "`IsAutocloseOption` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['autocloseTicketOption']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsAutocloseOption` = 0");
+    $updateQuery = $defaultQuery . "`IsAutocloseOption` = 1 WHERE `ID` = ".intval($_POST['autocloseTicketOption']);
+    hesk_dbQuery($updateQuery);
 
     hesk_process_messages($hesklang['statuses_saved'],'manage_statuses.php','SUCCESS');
-}
-
-function validateStatus($key, $textColor)
-{
-    global $hesklang;
-
-    //-- Validation logic
-    if ($key == '')
-    {
-        hesk_process_messages($hesklang['key_required'], 'manage_statuses.php');
-    } elseif ($textColor == '')
-    {
-        hesk_process_messages($hesklang['textColorRequired'], 'manage_statuses.php');
-    }
 }
