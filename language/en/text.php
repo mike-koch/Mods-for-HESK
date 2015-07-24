@@ -33,6 +33,7 @@ $hesklang['create_ticket'] = 'Create ticket';
 $hesklang['view_ticket_form'] = 'View ticket form';
 $hesklang['knowledgebase'] = 'Knowledgebase section';
 $hesklang['click_to_edit_name'] = 'Click to edit name';
+$hesklang['new_status'] = 'New Status';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';

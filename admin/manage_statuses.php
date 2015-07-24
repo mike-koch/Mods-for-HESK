@@ -89,7 +89,18 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <form class="form-horizontal" method="post" action="manage_statuses.php" role="form">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h4><?php echo $hesklang['statuses']; ?></h4>
+                            <h4>
+                                <?php echo $hesklang['statuses']; ?>
+                                <span class="nu-floatRight" style="margin-top: -7px">
+                                    <a href="#" class="btn btn-success">
+                                        <i class="fa fa-plus-circle"></i>
+                                        <?php
+                                            echo $hesklang['new_status'];
+                                            buildCreateStatusModal();
+                                        ?>
+                                    </a>
+                                </span>
+                            </h4>
                         </div>
                         <table class="table table-hover">
                             <thead>
@@ -132,10 +143,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <td>
                                         <!-- TODO Localize this -->
                                         <a href="#">
-                                            <i class="fa fa-pencil icon-link" style="color: orange" data-toggle="tooltip" title="Edit"></i></a>
+                                            <i class="fa fa-pencil icon-link" style="color: orange"
+                                               data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
                                         <?php echoArrows($j, $numberOfStatuses); ?>
                                         <a href="#">
-                                            <i class="fa fa-times icon-link" style="color: red" data-toggle="tooltip" title="Delete"></i></a>
+                                            <i class="fa fa-times icon-link" style="color: red"
+                                               data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a>
                                     </td>
                                 </tr>
                             <?php $j++; endwhile; ?>
@@ -284,20 +297,26 @@ require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
 
 function echoArrows($index, $numberOfStatuses) {
+    global $hesklang;
+
     if ($index !== 1) {
         // Display move up
-        echo '<a href="#"><i class="fa fa-arrow-up icon-link" style="color: green" data-toggle="tooltip" title="Move Up"></i></a> ';
+        echo '<a href="#"><i class="fa fa-arrow-up icon-link" style="color: green" data-toggle="tooltip" title="'.htmlspecialchars($hesklang['move_up']).'"></i></a> ';
     } else {
         echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;"> ';
     }
 
     if ($index !== $numberOfStatuses) {
         // Display move down
-        echo '<a href="#"><i class="fa fa-arrow-down icon-link" style="color: green" data-toggle="tooltip" title="Move Down"></i></a>';
+        echo '<a href="#"><i class="fa fa-arrow-down icon-link" style="color: green" data-toggle="tooltip" title="'.htmlspecialchars($hesklang['move_dn']).'"></i></a>';
     } else {
         echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;">';
     }
 
+}
+
+function buildCreateStatusModal() {
+    echo '';
 }
 
 function save() {
