@@ -78,6 +78,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 hesk_handle_messages();
 
                 //-- We need to get all of the statuses and dump the information to the page.
+                $numOfStatusesRS = hesk_dbQuery('SELECT 1 FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
+                $numberOfStatuses = hesk_dbNumRows($numOfStatusesRS);
+
                 $statusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
                 $closedStatusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 1';
                 $openStatusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0';
@@ -92,22 +95,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <thead>
                             <tr>
                                 <th><?php echo $hesklang['name']; ?></th>
-                                <th><?php echo $hesklang['closable_question']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark"
-                                       data-toggle="htmlpopover" data-placement="bottom"
-                                       title="<?php echo $hesklang['closable_question']; ?>"
-                                       data-content="<?php echo $hesklang['closable_description']; ?>"> </i>
-                                </th>
-                                <th><?php echo $hesklang['closedQuestionMark']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                       data-placement="top" title="<?php echo $hesklang['closedQuestionMark']; ?>"
-                                       data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i>
-                                </th>
+                                <th><?php echo $hesklang['closable_question']; ?></th>
+                                <th><?php echo $hesklang['closedQuestionMark']; ?></th>
                                 <th><?php echo $hesklang['actions']; ?></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php while ($row = hesk_dbFetchAssoc($statusesRS)): ?>
+                            <?php
+                            $j = 1;
+                            while ($row = hesk_dbFetchAssoc($statusesRS)):
+                            ?>
                                 <tr id="s<?php echo $row['ID']; ?>_row">
                                     <td style="color: <?php echo $row['TextColor']; ?>; font-weight: bold">
                                         <?php echo $hesklang[$row['Key']]; ?>
@@ -134,13 +131,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     </td>
                                     <td>
                                         <!-- TODO Localize this -->
-                                        <a href="#"><i class="fa fa-pencil" data-toggle="tooltip" title="Edit"></i></a>
-                                        <a href="#"><i class="fa fa-times" data-toggle="tooltip" title="Delete"></i></a>
-                                        <a href="#"><i class="fa fa-arrow-down" data-toggle="tooltip" title="Move Down"></i></a>
-                                        <a href="#"><i class="fa fa-arrow-up" data-toggle="tooltip" title="Move Up"></i></a>
+                                        <a href="#">
+                                            <i class="fa fa-pencil icon-link" style="color: orange" data-toggle="tooltip" title="Edit"></i></a>
+                                        <?php echoArrows($j, $numberOfStatuses); ?>
+                                        <a href="#">
+                                            <i class="fa fa-times icon-link" style="color: red" data-toggle="tooltip" title="Delete"></i></a>
                                     </td>
                                 </tr>
-                            <?php endwhile; ?>
+                            <?php $j++; endwhile; ?>
                             </tbody>
                         </table>
                     </div>
@@ -284,6 +282,23 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
+
+function echoArrows($index, $numberOfStatuses) {
+    if ($index !== 1) {
+        // Display move up
+        echo '<a href="#"><i class="fa fa-arrow-up icon-link" style="color: green" data-toggle="tooltip" title="Move Up"></i></a> ';
+    } else {
+        echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;"> ';
+    }
+
+    if ($index !== $numberOfStatuses) {
+        // Display move down
+        echo '<a href="#"><i class="fa fa-arrow-down icon-link" style="color: green" data-toggle="tooltip" title="Move Down"></i></a>';
+    } else {
+        echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;">';
+    }
+
+}
 
 function save() {
     global $hesklang, $hesk_settings;
