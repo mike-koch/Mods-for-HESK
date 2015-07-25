@@ -34,6 +34,10 @@ $hesklang['view_ticket_form'] = 'View ticket form';
 $hesklang['knowledgebase'] = 'Knowledgebase section';
 $hesklang['click_to_edit_name'] = 'Click to edit name';
 $hesklang['new_status'] = 'New Status';
+$hesklang['create_new_status_title'] = 'Create New Status';
+$hesklang['status_name_title'] = 'Status Name';
+$hesklang['properties'] = 'Properties';
+$hesklang['closable'] = 'Closable'; // Same as $hesklang['closable_question'], but without punctuation
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';

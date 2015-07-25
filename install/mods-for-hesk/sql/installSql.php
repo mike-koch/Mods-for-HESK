@@ -561,6 +561,13 @@ function execute240Scripts() {
       VALUES ('view_ticket', '1')");
     executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
       VALUES ('knowledgebase', '1')");
+
+    executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (
+      `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `language` VARCHAR(200) NOT NULL,
+      `text` VARCHAR(200) NOT NULL,
+      `status_id` INT NOT NULL,
+      PRIMARY KEY (`id`)) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
 }
 
 function execute240FileUpdate() {

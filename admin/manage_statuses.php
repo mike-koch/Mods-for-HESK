@@ -92,13 +92,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <h4>
                                 <?php echo $hesklang['statuses']; ?>
                                 <span class="nu-floatRight" style="margin-top: -7px">
-                                    <a href="#" class="btn btn-success">
+                                    <button class="btn btn-success" data-toggle="modal" data-target="#modal-status-new">
                                         <i class="fa fa-plus-circle"></i>
                                         <?php
                                             echo $hesklang['new_status'];
-                                            buildCreateStatusModal();
                                         ?>
-                                    </a>
+                                    </button>
                                 </span>
                             </h4>
                         </div>
@@ -141,7 +140,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         ?>
                                     </td>
                                     <td>
-                                        <!-- TODO Localize this -->
+                                        <!-- TODO Linkify These -->
                                         <a href="#">
                                             <i class="fa fa-pencil icon-link" style="color: orange"
                                                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
@@ -293,6 +292,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 </div>
 
 <?php
+buildCreateModal();
+
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
 
@@ -315,8 +316,84 @@ function echoArrows($index, $numberOfStatuses) {
 
 }
 
-function buildCreateStatusModal() {
-    echo '';
+function buildCreateModal() {
+    global $hesklang, $hesk_settings;
+
+    $languages = array();
+    foreach ($hesk_settings['languages'] as $key => $value) {
+        $languages[$key] = $hesk_settings['languages'][$key]['folder'];
+    }
+?>
+    <div class="modal fade" id="modal-status-new" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="#" role="form" method="post" class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><?php echo $hesklang['create_new_status_title']; ?></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4><?php echo $hesklang['status_name_title']; ?></h4>
+                                <div class="footerWithBorder blankSpace"></div>
+                                <?php foreach ($languages as $language => $languageCode): ?>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="status_<?php echo $languageCode; ?>">
+                                        <?php echo $language; ?>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" placeholder="<?php echo htmlspecialchars($language); ?>"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="col-md-6">
+                                <h4><?php echo $hesklang['properties']; ?></h4>
+                                <div class="footerWithBorder blankSpace"></div>
+                                <div class="form-group">
+                                    <label for="text-color" class="col-sm-4 control-label"><?php echo $hesklang['textColor']; ?></label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="text-color" class="form-control"
+                                               placeholder="<?php echo htmlspecialchars($hesklang['textColor']); ?>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="closable" class="col-sm-4 control-label"><?php echo $hesklang['closable']; ?></label>
+                                    <div class="col-sm-8">
+                                        <select name="closable" class="form-control">
+                                            <option value="yes"><?php echo $hesklang['yes_title_case']; ?></option>
+                                            <option value="conly"><?php echo $hesklang['customers_only']; ?></option>
+                                            <option value="sonly"><?php echo $hesklang['staff_only']; ?></option>
+                                            <option value="no"><?php echo $hesklang['no_title_case']; ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="closed" class="col-sm-4 control-label"><?php echo $hesklang['closed_title']; ?></label>
+                                    <div class="col-sm-8">
+                                        <select name="closed" class="form-control">
+                                            <option value="1"><?php echo $hesklang['yes_title_case']; ?></option>
+                                            <option value="0"><?php echo $hesklang['no_title_case']; ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="a" value="create">
+                        <div class="btn-group">
+                            <input type="submit" class="btn btn-success" value="<?php echo $hesklang['save_changes']; ?>">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['close_modal_without_saving']; ?></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php
 }
 
 function save() {
