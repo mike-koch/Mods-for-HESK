@@ -38,6 +38,7 @@ $hesklang['create_new_status_title'] = 'Create New Status';
 $hesklang['status_name_title'] = 'Status Name';
 $hesklang['properties'] = 'Properties';
 $hesklang['closable'] = 'Closable'; // Same as $hesklang['closable_question'], but without punctuation
+$hesklang['new_status_created'] = 'New status successfully created';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';

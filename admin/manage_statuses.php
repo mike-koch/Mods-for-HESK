@@ -18,9 +18,9 @@ hesk_checkPermission('can_man_ticket_statuses');
 define('WYSIWYG',1);
 
 // Are we performing an action?
-if (isset($_POST['action'])) {
-    if ($_POST['action'] == 'save') {
-        save();
+if (isset($_POST['a'])) {
+    if ($_POST['a'] == 'create') {
+        createStatus();
     }
 }
 /* Print header */
@@ -327,7 +327,7 @@ function buildCreateModal() {
     <div class="modal fade" id="modal-status-new" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="#" role="form" method="post" class="form-horizontal">
+                <form action="manage_statuses.php" role="form" method="post" class="form-horizontal">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title"><?php echo $hesklang['create_new_status_title']; ?></h4>
@@ -339,12 +339,12 @@ function buildCreateModal() {
                                 <div class="footerWithBorder blankSpace"></div>
                                 <?php foreach ($languages as $language => $languageCode): ?>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label" for="status_<?php echo $languageCode; ?>">
+                                    <label class="col-sm-3 control-label" for="name[<?php echo $language; ?>]">
                                         <?php echo $language; ?>
                                     </label>
                                     <div class="col-sm-9">
                                         <input type="text" placeholder="<?php echo htmlspecialchars($language); ?>"
-                                            class="form-control">
+                                            class="form-control" name="name[<?php echo $language; ?>]">
                                     </div>
                                 </div>
                                 <?php endforeach; ?>
@@ -395,6 +395,31 @@ function buildCreateModal() {
     </div>
     <?php
 }
+
+function createStatus() {
+    global $hesklang, $hesk_settings;
+
+    hesk_dbConnect();
+
+    // Create the new status record
+    $isClosed = hesk_POST('closed');
+    $closable = hesk_POST('closable');
+    $textColor = hesk_POST('text-color');
+    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`Key`, `TextColor`, `IsClosed`, `Closable`)
+		VALUES ('STORED IN XREF TABLE', '".hesk_dbEscape($textColor)."', ".intval($isClosed).", '".hesk_dbEscape($closable)."')";
+    hesk_dbQuery($insert);
+
+    $newStatusId = hesk_dbInsertID();
+
+    // For each language, create a value in the xref table
+    foreach (hesk_POST_array('name') as $language => $translation) {
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (`language`, `text`, `status_id`)
+            VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($translation)."', ".intval($newStatusId).")");
+    }
+
+    hesk_process_messages($hesklang['new_status_created'],'manage_statuses.php','SUCCESS');
+}
+
 
 function save() {
     global $hesklang, $hesk_settings;
