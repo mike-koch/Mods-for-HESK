@@ -1952,17 +1952,16 @@ function hesk_getFeatureArray() {
 function mfh_getDisplayTextForStatusId($statusId) {
 	global $hesklang, $hesk_settings;
 
-	$xrefRs = hesk_dbQuery("SELECT `text` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref`
-		WHERE `status_id` = ".intval($statusId)."
-		AND `language` = '".hesk_dbEscape($hesk_settings['language'])."'");
-	if (hesk_dbNumRows($xrefRs) == 1) {
+	$statusRs = hesk_dbQuery("SELECT `text`, `Key`, `language` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` AS `statuses`
+		LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` ON `status_id` = `statuses`.`ID`
+		WHERE `statuses`.`ID` = ".intval($statusId));
+
+	$statusRec = hesk_dbFetchAssoc($statusRs);
+	if ($statusRec['language'] == $hesk_settings['language'] && $statusRec['text'] != NULL) {
 		// We found a record. Use the text field
-		$xrefRecord = hesk_dbFetchAssoc($xrefRs);
-		return $xrefRecord['text'];
+		return $statusRec['text'];
 	} else {
 		// Fallback to the language key
-		$statusRs = hesk_dbQuery("SELECT `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".intval($statusId));
-		$statusRec = hesk_dbFetchAssoc($statusRs);
 		return $hesklang[$statusRec['Key']];
 	}
 }
