@@ -117,7 +117,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             ?>
                                 <tr id="s<?php echo $row['ID']; ?>_row">
                                     <td style="color: <?php echo $row['TextColor']; ?>; font-weight: bold">
-                                        <?php echo $hesklang[$row['Key']]; ?>
+                                        <?php echo mfh_getDisplayTextForStatusId($row['ID']); ?>
                                     </td>
                                     <td>
                                         <?php
