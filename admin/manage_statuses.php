@@ -22,7 +22,7 @@ if (isset($_REQUEST['a'])) {
     if ($_POST['a'] == 'create') { createStatus(); }
     elseif ($_POST['a'] == 'update') { updateStatus(); }
     elseif ($_GET['a'] == 'delete') { deleteStatus(); }
-    elseif ($_GET['a'] == 'up') { moveStatus('up'); }
+    elseif ($_GET['a'] == 'sort') { moveStatus(); }
 }
 
 
@@ -84,10 +84,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 $numOfStatusesRS = hesk_dbQuery('SELECT 1 FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
                 $numberOfStatuses = hesk_dbNumRows($numOfStatusesRS);
 
-                $statusesSql = 'SELECT `ID`, `IsAutocloseOption`, `TextColor`, `Closable`, `IsClosed` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
-                $closedStatusesSql = 'SELECT `ID`, `IsClosedByClient` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 1';
+                $statusesSql = 'SELECT `ID`, `IsAutocloseOption`, `TextColor`, `Closable`, `IsClosed` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` ORDER BY `sort` ASC';
+                $closedStatusesSql = 'SELECT `ID`, `IsClosedByClient` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 1 ORDER BY `sort` ASC';
                 $openStatusesSql = 'SELECT `ID`, `IsNewTicketStatus`, `IsStaffReopenedStatus`, `IsDefaultStaffReplyStatus` FROM
-                    `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0';
+                    `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0 ORDER BY `sort` ASC';
                 $statusesRS = hesk_dbQuery($statusesSql);
                 $statuses = array();
                 while ($row = hesk_dbFetchAssoc($statusesRS)) {
@@ -350,7 +350,7 @@ function echoArrows($index, $numberOfStatuses, $statusId) {
 
     if ($index !== 1) {
         // Display move up
-        echo '<a href="manage_statuses.php?a=up?id='.$statusId.'">
+        echo '<a href="manage_statuses.php?a=sort&move=-15&id='.$statusId.'">
             <i class="fa fa-arrow-up icon-link" style="color: green" data-toggle="tooltip"
             title="'.htmlspecialchars($hesklang['move_up']).'"></i></a> ';
     } else {
@@ -359,7 +359,9 @@ function echoArrows($index, $numberOfStatuses, $statusId) {
 
     if ($index !== $numberOfStatuses) {
         // Display move down
-        echo '<a href="#"><i class="fa fa-arrow-down icon-link" style="color: green" data-toggle="tooltip" title="'.htmlspecialchars($hesklang['move_dn']).'"></i></a>';
+        echo '<a href="manage_statuses.php?a=sort&move=15&id='.$statusId.'">
+            <i class="fa fa-arrow-down icon-link" style="color: green" data-toggle="tooltip"
+            title="'.htmlspecialchars($hesklang['move_dn']).'"></i></a>';
     } else {
         echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;">';
     }
@@ -613,7 +615,7 @@ function updateStatus() {
     hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` WHERE `status_id` = ".intval($statusId));
     foreach (hesk_POST_array('name') as $language => $translation) {
         hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (`language`, `text`, `status_id`)
-            VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($translation)."', ".intval($newStatusId).")");
+            VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($translation)."', ".intval($statusId).")");
     }
 
     hesk_process_messages($hesklang['ticket_status_updated'],'manage_statuses.php','SUCCESS');
@@ -630,19 +632,27 @@ function deleteStatus() {
     hesk_process_messages($hesklang['ticket_status_deleted'],'manage_statuses.php','SUCCESS');
 }
 
-function moveStatus($direction) {
-    die(var_dump($_GET));
+function moveStatus() {
+    global $hesk_settings, $hesklang;
 
-    // Get the current position of the status
-    $statusId = hesk_GET('id');
-    $rs = hesk_dbQuery("SELECT `sort` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".intval($statusId));
-    $record = hesk_dbFetchAssoc($rs);
+    $statusId = intval(hesk_GET('id'));
+    $statusMove = intval(hesk_GET('move'));
 
-    if ($direction == 'up') {
-        $newSort = intval($record['sort']) - 1;
-    } else {
-        $newSort = intval($record['sort']) + 1;
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `sort` = `sort`+".intval($statusMove)."
+        WHERE `ID` = '".intval($statusId)."' LIMIT 1");
+
+    /* Update all category fields with new order */
+    $res = hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ORDER BY `sort` ASC");
+
+    $i = 10;
+    while ($myStatus = hesk_dbFetchAssoc($res))
+    {
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `sort`=".intval($i)."
+            WHERE `ID`='".intval($myStatus['ID'])."' LIMIT 1");
+        $i += 10;
     }
+
+    hesk_process_messages($hesklang['status_sort_updated'],'manage_statuses.php','SUCCESS');
 }
 
 function save() {

@@ -46,6 +46,7 @@ $hesklang['ticket_status_updated'] = 'Ticket status successfully updated!';
 $hesklang['ticket_status_deleted'] = 'Ticket status deleted!';
 $hesklang['confirm_delete_status_question'] = 'Delete status?';
 $hesklang['confirm_delete_status'] = 'Are you sure you want to delete this status? This cannot be undone!';
+$hesklang['status_sort_updated'] = 'Ticket status sort updated!';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';
