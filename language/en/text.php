@@ -39,6 +39,10 @@ $hesklang['status_name_title'] = 'Status Name';
 $hesklang['properties'] = 'Properties';
 $hesklang['closable'] = 'Closable'; // Same as $hesklang['closable_question'], but without punctuation
 $hesklang['new_status_created'] = 'New status successfully created';
+$hesklang['editing_status_x'] = 'Editing status <span style="color: %s; font-weight: bold">%s</span>'; // 1st %s: text color, 2nd %s: status name
+$hesklang['status_not_in_database'] = 'The status text for this language was not found in the database, so a suggested translation has been filled for you.
+ Please click "Save Changes" to save this translation to the database and to remove this warning.';
+$hesklang['ticket_status_updated'] = 'Ticket status successfully updated!';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';

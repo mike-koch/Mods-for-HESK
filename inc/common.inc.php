@@ -1949,6 +1949,14 @@ function hesk_getFeatureArray() {
     );
 }
 
+function mfh_doesStatusHaveXrefRecord($statusId, $language) {
+	global $hesk_settings;
+
+	$rs = hesk_dbQuery("SELECT 1 FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref`
+		WHERE `language` = '".hesk_dbEscape($language)."' AND `status_id` = ".intval($statusId));
+	return hesk_dbNumRows($rs) > 0;
+}
+
 function mfh_getDisplayTextForStatusId($statusId) {
 	global $hesklang, $hesk_settings;
 
