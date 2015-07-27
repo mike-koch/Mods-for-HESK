@@ -568,6 +568,8 @@ function execute240Scripts() {
       `text` VARCHAR(200) NOT NULL,
       `status_id` INT NOT NULL,
       PRIMARY KEY (`id`)) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD COLUMN `sort` INT");
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `sort` = `ID`");
 }
 
 function execute240FileUpdate() {

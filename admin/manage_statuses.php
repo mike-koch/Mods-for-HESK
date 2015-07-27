@@ -22,6 +22,7 @@ if (isset($_REQUEST['a'])) {
     if ($_POST['a'] == 'create') { createStatus(); }
     elseif ($_POST['a'] == 'update') { updateStatus(); }
     elseif ($_GET['a'] == 'delete') { deleteStatus(); }
+    elseif ($_GET['a'] == 'up') { moveStatus('up'); }
 }
 
 
@@ -147,7 +148,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             <i class="fa fa-pencil icon-link" style="color: orange"
                                                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
                                         </span>
-                                        <?php echoArrows($j, $numberOfStatuses); ?>
+                                        <?php echoArrows($j, $numberOfStatuses, $row['ID']); ?>
                                         <span data-toggle="modal" data-target="#modal-status-delete-<?php echo $row['ID']; ?>" style="cursor: pointer;">
                                             <i class="fa fa-times icon-link" style="color: red"
                                                data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
@@ -338,12 +339,14 @@ function buildConfirmDeleteModal($statusId) {
     <?php
 }
 
-function echoArrows($index, $numberOfStatuses) {
+function echoArrows($index, $numberOfStatuses, $statusId) {
     global $hesklang;
 
     if ($index !== 1) {
         // Display move up
-        echo '<a href="#"><i class="fa fa-arrow-up icon-link" style="color: green" data-toggle="tooltip" title="'.htmlspecialchars($hesklang['move_up']).'"></i></a> ';
+        echo '<a href="manage_statuses.php?a=up?id='.$statusId.'">
+            <i class="fa fa-arrow-up icon-link" style="color: green" data-toggle="tooltip"
+            title="'.htmlspecialchars($hesklang['move_up']).'"></i></a> ';
     } else {
         echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;"> ';
     }
@@ -619,6 +622,20 @@ function deleteStatus() {
     hesk_process_messages($hesklang['ticket_status_deleted'],'manage_statuses.php','SUCCESS');
 }
 
+function moveStatus($direction) {
+    die(var_dump($_GET));
+
+    // Get the current position of the status
+    $statusId = hesk_GET('id');
+    $rs = hesk_dbQuery("SELECT `sort` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".intval($statusId));
+    $record = hesk_dbFetchAssoc($rs);
+
+    if ($direction == 'up') {
+        $newSort = intval($record['sort']) - 1;
+    } else {
+        $newSort = intval($record['sort']) + 1;
+    }
+}
 
 function save() {
     global $hesklang, $hesk_settings;
