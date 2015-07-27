@@ -89,6 +89,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 $openStatusesSql = 'SELECT `ID`, `IsNewTicketStatus`, `IsStaffReopenedStatus`, `IsDefaultStaffReplyStatus` FROM
                     `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0';
                 $statusesRS = hesk_dbQuery($statusesSql);
+                $statuses = array();
+                while ($row = hesk_dbFetchAssoc($statusesRS)) {
+                    array_push($statuses, $row);
+                }
                 ?>
                 <form class="form-horizontal" method="post" action="manage_statuses.php" role="form">
                     <div class="panel panel-default">
@@ -117,7 +121,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <tbody>
                             <?php
                             $j = 1;
-                            while ($row = hesk_dbFetchAssoc($statusesRS)):
+                            foreach ($statuses as $row):
                             ?>
                                 <tr id="s<?php echo $row['ID']; ?>_row">
                                     <td style="color: <?php echo $row['TextColor']; ?>; font-weight: bold">
@@ -156,10 +160,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     </td>
                                 </tr>
                             <?php
-                                buildEditModal($row['ID']);
-                                buildConfirmDeleteModal($row['ID']);
                                 $j++;
-                                endwhile; ?>
+                                endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -301,6 +303,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 </div>
 
 <?php
+foreach ($statuses as $status) {
+    buildEditModal($status['ID']);
+    buildConfirmDeleteModal($status['ID']);
+}
 buildCreateModal();
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
@@ -477,7 +483,9 @@ function buildEditModal($statusId) {
                                     if (isset($textArray[$language])) {
                                         $text = $textArray[$language];
                                     } else {
+                                        hesk_setLanguage($language);
                                         $text = $hesklang[$status['Key']];
+                                        hesk_resetLanguage();
                                         $warning = 'has-warning';
                                     }
                                 ?>
