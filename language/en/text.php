@@ -43,6 +43,9 @@ $hesklang['editing_status_x'] = 'Editing status <span style="color: %s; font-wei
 $hesklang['status_not_in_database'] = 'The status text for this language was not found in the database, so a suggested translation has been filled for you.
  Please click "Save Changes" to save this translation to the database and to remove this warning.';
 $hesklang['ticket_status_updated'] = 'Ticket status successfully updated!';
+$hesklang['ticket_status_deleted'] = 'Ticket status deleted!';
+$hesklang['confirm_delete_status_question'] = 'Delete status?';
+$hesklang['confirm_delete_status'] = 'Are you sure you want to delete this status? This cannot be undone!';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';

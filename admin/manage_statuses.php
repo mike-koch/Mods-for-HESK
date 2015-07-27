@@ -18,12 +18,10 @@ hesk_checkPermission('can_man_ticket_statuses');
 define('WYSIWYG',1);
 
 // Are we performing an action?
-if (isset($_POST['a'])) {
-    if ($_POST['a'] == 'create') {
-        createStatus();
-    } elseif ($_POST['a'] == 'update') {
-        updateStatus();
-    }
+if (isset($_REQUEST['a'])) {
+    if ($_POST['a'] == 'create') { createStatus(); }
+    elseif ($_POST['a'] == 'update') { updateStatus(); }
+    elseif ($_GET['a'] == 'delete') { deleteStatus(); }
 }
 
 
@@ -145,18 +143,22 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         ?>
                                     </td>
                                     <td>
-                                        <!-- TODO Linkify These -->
                                         <span data-toggle="modal" data-target="#modal-status-<?php echo $row['ID']; ?>" style="cursor: pointer;">
                                             <i class="fa fa-pencil icon-link" style="color: orange"
                                                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
                                         </span>
                                         <?php echoArrows($j, $numberOfStatuses); ?>
-                                        <a href="#">
+                                        <span data-toggle="modal" data-target="#modal-status-delete-<?php echo $row['ID']; ?>" style="cursor: pointer;">
                                             <i class="fa fa-times icon-link" style="color: red"
-                                               data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a>
+                                               data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
+                                        </span>
                                     </td>
                                 </tr>
-                            <?php buildEditModal($row['ID']); $j++; endwhile; ?>
+                            <?php
+                                buildEditModal($row['ID']);
+                                buildConfirmDeleteModal($row['ID']);
+                                $j++;
+                                endwhile; ?>
                             </tbody>
                         </table>
                     </div>
@@ -302,6 +304,39 @@ buildCreateModal();
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
+
+function buildConfirmDeleteModal($statusId) {
+    global $hesklang;
+
+    ?>
+    <div class="modal fade" id="modal-status-delete-<?php echo $statusId; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><?php echo $hesklang['confirm_delete_status_question']; ?></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p><?php echo $hesklang['confirm_delete_status']; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="a" value="create">
+                    <div class="btn-group">
+                        <a href="manage_statuses.php?a=delete&id=<?php echo $statusId; ?>" class="btn btn-danger">
+                            <?php echo $hesklang['delete']; ?>
+                        </a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['cancel']; ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
 
 function echoArrows($index, $numberOfStatuses) {
     global $hesklang;
@@ -571,6 +606,17 @@ function updateStatus() {
     }
 
     hesk_process_messages($hesklang['ticket_status_updated'],'manage_statuses.php','SUCCESS');
+}
+
+function deleteStatus() {
+    global $hesklang, $hesk_settings;
+
+    $statusId = hesk_GET('id');
+
+    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` WHERE `status_id` = ".intval($statusId));
+    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".intval($statusId));
+
+    hesk_process_messages($hesklang['ticket_status_deleted'],'manage_statuses.php','SUCCESS');
 }
 
 
