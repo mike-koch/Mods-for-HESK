@@ -1,5 +1,8 @@
 <?php
+define('IN_SCRIPT', 1);
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'inc/common.inc.php');
+echo $hesklang['yes'];
 
 function executeQuery($sql) {
     global $hesk_last_query;
@@ -576,6 +579,16 @@ function execute240Scripts() {
             WHERE `id`='".intval($myStatus['ID'])."' LIMIT 1");
         $i += 10;
     }
+}
+
+function initializeXrefTable() {
+    global $hesk_settings, $hesklang;
+
+    /*
+     * TODO:
+     * 1. Get each key from the DB
+     * 2. For each language, insert a xref record for the key
+     */
 }
 
 function execute240FileUpdate() {
