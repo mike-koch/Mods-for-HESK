@@ -584,11 +584,19 @@ function execute240Scripts() {
 function initializeXrefTable() {
     global $hesk_settings, $hesklang;
 
-    /*
-     * TODO:
-     * 1. Get each key from the DB
-     * 2. For each language, insert a xref record for the key
-     */
+    $languages = array();
+    foreach ($hesk_settings['languages'] as $key => $value) {
+        $languages[$key] = $hesk_settings['languages'][$key]['folder'];
+    }
+
+    $statusesRs = executeQuery("SELECT `ID`, `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+    while ($row = hesk_dbFetchAssoc($statusesRs)) {
+        foreach ($languages as $language => $languageCode) {
+            $sql = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (`language`, `text`, `status_id`)
+                VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($hesklang[$row['Key']])."', ".intval($row['ID']).")";
+            executeQuery($sql);
+        }
+    }
 }
 
 function execute240FileUpdate() {

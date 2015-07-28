@@ -120,6 +120,10 @@ function printRow($version) {
                                         <td>Migrate IP / Email Bans</td>
                                         <td><i id="spinner-banmigrate" class="fa fa-spinner"></i> <span id="span-banmigrate">Waiting...</span></td>
                                     </tr>
+                                    <tr id="row-initialize-statuses">
+                                        <td>Initialize Statuses</td>
+                                        <td><i id="spinner-initialize-statuses" class="fa fa-spinner"></i> <span id="span-initialize-statuses">Waiting...</span></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             <?php } ?>
