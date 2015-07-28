@@ -315,8 +315,7 @@ if (!$show['show']) {
                     $repliesColumnWidth = 3;
                 }
                 echo '<div class="col-md-3 col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>';
-                    $ticketStatusKey = $status['Key'];
-                     echo '<p class="ticketPropertyText">'.$hesklang[$ticketStatusKey].'</p>';
+                     echo '<p class="ticketPropertyText">'.mfh_getDisplayTextForStatusId($status['ID']).'</p>';
                 echo '</div>';
                 echo '<div class="col-md-3 col-sm-12 ticket-cell"><p class="ticketPropertyTitle">'.$hesklang['last_replier'].'</p>
                         <p class="ticketPropertyText">'.$ticket['repliername'].'</p></div>';
