@@ -243,12 +243,12 @@ $fid = 1;
 require(HESK_PATH . 'inc/assignment_search.inc.php');
 
 // --> TICKET STATUS
-$possibleStatusSql = 'SELECT `ID`, `Key` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
+$possibleStatusSql = 'SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
 $possibleStatusRS = hesk_dbQuery($possibleStatusSql);
 $possible_status = array();
 while ($row = $possibleStatusRS->fetch_assoc())
 {
-    $possible_status[$row['ID']] = $hesklang[$row['Key']];
+    $possible_status[$row['ID']] = mfh_getDisplayTextForStatusId($row['ID']);
 }
 
 $status = $possible_status;
@@ -507,9 +507,7 @@ if (isset($_GET['w']))
     $result = hesk_dbQuery($sql);
 	while ($ticket=hesk_dbFetchAssoc($result))
 	{
-        $statusContentKeySql = 'SELECT `Key` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `ID` = '.$ticket['status'];
-        $statusContentKeyRow = hesk_dbQuery($statusContentKeySql)->fetch_assoc();
-        $ticket['status'] = $hesklang[$statusContentKeyRow['Key']];
+        $ticket['status'] = mfh_getDisplayTextForStatusId($ticket['status']);
 
 		switch ($ticket['priority'])
 		{
@@ -788,7 +786,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             ?>
                             <div class="col-xs-4">
                                 <div class="checkbox">
-                                    <label><input type="checkbox" name="s<?php echo $row['ID']; ?>" value="1" <?php if (isset($status[$row['ID']])) {echo 'checked="checked"';} ?> /> <span style="color: <?php echo $row['TextColor']; ?>"><?php echo $hesklang[$row['Key']]; ?></span></label>
+                                    <label><input type="checkbox" name="s<?php echo $row['ID']; ?>" value="1" <?php if (isset($status[$row['ID']])) {echo 'checked="checked"';} ?> /> <span style="color: <?php echo $row['TextColor']; ?>"><?php echo mfh_getDisplayTextForStatusId($row['ID']); ?></span></label>
                                 </div>
                             </div>
                             <?php

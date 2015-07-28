@@ -38,10 +38,10 @@ if ( ! isset($status) )
 {
     $status = array();
     //-- We don't want to check statuses that are considered "closed"
-    $statusRS = hesk_dbQuery('SELECT `ID`, `Key` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0');
+    $statusRS = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0');
     while ($row = $statusRS->fetch_assoc())
     {
-        $status[$row['ID']] = $row['Key'];
+        $status[$row['ID']] = mfh_getDisplayTextForStatusId($row['ID']);
     }
 }
 
@@ -131,7 +131,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                 <tr>
                                     <?php
                                     $rowCounter = 1;
-                                    $statusRS = hesk_dbQuery('SELECT `ID`, `Key`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
+                                    $statusRS = hesk_dbQuery('SELECT `ID`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
                                     while ($row = $statusRS->fetch_assoc())
                                     {
                                         if ($rowCounter > 3)
@@ -149,7 +149,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                         }
                                         echo '<label><input type="checkbox" name="s'.$row['ID'].'" value="1"';
                                         if (isset($status[$row['ID']])) {echo 'checked="checked"';}
-                                        echo '/> <span style="font-weight: bold;color: '.$row['TextColor'].';">'.$hesklang[$row['Key']].'</span></label></td>';
+                                        echo '/> <span style="font-weight: bold;color: '.$row['TextColor'].';">'.mfh_getDisplayTextForStatusId($row['ID']).'</span></label></td>';
 
                                         $rowCounter++;
                                     }
