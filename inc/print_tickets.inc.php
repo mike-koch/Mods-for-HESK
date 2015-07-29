@@ -118,17 +118,16 @@ $possible_status = array();
 $results = hesk_dbQuery($statusSql);
 while ($row = $results->fetch_assoc())
 {
-    array_push($possible_status, $row['ID']);
+    $possible_status[$row['ID']] = $row['ID'];
     $totalStatuses++;
 }
 $status = $possible_status;
-
 // Process statuses unless overridden with "s_all" variable
 if ( ! hesk_GET('s_all') )
 {
     foreach ($status as $k => $v)
     {
-        if (empty($_GET['s' . $k]))
+        if (empty($_GET['s' . $v]))
         {
             unset($status[$k]);
         }

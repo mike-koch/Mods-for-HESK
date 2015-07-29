@@ -132,7 +132,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                     <?php
                                     $rowCounter = 1;
                                     $statusRS = hesk_dbQuery('SELECT `ID`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
-                                    while ($row = $statusRS->fetch_assoc())
+                                    while ($row = hesk_dbFetchAssoc($statusRS))
                                     {
                                         if ($rowCounter > 3)
                                         {
