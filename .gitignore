@@ -269,7 +269,6 @@ attachments
 img/ban.png
 img/banned.png
 img/ico_tools.png
-inc/recaptcha/recaptchalib_v2.php
 ip_whois.php
 language/en/emails/reset_password.txt
 language/en/help_files/ticket_list.html
