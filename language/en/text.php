@@ -47,6 +47,8 @@ $hesklang['ticket_status_deleted'] = 'Ticket status deleted!';
 $hesklang['confirm_delete_status_question'] = 'Delete status?';
 $hesklang['confirm_delete_status'] = 'Are you sure you want to delete this status? This cannot be undone!';
 $hesklang['status_sort_updated'] = 'Ticket status sort updated!';
+$hesklang['status_sort'] = 'Status Sorting';
+$hesklang['status_sort_help'] = 'Determines if statuses shown on the manage statuses page and all dropdowns are sorted by the user-defined order (default), or sorted alphabetically.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';
