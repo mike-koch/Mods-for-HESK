@@ -37,10 +37,14 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 if ( ! isset($status) )
 {
     $status = array();
+    $allStatuses = mfh_getAllStatuses();
     //-- We don't want to check statuses that are considered "closed"
-    $statusRS = hesk_dbQuery('SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0');
-    while ($row = $statusRS->fetch_assoc())
+    foreach ($allStatuses as $row)
     {
+        if ($status['IsClosed'] == 1) {
+            continue;
+        }
+
         $status[$row['ID']] = mfh_getDisplayTextForStatusId($row['ID']);
     }
 }
@@ -131,8 +135,8 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                 <tr>
                                     <?php
                                     $rowCounter = 1;
-                                    $statusRS = hesk_dbQuery('SELECT `ID`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
-                                    while ($row = hesk_dbFetchAssoc($statusRS))
+                                    $statuses = mfh_getAllStatuses();
+                                    foreach ($statuses as $row)
                                     {
                                         if ($rowCounter > 3)
                                         {

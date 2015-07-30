@@ -8,6 +8,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/status_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -85,18 +86,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 $numOfStatusesRS = hesk_dbQuery('SELECT 1 FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
                 $numberOfStatuses = hesk_dbNumRows($numOfStatusesRS);
 
-                $statusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` ORDER BY `sort` ASC';
-                $statusesRS = hesk_dbQuery($statusesSql);
-                $statuses = array();
-                while ($row = hesk_dbFetchAssoc($statusesRS)) {
-                    $row['text'] = mfh_getDisplayTextForStatusId($row['ID']);
-                    $statuses[$row['text']] = $row;
-                }
-
-                if ($modsForHesk_settings['statuses_order_column'] == 'name') {
-                    ksort($statuses);
-                }
-
+                $statuses = mfh_getAllStatuses();
                 ?>
                 <form class="form-horizontal" method="post" action="manage_statuses.php" role="form">
                     <div class="panel panel-default">

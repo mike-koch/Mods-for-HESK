@@ -112,11 +112,10 @@ $fid = 1;
 require(HESK_PATH . 'inc/assignment_search.inc.php');
 
 // --> TICKET STATUS
-$statusSql = "SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`";
+$statuses = mfh_getAllStatuses();
 $totalStatuses = 0;
 $possible_status = array();
-$results = hesk_dbQuery($statusSql);
-while ($row = $results->fetch_assoc())
+foreach ($statuses as $row)
 {
     $possible_status[$row['ID']] = $row['ID'];
     $totalStatuses++;
@@ -144,10 +143,12 @@ if ( $tmp < $totalStatuses )
 	if ($tmp == 0)
 	{
 		$status = $possible_status;
-        $resolvedSql = "SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `IsClosed` = 1";
-        $resolvedRS = hesk_dbQuery($resolvedSql);
-        while ($row = $resolvedRS->fetch_assoc())
+        foreach ($statuses as $row)
         {
+            if ($row['IsClosed'] == 0) {
+                continue;
+            }
+
             unset($status[$row['ID']]);
         }
     }

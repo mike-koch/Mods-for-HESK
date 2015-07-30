@@ -40,6 +40,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/status_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -1079,8 +1080,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                 echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticketPropertyTitle">'.$hesklang['status'].'</p>'; 
                     $status_options = array();
-                    $results = hesk_dbQuery("SELECT `ID`FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
-                    while ($row = hesk_dbFetchAssoc($results))
+                    $results = mfh_getAllStatuses();
+                    foreach ($results as $row)
                     {
                         $selected = $ticket['status'] == $row['ID'] ? 'selected' : '';
                         $status_options[$row['ID']] = '<option value="'.$row['ID'].'" '.$selected.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
@@ -1991,11 +1992,6 @@ function hesk_printReplyForm() {
 		                }
                     }
 
-                   $statusSql = 'SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsStaffClosedOption` = 1';
-                   $statusRow = hesk_dbQuery($statusSql)->fetch_assoc();
-                   $staffClosedOptionStatus = array();
-                   $staffClosedOptionStatus['ID'] = $statusRow['ID'];
-
 	                ?>
 	                <div class="form-inline">
                         <label>
@@ -2033,12 +2029,7 @@ function hesk_printReplyForm() {
                             </a></li>
                             <li class="divider"></li>
                             <?php
-                            $allStatusesRs = hesk_dbQuery('SELECT `ID`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
-                            $statuses = array();
-                            while ($row = hesk_dbFetchAssoc($allStatusesRs)) {
-                                array_push($statuses, $row);
-                            }
-
+                            $statuses = mfh_getAllStatuses();
                             foreach ($statuses as $status) {
                                 echo '<li><a>
                                         <button class="dropdown-submit" type="submit" name="submit_as_status" value="'.$status['ID'].'"">

@@ -40,6 +40,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/reporting_functions.inc.php');
+require(HESK_PATH . 'inc/status_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -243,10 +244,9 @@ $fid = 1;
 require(HESK_PATH . 'inc/assignment_search.inc.php');
 
 // --> TICKET STATUS
-$possibleStatusSql = 'SELECT `ID` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
-$possibleStatusRS = hesk_dbQuery($possibleStatusSql);
+$statuses = mfh_getAllStatuses();
 $possible_status = array();
-while ($row = $possibleStatusRS->fetch_assoc())
+foreach ($statuses as $row)
 {
     $possible_status[$row['ID']] = mfh_getDisplayTextForStatusId($row['ID']);
 }
@@ -262,9 +262,7 @@ foreach ($status as $k => $v)
 }
 
 // How many statuses are we pulling out of the database?
-$allStatusCountSql = 'SELECT COUNT(*) AS `Count` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
-$allStatusCountRow = hesk_dbQuery($allStatusCountSql)->fetch_assoc();
-$allStatusCount = $allStatusCountRow['Count'];
+$allStatusCount = count($statuses);
 $tmp = count($status);
 
 // Do we need to search by status?
@@ -779,14 +777,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <label for="status" class="control-label col-sm-2"><?php echo $hesklang['status']; ?>:</label>
                 <div class="col-sm-10">
                     <?php
-                        $getStatusCheckboxSql = 'SELECT `ID`, `Key`, `TextColor` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
-                        $getStatusCheckboxRS = hesk_dbQuery($getStatusCheckboxSql);
-                        while ($row = $getStatusCheckboxRS->fetch_assoc())
+						$statuses = mfh_getAllStatuses();
+                        foreach ($statuses as $row)
                         {
                             ?>
                             <div class="col-xs-4">
                                 <div class="checkbox">
-                                    <label><input type="checkbox" name="s<?php echo $row['ID']; ?>" value="1" <?php if (isset($status[$row['ID']])) {echo 'checked="checked"';} ?> /> <span style="color: <?php echo $row['TextColor']; ?>"><?php echo mfh_getDisplayTextForStatusId($row['ID']); ?></span></label>
+                                    <label><input type="checkbox" name="s<?php echo $row['ID']; ?>" value="1" <?php if (isset($status[$row['ID']])) {echo 'checked="checked"';} ?> /> <span style="color: <?php echo $row['TextColor']; ?>"><?php echo $row['text']; ?></span></label>
                                 </div>
                             </div>
                             <?php
