@@ -50,3 +50,6 @@ $modsForHesk_settings['request_location'] = 0;
 
 //-- Column to sort categories by. Can be either 'name' or 'cat_order'
 $modsForHesk_settings['category_order_column'] = 'cat_order';
+
+//-- Column to sort statuses by. Can be either 'sort' or 'name'
+$modsForHesk_settings['statuses_order_column'] = 'sort';

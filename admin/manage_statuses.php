@@ -5,6 +5,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -84,15 +85,18 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 $numOfStatusesRS = hesk_dbQuery('SELECT 1 FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
                 $numberOfStatuses = hesk_dbNumRows($numOfStatusesRS);
 
-                $statusesSql = 'SELECT `ID`, `IsAutocloseOption`, `TextColor`, `Closable`, `IsClosed` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` ORDER BY `sort` ASC';
-                $closedStatusesSql = 'SELECT `ID`, `IsClosedByClient` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 1 ORDER BY `sort` ASC';
-                $openStatusesSql = 'SELECT `ID`, `IsNewTicketStatus`, `IsStaffReopenedStatus`, `IsDefaultStaffReplyStatus` FROM
-                    `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0 ORDER BY `sort` ASC';
+                $statusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` ORDER BY `sort` ASC';
                 $statusesRS = hesk_dbQuery($statusesSql);
                 $statuses = array();
                 while ($row = hesk_dbFetchAssoc($statusesRS)) {
-                    array_push($statuses, $row);
+                    $row['text'] = mfh_getDisplayTextForStatusId($row['ID']);
+                    $statuses[$row['text']] = $row;
                 }
+
+                if ($modsForHesk_settings['statuses_order_column'] == 'name') {
+                    ksort($statuses);
+                }
+
                 ?>
                 <form class="form-horizontal" method="post" action="manage_statuses.php" role="form">
                     <div class="panel panel-default">
@@ -121,11 +125,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <tbody>
                             <?php
                             $j = 1;
-                            foreach ($statuses as $row):
+                            foreach ($statuses as $key => $row):
                             ?>
                                 <tr id="s<?php echo $row['ID']; ?>_row">
                                     <td style="color: <?php echo $row['TextColor']; ?>; font-weight: bold">
-                                        <?php echo mfh_getDisplayTextForStatusId($row['ID']); ?>
+                                        <?php echo $row['text']; ?>
                                     </td>
                                     <td>
                                         <?php
@@ -175,9 +179,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="col-sm-6 col-xs-12">
                                     <select name="newTicket" class="form-control" id="newTicket">
                                         <?php
-                                        $statusesRS = hesk_dbQuery($openStatusesSql);
-                                        while ($row = $statusesRS->fetch_assoc())
+                                        foreach ($statuses as $key => $row)
                                         {
+                                            if ($row['IsClosed'] == 1) {
+                                                continue;
+                                            }
+
                                             $selectedEcho = ($row['IsNewTicketStatus'] == 1) ? 'selected="selected"' : '';
                                             echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
                                         }
@@ -190,9 +197,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="col-sm-6 col-xs-12">
                                     <select name="closedByClient" class="form-control" id="closedByClient">
                                         <?php
-                                        $statusesRS = hesk_dbQuery($closedStatusesSql);
-                                        while ($row = $statusesRS->fetch_assoc())
+                                        foreach ($statuses as $key => $row)
                                         {
+                                            if ($row['IsClosed'] == 0) {
+                                                continue;
+                                            }
+
                                             $selectedEcho = ($row['IsClosedByClient'] == 1) ? 'selected="selected"' : '';
                                             echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
                                         }
@@ -205,9 +215,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="col-sm-6 col-xs-12">
                                     <select name="replyFromClient" class="form-control" id="replyFromClient">
                                         <?php
-                                        $statusesRS = hesk_dbQuery($openStatusesSql);
-                                        while ($row = $statusesRS->fetch_assoc())
+                                        foreach ($statuses as $key => $row)
                                         {
+                                            if ($row['IsClosed'] == 1) {
+                                                continue;
+                                            }
+
                                             $selectedEcho = ($row['IsCustomerReplyStatus'] == 1) ? 'selected="selected"' : '';
                                             echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
                                         }
@@ -220,9 +233,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="col-sm-6 col-xs-12">
                                     <select name="staffClosedOption" class="form-control" id="staffClosedOption">
                                         <?php
-                                        $statusesRS = hesk_dbQuery($closedStatusesSql);
-                                        while ($row = $statusesRS->fetch_assoc())
+                                        foreach ($statuses as $key => $row)
                                         {
+                                            if ($row['IsClosed'] == 0) {
+                                                continue;
+                                            }
+
                                             $selectedEcho = ($row['IsStaffClosedOption'] == 1) ? 'selected="selected"' : '';
                                             echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
                                         }
@@ -235,9 +251,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="col-sm-6 col-xs-12">
                                     <select name="staffReopenedStatus" class="form-control" id="staffReopenedStatus">
                                         <?php
-                                        $statusesRS = hesk_dbQuery($openStatusesSql);
-                                        while ($row = $statusesRS->fetch_assoc())
+                                        foreach ($statuses as $key => $row)
                                         {
+                                            if ($row['IsClosed'] == 1) {
+                                                continue;
+                                            }
+
                                             $selectedEcho = ($row['IsStaffReopenedStatus'] == 1) ? 'selected="selected"' : '';
                                             echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
                                         }
@@ -250,9 +269,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="col-sm-6 col-xs-12">
                                     <select name="defaultStaffReplyStatus" class="form-control" id="defaultStaffReplyStatus">
                                         <?php
-                                        $statusesRS = hesk_dbQuery($openStatusesSql);
-                                        while ($row = $statusesRS->fetch_assoc())
+                                        foreach ($statuses as $key => $row)
                                         {
+                                            if ($row['IsClosed'] == 1) {
+                                                continue;
+                                            }
+
                                             $selectedEcho = ($row['IsDefaultStaffReplyStatus'] == 1) ? 'selected="selected"' : '';
                                             echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
                                         }
@@ -265,8 +287,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="col-sm-6 col-xs-12">
                                     <select name="lockedTicketStatus" class="form-control" id="lockedTicketStatus">
                                         <?php
-                                        $statusesRS = hesk_dbQuery($statusesSql);
-                                        while ($row = $statusesRS->fetch_assoc())
+                                        foreach ($statuses as $key => $row)
                                         {
                                             $selectedEcho = ($row['LockedTicketStatus'] == 1) ? 'selected="selected"' : '';
                                             echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
@@ -280,9 +301,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="col-sm-6 col-xs-12">
                                     <select name="autocloseTicketOption" class="form-control" id="autocloseTicketOption">
                                         <?php
-                                        $statusesRS = hesk_dbQuery($closedStatusesSql);
-                                        while ($row = $statusesRS->fetch_assoc())
+                                        foreach ($statuses as $key => $row)
                                         {
+                                            if ($row['IsClosed'] == 0) {
+                                                continue;
+                                            }
+
                                             $selectedEcho = ($row['IsAutocloseOption'] == 1) ? 'selected' : '';
                                             echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
                                         }
@@ -346,7 +370,11 @@ function buildConfirmDeleteModal($statusId) {
 }
 
 function echoArrows($index, $numberOfStatuses, $statusId) {
-    global $hesklang;
+    global $hesklang, $modsForHesk_settings;
+
+    if ($modsForHesk_settings['statuses_order_column'] == 'name') {
+        return;
+    }
 
     if ($index !== 1) {
         // Display move up
