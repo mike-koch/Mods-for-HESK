@@ -37,6 +37,7 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -50,6 +51,10 @@ hesk_checkPermission('can_man_ticket_tpl');
 
 // Define required constants
 define('LOAD_TABS',1);
+
+if ($modsForHesk_settings['rich_text_for_tickets']) {
+    define('WYSIWYG', 1);
+}
 
 /* What should we do? */
 if ( $action = hesk_REQUEST('a') )
@@ -127,8 +132,11 @@ $num = hesk_dbNumRows($result);
                             $options .= (isset($_SESSION['canned']['id']) && $_SESSION['canned']['id'] == $mysaved['id']) ? ' selected="selected" ' : '';
                             $options .= '>'.$mysaved['title'].'</option>';
 
-
-                            $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved['message']) )."';\n";
+                            if ($modsForHesk_settings['rich_text_for_tickets']) {
+                                $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", html_entity_decode($mysaved['message'] ))."';\n";
+                            } else {
+                                $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved['message']) )."';\n";
+                            }
                             $javascript_titles.='myTitle['.$mysaved['id'].']=\''.addslashes($mysaved['title'])."';\n";
 
                             echo '
@@ -223,7 +231,7 @@ $num = hesk_dbNumRows($result);
                 <label for="name" class="col-sm-2 control-label"><?php echo $hesklang['ticket_tpl_title']; ?></label>
                 <div class="col-sm-10">
                     <span id="HeskTitle">
-                        <input class="form-control" type="text" name="name" size="40" maxlength="50" placeholder="<?php echo htmlspecialchars($hesklang['ticket_tpl_title']); ?>"
+                        <input id="subject" class="form-control" type="text" name="name" size="40" maxlength="50" placeholder="<?php echo htmlspecialchars($hesklang['ticket_tpl_title']); ?>"
                             <?php if (isset($_SESSION['canned']['name'])) {echo ' value="'.stripslashes($_SESSION['canned']['name']).'" ';} ?>>
                     </span>
                 </div>
@@ -232,10 +240,14 @@ $num = hesk_dbNumRows($result);
                 <label for="msg" class="col-sm-2 control-label"><?php echo $hesklang['message']; ?></label>
                 <div class="col-sm-10">
                     <span id="HeskMsg">
-                        <textarea class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="msg" rows="15" cols="70"><?php
+                        <textarea id="message" class="form-control htmlEditor" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="msg" rows="15" cols="70"><?php
                             if (isset($_SESSION['canned']['msg']))
                             {
-                                echo stripslashes($_SESSION['canned']['msg']);
+                                if ($modsForHesk_settings['rich_text_for_tickets']) {
+                                    echo $_SESSION['canned']['msg'];
+                                } else {
+                                    echo stripslashes($_SESSION['canned']['msg']);
+                                }
                             }
                             ?></textarea>
                     </span>
@@ -250,34 +262,83 @@ $num = hesk_dbNumRows($result);
         </form>
     </div>
 </div>
+<?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        tinyMCE.init({
+            mode : "textareas",
+            editor_selector : "htmlEditor",
+            elements : "content",
+            theme : "advanced",
+            convert_urls : false,
+
+            theme_advanced_buttons1 : "cut,copy,paste,|,undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
+            theme_advanced_buttons2 : "sub,sup,|,charmap,|,bullist,numlist,|,outdent,indent,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,link,unlink,anchor,image,cleanup,code",
+            theme_advanced_buttons3 : "",
+
+            theme_advanced_toolbar_location : "top",
+            theme_advanced_toolbar_align : "left",
+            theme_advanced_statusbar_location : "bottom",
+            theme_advanced_resizing : true
+        });
+        /* ]]> */
+    </script>
+<?php endif; ?>
 
 <script language="javascript" type="text/javascript"><!--
-var myMsgTxt = new Array();
-myMsgTxt[0]='';
-var myTitle = new Array();
-myTitle[0]='';
+    // -->
+    var myMsgTxt = new Array();
+    var myTitle = new Array();
+    myMsgTxt[0]='';
+    myTitle[0]='';
 
-<?php
-echo $javascript_titles;
-echo $javascript_messages;
-?>
+    <?php
+    echo $javascript_titles;
+    echo $javascript_messages;
+    ?>
 
-function setMessage(msgid) {
-    if (document.getElementById) {
-        document.getElementById('HeskMsg').innerHTML='<textarea class="form-control" name="msg" rows="15" cols="70">'+myMsgTxt[msgid]+'</textarea>';
-        document.getElementById('HeskTitle').innerHTML='<input class="form-control" type="text" name="name" size="40" maxlength="50" value="'+myTitle[msgid]+'">';
-    } else {
-        document.form1.msg.value=myMsgTxt[msgid];
-        document.form1.name.value=myTitle[msgid];
+    function setMessage(msgid)
+    {
+        var useHtmlEditor = <?php echo $modsForHesk_settings['rich_text_for_tickets']; ?>;
+        var myMsg=myMsgTxt[msgid];
+        var mySubject=myTitle[msgid];
+
+        if (myMsg == '')
+        {
+            if (useHtmlEditor) {
+                tinymce.get("message").setContent('');
+                tinymce.get("message").execCommand('mceInsertRawHTML', false, '');
+            }
+            else {
+                document.getElementById('message').value = '';
+            }
+            document.getElementById('subject').value = '';
+            return true;
+        }
+        if (document.getElementById)
+        {
+            if (useHtmlEditor) {
+                tinymce.get("message").setContent('');
+                tinymce.get("message").execCommand('mceInsertRawHTML', false, myMsg);
+            } else {
+                document.getElementById('message').value = myMsg;
+            }
+            document.getElementById('subject').value = mySubject;
+        }
+        else
+        {
+            document.form1.message.value=myMsg;
+            document.form1.subject.value=mySubject;
+        }
+
+        if (msgid==0) {
+            document.form1.a[0].checked=true;
+        } else {
+            document.form1.a[1].checked=true;
+        }
+
     }
-
-    if (msgid==0) {
-        document.form1.a[0].checked=true;
-    } else {
-        document.form1.a[1].checked=true;
-    }
-}
-//-->
+    //-->
 </script>
 
 <?php
