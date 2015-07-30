@@ -5,8 +5,10 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/status_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -18,11 +20,14 @@ hesk_checkPermission('can_man_ticket_statuses');
 define('WYSIWYG',1);
 
 // Are we performing an action?
-if (isset($_POST['action'])) {
-    if ($_POST['action'] == 'save') {
-        save();
-    }
+if (isset($_REQUEST['a'])) {
+    if ($_POST['a'] == 'create') { createStatus(); }
+    elseif ($_POST['a'] == 'update') { updateStatus(); }
+    elseif ($_GET['a'] == 'delete') { deleteStatus(); }
+    elseif ($_GET['a'] == 'sort') { moveStatus(); }
 }
+
+
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
@@ -77,214 +82,228 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
 
-                ?>
-                <h6 style="font-weight: bold"><?php echo $hesklang['basicProperties']; ?></h6>
-                <div class="footerWithBorder blankSpace"></div>
-                <?php
                 //-- We need to get all of the statuses and dump the information to the page.
-                $statusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`';
-                $closedStatusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 1';
-                $openStatusesSql = 'SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses` WHERE `IsClosed` = 0';
-                $statusesRS = hesk_dbQuery($statusesSql);
+                $numOfStatusesRS = hesk_dbQuery('SELECT 1 FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
+                $numberOfStatuses = hesk_dbNumRows($numOfStatusesRS);
+
+                $statuses = mfh_getAllStatuses();
                 ?>
                 <form class="form-horizontal" method="post" action="manage_statuses.php" role="form">
-                    <div class="table-responsive">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>
+                                <?php echo $hesklang['statuses']; ?>
+                                <span class="nu-floatRight" style="margin-top: -7px">
+                                    <button class="btn btn-success" data-toggle="modal" data-target="#modal-status-new">
+                                        <i class="fa fa-plus-circle"></i>
+                                        <?php
+                                            echo $hesklang['new_status'];
+                                        ?>
+                                    </button>
+                                </span>
+                            </h4>
+                        </div>
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                            <th><?php echo $hesklang['name']; ?></th>
-                            <th><?php echo $hesklang['language_key']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['language_key']; ?>" data-content="<?php echo $hesklang['language_key_description']; ?>"></i></th>
-                            <th><?php echo $hesklang['textColor']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['textColor']; ?>" data-content="<?php echo $hesklang['textColorDescr']; ?>"></i></th>
-                            <th><?php echo $hesklang['closable_question']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover" data-placement="bottom" title="<?php echo $hesklang['closable_question']; ?>" data-content="<?php echo $hesklang['closable_description']; ?>"></i></th>
-                            <th><?php echo $hesklang['closedQuestionMark']; ?> <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" data-placement="top" title="<?php echo $hesklang['closedQuestionMark']; ?>" data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i></th>
-                            <th><?php echo $hesklang['delete']; ?></th>
+                                <th><?php echo $hesklang['name']; ?></th>
+                                <th><?php echo $hesklang['closable_question']; ?></th>
+                                <th><?php echo $hesklang['closedQuestionMark']; ?></th>
+                                <th><?php echo $hesklang['actions']; ?></th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                            //Print each status
-                            while ($row = $statusesRS->fetch_assoc())
-                            {
-                                $checkedEcho = ($row['IsClosed'] == 1) ? 'checked="checked"' : '';
-                                $isDisabled = false;
-                                if ($row['IsNewTicketStatus'] || $row['IsClosedByClient'] || $row['IsCustomerReplyStatus'] ||
-                                    $row['IsStaffClosedOption'] || $row['IsStaffReopenedStatus'] || $row['IsDefaultStaffReplyStatus'] ||
-                                    $row['LockedTicketStatus'] || $row['IsAutocloseOption'])
-                                {
-                                    $isDisabled = true;
-                                }
-
-                                $yesSelected = $customersOnlySelected = $staffOnlySelected = $noSelected = '';
-                                if ($row['Closable'] == 'yes') { $yesSelected = 'selected'; }
-                                elseif ($row['Closable'] == 'conly') { $customersOnlySelected = 'selected'; }
-                                elseif ($row['Closable'] == 'sonly') { $staffOnlySelected = 'selected'; }
-                                else { $noSelected = 'selected'; }
-
-                                echo '<tr id="s'.$row['ID'].'_row">';
-                                echo '<td>'.$hesklang[$row['Key']].'</td>'; //Name
-                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_key" value="'.$row['Key'].'" placeholder="'.htmlspecialchars($hesklang['language_key']).'"></td>'; // Language File Key
-                                echo '<td><input type="text" class="form-control" name="s'.$row['ID'].'_textColor" value="'.$row['TextColor'].'" placeholder="'.htmlspecialchars($hesklang['textColor']).'"></td>'; // Text Color
-                                echo '<td>
-                                              <select class="form-control" name="s'.$row['ID'].'_closable">
-                                                  <option value="yes" '.$yesSelected.'>'.$hesklang['yes_title_case'].'</option>
-                                                  <option value="conly" '.$customersOnlySelected.'>'.$hesklang['customers_only'].'</option>
-                                                  <option value="sonly" '.$staffOnlySelected.'>'.$hesklang['staff_only'].'</option>
-                                                  <option value="no" '.$noSelected.'>'.$hesklang['no_title_case'].'</option>
-                                              </select>
-                                          </td>';
-                                echo '<td><input type="checkbox" name="s'.$row['ID'].'_isClosed" value="1" '.$checkedEcho.'></td>'; // Resolved Status?
-                                echo '<td>';
-                                if ($isDisabled)
-                                {
-                                    echo '<i class="fa fa-ban" style="color: red; font-size: 1.2em; font-weight: bold" data-toggle="popover" data-placement="left" title="'.$hesklang['whyCantIDeleteThisStatus'].'" data-content="'.$hesklang['whyCantIDeleteThisStatusReason'].'"></i>';
-                                } else
-                                {
-                                    echo '<input type="checkbox" onclick="toggleRow(\'s'.$row['ID'].'_row\')" name="s'.$row['ID'].'_delete" value="1">';
-                                }
-                                echo '</td>'; //Delete status?
-                                echo '</tr>';
-                            }
-
-                            //Print out an additional blank space for adding a status
-                            echo '<tr class="info">';
-                            echo '<td><b>'.$hesklang['addNew'].'</b></td>';
-                            echo '<td><input type="text" class="form-control" name="sN_key" value="" placeholder="'.htmlspecialchars($hesklang['language_key']).'"></td>'; // Language File Key
-                            echo '<td><input type="text" class="form-control" name="sN_textColor" value="" placeholder="'.htmlspecialchars($hesklang['textColor']).'"></td>'; // Text Color
-                            echo '<td>
-                                        <select class="form-control" name="sN_closable">
-                                            <option value="yes">'.$hesklang['yes_title_case'].'</option>
-                                            <option value="conly">'.$hesklang['customers_only'].'</option>
-                                            <option value="sonly">'.$hesklang['staff_only'].'</option>
-                                            <option value="no">'.$hesklang['no_title_case'].'</option>
-                                        </select>
-                                    </td>';
-                            echo '<td><input type="checkbox" name="sN_isClosed" value="1"></td>'; // Resolved Status?
-                            echo '<td></td>'; //Empty placeholder where the delete row is.
-                            echo '</tr>';
+                            $j = 1;
+                            foreach ($statuses as $key => $row):
                             ?>
+                                <tr id="s<?php echo $row['ID']; ?>_row">
+                                    <td style="color: <?php echo $row['TextColor']; ?>; font-weight: bold">
+                                        <?php echo $row['text']; ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        if ($row['Closable'] == 'yes') {
+                                            echo $hesklang['yes_title_case'];
+                                        } elseif ($row['Closable'] == 'conly') {
+                                            echo $hesklang['customers_only'];
+                                        } elseif ($row['Closable'] == 'sonly') {
+                                            echo $hesklang['staff_only'];
+                                        } elseif ($row['Closable'] == 'no') {
+                                            echo $hesklang['no_title_case'];
+                                        }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        if ($row['IsClosed']) {
+                                            echo '<i class="fa fa-check-circle icon-link" style="color: green;"></i>';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <span data-toggle="modal" data-target="#modal-status-<?php echo $row['ID']; ?>" style="cursor: pointer;">
+                                            <i class="fa fa-pencil icon-link" style="color: orange"
+                                               data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
+                                        </span>
+                                        <?php echoArrows($j, $numberOfStatuses, $row['ID']); ?>
+                                        <span data-toggle="modal" data-target="#modal-status-delete-<?php echo $row['ID']; ?>" style="cursor: pointer;">
+                                            <i class="fa fa-times icon-link" style="color: red"
+                                               data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php
+                                $j++;
+                                endforeach; ?>
                             </tbody>
                         </table>
                     </div>
-                    <h6 style="font-weight: bold"><?php echo $hesklang['defaultStatusForAction']; ?></h6>
-                    <div class="footerWithBorder blankSpace"></div>
-                    <div class="form-group">
-                        <label for="newTicket" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isNewTicketMsg']; ?></label>
-                        <div class="col-sm-6 col-xs-12">
-                            <select name="newTicket" class="form-control" id="newTicket">
-                                <?php
-                                $statusesRS = hesk_dbQuery($openStatusesSql);
-                                while ($row = $statusesRS->fetch_assoc())
-                                {
-                                    $selectedEcho = ($row['IsNewTicketStatus'] == 1) ? 'selected="selected"' : '';
-                                    echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['Key']].'</option>';
-                                }
-                                ?>
-                            </select>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4><?php echo $hesklang['defaultStatusForAction']; ?></h4>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="closedByClient" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isClosedByClientMsg']; ?></label>
-                        <div class="col-sm-6 col-xs-12">
-                            <select name="closedByClient" class="form-control" id="closedByClient">
-                                <?php
-                                $statusesRS = hesk_dbQuery($closedStatusesSql);
-                                while ($row = $statusesRS->fetch_assoc())
-                                {
-                                    $selectedEcho = ($row['IsClosedByClient'] == 1) ? 'selected="selected"' : '';
-                                    echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['Key']].'</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="replyFromClient" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isRepliedByClientMsg']; ?></label>
-                        <div class="col-sm-6 col-xs-12">
-                            <select name="replyFromClient" class="form-control" id="replyFromClient">
-                                <?php
-                                $statusesRS = hesk_dbQuery($openStatusesSql);
-                                while ($row = $statusesRS->fetch_assoc())
-                                {
-                                    $selectedEcho = ($row['IsCustomerReplyStatus'] == 1) ? 'selected="selected"' : '';
-                                    echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['Key']].'</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="staffClosedOption" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isStaffClosedOptionMsg']; ?></label>
-                        <div class="col-sm-6 col-xs-12">
-                            <select name="staffClosedOption" class="form-control" id="staffClosedOption">
-                                <?php
-                                $statusesRS = hesk_dbQuery($closedStatusesSql);
-                                while ($row = $statusesRS->fetch_assoc())
-                                {
-                                    $selectedEcho = ($row['IsStaffClosedOption'] == 1) ? 'selected="selected"' : '';
-                                    echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['Key']].'</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="staffReopenedStatus" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isStaffReopenedStatusMsg']; ?></label>
-                        <div class="col-sm-6 col-xs-12">
-                            <select name="staffReopenedStatus" class="form-control" id="staffReopenedStatus">
-                                <?php
-                                $statusesRS = hesk_dbQuery($openStatusesSql);
-                                while ($row = $statusesRS->fetch_assoc())
-                                {
-                                    $selectedEcho = ($row['IsStaffReopenedStatus'] == 1) ? 'selected="selected"' : '';
-                                    echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['Key']].'</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="defaultStaffReplyStatus" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isDefaultStaffReplyStatusMsg']; ?></label>
-                        <div class="col-sm-6 col-xs-12">
-                            <select name="defaultStaffReplyStatus" class="form-control" id="defaultStaffReplyStatus">
-                                <?php
-                                $statusesRS = hesk_dbQuery($openStatusesSql);
-                                while ($row = $statusesRS->fetch_assoc())
-                                {
-                                    $selectedEcho = ($row['IsDefaultStaffReplyStatus'] == 1) ? 'selected="selected"' : '';
-                                    echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['Key']].'</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="lockedTicketStatus" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['lockedTicketStatusMsg']; ?></label>
-                        <div class="col-sm-6 col-xs-12">
-                            <select name="lockedTicketStatus" class="form-control" id="lockedTicketStatus">
-                                <?php
-                                $statusesRS = hesk_dbQuery($statusesSql);
-                                while ($row = $statusesRS->fetch_assoc())
-                                {
-                                    $selectedEcho = ($row['LockedTicketStatus'] == 1) ? 'selected="selected"' : '';
-                                    echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['Key']].'</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="autocloseTicketOption" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['autoclose_ticket_status']; ?></label>
-                        <div class="col-sm-6 col-xs-12">
-                            <select name="autocloseTicketOption" class="form-control" id="autocloseTicketOption">
-                                <?php
-                                $statusesRS = hesk_dbQuery($closedStatusesSql);
-                                while ($row = $statusesRS->fetch_assoc())
-                                {
-                                    $selectedEcho = ($row['IsAutocloseOption'] == 1) ? 'selected' : '';
-                                    echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.$hesklang[$row['Key']].'</option>';
-                                }
-                                ?>
-                            </select>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="newTicket" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isNewTicketMsg']; ?></label>
+                                <div class="col-sm-6 col-xs-12">
+                                    <select name="newTicket" class="form-control" id="newTicket">
+                                        <?php
+                                        foreach ($statuses as $key => $row)
+                                        {
+                                            if ($row['IsClosed'] == 1) {
+                                                continue;
+                                            }
+
+                                            $selectedEcho = ($row['IsNewTicketStatus'] == 1) ? 'selected="selected"' : '';
+                                            echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="closedByClient" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isClosedByClientMsg']; ?></label>
+                                <div class="col-sm-6 col-xs-12">
+                                    <select name="closedByClient" class="form-control" id="closedByClient">
+                                        <?php
+                                        foreach ($statuses as $key => $row)
+                                        {
+                                            if ($row['IsClosed'] == 0) {
+                                                continue;
+                                            }
+
+                                            $selectedEcho = ($row['IsClosedByClient'] == 1) ? 'selected="selected"' : '';
+                                            echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="replyFromClient" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isRepliedByClientMsg']; ?></label>
+                                <div class="col-sm-6 col-xs-12">
+                                    <select name="replyFromClient" class="form-control" id="replyFromClient">
+                                        <?php
+                                        foreach ($statuses as $key => $row)
+                                        {
+                                            if ($row['IsClosed'] == 1) {
+                                                continue;
+                                            }
+
+                                            $selectedEcho = ($row['IsCustomerReplyStatus'] == 1) ? 'selected="selected"' : '';
+                                            echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="staffClosedOption" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isStaffClosedOptionMsg']; ?></label>
+                                <div class="col-sm-6 col-xs-12">
+                                    <select name="staffClosedOption" class="form-control" id="staffClosedOption">
+                                        <?php
+                                        foreach ($statuses as $key => $row)
+                                        {
+                                            if ($row['IsClosed'] == 0) {
+                                                continue;
+                                            }
+
+                                            $selectedEcho = ($row['IsStaffClosedOption'] == 1) ? 'selected="selected"' : '';
+                                            echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="staffReopenedStatus" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isStaffReopenedStatusMsg']; ?></label>
+                                <div class="col-sm-6 col-xs-12">
+                                    <select name="staffReopenedStatus" class="form-control" id="staffReopenedStatus">
+                                        <?php
+                                        foreach ($statuses as $key => $row)
+                                        {
+                                            if ($row['IsClosed'] == 1) {
+                                                continue;
+                                            }
+
+                                            $selectedEcho = ($row['IsStaffReopenedStatus'] == 1) ? 'selected="selected"' : '';
+                                            echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="defaultStaffReplyStatus" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isDefaultStaffReplyStatusMsg']; ?></label>
+                                <div class="col-sm-6 col-xs-12">
+                                    <select name="defaultStaffReplyStatus" class="form-control" id="defaultStaffReplyStatus">
+                                        <?php
+                                        foreach ($statuses as $key => $row)
+                                        {
+                                            if ($row['IsClosed'] == 1) {
+                                                continue;
+                                            }
+
+                                            $selectedEcho = ($row['IsDefaultStaffReplyStatus'] == 1) ? 'selected="selected"' : '';
+                                            echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lockedTicketStatus" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['lockedTicketStatusMsg']; ?></label>
+                                <div class="col-sm-6 col-xs-12">
+                                    <select name="lockedTicketStatus" class="form-control" id="lockedTicketStatus">
+                                        <?php
+                                        foreach ($statuses as $key => $row)
+                                        {
+                                            $selectedEcho = ($row['LockedTicketStatus'] == 1) ? 'selected="selected"' : '';
+                                            echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="autocloseTicketOption" class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['autoclose_ticket_status']; ?></label>
+                                <div class="col-sm-6 col-xs-12">
+                                    <select name="autocloseTicketOption" class="form-control" id="autocloseTicketOption">
+                                        <?php
+                                        foreach ($statuses as $key => $row)
+                                        {
+                                            if ($row['IsClosed'] == 0) {
+                                                continue;
+                                            }
+
+                                            $selectedEcho = ($row['IsAutocloseOption'] == 1) ? 'selected' : '';
+                                            echo '<option value="'.$row['ID'].'" '.$selectedEcho.'>'.mfh_getDisplayTextForStatusId($row['ID']).'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-sm-offset-6">
@@ -298,140 +317,399 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 </div>
 
 <?php
+foreach ($statuses as $status) {
+    buildEditModal($status['ID']);
+    buildConfirmDeleteModal($status['ID']);
+}
+buildCreateModal();
+
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
+
+function buildConfirmDeleteModal($statusId) {
+    global $hesklang;
+
+    ?>
+    <div class="modal fade" id="modal-status-delete-<?php echo $statusId; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><?php echo $hesklang['confirm_delete_status_question']; ?></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p><?php echo $hesklang['confirm_delete_status']; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="a" value="create">
+                    <div class="btn-group">
+                        <a href="manage_statuses.php?a=delete&id=<?php echo $statusId; ?>" class="btn btn-danger">
+                            <?php echo $hesklang['delete']; ?>
+                        </a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['cancel']; ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+function echoArrows($index, $numberOfStatuses, $statusId) {
+    global $hesklang, $modsForHesk_settings;
+
+    if ($modsForHesk_settings['statuses_order_column'] == 'name') {
+        return;
+    }
+
+    if ($index !== 1) {
+        // Display move up
+        echo '<a href="manage_statuses.php?a=sort&move=-15&id='.$statusId.'">
+            <i class="fa fa-arrow-up icon-link" style="color: green" data-toggle="tooltip"
+            title="'.htmlspecialchars($hesklang['move_up']).'"></i></a> ';
+    } else {
+        echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;"> ';
+    }
+
+    if ($index !== $numberOfStatuses) {
+        // Display move down
+        echo '<a href="manage_statuses.php?a=sort&move=15&id='.$statusId.'">
+            <i class="fa fa-arrow-down icon-link" style="color: green" data-toggle="tooltip"
+            title="'.htmlspecialchars($hesklang['move_dn']).'"></i></a>';
+    } else {
+        echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;">';
+    }
+
+}
+
+function buildCreateModal() {
+    global $hesklang, $hesk_settings;
+
+    $languages = array();
+    foreach ($hesk_settings['languages'] as $key => $value) {
+        $languages[$key] = $hesk_settings['languages'][$key]['folder'];
+    }
+?>
+    <div class="modal fade" id="modal-status-new" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="manage_statuses.php" role="form" method="post" class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><?php echo $hesklang['create_new_status_title']; ?></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4><?php echo $hesklang['status_name_title']; ?></h4>
+                                <div class="footerWithBorder blankSpace"></div>
+                                <?php foreach ($languages as $language => $languageCode): ?>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name[<?php echo $language; ?>]">
+                                        <?php echo $language; ?>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" placeholder="<?php echo htmlspecialchars($language); ?>"
+                                            class="form-control" name="name[<?php echo $language; ?>]">
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="col-md-6">
+                                <h4><?php echo $hesklang['properties']; ?></h4>
+                                <div class="footerWithBorder blankSpace"></div>
+                                <div class="form-group">
+                                    <label for="text-color" class="col-sm-4 control-label"><?php echo $hesklang['textColor']; ?></label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="text-color" class="form-control"
+                                               placeholder="<?php echo htmlspecialchars($hesklang['textColor']); ?>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="closable" class="col-sm-4 control-label"><?php echo $hesklang['closable']; ?></label>
+                                    <div class="col-sm-8">
+                                        <select name="closable" class="form-control">
+                                            <option value="yes"><?php echo $hesklang['yes_title_case']; ?></option>
+                                            <option value="conly"><?php echo $hesklang['customers_only']; ?></option>
+                                            <option value="sonly"><?php echo $hesklang['staff_only']; ?></option>
+                                            <option value="no"><?php echo $hesklang['no_title_case']; ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="closed" class="col-sm-4 control-label"><?php echo $hesklang['closed_title']; ?></label>
+                                    <div class="col-sm-8">
+                                        <select name="closed" class="form-control">
+                                            <option value="1"><?php echo $hesklang['yes_title_case']; ?></option>
+                                            <option value="0"><?php echo $hesklang['no_title_case']; ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="a" value="create">
+                        <div class="btn-group">
+                            <input type="submit" class="btn btn-success" value="<?php echo $hesklang['save_changes']; ?>">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['close_modal_without_saving']; ?></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+function buildEditModal($statusId) {
+    global $hesklang, $hesk_settings;
+
+    // Get status information for this status
+    $getStatusRs = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".intval($statusId));
+    $status = hesk_dbFetchAssoc($getStatusRs);
+
+    $textRs = hesk_dbQuery("SELECT `language`, `text` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref`
+        WHERE `status_id` = ".intval($statusId));
+    $textArray = array();
+    while ($row = hesk_dbFetchAssoc($textRs)) {
+        $textArray[$row['language']] = $row['text'];
+    }
+
+    $languages = array();
+    foreach ($hesk_settings['languages'] as $key => $value) {
+        $languages[$key] = $hesk_settings['languages'][$key]['folder'];
+    }
+    ?>
+    <div class="modal fade" id="modal-status-<?php echo $statusId; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="manage_statuses.php" role="form" method="post" class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><?php echo sprintf($hesklang['editing_status_x'], $status['TextColor'], mfh_getDisplayTextForStatusId($statusId)); ?></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4><?php echo $hesklang['status_name_title']; ?></h4>
+                                <div class="footerWithBorder blankSpace"></div>
+                                <?php foreach ($languages as $language => $languageCode):
+                                    $warning = '';
+                                    if (isset($textArray[$language])) {
+                                        $text = $textArray[$language];
+                                    } else {
+                                        hesk_setLanguage($language);
+                                        $text = $hesklang[$status['Key']];
+                                        hesk_resetLanguage();
+                                        $warning = 'has-warning';
+                                    }
+                                ?>
+                                    <div class="form-group <?php echo $warning; ?>">
+                                        <label class="col-sm-3 control-label" for="name[<?php echo $language; ?>]">
+                                            <?php
+                                            if ($warning != '') {
+                                                echoWarningForStatus();
+                                            }
+                                            echo $language;
+                                            ?>
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="text" placeholder="<?php echo htmlspecialchars($language); ?>"
+                                                   class="form-control" name="name[<?php echo $language; ?>]"
+                                                   value="<?php echo htmlspecialchars($text); ?>">
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="col-md-6">
+                                <h4><?php echo $hesklang['properties']; ?></h4>
+                                <div class="footerWithBorder blankSpace"></div>
+                                <div class="form-group">
+                                    <label for="text-color" class="col-sm-4 control-label"><?php echo $hesklang['textColor']; ?></label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="text-color" class="form-control"
+                                               value="<?php echo $status['TextColor']; ?>"
+                                               placeholder="<?php echo htmlspecialchars($hesklang['textColor']); ?>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="closable" class="col-sm-4 control-label"><?php echo $hesklang['closable']; ?></label>
+                                    <div class="col-sm-8">
+                                        <?php
+                                        $yesSelected = $status['Closable'] == 'yes' ? 'selected' : '';
+                                        $customersOnlySelected = $status['Closable'] == 'conly' ? 'selected' : '';
+                                        $staffOnlySelected = $status['Closable'] == 'sonly' ? 'selected' : '';
+                                        $noSelected = $status['Closable'] == 'no' ? 'selected' : '';
+                                        ?>
+                                        <select name="closable" class="form-control">
+                                            <option value="yes" <?php echo $yesSelected; ?>><?php echo $hesklang['yes_title_case']; ?></option>
+                                            <option value="conly" <?php echo $customersOnlySelected; ?>><?php echo $hesklang['customers_only']; ?></option>
+                                            <option value="sonly" <?php echo $staffOnlySelected; ?>><?php echo $hesklang['staff_only']; ?></option>
+                                            <option value="no" <?php echo $noSelected; ?>><?php echo $hesklang['no_title_case']; ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="closed" class="col-sm-4 control-label"><?php echo $hesklang['closed_title']; ?></label>
+                                    <div class="col-sm-8">
+                                        <?php
+                                        $yes = $status['IsClosed'] == 1 ? 'selected' : '';
+                                        $no = $status['IsClosed'] == 1 ? '' : 'selected';
+                                        ?>
+                                        <select name="closed" class="form-control">
+                                            <option value="1" <?php echo $yes; ?>><?php echo $hesklang['yes_title_case']; ?></option>
+                                            <option value="0" <?php echo $no; ?>><?php echo $hesklang['no_title_case']; ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="a" value="update">
+                        <input type="hidden" name="status-id" value="<?php echo $statusId; ?>">
+                        <div class="btn-group">
+                            <input type="submit" class="btn btn-success" value="<?php echo $hesklang['save_changes']; ?>">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['close_modal_without_saving']; ?></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+function echoWarningForStatus() {
+    global $hesklang;
+
+    echo '<i class="fa fa-exclamation-triangle" data-toggle="tooltip" title="'.htmlspecialchars($hesklang['status_not_in_database']).'"></i> ';
+}
+
+function createStatus() {
+    global $hesklang, $hesk_settings;
+
+    hesk_dbConnect();
+
+    // Create the new status record
+    $isClosed = hesk_POST('closed');
+    $closable = hesk_POST('closable');
+    $textColor = hesk_POST('text-color');
+    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`Key`, `TextColor`, `IsClosed`, `Closable`)
+		VALUES ('STORED IN XREF TABLE', '".hesk_dbEscape($textColor)."', ".intval($isClosed).", '".hesk_dbEscape($closable)."')";
+    hesk_dbQuery($insert);
+
+    $newStatusId = hesk_dbInsertID();
+
+    // For each language, create a value in the xref table
+    foreach (hesk_POST_array('name') as $language => $translation) {
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (`language`, `text`, `status_id`)
+            VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($translation)."', ".intval($newStatusId).")");
+    }
+
+    hesk_process_messages($hesklang['new_status_created'],'manage_statuses.php','SUCCESS');
+}
+
+function updateStatus() {
+    global $hesklang, $hesk_settings;
+
+    $statusId = hesk_POST('status-id');
+    $isClosed = hesk_POST('closed');
+    $closable = hesk_POST('closable');
+    $textColor = hesk_POST('text-color');
+    $update = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`
+        SET `TextColor` = '".hesk_dbEscape($textColor)."',
+            `IsClosed` = ".intval($isClosed).",
+            `Closable` = '".hesk_dbEscape($closable)."'
+        WHERE `ID` = ".intval($statusId);
+    hesk_dbQuery($update);
+
+    // For each language, delete the xref record and insert the new ones
+    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` WHERE `status_id` = ".intval($statusId));
+    foreach (hesk_POST_array('name') as $language => $translation) {
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (`language`, `text`, `status_id`)
+            VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($translation)."', ".intval($statusId).")");
+    }
+
+    hesk_process_messages($hesklang['ticket_status_updated'],'manage_statuses.php','SUCCESS');
+}
+
+function deleteStatus() {
+    global $hesklang, $hesk_settings;
+
+    $statusId = hesk_GET('id');
+
+    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` WHERE `status_id` = ".intval($statusId));
+    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".intval($statusId));
+
+    hesk_process_messages($hesklang['ticket_status_deleted'],'manage_statuses.php','SUCCESS');
+}
+
+function moveStatus() {
+    global $hesk_settings, $hesklang;
+
+    $statusId = intval(hesk_GET('id'));
+    $statusMove = intval(hesk_GET('move'));
+
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `sort` = `sort`+".intval($statusMove)."
+        WHERE `ID` = '".intval($statusId)."' LIMIT 1");
+
+    /* Update all category fields with new order */
+    $res = hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ORDER BY `sort` ASC");
+
+    $i = 10;
+    while ($myStatus = hesk_dbFetchAssoc($res))
+    {
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `sort`=".intval($i)."
+            WHERE `ID`='".intval($myStatus['ID'])."' LIMIT 1");
+        $i += 10;
+    }
+
+    hesk_process_messages($hesklang['status_sort_updated'],'manage_statuses.php','SUCCESS');
+}
 
 function save() {
     global $hesklang, $hesk_settings;
 
-    //-- Before we do anything, make sure the statuses are valid.
-    $rows = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`');
-    while ($row = $rows->fetch_assoc())
-    {
-        if (!isset($_POST['s'.$row['ID'].'_delete']))
-        {
-            validateStatus($_POST['s'.$row['ID'].'_key'], $_POST['s'.$row['ID'].'_textColor']);
-        }
-    }
-
-    //-- Validate the new one if at least one of the fields are used / checked
-    if ($_POST['sN_key'] != null || $_POST['sN_textColor'] != null || isset($_POST['sN_isClosed']))
-    {
-        validateStatus($_POST['sN_key'], $_POST['sN_textColor']);
-    }
-
-    hesk_dbConnect();
-    $wasStatusDeleted = false;
-    //-- Get all the status IDs
-    $statusesSql = 'SELECT * FROM `'.$hesk_settings['db_pfix'].'statuses`';
-    $results = hesk_dbQuery($statusesSql);
-    while ($row = $results->fetch_assoc())
-    {
-        //-- If the status is marked for deletion, delete it and skip everything below.
-        if (isset($_POST['s'.$row['ID'].'_delete']))
-        {
-            $delete = "DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ?";
-            $stmt = hesk_dbConnect()->prepare($delete);
-            $stmt->bind_param('i', $row['ID']);
-            $stmt->execute();
-            $wasStatusDeleted = true;
-        } else
-        {
-            //-- Update the information in the database with what is on the page
-            $query = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `Key` = ?, `TextColor` = ?, `IsClosed` = ?, `Closable` = ? WHERE `ID` = ?";
-            $stmt = hesk_dbConnect()->prepare($query);
-            $isStatusClosed = (isset($_POST['s'.$row['ID'].'_isClosed']) ? 1 : 0);
-            $stmt->bind_param('sssisi', $_POST['s'.$row['ID'].'_key'], $_POST['s'.$row['ID'].'_textColor'], $isStatusClosed, $_POST['s'.$row['ID'].'_closable'], $row['ID']);
-            $stmt->execute();
-        }
-    }
-
-    //-- If any statuses were deleted, re-index them before adding a new one
-    if ($wasStatusDeleted) {
-        //-- First drop and re-add the ID column
-        hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` DROP COLUMN `ID`");
-        hesk_dbQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD `ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
-
-        //-- Since statuses should be zero-based, but are now one-based, subtract one from each ID
-        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `ID` = `ID`-1");
-    }
-
-    //-- Insert the addition if there is anything to add
-    if ($_POST['sN_key'] != null && $_POST['sN_textColor'] != null)
-    {
-        //-- The next ID is equal to the number of rows, since the IDs are zero-indexed.
-        $nextValue = hesk_dbQuery('SELECT * FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'statuses`')->num_rows;
-        $isClosed = isset($_POST['sN_isClosed']) ? 1 : 0;
-        $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`ID`, `Key`, `TextColor`, `IsClosed`, `Closable`)
-		VALUES (".$nextValue.", '".hesk_dbEscape($_POST['sN_key'])."', '".hesk_dbEscape($_POST['sN_textColor'])."', ".$isClosed.", '".hesk_dbEscape($_POST['sN_closable'])."')";
-        hesk_dbQuery($insert);
-    }
-
     //-- Update default status for actions
     $defaultQuery = "UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET ";
 
-    hesk_dbConnect()->query($defaultQuery . "`IsNewTicketStatus` = 0");
-    $updateQuery = $defaultQuery . "`IsNewTicketStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['newTicket']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsNewTicketStatus` = 0");
+    $updateQuery = $defaultQuery . "`IsNewTicketStatus` = 1 WHERE `ID` = ".intval($_POST['newTicket']);
+    hesk_dbQuery($updateQuery);
 
+    hesk_dbQuery($defaultQuery . "`IsClosedByClient` = 0");
+    $updateQuery = $defaultQuery . "`IsClosedByClient` = 1 WHERE `ID` = ".intval($_POST['closedByClient']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsClosedByClient` = 0");
-    $updateQuery = $defaultQuery . "`IsClosedByClient` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['closedByClient']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsCustomerReplyStatus` = 0");
+    $updateQuery = $defaultQuery . "`IsCustomerReplyStatus` = 1 WHERE `ID` = ".intval($_POST['replyFromClient']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsCustomerReplyStatus` = 0");
-    $updateQuery = $defaultQuery . "`IsCustomerReplyStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['replyFromClient']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsStaffClosedOption` = 0");
+    $updateQuery = $defaultQuery . "`IsStaffClosedOption` = 1 WHERE `ID` = ".intval($_POST['staffClosedOption']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsStaffClosedOption` = 0");
-    $updateQuery = $defaultQuery . "`IsStaffClosedOption` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['staffClosedOption']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsStaffReopenedStatus` = 0");
+    $updateQuery = $defaultQuery . "`IsStaffReopenedStatus` = 1 WHERE `ID` = ".intval($_POST['staffReopenedStatus']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsStaffReopenedStatus` = 0");
-    $updateQuery = $defaultQuery . "`IsStaffReopenedStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['staffReopenedStatus']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsDefaultStaffReplyStatus` = 0");
+    $updateQuery = $defaultQuery . "`IsDefaultStaffReplyStatus` = 1 WHERE `ID` = ".intval($_POST['defaultStaffReplyStatus']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`IsDefaultStaffReplyStatus` = 0");
-    $updateQuery = $defaultQuery . "`IsDefaultStaffReplyStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['defaultStaffReplyStatus']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`LockedTicketStatus` = 0");
+    $updateQuery = $defaultQuery . "`LockedTicketStatus` = 1 WHERE `ID` = ".intval($_POST['lockedTicketStatus']);
+    hesk_dbQuery($updateQuery);
 
-    hesk_dbConnect()->query($defaultQuery . "`LockedTicketStatus` = 0");
-    $updateQuery = $defaultQuery . "`LockedTicketStatus` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['lockedTicketStatus']);
-    $stmt->execute();
-
-    hesk_dbConnect()->query($defaultQuery . "`IsAutocloseOption` = 0");
-    $updateQuery = $defaultQuery . "`IsAutocloseOption` = 1 WHERE `ID` = ?";
-    $stmt = hesk_dbConnect()->prepare($updateQuery);
-    $stmt->bind_param('i', $_POST['autocloseTicketOption']);
-    $stmt->execute();
+    hesk_dbQuery($defaultQuery . "`IsAutocloseOption` = 0");
+    $updateQuery = $defaultQuery . "`IsAutocloseOption` = 1 WHERE `ID` = ".intval($_POST['autocloseTicketOption']);
+    hesk_dbQuery($updateQuery);
 
     hesk_process_messages($hesklang['statuses_saved'],'manage_statuses.php','SUCCESS');
-}
-
-function validateStatus($key, $textColor)
-{
-    global $hesklang;
-
-    //-- Validation logic
-    if ($key == '')
-    {
-        hesk_process_messages($hesklang['key_required'], 'manage_statuses.php');
-    } elseif ($textColor == '')
-    {
-        hesk_process_messages($hesklang['textColorRequired'], 'manage_statuses.php');
-    }
 }

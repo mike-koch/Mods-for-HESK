@@ -1,5 +1,8 @@
 <?php
+define('IN_SCRIPT', 1);
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'inc/common.inc.php');
+echo $hesklang['yes'];
 
 function executeQuery($sql) {
     global $hesk_last_query;
@@ -561,6 +564,39 @@ function execute240Scripts() {
       VALUES ('view_ticket', '1')");
     executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
       VALUES ('knowledgebase', '1')");
+
+    executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (
+      `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `language` VARCHAR(200) NOT NULL,
+      `text` VARCHAR(200) NOT NULL,
+      `status_id` INT NOT NULL,
+      PRIMARY KEY (`id`)) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD COLUMN `sort` INT");
+    $statusesRs = executeQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ORDER BY `ID` ASC");
+    $i = 10;
+    while ($myStatus = hesk_dbFetchAssoc($statusesRs)) {
+        hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `sort`=".intval($i)."
+            WHERE `id`='".intval($myStatus['ID'])."' LIMIT 1");
+        $i += 10;
+    }
+}
+
+function initializeXrefTable() {
+    global $hesk_settings, $hesklang;
+
+    $languages = array();
+    foreach ($hesk_settings['languages'] as $key => $value) {
+        $languages[$key] = $hesk_settings['languages'][$key]['folder'];
+    }
+
+    $statusesRs = executeQuery("SELECT `ID`, `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+    while ($row = hesk_dbFetchAssoc($statusesRs)) {
+        foreach ($languages as $language => $languageCode) {
+            $sql = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (`language`, `text`, `status_id`)
+                VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($hesklang[$row['Key']])."', ".intval($row['ID']).")";
+            executeQuery($sql);
+        }
+    }
 }
 
 function execute240FileUpdate() {

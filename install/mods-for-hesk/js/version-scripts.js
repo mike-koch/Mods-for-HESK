@@ -62,7 +62,9 @@ function executeUpdate(version, cssclass, formattedVersion) {
         success: function(data) {
             markUpdateAsSuccess(cssclass, formattedVersion);
             if (version == 200) {
-                migrateIpEmailBans('banmigrate', cssclass);
+                migrateIpEmailBans('banmigrate', 'banmigrate');
+            } else if (version == 240) {
+                initializeStatuses('initialize-statuses', 'initialize-statuses');
             } else {
                 processUpdates(version);
             }
@@ -83,7 +85,6 @@ function migrateIpEmailBans(version, cssclass) {
         data: { task: 'ip-email-bans' },
         success: function(data) {
             var parsedData = $.parseJSON(data);
-            console.info(parsedData);
             if (parsedData.status == 'ATTENTION') {
                 appendToInstallConsole('<tr><td><span class="label label-warning">WARNING</span></td><td>Your response is needed. Please check above.</td></tr>');
                 markUpdateAsAttention(version);
@@ -94,9 +95,31 @@ function migrateIpEmailBans(version, cssclass) {
         },
         error: function(data) {
             appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>' + data.responseText + '</td></tr>');
-            markUpdateAsFailure(cssclass);
+            markUpdateAsFailure(version);
         }
     });
+}
+
+function initializeStatuses(version, cssclass) {
+    startVersionUpgrade(version);
+    appendToInstallConsole('<tr><td><span class="label label-info">INFO</span></td><td>Initializing Statuses</td></tr>');
+    $.ajax({
+        type: 'POST',
+        url: 'ajax/task-ajax.php',
+        data: { task: 'initialize-statuses' },
+        success: function(data) {
+            markUpdateAsSuccess(cssclass, 'Initializing Statuses');
+            statusesInitialized();
+        },
+        error: function(data) {
+            appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>' + data.responseText + '</td></tr>');
+            markUpdateAsFailure(version);
+        }
+    });
+}
+
+function statusesInitialized() {
+    processUpdates(240);
 }
 
 
