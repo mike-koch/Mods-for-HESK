@@ -52,4 +52,4 @@ $modsForHesk_settings['request_location'] = 0;
 $modsForHesk_settings['category_order_column'] = 'cat_order';
 
 //-- Setting for using rich-text editor for tickets. 0 = Disable, 1 = Enable
-$modsForHesk_settings['rich_text_for_tickets'] = 1;
+$modsForHesk_settings['rich_text_for_tickets'] = 0;

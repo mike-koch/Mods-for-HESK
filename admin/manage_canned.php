@@ -75,9 +75,19 @@ else {return false;}
 }
 
 function hesk_insertTag(tag) {
-var text_to_insert = '%%'+tag+'%%';
-hesk_insertAtCursor(document.form1.msg, text_to_insert);
-document.form1.msg.focus();
+    var text_to_insert = '%%'+tag+'%%';
+    var msg = '';
+    <?php
+    if ($modsForHesk_settings['rich_text_for_tickets']) { ?>
+        msg = tinymce.get("message").getContent();
+        tinymce.get("message").setContent('');
+        tinymce.get("message").execCommand('mceInsertRawHTML', false, msg + text_to_insert);
+    <?php } else { ?>
+        msg = document.getElementById('message').value;
+        document.getElementById('message').value = msg + text_to_insert;
+    <?php }
+    ?>
+    document.form1.msg.focus();
 }
 
 function hesk_insertAtCursor(myField, myValue) {
@@ -270,35 +280,6 @@ function hesk_insertAtCursor(myField, myValue) {
             }
             //-->
         </script>
-        <!--<script language="javascript" type="text/javascript"><!--
-        var myMsgTxt = new Array();
-        myMsgTxt[0]='';
-        var myTitle = new Array();
-        myTitle[0]='';
-
-        <?php
-/*        echo $javascript_titles;
-        echo $javascript_messages;
-        */?>
-
-        function setMessage(msgid) {
-            if (document.getElementById) {
-                document.getElementById('HeskMsg').innerHTML='<textarea class="form-control" name="msg" rows="15" cols="70">'+myMsgTxt[msgid]+'</textarea>';
-                document.getElementById('HeskTitle').innerHTML='<input type="text" class="form-control" name="name" size="40" maxlength="50" value="'+myTitle[msgid]+'">';
-            } else {
-                document.form1.msg.value=myMsgTxt[msgid];
-                document.form1.name.value=myTitle[msgid];
-            }
-
-            if (msgid==0) {
-                document.form1.a[0].checked=true;
-            } else {
-                document.form1.a[1].checked=true;
-            }
-        }
-        //-->
-        <!--</script>-->
-
         <?php
         /* This will handle error, success and notice messages */
         hesk_handle_messages();
