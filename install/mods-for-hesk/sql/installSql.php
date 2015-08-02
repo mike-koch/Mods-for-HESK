@@ -95,6 +95,13 @@ function executePre140Scripts() {
     executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (ID, ShortNameContentKey, TicketViewContentKey, TextColor, IsNewTicketStatus, IsClosed, IsClosedByClient, IsCustomerReplyStatus,
 		IsStaffClosedOption, IsStaffReopenedStatus, IsDefaultStaffReplyStatus, LockedTicketStatus)
 	VALUES (5, 'on_hold', 'on_hold', '#000000', 0, 0, 0, 0, 0, 0, 0, 0);");
+
+    $keyRs = executeQuery("SHOW KEYS FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE Key_name='statuses'");
+    if (hesk_dbNumRows($keyRs) == 0)
+    {
+        //-- Add the key
+        executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD KEY `statuses` (`status`)");
+    }
 }
 
 // Version 1.4.0
