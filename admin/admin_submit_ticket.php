@@ -42,6 +42,7 @@ require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
 require(HESK_PATH . 'inc/email_functions.inc.php');
+require(HESK_PATH . 'inc/htmLawed.php');
 require(HESK_PATH . 'inc/posting_functions.inc.php');
 
 hesk_session_start();
