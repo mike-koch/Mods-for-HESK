@@ -341,8 +341,11 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$
 {
 	global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket;
 
-	// Demo mode
-	if ( defined('HESK_DEMO') )
+	// Are we in demo mode or are all email fields blank? If so, don't send an email.
+	if ( defined('HESK_DEMO')
+        || (($to == NULL || $to == '')
+            && ($cc == NULL || count($cc) == 0)
+            && ($bcc == NULL || count($bcc) == 0)))
 	{
 		return true;
 	}
