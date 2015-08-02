@@ -98,11 +98,19 @@ $replies = hesk_dbNumRows($res);
 <title><?php echo $hesk_settings['hesk_title']; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $hesklang['ENCODING']; ?>">
 <style type="text/css">
-body, table, td, p
+body, table, td
 {
     color : black;
     font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size : <?php echo $hesk_settings['print_font_size']; ?>px;
+}
+p
+{
+    color: black;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: <?php echo $hesk_settings['print_font_size']; ?>px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 table
 {
@@ -159,7 +167,7 @@ $random=mt_rand(10000,99999);
 
 // Print ticket head
 echo '
-<h3>'.$ticket[subject].'</h3>
+<h3>'.$ticket['subject'].'</h3>
 <hr/>
 <table border="1" bordercolor="#FFFFFF" cellspacing="0" cellpadding="2" width="100%">
 
@@ -234,12 +242,21 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
 echo '</table><br>';
 
 // Print initial ticket message
-echo '<p>' . hesk_unhortenUrl($ticket['message']) . '</p>';
+$newMessage = hesk_unhortenUrl($ticket['message']);
+if ($modsForHesk_settings['rich_text_for_tickets'])
+{
+    $newMessage = hesk_html_entity_decode($newMessage);
+}
+echo '<p>' . $newMessage . '</p>';
 
 // Print replies
 while ($reply = hesk_dbFetchAssoc($res))
 {
 	$reply['dt'] = hesk_date($reply['dt'], true);
+    $theReply = hesk_unhortenUrl($reply['message']);
+    if ($modsForHesk_settings['rich_text_for_tickets']) {
+        $theReply = hesk_html_entity_decode($theReply);
+    }
 
     echo '
     <hr />
@@ -251,7 +268,7 @@ while ($reply = hesk_dbFetchAssoc($res))
 	</tr>
 	</table>
 
-    <p>' . hesk_unhortenUrl($reply['message']) . '</p>
+    <div class="message">' . $theReply . '</div>
     ';
 }
 

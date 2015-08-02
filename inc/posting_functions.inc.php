@@ -33,7 +33,7 @@
 *******************************************************************************/
 
 /* Check if this is a valid include */
-if (!defined('IN_SCRIPT')) {die('Invalid attempt');} 
+if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 /*** FUNCTIONS ***/
 
@@ -53,6 +53,8 @@ function hesk_newTicket($ticket, $isVerified = true)
     $defaultNewTicket = hesk_dbFetchAssoc($defaultNewTicketRs);
     $ticket['status'] = $defaultNewTicket['ID'];
     $tableName = $isVerified ? 'tickets' : 'stage_tickets';
+
+	$ticket['message'] = htmLawed($ticket['message'], array('safe' => 1, 'deny_attribute'=>'style'));
 
 	// Insert ticket into database
 	hesk_dbQuery("

@@ -516,6 +516,7 @@ $set['mfh_attachments'] = empty($_POST['email_attachments']) ? 0 : 1;
 $set['show_number_merged'] = empty($_POST['show_number_merged']) ? 0 : 1;
 $set['request_location'] = empty($_POST['request_location']) ? 0 : 1;
 $set['category_order_column'] = empty($_POST['category_order_column']) ? 'cat_order' : 'name';
+$set['rich_text_for_tickets'] = empty($_POST['rich_text_for_tickets']) ? 0 : 1;
 $set['statuses_order_column'] = empty($_POST['statuses_order_column']) ? 'sort' : 'name';
 
 if ($set['customer-email-verification-required'])
@@ -586,6 +587,9 @@ $modsForHesk_settings[\'request_location\'] = '.$set['request_location'].';
 
 //-- Column to sort categories by. Can be either \'name\' or \'cat_order\'
 $modsForHesk_settings[\'category_order_column\'] = \''.$set['category_order_column'].'\';
+
+//-- Setting for using rich-text editor for tickets. 0 = Disable, 1 = Enable
+$modsForHesk_settings[\'rich_text_for_tickets\'] = '.$set['rich_text_for_tickets'].';
 
 //-- Column to sort statuses by. Can be either \'sort\' or \'name\'
 $modsForHesk_settings[\'statuses_order_column\'] = \''.$set['statuses_order_column'].'\';';

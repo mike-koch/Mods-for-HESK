@@ -193,9 +193,14 @@
     font-size: 15px;
     background-color: #fff;
 }
-.ticketMessageBottom > p.message {
+.ticketMessageBottom > .message {
     margin-bottom: 0px;
 
+}
+
+.message > * {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .ticketMessage {

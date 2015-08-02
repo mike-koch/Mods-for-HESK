@@ -35,6 +35,7 @@
 define('IN_SCRIPT',1);
 define('HESK_PATH','./');
 define('HESK_NO_ROBOTS',1);
+define('WYSIWYG',1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -379,7 +380,7 @@ if (!$show['show']) {
                 <div class="ticketMessageBottom">
                      <!-- Message -->
                      <p><b><?php echo $hesklang['message']; ?>:</b></p>
-                     <p class="message"><?php echo $ticket['message']; ?><br />&nbsp;</p>
+                     <div class="message"><?php echo hesk_html_entity_decode($ticket['message']); ?></div>
                 </div>
                 <div class="ticketMessageTop">
                      <!-- Custom Fields after Message -->
@@ -578,7 +579,7 @@ exit();
 
 function hesk_printCustomerReplyForm($reopen=0)
 {
-	global $hesklang, $hesk_settings, $trackingID, $my_email;
+	global $hesklang, $hesk_settings, $trackingID, $my_email, $modsForHesk_settings;
 
 	// Already printed?
 	if (defined('REPLY_FORM'))
@@ -596,7 +597,29 @@ function hesk_printCustomerReplyForm($reopen=0)
         <div class="form-group">
             <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>: <span class="important">*</span></label>
             <div class="col-sm-9">
-                <textarea name="message" class="form-control" rows="12" cols="60"><?php if (isset($_SESSION['ticket_message'])) {echo stripslashes(hesk_input($_SESSION['ticket_message']));} ?></textarea>     
+                <textarea name="message" class="form-control htmlEditor" rows="12" cols="60"><?php if (isset($_SESSION['ticket_message'])) {echo stripslashes(hesk_input($_SESSION['ticket_message']));} ?></textarea>
+                <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+                    <script type="text/javascript">
+                        /* <![CDATA[ */
+                        tinyMCE.init({
+                            mode : "textareas",
+                            editor_selector : "htmlEditor",
+                            elements : "content",
+                            theme : "advanced",
+                            convert_urls : false,
+
+                            theme_advanced_buttons1 : "cut,copy,paste,|,undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
+                            theme_advanced_buttons2 : "sub,sup,|,charmap,|,bullist,numlist,|,outdent,indent,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,link,unlink,anchor,image,cleanup",
+                            theme_advanced_buttons3 : "",
+
+                            theme_advanced_toolbar_location : "top",
+                            theme_advanced_toolbar_align : "left",
+                            theme_advanced_statusbar_location : "bottom",
+                            theme_advanced_resizing : true
+                        });
+                        /* ]]> */
+                    </script>
+                <?php endif; ?>
             </div>
         </div>
         <?php
@@ -631,7 +654,11 @@ function hesk_printCustomerReplyForm($reopen=0)
 	        echo '<input type="hidden" name="reopen" value="1" />';
         }
         ?>
-	    <input type="submit" value="<?php echo $hesklang['submit_reply']; ?>" class="btn btn-default" />
+        <div class="form-group">
+            <div class="col-sm-9 col-sm-offset-3">
+                <input type="submit" value="<?php echo $hesklang['submit_reply']; ?>" class="btn btn-default" />
+            </div>
+        </div>
     </form>
 
 <?php
@@ -696,7 +723,7 @@ function hesk_printCustomerTicketReplies()
                 <div class="ticketMessageBottom">
                      <!-- Message -->
                      <p><b><?php echo $hesklang['message']; ?>:</b></p>
-			         <p class="message"><?php echo $reply['message']; ?></p> 
+			         <div class="message"><?php echo hesk_html_entity_decode($reply['message']); ?></div>
                 </div>
                 <div class="ticketMessageTop">
                      <?php hesk_listAttachments($reply['attachments'],$i);?>

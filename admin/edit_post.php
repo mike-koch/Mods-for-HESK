@@ -34,9 +34,11 @@
 
 define('IN_SCRIPT',1);
 define('HESK_PATH','../');
+define('WYSIWYG',1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
+require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -453,7 +455,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="form-group">
                 <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" name="message" rows="12" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" cols="60"><?php echo $ticket['message']; ?></textarea>
+                    <?php
+                    $message = $modsForHesk_settings['rich_text_for_tickets'] ? hesk_html_entity_decode($ticket['message']) : $ticket['message'];
+                    ?>
+                    <textarea class="form-control htmlEditor" name="message" rows="12" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" cols="60"><?php echo $message; ?></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -478,6 +483,28 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </form>
     </div>     
 </div>
+<?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        tinyMCE.init({
+            mode : "textareas",
+            editor_selector : "htmlEditor",
+            elements : "content",
+            theme : "advanced",
+            convert_urls : false,
+
+            theme_advanced_buttons1 : "cut,copy,paste,|,undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
+            theme_advanced_buttons2 : "sub,sup,|,charmap,|,bullist,numlist,|,outdent,indent,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,link,unlink,anchor,image,cleanup,code",
+            theme_advanced_buttons3 : "",
+
+            theme_advanced_toolbar_location : "top",
+            theme_advanced_toolbar_align : "left",
+            theme_advanced_statusbar_location : "bottom",
+            theme_advanced_resizing : true
+        });
+        /* ]]> */
+    </script>
+<?php endif; ?>
 
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');

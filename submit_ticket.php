@@ -56,6 +56,7 @@ hesk_check_kb_only();
 hesk_load_database_functions();
 require(HESK_PATH . 'inc/email_functions.inc.php');
 require(HESK_PATH . 'inc/posting_functions.inc.php');
+require(HESK_PATH . 'inc/htmLawed.php');
 
 // We only allow POST requests to this file
 if ( $_SERVER['REQUEST_METHOD'] != 'POST' )
@@ -256,7 +257,7 @@ else
 }
 
 $tmpvar['subject']  = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer['subject']=$hesklang['enter_ticket_subject'];
-$tmpvar['message']  = hesk_input( hesk_POST('message') ) or $hesk_error_buffer['message']=$hesklang['enter_message'];
+$tmpvar['message']  = hesk_input(hesk_POST('message')) or $hesk_error_buffer['message']=$hesklang['enter_message'];;
 
 // Is category a valid choice?
 if ($tmpvar['category'])
