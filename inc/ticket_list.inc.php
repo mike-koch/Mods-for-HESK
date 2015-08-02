@@ -404,8 +404,9 @@ if ($total > 0)
         // Print ticket status
         if ( hesk_show_column('status') )
         {
-            $statusName = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `Key`, `TextColor` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$ticket['status']));
-            $ticket['status']='<span style="color: '.$statusName['TextColor'].'">'.$hesklang[$statusName['Key']].'</span>';
+            $statusRS = hesk_dbQuery("SELECT `ID`, `TextColor` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE ID = ".$ticket['status']);
+            $statusName = hesk_dbFetchAssoc($statusRS);
+            $ticket['status']='<span style="color: '.$statusName['TextColor'].'">'.mfh_getDisplayTextForStatusId($statusName['ID']).'</span>';
             echo '<td class="'.$color.'">'.$ticket['status'].'&nbsp;</td>';
         }
 

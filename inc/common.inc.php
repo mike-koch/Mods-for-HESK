@@ -1948,3 +1948,28 @@ function hesk_getFeatureArray() {
         'can_change_notification_settings', /* User can change notification settings */
     );
 }
+
+function mfh_doesStatusHaveXrefRecord($statusId, $language) {
+	global $hesk_settings;
+
+	$rs = hesk_dbQuery("SELECT 1 FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref`
+		WHERE `language` = '".hesk_dbEscape($language)."' AND `status_id` = ".intval($statusId));
+	return hesk_dbNumRows($rs) > 0;
+}
+
+function mfh_getDisplayTextForStatusId($statusId) {
+	global $hesklang, $hesk_settings;
+
+	$statusRs = hesk_dbQuery("SELECT `text`, `Key`, `language` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` AS `statuses`
+		LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` ON `status_id` = `statuses`.`ID`
+		WHERE `statuses`.`ID` = ".intval($statusId));
+
+	$statusRec = hesk_dbFetchAssoc($statusRs);
+	if ($statusRec['language'] == $hesk_settings['language'] && $statusRec['text'] != NULL) {
+		// We found a record. Use the text field
+		return $statusRec['text'];
+	} else {
+		// Fallback to the language key
+		return $hesklang[$statusRec['Key']];
+	}
+}

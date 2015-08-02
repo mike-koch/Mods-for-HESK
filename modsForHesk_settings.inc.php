@@ -53,3 +53,6 @@ $modsForHesk_settings['category_order_column'] = 'cat_order';
 
 //-- Setting for using rich-text editor for tickets. 0 = Disable, 1 = Enable
 $modsForHesk_settings['rich_text_for_tickets'] = 1;
+
+//-- Column to sort statuses by. Can be either 'sort' or 'name'
+$modsForHesk_settings['statuses_order_column'] = 'sort';

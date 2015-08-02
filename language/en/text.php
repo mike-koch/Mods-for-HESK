@@ -34,6 +34,23 @@ $hesklang['view_ticket_form'] = 'View ticket form';
 $hesklang['knowledgebase'] = 'Knowledgebase section';
 $hesklang['allow_rich_text_for_tickets'] = 'Allow rich text for tickets';
 $hesklang['allow_rich_text_for_tickets_help'] = 'Allow staff and customers to use rich text formatting when writing ticket messages / replies.';
+$hesklang['click_to_edit_name'] = 'Click to edit name';
+$hesklang['new_status'] = 'New Status';
+$hesklang['create_new_status_title'] = 'Create New Status';
+$hesklang['status_name_title'] = 'Status Name';
+$hesklang['properties'] = 'Properties';
+$hesklang['closable'] = 'Closable'; // Same as $hesklang['closable_question'], but without punctuation
+$hesklang['new_status_created'] = 'New status successfully created';
+$hesklang['editing_status_x'] = 'Editing status <span style="color: %s; font-weight: bold">%s</span>'; // 1st %s: text color, 2nd %s: status name
+$hesklang['status_not_in_database'] = 'The status text for this language was not found in the database, so a suggested translation has been filled for you.
+ Please click "Save Changes" to save this translation to the database and to remove this warning.';
+$hesklang['ticket_status_updated'] = 'Ticket status successfully updated!';
+$hesklang['ticket_status_deleted'] = 'Ticket status deleted!';
+$hesklang['confirm_delete_status_question'] = 'Delete status?';
+$hesklang['confirm_delete_status'] = 'Are you sure you want to delete this status? This cannot be undone!';
+$hesklang['status_sort_updated'] = 'Ticket status sort updated!';
+$hesklang['status_sort'] = 'Status Sorting';
+$hesklang['status_sort_help'] = 'Determines if statuses shown on the manage statuses page and all dropdowns are sorted by the user-defined order (default), or sorted alphabetically.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';
