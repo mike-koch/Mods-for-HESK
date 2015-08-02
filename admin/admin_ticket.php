@@ -365,6 +365,7 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST'))
     if ($hesk_settings['attachments']['use'])
     {
         require(HESK_PATH . 'inc/posting_functions.inc.php');
+        require(HESK_PATH . 'inc/htmLawed.php');
         require(HESK_PATH . 'inc/attachments.inc.php');
         $attachments = array();
         for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
