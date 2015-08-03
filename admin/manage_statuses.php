@@ -652,6 +652,7 @@ function deleteStatus() {
 
     hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` WHERE `status_id` = ".intval($statusId));
     hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".intval($statusId));
+    resortStatuses();
 
     hesk_process_messages($hesklang['ticket_status_deleted'],'manage_statuses.php','SUCCESS');
 }
@@ -665,9 +666,16 @@ function moveStatus() {
     hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` SET `sort` = `sort`+".intval($statusMove)."
         WHERE `ID` = '".intval($statusId)."' LIMIT 1");
 
+    resortStatuses();
+
+    hesk_process_messages($hesklang['status_sort_updated'],'manage_statuses.php','SUCCESS');
+}
+
+function resortStatuses() {
+    global $hesk_settings;
+
     /* Update all category fields with new order */
     $res = hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ORDER BY `sort` ASC");
-
     $i = 10;
     while ($myStatus = hesk_dbFetchAssoc($res))
     {
@@ -675,8 +683,6 @@ function moveStatus() {
             WHERE `ID`='".intval($myStatus['ID'])."' LIMIT 1");
         $i += 10;
     }
-
-    hesk_process_messages($hesklang['status_sort_updated'],'manage_statuses.php','SUCCESS');
 }
 
 function save() {
