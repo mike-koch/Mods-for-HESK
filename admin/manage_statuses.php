@@ -600,8 +600,14 @@ function createStatus() {
     $isClosed = hesk_POST('closed');
     $closable = hesk_POST('closable');
     $textColor = hesk_POST('text-color');
-    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`Key`, `TextColor`, `IsClosed`, `Closable`)
-		VALUES ('STORED IN XREF TABLE', '".hesk_dbEscape($textColor)."', ".intval($isClosed).", '".hesk_dbEscape($closable)."')";
+
+    /* Get the latest cat_order */
+    $res = hesk_dbQuery("SELECT `sort` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ORDER BY `sort` DESC LIMIT 1");
+    $row = hesk_dbFetchRow($res);
+    $my_order = $row[0]+10;
+
+    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`Key`, `TextColor`, `IsClosed`, `Closable`, `sort`)
+		VALUES ('STORED IN XREF TABLE', '".hesk_dbEscape($textColor)."', ".intval($isClosed).", '".hesk_dbEscape($closable)."', ".intval($my_order).")";
     hesk_dbQuery($insert);
 
     $newStatusId = hesk_dbInsertID();
