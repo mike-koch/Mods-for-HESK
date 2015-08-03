@@ -147,9 +147,27 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
                                         </span>
                                         <?php echoArrows($j, $numberOfStatuses, $row['ID']); ?>
-                                        <span data-toggle="modal" data-target="#modal-status-delete-<?php echo $row['ID']; ?>" style="cursor: pointer;">
-                                            <i class="fa fa-times icon-link" style="color: red"
-                                               data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
+                                        <?php
+                                        // Only show the delete button if (1) it's not a default action and (2) no tickets are set to that status
+                                        $delete = canStatusBeDeleted($row['ID']);
+                                        $cursor = 'cursor: pointer';
+                                        $iconStyle = 'color: red';
+                                        $dataTarget = 'data-target="#modal-status-delete-'.$row['ID'];
+                                        $tooltip = $hesklang['delete'];
+                                        if ($delete == 'no-default' || $delete == 'no-tickets') {
+                                            $cursor = '';
+                                            $dataTarget = '';
+                                            $iconStyle = 'color: grey';
+                                        }
+                                        if ($delete == 'no-default') {
+                                            $tooltip = $hesklang['whyCantIDeleteThisStatusReason'];
+                                        } elseif ($delete == 'no-tickets') {
+                                            $tooltip = $hesklang['cannot_delete_status_tickets'];
+                                        }
+                                        ?>
+                                        <span data-toggle="modal" <?php echo $dataTarget; ?> style="<?php echo $cursor; ?>;">
+                                            <i class="fa fa-times icon-link" style="<?php echo $iconStyle; ?>"
+                                               data-toggle="tooltip" title="<?php echo $tooltip; ?>"></i>
                                         </span>
                                     </td>
                                 </tr>
@@ -583,6 +601,25 @@ function buildEditModal($statusId) {
         </div>
     </div>
     <?php
+}
+
+function canStatusBeDeleted($id) {
+    global $hesk_settings;
+
+    $defaultActionSql = "SELECT 1 FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` WHERE `ID` = ".intval($id)." AND
+        (`IsNewTicketStatus` = 1 OR `IsClosedByClient` = 1 OR `IsCustomerReplyStatus` = 1 OR `IsStaffClosedOption` = 1
+            OR `IsStaffReopenedStatus` = 1 OR `IsDefaultStaffReplyStatus` = 1 OR `LockedTicketStatus` = 1 OR `IsAutocloseOption` = 1)";
+    $defaultActionRs = hesk_dbQuery($defaultActionSql);
+    if (hesk_dbNumRows($defaultActionRs) > 0) {
+        // it's a default action
+        return 'no-default';
+    }
+    // check if any tickets have this status
+    $statusRs = hesk_dbQuery("SELECT 1 FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `status` = ".intval($id));
+    if (hesk_dbNumRows($statusRs) > 0) {
+        return 'no-tickets';
+    }
+    return 'yes';
 }
 
 function echoWarningForStatus() {
