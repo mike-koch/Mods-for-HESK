@@ -95,9 +95,6 @@ if ( isset($_GET['kb_att']) )
 			hesk_checkPermission('can_man_kb');
 		}
     }
-
-	// Update the download count
-	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` SET `download_count` = `download_count` + 1 WHERE `att_id` = '{$att_id}'");
 }
 
 // Ticket attachments
@@ -137,7 +134,7 @@ else
     }
 
 	// Update the download count
-	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` SET `download_count` = `download_count` + 1 WHERE `att_id` = '{$att_id}'");
+
 }
 
 // Path of the file on the server
@@ -147,6 +144,13 @@ $realpath = $hesk_settings['attach_dir'] . '/' . $file['saved_name'];
 if ( ! file_exists($realpath))
 {
 	hesk_error($hesklang['attdel']);
+}
+
+// Update the download count
+if ( isset($_GET['kb_att']) ) {
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` SET `download_count` = `download_count` + 1 WHERE `att_id` = '{$att_id}'");
+} else {
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` SET `download_count` = `download_count` + 1 WHERE `att_id` = '{$att_id}'");
 }
 
 // Send the file as an attachment to prevent malicious code from executing
