@@ -95,6 +95,9 @@ if ( isset($_GET['kb_att']) )
 			hesk_checkPermission('can_man_kb');
 		}
     }
+
+	// Update the download count
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` SET `download_count` = `download_count` + 1 WHERE `att_id` = '{$att_id}'");
 }
 
 // Ticket attachments
@@ -132,6 +135,9 @@ else
         	hesk_error($hesklang['perm_deny']);
 		}
     }
+
+	// Update the download count
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` SET `download_count` = `download_count` + 1 WHERE `att_id` = '{$att_id}'");
 }
 
 // Path of the file on the server
