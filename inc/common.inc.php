@@ -1973,3 +1973,12 @@ function mfh_getDisplayTextForStatusId($statusId) {
 		return $hesklang[$statusRec['Key']];
 	}
 }
+
+function mfh_getNumberOfDownloadsForAttachment($att_id, $table='attachments')
+{
+	global $hesk_settings;
+
+	$res = hesk_dbQuery('SELECT `download_count` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'].$table)."` WHERE `att_id` = ".intval($att_id));
+	$rec = hesk_dbFetchAssoc($res);
+	return $rec['download_count'];
+}

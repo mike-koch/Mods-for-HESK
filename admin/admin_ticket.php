@@ -1520,7 +1520,7 @@ function hesk_listAttachments($attachments='', $reply=0, $white=1)
 	$att=explode(',',substr($attachments, 0, -1));
     echo '<div class="table-responsive">';
     echo '<table class="table table-striped attachment-table">';
-    echo '<thead><tr><th>&nbsp;</th><th>'.$hesklang['file_name'].'</th><th>'.$hesklang['action'].'</th></tr></thead>';
+    echo '<thead><tr><th>&nbsp;</th><th>'.$hesklang['file_name'].'</th><th>'.$hesklang['download_count'].'</th><th>'.$hesklang['action'].'</th></tr></thead>';
     echo '<tbody>';
 	foreach ($att as $myatt)
 	{
@@ -1568,6 +1568,9 @@ function hesk_listAttachments($attachments='', $reply=0, $white=1)
             </td>
             <td>
                 <p>'.$att_name.'</p>
+            </td>
+            <td>
+                '.mfh_getNumberOfDownloadsForAttachment($att_id).'
             </td>
             <td>
                 <div class="btn-group">';
