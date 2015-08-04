@@ -2,7 +2,6 @@
 define('IN_SCRIPT', 1);
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
-echo $hesklang['yes'];
 
 function executeQuery($sql) {
     global $hesk_last_query;
@@ -557,6 +556,8 @@ function execute240Scripts() {
     global $hesk_settings;
 
     hesk_dbConnect();
+
+    // Setup quick help sections
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` (
       `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
       `location` VARCHAR(100) NOT NULL,
@@ -572,6 +573,7 @@ function execute240Scripts() {
     executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
       VALUES ('knowledgebase', '1')");
 
+    // Setup status improvement tables
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (
       `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
       `language` VARCHAR(200) NOT NULL,
@@ -586,6 +588,11 @@ function execute240Scripts() {
             WHERE `id`='".intval($myStatus['ID'])."' LIMIT 1");
         $i += 10;
     }
+
+    // Process attachment improvement tables
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` ADD COLUMN `download_count` INT NOT NULL DEFAULT 0");
+
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.4.0' WHERE `Key` = 'modsForHeskVersion'");
 }
 
 function initializeXrefTable() {
