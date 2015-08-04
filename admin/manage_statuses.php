@@ -21,10 +21,11 @@ define('WYSIWYG',1);
 
 // Are we performing an action?
 if (isset($_REQUEST['a'])) {
-    if ($_POST['a'] == 'create') { createStatus(); }
-    elseif ($_POST['a'] == 'update') { updateStatus(); }
-    elseif ($_GET['a'] == 'delete') { deleteStatus(); }
-    elseif ($_GET['a'] == 'sort') { moveStatus(); }
+    if ($_REQUEST['a'] == 'create') { createStatus(); }
+    elseif ($_REQUEST['a'] == 'update') { updateStatus(); }
+    elseif ($_REQUEST['a'] == 'delete') { deleteStatus(); }
+    elseif ($_REQUEST['a'] == 'sort') { moveStatus(); }
+    elseif ($_REQUEST['a'] == 'save') { save(); }
 }
 
 
@@ -325,7 +326,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </div>
                     </div>
                     <div class="col-sm-6 col-sm-offset-6">
-                        <input type="hidden" name="action" value="save">
+                        <input type="hidden" name="a" value="save">
                         <input type="submit" class="btn btn-default" value="<?php echo $hesklang['save_changes']; ?>">
                     </div>
                 </form>
@@ -760,5 +761,5 @@ function save() {
     $updateQuery = $defaultQuery . "`IsAutocloseOption` = 1 WHERE `ID` = ".intval($_POST['autocloseTicketOption']);
     hesk_dbQuery($updateQuery);
 
-    hesk_process_messages($hesklang['statuses_saved'],'manage_statuses.php','SUCCESS');
+    hesk_process_messages($hesklang['default_statuses_updated'],'manage_statuses.php','SUCCESS');
 }
