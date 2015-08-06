@@ -38,9 +38,9 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 /***************************
 Function hesk_uploadFiles()
 ***************************/
-function hesk_uploadFile($i)
+function hesk_uploadFile($i, $isTicket = true)
 {
-	global $hesk_settings, $hesklang, $trackingID, $hesk_error_buffer;
+	global $hesk_settings, $hesklang, $trackingID, $hesk_error_buffer, $modsForHesk_settings;
 
 	/* Return if name is empty */
 	if (empty($_FILES['attachment']['name'][$i])) {return '';}
@@ -92,7 +92,11 @@ function hesk_uploadFile($i)
     */
 
 	/* If upload was successful let's create the headers */
-	if ( ! move_uploaded_file($_FILES['attachment']['tmp_name'][$i], dirname(dirname(__FILE__)).'/'.$hesk_settings['attach_dir'].'/'.$file_name))
+	$directory = $hesk_settings['attach_dir'];
+	if (!$isTicket) {
+		$directory = $modsForHesk_settings['kb_attach_dir'];
+	}
+	if ( ! move_uploaded_file($_FILES['attachment']['tmp_name'][$i], dirname(dirname(__FILE__)).'/'.$directory.'/'.$file_name))
 	{
 	    return hesk_fileError($hesklang['cannot_move_tmp']);
 	}
@@ -118,11 +122,16 @@ function hesk_fileError($error)
 } // End hesk_fileError()
 
 
-function hesk_removeAttachments($attachments)
+function hesk_removeAttachments($attachments, $isTicket)
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
-	$hesk_settings['server_path'] = dirname(dirname(__FILE__)).'/'.$hesk_settings['attach_dir'].'/';
+	$directory = $hesk_settings['attach_dir'];
+	if (!$isTicket) {
+		$directory = $modsForHesk_settings['kb_attach_dir'];
+	}
+
+	$hesk_settings['server_path'] = dirname(dirname(__FILE__)).'/'.$directory.'/';
 
 	foreach ($attachments as $myatt)
 	{
