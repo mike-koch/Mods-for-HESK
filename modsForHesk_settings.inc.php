@@ -56,3 +56,6 @@ $modsForHesk_settings['rich_text_for_tickets'] = 0;
 
 //-- Column to sort statuses by. Can be either 'sort' or 'name'
 $modsForHesk_settings['statuses_order_column'] = 'sort';
+
+//-- Directory to store knowledgebase articles in.
+$modsForHesk_settings['kb_attach_dir'] = 'attachments';

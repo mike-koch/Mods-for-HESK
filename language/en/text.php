@@ -54,6 +54,10 @@ $hesklang['status_sort_help'] = 'Determines if statuses shown on the manage stat
 $hesklang['cannot_delete_status_tickets'] = 'This status cannot be deleted because there are tickets set to this status.';
 $hesklang['default_statuses_updated'] = 'Default statuses have been updated!';
 $hesklang['download_count'] = 'Download Count';
+$hesklang['kb_attach_dir'] = 'Knowledgebase attachments folder';
+$hesklang['kb_attach_dir_help'] = 'Name of the folder, where knowledgebase attachments will be stored.<br><br>The folder needs to exist within the main HESK folder and be writable by PHP. On most systems names are CaSe SeNSiTiVe.
+    <br><br>Allowed chars (other will be removed): a-z A-Z 0-9 _ -';
+$hesklang['ticket_attach_dir'] = 'Ticket attachments folder';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';

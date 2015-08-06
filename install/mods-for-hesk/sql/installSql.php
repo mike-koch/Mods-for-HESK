@@ -615,6 +615,8 @@ function initializeXrefTable() {
 }
 
 function execute240FileUpdate() {
+    global $hesk_settings;
+
     $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
 
     //-- Only add the additional settings if they aren't already there.
@@ -631,6 +633,13 @@ $modsForHesk_settings[\'category_order_column\'] = \'cat_order\';';
 
         //-- Setting for using rich-text editor for tickets. 0 = Disable, 1 = Enable
 $modsForHesk_settings[\'rich_text_for_tickets\'] = 0;';
+    }
+    if (strpos($file, '$modsForHesk_settings[\'kb_attach_dir\']') === false)
+    {
+        $file .= '
+
+        //-- Directory to store knowledgebase articles in.
+$modsForHesk_settings[\'kb_attach_dir\'] = \''.$hesk_settings['attach_dir'].'\';';
     }
 
     return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
