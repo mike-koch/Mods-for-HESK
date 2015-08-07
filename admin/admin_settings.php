@@ -697,9 +697,9 @@ if ( defined('HESK_DEMO') )
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="s_attach_dir" class="col-sm-3 control-label"><?php echo $hesklang['atf']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#62','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                    <label for="s_attach_dir" class="col-sm-3 control-label"><?php echo $hesklang['ticket_attach_dir']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#62','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['atf']); ?>" name="s_attach_dir" size="40" maxlength="255" value="<?php echo $hesk_settings['attach_dir']; ?>" />
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['ticket_attach_dir']); ?>" name="s_attach_dir" size="40" maxlength="255" value="<?php echo $hesk_settings['attach_dir']; ?>" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -1287,6 +1287,21 @@ if ( defined('HESK_DEMO') )
                         ?>
                     </div>
                 </div>
+
+                  <div class="form-group">
+                      <label for="kb_attach_dir" class="col-sm-4 control-label">
+                          <span class="label label-primary"
+                                data-toggle="tooltip"
+                                title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                          <?php echo $hesklang['kb_attach_dir']; ?>
+                          <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                             title="<?php echo $hesklang['kb_attach_dir']; ?>"
+                             data-content="<?php echo $hesklang['kb_attach_dir_help']; ?>"></i>
+                      </label>
+                      <div class="col-sm-8">
+                          <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_attach_dir']); ?>" name="kb_attach_dir" size="40" maxlength="255" value="<?php echo $modsForHesk_settings['kb_attach_dir']; ?>">
+                      </div>
+                  </div>
                   <div class="form-group">
                       <label for="knowledgebase-visibility-setting" class="col-sm-4 col-xs-12 control-label">
                           <span class="label label-primary"

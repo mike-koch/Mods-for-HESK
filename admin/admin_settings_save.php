@@ -518,6 +518,7 @@ $set['request_location'] = empty($_POST['request_location']) ? 0 : 1;
 $set['category_order_column'] = empty($_POST['category_order_column']) ? 'cat_order' : 'name';
 $set['rich_text_for_tickets'] = empty($_POST['rich_text_for_tickets']) ? 0 : 1;
 $set['statuses_order_column'] = empty($_POST['statuses_order_column']) ? 'sort' : 'name';
+$set['kb_attach_dir'] = hesk_POST('kb_attach_dir', 'attachments');
 
 if ($set['customer-email-verification-required'])
 {
@@ -592,7 +593,10 @@ $modsForHesk_settings[\'category_order_column\'] = \''.$set['category_order_colu
 $modsForHesk_settings[\'rich_text_for_tickets\'] = '.$set['rich_text_for_tickets'].';
 
 //-- Column to sort statuses by. Can be either \'sort\' or \'name\'
-$modsForHesk_settings[\'statuses_order_column\'] = \''.$set['statuses_order_column'].'\';';
+$modsForHesk_settings[\'statuses_order_column\'] = \''.$set['statuses_order_column'].'\';
+
+//-- Directory to store knowledgebase articles in.
+$modsForHesk_settings[\'kb_attach_dir\'] = \''.$set['kb_attach_dir'].'\';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )

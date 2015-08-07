@@ -40,6 +40,7 @@ define('WYSIWYG',1);
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
 
 // Are we in maintenance mode?
 hesk_check_maintenance();
@@ -407,7 +408,7 @@ if (!$show['show']) {
                             }
                         }
                         /* Attachments */
-                        hesk_listAttachments($ticket['attachments'], $i);
+                        mfh_listAttachments($ticket['attachments'], $i, false);
                     ?>
                 </div>
             </div>
@@ -726,7 +727,7 @@ function hesk_printCustomerTicketReplies()
 			         <div class="message"><?php echo hesk_html_entity_decode($reply['message']); ?></div>
                 </div>
                 <div class="ticketMessageTop">
-                     <?php hesk_listAttachments($reply['attachments'],$i);?>
+                     <?php mfh_listAttachments($reply['attachments'],$i,false);?>
                 </div>
             </div>
         </div>
@@ -737,37 +738,6 @@ function hesk_printCustomerTicketReplies()
 
 } // End hesk_printCustomerTicketReplies()
 
-
-function hesk_listAttachments($attachments='', $white=1)
-{
-	global $hesk_settings, $hesklang, $trackingID;
-
-	/* Attachments disabled or not available */
-	if ( ! $hesk_settings['attachments']['use'] || ! strlen($attachments) )
-    {
-    	return false;
-    }
-
-    /* Style and mousover/mousout */
-    $tmp = $white ? 'White' : 'Blue';
-    $style = 'class="option'.$tmp.'OFF" onmouseover="this.className=\'option'.$tmp.'ON\'" onmouseout="this.className=\'option'.$tmp.'OFF\'"';
-
-	/* List attachments */
-	echo '<p><b>'.$hesklang['attachments'].':</b><br />';
-	$att=explode(',',substr($attachments, 0, -1));
-	foreach ($att as $myatt)
-	{
-		list($att_id, $att_name) = explode('#', $myatt);
-
-		echo '
-		<a href="download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.$hesk_settings['e_query'].'"><img src="img/clip.png" width="16" height="16" alt="'.$hesklang['dnl'].' '.$att_name.'" title="'.$hesklang['dnl'].' '.$att_name.'" '.$style.' /></a>
-		<a href="download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.$hesk_settings['e_query'].'">'.$att_name.'</a><br />
-        ';
-	}
-	echo '</p>';
-
-    return true;
-} // End hesk_listAttachments()
 
 
 function hesk_getCustomerButtons($white=1)
