@@ -603,15 +603,18 @@ function initializeXrefTable() {
     }
 
     $statusesRs = executeQuery("SELECT `ID`, `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+    $oldSetting = $hesk_settings['can_sel_lang'];
+    $hesk_settings['can_sel_lang'] = 1;
     while ($row = hesk_dbFetchAssoc($statusesRs)) {
         foreach ($languages as $language => $languageCode) {
             hesk_setLanguage($language);
             $sql = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (`language`, `text`, `status_id`)
                 VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($hesklang[$row['Key']])."', ".intval($row['ID']).")";
             executeQuery($sql);
-            hesk_resetLanguage();
         }
     }
+    $hesk_settings['can_sel_lang'] = $oldSetting;
+    hesk_resetLanguage();
 }
 
 function execute240FileUpdate() {
