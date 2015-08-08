@@ -292,6 +292,7 @@ hesk_dbConnect();
                                         <a id="130" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=130">v1.3.0</a>
                                     </div>
                                 </div>
+                                <br>
                                 <div class="row">
                                     <div class="col-md-3 col-sm-12">
                                         <a id="124" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=124">v1.2.4</a>
