@@ -1962,7 +1962,7 @@ function mfh_getDisplayTextForStatusId($statusId) {
 
 	$statusRs = hesk_dbQuery("SELECT `text`, `Key`, `language` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` AS `statuses`
 		LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` ON `status_id` = `statuses`.`ID`
-		WHERE `statuses`.`ID` = ".intval($statusId));
+		WHERE `statuses`.`ID` = ".intval($statusId)." AND `language` = ".hesk_dbEscape($hesk_settings['language']));
 
 	$statusRec = hesk_dbFetchAssoc($statusRs);
 	if ($statusRec['language'] == $hesk_settings['language'] && $statusRec['text'] != NULL) {
