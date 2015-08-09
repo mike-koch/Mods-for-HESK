@@ -512,15 +512,7 @@ if ( defined('HESK_DEMO') )
               <li><a href="#email" data-toggle="tab"><?php echo $hesklang['tab_6']; ?></a></li>
               <li><a href="#ticket-list" data-toggle="tab"><?php echo $hesklang['tab_7']; ?></a></li>
               <li><a href="#misc" data-toggle="tab"><?php echo $hesklang['tab_5']; ?></a></li>
-              <li class="dropdown">
-                  <a href="#" id="modsForHeskDropdown" class="dropdown-toggle" data-toggle="dropdown">
-                      <?php echo $hesklang['mods_for_hesk']; ?><span class="caret"></span>
-                  </a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="modsForHeskDropdown">
-                      <li><a href="#mfh-general" data-toggle="tab"><?php echo $hesklang['tab_1'].'/'.$hesklang['statuses']; ?></a></li>
-                      <li><a href="#colors" data-toggle="tab"><?php echo $hesklang['uiColors']; ?></a></li>
-                  </ul>
-              </li>
+              <li><a href="#colors" data-toggle="tab"><?php echo $hesklang['uiColors']; ?></a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -2392,23 +2384,6 @@ if ( defined('HESK_DEMO') )
                         </div>    
                     </div>
                 </div>
-              </div>
-              <!-- Mods for HESK: General/Statuses -->
-              <div class="tab-pane fade in" id="mfh-general">
-                  <h6 style="font-weight: bold"><?php echo $hesklang['tab_1'].'/'.$hesklang['statuses']; ?></h6>
-                  <div class="footerWithBorder blankSpace"></div>
-                  <div class="row text-center">
-                      <div class="col-sm-12">
-                          <h2>Where did general settings and statuses go?</h2>
-                          <p>Starting with Mods for HESK 2.3.0, general Mods for HESK settings are in their respective
-                              tabs, indicated by
-                              <span class="label label-primary"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>.
-                              Please visit http://mods-for-hesk.mkochcs.com/faq.php to see where each individual setting has moved to.
-                              <br>Statuses have been moved to the "Tools" menu. <br><br>
-                              <i>This notice will be <b>removed</b> in 2.4.0.</i>
-                          </p>
-                      </div>
-                  </div>
               </div>
               <!-- Mods For Hesk: Color settings -->
               <div class="tab-pane fade in" id="colors">
