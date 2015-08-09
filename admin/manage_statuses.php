@@ -645,7 +645,7 @@ function createStatus() {
     $my_order = $row[0]+10;
 
     // Get the next status id
-    $res = hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ORDER BY `Id` DESC LIMIT 1");
+    $res = hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ORDER BY `ID` DESC LIMIT 1");
     $row = hesk_dbFetchAssoc($res);
     $nextId = $row['ID'] + 1;
 
