@@ -139,6 +139,17 @@ hesk_dbConnect();
                                 <div class="row">
                                     <div class="col-md-3 col-sm-12">
                                         <?php
+                                        if ($version == '2.3.2') {
+                                            $v232btn = 'btn-success';
+                                            $disableAllExcept = '232';
+                                        } else {
+                                            $v232btn = 'btn-default';
+                                        }
+                                        ?>
+                                        <a id="232" class="btn <?php echo $v232btn; ?> btn-block disablable" href="installModsForHesk.php?v=232">v2.3.2</a>
+                                    </div>
+                                    <div class="col-md-3 col-sm-12">
+                                        <?php
                                         if ($version == '2.3.1') {
                                             $v231btn = 'btn-success';
                                             $disableAllExcept = '231';
@@ -170,6 +181,9 @@ hesk_dbConnect();
                                         ?>
                                         <a id="221" class="btn <?php echo $v221btn; ?> btn-block disablable" href="installModsForHesk.php?v=221">v2.2.1</a>
                                     </div>
+                                </div>
+                                <br>
+                                <div class="row">
                                     <div class="col-md-3 col-sm-12">
                                         <?php
                                         if ($version == '2.2.0') {
@@ -181,9 +195,6 @@ hesk_dbConnect();
                                         ?>
                                         <a id="220" class="btn <?php echo $v220btn; ?> btn-block disablable" href="installModsForHesk.php?v=220">v2.2.0</a>
                                     </div>
-                                </div>
-                                <br>
-                                <div class="row">
                                     <div class="col-md-3 col-sm-12">
                                         <?php
                                         if ($version == '2.1.1') {
@@ -217,6 +228,9 @@ hesk_dbConnect();
                                         ?>
                                         <a id="201" class="btn <?php echo $v201btn; ?> btn-block disablable" href="installModsForHesk.php?v=201">v2.0.1</a>
                                     </div>
+                                </div>
+                                <br>
+                                <div class="row">
                                     <div class="col-md-3 col-sm-12">
                                         <?php
                                         if ($version == '2.0.0') {
@@ -228,9 +242,6 @@ hesk_dbConnect();
                                         ?>
                                         <a id="200" class="btn <?php echo $v200btn; ?> btn-block disablable" href="installModsForHesk.php?v=200">v2.0.0</a>
                                     </div>
-                                </div>
-                                <br>
-                                <div class="row">
                                     <div class="col-md-3 col-sm-12">
                                         <?php
                                         if ($version == '1.7.0') {
@@ -265,12 +276,12 @@ hesk_dbConnect();
                                         ?>
                                         <a id="160" class="btn <?php echo $v160btn; ?> btn-block disablable" href="installModsForHesk.php?v=160">v1.6.0</a>
                                     </div>
-                                    <div class="col-md-3 col-sm-12">
-                                        <a id="150" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=150">v1.5.0</a>
-                                    </div>
                                 </div>
                                 <br>
                                 <div class="row">
+                                    <div class="col-md-3 col-sm-12">
+                                        <a id="150" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=150">v1.5.0</a>
+                                    </div>
                                     <div class="col-md-3 col-sm-12">
                                         <a id="141" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=141">v1.4.1</a>
                                     </div>
@@ -280,6 +291,9 @@ hesk_dbConnect();
                                     <div class="col-md-3 col-sm-12">
                                         <a id="130" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=130">v1.3.0</a>
                                     </div>
+                                </div>
+                                <br>
+                                <div class="row">
                                     <div class="col-md-3 col-sm-12">
                                         <a id="124" class="btn btn-default btn-block disablable" href="installModsForHesk.php?v=124">v1.2.4</a>
                                     </div>

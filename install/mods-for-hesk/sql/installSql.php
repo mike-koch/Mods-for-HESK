@@ -1,7 +1,5 @@
 <?php
-define('IN_SCRIPT', 1);
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'inc/common.inc.php');
 
 function executeQuery($sql) {
     global $hesk_last_query;
@@ -564,13 +562,13 @@ function execute240Scripts() {
       `show` ENUM('0','1') NOT NULL
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
 
-    executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
+    executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` (`location`, `show`)
       VALUES ('create_ticket', '1')");
-    executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
+    executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` (`location`, `show`)
       VALUES ('view_ticket_form', '1')");
-    executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
+    executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` (`location`, `show`)
       VALUES ('view_ticket', '1')");
-    executeQuery("INSERT INTO `hesk_quick_help_sections` (`location`, `show`)
+    executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` (`location`, `show`)
       VALUES ('knowledgebase', '1')");
 
     // Setup status improvement tables
@@ -578,8 +576,7 @@ function execute240Scripts() {
       `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
       `language` VARCHAR(200) NOT NULL,
       `text` VARCHAR(200) NOT NULL,
-      `status_id` INT NOT NULL,
-      PRIMARY KEY (`id`)) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+      `status_id` INT NOT NULL) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ADD COLUMN `sort` INT");
     $statusesRs = executeQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ORDER BY `ID` ASC");
     $i = 10;
@@ -599,19 +596,25 @@ function execute240Scripts() {
 function initializeXrefTable() {
     global $hesk_settings, $hesklang;
 
+    hesk_dbConnect();
     $languages = array();
     foreach ($hesk_settings['languages'] as $key => $value) {
         $languages[$key] = $hesk_settings['languages'][$key]['folder'];
     }
 
     $statusesRs = executeQuery("SELECT `ID`, `Key` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses`");
+    $oldSetting = $hesk_settings['can_sel_lang'];
+    $hesk_settings['can_sel_lang'] = 1;
     while ($row = hesk_dbFetchAssoc($statusesRs)) {
         foreach ($languages as $language => $languageCode) {
+            hesk_setLanguage($language);
             $sql = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (`language`, `text`, `status_id`)
                 VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($hesklang[$row['Key']])."', ".intval($row['ID']).")";
             executeQuery($sql);
         }
     }
+    $hesk_settings['can_sel_lang'] = $oldSetting;
+    hesk_resetLanguage();
 }
 
 function execute240FileUpdate() {

@@ -58,6 +58,9 @@ function echoInitialVersionRows($version) {
     if ($version < 232) {
         printRow('v2.3.2');
     }
+    if ($version < 240) {
+        printRow('v2.4.0');
+    }
 }
 
 function printRow($version) {
@@ -107,7 +110,7 @@ function printRow($version) {
                                 <?php echoInitialVersionRows($startingVersion); ?>
                                 </tbody>
                             </table>
-                            <?php if ($startingVersion < 200) { ?>
+                            <?php if ($startingVersion < 240) { ?>
                                 <table class="table table-striped" style="table-layout: fixed">
                                     <thead>
                                     <tr>
@@ -116,10 +119,12 @@ function printRow($version) {
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <?php if ($startingVersion < 200): ?>
                                     <tr id="row-banmigrate">
                                         <td>Migrate IP / Email Bans</td>
                                         <td><i id="spinner-banmigrate" class="fa fa-spinner"></i> <span id="span-banmigrate">Waiting...</span></td>
                                     </tr>
+                                    <?php endif; ?>
                                     <tr id="row-initialize-statuses">
                                         <td>Initialize Statuses</td>
                                         <td><i id="spinner-initialize-statuses" class="fa fa-spinner"></i> <span id="span-initialize-statuses">Waiting...</span></td>

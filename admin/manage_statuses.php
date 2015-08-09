@@ -644,8 +644,13 @@ function createStatus() {
     $row = hesk_dbFetchRow($res);
     $my_order = $row[0]+10;
 
-    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`Key`, `TextColor`, `IsClosed`, `Closable`, `sort`)
-		VALUES ('STORED IN XREF TABLE', '".hesk_dbEscape($textColor)."', ".intval($isClosed).", '".hesk_dbEscape($closable)."', ".intval($my_order).")";
+    // Get the next status id
+    $res = hesk_dbQuery("SELECT `ID` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` ORDER BY `ID` DESC LIMIT 1");
+    $row = hesk_dbFetchAssoc($res);
+    $nextId = $row['ID'] + 1;
+
+    $insert = "INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."statuses` (`ID`, `Key`, `TextColor`, `IsClosed`, `Closable`, `sort`)
+		VALUES (".intval($nextId).", 'STORED IN XREF TABLE', '".hesk_dbEscape($textColor)."', ".intval($isClosed).", '".hesk_dbEscape($closable)."', ".intval($my_order).")";
     hesk_dbQuery($insert);
 
     $newStatusId = hesk_dbInsertID();

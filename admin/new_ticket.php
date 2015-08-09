@@ -563,7 +563,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         while ($mysaved = hesk_dbFetchRow($res))
                         {
                             $can_options .= '<option value="' . $mysaved[0] . '">' . $mysaved[1]. "</option>\n";
-                            echo 'myMsgTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved[2]))."';\n";
+                            if ($modsForHesk_settings['rich_text_for_tickets']) {
+                                echo 'myMsgTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", hesk_html_entity_decode($mysaved[2]))."';\n";
+                            } else {
+                                echo 'myMsgTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved[2]))."';\n";
+                            }
                             echo 'mySubjectTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved[1]))."';\n";
                         }
 
