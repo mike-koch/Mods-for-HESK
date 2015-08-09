@@ -1943,7 +1943,7 @@ function hesk_printReplyForm() {
 
 function hesk_printCanned()
 {
-	global $hesklang, $hesk_settings, $can_reply, $ticket;
+	global $hesklang, $hesk_settings, $can_reply, $ticket, $modsForHesk_settings;
 
 	/* Can user reply to tickets? */
 	if ( ! $can_reply)
@@ -1972,13 +1972,19 @@ function hesk_printCanned()
 	while ($mysaved = hesk_dbFetchRow($res))
 	{
 	    $can_options .= '<option value="' . $mysaved[0] . '">' . $mysaved[1]. "</option>\n";
-	    echo 'myMsgTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved[2]))."';\n";
+	    if ($modsForHesk_settings['rich_text_for_tickets']) {
+	        echo 'myMsgTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", hesk_html_entity_decode($mysaved[2]))."';\n";
+	    } else {
+	        echo 'myMsgTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved[2]))."';\n";
+	    }
 	}
 
 	?>
 
 	function setMessage(msgid)
     {
+        var isHtml = <?php echo hesk_jsString($modsForHesk_settings['rich_text_for_tickets']); ?>;
+
 		var myMsg=myMsgTxt[msgid];
 
         if (myMsg == '')
@@ -2021,12 +2027,23 @@ function hesk_printCanned()
         {
 			if (document.getElementById('moderep').checked)
             {
-				document.getElementById('HeskMsg').innerHTML='<textarea class="form-control" name="message" id="message" rows="12" cols="72">'+myMsg+'</textarea>';
+                if (isHtml){
+                    tinymce.get("message").setContent('');
+                    tinymce.get("message").execCommand('mceInsertRawHTML', false, myMsg);
+                } else {
+                    document.getElementById('message').value = myMsg;
+                }
             }
             else
             {
-            	var oldMsg = document.getElementById('message').value;
-		        document.getElementById('HeskMsg').innerHTML='<textarea class="form-control" name="message" id="message" rows="12" cols="72">'+oldMsg+myMsg+'</textarea>';
+                if (isHtml) {
+                    var oldMsg = tinymce.get("message").getContent();
+                    tinymce.get("message").setContent('');
+                    tinymce.get("message").execCommand('mceInsertRawHTML', false, oldMsg + myMsg);
+                } else {
+                    var oldMsg = document.getElementById('message').value;
+                    document.getElementById('message').value = oldMsg + myMsg;
+                }
             }
 	    }
         else
