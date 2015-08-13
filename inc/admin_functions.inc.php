@@ -273,7 +273,7 @@ function hesk_mergeTickets($merge_these, $merge_into)
 	{
 		$res = hesk_dbQuery("SELECT `dt`, `staffid` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`=".intval($ticket['id'])." AND `staffid`>0 ORDER BY `dt` ASC LIMIT 1");
 		$reply = hesk_dbFetchAssoc($res);
-		$replies_sql = " `firstreply`='".hesk_dbEscape($reply['dt'])."', `firstreplyby`=".intval($reply['staffid'])." , ";
+		$replies_sql .= " `firstreply`='".hesk_dbEscape($reply['dt'])."', `firstreplyby`=".intval($reply['staffid'])." , ";
 	}
 
     /* Update history (log) and merged IDs of target ticket */
