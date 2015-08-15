@@ -137,6 +137,12 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
+$columnWidth = 'col-md-8';
+$showRs = hesk_dbQuery("SELECT `show` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` WHERE `id` = 5");
+$show = hesk_dbFetchAssoc($showRs);
+if (!$show['show']) {
+    $columnWidth = 'col-md-10 col-md-offset-1';
+}
 ?>
 
 <ol class="breadcrumb">
@@ -144,6 +150,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
   <li class="active"><?php echo $hesklang['nti2']; ?></li>
 </ol>
     <div class="row" style="margin-top: 20px">
+        <?php if ($columnWidth == 'col-md-8'): ?>
         <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading"><?php echo $hesklang['quick_help']; ?></div>
@@ -154,7 +161,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
+        <?php endif; ?>
+        <div class="<?php echo $columnWidth; ?>">
             <?php
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
@@ -1063,7 +1071,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>       
             </form>
         </div>
-
+    </div>
 <?php
 
 // Request for the users location if enabled
