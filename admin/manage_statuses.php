@@ -153,7 +153,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         $delete = canStatusBeDeleted($row['ID']);
                                         $cursor = 'cursor: pointer';
                                         $iconStyle = 'color: red';
-                                        $dataTarget = 'data-target="#modal-status-delete-'.$row['ID'];
+                                        $dataTarget = 'data-target="#modal-status-delete-'.$row['ID'].'"';
                                         $tooltip = $hesklang['delete'];
                                         if ($delete == 'no-default' || $delete == 'no-tickets') {
                                             $cursor = '';
@@ -424,7 +424,11 @@ function buildCreateModal() {
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4><?php echo $hesklang['status_name_title']; ?></h4>
+                                <h4><?php echo $hesklang['status_name_title']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                        data-toggle="popover"
+                                        title="<?php echo $hesklang['status_name_title']; ?>"
+                                        data-content="<?php echo $hesklang['status_name_title_help']; ?>"></i></h4>
                                 <div class="footerWithBorder blankSpace"></div>
                                 <?php foreach ($languages as $language => $languageCode): ?>
                                 <div class="form-group">
@@ -442,14 +446,26 @@ function buildCreateModal() {
                                 <h4><?php echo $hesklang['properties']; ?></h4>
                                 <div class="footerWithBorder blankSpace"></div>
                                 <div class="form-group">
-                                    <label for="text-color" class="col-sm-4 control-label"><?php echo $hesklang['textColor']; ?></label>
+                                    <label for="text-color" class="col-sm-4 control-label">
+                                        <?php echo $hesklang['textColor']; ?>
+                                        <i class="fa fa-question-circle settingsquestionmark"
+                                           data-toggle="popover"
+                                           title="<?php echo $hesklang['textColor']; ?>"
+                                           data-content="<?php echo $hesklang['textColorDescr']; ?>"></i>
+                                    </label>
                                     <div class="col-sm-8">
                                         <input type="text" name="text-color" class="form-control"
                                                placeholder="<?php echo htmlspecialchars($hesklang['textColor']); ?>">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="closable" class="col-sm-4 control-label"><?php echo $hesklang['closable']; ?></label>
+                                    <label for="closable" class="col-sm-4 control-label">
+                                        <?php echo $hesklang['closable']; ?>
+                                        <i class="fa fa-question-circle settingsquestionmark"
+                                           data-toggle="htmlpopover"
+                                           title="<?php echo $hesklang['closable']; ?>"
+                                           data-content="<?php echo $hesklang['closable_description']; ?>"></i>
+                                    </label>
                                     <div class="col-sm-8">
                                         <select name="closable" class="form-control">
                                             <option value="yes"><?php echo $hesklang['yes_title_case']; ?></option>
@@ -460,7 +476,13 @@ function buildCreateModal() {
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="closed" class="col-sm-4 control-label"><?php echo $hesklang['closed_title']; ?></label>
+                                    <label for="closed" class="col-sm-4 control-label">
+                                        <?php echo $hesklang['closed_title']; ?>
+                                        <i class="fa fa-question-circle settingsquestionmark"
+                                           data-toggle="htmlpopover"
+                                           title="<?php echo $hesklang['closed_title']; ?>"
+                                           data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i>
+                                    </label>
                                     <div class="col-sm-8">
                                         <select name="closed" class="form-control">
                                             <option value="1"><?php echo $hesklang['yes_title_case']; ?></option>
@@ -515,7 +537,13 @@ function buildEditModal($statusId) {
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4><?php echo $hesklang['status_name_title']; ?></h4>
+                                <h4>
+                                    <?php echo $hesklang['status_name_title']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="popover"
+                                       title="<?php echo $hesklang['status_name_title']; ?>"
+                                       data-content="<?php echo $hesklang['status_name_title_help']; ?>"></i>
+                                </h4>
                                 <div class="footerWithBorder blankSpace"></div>
                                 <?php foreach ($languages as $language => $languageCode):
                                     $warning = '';
@@ -549,7 +577,13 @@ function buildEditModal($statusId) {
                                 <h4><?php echo $hesklang['properties']; ?></h4>
                                 <div class="footerWithBorder blankSpace"></div>
                                 <div class="form-group">
-                                    <label for="text-color" class="col-sm-4 control-label"><?php echo $hesklang['textColor']; ?></label>
+                                    <label for="text-color" class="col-sm-4 control-label">
+                                        <?php echo $hesklang['textColor']; ?>
+                                        <i class="fa fa-question-circle settingsquestionmark"
+                                           data-toggle="popover"
+                                           title="<?php echo $hesklang['textColor']; ?>"
+                                           data-content="<?php echo $hesklang['textColorDescr']; ?>"></i>
+                                    </label>
                                     <div class="col-sm-8">
                                         <input type="text" name="text-color" class="form-control"
                                                value="<?php echo $status['TextColor']; ?>"
@@ -557,7 +591,13 @@ function buildEditModal($statusId) {
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="closable" class="col-sm-4 control-label"><?php echo $hesklang['closable']; ?></label>
+                                    <label for="closable" class="col-sm-4 control-label">
+                                        <?php echo $hesklang['closable']; ?>
+                                        <i class="fa fa-question-circle settingsquestionmark"
+                                           data-toggle="htmlpopover"
+                                           title="<?php echo $hesklang['closable']; ?>"
+                                           data-content="<?php echo $hesklang['closable_description']; ?>"></i>
+                                    </label>
                                     <div class="col-sm-8">
                                         <?php
                                         $yesSelected = $status['Closable'] == 'yes' ? 'selected' : '';
@@ -574,7 +614,13 @@ function buildEditModal($statusId) {
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="closed" class="col-sm-4 control-label"><?php echo $hesklang['closed_title']; ?></label>
+                                    <label for="closed" class="col-sm-4 control-label">
+                                        <?php echo $hesklang['closed_title']; ?>
+                                        <i class="fa fa-question-circle settingsquestionmark"
+                                           data-toggle="htmlpopover"
+                                           title="<?php echo $hesklang['closed_title']; ?>"
+                                           data-content="<?php echo $hesklang['closedQuestionMarkDescr']; ?>"></i>
+                                    </label>
                                     <div class="col-sm-8">
                                         <?php
                                         $yes = $status['IsClosed'] == 1 ? 'selected' : '';
@@ -653,12 +699,11 @@ function createStatus() {
 		VALUES (".intval($nextId).", 'STORED IN XREF TABLE', '".hesk_dbEscape($textColor)."', ".intval($isClosed).", '".hesk_dbEscape($closable)."', ".intval($my_order).")";
     hesk_dbQuery($insert);
 
-    $newStatusId = hesk_dbInsertID();
 
     // For each language, create a value in the xref table
     foreach (hesk_POST_array('name') as $language => $translation) {
         hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (`language`, `text`, `status_id`)
-            VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($translation)."', ".intval($newStatusId).")");
+            VALUES ('".hesk_dbEscape($language)."', '".hesk_dbEscape($translation)."', ".intval($nextId).")");
     }
 
     hesk_process_messages($hesklang['new_status_created'],'manage_statuses.php','SUCCESS');

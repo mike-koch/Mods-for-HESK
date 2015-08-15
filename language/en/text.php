@@ -39,6 +39,7 @@ $hesklang['click_to_edit_name'] = 'Click to edit name';
 $hesklang['new_status'] = 'New Status';
 $hesklang['create_new_status_title'] = 'Create New Status';
 $hesklang['status_name_title'] = 'Status Name';
+$hesklang['status_name_title_help'] = 'The name of the status that should appear when viewing the ticket, for each language you have installed.';
 $hesklang['properties'] = 'Properties';
 $hesklang['closable'] = 'Closable'; // Same as $hesklang['closable_question'], but without punctuation
 $hesklang['new_status_created'] = 'New status successfully created';
@@ -176,8 +177,8 @@ $hesklang['error_saving_template'] = 'An error occurred when trying to save the 
 $hesklang['can_man_email_tpl'] = 'Edit email templates';
 $hesklang['email_template_directory_not_writable'] = 'The email template <b>%s</b> is not writable by HESK. Please CHMOD it to 0666.'; // %s: template file name
 $hesklang['closable_question'] = 'Closable?';
-$hesklang['closable_description'] = '<b><i>This setting is ignored if the &quot;Closed?&quot; checkbox is checked for this status</i></b>.
-    <br><br>Determines if the customer staff is able to close a ticket in this status.
+$hesklang['closable_description'] = '<b><i>This setting is ignored if the &quot;Closed?&quot; setting is set to &quot;Yes&quot; for this status</i></b>.
+    <br><br>Determines if the customer and/or staff is able to close a ticket in this status.
     <br><br><b>Yes:</b> Both customers and staff can close a ticket in this status.
     <br><b>Customers only:</b> Customers can close a ticket in this status, but staff cannot.
     <br><b>Staff only:</b> Staff can close a ticket in this status, but customers cannot.
