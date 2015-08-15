@@ -570,6 +570,8 @@ function execute240Scripts() {
       VALUES ('view_ticket', '1')");
     executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` (`location`, `show`)
       VALUES ('knowledgebase', '1')");
+    executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` (`location`, `show`)
+      VALUES ('staff_create_ticket', '1')");
 
     // Setup status improvement tables
     executeQuery("CREATE TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref` (

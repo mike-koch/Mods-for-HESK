@@ -29,9 +29,10 @@ $hesklang['category_sort_help'] = 'Determines if categories shown on the manage 
 sorted alphabetically.';
 $hesklang['quick_help_sections'] = 'Quick Help Sections';
 $hesklang['quick_help_sections_help'] = 'Check the checkbox to show the "Quick Help" sections on the left-hand side, or uncheck to not show.';
-$hesklang['create_ticket'] = 'Create ticket';
+$hesklang['create_ticket'] = 'Create ticket (customers)';
 $hesklang['view_ticket_form'] = 'View ticket form';
 $hesklang['knowledgebase'] = 'Knowledgebase section';
+$hesklang['staff_create_ticket'] = 'Create ticket (staff)';
 $hesklang['allow_rich_text_for_tickets'] = 'Allow rich text for tickets';
 $hesklang['allow_rich_text_for_tickets_help'] = 'Allow staff and customers to use rich text formatting when writing ticket messages / replies.';
 $hesklang['click_to_edit_name'] = 'Click to edit name';
