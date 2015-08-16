@@ -183,12 +183,12 @@ if ( defined('HESK_DEMO') )
                                 echo ' - <span style="color:green">' . $hesklang['mfh_up_to_date'] . '</span>';
                             } else
                             {
-                                ?> - <a href="http://mods-for-hesk.mkochcs.com" target="_blank" style="color:orange;font-weight:bold"><?php echo $hesklang['hnw']; ?></a>
+                                ?> - <a href="https://mods-for-hesk.mkochcs.com" target="_blank" style="color:orange;font-weight:bold"><?php echo $hesklang['hnw']; ?></a>
                            <?php
                             }
                         } else
                         {
-                            ?> - <a href="http://mods-for-hesk.mkochcs.com?checkVersion.php?v=<?php echo $modsForHeskVersion; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a>
+                            ?> - <a href="https://mods-for-hesk.mkochcs.com/versioncheck.php?version=<?php echo $modsForHeskVersion; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a>
                         <?php
                         }
                         ?>
