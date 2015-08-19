@@ -82,6 +82,9 @@ function removeOtherColumns() {
     executeQuery("DROP TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."text_to_status_xref`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` DROP COLUMN `download_count`");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` DROP COLUMN `download_count`");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` DROP COLUMN `html`");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` DROP COLUMN `html`");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` DROP COLUMN `html`");
 
 
     // These queries are ran in case someone used an unfortunate installation they may have not properly cleaned up tables

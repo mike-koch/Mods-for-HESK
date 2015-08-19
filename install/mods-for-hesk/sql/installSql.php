@@ -592,6 +592,7 @@ function execute240Scripts() {
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` ADD COLUMN `download_count` INT NOT NULL DEFAULT 0");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` ADD COLUMN `download_count` INT NOT NULL DEFAULT 0");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `html` ENUM('0','1') NOT NULL DEFAULT '0'");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `html` ENUM('0','1') NOT NULL DEFAULT '0'");
     executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` ADD COLUMN `html` ENUM('0','1') NOT NULL DEFAULT '0'");
 
     executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.4.0' WHERE `Key` = 'modsForHeskVersion'");
