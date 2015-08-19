@@ -243,7 +243,7 @@ echo '</table><br>';
 
 // Print initial ticket message
 $newMessage = hesk_unhortenUrl($ticket['message']);
-if ($modsForHesk_settings['rich_text_for_tickets'])
+if ($ticket['html'])
 {
     $newMessage = hesk_html_entity_decode($newMessage);
 }
@@ -254,7 +254,7 @@ while ($reply = hesk_dbFetchAssoc($res))
 {
 	$reply['dt'] = hesk_date($reply['dt'], true);
     $theReply = hesk_unhortenUrl($reply['message']);
-    if ($modsForHesk_settings['rich_text_for_tickets']) {
+    if ($reply['html']) {
         $theReply = hesk_html_entity_decode($theReply);
     }
 

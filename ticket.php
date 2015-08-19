@@ -381,7 +381,14 @@ if (!$show['show']) {
                 <div class="ticketMessageBottom">
                      <!-- Message -->
                      <p><b><?php echo $hesklang['message']; ?>:</b></p>
-                     <div class="message"><?php echo hesk_html_entity_decode($ticket['message']); ?></div>
+                     <div class="message">
+                         <?php if ($ticket['html']) {
+                             echo hesk_html_entity_decode($ticket['message']);
+                         } else {
+                             echo $ticket['message'];
+                         }
+                         ?>
+                     </div>
                 </div>
                 <div class="ticketMessageTop">
                      <!-- Custom Fields after Message -->
@@ -724,7 +731,15 @@ function hesk_printCustomerTicketReplies()
                 <div class="ticketMessageBottom">
                      <!-- Message -->
                      <p><b><?php echo $hesklang['message']; ?>:</b></p>
-			         <div class="message"><?php echo hesk_html_entity_decode($reply['message']); ?></div>
+			         <div class="message">
+                         <?php
+                         if ($reply['html']) {
+                             echo hesk_html_entity_decode($reply['message']);
+                         } else {
+                             echo $reply['message'];
+                         }
+                         ?>
+                     </div>
                 </div>
                 <div class="ticketMessageTop">
                      <?php mfh_listAttachments($reply['attachments'],$i,false);?>

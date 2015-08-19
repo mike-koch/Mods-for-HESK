@@ -99,7 +99,8 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`custom20`,
 		`status`,
 		`latitude`,
-		`longitude`
+		`longitude`,
+		`html`
 	)
 	VALUES
 	(
@@ -142,7 +143,8 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'".hesk_dbEscape($ticket['custom20'])."',
 		'".intval($ticket['status'])."',
 		'".hesk_dbEscape($ticket['latitude'])."',
-		'".hesk_dbEscape($ticket['longitude'])."'
+		'".hesk_dbEscape($ticket['longitude'])."',
+		'".hesk_dbEscape($ticket['html'])."'
 	)
 	");
 

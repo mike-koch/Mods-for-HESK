@@ -1399,7 +1399,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                      <!-- Message -->
                     <p><b><?php echo $hesklang['message']; ?>:</b></p>
 		            <div class="message">
-                        <?php if ($modsForHesk_settings['rich_text_for_tickets']) {
+                        <?php if ($ticket['html']) {
                             echo hesk_html_entity_decode($ticket['message']);
                         } else {
                             echo $ticket['message'];
@@ -1697,7 +1697,7 @@ function hesk_printTicketReplies() {
                 </div>
                 <div class="ticketMessageBottom">
                     <p><b><?php echo $hesklang['message']; ?>:</b></p>
-			        <p><?php if ($modsForHesk_settings['rich_text_for_tickets']) {
+			        <p><?php if ($reply['html']) {
                             echo hesk_html_entity_decode($reply['message']);
                         } else {
                             echo $reply['message'];

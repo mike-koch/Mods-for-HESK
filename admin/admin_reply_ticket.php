@@ -211,13 +211,14 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments))
 }
 
 // Add reply
+$html = $modsForHesk_settings['rich_text_for_tickets'];
 if ($submit_as_customer)
 {
-    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`) VALUES ('".intval($replyto)."','".hesk_dbEscape(addslashes($ticket['name']))."','".hesk_dbEscape($message."<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>")."',NOW(),'".hesk_dbEscape($myattachments)."')");
+    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`html`) VALUES ('".intval($replyto)."','".hesk_dbEscape(addslashes($ticket['name']))."','".hesk_dbEscape($message."<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>")."',NOW(),'".hesk_dbEscape($myattachments)."', '".$html."')");
 }
 else
 {
-    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`) VALUES ('".intval($replyto)."','".hesk_dbEscape(addslashes($_SESSION['name']))."','".hesk_dbEscape($message)."',NOW(),'".hesk_dbEscape($myattachments)."','".intval($_SESSION['id'])."')");
+    hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`,`html`) VALUES ('".intval($replyto)."','".hesk_dbEscape(addslashes($_SESSION['name']))."','".hesk_dbEscape($message)."',NOW(),'".hesk_dbEscape($myattachments)."','".intval($_SESSION['id'])."', '".$html."')");
 }
 
 /* Track ticket status changes for history */
