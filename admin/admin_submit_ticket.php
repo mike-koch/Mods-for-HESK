@@ -279,6 +279,8 @@ if (!$modsForHesk_settings['rich_text_for_tickets']) {
 $tmpvar['latitude'] = hesk_POST('latitude', 'E-4');
 $tmpvar['longitude'] = hesk_POST('longitude', 'E-4');
 
+$tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets'];
+
 // Insert ticket to database
 $ticket = hesk_newTicket($tmpvar);
 
