@@ -21,7 +21,8 @@ define('WYSIWYG',1);
 
 // Are we performing an action?
 if (isset($_REQUEST['a'])) {
-    if ($_REQUEST['a'] == 'create') { createStatus(); }
+    if ( defined('HESK_DEMO') ) { hesk_process_messages($hesklang['cannot_edit_status_demo'], 'manage_statuses.php'); }
+    elseif ($_REQUEST['a'] == 'create') { createStatus(); }
     elseif ($_REQUEST['a'] == 'update') { updateStatus(); }
     elseif ($_REQUEST['a'] == 'delete') { deleteStatus(); }
     elseif ($_REQUEST['a'] == 'sort') { moveStatus(); }

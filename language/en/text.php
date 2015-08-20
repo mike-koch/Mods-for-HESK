@@ -60,6 +60,7 @@ $hesklang['kb_attach_dir'] = 'Knowledgebase attachments folder';
 $hesklang['kb_attach_dir_help'] = 'Name of the folder, where knowledgebase attachments will be stored.<br><br>The folder needs to exist within the main HESK folder and be writable by PHP. On most systems names are CaSe SeNSiTiVe.
     <br><br>Allowed chars (other will be removed): a-z A-Z 0-9 _ -';
 $hesklang['ticket_attach_dir'] = 'Ticket attachments folder';
+$hesklang['cannot_edit_status_demo'] = 'You cannot edit statuses while in demo mode!';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.3.0
 $hesklang['sm_icon'] = 'Icon';
