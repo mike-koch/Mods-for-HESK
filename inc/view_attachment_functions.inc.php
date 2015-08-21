@@ -45,6 +45,10 @@ function mfh_listAttachments($attachments='', $reply=0, $is_staff)
                 echo '<span data-toggle="tooltip" title="'.$hesklang['click_to_preview'].'">
                                   <img src="'.$path.'" alt="'.$hesklang['image'].'" data-toggle="modal" data-target="#modal-attachment-'.$att_id.'">
                               </span>';
+			    $download_path = '';
+				if ($is_staff) {
+					$download_path = '../';
+				}
                 echo '<div class="modal fade" id="modal-attachment-'.$att_id.'" tabindex="-1" role="dialog" aria-hidden="true">
                                   <div class="modal-dialog">
                                       <div class="modal-content">
@@ -57,7 +61,7 @@ function mfh_listAttachments($attachments='', $reply=0, $is_staff)
                                           </div>
                                           <div class="modal-footer">
                                               <button type="button" class="btn btn-default" data-dismiss="modal">'.$hesklang['close_modal'].'</button>
-                                              <a href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'" class="btn btn-success">'.$hesklang['dnl'].'</a>
+                                              <a href="'.$download_path.'download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'" class="btn btn-success">'.$hesklang['dnl'].'</a>
                                           </div>
                                       </div>
                                   </div>
@@ -78,11 +82,14 @@ function mfh_listAttachments($attachments='', $reply=0, $is_staff)
         echo '<td>
                 <div class="btn-group">';
         /* Can edit and delete tickets? */
-        if ($is_staff && $can_edit && $can_delete)
-        {
-            echo '<a class="btn btn-danger" href="admin_ticket.php?delatt='.$att_id.'&amp;reply='.$reply.'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delete'].'"><i class="fa fa-times"></i></a> ';
+		$download_path = '';
+        if ($is_staff) {
+			$download_path = '../';
+			if ($can_edit && $can_delete) {
+				echo '<a class="btn btn-danger" href="admin_ticket.php?delatt='.$att_id.'&amp;reply='.$reply.'&amp;track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['pda']).'\');" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delete'].'"><i class="fa fa-times"></i></a> ';
+			}
         }
-        echo '<a class="btn btn-success" href="../download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'"
+        echo '<a class="btn btn-success" href="'.$download_path.'download_attachment.php?att_id='.$att_id.'&amp;track='.$trackingID.'"
                         data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['dnl'].'">
                             <i class="fa fa-arrow-down"></i>
                       </a>';
