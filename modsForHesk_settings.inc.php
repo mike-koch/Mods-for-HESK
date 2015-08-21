@@ -59,3 +59,6 @@ $modsForHesk_settings['statuses_order_column'] = 'sort';
 
 //-- Directory to store knowledgebase articles in.
 $modsForHesk_settings['kb_attach_dir'] = 'attachments';
+
+//-- Setting for using rich-text editor for customers. 0 = Disable, 1 = Enable
+$modsForHesk_settings['rich_text_for_tickets_for_customers'] = 0;
