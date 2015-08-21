@@ -864,11 +864,13 @@ if ( defined('HESK_DEMO') )
                             </label>
                             <div class="col-sm-6 form-inline">
                                 <?php
-                                $on = $modsForHesk_settings['rich_text_for_tickets'] ? 'checked' : '';
-                                $off = $modsForHesk_settings['rich_text_for_tickets'] ? '' : 'checked';
+                                $both = $modsForHesk_settings['rich_text_for_tickets'] && $modsForHesk_settings['rich_text_for_tickets_for_customers'] ? 'checked' : '';
+                                $staff = $modsForHesk_settings['rich_text_for_tickets'] && !$modsForHesk_settings['rich_text_for_tickets_for_customers'] ? 'checked' : '';
+								$no = $modsForHesk_settings['rich_text_for_tickets'] && $modsForHesk_settings['rich_text_for_tickets_for_customers'] ? '' : 'checked';
                                 echo '
-								<div class="radio"><label><input type="radio" name="rich_text_for_tickets" value="0" '.$off.'> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
-								<div class="radio"><label><input type="radio" name="rich_text_for_tickets" value="1" '.$on.'> '.$hesklang['on'].'</label></div>
+								<div class="radio"><label><input type="radio" name="rich_text_for_tickets" value="0" '.$no.'> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+								<div class="radio"><label><input type="radio" name="rich_text_for_tickets" value="1" '.$staff.'> '.$hesklang['staff_only'].'</label></div>&nbsp;&nbsp;&nbsp;
+								<div class="radio"><label><input type="radio" name="rich_text_for_tickets" value="2" '.$both.'> '.$hesklang['on'].'</label></div>
 								';
                                 ?>
                             </div>

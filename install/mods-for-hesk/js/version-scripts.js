@@ -50,6 +50,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 240) {
         startVersionUpgrade('240');
         executeUpdate(240, '240', '2.4.0');
+    } else if (startingVersion < 241) {
+        startVersionUpgrade('241');
+        executeUpdate(241, '241', '2.4.1');
     } else {
         installationFinished();
     }

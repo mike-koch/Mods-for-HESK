@@ -448,7 +448,7 @@ $tmpvar['latitude'] = hesk_POST('latitude');
 $tmpvar['longitude'] = hesk_POST('longitude');
 
 // Set html
-$tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets'];
+$tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets_for_customers'];
 
 // Should the helpdesk validate emails?
 $createTicket = true;

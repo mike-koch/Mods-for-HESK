@@ -576,7 +576,7 @@ if (!$show['show']) {
                     
 	                <div class="col-sm-12">
                         <textarea placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="message" id="message" class="form-control htmlEditor" rows="12" cols="60" <?php if (in_array('message',$_SESSION['iserror'])) {echo ' class="isError" ';} ?> ><?php if (isset($_SESSION['c_message'])) {echo stripslashes(hesk_input($_SESSION['c_message']));} ?></textarea>
-                        <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+                        <?php if ($modsForHesk_settings['rich_text_for_tickets_for_customers']): ?>
                             <script type="text/javascript">
                                 /* <![CDATA[ */
                                 tinyMCE.init({

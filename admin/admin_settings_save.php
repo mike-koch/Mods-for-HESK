@@ -516,7 +516,17 @@ $set['mfh_attachments'] = empty($_POST['email_attachments']) ? 0 : 1;
 $set['show_number_merged'] = empty($_POST['show_number_merged']) ? 0 : 1;
 $set['request_location'] = empty($_POST['request_location']) ? 0 : 1;
 $set['category_order_column'] = empty($_POST['category_order_column']) ? 'cat_order' : 'name';
-$set['rich_text_for_tickets'] = empty($_POST['rich_text_for_tickets']) ? 0 : 1;
+$rich_text_setting = hesk_POST('rich_text_for_tickets', 0);
+if ($rich_text_setting == 0) {
+	$set['rich_text_for_tickets'] = 0;
+	$set['rich_text_for_tickets_for_customers'] = 0;
+} elseif ($rich_text_setting == 1) {
+	$set['rich_text_for_tickets'] = 1;
+	$set['rich_text_for_tickets_for_customers'] = 0;
+} else {
+	$set['rich_text_for_tickets'] = 1;
+	$set['rich_text_for_tickets_for_customers'] = 1;
+}
 $set['statuses_order_column'] = empty($_POST['statuses_order_column']) ? 'sort' : 'name';
 $set['kb_attach_dir'] = hesk_POST('kb_attach_dir', 'attachments');
 
@@ -596,7 +606,10 @@ $modsForHesk_settings[\'rich_text_for_tickets\'] = '.$set['rich_text_for_tickets
 $modsForHesk_settings[\'statuses_order_column\'] = \''.$set['statuses_order_column'].'\';
 
 //-- Directory to store knowledgebase articles in.
-$modsForHesk_settings[\'kb_attach_dir\'] = \''.$set['kb_attach_dir'].'\';';
+$modsForHesk_settings[\'kb_attach_dir\'] = \''.$set['kb_attach_dir'].'\';
+
+//-- Setting for using rich-text editor for customers. 0 = Disable, 1 = Enable
+$modsForHesk_settings[\'rich_text_for_tickets_for_customers\'] = '.$set['rich_text_for_tickets_for_customers'].';';
 
 // Write the file
 if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )
