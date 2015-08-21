@@ -652,3 +652,28 @@ $modsForHesk_settings[\'kb_attach_dir\'] = \''.$hesk_settings['attach_dir'].'\';
 
     return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
 }
+// END Version 2.4.0
+
+// BEGIN Version 2.4.1
+function execute241Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.4.1' WHERE `Key` = 'modsForHeskVersion'");
+}
+
+function execute241FileUpdate() {
+
+    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
+
+    if (strpos($file, '$modsForHesk_settings[\'rich_text_for_tickets_for_customers\']') === false)
+    {
+        $file .= '
+
+        //-- Setting for using rich-text editor for customers. 0 = Disable, 1 = Enable
+$modsForHesk_settings[\'rich_text_for_tickets_for_customers\'] = 0;';
+    }
+
+    return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
+}
