@@ -205,7 +205,7 @@ $ticket['status'] = $ticket['status'] == $defaultNewTicketStatus['ID'] ? $defaul
 $res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `status`='{$ticket['status']}', `replies`=`replies`+1, `lastreplier`='0' WHERE `id`='{$ticket['id']}' LIMIT 1");
 
 // Insert reply into database
-$html = $modsForHesk_settings['rich_text_for_tickets'];
+$html = $modsForHesk_settings['rich_text_for_tickets_for_customers'];
 hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`, `html`) VALUES ({$ticket['id']},'".hesk_dbEscape($ticket['name'])."','".hesk_dbEscape($message)."',NOW(),'".hesk_dbEscape($myattachments)."','".$html."')");
 
 

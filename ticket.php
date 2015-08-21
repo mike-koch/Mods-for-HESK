@@ -606,7 +606,7 @@ function hesk_printCustomerReplyForm($reopen=0)
             <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>: <span class="important">*</span></label>
             <div class="col-sm-9">
                 <textarea name="message" class="form-control htmlEditor" rows="12" cols="60"><?php if (isset($_SESSION['ticket_message'])) {echo stripslashes(hesk_input($_SESSION['ticket_message']));} ?></textarea>
-                <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+                <?php if ($modsForHesk_settings['rich_text_for_tickets_for_customers']): ?>
                     <script type="text/javascript">
                         /* <![CDATA[ */
                         tinyMCE.init({
