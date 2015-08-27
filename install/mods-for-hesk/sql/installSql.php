@@ -686,41 +686,65 @@ function migrateSettings() {
     if (file_exists(HESK_PATH . 'modsForHesk_settings.inc.php')) {
         require_once(HESK_PATH . 'modsForHesk_settings.inc.php');
 
+        $rtl = getSettingValue($modsForHesk_settings, 'rtl', 0);
+        $show_icons = getSettingValue($modsForHesk_settings, 'show_icons', 0);
+        $custom_field_setting = getSettingValue($modsForHesk_settings, 'custom_field_setting', 0);
+        $customer_email_verification_required = getSettingValue($modsForHesk_settings, 'customer_email_verification_required', 0);
+        $html_emails = getSettingValue($modsForHesk_settings, 'html_emails', 1);
+        $use_mailgun = getSettingValue($modsForHesk_settings, 'use_mailgun', 0);
+        $mailgun_api_key = getSettingValue($modsForHesk_settings, 'mailgun_api_key', '');
+        $mailgun_domain = getSettingValue($modsForHesk_settings, 'mailgun_domain', '');
+        $use_bootstrap_theme = getSettingValue($modsForHesk_settings, 'use_bootstrap_theme', 1);
+        $new_kb_article_visibility = getSettingValue($modsForHesk_settings, 'new_kb_article_visibility', 0);
+        $attachments = getSettingValue($modsForHesk_settings, 'attachments', 0);
+        $show_number_merged = getSettingValue($modsForHesk_settings, 'show_number_merged', 1);
+        $request_location = getSettingValue($modsForHesk_settings, 'request_location', 0);
+        $category_order_column = getSettingValue($modsForHesk_settings, 'category_order_column', 'cat_order');
+        $rich_text_for_tickets = getSettingValue($modsForHesk_settings, 'rich_text_for_tickets', 0);
+        $statuses_order_column = getSettingValue($modsForHesk_settings, 'statuses_order_column', 'sort');
+        $kb_attach_dir = getSettingValue($modsForHesk_settings, 'kb_attach_dir', 'attachments');
+        $rich_text_for_tickets_for_customers = getSettingValue($modsForHesk_settings, 'rich_text_for_tickets_for_customers', 0);
+
+
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('rtl', '".intval($modsForHesk_settings['rtl'])."')");
+            VALUES ('rtl', ".intval($rtl).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('show_icons', '".intval($modsForHesk_settings['show_icons'])."')");
+            VALUES ('show_icons', ".intval($show_icons).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('custom_field_setting', '".intval($modsForHesk_settings['custom_field_setting'])."')");
+            VALUES ('custom_field_setting', ".intval($custom_field_setting).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('customer_email_verification_required', '".intval($modsForHesk_settings['customer_email_verification_required'])."')");
+            VALUES ('customer_email_verification_required', ".intval($customer_email_verification_required).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('html_emails', '".intval($modsForHesk_settings['html_emails'])."')");
+            VALUES ('html_emails', ".intval($html_emails).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('use_mailgun', '".intval($modsForHesk_settings['use_mailgun'])."')");
+            VALUES ('use_mailgun', ".intval($use_mailgun).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('mailgun_api_key', '".intval($modsForHesk_settings['mailgun_api_key'])."')");
+            VALUES ('mailgun_api_key', '".hesk_dbEscape($mailgun_api_key)."')");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('mailgun_domain', '".intval($modsForHesk_settings['mailgun_domain'])."')");
+            VALUES ('mailgun_domain', '".hesk_dbEscape($mailgun_domain)."')");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('use_bootstrap_theme', '".intval($modsForHesk_settings['use_bootstrap_theme'])."')");
+            VALUES ('use_bootstrap_theme', ".intval($use_bootstrap_theme).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('new_kb_article_visibility', '".intval($modsForHesk_settings['new_kb_article_visibility'])."')");
+            VALUES ('new_kb_article_visibility', ".intval($new_kb_article_visibility).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('attachments', '".intval($modsForHesk_settings['attachments'])."')");
+            VALUES ('attachments', ".intval($attachments).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('show_number_merged', '".intval($modsForHesk_settings['show_number_merged'])."')");
+            VALUES ('show_number_merged', ".intval($show_number_merged).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('request_location', '".intval($modsForHesk_settings['request_location'])."')");
+            VALUES ('request_location', ".intval($request_location).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('category_order_column', '".intval($modsForHesk_settings['category_order_column'])."')");
+            VALUES ('category_order_column', '".hesk_dbEscape($category_order_column)."')");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('rich_text_for_tickets', '".intval($modsForHesk_settings['rich_text_for_tickets'])."')");
+            VALUES ('rich_text_for_tickets', ".intval($rich_text_for_tickets).")");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('statuses_order_column', '".intval($modsForHesk_settings['statuses_order_column'])."')");
+            VALUES ('statuses_order_column', '".hesk_dbEscape($statuses_order_column)."')");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('kb_attach_dir', '".intval($modsForHesk_settings['kb_attach_dir'])."')");
+            VALUES ('kb_attach_dir', '".hesk_dbEscape($kb_attach_dir)."')");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
-            VALUES ('rich_text_for_tickets_for_customers', '".intval($modsForHesk_settings['rich_text_for_tickets_for_customers'])."')");
+            VALUES ('rich_text_for_tickets_for_customers', ".intval($rich_text_for_tickets_for_customers).")");
     }
+}
+
+function getSettingValue($settings, $setting, $default) {
+    return isset($settings[$setting]) ? $settings[$setting] : $default;
 }
