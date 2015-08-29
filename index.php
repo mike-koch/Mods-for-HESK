@@ -38,12 +38,12 @@ define('WYSIWYG',1);
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 
+hesk_load_database_functions();
+hesk_dbConnect();
 // Are we in maintenance mode?
 hesk_check_maintenance();
-hesk_load_database_functions();
 
 // Are we in "Knowledgebase only" mode?
 hesk_check_kb_only();

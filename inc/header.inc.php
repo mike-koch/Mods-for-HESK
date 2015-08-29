@@ -34,7 +34,11 @@
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
+if (!function_exists('mfh_getSettings')) {
+    die('Mods for HESK settings are not accessible!');
+}
+
+$modsForHesk_settings = mfh_getSettings();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

@@ -1988,7 +1988,7 @@ function mfh_getSettings() {
 	global $hesk_settings;
 
 	$settings = array();
-	$res = hesk_dbQuery("SELECT `Key`, `Value` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` WHERE `Key` <> 'version'");
+	$res = hesk_dbQuery("SELECT `Key`, `Value` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` WHERE `Key` <> 'modsForHeskVersion'");
 	while ($row = hesk_dbFetchAssoc($res)) {
 		$settings[$row['Key']] = $row['Value'];
 	}
