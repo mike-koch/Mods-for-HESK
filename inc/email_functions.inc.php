@@ -104,7 +104,7 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
 
     $changedLanguage = false;
     //Set the user's language according to the ticket.
-    if ($ticket['language'] !== NULL)
+    if (isset($ticket['language']) && $ticket['language'] !== NULL)
     {
         hesk_setLanguage($ticket['language']);
         $changedLanguage = true;
@@ -135,10 +135,7 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
 	hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $ccEmails, $bccEmails, $hasMessage);
 
     // Reset the language if it was changed
-    if ($changedLanguage)
-    {
-        hesk_resetLanguage();
-    }
+    hesk_resetLanguage();
 
     return true;
 
