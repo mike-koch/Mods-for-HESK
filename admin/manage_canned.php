@@ -161,7 +161,9 @@ function hesk_insertAtCursor(myField, myValue) {
 
                         $javascript_titles.='myTitle['.$mysaved['id'].']=\''.addslashes($mysaved['title'])."';\n";
                         if ($modsForHesk_settings['rich_text_for_tickets']) {
-                            $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", hesk_html_entity_decode($mysaved['message']) )."';\n";
+                            $theMessage = hesk_html_entity_decode($mysaved['message']);
+                            $theMessage = addslashes($theMessage);
+                            $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", $theMessage )."';\n";
                         } else {
                             $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved['message']) )."';\n";
                         }
