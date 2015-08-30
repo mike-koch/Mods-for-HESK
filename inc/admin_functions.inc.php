@@ -758,13 +758,13 @@ function hesk_checkPermission($feature,$showerror=1) {
 	global $hesklang;
 
     /* Admins have full access to all features */
-    if ($_SESSION['isadmin'])
+	if (isset($_SESSION['isadmin']) && $_SESSION['isadmin'])
     {
         return true;
     }
 
     /* Check other staff for permissions */
-    if (strpos($_SESSION['heskprivileges'], $feature) === false)
+	if (isset($_SESSION['heskprivileges']) && strpos($_SESSION['heskprivileges'], $feature) === false)
     {
     	if ($showerror)
         {
