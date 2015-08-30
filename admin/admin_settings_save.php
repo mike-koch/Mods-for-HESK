@@ -35,6 +35,12 @@
 define('IN_SCRIPT',1);
 define('HESK_PATH','../');
 
+// Make sure OPcache is reset when modifying settings
+if ( function_exists('opcache_reset') )
+{
+	opcache_reset();
+}
+
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'modsForHesk_settings.inc.php');
@@ -108,7 +114,7 @@ else
 /* --> Helpdesk settings */
 $set['hesk_title']		= hesk_input( hesk_POST('s_hesk_title'), $hesklang['err_htitle']);
 $set['hesk_title']		= str_replace('\\&quot;','&quot;',$set['hesk_title']);
-$set['hesk_url']		= hesk_input( hesk_POST('s_hesk_url'), $hesklang['err_hurl']);
+$set['hesk_url']		= rtrim( hesk_input( hesk_POST('s_hesk_url'), $hesklang['err_hurl']), '/');
 
 // ---> check admin folder
 $set['admin_dir'] = isset($_POST['s_admin_dir']) && ! is_array($_POST['s_admin_dir']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $_POST['s_admin_dir']) : 'admin';
@@ -487,6 +493,19 @@ for ($i=1;$i<=20;$i++)
         {
         	$set['custom_fields'][$this_field]['type'] = 'text';
         }
+
+		// Try to detect if field type changed to anything except "select"
+		if ($set['custom_fields'][$this_field]['type'] != 'select')
+		{
+			// If type is "radio" or "checkbox" remove "please select", keep other options
+			$set['custom_fields'][$this_field]['value'] = str_replace('{HESK_SELECT}', '', $set['custom_fields'][$this_field]['value']);
+
+			// Field type changed to "text" or "textarea", clear default value if it contains "#HESK#" separator
+			if ( in_array($set['custom_fields'][$this_field]['type'], array('text','textarea')) && ! in_array($hesk_settings['custom_fields'][$this_field]['type'], array('text','textarea')) && strpos($set['custom_fields'][$this_field]['value'], '#HESK#') !== false )
+			{
+				$set['custom_fields'][$this_field]['value'] = '';
+			}
+		}
 	}
 	else
 	{
