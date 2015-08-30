@@ -78,7 +78,7 @@ $my_email = hesk_getCustomerEmail();
 $message = hesk_input( hesk_POST('message') );
 
 // If the message was entered, further parse it
-if ( strlen($message) )
+if ( strlen($message) && !$modsForHesk_settings['rich_text_for_tickets_for_customers'] )
 {
 	// Make links clickable
 	$message = hesk_makeURL($message);
