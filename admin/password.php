@@ -238,6 +238,9 @@ elseif ( isset($_GET['h']) )
 			// Expire all verification hashes for this user
 			hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."reset_password` WHERE `user`=".intval($row['user']));
 
+			// Load additional required functions
+			require(HESK_PATH . 'inc/admin_functions.inc.php');
+
 			// Get user details
 			$res = hesk_dbQuery('SELECT * FROM `'.$hesk_settings['db_pfix']."users` WHERE `id`=".intval($row['user'])." LIMIT 1");
 			$row = hesk_dbFetchAssoc($res);
@@ -245,6 +248,11 @@ elseif ( isset($_GET['h']) )
 			{
 				$_SESSION[$k]=$v;
 			}
+
+			// Set a tag that will be used to expire sessions after username or password change
+			$_SESSION['session_verify'] = hesk_activeSessionCreateTag($_SESSION['user'], $_SESSION['pass']);
+
+			// We don't need the password hash anymore
 			unset($_SESSION['pass']);
 
 			// Clean brute force attempts
