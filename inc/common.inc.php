@@ -37,6 +37,12 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 #error_reporting(E_ALL);
 
+// Set correct Content-Type header
+if ( ! defined('NO_HTTP_HEADER') )
+{
+	header('Content-Type: text/html; charset=utf-8');
+}
+
 // Set backslash options
 if (get_magic_quotes_gpc())
 {
