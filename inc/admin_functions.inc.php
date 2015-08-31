@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -758,13 +758,13 @@ function hesk_checkPermission($feature,$showerror=1) {
 	global $hesklang;
 
     /* Admins have full access to all features */
-    if ($_SESSION['isadmin'])
+	if (isset($_SESSION['isadmin']) && $_SESSION['isadmin'])
     {
         return true;
     }
 
     /* Check other staff for permissions */
-    if (strpos($_SESSION['heskprivileges'], $feature) === false)
+	if (isset($_SESSION['heskprivileges']) && strpos($_SESSION['heskprivileges'], $feature) === false)
     {
     	if ($showerror)
         {
