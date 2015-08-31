@@ -677,3 +677,13 @@ $modsForHesk_settings[\'rich_text_for_tickets_for_customers\'] = 0;';
 
     return file_put_contents(HESK_PATH.'modsForHesk_settings.inc.php', $file);
 }
+// END Version 2.4.1
+
+// Version 2.4.2
+function execute242Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.4.2' WHERE `Key` = 'modsForHeskVersion'");
+}

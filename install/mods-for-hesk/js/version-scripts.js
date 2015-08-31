@@ -53,6 +53,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 241) {
         startVersionUpgrade('241');
         executeUpdate(241, '241', '2.4.1');
+    } else if (startingVersion < 242) {
+        startVersionUpgrade('242');
+        executeUpdate(242, '242', '2.4.2');
     } else {
         installationFinished();
     }
