@@ -114,8 +114,10 @@ if (isset($_POST['save']))
 	    	hesk_error($myerror);
 	    }
 
-		$tmpvar['message'] = hesk_makeURL($tmpvar['message']);
-		$tmpvar['message'] = nl2br($tmpvar['message']);
+		if (!$modsForHesk_settings['rich_text_for_tickets']) {
+			$tmpvar['message'] = hesk_makeURL($tmpvar['message']);
+			$tmpvar['message'] = nl2br($tmpvar['message']);
+		}
 
     	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` SET `message`='".hesk_dbEscape($tmpvar['message'])."' WHERE `id`='".intval($tmpvar['id'])."' AND `replyto`='".intval($ticket['id'])."' LIMIT 1");
     }

@@ -412,8 +412,10 @@ if (count($hesk_error_buffer))
     hesk_process_messages($hesk_error_buffer, 'index.php?a=add');
 }
 
-$tmpvar['message']=hesk_makeURL($tmpvar['message']);
-$tmpvar['message']=nl2br($tmpvar['message']);
+if (!$modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+    $tmpvar['message']=hesk_makeURL($tmpvar['message']);
+    $tmpvar['message']=nl2br($tmpvar['message']);
+}
 
 // Track suggested knowledgebase articles
 if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && isset($_POST['suggested']) && is_array($_POST['suggested']) )
