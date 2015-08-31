@@ -1973,7 +1973,9 @@ function hesk_printCanned()
 	{
 	    $can_options .= '<option value="' . $mysaved[0] . '">' . $mysaved[1]. "</option>\n";
 	    if ($modsForHesk_settings['rich_text_for_tickets']) {
-	        echo 'myMsgTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", hesk_html_entity_decode($mysaved[2]))."';\n";
+	        $theMessage = hesk_html_entity_decode($mysaved[2]);
+	        $theMessage = addslashes($theMessage);
+	        echo 'myMsgTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", $theMessage)."';\n";
 	    } else {
 	        echo 'myMsgTxt['.$mysaved[0].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved[2]))."';\n";
 	    }
