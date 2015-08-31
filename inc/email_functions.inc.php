@@ -738,8 +738,10 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
             if ($isForHtml)
             {
                 $htmlMessage = nl2br($ticket['message']);
+                $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $htmlMessage, $msg);
                 return str_replace('%%MESSAGE%%', $htmlMessage, $msg);
             }
+            $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $ticket['message'], $msg);
             return str_replace('%%MESSAGE%%', $ticket['message'], $msg);
         }
         else
@@ -862,6 +864,15 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
         if ( ! $is_admin && ($hesk_settings['email_piping'] || $hesk_settings['pop3']) && $hesk_settings['strip_quoted'])
         {
             $msg = $hesklang['EMAIL_HR'] . "\n\n" . $msg;
+        }
+    } elseif (strpos($msg, '%%MESSAGE_NO_ATTACHMENTS%%') !== false) {
+        if ($isForHtml)
+        {
+            $htmlMessage = nl2br($ticket['message']);
+            $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $htmlMessage, $msg);
+        } else
+        {
+            $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%',$ticket['message'],$msg);
         }
     }
 
