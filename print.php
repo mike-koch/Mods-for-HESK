@@ -48,7 +48,6 @@ $trackingID = hesk_cleanID() or die("$hesklang[int_error]: $hesklang[no_trackID]
 
 /* Connect to database */
 hesk_dbConnect();
-$modsForHesk_settings = mfh_getSettings();
 
 // Perform additional checks for customers
 if ( empty($_SESSION['id']) )
@@ -124,7 +123,7 @@ hr
 	background-color: #9e9e9e;
 	height: 1px;
 	width: 100%;
-	text-align: <?php if ($modsForHesk_settings['rtl']) {echo 'right';} else {echo 'left';} ?>;
+	text-align: <?php if (mfh_getSetting('rtl')) {echo 'right';} else {echo 'left';} ?>;
 }
 </style>
 </head>
@@ -221,7 +220,7 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
     if ($v['use'])
 	{
-        if ($modsForHesk_settings['custom_field_setting'])
+        if (mfh_getSetting('custom_field_setting'))
         {
             $v['name'] = $hesklang[$v['name']];
         }

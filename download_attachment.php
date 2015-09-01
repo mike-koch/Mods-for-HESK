@@ -41,7 +41,6 @@ require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
-$modsForHesk_settings = mfh_getSettings();
 
 // Are we in maintenance mode? (check customers only)
 if ( empty($SESSION['id']) )
@@ -141,7 +140,7 @@ else
 // Path of the file on the server
 $realpath = $hesk_settings['attach_dir'] . '/' . $file['saved_name'];
 if (isset($_GET['kb_att'])) {
-	$realpath = $modsForHesk_settings['kb_attach_dir'] . '/' . $file['saved_name'];
+	$realpath = mfh_getSetting('kb_attach_dir') . '/' . $file['saved_name'];
 }
 
 // Perhaps the file has been deleted?

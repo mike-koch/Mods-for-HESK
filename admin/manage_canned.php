@@ -37,7 +37,6 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -78,7 +77,7 @@ function hesk_insertTag(tag) {
     var text_to_insert = '%%'+tag+'%%';
     var msg = '';
     <?php
-    if ($modsForHesk_settings['rich_text_for_tickets']) { ?>
+    if (mfh_getSetting('rich_text_for_tickets')) { ?>
         msg = tinymce.get("message").getContent();
         tinymce.get("message").setContent('');
         tinymce.get("message").execCommand('mceInsertRawHTML', false, msg + text_to_insert);
@@ -160,7 +159,7 @@ function hesk_insertAtCursor(myField, myValue) {
 
 
                         $javascript_titles.='myTitle['.$mysaved['id'].']=\''.addslashes($mysaved['title'])."';\n";
-                        if ($modsForHesk_settings['rich_text_for_tickets']) {
+                        if (mfh_getSetting('rich_text_for_tickets')) {
                             $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", hesk_html_entity_decode($mysaved['message']) )."';\n";
                         } else {
                             $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved['message']) )."';\n";
@@ -206,7 +205,7 @@ function hesk_insertAtCursor(myField, myValue) {
             </div>
         </div>
     </div>
-    <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+    <?php if (mfh_getSetting('rich_text_for_tickets')): ?>
         <script type="text/javascript">
             /* <![CDATA[ */
             tinyMCE.init({
@@ -243,7 +242,7 @@ function hesk_insertAtCursor(myField, myValue) {
 
             function setMessage(msgid)
             {
-                var useHtmlEditor = <?php echo $modsForHesk_settings['rich_text_for_tickets']; ?>;
+                var useHtmlEditor = <?php echo mfh_getSetting('rich_text_for_tickets'); ?>;
                 var myMsg=myMsgTxt[msgid];
                 var mySubject=myTitle[msgid];
 
@@ -352,7 +351,7 @@ function hesk_insertAtCursor(myField, myValue) {
                             {
                                 if ($v['use'])
                                 {
-                                    if ($modsForHesk_settings['custom_field_setting'])
+                                    if (mfh_getSetting('custom_field_setting'))
                                     {
                                         $v['name'] = $hesklang[$v['name']];
                                     }

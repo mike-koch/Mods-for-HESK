@@ -38,7 +38,6 @@ define('WYSIWYG',1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
@@ -51,6 +50,8 @@ hesk_isLoggedIn();
 
 /* Check permissions for this feature */
 hesk_checkPermission('can_view_tickets');
+$modsForHesk_settings = mfh_getSettings();
+
 $can_del_notes		 = hesk_checkPermission('can_del_notes',0);
 $can_reply			 = hesk_checkPermission('can_reply_tickets',0);
 $can_delete			 = hesk_checkPermission('can_del_tickets',0);

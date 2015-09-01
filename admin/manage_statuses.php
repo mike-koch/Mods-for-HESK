@@ -5,7 +5,6 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
@@ -380,9 +379,9 @@ function buildConfirmDeleteModal($statusId) {
 }
 
 function echoArrows($index, $numberOfStatuses, $statusId) {
-    global $hesklang, $modsForHesk_settings;
+    global $hesklang;
 
-    if ($modsForHesk_settings['statuses_order_column'] == 'name') {
+    if (mfh_getSetting('statuses_order_column') == 'name') {
         return;
     }
 

@@ -37,7 +37,6 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -139,14 +138,14 @@ if (strlen($message))
     // Attach signature to the message?
     if ( ! $submit_as_customer && ! empty($_POST['signature']))
 	{
-        if ($modsForHesk_settings['rich_text_for_tickets']) {
+        if (mfh_getSetting('rich_text_for_tickets')) {
             $message .= "<br><br>" . nl2br($_SESSION['signature']) . "<br>";
         } else {
             $message .= "\n\n" . addslashes($_SESSION['signature']) . "\n";
         }
 	}
 
-    if (!$modsForHesk_settings['rich_text_for_tickets']) {
+    if (!mfh_getSetting('rich_text_for_tickets')) {
         // Make links clickable
         $message = hesk_makeURL($message);
 
@@ -211,7 +210,7 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments))
 }
 
 // Add reply
-$html = $modsForHesk_settings['rich_text_for_tickets'];
+$html = mfh_getSetting('rich_text_for_tickets');
 if ($submit_as_customer)
 {
     hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`html`) VALUES ('".intval($replyto)."','".hesk_dbEscape(addslashes($ticket['name']))."','".hesk_dbEscape($message."<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>")."',NOW(),'".hesk_dbEscape($myattachments)."', '".$html."')");

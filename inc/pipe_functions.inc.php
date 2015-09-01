@@ -43,7 +43,6 @@ require(HESK_PATH . 'inc/htmLawed.php');
 require(HESK_PATH . 'inc/mail/rfc822_addresses.php');
 require(HESK_PATH . 'inc/mail/mime_parser.php');
 require(HESK_PATH . 'inc/mail/email_parser.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 
 /*** FUNCTIONS ***/
 

@@ -38,7 +38,6 @@ define('WYSIWYG',1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -52,6 +51,7 @@ if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
     hesk_checkPermission('can_view_tickets');
     hesk_checkPermission('can_edit_tickets');
 }
+$modsForHesk_settings = mfh_getSettings();
 
 /* Ticket ID */
 $trackingID = hesk_cleanID() or die($hesklang['int_error'].': '.$hesklang['no_trackID']);

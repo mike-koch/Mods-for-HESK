@@ -44,7 +44,6 @@ if ( ! isset($_POST['hx']) || $_POST['hx'] != 3 || ! isset($_POST['hy']) || $_PO
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 
 // Are we in maintenance mode?
@@ -276,7 +275,7 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
 	if ($v['use'])
     {
-        if ($modsForHesk_settings['custom_field_setting'])
+        if (mfh_getSetting('custom_field_setting'))
         {
             $v['name'] = $hesklang[$v['name']];
         }
@@ -448,11 +447,11 @@ $tmpvar['latitude'] = hesk_POST('latitude');
 $tmpvar['longitude'] = hesk_POST('longitude');
 
 // Set html
-$tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets_for_customers'];
+$tmpvar['html'] = mfh_getSetting('rich_text_for_tickets_for_customers');
 
 // Should the helpdesk validate emails?
 $createTicket = true;
-if ($modsForHesk_settings['customer_email_verification_required'])
+if (mfh_getSetting('customer_email_verification_required'))
 {
     $verifiedEmailSql = "SELECT `Email` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."verified_emails` WHERE `Email` = '".hesk_dbEscape($tmpvar['email'])."'";
     $verifiedEmailRS = hesk_dbQuery($verifiedEmailSql);

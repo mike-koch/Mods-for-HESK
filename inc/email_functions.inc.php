@@ -35,12 +35,6 @@
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
-// Include modsForHesk_settings.inc.php if it hasn't been included already
-if (!isset($modsForHesk_settings))
-{
-    include(HESK_PATH . 'modsForHesk_settings.inc.php');
-}
-
 /* Get includes for SMTP */
 if ($hesk_settings['smtp'])
 {
@@ -49,6 +43,11 @@ if ($hesk_settings['smtp'])
 	{
 		require_once(HESK_PATH . 'inc/mail/sasl/sasl.php');
 	}
+}
+
+// Include common if needed
+if (!function_exists('mfh_getSetting')) {
+    require_once(HESK_PATH . 'common.inc.php');
 }
 
 function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $activationKey)
@@ -339,7 +338,7 @@ function hesk_validEmails()
 
 function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$hasMessageTag = false)
 {
-	global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket;
+	global $hesk_settings, $hesklang, $ticket;
 
 	// Are we in demo mode or are all email fields blank? If so, don't send an email.
 	if ( defined('HESK_DEMO')
@@ -371,15 +370,15 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$
 	# return true;
 
     // Use mailgun
-    if ($modsForHesk_settings['use_mailgun'])
+    if (mfh_getSetting('use_mailgun'))
     {
         ob_start();
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://api.mailgun.net/v2/".$modsForHesk_settings['mailgun_domain']."/messages");
+        curl_setopt($ch, CURLOPT_URL, "https://api.mailgun.net/v2/".mfh_getSetting('mailgun_domain')."/messages");
 
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_USERPWD, 'api:' . $modsForHesk_settings['mailgun_api_key']);
+        curl_setopt($ch, CURLOPT_USERPWD, 'api:' . mfh_getSetting('mailgun_api_key'));
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
@@ -403,11 +402,11 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$
         {
             $postfields['bcc'] = implode(',',$bcc);
         }
-        if ($modsForHesk_settings['html_emails'])
+        if (mfh_getSetting('html_emails'))
         {
             $postfields['html'] = $htmlMessage;
         }
-        if ($hasMessageTag && $modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+        if ($hasMessageTag && mfh_getSetting('attachments') && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
         {
             $postfields = processDirectAttachments('mailgun', $postfields);
         }
@@ -436,7 +435,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$
     $message .= "Content-Type: text/plain; charset=".$hesklang['ENCODING']."\n\n";
     $message .= $plaintextMessage."\n\n";
     //Prepare the message for HTML or non-html
-    if ($modsForHesk_settings['html_emails'])
+    if (mfh_getSetting('html_emails'))
     {
         $message .= "--".$innerboundary."\n";
         $message .= "Content-Type: text/html; charset=".$hesklang['ENCODING']."\n\n";
@@ -467,7 +466,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$
         $headers.= "Content-Type: multipart/mixed;boundary=\"".$outerboundary."\"";
 
         // Add attachments if necessary
-        if ($hasMessageTag && $modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+        if ($hasMessageTag && mfh_getSetting('attachments') && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
         {
             $message .= processDirectAttachments('phpmail', NULL, $outerboundary);
         }
@@ -520,7 +519,7 @@ function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$
     }
 
     // Add attachments if necessary
-    if ($hasMessageTag && $modsForHesk_settings['attachments'] && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
+    if ($hasMessageTag && mfh_getSetting('attachments') && $hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']))
     {
         $message .= processDirectAttachments('smtp', NULL, $outerboundary);
     }
@@ -629,10 +628,10 @@ function hesk_getEmailSubject($eml_file, $ticket='', $is_ticket=1, $strip=0)
 
 function hesk_getHtmlMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $just_message=0)
 {
-    global $hesk_settings, $hesklang, $modsForHesk_settings;
+    global $hesk_settings, $hesklang;
 
     // Demo mode
-    if ( defined('HESK_DEMO') || !$modsForHesk_settings['html_emails'])
+    if ( defined('HESK_DEMO') || !mfh_getSetting('html_emails'))
     {
         return '';
     }
@@ -700,10 +699,10 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
 
 function hesk_doesTemplateHaveTag($eml_file, $tag)
 {
-    global $hesk_settings, $modsForHesk_settings;
+    global $hesk_settings;
     $path = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/'. $eml_file .'.txt';
     $htmlHasTag = false;
-    if ($modsForHesk_settings['html_emails']) {
+    if (mfh_getSetting('html_emails')) {
         $htmlPath = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/html/'. $eml_file . '.txt';
         $htmlContents = file_get_contents(HESK_PATH.$htmlPath);
         $htmlHasTag = !(strpos($htmlContents, $tag) === false);
@@ -714,7 +713,7 @@ function hesk_doesTemplateHaveTag($eml_file, $tag)
 
 function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, $isForHtml = 0)
 {
-    global $hesk_settings, $hesklang, $modsForHesk_settings;
+    global $hesk_settings, $hesklang;
 
     /* Return just the message without any processing? */
     if ($just_message)
@@ -834,10 +833,9 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
         }
 
         // Add direct links to any attachments at the bottom of the email message OR add them as attachments, depending on the settings
-        // if ($modsForHesk_settings['attachments'] == 'inline' (other is 'attachment') {...}
         if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) )
         {
-            if (!$modsForHesk_settings['attachments']) {
+            if (!mfh_getSetting('attachments')) {
                 if ($isForHtml) {
                     $msg .= "<br><br><br>" . $hesklang['fatt'];
                 } else {
