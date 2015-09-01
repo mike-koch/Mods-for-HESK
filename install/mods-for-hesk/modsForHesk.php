@@ -66,24 +66,6 @@ hesk_dbConnect();
                                 <td class="warning"><i class="fa fa-exclamation-triangle"></i> Please check before continuing!*</td>
                             </tr>
                             <tr>
-                                <td>
-                                    modsForHesk_settings.inc.php
-                                </td>
-                                <?php
-                                $fileperm = substr(sprintf('%o', fileperms(HESK_PATH.'modsForHesk_settings.inc.php')), -4);
-                                $class =  (intval($fileperm) < 666) ? 'class="danger"' : 'class="success"';
-                                ?>
-                                <td <?php echo $class; ?>>
-                                    <?php if ($class == 'class="success"') {
-                                        echo '<i class="fa fa-check-circle"></i> Success';
-                                    } else {
-                                        echo '<i class="fa fa-times-circle"></i> CHMOD to 0666, yours is '.$fileperm;
-                                        $allowInstallation = false;
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td colspan="2">
                                     * Mods for HESK is unable to check database permissions automatically.
                                 </td>

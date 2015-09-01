@@ -1,21 +1,20 @@
 <?php
     header("Content-type: text/css; charset: UTF-8");
-    require_once('../modsForHesk_settings.inc.php');
 
-    $navbarBackgroundColor = $modsForHesk_settings['navbarBackgroundColor'];
-    $navbarBrandColor = $modsForHesk_settings['navbarBrandColor'];
-    $navbarBrandHoverColor = $modsForHesk_settings['navbarBrandHoverColor'];
+    $navbarBackgroundColor = '#414a5c';
+    $navbarBrandColor = '#d4dee7';
+    $navbarBrandHoverColor = '#ffffff';
 
-    $navbarItemTextColor = $modsForHesk_settings['navbarItemTextColor'];
-    $navbarItemTextHoverColor = $modsForHesk_settings['navbarItemTextHoverColor'];
-    $navbarItemTextSelectedColor = $modsForHesk_settings['navbarItemTextSelectedColor'];
-    $navbarItemSelectedBackgroundColor = $modsForHesk_settings['navbarItemSelectedBackgroundColor'];
+    $navbarItemTextColor = '#d4dee7';
+    $navbarItemTextHoverColor = '#ffffff';
+    $navbarItemTextSelectedColor = '#ffffff';
+    $navbarItemSelectedBackgroundColor = '#2d3646';
 
-    $dropdownItemTextColor = $modsForHesk_settings['dropdownItemTextColor'];
-    $dropdownItemTextHoverColor = $modsForHesk_settings['dropdownItemTextHoverColor'];
-    $dropdownItemTextHoverBackgroundColor = $modsForHesk_settings['dropdownItemTextHoverBackgroundColor'];
+    $dropdownItemTextColor = '#333333';
+    $dropdownItemTextHoverColor = '#262626';
+    $dropdownItemTextHoverBackgroundColor = '#f5f5f5';
 
-    $questionMarkColor = $modsForHesk_settings['questionMarkColor'];
+    $questionMarkColor = '#000000';
 ?>
 
 .nu-rtlFloatLeft {

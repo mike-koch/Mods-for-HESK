@@ -254,25 +254,6 @@ if ( defined('HESK_DEMO') )
                         ?>
                     </td>
                 </tr>
-                <tr>
-                    <td class="text-right">
-                        /modsForHesk_settings.inc.php
-                    </td>
-                    <?php
-                    $modsForHeskIsWritable = is_writable(HESK_PATH . 'modsForHesk_settings.inc.php');
-                    $cellClass = $modsForHeskIsWritable ? 'success' : 'danger';
-                    ?>
-                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
-                        <?php
-                        if ($modsForHeskIsWritable) {
-                            $enable_save_settings=1;
-                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="success">'.$hesklang['writable'].'</span>';
-                        } else {
-                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="error">'.$hesklang['not_writable'].'</span><br />'.$hesklang['e_mfh_settings'];
-                        }
-                        ?>
-                    </td>
-                </tr>
             </table>
         </div>
     </div>

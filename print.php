@@ -37,17 +37,18 @@ define('HESK_PATH','./');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
+
 
 /* Get the tracking ID */
 $trackingID = hesk_cleanID() or die("$hesklang[int_error]: $hesklang[no_trackID]");
 
 /* Connect to database */
 hesk_dbConnect();
+$modsForHesk_settings = mfh_getSettings();
 
 // Perform additional checks for customers
 if ( empty($_SESSION['id']) )

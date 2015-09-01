@@ -37,11 +37,11 @@ define('HESK_PATH','./');
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
+$modsForHesk_settings = mfh_getSettings();
 
 // Are we in maintenance mode? (check customers only)
 if ( empty($SESSION['id']) )
