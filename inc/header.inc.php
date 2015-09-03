@@ -59,7 +59,50 @@ $modsForHesk_settings = mfh_getSettings();
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
 	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } else { ?>
-    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
+        <style>
+            .navbar-default {
+                background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
+                background-image: none;
+                filter: none;
+            }
+            .navbar-default .navbar-brand {
+                color: <?php echo $modsForHesk_settings['navbarBrandColor']; ?>;
+            }
+            .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
+                color: <?php echo $modsForHesk_settings['navbarBrandHoverColor']; ?>;
+                background-color: transparent;
+            }
+            .navbar-default .navbar-nav>li>a {
+                color: <?php echo $modsForHesk_settings['navbarItemTextColor']; ?>;
+            }
+            .navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+                color: <?php echo $modsForHesk_settings['navbarItemTextHoverColor']; ?>;
+                background-color: transparent;
+            }
+            .dropdown-menu>li>a {
+                color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>;
+            }
+            .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+                color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
+                text-decoration: none;
+                background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
+            }
+            .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+                color: <?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>;
+                background-color: <?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>;
+                background-image: none;
+            }
+            .settingsquestionmark {
+                color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
+                font-size: 14px;
+                cursor: pointer;
+            }
+            .h3questionmark {
+                color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
+                font-size: 14px;
+            }
+        </style>
     <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -74,49 +117,6 @@ $modsForHesk_settings = mfh_getSettings();
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-iconpicker.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-    <style>
-        .navbar-default {
-            background-color: <?php echo $navbarBackgroundColor; ?>;
-            background-image: none;
-            filter: none;
-        }
-        .navbar-default .navbar-brand {
-            color: <?php echo $modsForHesk_settings['navbarBrandColor']; ?>;
-        }
-        .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
-            color: <?php echo $modsForHesk_settings['navbarBrandHoverColor']; ?>;
-            background-color: transparent;
-        }
-        .navbar-default .navbar-nav>li>a {
-            color: <?php echo $modsForHesk_settings['navbarItemTextColor']; ?>;
-        }
-        .navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
-            color: <?php echo $modsForHesk_settings['navbarItemTextHoverColor']; ?>;
-            background-color: transparent;
-        }
-        .dropdown-menu>li>a {
-            color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>;
-        }
-        .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
-            color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
-            text-decoration: none;
-            background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
-        }
-        .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
-            color: <?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>;
-            background-color: <?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>;
-            background-image: none;
-        }
-        .settingsquestionmark {
-            color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .h3questionmark {
-            color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
-            font-size: 14px;
-        }
-    </style>
 
     <?php
 
