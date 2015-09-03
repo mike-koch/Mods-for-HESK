@@ -45,11 +45,6 @@ if ($hesk_settings['smtp'])
 	}
 }
 
-// Include common if needed
-if (!function_exists('mfh_getSetting')) {
-    require_once(HESK_PATH . 'common.inc.php');
-}
-
 function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $activationKey)
 {
     global $hesk_settings, $ticket;

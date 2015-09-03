@@ -705,6 +705,18 @@ function migrateSettings() {
         $kb_attach_dir = getSettingValue($modsForHesk_settings, 'kb_attach_dir', 'attachments');
         $rich_text_for_tickets_for_customers = getSettingValue($modsForHesk_settings, 'rich_text_for_tickets_for_customers', 0);
 
+        $navbar_background_color = getSettingValue($modsForHesk_settings, 'navbarBackgroundColor', '#414a5c');
+        $navbar_brand_color = getSettingValue($modsForHesk_settings, 'navbarBrandColor', '#d4dee7');
+        $navbar_brand_hover_color = getSettingValue($modsForHesk_settings, 'navbarBrandHoverColor', '#ffffff');
+        $navbar_item_text_color = getSettingValue($modsForHesk_settings, 'navbarItemTextColor', '#d4dee7');
+        $navbar_item_text_hover_color = getSettingValue($modsForHesk_settings, 'navbarItemTextHoverColor', '#ffffff');
+        $navbar_item_text_selected_color = getSettingValue($modsForHesk_settings, 'navbarItemTextSelectedColor', '#ffffff');
+        $navbar_item_selected_background_color = getSettingValue($modsForHesk_settings, 'navbarItemSelectedBackgroundColor', '#2d3646');
+        $dropdown_item_text_color = getSettingValue($modsForHesk_settings, 'dropdownItemTextColor', '#333333');
+        $dropdown_item_text_hover_color = getSettingValue($modsForHesk_settings, 'dropdownItemTextHoverColor', '#262626');
+        $dropdown_item_text_hover_background_color = getSettingValue($modsForHesk_settings, 'dropdownItemTextHoverBackgroundColor', '#f5f5f5');
+        $question_mark_color = getSettingValue($modsForHesk_settings, 'questionMarkColor', '#000000');
+
 
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
             VALUES ('rtl', ".intval($rtl).")");
@@ -742,6 +754,28 @@ function migrateSettings() {
             VALUES ('kb_attach_dir', '".hesk_dbEscape($kb_attach_dir)."')");
         executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
             VALUES ('rich_text_for_tickets_for_customers', ".intval($rich_text_for_tickets_for_customers).")");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('navbarBackgroundColor', '".hesk_dbEscape($navbar_background_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('navbarBrandColor', '".hesk_dbEscape($navbar_brand_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('navbarBrandHoverColor', '".hesk_dbEscape($navbar_brand_hover_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('navbarItemTextColor', '".hesk_dbEscape($navbar_item_text_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('navbarItemTextHoverColor', '".hesk_dbEscape($navbar_item_text_hover_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('navbarItemTextSelectedColor', '".hesk_dbEscape($navbar_item_text_selected_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('navbarItemSelectedBackgroundColor', '".hesk_dbEscape($navbar_item_selected_background_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('dropdownItemTextColor', '".hesk_dbEscape($dropdown_item_text_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('dropdownItemTextHoverColor', '".hesk_dbEscape($dropdown_item_text_hover_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('dropdownItemTextHoverBackgroundColor', '".hesk_dbEscape($dropdown_item_text_hover_background_color)."')");
+        executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`)
+            VALUES ('questionMarkColor', '".hesk_dbEscape($question_mark_color)."')");
     }
 }
 

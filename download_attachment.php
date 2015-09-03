@@ -140,7 +140,8 @@ else
 // Path of the file on the server
 $realpath = $hesk_settings['attach_dir'] . '/' . $file['saved_name'];
 if (isset($_GET['kb_att'])) {
-	$realpath = mfh_getSetting('kb_attach_dir') . '/' . $file['saved_name'];
+	$modsForHesk_settings = mfh_getSettings();
+	$realpath = $modsForHesk_settings['kb_attach_dir'] . '/' . $file['saved_name'];
 }
 
 // Perhaps the file has been deleted?

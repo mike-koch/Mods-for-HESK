@@ -91,6 +91,8 @@ $category = hesk_dbFetchAssoc($res);
 /* Get replies */
 $res  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='{$ticket['id']}' ORDER BY `id` ASC");
 $replies = hesk_dbNumRows($res);
+
+$modsForHesk_settings = mfh_getSettings();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -123,7 +125,7 @@ hr
 	background-color: #9e9e9e;
 	height: 1px;
 	width: 100%;
-	text-align: <?php if (mfh_getSetting('rtl')) {echo 'right';} else {echo 'left';} ?>;
+	text-align: <?php if ($modsForHesk_settings['rtl']) {echo 'right';} else {echo 'left';} ?>;
 }
 </style>
 </head>
@@ -220,7 +222,7 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
     if ($v['use'])
 	{
-        if (mfh_getSetting('custom_field_setting'))
+        if ($modsForHesk_settings['custom_field_setting'])
         {
             $v['name'] = $hesklang[$v['name']];
         }

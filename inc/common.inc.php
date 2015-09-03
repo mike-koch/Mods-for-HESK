@@ -1984,7 +1984,6 @@ function mfh_getNumberOfDownloadsForAttachment($att_id, $table='attachments')
 	return $rec['download_count'];
 }
 
-/* @deprecated */
 function mfh_getSettings() {
 	global $hesk_settings;
 
@@ -1994,14 +1993,4 @@ function mfh_getSettings() {
 		$settings[$row['Key']] = $row['Value'];
 	}
 	return $settings;
-}
-
-function mfh_getSetting($key) {
-	global $hesk_settings;
-
-	hesk_dbConnect();
-
-	$res = hesk_dbQuery("SELECT `Value` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` WHERE `Key` <> '".hesk_dbEscape($key)."' LIMIT 1");
-	$row = hesk_dbFetchAssoc($res);
-	return $row['Value'];
 }

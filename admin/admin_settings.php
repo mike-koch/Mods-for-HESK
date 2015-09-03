@@ -328,6 +328,7 @@ if ( defined('HESK_DEMO') )
 
         $hesklang['err_custname'] = addslashes($hesklang['err_custname']);
 
+        $modsForHesk_settings = mfh_getSettings();
         ?>
         <script language="javascript" type="text/javascript"><!--
         function hesk_checkFields()
@@ -823,8 +824,8 @@ if ( defined('HESK_DEMO') )
                             </label>
 							<div class="col-sm-6">
 								<?php
-								$on = mfh_getSetting('category_order_column') == 'name' ? 'checked' : '';
-								$off = mfh_getSetting('category_order_column') == 'name' ? '' : 'checked';
+								$on = $modsForHesk_settings['category_order_column'] == 'name' ? 'checked' : '';
+								$off = $modsForHesk_settings['category_order_column'] == 'name' ? '' : 'checked';
 								echo '
 								<div class="radio"><label><input type="radio" name="category_order_column" value="0" '.$off.'>'.$hesklang['sort_by_user_defined_order'].'</label></div>
 								<div class="radio"><label><input type="radio" name="category_order_column" value="1" '.$on.'>'.$hesklang['sort_alphabetically'].'</label></div>
@@ -844,9 +845,9 @@ if ( defined('HESK_DEMO') )
                             </label>
                             <div class="col-sm-6 form-inline">
                                 <?php
-                                $both = mfh_getSetting('rich_text_for_tickets') && mfh_getSetting('rich_text_for_tickets_for_customers') ? 'checked' : '';
-                                $staff = mfh_getSetting('rich_text_for_tickets') && !mfh_getSetting('rich_text_for_tickets_for_customers') ? 'checked' : '';
-								$no = mfh_getSetting('rich_text_for_tickets') && mfh_getSetting('rich_text_for_tickets_for_customers') ? '' : 'checked';
+                                $both = $modsForHesk_settings['rich_text_for_tickets'] && $modsForHesk_settings['rich_text_for_tickets_for_customers'] ? 'checked' : '';
+                                $staff = $modsForHesk_settings['rich_text_for_tickets'] && !$modsForHesk_settings['rich_text_for_tickets_for_customers'] ? 'checked' : '';
+								$no = $modsForHesk_settings['rich_text_for_tickets'] && $modsForHesk_settings['rich_text_for_tickets_for_customers'] ? '' : 'checked';
                                 echo '
 								<div class="radio"><label><input type="radio" name="rich_text_for_tickets" value="0" '.$no.'> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
 								<div class="radio"><label><input type="radio" name="rich_text_for_tickets" value="1" '.$staff.'> '.$hesklang['staff_only'].'</label></div>&nbsp;&nbsp;&nbsp;
@@ -867,8 +868,8 @@ if ( defined('HESK_DEMO') )
                             </label>
                             <div class="col-sm-6">
                                 <?php
-                                $on = mfh_getSetting('statuses_order_column') == 'name' ? 'checked' : '';
-                                $off = mfh_getSetting('statuses_order_column') == 'name' ? '' : 'checked';
+                                $on = $modsForHesk_settings['statuses_order_column'] == 'name' ? 'checked' : '';
+                                $off = $modsForHesk_settings['statuses_order_column'] == 'name' ? '' : 'checked';
                                 echo '
 								<div class="radio"><label><input type="radio" name="statuses_order_column" value="0" '.$off.'>'.$hesklang['sort_by_user_defined_order'].'</label></div>
 								<div class="radio"><label><input type="radio" name="statuses_order_column" value="1" '.$on.'>'.$hesklang['sort_alphabetically'].'</label></div>
@@ -951,8 +952,8 @@ if ( defined('HESK_DEMO') )
                             </label>
                             <div class="col-sm-6 form-inline">
                                 <?php
-                                $on = mfh_getSetting('request_location') ? 'checked' : '';
-                                $off = mfh_getSetting('request_location') ? '' : 'checked';
+                                $on = $modsForHesk_settings['request_location'] ? 'checked' : '';
+                                $off = $modsForHesk_settings['request_location'] ? '' : 'checked';
                                 echo '
                                 <div class="radio"><label><input type="radio" name="request_location" value="0" '.$off.' /> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
                                 <div class="radio"><label><input type="radio" name="request_location" value="1" '.$on.' /> '.$hesklang['on'].'</label></div>';
@@ -1147,7 +1148,7 @@ if ( defined('HESK_DEMO') )
                 <div class="col-sm-8 col-xs-12">
                     <div class="checkbox">
                         <label>
-                            <input id="email-verification" name="email-verification" type="checkbox" <?php if (mfh_getSetting('customer_email_verification_required')) {echo 'checked';} ?>> <?php echo $hesklang['require_customer_validate_email']; ?>
+                            <input id="email-verification" name="email-verification" type="checkbox" <?php if ($modsForHesk_settings['customer_email_verification_required']) {echo 'checked';} ?>> <?php echo $hesklang['require_customer_validate_email']; ?>
                         </label>
                     </div>
                 </div>
@@ -1273,7 +1274,7 @@ if ( defined('HESK_DEMO') )
                              data-content="<?php echo $hesklang['kb_attach_dir_help']; ?>"></i>
                       </label>
                       <div class="col-sm-8">
-                          <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_attach_dir']); ?>" name="kb_attach_dir" size="40" maxlength="255" value="<?php echo mfh_getSetting('kb_attach_dir'); ?>">
+                          <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_attach_dir']); ?>" name="kb_attach_dir" size="40" maxlength="255" value="<?php echo $modsForHesk_settings['kb_attach_dir']; ?>">
                       </div>
                   </div>
                   <div class="form-group">
@@ -1289,7 +1290,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-8 col-xs-12">
                           <div class="radio">
                               <label>
-                                  <input type="radio" name="new_kb_article_visibility" value="0" <?php echo mfh_getSetting('new_kb_article_visibility') == 0 ? 'checked' : ''; ?>>
+                                  <input type="radio" name="new_kb_article_visibility" value="0" <?php echo $modsForHesk_settings['new_kb_article_visibility'] == 0 ? 'checked' : ''; ?>>
                                   <?php echo $hesklang['kb_published']; ?>
                                   <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                      title="<?php echo $hesklang['kb_published']; ?>"
@@ -1298,7 +1299,7 @@ if ( defined('HESK_DEMO') )
                           </div>
                           <div class="radio">
                               <label>
-                                  <input type="radio" name="new_kb_article_visibility" value="1" <?php echo mfh_getSetting('new_kb_article_visibility') == 1 ? 'checked' : ''; ?>>
+                                  <input type="radio" name="new_kb_article_visibility" value="1" <?php echo $modsForHesk_settings['new_kb_article_visibility'] == 1 ? 'checked' : ''; ?>>
                                   <?php echo $hesklang['kb_private']; ?>
                                   <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                      title="<?php echo $hesklang['kb_private']; ?>"
@@ -1307,7 +1308,7 @@ if ( defined('HESK_DEMO') )
                           </div>
                           <div class="radio">
                               <label>
-                                  <input type="radio" name="new_kb_article_visibility" value="2" <?php echo mfh_getSetting('new_kb_article_visibility') == 2 ? 'checked' : ''; ?>>
+                                  <input type="radio" name="new_kb_article_visibility" value="2" <?php echo $modsForHesk_settings['new_kb_article_visibility'] == 2 ? 'checked' : ''; ?>>
                                   <?php echo $hesklang['kb_draft']; ?>
                                   <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                      title="<?php echo $hesklang['kb_draft']; ?>"
@@ -1487,7 +1488,7 @@ if ( defined('HESK_DEMO') )
                                              '<?php echo $hesklang['custom_language_key']; ?>',
                                              '<?php echo $hesklang['custom_n']; ?>',
                                              this)"
-                                      <?php if (mfh_getSetting('custom_field_setting')) {echo 'checked';} ?>> <?php echo $hesklang['enable_custom_field_language']; ?>
+                                      <?php if ($modsForHesk_settings['custom_field_setting']) {echo 'checked';} ?>> <?php echo $hesklang['enable_custom_field_language']; ?>
                               </label>
                           </div>
                       </div>
@@ -1498,7 +1499,7 @@ if ( defined('HESK_DEMO') )
                 <th><?php echo $hesklang['s_type']; ?></th>
                 <th><?php echo $hesklang['custom_r']; ?></th>
                 <th id="fieldNameHeader">
-                    <?php if (mfh_getSetting('custom_field_setting')) { echo $hesklang['custom_language_key']; } else { echo $hesklang['custom_n']; } ?>
+                    <?php if ($modsForHesk_settings['custom_field_setting']) { echo $hesklang['custom_language_key']; } else { echo $hesklang['custom_n']; } ?>
                 </th>
                 <th><?php echo $hesklang['custom_place']; ?></th>
                 <th><?php echo $hesklang['opt']; ?></th>
@@ -1568,7 +1569,7 @@ if ( defined('HESK_DEMO') )
                             $on = 'checked="checked"';
                             $onload_div = 'block';
                         }
-                        elseif (mfh_getSetting('use_mailgun'))
+                        elseif ($modsForHesk_settings['use_mailgun'])
                         {
                             $mailgunOn = 'checked="checked"';
                             $onload_mailgun = 'block';
@@ -1634,7 +1635,7 @@ if ( defined('HESK_DEMO') )
                             </i>
                         </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['mailgun_api_key']); ?>" id="mailgun_api_key" name="mailgun_api_key" value="<?php echo mfh_getSetting('mailgun_api_key'); ?>">
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['mailgun_api_key']); ?>" id="mailgun_api_key" name="mailgun_api_key" value="<?php echo $modsForHesk_settings['mailgun_api_key']; ?>">
                         </div>
                     </div>
                     <div class="form-group">
@@ -1646,7 +1647,7 @@ if ( defined('HESK_DEMO') )
                             <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover" title="<?php echo $hesklang['mailgun_domain']; ?>" data-content="<?php echo $hesklang['mailgun_domain_help']; ?>"></i>
                         </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['mailgun_domain']); ?>" id="mailgun_domain" name="mailgun_domain" value="<?php echo mfh_getSetting('mailgun_domain'); ?>">
+                            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['mailgun_domain']); ?>" id="mailgun_domain" name="mailgun_domain" value="<?php echo $modsForHesk_settings['mailgun_domain']; ?>">
                         </div>
                     </div>
                 </div>
@@ -2063,7 +2064,7 @@ if ( defined('HESK_DEMO') )
                         <div class="col-sm-9">
                             <div class="checkbox">
                                 <?php
-                                if (mfh_getSetting('customer_email_verification_required'))
+                                if ($modsForHesk_settings['customer_email_verification_required'])
                                 {
                                 ?>
                                     <label>
@@ -2112,7 +2113,7 @@ if ( defined('HESK_DEMO') )
                         <div class="col-sm-9 col-xs-12">
                             <div class="checkbox">
                                 <label>
-                                    <input id="html_emails" name="html_emails" type="checkbox" <?php if (mfh_getSetting('html_emails')) {echo 'checked';} ?>> <?php echo $hesklang['html_emails_text']; ?>
+                                    <input id="html_emails" name="html_emails" type="checkbox" <?php if ($modsForHesk_settings['html_emails']) {echo 'checked';} ?>> <?php echo $hesklang['html_emails_text']; ?>
                                 </label>
                             </div>
                         </div>
@@ -2130,13 +2131,13 @@ if ( defined('HESK_DEMO') )
                         <div class="col-sm-9 col-xs-12">
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="email_attachments" value="0" <?php echo mfh_getSetting('attachments') == 0 ? 'checked' : ''; ?>>
+                                    <input type="radio" name="email_attachments" value="0" <?php echo $modsForHesk_settings['attachments'] == 0 ? 'checked' : ''; ?>>
                                     <?php echo $hesklang['show_attachments_as_links']; ?>
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="email_attachments" value="1" <?php echo mfh_getSetting('attachments') == 1 ? 'checked' : ''; ?>>
+                                    <input type="radio" name="email_attachments" value="1" <?php echo $modsForHesk_settings['attachments'] == 1 ? 'checked' : ''; ?>>
                                     <?php echo $hesklang['attach_directly_to_email']; ?>
                                 </label>
                             </div>
@@ -2175,7 +2176,7 @@ if ( defined('HESK_DEMO') )
                       <div class="col-sm-8">
                           <div class="checkbox">
                               <label>
-                                  <input type="checkbox" name="show_number_merged" <?php if (mfh_getSetting('show_number_merged')) {echo 'checked';} ?>> <?php echo $hesklang['show_number_merged_descr']; ?>
+                                  <input type="checkbox" name="show_number_merged" <?php if ($modsForHesk_settings['show_number_merged']) {echo 'checked';} ?>> <?php echo $hesklang['show_number_merged_descr']; ?>
                               </label>
                           </div>
                       </div>
@@ -2317,7 +2318,7 @@ if ( defined('HESK_DEMO') )
                     <div class="col-sm-8 col-xs-12">
                         <div class="checkbox">
                             <label>
-                                <input id="rtl" name="rtl" type="checkbox" <?php if (mfh_getSetting('rtl')) {echo 'checked' ;} ?>> <?php echo $hesklang['display_rtl']; ?>
+                                <input id="rtl" name="rtl" type="checkbox" <?php if ($modsForHesk_settings['rtl']) {echo 'checked' ;} ?>> <?php echo $hesklang['display_rtl']; ?>
                             </label>
                         </div>
                     </div>
@@ -2335,7 +2336,7 @@ if ( defined('HESK_DEMO') )
                     <div class="col-sm-8 col-xs-12">
                         <div class="checkbox">
                             <label>
-                                <input id="show-icons" name="show-icons" type="checkbox" <?php if (mfh_getSetting('show_icons')) {echo 'checked';} ?>> <?php echo $hesklang['show_icons_navigation']; ?>
+                                <input id="show-icons" name="show-icons" type="checkbox" <?php if ($modsForHesk_settings['show_icons']) {echo 'checked';} ?>> <?php echo $hesklang['show_icons_navigation']; ?>
                             </label>
                         </div>
                     </div>
@@ -2353,7 +2354,7 @@ if ( defined('HESK_DEMO') )
                     <div class="col-sm-8 col-xs-12">
                         <div class="checkbox">
                             <label>
-                                <input id="use_boostrap_theme" name="use_bootstrap_theme" type="checkbox" <?php if (mfh_getSetting('use_bootstrap_theme')) {echo 'checked';} ?>> <?php echo $hesklang['use_bootstrap_theme']; ?>
+                                <input id="use_boostrap_theme" name="use_bootstrap_theme" type="checkbox" <?php if ($modsForHesk_settings['use_bootstrap_theme']) {echo 'checked';} ?>> <?php echo $hesklang['use_bootstrap_theme']; ?>
                             </label>
                         </div>
                     </div>
@@ -2380,7 +2381,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['navbarBackgroundColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="navbarBackgroundColor" name="navbarBackgroundColor" class="form-control" value="<?php echo mfh_getSetting('navbarBackgroundColor'); ?>">
+                                  <input type="text" id="navbarBackgroundColor" name="navbarBackgroundColor" class="form-control" value="<?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2392,7 +2393,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['navbarBrandColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="navbarBrandColor" name="navbarBrandColor" class="form-control" value="<?php echo mfh_getSetting('navbarBrandColor'); ?>">
+                                  <input type="text" id="navbarBrandColor" name="navbarBrandColor" class="form-control" value="<?php echo $modsForHesk_settings['navbarBrandColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2406,7 +2407,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['navbarBrandHoverColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="navbarBrandHoverColor" name="navbarBrandHoverColor" class="form-control" value="<?php echo mfh_getSetting('navbarBrandHoverColor'); ?>">
+                                  <input type="text" id="navbarBrandHoverColor" name="navbarBrandHoverColor" class="form-control" value="<?php echo $modsForHesk_settings['navbarBrandHoverColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2418,7 +2419,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['navbarItemTextColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="navbarItemTextColor" name="navbarItemTextColor" class="form-control" value="<?php echo mfh_getSetting('navbarItemTextColor'); ?>">
+                                  <input type="text" id="navbarItemTextColor" name="navbarItemTextColor" class="form-control" value="<?php echo $modsForHesk_settings['navbarItemTextColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2432,7 +2433,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['navbarItemTextHoverColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="navbarItemTextHoverColor" name="navbarItemTextHoverColor" class="form-control" value="<?php echo mfh_getSetting('navbarItemTextHoverColor'); ?>">
+                                  <input type="text" id="navbarItemTextHoverColor" name="navbarItemTextHoverColor" class="form-control" value="<?php echo $modsForHesk_settings['navbarItemTextHoverColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2444,7 +2445,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['navbarItemTextSelectedColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="navbarItemTextSelectedColor" name="navbarItemTextSelectedColor" class="form-control" value="<?php echo mfh_getSetting('navbarItemTextSelectedColor'); ?>">
+                                  <input type="text" id="navbarItemTextSelectedColor" name="navbarItemTextSelectedColor" class="form-control" value="<?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2458,7 +2459,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['navbarItemSelectedBackgroundColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="navbarItemSelectedBackgroundColor" name="navbarItemSelectedBackgroundColor" class="form-control" value="<?php echo mfh_getSetting('navbarItemSelectedBackgroundColor'); ?>">
+                                  <input type="text" id="navbarItemSelectedBackgroundColor" name="navbarItemSelectedBackgroundColor" class="form-control" value="<?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2470,7 +2471,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['dropdownItemTextColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="dropdownItemTextColor" name="dropdownItemTextColor" class="form-control" value="<?php echo mfh_getSetting('dropdownItemTextColor'); ?>">
+                                  <input type="text" id="dropdownItemTextColor" name="dropdownItemTextColor" class="form-control" value="<?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2484,7 +2485,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['dropdownItemTextHoverColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="dropdownItemTextHoverColor" name="dropdownItemTextHoverColor" class="form-control" value="<?php echo mfh_getSetting('dropdownItemTextHoverColor'); ?>">
+                                  <input type="text" id="dropdownItemTextHoverColor" name="dropdownItemTextHoverColor" class="form-control" value="<?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2496,7 +2497,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['questionMarkColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="questionMarkColor" name="questionMarkColor" class="form-control" value="<?php echo mfh_getSetting('questionMarkColor'); ?>">
+                                  <input type="text" id="questionMarkColor" name="questionMarkColor" class="form-control" value="<?php echo $modsForHesk_settings['questionMarkColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2510,7 +2511,7 @@ if ( defined('HESK_DEMO') )
                                      data-content="<?php echo $hesklang['dropdownItemTextHoverBackgroundColorHelp']; ?>"></i>
                               </label>
                               <div class="col-sm-5 col-xs-12">
-                                  <input type="text" id="dropdownItemTextHoverBackgroundColor" name="dropdownItemTextHoverBackgroundColor" class="form-control" value="<?php echo mfh_getSetting('dropdownItemTextHoverBackgroundColor'); ?>">
+                                  <input type="text" id="dropdownItemTextHoverBackgroundColor" name="dropdownItemTextHoverBackgroundColor" class="form-control" value="<?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>">
                               </div>
                           </div>
                       </div>
@@ -2848,7 +2849,7 @@ function hesk_testLanguage($return_options = 0)
 		        background:#fff;
 		        color: black;
 		        font : 68.8%/1.5 Verdana, Geneva, Arial, Helvetica, sans-serif;
-		        text-align: <?php if (mfh_getSetting('rtl')) { echo 'right'; } else { echo 'left'; } ?>;
+		        text-align: <?php if ($modsForHesk_settings['rtl']) { echo 'right'; } else { echo 'left'; } ?>;
 		}
 
 		p

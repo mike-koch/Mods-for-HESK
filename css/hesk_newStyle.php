@@ -1,22 +1,3 @@
-<?php
-    header("Content-type: text/css; charset: UTF-8");
-
-    $navbarBackgroundColor = '#414a5c';
-    $navbarBrandColor = '#d4dee7';
-    $navbarBrandHoverColor = '#ffffff';
-
-    $navbarItemTextColor = '#d4dee7';
-    $navbarItemTextHoverColor = '#ffffff';
-    $navbarItemTextSelectedColor = '#ffffff';
-    $navbarItemSelectedBackgroundColor = '#2d3646';
-
-    $dropdownItemTextColor = '#333333';
-    $dropdownItemTextHoverColor = '#262626';
-    $dropdownItemTextHoverBackgroundColor = '#f5f5f5';
-
-    $questionMarkColor = '#000000';
-?>
-
 .nu-rtlFloatLeft {
     /* Don't do anything; the pager looks good already */
 }
@@ -87,47 +68,6 @@
 
 .navbar {
     margin-bottom: 0;
-}
-.navbar-default {
-    background-color: <?php echo $navbarBackgroundColor; ?>;
-    background-image: none;
-    filter: none;
-}
-.navbar-default .navbar-brand {
-    color: <?php echo $navbarBrandColor; ?>;
-}
-.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
-    color: <?php echo $navbarBrandHoverColor; ?>;
-    background-color: transparent;
-}
-.navbar-default .navbar-nav>li>a {
-    color: <?php echo $navbarItemTextColor; ?>;
-}
-.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
-    color: <?php echo $navbarItemTextHoverColor; ?>;
-    background-color: transparent;
-}
-.dropdown-menu>li>a {
-    color: <?php echo $dropdownItemTextColor; ?>;
-}
-.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
-    color: <?php echo $dropdownItemTextHoverColor; ?>;
-    text-decoration: none;
-    background-color: <?php echo $dropdownItemTextHoverBackgroundColor; ?>;
-}
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
-    color: <?php echo $navbarItemTextSelectedColor; ?>;
-    background-color: <?php echo $navbarItemSelectedBackgroundColor; ?>;
-    background-image: none;
-}
-.settingsquestionmark {
-    color: <?php echo $questionMarkColor; ?>;
-    font-size: 14px;
-    cursor: pointer;
-}
-.h3questionmark {
-    color: <?php echo $questionMarkColor; ?>;
-    font-size: 14px;
 }
 .h3questionmark:hover {
     text-decoration: underline;
