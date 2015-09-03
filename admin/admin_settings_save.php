@@ -503,7 +503,6 @@ foreach ($postArray as $value) {
     hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."quick_help_sections` SET `show` = '1' WHERE `id` = '".intval($value)."'");
 }
 
-//TODO change this to DB calls
 // Save the modsForHesk_settings.inc.php file
 $set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
@@ -516,6 +515,7 @@ $set['mfh_attachments'] = empty($_POST['email_attachments']) ? 0 : 1;
 $set['show_number_merged'] = empty($_POST['show_number_merged']) ? 0 : 1;
 $set['request_location'] = empty($_POST['request_location']) ? 0 : 1;
 $set['category_order_column'] = empty($_POST['category_order_column']) ? 'cat_order' : 'name';
+
 $rich_text_setting = hesk_POST('rich_text_for_tickets', 0);
 if ($rich_text_setting == 0) {
 	$set['rich_text_for_tickets'] = 0;
@@ -527,6 +527,7 @@ if ($rich_text_setting == 0) {
 	$set['rich_text_for_tickets'] = 1;
 	$set['rich_text_for_tickets_for_customers'] = 1;
 }
+
 $set['statuses_order_column'] = empty($_POST['statuses_order_column']) ? 'sort' : 'name';
 $set['kb_attach_dir'] = hesk_POST('kb_attach_dir', 'attachments');
 
@@ -546,77 +547,32 @@ $set['dropdownItemTextColor'] = hesk_input(hesk_POST('dropdownItemTextColor'));
 $set['dropdownItemTextHoverColor'] = hesk_input(hesk_POST('dropdownItemTextHoverColor'));
 $set['questionMarkColor'] = hesk_input(hesk_POST('questionMarkColor'));
 $set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownItemTextHoverBackgroundColor'));
-$modsForHesk_file_content='<?php
-
-//-- Mods For Hesk Theme Color Settings
-$modsForHesk_settings[\'navbarBackgroundColor\'] = \''.$set['navbarBackgroundColor'].'\';
-$modsForHesk_settings[\'navbarBrandColor\'] = \''.$set['navbarBrandColor'].'\';
-$modsForHesk_settings[\'navbarBrandHoverColor\'] = \''.$set['navbarBrandHoverColor'].'\';
-$modsForHesk_settings[\'navbarItemTextColor\'] = \''.$set['navbarItemTextColor'].'\';
-$modsForHesk_settings[\'navbarItemTextHoverColor\'] = \''.$set['navbarItemTextHoverColor'].'\';
-$modsForHesk_settings[\'navbarItemTextSelectedColor\'] = \''.$set['navbarItemTextSelectedColor'].'\';
-$modsForHesk_settings[\'navbarItemSelectedBackgroundColor\'] = \''.$set['navbarItemSelectedBackgroundColor'].'\';
-$modsForHesk_settings[\'dropdownItemTextColor\'] = \''.$set['dropdownItemTextColor'].'\';
-$modsForHesk_settings[\'dropdownItemTextHoverColor\'] = \''.$set['dropdownItemTextHoverColor'].'\';
-$modsForHesk_settings[\'dropdownItemTextHoverBackgroundColor\'] = \''.$set['dropdownItemTextHoverBackgroundColor'].'\';
-$modsForHesk_settings[\'questionMarkColor\'] = \''.$set['questionMarkColor'].'\';
-
-//-- Set this to 1 for right-to-left text.
-$modsForHesk_settings[\'rtl\'] = '.$set['rtl'].';
-
-//-- Set this to 1 to show icons next to navigation menu items
-$modsForHesk_settings[\'show_icons\'] = '.$set['show-icons'].';
-
-//-- Set this to 1 to enable custom field names as keys
-$modsForHesk_settings[\'custom_field_setting\'] = '.$set['custom-field-setting'].';
-
-//-- Set this to 1 to enable email verification for new customers
-$modsForHesk_settings[\'customer_email_verification_required\'] = '.$set['customer-email-verification-required'].';
-
-//-- Set this to 1 to enable HTML-formatted emails.
-$modsForHesk_settings[\'html_emails\'] = '.$set['html_emails'].';
-
-//-- Mailgun Settings
-$modsForHesk_settings[\'use_mailgun\'] = '.$set['use_mailgun'].';
-$modsForHesk_settings[\'mailgun_api_key\'] = \''.$set['mailgun_api_key'].'\';
-$modsForHesk_settings[\'mailgun_domain\'] = \''.$set['mailgun_domain'].'\';
-
-//-- Set this to 1 to enable bootstrap-theme.css
-$modsForHesk_settings[\'use_bootstrap_theme\'] = '.$set['use_bootstrap_theme'].';
-
-//-- Default value for new Knowledgebase article: 0 = Published, 1 = Private, 2 = Draft
-$modsForHesk_settings[\'new_kb_article_visibility\'] = '.$set['new_kb_article_visibility'].';
-
-//-- Setting for adding attachments to email messages. Either 0 for default-HESK behavior, or 1 to send as attachments
-$modsForHesk_settings[\'attachments\'] = '.$set['mfh_attachments'].';
-
-//-- Setting for showing number of merged tickets in the ticket search screen. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'show_number_merged\'] = '.$set['show_number_merged'].';
-
-//-- Setting for requesting user\'s location. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'request_location\'] = '.$set['request_location'].';
-
-//-- Column to sort categories by. Can be either \'name\' or \'cat_order\'
-$modsForHesk_settings[\'category_order_column\'] = \''.$set['category_order_column'].'\';
-
-//-- Setting for using rich-text editor for tickets. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'rich_text_for_tickets\'] = '.$set['rich_text_for_tickets'].';
-
-//-- Column to sort statuses by. Can be either \'sort\' or \'name\'
-$modsForHesk_settings[\'statuses_order_column\'] = \''.$set['statuses_order_column'].'\';
-
-//-- Directory to store knowledgebase articles in.
-$modsForHesk_settings[\'kb_attach_dir\'] = \''.$set['kb_attach_dir'].'\';
-
-//-- Setting for using rich-text editor for customers. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'rich_text_for_tickets_for_customers\'] = '.$set['rich_text_for_tickets_for_customers'].';';
-
-// Write the file
-if ( ! file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $modsForHesk_file_content) )
-{
-    hesk_error($hesklang['err_modsForHesk_settings']);
-}
-
+mfh_updateSetting('rtl', $set['rtl']);
+mfh_updateSetting('show_icons', $set['show-icons']);
+mfh_updateSetting('custom_field_setting', $set['custom-field-setting']);
+mfh_updateSetting('customer_email_verification_required', $set['customer-email-verification-required']);
+mfh_updateSetting('html_emails', $set['html_emails']);
+mfh_updateSetting('use_bootstrap_theme', $set['use_bootstrap_theme']);
+mfh_updateSetting('new_kb_article_visibility', $set['new_kb_article_visibility']);
+mfh_updateSetting('attachments', $set['mfh_attachments']);
+mfh_updateSetting('show_number_merged', $set['show_number_merged']);
+mfh_updateSetting('request_location', $set['request_location']);
+mfh_updateSetting('category_order_column', $set['category_order_column'], true);
+mfh_updateSetting('rich_text_for_tickets', $set['rich_text_for_tickets']);
+mfh_updateSetting('rich_text_for_tickets_for_customers', $set['rich_text_for_tickets_for_customers']);
+mfh_updateSetting('statuses_order_column', $set['statuses_order_column'], true);
+mfh_updateSetting('kb_attach_dir', $set['kb_attach_dir'], true);
+mfh_updateSetting('navbarBackgroundColor', $set['navbarBackgroundColor'], true);
+mfh_updateSetting('navbarBrandColor', $set['navbarBrandColor'], true);
+mfh_updateSetting('navbarBrandHoverColor', $set['navbarBrandHoverColor'], true);
+mfh_updateSetting('navbarItemTextColor', $set['navbarItemTextColor'], true);
+mfh_updateSetting('navbarItemTextHoverColor', $set['navbarItemTextHoverColor'], true);
+mfh_updateSetting('navbarItemTextSelectedColor', $set['navbarItemTextSelectedColor'], true);
+mfh_updateSetting('navbarItemSelectedBackgroundColor', $set['navbarItemSelectedBackgroundColor'], true);
+mfh_updateSetting('dropdownItemTextColor', $set['dropdownItemTextColor'], true);
+mfh_updateSetting('dropdownItemTextHoverColor', $set['dropdownItemTextHoverColor'], true);
+mfh_updateSetting('questionMarkColor', $set['questionMarkColor'], true);
+mfh_updateSetting('dropdownItemTextHoverBackgroundColor', $set['dropdownItemTextHoverBackgroundColor'], true);
 
 // Prepare settings file and save it
 $settings_file_content='<?php
@@ -857,6 +813,13 @@ exit();
 
 
 /** FUNCTIONS **/
+function mfh_updateSetting($key, $value, $isString = false) {
+	global $hesk_settings;
+
+	$formattedValue = $isString ? "'".hesk_dbEscape($value)."'" : intval($value);
+
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = ".$formattedValue." WHERE `Key` = '".$key."'");
+}
 
 function hesk_checkMinMax($myint,$min,$max,$defval)
 {
