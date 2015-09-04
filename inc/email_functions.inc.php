@@ -35,12 +35,6 @@
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
-// Include modsForHesk_settings.inc.php if it hasn't been included already
-if (!isset($modsForHesk_settings))
-{
-    include(HESK_PATH . 'modsForHesk_settings.inc.php');
-}
-
 /* Get includes for SMTP */
 if ($hesk_settings['smtp'])
 {
@@ -51,7 +45,7 @@ if ($hesk_settings['smtp'])
 	}
 }
 
-function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $activationKey)
+function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $activationKey, $modsForHesk_settings)
 {
     global $hesk_settings, $ticket;
 
@@ -62,14 +56,14 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
 
     // Format email subject and message
     $subject = hesk_getEmailSubject($email_template, $ticket);
-    $message = hesk_getEmailMessage($email_template, $ticket);
-    $htmlMessage = hesk_getHtmlMessage($email_template, $ticket);
+    $message = hesk_getEmailMessage($email_template, $ticket, $modsForHesk_settings);
+    $htmlMessage = hesk_getHtmlMessage($email_template, $ticket, $modsForHesk_settings);
     $activationUrl = $hesk_settings['hesk_url'] . '/verifyemail.php?key=%%ACTIVATIONKEY%%';
     $message = str_replace('%%VERIFYURL%%', $activationUrl, $message);
     $htmlMessage = str_replace('%%VERIFYURL%%', $activationUrl, $htmlMessage);
     $message = str_replace('%%ACTIVATIONKEY%%', $activationKey, $message);
     $htmlMessage = str_replace('%%ACTIVATIONKEY%%', $activationKey, $htmlMessage);
-    $hasMessage = hesk_doesTemplateHaveTag($email_template, '%%MESSAGE%%');
+    $hasMessage = hesk_doesTemplateHaveTag($email_template, '%%MESSAGE%%', $modsForHesk_settings);
 
     // Add Cc / Bcc recipents if needed
     $ccEmails = array();
@@ -88,11 +82,11 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
         }
     }
 
-    hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $ccEmails, $bccEmails, $hasMessage);
+    hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, $ccEmails, $bccEmails, $hasMessage);
 }
 
 
-function hesk_notifyCustomer($email_template = 'new_ticket')
+function hesk_notifyCustomer($modsForHesk_settings, $email_template = 'new_ticket')
 {
 	global $hesk_settings, $hesklang, $ticket;
 
@@ -112,9 +106,9 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
 
 	// Format email subject and message
 	$subject = hesk_getEmailSubject($email_template,$ticket);
-	$message = hesk_getEmailMessage($email_template,$ticket);
-    $htmlMessage = hesk_getHtmlMessage($email_template,$ticket);
-    $hasMessage = hesk_doesTemplateHaveTag($email_template,'%%MESSAGE%%');
+	$message = hesk_getEmailMessage($email_template,$ticket,$modsForHesk_settings);
+    $htmlMessage = hesk_getHtmlMessage($email_template,$ticket, $modsForHesk_settings);
+    $hasMessage = hesk_doesTemplateHaveTag($email_template,'%%MESSAGE%%', $modsForHesk_settings);
 
     // Add Cc / Bcc recipents if needed
     $ccEmails = array();
@@ -132,7 +126,7 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
     }
 
 	// Send e-mail
-	hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $ccEmails, $bccEmails, $hasMessage);
+	hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, $ccEmails, $bccEmails, $hasMessage);
 
     // Reset the language if it was changed
     hesk_resetLanguage();
@@ -142,7 +136,7 @@ function hesk_notifyCustomer($email_template = 'new_ticket')
 } // END hesk_notifyCustomer()
 
 
-function hesk_notifyAssignedStaff($autoassign_owner, $email_template, $type = 'notify_assigned')
+function hesk_notifyAssignedStaff($autoassign_owner, $email_template, $modsForHesk_settings, $type = 'notify_assigned')
 {
 	global $hesk_settings, $hesklang, $ticket;
 
@@ -174,12 +168,12 @@ function hesk_notifyAssignedStaff($autoassign_owner, $email_template, $type = 'n
 
 	/* Format email subject and message for staff */
     $subject = hesk_getEmailSubject($email_template,$ticket);
-	$message = hesk_getEmailMessage($email_template,$ticket,1);
-    $htmlMessage = hesk_getHtmlMessage($email_template,$ticket,1);
-    $hasMessage = hesk_doesTemplateHaveTag($email_template,'%%MESSAGE%%');
+	$message = hesk_getEmailMessage($email_template,$ticket,$modsForHesk_settings,1);
+    $htmlMessage = hesk_getHtmlMessage($email_template,$ticket,$modsForHesk_settings,1);
+    $hasMessage = hesk_doesTemplateHaveTag($email_template,'%%MESSAGE%%', $modsForHesk_settings);
 
 	/* Send email to staff */
-	hesk_mail($autoassign_owner['email'], $subject, $message, $htmlMessage, array(), array(), $hasMessage);
+	hesk_mail($autoassign_owner['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, array(), array(), $hasMessage);
 
     /* Reset language to original one */
     hesk_resetLanguage();
@@ -189,7 +183,7 @@ function hesk_notifyAssignedStaff($autoassign_owner, $email_template, $type = 'n
 } // END hesk_notifyAssignedStaff()
 
 
-function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
+function hesk_notifyStaff($email_template,$sql_where,$modsForHesk_settings,$is_ticket=1)
 {
 	global $hesk_settings, $hesklang, $ticket;
 
@@ -225,7 +219,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
     	/* Make sure each user gets email in his/her preferred language */
         $current_language = 'NONE';
         $recipients = array();
-        $hasMessage = hesk_doesTemplateHaveTag($email_template,'%%MESSAGE%%');
+        $hasMessage = hesk_doesTemplateHaveTag($email_template,'%%MESSAGE%%', $modsForHesk_settings);
 
 		/* Loop through staff */
         foreach ($admins as $admin)
@@ -248,7 +242,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
                 if ($current_language != 'NONE')
                 {
 					/* Send e-mail to staff */
-					hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage, array(), array(), $hasMessage);
+					hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage, $modsForHesk_settings, array(), array(), $hasMessage);
 
                     /* Reset list of email addresses */
                     $recipients = array();
@@ -259,9 +253,9 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
 
 				/* Format staff email subject and message for this language */
                 $subject = hesk_getEmailSubject($email_template,$ticket);
-				$message = hesk_getEmailMessage($email_template,$ticket,$is_ticket);
-                $htmlMessage = hesk_getHtmlMessage($email_template,$ticket,$is_ticket);
-                $hasMessage = hesk_doesTemplateHaveTag($email_template, '%%MESSAGE%%');
+				$message = hesk_getEmailMessage($email_template,$ticket,$modsForHesk_settings,$is_ticket);
+                $htmlMessage = hesk_getHtmlMessage($email_template,$ticket,$modsForHesk_settings,$is_ticket);
+                $hasMessage = hesk_doesTemplateHaveTag($email_template, '%%MESSAGE%%', $modsForHesk_settings);
 
 				/* Add email to the recipients list */
 				$recipients[] = $admin['email'];
@@ -272,7 +266,7 @@ function hesk_notifyStaff($email_template,$sql_where,$is_ticket=1)
         }
 
         /* Send email messages to the remaining staff */
-		hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage, array(), array(), $hasMessage);
+		hesk_mail(implode(',',$recipients), $subject, $message, $htmlMessage, $modsForHesk_settings, array(), array(), $hasMessage);
 
 		/* Reset language to original one */
 		hesk_resetLanguage();
@@ -334,9 +328,9 @@ function hesk_validEmails()
 } // END hesk_validEmails()
 
 
-function hesk_mail($to,$subject,$message,$htmlMessage,$cc=array(),$bcc=array(),$hasMessageTag = false)
+function hesk_mail($to,$subject,$message,$htmlMessage,$modsForHesk_settings,$cc=array(),$bcc=array(),$hasMessageTag = false)
 {
-	global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket;
+	global $hesk_settings, $hesklang, $ticket;
 
 	// Are we in demo mode or are all email fields blank? If so, don't send an email.
 	if ( defined('HESK_DEMO')
@@ -624,9 +618,9 @@ function hesk_getEmailSubject($eml_file, $ticket='', $is_ticket=1, $strip=0)
 
 } // hesk_getEmailSubject()
 
-function hesk_getHtmlMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $just_message=0)
+function hesk_getHtmlMessage($eml_file, $ticket, $modsForHesk_settings, $is_admin=0, $is_ticket=1, $just_message=0)
 {
-    global $hesk_settings, $hesklang, $modsForHesk_settings;
+    global $hesk_settings, $hesklang;
 
     // Demo mode
     if ( defined('HESK_DEMO') || !$modsForHesk_settings['html_emails'])
@@ -655,11 +649,11 @@ function hesk_getHtmlMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $jus
     }
 
     //Perform logic common between hesk_getEmailMessage and hesk_getHtmlMessage
-    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, true);
+    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, $modsForHesk_settings, true);
     return $msg;
 }
 
-function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $just_message=0)
+function hesk_getEmailMessage($eml_file, $ticket, $modsForHesk_settings, $is_admin=0, $is_ticket=1, $just_message=0)
 {
 	global $hesk_settings, $hesklang;
 
@@ -690,14 +684,14 @@ function hesk_getEmailMessage($eml_file, $ticket, $is_admin=0, $is_ticket=1, $ju
     	hesk_error($hesklang['emfm'].': '.$eml_file);
     }
 
-    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message);
+    $msg = hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, $modsForHesk_settings);
     return $msg;
 
 } // END hesk_getEmailMessage
 
-function hesk_doesTemplateHaveTag($eml_file, $tag)
+function hesk_doesTemplateHaveTag($eml_file, $tag, $modsForHesk_settings)
 {
-    global $hesk_settings, $modsForHesk_settings;
+    global $hesk_settings;
     $path = 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/emails/'. $eml_file .'.txt';
     $htmlHasTag = false;
     if ($modsForHesk_settings['html_emails']) {
@@ -709,9 +703,9 @@ function hesk_doesTemplateHaveTag($eml_file, $tag)
     return !(strpos($emailContents, $tag) === false) || $htmlHasTag;
 }
 
-function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, $isForHtml = 0)
+function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message, $modsForHesk_settings, $isForHtml = 0)
 {
-    global $hesk_settings, $hesklang, $modsForHesk_settings;
+    global $hesk_settings, $hesklang;
 
     /* Return just the message without any processing? */
     if ($just_message)
@@ -831,7 +825,6 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
         }
 
         // Add direct links to any attachments at the bottom of the email message OR add them as attachments, depending on the settings
-        // if ($modsForHesk_settings['attachments'] == 'inline' (other is 'attachment') {...}
         if ($hesk_settings['attachments']['use'] && isset($ticket['attachments']) && strlen($ticket['attachments']) )
         {
             if (!$modsForHesk_settings['attachments']) {

@@ -1,6 +1,5 @@
 <?php
     header("Content-type: text/css; charset: UTF-8");
-    require_once('../modsForHesk_settings.inc.php');
 
     $navbarBackgroundColor = $modsForHesk_settings['navbarBackgroundColor'];
     $navbarBrandColor = $modsForHesk_settings['navbarBrandColor'];

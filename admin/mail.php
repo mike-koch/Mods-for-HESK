@@ -37,15 +37,16 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
-require(HESK_PATH . 'inc/email_functions.inc.php');
 
 hesk_session_start();
 hesk_dbConnect();
+require(HESK_PATH . 'inc/email_functions.inc.php');
 hesk_isLoggedIn();
+
+$modsForHesk_settings = mfh_getSettings();
 
 /* List of staff */
 $admins = array();
@@ -289,7 +290,7 @@ function mail_get_ids()
 
 function mail_send()
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
 	/* A security check */
 	hesk_token_check('POST');
@@ -362,12 +363,12 @@ function mail_send()
 
 			/* Format email subject and message for recipient */
 			$subject = hesk_getEmailSubject('new_pm',$pm,0);
-			$message = hesk_getEmailMessage('new_pm',$pm,1,0);
-            $htmlMessage = hesk_getHtmlMessage('new_pm',$pm,1,0);
-            $hasMessage = hesk_doesTemplateHaveTag('new_pm','%%MESSAGE%%');
+			$message = hesk_getEmailMessage('new_pm',$pm,$modsForHesk_settings,1,0);
+            $htmlMessage = hesk_getHtmlMessage('new_pm',$pm,$modsForHesk_settings,1,0);
+            $hasMessage = hesk_doesTemplateHaveTag('new_pm','%%MESSAGE%%', $modsForHesk_settings);
 
 			/* Send e-mail */
-			hesk_mail($pm_recipient['email'], $subject, $message, $htmlMessage, array(), array(), $hasMessage);
+			hesk_mail($pm_recipient['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, array(), array(), $hasMessage);
         }
 
 		unset($_SESSION['mail']);

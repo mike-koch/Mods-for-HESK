@@ -5,7 +5,6 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
@@ -28,6 +27,8 @@ if (isset($_REQUEST['a'])) {
     elseif ($_REQUEST['a'] == 'sort') { moveStatus(); }
     elseif ($_REQUEST['a'] == 'save') { save(); }
 }
+
+$modsForHesk_settings = mfh_getSettings();
 
 
 /* Print header */
@@ -148,7 +149,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             <i class="fa fa-pencil icon-link" style="color: orange"
                                                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
                                         </span>
-                                        <?php echoArrows($j, $numberOfStatuses, $row['ID']); ?>
+                                        <?php echoArrows($j, $numberOfStatuses, $row['ID'], $modsForHesk_settings); ?>
                                         <?php
                                         // Only show the delete button if (1) it's not a default action and (2) no tickets are set to that status
                                         $delete = canStatusBeDeleted($row['ID']);
@@ -379,8 +380,8 @@ function buildConfirmDeleteModal($statusId) {
     <?php
 }
 
-function echoArrows($index, $numberOfStatuses, $statusId) {
-    global $hesklang, $modsForHesk_settings;
+function echoArrows($index, $numberOfStatuses, $statusId, $modsForHesk_settings) {
+    global $hesklang;
 
     if ($modsForHesk_settings['statuses_order_column'] == 'name') {
         return;

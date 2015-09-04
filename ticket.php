@@ -48,6 +48,9 @@ hesk_check_maintenance();
 hesk_load_database_functions();
 
 hesk_session_start();
+/* Connect to database */
+hesk_dbConnect();
+$modsForHesk_settings = mfh_getSettings();
 
 $hesk_error_buffer = array();
 $do_remember = '';
@@ -101,8 +104,6 @@ elseif ( empty($trackingID) || ( $hesk_settings['email_view_ticket'] && empty($m
 	print_form();
 }
 
-/* Connect to database */
-hesk_dbConnect();
 
 /* Limit brute force attempts */
 hesk_limitBfAttempts();

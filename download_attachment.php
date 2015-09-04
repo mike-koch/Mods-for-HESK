@@ -37,7 +37,6 @@ define('HESK_PATH','./');
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 
@@ -141,6 +140,7 @@ else
 // Path of the file on the server
 $realpath = $hesk_settings['attach_dir'] . '/' . $file['saved_name'];
 if (isset($_GET['kb_att'])) {
+	$modsForHesk_settings = mfh_getSettings();
 	$realpath = $modsForHesk_settings['kb_attach_dir'] . '/' . $file['saved_name'];
 }
 

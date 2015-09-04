@@ -41,7 +41,7 @@ if ( ! isset($status) )
     //-- We don't want to check statuses that are considered "closed"
     foreach ($allStatuses as $row)
     {
-        if ($status['IsClosed'] == 1) {
+        if ($row['IsClosed'] == 1) {
             continue;
         }
 
