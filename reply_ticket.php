@@ -243,12 +243,12 @@ $ticket = hesk_ticketToPlain($info, 1, 0);
 // --> If ticket is assigned just notify the owner
 if ($ticket['owner'])
 {
-	hesk_notifyAssignedStaff(false, 'new_reply_by_customer', 'notify_reply_my');
+	hesk_notifyAssignedStaff(false, 'new_reply_by_customer', $modsForHesk_settings, 'notify_reply_my');
 }
 // --> No owner assigned, find and notify appropriate staff
 else
 {
-	hesk_notifyStaff('new_reply_by_customer',"`notify_reply_unassigned`='1'");
+	hesk_notifyStaff('new_reply_by_customer',"`notify_reply_unassigned`='1'", $modsForHesk_settings);
 }
 
 /* Clear unneeded session variables */

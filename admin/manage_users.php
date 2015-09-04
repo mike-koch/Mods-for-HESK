@@ -92,8 +92,9 @@ $default_userdata = array(
     'notify_note_unassigned' => 1,
 );
 
+$modsForHesk_settings = mfh_getSettings();
 /* A list of all categories */
-$orderBy = mfh_getSetting('category_order_column');
+$orderBy = $modsForHesk_settings['category_order_column'];
 $hesk_settings['categories'] = array();
 $res = hesk_dbQuery('SELECT `id`,`name` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` ORDER BY `'.$orderBy.'` ASC');
 while ($row=hesk_dbFetchAssoc($res))

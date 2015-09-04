@@ -74,14 +74,16 @@ else {return false;}
 //-->
 </script>
 
-<?php 
+<?php
+    $modsForHesk_settings = mfh_getSettings();
+
     $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."permission_templates` ORDER BY `name` ASC");
     $templates = array();
     while ($row = hesk_dbFetchAssoc($res)) {
         array_push($templates, $row);
     }
     $featureArray = hesk_getFeatureArray();
-    $orderBy = mfh_getSetting('category_order_column');
+    $orderBy = $modsForHesk_settings['category_order_column'];
     $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `".$orderBy."` ASC");
     $categories = array();
     while ($row = hesk_dbFetchAssoc($res)) {

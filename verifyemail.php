@@ -45,7 +45,8 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 {
                     $ticket = hesk_newTicket($innerResult);
                     // Notify the customer
-                    hesk_notifyCustomer();
+                    $modsForHesk_settings = mfh_getSettings();
+                    hesk_notifyCustomer($modsForHesk_settings);
 
                     // Need to notify staff?
                     // --> From autoassign?
@@ -53,12 +54,12 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                     $autoassign_owner = $getOwnerRs->fetch_assoc();
                     if ($ticket['owner'] && $autoassign_owner['notify_assigned'])
                     {
-                        hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
+                        hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you', $modsForHesk_settings);
                     }
                     // --> No autoassign, find and notify appropriate staff
                     elseif ( ! $ticket['owner'] )
                     {
-                        hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
+                        hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ", $modsForHesk_settings);
                     }
 
                     array_push($submittedTickets, $innerResult['trackid']);

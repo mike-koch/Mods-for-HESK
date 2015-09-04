@@ -373,7 +373,8 @@ if (!isset($_SESSION['hide']['new_article']))
                                 $selectedIndex = -1;
                             } else
                             {
-                                $selectedIndex = mfh_getSetting('new_kb_article_visibility');
+                                $modsForHesk_settings = mfh_getSettings();
+                                $selectedIndex = $modsForHesk_settings['new_kb_article_visibility'];
                             }
                             ?>
                             <div class="radio">

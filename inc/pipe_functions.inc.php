@@ -300,12 +300,13 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 		// --> If ticket is assigned just notify the owner
 		if ($ticket['owner'])
 		{
-			hesk_notifyAssignedStaff(false, 'new_reply_by_customer', 'notify_reply_my');
+			$modsForHesk_settings = mfh_getSettings();
+			hesk_notifyAssignedStaff(false, 'new_reply_by_customer', $modsForHesk_settings, 'notify_reply_my');
 		}
 		// --> No owner assigned, find and notify appropriate staff
 		else
 		{
-			hesk_notifyStaff('new_reply_by_customer',"`notify_reply_unassigned`='1'");
+			hesk_notifyStaff('new_reply_by_customer',"`notify_reply_unassigned`='1'", $modsForHesk_settings);
 		}
 
 		return $ticket['trackid'];
@@ -362,7 +363,7 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 		// SPAM tags not found or not checked, send email
 		if ($possible_SPAM === false)
 		{
-			hesk_notifyCustomer();
+			hesk_notifyCustomer($modsForHesk_settings);
 		}
 	}
 
@@ -370,12 +371,12 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 	// --> From autoassign?
 	if ($tmpvar['owner'] && $autoassign_owner['notify_assigned'])
 	{
-		hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
+		hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you', $modsForHesk_settings);
 	}
 	// --> No autoassign, find and notify appropriate staff
 	elseif ( ! $tmpvar['owner'] )
 	{
-		hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
+		hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ", $modsForHesk_settings);
 	}
 
     return $ticket['trackid'];

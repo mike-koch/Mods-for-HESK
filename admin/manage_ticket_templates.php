@@ -45,13 +45,15 @@ hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
 
+$modsForHesk_settings = mfh_getSettings();
+
 /* Check permissions for this feature */
 hesk_checkPermission('can_man_ticket_tpl');
 
 // Define required constants
 define('LOAD_TABS',1);
 
-if (mfh_getSetting('rich_text_for_tickets')) {
+if ($modsForHesk_settings['rich_text_for_tickets']) {
     define('WYSIWYG', 1);
 }
 
@@ -64,6 +66,7 @@ if ( $action = hesk_REQUEST('a') )
 	elseif ($action == 'remove') {remove();}
 	elseif ($action == 'order')  {order_saved();}
 }
+
 
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
@@ -131,7 +134,7 @@ $num = hesk_dbNumRows($result);
                             $options .= (isset($_SESSION['canned']['id']) && $_SESSION['canned']['id'] == $mysaved['id']) ? ' selected="selected" ' : '';
                             $options .= '>'.$mysaved['title'].'</option>';
 
-                            if (mfh_getSetting('rich_text_for_tickets')) {
+                            if ($modsForHesk_settings['rich_text_for_tickets']) {
                                 $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", html_entity_decode($mysaved['message'] ))."';\n";
                             } else {
                                 $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved['message']) )."';\n";
@@ -242,7 +245,7 @@ $num = hesk_dbNumRows($result);
                         <textarea id="message" class="form-control htmlEditor" placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="msg" rows="15" cols="70"><?php
                             if (isset($_SESSION['canned']['msg']))
                             {
-                                if (mfh_getSetting('rich_text_for_tickets')) {
+                                if ($modsForHesk_settings['rich_text_for_tickets']) {
                                     echo $_SESSION['canned']['msg'];
                                 } else {
                                     echo stripslashes($_SESSION['canned']['msg']);
@@ -261,7 +264,7 @@ $num = hesk_dbNumRows($result);
         </form>
     </div>
 </div>
-<?php if (mfh_getSetting('rich_text_for_tickets')): ?>
+<?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
     <script type="text/javascript">
         /* <![CDATA[ */
         tinyMCE.init({
@@ -298,7 +301,7 @@ $num = hesk_dbNumRows($result);
 
     function setMessage(msgid)
     {
-        var useHtmlEditor = <?php echo mfh_getSetting('rich_text_for_tickets'); ?>;
+        var useHtmlEditor = <?php echo $modsForHesk_settings['rich_text_for_tickets']; ?>;
         var myMsg=myMsgTxt[msgid];
         var mySubject=myTitle[msgid];
 

@@ -388,13 +388,13 @@ if ($submit_as_customer)
 {
     if ($ticket['owner'] && $ticket['owner'] != $_SESSION['id'])
     {
-        hesk_notifyAssignedStaff(false, 'new_reply_by_customer', 'notify_reply_my');
+        hesk_notifyAssignedStaff(false, 'new_reply_by_customer', $modsForHesk_settings, 'notify_reply_my');
     }
 }
 // Notify customer?
 elseif ( ! isset($_POST['no_notify']) || intval( hesk_POST('no_notify') ) != 1)
 {
-	hesk_notifyCustomer('new_reply_by_staff');
+	hesk_notifyCustomer($modsForHesk_settings, 'new_reply_by_staff');
 }
 
 // Delete any existing drafts from this owner for this ticket

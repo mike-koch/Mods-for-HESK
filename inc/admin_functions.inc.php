@@ -498,7 +498,8 @@ function hesk_autoLogin($noredirect=0)
 					$ticket['dt'] = hesk_date($ticket['dt'], true);
 					$ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
                     $ticket = hesk_ticketToPlain($ticket, 1, 0);
-					hesk_notifyCustomer('ticket_closed');
+					$modsForHesk_settings = mfh_getSettings();
+					hesk_notifyCustomer($modsForHesk_settings, 'ticket_closed');
 				}
 			}
 		}

@@ -1,8 +1,6 @@
 admin/admin_suggest_articles.php
 admin/archive.php
-admin/assign_owner.php
 admin/generate_spam_question.php
-admin/move_category.php
 admin/priority.php
 admin/test_connection.php
 attachments/index.htm

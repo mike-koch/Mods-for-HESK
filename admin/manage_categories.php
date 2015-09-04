@@ -71,6 +71,8 @@ if ( $action = hesk_REQUEST('a') )
     elseif ($action == 'manager')    {change_manager();}
 }
 
+$modsForHesk_settings = mfh_getSettings();
+
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
@@ -88,7 +90,7 @@ else {return false;}
 </script>
 
 <?php
-    $orderBy = mfh_getSetting('category_order_column');
+    $orderBy = $modsForHesk_settings['category_order_column'];
     $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `".$orderBy."` ASC");
     $options='';
     while ($mycat=hesk_dbFetchAssoc($res))

@@ -287,7 +287,7 @@ $ticket = hesk_newTicket($tmpvar);
 // Notify the customer about the ticket?
 if ($notify)
 {
-	hesk_notifyCustomer();
+	hesk_notifyCustomer($modsForHesk_settings);
 }
 
 // If ticket is assigned to someone notify them?
@@ -296,18 +296,18 @@ if ($ticket['owner'] && $ticket['owner'] != intval($_SESSION['id']))
 	// If we don't have info from auto-assign get it from database
     if ( ! isset($autoassign_owner['email']) )
     {
-		hesk_notifyAssignedStaff(false, 'ticket_assigned_to_you');
+		hesk_notifyAssignedStaff(false, 'ticket_assigned_to_you', $modsForHesk_settings);
 	}
     else
     {
-		hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
+		hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you', $modsForHesk_settings);
     }
 }
 
 // Ticket unassigned, notify everyone that selected to be notified about unassigned tickets
 elseif ( ! $ticket['owner'])
 {
-	hesk_notifyStaff('new_ticket_staff', " `id` != ".intval($_SESSION['id'])." AND `notify_new_unassigned` = '1' ");
+	hesk_notifyStaff('new_ticket_staff', " `id` != ".intval($_SESSION['id'])." AND `notify_new_unassigned` = '1' ", $modsForHesk_settings);
 }
 
 // Unset temporary variables

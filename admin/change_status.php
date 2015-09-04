@@ -44,6 +44,7 @@ hesk_load_database_functions();
 hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
+$modsForHesk_settings = mfh_getSettings();
 
 /* Check permissions for this feature */
 if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
@@ -103,7 +104,7 @@ if ($statusRow['IsClosed']) // Closed
 
         // Notify customer
         require(HESK_PATH . 'inc/email_functions.inc.php');
-        hesk_notifyCustomer('ticket_closed');
+        hesk_notifyCustomer($modsForHesk_settings,'ticket_closed');
     }
 
     // Log who marked the ticket resolved
