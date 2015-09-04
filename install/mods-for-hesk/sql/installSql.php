@@ -679,6 +679,15 @@ $modsForHesk_settings[\'rich_text_for_tickets_for_customers\'] = 0;';
 }
 // END Version 2.4.1
 
+// Version 2.4.2
+function execute242Scripts() {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+
+    executeQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` SET `Value` = '2.4.2' WHERE `Key` = 'modsForHeskVersion'");
+}
+
 // BEGIN Version 2.5.0
 function migrateSettings() {
     global $hesk_settings;

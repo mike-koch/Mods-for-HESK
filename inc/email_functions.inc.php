@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -98,7 +98,7 @@ function hesk_notifyCustomer($modsForHesk_settings, $email_template = 'new_ticke
 
     $changedLanguage = false;
     //Set the user's language according to the ticket.
-    if ($ticket['language'] !== NULL)
+    if (isset($ticket['language']) && $ticket['language'] !== NULL)
     {
         hesk_setLanguage($ticket['language']);
         $changedLanguage = true;
@@ -129,10 +129,7 @@ function hesk_notifyCustomer($modsForHesk_settings, $email_template = 'new_ticke
 	hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, $ccEmails, $bccEmails, $hasMessage);
 
     // Reset the language if it was changed
-    if ($changedLanguage)
-    {
-        hesk_resetLanguage();
-    }
+    hesk_resetLanguage();
 
     return true;
 

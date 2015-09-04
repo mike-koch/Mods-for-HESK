@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -135,7 +135,9 @@ $num = hesk_dbNumRows($result);
                             $options .= '>'.$mysaved['title'].'</option>';
 
                             if ($modsForHesk_settings['rich_text_for_tickets']) {
-                                $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", html_entity_decode($mysaved['message'] ))."';\n";
+                                $theMessage = html_entity_decode($mysaved['message']);
+                                $theMessage = addslashes($theMessage);
+                                $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", $theMessage)."';\n";
                             } else {
                                 $javascript_messages.='myMsgTxt['.$mysaved['id'].']=\''.str_replace("\r\n","\\r\\n' + \r\n'", addslashes($mysaved['message']) )."';\n";
                             }

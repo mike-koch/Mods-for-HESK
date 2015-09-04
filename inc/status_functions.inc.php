@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.4 from 22nd June 2015
+ *  Version: 2.6.5 from 28th August 2015
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************

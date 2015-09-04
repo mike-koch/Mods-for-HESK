@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -412,8 +412,10 @@ if (count($hesk_error_buffer))
     hesk_process_messages($hesk_error_buffer, 'index.php?a=add');
 }
 
-$tmpvar['message']=hesk_makeURL($tmpvar['message']);
-$tmpvar['message']=nl2br($tmpvar['message']);
+if (!$modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+    $tmpvar['message']=hesk_makeURL($tmpvar['message']);
+    $tmpvar['message']=nl2br($tmpvar['message']);
+}
 
 // Track suggested knowledgebase articles
 if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && isset($_POST['suggested']) && is_array($_POST['suggested']) )

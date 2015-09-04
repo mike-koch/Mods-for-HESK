@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -80,7 +80,7 @@ $my_email = hesk_getCustomerEmail();
 $message = hesk_input( hesk_POST('message') );
 
 // If the message was entered, further parse it
-if ( strlen($message) )
+if ( strlen($message) && !$modsForHesk_settings['rich_text_for_tickets_for_customers'] )
 {
 	// Make links clickable
 	$message = hesk_makeURL($message);

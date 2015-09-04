@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -114,8 +114,10 @@ if (isset($_POST['save']))
 	    	hesk_error($myerror);
 	    }
 
-		$tmpvar['message'] = hesk_makeURL($tmpvar['message']);
-		$tmpvar['message'] = nl2br($tmpvar['message']);
+		if (!$modsForHesk_settings['rich_text_for_tickets']) {
+			$tmpvar['message'] = hesk_makeURL($tmpvar['message']);
+			$tmpvar['message'] = nl2br($tmpvar['message']);
+		}
 
     	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` SET `message`='".hesk_dbEscape($tmpvar['message'])."' WHERE `id`='".intval($tmpvar['id'])."' AND `replyto`='".intval($ticket['id'])."' LIMIT 1");
     }
