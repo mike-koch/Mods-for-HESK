@@ -37,11 +37,11 @@ define('HESK_PATH','./');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
+
 
 /* Get the tracking ID */
 $trackingID = hesk_cleanID() or die("$hesklang[int_error]: $hesklang[no_trackID]");
@@ -91,6 +91,8 @@ $category = hesk_dbFetchAssoc($res);
 /* Get replies */
 $res  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='{$ticket['id']}' ORDER BY `id` ASC");
 $replies = hesk_dbNumRows($res);
+
+$modsForHesk_settings = mfh_getSettings();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>

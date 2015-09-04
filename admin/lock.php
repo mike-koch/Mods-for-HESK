@@ -44,6 +44,7 @@ hesk_load_database_functions();
 hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
+$modsForHesk_settings = mfh_getSettings();
 
 /* Check permissions for this feature */
 hesk_checkPermission('can_view_tickets');
@@ -98,7 +99,7 @@ else
 
             $ticket['dt'] = hesk_date($ticket['dt'], true);
             $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
-            hesk_notifyCustomer('ticket_closed');
+            hesk_notifyCustomer($modsForHesk_settings, 'ticket_closed');
         }
     }
 }

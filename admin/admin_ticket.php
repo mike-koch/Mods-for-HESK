@@ -38,7 +38,6 @@ define('WYSIWYG',1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
@@ -51,6 +50,8 @@ hesk_isLoggedIn();
 
 /* Check permissions for this feature */
 hesk_checkPermission('can_view_tickets');
+$modsForHesk_settings = mfh_getSettings();
+
 $can_del_notes		 = hesk_checkPermission('can_del_notes',0);
 $can_reply			 = hesk_checkPermission('can_reply_tickets',0);
 $can_delete			 = hesk_checkPermission('can_del_tickets',0);
@@ -456,14 +457,14 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST'))
 
             /* Format email subject and message for staff */
             $subject = hesk_getEmailSubject('new_note',$ticket);
-            $message = hesk_getEmailMessage('new_note',$ticket,1);
-            $htmlMessage = hesk_getHtmlMessage('new_note',$ticket,1);
-            $hasMessage = hesk_doesTemplateHaveTag('new_note', '%%MESSAGE%%');
+            $message = hesk_getEmailMessage('new_note',$ticket,$modsForHesk_settings,1);
+            $htmlMessage = hesk_getHtmlMessage('new_note',$ticket,$modsForHesk_settings, 1);
+            $hasMessage = hesk_doesTemplateHaveTag('new_note', '%%MESSAGE%%', $modsForHesk_settings);
 
 
             /* Send email to staff */
             while ($user = hesk_dbFetchAssoc($users)) {
-                hesk_mail($user['email'], $subject, $message, $htmlMessage, array(), array(), $hasMessage);
+                hesk_mail($user['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, array(), array(), $hasMessage);
             }
         }
     }

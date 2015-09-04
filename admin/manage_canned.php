@@ -37,7 +37,6 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -59,6 +58,8 @@ if ( $action = hesk_REQUEST('a') )
 	elseif ($action == 'remove') {remove();}
 	elseif ($action == 'order')  {order_saved();}
 }
+
+$modsForHesk_settings = mfh_getSettings();
 
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');

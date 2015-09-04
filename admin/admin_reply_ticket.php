@@ -37,7 +37,6 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -90,6 +89,7 @@ $message = hesk_input(hesk_POST('message'));
 // Submit as customer?
 $submit_as_customer = isset($_POST['submit_as_customer']) ? true : false;
 
+$modsForHesk_settings = mfh_getSettings();
 if (strlen($message))
 {
     // Save message for later and ignore the rest?
@@ -388,13 +388,13 @@ if ($submit_as_customer)
 {
     if ($ticket['owner'] && $ticket['owner'] != $_SESSION['id'])
     {
-        hesk_notifyAssignedStaff(false, 'new_reply_by_customer', 'notify_reply_my');
+        hesk_notifyAssignedStaff(false, 'new_reply_by_customer', $modsForHesk_settings, 'notify_reply_my');
     }
 }
 // Notify customer?
 elseif ( ! isset($_POST['no_notify']) || intval( hesk_POST('no_notify') ) != 1)
 {
-	hesk_notifyCustomer('new_reply_by_staff');
+	hesk_notifyCustomer($modsForHesk_settings, 'new_reply_by_staff');
 }
 
 // Delete any existing drafts from this owner for this ticket
