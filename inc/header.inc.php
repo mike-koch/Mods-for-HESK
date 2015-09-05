@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -34,7 +34,11 @@
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
+if (!function_exists('mfh_getSettings')) {
+    die('Mods for HESK settings are not accessible!');
+}
+
+$modsForHesk_settings = mfh_getSettings();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -42,7 +46,7 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
 	<title><?php echo (isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>" />
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <meta name="theme-color" content="<?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>">
+    <meta name="theme-color" content="<?php echo '#414a5c'; ?>">
     <?php if ($modsForHesk_settings['rtl']) { ?>
     <link href="<?php echo HESK_PATH; ?>hesk_style_RTL.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } else { ?>
@@ -53,9 +57,9 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
 	<link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" <?php if ($modsForHesk_settings['use_bootstrap_theme'] == 0) {echo 'disabled';} ?>>
     <?php if ($modsForHesk_settings['rtl']) { ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
-	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
+	<link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } else { ?>
-    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.php?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo $hesk_settings['hesk_version']; ?>" type="text/css" rel="stylesheet" />
     <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -70,6 +74,47 @@ require(HESK_PATH . 'modsForHesk_settings.inc.php');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-iconpicker.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+    <style>
+        .navbar-default {
+            background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
+            background-image: none;
+            filter: none;
+        }
+        .navbar-default .navbar-brand {
+            color: <?php echo $modsForHesk_settings['navbarBrandColor']; ?>;
+        }
+        .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
+            color: <?php echo $modsForHesk_settings['navbarBrandHoverColor']; ?>;
+            background-color: transparent;
+        }
+        .navbar-default .navbar-nav>li>a {
+            color: <?php echo $modsForHesk_settings['navbarItemTextColor']; ?>;
+        }
+        .navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+            color: <?php echo $modsForHesk_settings['navbarItemTextHoverColor']; ?>;
+            background-color: transparent;
+        }
+        .dropdown-menu>li>a {
+            color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>;
+        }
+        .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+            color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
+            text-decoration: none;
+            background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
+        }
+        .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+            color: <?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>;
+            background-color: <?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>;
+            background-image: none;
+        }
+        .settingsquestionmark {
+            color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
+            cursor: pointer;
+        }
+        .h3questionmark {
+            color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
+        }
+    </style>
 
     <?php
 

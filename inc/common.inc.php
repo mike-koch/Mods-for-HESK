@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -36,6 +36,12 @@
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');} 
 
 #error_reporting(E_ALL);
+
+// Set correct Content-Type header
+if ( ! defined('NO_HTTP_HEADER') )
+{
+	header('Content-Type: text/html; charset=utf-8');
+}
 
 // Set backslash options
 if (get_magic_quotes_gpc())
@@ -1982,4 +1988,15 @@ function mfh_getNumberOfDownloadsForAttachment($att_id, $table='attachments')
 	$res = hesk_dbQuery('SELECT `download_count` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'].$table)."` WHERE `att_id` = ".intval($att_id));
 	$rec = hesk_dbFetchAssoc($res);
 	return $rec['download_count'];
+}
+
+function mfh_getSettings() {
+	global $hesk_settings;
+
+	$settings = array();
+	$res = hesk_dbQuery("SELECT `Key`, `Value` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` WHERE `Key` <> 'modsForHeskVersion'");
+	while ($row = hesk_dbFetchAssoc($res)) {
+		$settings[$row['Key']] = $row['Value'];
+	}
+	return $settings;
 }

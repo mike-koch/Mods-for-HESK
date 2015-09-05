@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -44,7 +44,6 @@ if ( ! isset($_POST['hx']) || $_POST['hx'] != 3 || ! isset($_POST['hy']) || $_PO
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 
 // Are we in maintenance mode?
@@ -272,6 +271,7 @@ if ($tmpvar['category'])
 }
 
 // Custom fields
+$modsForHesk_settings = mfh_getSettings();
 foreach ($hesk_settings['custom_fields'] as $k=>$v)
 {
 	if ($v['use'])
@@ -412,8 +412,10 @@ if (count($hesk_error_buffer))
     hesk_process_messages($hesk_error_buffer, 'index.php?a=add');
 }
 
-$tmpvar['message']=hesk_makeURL($tmpvar['message']);
-$tmpvar['message']=nl2br($tmpvar['message']);
+if (!$modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+    $tmpvar['message']=hesk_makeURL($tmpvar['message']);
+    $tmpvar['message']=nl2br($tmpvar['message']);
+}
 
 // Track suggested knowledgebase articles
 if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && isset($_POST['suggested']) && is_array($_POST['suggested']) )
@@ -470,7 +472,7 @@ if ($modsForHesk_settings['customer_email_verification_required'])
         hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."pending_verification_emails` (`Email`, `ActivationKey`)
         VALUES ('".$escapedEmail."', '".$escapedKey."')");
 
-        hesk_notifyCustomerForVerifyEmail('verify_email', $key);
+        hesk_notifyCustomerForVerifyEmail('verify_email', $key, $modsForHesk_settings);
         $createTicket = false;
     }
 }
@@ -482,19 +484,19 @@ if ($createTicket)
     // Notify the customer
     if ($hesk_settings['notify_new'])
     {
-        hesk_notifyCustomer();
+        hesk_notifyCustomer($modsForHesk_settings);
     }
 
     // Need to notify staff?
     // --> From autoassign?
         if ($tmpvar['owner'] && $autoassign_owner['notify_assigned'])
         {
-            hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
+            hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you', $modsForHesk_settings);
         }
     // --> No autoassign, find and notify appropriate staff
         elseif ( ! $tmpvar['owner'] )
         {
-            hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ");
+            hesk_notifyStaff('new_ticket_staff', " `notify_new_unassigned` = '1' ", $modsForHesk_settings);
         }
 }
 

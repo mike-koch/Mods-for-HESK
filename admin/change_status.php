@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -44,6 +44,7 @@ hesk_load_database_functions();
 hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
+$modsForHesk_settings = mfh_getSettings();
 
 /* Check permissions for this feature */
 if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
@@ -103,7 +104,7 @@ if ($statusRow['IsClosed']) // Closed
 
         // Notify customer
         require(HESK_PATH . 'inc/email_functions.inc.php');
-        hesk_notifyCustomer('ticket_closed');
+        hesk_notifyCustomer($modsForHesk_settings,'ticket_closed');
     }
 
     // Log who marked the ticket resolved

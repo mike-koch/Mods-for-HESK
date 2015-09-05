@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -42,7 +42,6 @@ if (is_dir(HESK_PATH . 'install')) {die('Please delete the <b>install</b> folder
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 
 // Save the default language for the settings page before choosing user's preferred one
 $hesk_settings['language_default'] = $hesk_settings['language'];
@@ -254,25 +253,6 @@ if ( defined('HESK_DEMO') )
                         ?>
                     </td>
                 </tr>
-                <tr>
-                    <td class="text-right">
-                        /modsForHesk_settings.inc.php
-                    </td>
-                    <?php
-                    $modsForHeskIsWritable = is_writable(HESK_PATH . 'modsForHesk_settings.inc.php');
-                    $cellClass = $modsForHeskIsWritable ? 'success' : 'danger';
-                    ?>
-                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
-                        <?php
-                        if ($modsForHeskIsWritable) {
-                            $enable_save_settings=1;
-                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="success">'.$hesklang['writable'].'</span>';
-                        } else {
-                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="error">'.$hesklang['not_writable'].'</span><br />'.$hesklang['e_mfh_settings'];
-                        }
-                        ?>
-                    </td>
-                </tr>
             </table>
         </div>
     </div>
@@ -348,6 +328,7 @@ if ( defined('HESK_DEMO') )
 
         $hesklang['err_custname'] = addslashes($hesklang['err_custname']);
 
+        $modsForHesk_settings = mfh_getSettings();
         ?>
         <script language="javascript" type="text/javascript"><!--
         function hesk_checkFields()
@@ -2711,7 +2692,7 @@ function hesk_cacheMfhLatestVersion($latest)
 
 function hesk_testLanguage($return_options = 0)
 {
-	global $hesk_settings, $hesklang, $modsForHesk_settings;
+	global $hesk_settings, $hesklang;
 
 	/* Get a list of valid emails */
     include_once(HESK_PATH . 'inc/email_functions.inc.php');

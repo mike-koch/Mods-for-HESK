@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -37,8 +37,14 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+
+// Connect to database and check for brute force attempts
+hesk_load_database_functions();
+hesk_dbConnect();
+hesk_limitBfAttempts();
+
+$modsForHesk_settings = mfh_getSettings();
 
 // Is the password reset function enabled?
 if ( ! $hesk_settings['reset_pass'])
@@ -133,11 +139,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		}
 	}
 
-	// Connect to database and check for brute force attempts
-	hesk_load_database_functions();
-	hesk_dbConnect();
-	hesk_limitBfAttempts();
-
 	// Get email
 	$email = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer['email']=$hesklang['enter_valid_email'];
 
@@ -180,8 +181,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			require(HESK_PATH . 'inc/email_functions.inc.php');
 
 			// Get the email message
-			$msg = hesk_getEmailMessage('reset_password',array(),1,0,1);
-            $htmlMsg = hesk_getHtmlMessage('reset_password',array(),1,0,1);
+			$msg = hesk_getEmailMessage('reset_password',array(),$modsForHesk_settings,1,0,1);
+            $htmlMsg = hesk_getHtmlMessage('reset_password',array(),$modsForHesk_settings,1,0,1);
 
 			// Replace message special tags
 			$msg = str_replace('%%NAME%%',				hesk_msgToPlain($row['name'],1,1),	$msg);
@@ -194,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $htmlMsg = str_replace('%%PASSWORD_RESET%%',	$hesk_settings['hesk_url'].'/'.$hesk_settings['admin_dir'].'/password.php?h='.$hash, $htmlMsg);
 
 			// Send email
-			hesk_mail($email, $hesklang['reset_password'], $msg, $htmlMsg);
+			hesk_mail($email, $hesklang['reset_password'], $msg, $htmlMsg, $modsForHesk_settings);
 
 			// Show success
 			hesk_process_messages($hesklang['pemls'],'NOREDIRECT','SUCCESS');
@@ -238,6 +239,9 @@ elseif ( isset($_GET['h']) )
 			// Expire all verification hashes for this user
 			hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."reset_password` WHERE `user`=".intval($row['user']));
 
+			// Load additional required functions
+			require(HESK_PATH . 'inc/admin_functions.inc.php');
+
 			// Get user details
 			$res = hesk_dbQuery('SELECT * FROM `'.$hesk_settings['db_pfix']."users` WHERE `id`=".intval($row['user'])." LIMIT 1");
 			$row = hesk_dbFetchAssoc($res);
@@ -245,6 +249,11 @@ elseif ( isset($_GET['h']) )
 			{
 				$_SESSION[$k]=$v;
 			}
+
+			// Set a tag that will be used to expire sessions after username or password change
+			$_SESSION['session_verify'] = hesk_activeSessionCreateTag($_SESSION['user'], $_SESSION['pass']);
+
+			// We don't need the password hash anymore
 			unset($_SESSION['pass']);
 
 			// Clean brute force attempts

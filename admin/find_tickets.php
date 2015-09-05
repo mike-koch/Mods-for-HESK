@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -39,6 +39,7 @@ define('HESK_PATH','../');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/status_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -66,7 +67,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <tr>
 <td>
 <div class="row" style="padding-top: 20px">
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4><?php echo $hesklang['tickets_found']; ?> <span style="float: right; margin-top: -7px;"><a href="new_ticket.php" class="btn btn-success"><?php echo $hesklang['nti']; ?></a></span></h4>
@@ -99,7 +100,8 @@ LEFT(`message`, 400) AS `message`,
 `lastreplier`,
 `replierid`,
 `archive`,
-`locked`
+`locked`,
+`merged`
 ";
 
 foreach ($hesk_settings['custom_fields'] as $k=>$v)

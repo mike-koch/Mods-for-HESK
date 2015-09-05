@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -43,6 +43,7 @@ hesk_load_database_functions();
 
 hesk_session_start();
 hesk_dbConnect();
+$modsForHesk_settings = mfh_getSettings();
 
 /* What should we do? */
 $action = hesk_REQUEST('a');
@@ -70,7 +71,7 @@ exit();
 /*** START FUNCTIONS ***/
 function do_login()
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
     $hesk_error_buffer = array();
 
@@ -285,7 +286,7 @@ function do_login()
                         $ticket['dt'] = hesk_date($ticket['dt'], true);
                         $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
                         $ticket = hesk_ticketToPlain($ticket, 1, 0);
-                        hesk_notifyCustomer('ticket_closed');
+                        hesk_notifyCustomer($modsForHesk_settings,'ticket_closed');
                     }
                 }
             }

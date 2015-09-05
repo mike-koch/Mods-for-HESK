@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.4 from 22nd June 2015
+ *  Version: 2.6.5 from 28th August 2015
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -41,7 +41,7 @@ if ( ! isset($status) )
     //-- We don't want to check statuses that are considered "closed"
     foreach ($allStatuses as $row)
     {
-        if ($status['IsClosed'] == 1) {
+        if ($row['IsClosed'] == 1) {
             continue;
         }
 

@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.4 from 22nd June 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -37,7 +37,6 @@ define('HESK_PATH','../');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -71,6 +70,8 @@ if ( $action = hesk_REQUEST('a') )
     elseif ($action == 'priority')   {change_priority();}
     elseif ($action == 'manager')    {change_manager();}
 }
+
+$modsForHesk_settings = mfh_getSettings();
 
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
