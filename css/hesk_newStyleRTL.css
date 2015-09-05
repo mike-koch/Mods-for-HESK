@@ -1,22 +1,3 @@
-<?php
-    header("Content-type: text/css; charset: UTF-8");
-
-    $navbarBackgroundColor = $modsForHesk_settings['navbarBackgroundColor'];
-    $navbarBrandColor = $modsForHesk_settings['navbarBrandColor'];
-    $navbarBrandHoverColor = $modsForHesk_settings['navbarBrandHoverColor'];
-
-    $navbarItemTextColor = $modsForHesk_settings['navbarItemTextColor'];
-    $navbarItemTextHoverColor = $modsForHesk_settings['navbarItemTextHoverColor'];
-    $navbarItemTextSelectedColor = $modsForHesk_settings['navbarItemTextSelectedColor'];
-    $navbarItemSelectedBackgroundColor = $modsForHesk_settings['navbarItemSelectedBackgroundColor'];
-
-    $dropdownItemTextColor = $modsForHesk_settings['dropdownItemTextColor'];
-    $dropdownItemTextHoverColor = $modsForHesk_settings['dropdownItemTextHoverColor'];
-    $dropdownItemTextHoverBackgroundColor = $modsForHesk_settings['dropdownItemTextHoverBackgroundColor'];
-
-    $questionMarkColor = $modsForHesk_settings['questionMarkColor'];
-?>
-
 .nu-rtlFloatLeft {
     float: left;
 }
@@ -88,49 +69,8 @@
 .navbar {
     margin-bottom: 0;
 }
-.navbar-default {
-    background-color: <?php echo $navbarBackgroundColor; ?>;
-    background-image: none;
-    filter: none;
-}
-.navbar-default .navbar-brand {
-    color: <?php echo $navbarBrandColor; ?>;
-}
-.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
-    color: <?php echo $navbarBrandHoverColor; ?>;
-    background-color: transparent;
-}
-.navbar-default .navbar-nav>li>a {
-    color: <?php echo $navbarItemTextColor; ?>;
-}
-.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
-    color: <?php echo $navbarItemTextHoverColor; ?>;
-    background-color: transparent;
-}
-.dropdown-menu>li>a {
-    color: <?php echo $dropdownItemTextColor; ?>;
-}
-.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
-    color: <?php echo $dropdownItemTextHoverColor; ?>;
-    text-decoration: none;
-    background-color: <?php echo $dropdownItemTextHoverBackgroundColor; ?>;
-}
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
-    color: <?php echo $navbarItemTextSelectedColor; ?>;
-    background-color: <?php echo $navbarItemSelectedBackgroundColor; ?>;
-    background-image: none;
-}
-.settingsquestionmark {
-    color: <?php echo $questionMarkColor; ?>;
-    font-size: 14px;
-    cursor: pointer;
-}
 .settingsquestionmark:hover {
     text-decoration: underline;
-}
-.h3questionmark {
-    color: <?php echo $questionMarkColor; ?>;
-    font-size: 14px;
 }
 .h3questionmark:hover {
     text-decoration: underline;
