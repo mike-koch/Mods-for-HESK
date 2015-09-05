@@ -788,6 +788,14 @@ function migrateSettings() {
     }
 }
 
+function execute250Scripts() {
+    global $hesk_settings;
+
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `user_agent` TEXT");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `user_agent` TEXT");
+}
+
 function getSettingValue($settings, $setting, $default) {
     return isset($settings[$setting]) ? $settings[$setting] : $default;
 }
+// END Version 2.5.0

@@ -55,6 +55,7 @@ function hesk_newTicket($ticket, $isVerified = true)
     $tableName = $isVerified ? 'tickets' : 'stage_tickets';
 
 	$ticket['message'] = htmLawed($ticket['message'], array('safe' => 1, 'deny_attribute'=>'style'));
+	$userAgent = $_SERVER["HTTP_USER_AGENT"];
 
 	// Insert ticket into database
 	hesk_dbQuery("
@@ -100,7 +101,8 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`status`,
 		`latitude`,
 		`longitude`,
-		`html`
+		`html`,
+		`user_agent`
 	)
 	VALUES
 	(
@@ -144,7 +146,8 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'".intval($ticket['status'])."',
 		'".hesk_dbEscape($ticket['latitude'])."',
 		'".hesk_dbEscape($ticket['longitude'])."',
-		'".hesk_dbEscape($ticket['html'])."'
+		'".hesk_dbEscape($ticket['html'])."',
+		'".hesk_dbEscape($userAgent)."'
 	)
 	");
 
