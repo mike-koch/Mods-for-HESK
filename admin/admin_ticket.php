@@ -695,6 +695,13 @@ if($ticket['email'] != '') {
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
+<script>
+    var userAgent = platform.parse('<?php echo addslashes($ticket['user_agent']); ?>');
+    var fontIcon = '';
+    if (userAgent.os == 'OS X') {
+        fontIcon = 'fa fa-apple';
+    }
+</script>
 <div class="row" style="padding: 20px">
     <div class="col-md-2">
         <div class="panel panel-default">
@@ -881,6 +888,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         if ($ticket['locked'])
                         {
                             echo '<span class="fa fa-lock"></span>&nbsp;';
+                        }
+                        if (isset($ticket['user_agent']) && $ticket['user_agent'] !== NULL)
+                        {
+
                         }
                         if ($modsForHesk_settings['request_location'])
                         {
