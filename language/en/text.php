@@ -23,6 +23,7 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.0
 $hesklang['ticket_message_no_attachments'] = 'Ticket/Reply message, however attachments will not be included in the email';
+$hesklang['ticket_submitted_using'] = 'Ticket submitted using: ';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.4.0
 $hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';

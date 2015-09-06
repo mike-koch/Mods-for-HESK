@@ -697,10 +697,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 <script>
     var userAgent = platform.parse('<?php echo addslashes($ticket['user_agent']); ?>');
-    var fontIcon = '';
-    if (userAgent.os == 'OS X') {
-        fontIcon = 'fa fa-apple';
-    }
 </script>
 <div class="row" style="padding: 20px">
     <div class="col-md-2">
@@ -891,7 +887,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         }
                         if (isset($ticket['user_agent']) && $ticket['user_agent'] !== NULL)
                         {
-
+                            $tooltipText = $hesklang['ticket_submitted_using'];
+                            echo '<i class="fa fa-desktop" id="user-agent"></i>';
+                            echo '<script>$("#user-agent").tooltip({ title: \''.$tooltipText.'\' + userAgent })</script>';
                         }
                         if ($modsForHesk_settings['request_location'])
                         {
