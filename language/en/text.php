@@ -23,7 +23,11 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.0
 $hesklang['ticket_message_no_attachments'] = 'Ticket/Reply message, however attachments will not be included in the email';
-$hesklang['ticket_submitted_using'] = 'Ticket submitted using: ';
+$hesklang['click_for_device_information'] = 'Click for device information';
+$hesklang['device_information'] = 'Device information';
+$hesklang['operating_system'] = 'Operating System';
+$hesklang['browser'] = 'Browser';
+$hesklang['screen_resolution'] = 'Screen Resolution';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.4.0
 $hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';

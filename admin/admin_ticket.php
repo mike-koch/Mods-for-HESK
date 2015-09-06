@@ -695,9 +695,6 @@ if($ticket['email'] != '') {
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-<script>
-    var userAgent = platform.parse('<?php echo addslashes($ticket['user_agent']); ?>');
-</script>
 <div class="row" style="padding: 20px">
     <div class="col-md-2">
         <div class="panel panel-default">
@@ -885,12 +882,56 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         {
                             echo '<span class="fa fa-lock"></span>&nbsp;';
                         }
-                        if (isset($ticket['user_agent']) && $ticket['user_agent'] !== NULL)
-                        {
-                            $tooltipText = $hesklang['ticket_submitted_using'];
-                            echo '<i class="fa fa-desktop" id="user-agent"></i>';
-                            echo '<script>$("#user-agent").tooltip({ title: \''.$tooltipText.'\' + userAgent })</script>';
-                        }
+                        if ($ticket['user_agent'] !== NULL
+                            && $ticket['screen_resolution_height'] !== NULL
+                            && $ticket['screen_resolution_width'] !== NULL):
+                        ?>
+                            <span data-toggle="modal" data-target="#user-agent-modal" style="cursor: pointer">
+                                <i class="fa fa-desktop" data-toggle="tooltip"
+                                   title="<?php echo htmlspecialchars($hesklang['click_for_device_information']); ?>"></i>
+                            </span>
+                            <div id="user-agent-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4><?php echo $hesklang['device_information']; ?></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <script>
+                                                var userAgent = platform.parse('<?php echo addslashes($ticket['user_agent']); ?>');
+                                                console.log(userAgent);
+                                                var screenResWidth = <?php echo intval($ticket['screen_resolution_width']); ?>;
+                                                var screenResHeight = <?php echo intval($ticket['screen_resolution_height']); ?>;
+                                            </script>
+                                            <table class="table table-striped">
+                                                <tbody>
+                                                <tr>
+                                                    <td><strong><?php echo $hesklang['operating_system']; ?></strong></td>
+                                                    <td id="operating-system">&nbsp;</td>
+                                                    <script>$('#operating-system').html(userAgent.os.toString());</script>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong><?php echo $hesklang['browser']; ?></strong></td>
+                                                    <td id="browser">&nbsp;</td>
+                                                    <script>$('#browser').html(userAgent.name + ' ' + userAgent.version);</script>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong><?php echo $hesklang['screen_resolution']; ?></strong></td>
+                                                    <td id="screen-resolution">&nbsp;</td>
+                                                    <script>$('#screen-resolution').html(screenResWidth + ' x ' + screenResHeight);</script>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php
+                        endif;
+
                         if ($modsForHesk_settings['request_location'])
                         {
                             $locationText = '';
