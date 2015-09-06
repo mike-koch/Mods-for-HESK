@@ -884,7 +884,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         }
                         if ($ticket['user_agent'] !== NULL
                             && $ticket['screen_resolution_height'] !== NULL
-                            && $ticket['screen_resolution_width'] !== NULL):
+                            && $ticket['screen_resolution_height'] != 0
+                            && $ticket['screen_resolution_width'] !== NULL
+                            && $ticket['screen_resolution_width'] != 0):
                         ?>
                             <span data-toggle="modal" data-target="#user-agent-modal" style="cursor: pointer">
                                 <i class="fa fa-desktop" data-toggle="tooltip"

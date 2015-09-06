@@ -1055,8 +1055,14 @@ if (!$show['show']) {
                         <div class="col-md-9 col-md-offset-3">
                             <input type="hidden" id="latitude" name="latitude" value="E-0">
                             <input type="hidden" id="longitude" name="longitude" value="E-0">
+                            <input type="hidden" id="screen-resolution-height" name="screen_resolution_height">
+                            <input type="hidden" id="screen-resolution-width" name="screen_resolution_width">
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
                             <input class="btn btn-default" type="submit" value="<?php echo $hesklang['sub_ticket']; ?>">
+                            <script>
+                                $('#screen-resolution-height').prop('value', screen.height);
+                                $('#screen-resolution-width').prop('value', screen.width);
+                            </script>
                         </div>
                     </div>
 
