@@ -339,6 +339,13 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 		$tmpvar[$k] = '';
 	}
 
+	$ticket['latitude'] = NULL;
+	$ticket['longitude'] = NULL;
+	$ticket['html'] = 0;
+	$ticket['user_agent'] = NULL;
+	$ticket['screen_resolution_width'] = NULL;
+	$ticket['screen_resolution_height'] = NULL;
+
 	// Insert ticket to database
 	$ticket = hesk_newTicket($tmpvar);
 
