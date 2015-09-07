@@ -882,7 +882,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         {
                             echo '<span class="fa fa-lock"></span>&nbsp;';
                         }
-                        if ($ticket['user_agent'] !== NULL
+                        if ($modsForHesk_settings['display_user_agent_information']
+                            && $ticket['user_agent'] !== NULL
                             && $ticket['screen_resolution_height'] !== NULL
                             && $ticket['screen_resolution_height'] != 0
                             && $ticket['screen_resolution_width'] !== NULL

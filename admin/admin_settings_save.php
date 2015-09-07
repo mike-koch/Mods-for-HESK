@@ -551,6 +551,7 @@ if ($rich_text_setting == 0) {
 
 $set['statuses_order_column'] = empty($_POST['statuses_order_column']) ? 'sort' : 'name';
 $set['kb_attach_dir'] = hesk_POST('kb_attach_dir', 'attachments');
+$set['display_user_agent_information'] = empty($_POST['display_user_agent_information']) ? 0 : 1;
 
 if ($set['customer-email-verification-required'])
 {
@@ -594,6 +595,7 @@ mfh_updateSetting('dropdownItemTextColor', $set['dropdownItemTextColor'], true);
 mfh_updateSetting('dropdownItemTextHoverColor', $set['dropdownItemTextHoverColor'], true);
 mfh_updateSetting('questionMarkColor', $set['questionMarkColor'], true);
 mfh_updateSetting('dropdownItemTextHoverBackgroundColor', $set['dropdownItemTextHoverBackgroundColor'], true);
+mfh_updateSetting('display_user_agent_information', $set['display_user_agent_information']);
 
 // Prepare settings file and save it
 $settings_file_content='<?php
@@ -833,7 +835,6 @@ else
 exit();
 
 
-/** FUNCTIONS **/
 function mfh_updateSetting($key, $value, $isString = false) {
 	global $hesk_settings;
 

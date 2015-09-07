@@ -28,6 +28,9 @@ $hesklang['device_information'] = 'Device information';
 $hesklang['operating_system'] = 'Operating System';
 $hesklang['browser'] = 'Browser';
 $hesklang['screen_resolution'] = 'Screen Resolution';
+$hesklang['display_user_agent_information'] = 'Show user agent';
+$hesklang['display_user_agent_information_help'] = 'When enabled, staff will be able to view the operating system, browser,
+    and screen resolution of the device used to create the ticket.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.4.0
 $hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';
