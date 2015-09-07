@@ -10,61 +10,61 @@ if (!isset($_GET['v'])) {
 $startingVersion = intval($_GET['v']);
 
 function echoInitialVersionRows($version) {
-    if ($version < 1) {
+    if ($version < 2) {
         printRow('Pre-1.4.0');
     }
-    if ($version < 140) {
+    if ($version < 3) {
         printRow('1.4.0');
     }
-    if ($version < 141) {
+    if ($version < 4) {
         printRow('1.4.1');
     }
-    if ($version < 150) {
+    if ($version < 5) {
         printRow('1.5.0');
     }
-    if ($version < 160) {
+    if ($version < 6) {
         printRow('1.6.0');
     }
-    if ($version < 161) {
+    if ($version < 7) {
         printRow('1.6.1');
     }
-    if ($version < 170) {
+    if ($version < 8) {
         printRow('1.7.0');
     }
-    if ($version < 200) {
+    if ($version < 9) {
         printRow('2.0.0');
     }
-    if ($version < 201) {
+    if ($version < 10) {
         printRow('2.0.1');
     }
-    if ($version < 210) {
+    if ($version < 11) {
         printRow('2.1.0');
     }
-    if ($version < 211) {
+    if ($version < 12) {
         printRow('2.1.1');
     }
-    if ($version < 220) {
+    if ($version < 13) {
         printRow('2.2.0');
     }
-    if ($version < 221) {
+    if ($version < 14) {
         printRow('2.2.1');
     }
-    if ($version < 230) {
+    if ($version < 15) {
         printRow('2.3.0');
     }
-    if ($version < 231) {
+    if ($version < 16) {
         printRow('2.3.1');
     }
-    if ($version < 232) {
+    if ($version < 17) {
         printRow('2.3.2');
     }
-    if ($version < 240) {
+    if ($version < 18) {
         printRow('2.4.0');
     }
-    if ($version < 241) {
+    if ($version < 19) {
         printRow('2.4.1');
     }
-    if ($version < 242) {
+    if ($version < 20) {
         printRow('2.4.2');
     }
 }
@@ -115,7 +115,7 @@ function printRow($version) {
                                 <?php echoInitialVersionRows($startingVersion); ?>
                                 </tbody>
                             </table>
-                            <?php if ($startingVersion < 240) { ?>
+                            <?php if ($startingVersion < 18) { ?>
                                 <table class="table table-striped" style="table-layout: fixed">
                                     <thead>
                                     <tr>
@@ -124,7 +124,7 @@ function printRow($version) {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php if ($startingVersion < 200): ?>
+                                    <?php if ($startingVersion < 9): ?>
                                     <tr id="row-banmigrate">
                                         <td>Migrate IP / Email Bans</td>
                                         <td><i id="spinner-banmigrate" class="fa fa-spinner"></i> <span id="span-banmigrate">Waiting...</span></td>
