@@ -11,67 +11,66 @@ $startingVersion = intval($_GET['v']);
 
 function echoInitialVersionRows($version) {
     if ($version < 1) {
-        printRow('Pre-v1.4.0');
+        printRow('Pre-1.4.0');
     }
     if ($version < 140) {
-        printRow('v1.4.0');
+        printRow('1.4.0');
     }
     if ($version < 141) {
-        printRow('v1.4.1');
+        printRow('1.4.1');
     }
     if ($version < 150) {
-        printRow('v1.5.0');
+        printRow('1.5.0');
     }
     if ($version < 160) {
-        printRow('v1.6.0');
+        printRow('1.6.0');
     }
     if ($version < 161) {
-        printRow('v1.6.1');
+        printRow('1.6.1');
     }
     if ($version < 170) {
-        printRow('v1.7.0');
+        printRow('1.7.0');
     }
     if ($version < 200) {
-        printRow('v2.0.0');
+        printRow('2.0.0');
     }
     if ($version < 201) {
-        printRow('v2.0.1');
+        printRow('2.0.1');
     }
     if ($version < 210) {
-        printRow('v2.1.0');
+        printRow('2.1.0');
     }
     if ($version < 211) {
-        printRow('v2.1.1');
+        printRow('2.1.1');
     }
     if ($version < 220) {
-        printRow('v2.2.0');
+        printRow('2.2.0');
     }
     if ($version < 221) {
-        printRow('v2.2.1');
+        printRow('2.2.1');
     }
     if ($version < 230) {
-        printRow('v2.3.0');
+        printRow('2.3.0');
     }
     if ($version < 231) {
-        printRow('v2.3.1');
+        printRow('2.3.1');
     }
     if ($version < 232) {
-        printRow('v2.3.2');
+        printRow('2.3.2');
     }
     if ($version < 240) {
-        printRow('v2.4.0');
+        printRow('2.4.0');
     }
     if ($version < 241) {
-        printRow('v2.4.1');
+        printRow('2.4.1');
     }
     if ($version < 242) {
-        printRow('v2.4.2');
+        printRow('2.4.2');
     }
 }
 
 function printRow($version) {
     $versionId = str_replace('.','',$version);
-    $versionId = str_replace('v','',$versionId);
     $versionId = str_replace('Pre-','p',$versionId);
     echo '<tr id="row-'.$versionId.'">';
     echo '<td>'.$version.'</td>';
