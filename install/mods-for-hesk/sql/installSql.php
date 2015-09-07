@@ -791,3 +791,17 @@ function migrateSettings() {
 function getSettingValue($settings, $setting, $default) {
     return isset($settings[$setting]) ? $settings[$setting] : $default;
 }
+
+function execute250Scripts() {
+    global $hesk_settings;
+
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `user_agent` TEXT");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `screen_resolution_width` INT");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` ADD COLUMN `screen_resolution_height` INT");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `user_agent` TEXT");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `screen_resolution_width` INT");
+    executeQuery("ALTER TABLE `".hesk_dbEscape($hesk_settings['db_pfix'])."stage_tickets` ADD COLUMN `screen_resolution_height` INT");
+
+    executeQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."settings` (`Key`, `Value`) VALUES ('display_user_agent_information', '0')");
+}
+// END Version 2.5.0

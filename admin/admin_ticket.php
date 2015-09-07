@@ -882,6 +882,59 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         {
                             echo '<span class="fa fa-lock"></span>&nbsp;';
                         }
+                        if ($modsForHesk_settings['display_user_agent_information']
+                            && $ticket['user_agent'] !== NULL
+                            && $ticket['screen_resolution_height'] !== NULL
+                            && $ticket['screen_resolution_height'] != 0
+                            && $ticket['screen_resolution_width'] !== NULL
+                            && $ticket['screen_resolution_width'] != 0):
+                        ?>
+                            <span data-toggle="modal" data-target="#user-agent-modal" style="cursor: pointer">
+                                <i class="fa fa-desktop" data-toggle="tooltip"
+                                   title="<?php echo htmlspecialchars($hesklang['click_for_device_information']); ?>"></i>
+                            </span>
+                            <div id="user-agent-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4><?php echo $hesklang['device_information']; ?></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <script>
+                                                var userAgent = platform.parse('<?php echo addslashes($ticket['user_agent']); ?>');
+                                                console.log(userAgent);
+                                                var screenResWidth = <?php echo intval($ticket['screen_resolution_width']); ?>;
+                                                var screenResHeight = <?php echo intval($ticket['screen_resolution_height']); ?>;
+                                            </script>
+                                            <table class="table table-striped">
+                                                <tbody>
+                                                <tr>
+                                                    <td><strong><?php echo $hesklang['operating_system']; ?></strong></td>
+                                                    <td id="operating-system">&nbsp;</td>
+                                                    <script>$('#operating-system').html(userAgent.os.toString());</script>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong><?php echo $hesklang['browser']; ?></strong></td>
+                                                    <td id="browser">&nbsp;</td>
+                                                    <script>$('#browser').html(userAgent.name + ' ' + userAgent.version);</script>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong><?php echo $hesklang['screen_resolution']; ?></strong></td>
+                                                    <td id="screen-resolution">&nbsp;</td>
+                                                    <script>$('#screen-resolution').html(screenResWidth + ' x ' + screenResHeight);</script>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php
+                        endif;
+
                         if ($modsForHesk_settings['request_location'])
                         {
                             $locationText = '';

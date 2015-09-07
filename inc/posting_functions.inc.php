@@ -100,7 +100,10 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`status`,
 		`latitude`,
 		`longitude`,
-		`html`
+		`html`,
+		`user_agent`,
+		`screen_resolution_height`,
+		`screen_resolution_width`
 	)
 	VALUES
 	(
@@ -144,7 +147,10 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'".intval($ticket['status'])."',
 		'".hesk_dbEscape($ticket['latitude'])."',
 		'".hesk_dbEscape($ticket['longitude'])."',
-		'".hesk_dbEscape($ticket['html'])."'
+		'".hesk_dbEscape($ticket['html'])."',
+		'".hesk_dbEscape($ticket['user_agent'])."',
+		'".hesk_dbEscape($ticket['screen_resolution_height'])."',
+		'".hesk_dbEscape($ticket['screen_resolution_width'])."'
 	)
 	");
 
