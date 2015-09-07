@@ -1,61 +1,61 @@
 function processUpdates(startingVersion) {
-    if (startingVersion < 1) {
+    if (startingVersion < 2) {
         startVersionUpgrade('p140');
-        executeUpdate(1, 'p140', 'Pre 1.4.0');
-    } else if (startingVersion < 140) {
+        executeUpdate(2, '2', 'Pre 1.4.0');
+    } else if (startingVersion < 3) {
         startVersionUpgrade('140');
-        executeUpdate(140, '140', '1.4.0');
-    } else if (startingVersion < 141) {
+        executeUpdate(3, '3', '1.4.0');
+    } else if (startingVersion < 4) {
         startVersionUpgrade('141');
-        executeUpdate(141, '141', '1.4.1');
-    } else if (startingVersion < 150) {
+        executeUpdate(4, '4', '1.4.1');
+    } else if (startingVersion < 5) {
         startVersionUpgrade('150');
-        executeUpdate(150, '150', '1.5.0');
-    } else if (startingVersion < 160) {
+        executeUpdate(5, '5', '1.5.0');
+    } else if (startingVersion < 6) {
         startVersionUpgrade('160');
-        executeUpdate(160, '160', '1.6.0');
-    } else if (startingVersion < 161) {
+        executeUpdate(6, '6', '1.6.0');
+    } else if (startingVersion < 7) {
         startVersionUpgrade('161');
-        executeUpdate(161, '161', '1.6.1');
-    } else if (startingVersion < 170) {
+        executeUpdate(7, '7', '1.6.1');
+    } else if (startingVersion < 8) {
         startVersionUpgrade('170');
-        executeUpdate(170, '170', '1.7.0');
-    } else if (startingVersion < 200) {
+        executeUpdate(8, '8', '1.7.0');
+    } else if (startingVersion < 9) {
         startVersionUpgrade('200');
-        executeUpdate(200, '200', '2.0.0');
-    } else if (startingVersion < 201) {
+        executeUpdate(9, '9', '2.0.0');
+    } else if (startingVersion < 10) {
         startVersionUpgrade('201');
-        executeUpdate(201, '201', '2.0.1');
-    } else if (startingVersion < 210) {
+        executeUpdate(10, '10', '2.0.1');
+    } else if (startingVersion < 11) {
         startVersionUpgrade('210');
-        executeUpdate(210, '210', '2.1.0');
-    } else if (startingVersion < 211) {
+        executeUpdate(11, '11', '2.1.0');
+    } else if (startingVersion < 12) {
         startVersionUpgrade('211');
-        executeUpdate(211, '211', '2.1.1');
-    } else if (startingVersion < 220) {
+        executeUpdate(12, '12', '2.1.1');
+    } else if (startingVersion < 13) {
         startVersionUpgrade('220');
-        executeUpdate(220, '220', '2.2.0');
-    } else if (startingVersion < 221) {
+        executeUpdate(13, '13', '2.2.0');
+    } else if (startingVersion < 14) {
         startVersionUpgrade('221');
-        executeUpdate(221, '221', '2.2.1');
-    } else if (startingVersion < 230) {
+        executeUpdate(14, '14', '2.2.1');
+    } else if (startingVersion < 15) {
         startVersionUpgrade('230');
-        executeUpdate(230, '230', '2.3.0');
-    } else if (startingVersion < 231) {
+        executeUpdate(15, '15', '2.3.0');
+    } else if (startingVersion < 16) {
         startVersionUpgrade('231');
-        executeUpdate(231, '231', '2.3.1');
-    } else if (startingVersion < 232) {
+        executeUpdate(16, '16', '2.3.1');
+    } else if (startingVersion < 17) {
         startVersionUpgrade('232');
-        executeUpdate(232, '232', '2.3.2');
-    } else if (startingVersion < 240) {
+        executeUpdate(17, '17', '2.3.2');
+    } else if (startingVersion < 18) {
         startVersionUpgrade('240');
-        executeUpdate(240, '240', '2.4.0');
-    } else if (startingVersion < 241) {
+        executeUpdate(18, '18', '2.4.0');
+    } else if (startingVersion < 19) {
         startVersionUpgrade('241');
-        executeUpdate(241, '241', '2.4.1');
-    } else if (startingVersion < 242) {
+        executeUpdate(19, '19', '2.4.1');
+    } else if (startingVersion < 20) {
         startVersionUpgrade('242');
-        executeUpdate(242, '242', '2.4.2');
+        executeUpdate(20, '20', '2.4.2');
     } else {
         installationFinished();
     }
@@ -70,9 +70,9 @@ function executeUpdate(version, cssclass, formattedVersion) {
         data: { version: version },
         success: function(data) {
             markUpdateAsSuccess(cssclass, formattedVersion);
-            if (version == 200) {
+            if (version == 9) {
                 migrateIpEmailBans('banmigrate', 'banmigrate');
-            } else if (version == 240) {
+            } else if (version == 18) {
                 initializeStatuses('initialize-statuses', 'initialize-statuses');
             } else {
                 processUpdates(version);
@@ -128,7 +128,7 @@ function initializeStatuses(version, cssclass) {
 }
 
 function statusesInitialized() {
-    processUpdates(240);
+    processUpdates(18);
 }
 
 
@@ -155,7 +155,7 @@ function runMigration() {
 function migrateComplete() {
     $('#attention-row').hide();
     markUpdateAsSuccess('banmigrate', 'IP and Email address bans');
-    processUpdates(200);
+    processUpdates(9);
 }
 
 jQuery(document).ready(loadJquery);
