@@ -289,6 +289,7 @@ function getSpecialTagMap() {
     $map['%%EMAIL%%'] = $hesklang['customer_email'];
     $map['%%SUBJECT%%'] = $hesklang['ticket_subject'];
     $map['%%MESSAGE%%'] = $hesklang['ticket_message'];
+    $map['%%MESSAGE_NO_ATTACHMENTS%%'] = $hesklang['ticket_message_no_attachments'];
     $map['%%CREATED%%'] = $hesklang['ticket_created'];
     $map['%%UPDATED%%'] = $hesklang['ticket_updated'];
     $map['%%TRACK_ID%%'] = $hesklang['ticket_trackID'];

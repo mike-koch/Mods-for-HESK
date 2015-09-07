@@ -37,7 +37,6 @@ define('HESK_PATH','../');
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
@@ -48,6 +47,7 @@ require(HESK_PATH . 'inc/posting_functions.inc.php');
 hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
+$modsForHesk_settings = mfh_getSettings();
 
 // We only allow POST requests from the HESK form to this file
 if ( $_SERVER['REQUEST_METHOD'] != 'POST' )
@@ -281,13 +281,18 @@ $tmpvar['longitude'] = hesk_POST('longitude', 'E-4');
 
 $tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets'];
 
+// Set user agent and screen res to null
+$tmpvar['user_agent'] = NULL;
+$tmpvar['screen_resolution_height'] = NULL;
+$tmpvar['screen_resolution_width'] = NULL;
+
 // Insert ticket to database
 $ticket = hesk_newTicket($tmpvar);
 
 // Notify the customer about the ticket?
 if ($notify)
 {
-	hesk_notifyCustomer();
+	hesk_notifyCustomer($modsForHesk_settings);
 }
 
 // If ticket is assigned to someone notify them?
@@ -296,18 +301,18 @@ if ($ticket['owner'] && $ticket['owner'] != intval($_SESSION['id']))
 	// If we don't have info from auto-assign get it from database
     if ( ! isset($autoassign_owner['email']) )
     {
-		hesk_notifyAssignedStaff(false, 'ticket_assigned_to_you');
+		hesk_notifyAssignedStaff(false, 'ticket_assigned_to_you', $modsForHesk_settings);
 	}
     else
     {
-		hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you');
+		hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you', $modsForHesk_settings);
     }
 }
 
 // Ticket unassigned, notify everyone that selected to be notified about unassigned tickets
 elseif ( ! $ticket['owner'])
 {
-	hesk_notifyStaff('new_ticket_staff', " `id` != ".intval($_SESSION['id'])." AND `notify_new_unassigned` = '1' ");
+	hesk_notifyStaff('new_ticket_staff', " `id` != ".intval($_SESSION['id'])." AND `notify_new_unassigned` = '1' ", $modsForHesk_settings);
 }
 
 // Unset temporary variables

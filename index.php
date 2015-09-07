@@ -38,15 +38,17 @@ define('WYSIWYG',1);
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 
+hesk_load_database_functions();
+hesk_dbConnect();
 // Are we in maintenance mode?
 hesk_check_maintenance();
-hesk_load_database_functions();
 
 // Are we in "Knowledgebase only" mode?
 hesk_check_kb_only();
+
+$modsForHesk_settings = mfh_getSettings();
 
 // What should we do?
 $action = hesk_REQUEST('a');
@@ -1053,8 +1055,14 @@ if (!$show['show']) {
                         <div class="col-md-9 col-md-offset-3">
                             <input type="hidden" id="latitude" name="latitude" value="E-0">
                             <input type="hidden" id="longitude" name="longitude" value="E-0">
+                            <input type="hidden" id="screen-resolution-height" name="screen_resolution_height">
+                            <input type="hidden" id="screen-resolution-width" name="screen_resolution_width">
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
                             <input class="btn btn-default" type="submit" value="<?php echo $hesklang['sub_ticket']; ?>">
+                            <script>
+                                $('#screen-resolution-height').prop('value', screen.height);
+                                $('#screen-resolution-width').prop('value', screen.width);
+                            </script>
                         </div>
                     </div>
 
@@ -1273,7 +1281,7 @@ function print_start()
 
 function forgot_tid()
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
 	require(HESK_PATH . 'inc/email_functions.inc.php');
 
@@ -1337,18 +1345,18 @@ function forgot_tid()
     $html_tid_list .= '</ul>';
 
 	/* Get e-mail message for customer */
-	$msg = hesk_getEmailMessage('forgot_ticket_id','',0,0,1);
+	$msg = hesk_getEmailMessage('forgot_ticket_id','',$modsForHesk_settings,0,0,1);
     $msg = processEmail($msg, $name, $num, $tid_list);
 
     // Get HTML message for customer
-    $htmlMsg = hesk_getHtmlMessage('forgot_ticket_id','',0,0,1);
+    $htmlMsg = hesk_getHtmlMessage('forgot_ticket_id','', $modsForHesk_settings, 0,0,1);
     $htmlMsg = processEmail($htmlMsg, $name, $num, $html_tid_list);
 
 
     $subject = hesk_getEmailSubject('forgot_ticket_id');
 
 	/* Send e-mail */
-	hesk_mail($email, $subject, $msg, $htmlMsg);
+	hesk_mail($email, $subject, $msg, $htmlMsg, $modsForHesk_settings);
 
 	/* Show success message */
 	$tmp  = '<b>'.$hesklang['tid_sent'].'!</b>';

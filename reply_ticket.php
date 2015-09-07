@@ -37,7 +37,6 @@ define('HESK_PATH','./');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 
 // Are we in maintenance mode?
@@ -66,6 +65,9 @@ hesk_session_start();
 /* A security check */
 # hesk_token_check('POST');
 
+
+/* Connect to database */
+hesk_dbConnect();
 $hesk_error_buffer = array();
 
 // Tracking ID
@@ -135,9 +137,6 @@ if (count($hesk_error_buffer)!=0)
     hesk_process_messages($hesk_error_buffer,'ticket.php?track='.$trackingID.$hesk_settings['e_param'].'&Refresh='.rand(10000,99999));
 }
 
-/* Connect to database */
-hesk_dbConnect();
-
 // Check if this IP is temporarily locked out
 $res = hesk_dbQuery("SELECT `number` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` WHERE `ip`='".hesk_dbEscape($_SERVER['REMOTE_ADDR'])."' AND `last_attempt` IS NOT NULL AND DATE_ADD(`last_attempt`, INTERVAL ".intval($hesk_settings['attempt_banmin'])." MINUTE ) > NOW() LIMIT 1");
 if (hesk_dbNumRows($res) == 1)
@@ -205,6 +204,7 @@ $ticket['status'] = $ticket['status'] == $defaultNewTicketStatus['ID'] ? $defaul
 $res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `lastchange`=NOW(), `status`='{$ticket['status']}', `replies`=`replies`+1, `lastreplier`='0' WHERE `id`='{$ticket['id']}' LIMIT 1");
 
 // Insert reply into database
+$modsForHesk_settings = mfh_getSettings();
 $html = $modsForHesk_settings['rich_text_for_tickets_for_customers'];
 hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` (`replyto`,`name`,`message`,`dt`,`attachments`, `html`) VALUES ({$ticket['id']},'".hesk_dbEscape($ticket['name'])."','".hesk_dbEscape($message)."',NOW(),'".hesk_dbEscape($myattachments)."','".$html."')");
 
@@ -243,12 +243,12 @@ $ticket = hesk_ticketToPlain($info, 1, 0);
 // --> If ticket is assigned just notify the owner
 if ($ticket['owner'])
 {
-	hesk_notifyAssignedStaff(false, 'new_reply_by_customer', 'notify_reply_my');
+	hesk_notifyAssignedStaff(false, 'new_reply_by_customer', $modsForHesk_settings, 'notify_reply_my');
 }
 // --> No owner assigned, find and notify appropriate staff
 else
 {
-	hesk_notifyStaff('new_reply_by_customer',"`notify_reply_unassigned`='1'");
+	hesk_notifyStaff('new_reply_by_customer',"`notify_reply_unassigned`='1'", $modsForHesk_settings);
 }
 
 /* Clear unneeded session variables */

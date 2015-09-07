@@ -21,6 +21,17 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.5.0
+$hesklang['ticket_message_no_attachments'] = 'Ticket/Reply message, however attachments will not be included in the email';
+$hesklang['click_for_device_information'] = 'Click for device information';
+$hesklang['device_information'] = 'Device information';
+$hesklang['operating_system'] = 'Operating System';
+$hesklang['browser'] = 'Browser';
+$hesklang['screen_resolution'] = 'Screen Resolution';
+$hesklang['display_user_agent_information'] = 'Show user agent';
+$hesklang['display_user_agent_information_help'] = 'When enabled, staff will be able to view the operating system, browser,
+    and screen resolution of the device used to create the ticket.';
+
 // ADDED OR MODIFIED IN Mods for HESK 2.4.0
 $hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';
 $hesklang['sort_alphabetically'] = 'Sort alphabetically';

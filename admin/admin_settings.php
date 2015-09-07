@@ -42,7 +42,6 @@ if (is_dir(HESK_PATH . 'install')) {die('Please delete the <b>install</b> folder
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-require(HESK_PATH . 'modsForHesk_settings.inc.php');
 
 // Save the default language for the settings page before choosing user's preferred one
 $hesk_settings['language_default'] = $hesk_settings['language'];
@@ -254,25 +253,6 @@ if ( defined('HESK_DEMO') )
                         ?>
                     </td>
                 </tr>
-                <tr>
-                    <td class="text-right">
-                        /modsForHesk_settings.inc.php
-                    </td>
-                    <?php
-                    $modsForHeskIsWritable = is_writable(HESK_PATH . 'modsForHesk_settings.inc.php');
-                    $cellClass = $modsForHeskIsWritable ? 'success' : 'danger';
-                    ?>
-                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
-                        <?php
-                        if ($modsForHeskIsWritable) {
-                            $enable_save_settings=1;
-                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="success">'.$hesklang['writable'].'</span>';
-                        } else {
-                            echo '<span class="success">'.$hesklang['exists'].'</span>, <span class="error">'.$hesklang['not_writable'].'</span><br />'.$hesklang['e_mfh_settings'];
-                        }
-                        ?>
-                    </td>
-                </tr>
             </table>
         </div>
     </div>
@@ -348,6 +328,7 @@ if ( defined('HESK_DEMO') )
 
         $hesklang['err_custname'] = addslashes($hesklang['err_custname']);
 
+        $modsForHesk_settings = mfh_getSettings();
         ?>
         <script language="javascript" type="text/javascript"><!--
         function hesk_checkFields()
@@ -892,6 +873,27 @@ if ( defined('HESK_DEMO') )
                                 echo '
 								<div class="radio"><label><input type="radio" name="statuses_order_column" value="0" '.$off.'>'.$hesklang['sort_by_user_defined_order'].'</label></div>
 								<div class="radio"><label><input type="radio" name="statuses_order_column" value="1" '.$on.'>'.$hesklang['sort_alphabetically'].'</label></div>
+								';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="display_user_agent_information" class="col-sm-6 control-label">
+                                <span class="label label-primary"
+                                      data-toggle="tooltip"
+                                      title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                                <?php echo $hesklang['display_user_agent_information']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                   title="<?php echo $hesklang['display_user_agent_information']; ?>"
+                                   data-content="<?php echo $hesklang['display_user_agent_information_help']; ?>"></i>
+                            </label>
+                            <div class="col-sm-6">
+                                <?php
+                                $on = $modsForHesk_settings['display_user_agent_information'] ? 'checked' : '';
+                                $off = $modsForHesk_settings['display_user_agent_information'] ? '' : 'checked';
+                                echo '
+								<div class="radio"><label><input type="radio" name="statuses_order_column" value="0" '.$off.'>'.$hesklang['no'].'</label></div>
+								<div class="radio"><label><input type="radio" name="statuses_order_column" value="1" '.$on.'>'.$hesklang['yes'].'</label></div>
 								';
                                 ?>
                             </div>
@@ -2711,7 +2713,7 @@ function hesk_cacheMfhLatestVersion($latest)
 
 function hesk_testLanguage($return_options = 0)
 {
-	global $hesk_settings, $hesklang, $modsForHesk_settings;
+	global $hesk_settings, $hesklang;
 
 	/* Get a list of valid emails */
     include_once(HESK_PATH . 'inc/email_functions.inc.php');
