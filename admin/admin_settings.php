@@ -1529,7 +1529,6 @@ if ( defined('HESK_DEMO') )
                 <?php
                 for ($i=1;$i<=20;$i++)
                 {
-                    //$this_field='custom' . $i;
                     $this_field = $hesk_settings['custom_fields']['custom'.$i];
 
                     $onload_locally = $this_field['use'] ? '' : ' disabled="disabled" ';
@@ -1547,6 +1546,8 @@ if ( defined('HESK_DEMO') )
                         <option value="date" '.($this_field['type'] == 'date' ? 'selected="selected"' : '').'>'.$hesklang['date_custom_field'].'</option>
                         <option value="multiselect" '.($this_field['type'] == 'multiselect' ? 'selected="selected"' : '').'>'.$hesklang['multiple_select_custom_field'].'</option>
                         <option value="email" '.($this_field['type'] == 'email' ? 'selected="selected"' : '').'>'.$hesklang['email_custom_field'].'</option>
+                        <option value="hidden" '.($this_field['type'] == 'hidden' ? 'selected="selected"' : '').'>'.$hesklang['hidden_custom_field'].'</option>
+                        <option value="readonly" '.($this_field['type'] == 'readonly' ? 'selected="selected"' : '').'>'.$hesklang['readonly_custom_field'].'</option>
                         </select>
                     </td>
                     <td><div class="checkbox"><label><input type="checkbox" name="s_custom'.$i.'_req" value="1" id="s_custom'.$i.'_req" '; if ($this_field['req']) {echo 'checked="checked"';} echo $onload_locally.' /> '.$hesklang['yes'].'</label></div></td>

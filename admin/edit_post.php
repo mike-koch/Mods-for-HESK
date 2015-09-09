@@ -433,6 +433,37 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div></div></div>';
                                 break;
 
+							case 'hidden':
+								//Clean up multiple dashes or whitespaces
+								$formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+								$formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
+								if (strlen($k_value) != 0)
+								{
+									$v['value'] = $k_value;
+								}
+
+								echo '<input type="hidden" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'"/>';
+
+								break;
+
+							case 'readonly':
+								//Clean up multiple dashes or whitespaces
+								$formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+								$formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
+								if (strlen($k_value) != 0)
+								{
+									$v['value'] = $k_value;
+								}
+
+								echo '<div class="form-group">
+                                <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': </label>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" readonly></div>
+                                </div>';
+
+								break;
+
 		                    /* Default text input */
 		                    default:
 	                	        if (strlen($k_value) != 0)

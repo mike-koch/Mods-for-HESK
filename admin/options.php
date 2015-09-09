@@ -120,6 +120,44 @@ switch ($type)
         <p><input type="button" value="  '.$hesklang['ok'].'  " onclick="Javascript:hesk_saveOptions()" /></p>
         ';
     	break;
+    case 'hidden':
+        echo '
+        <script language="javascript">
+        function hesk_saveOptions()
+        {
+            window.opener.document.getElementById(\'s_'.$id.'_val\').value = document.getElementById(\'o1\').value;
+            window.close();
+        }
+        </script>
+        <p>'.$hesklang['hidden_custom_field_help'].'</p>
+		<table border="0">
+        <tr>
+        <td>'.$hesklang['value_colon'].'<td>
+        <td><input type="text" name="o1" id="o1" value="'.$query.'" size="30" /></td>
+        </tr>
+        </table>
+        <p><input type="button" value="  '.$hesklang['ok'].'  " onclick="Javascript:hesk_saveOptions()" /></p>
+        ';
+        break;
+    case 'readonly':
+        echo '
+        <script language="javascript">
+        function hesk_saveOptions()
+        {
+            window.opener.document.getElementById(\'s_'.$id.'_val\').value = document.getElementById(\'o1\').value;
+            window.close();
+        }
+        </script>
+        <p>'.$hesklang['readonly_custom_field_help'].'</p>
+		<table border="0">
+        <tr>
+        <td>'.$hesklang['value_colon'].'<td>
+        <td><input type="text" name="o1" id="o1" value="'.$query.'" size="30" /></td>
+        </tr>
+        </table>
+        <p><input type="button" value="  '.$hesklang['ok'].'  " onclick="Javascript:hesk_saveOptions()" /></p>
+        ';
+        break;
     case 'textarea':
     	if (strpos($query,'#') !== false)
         {

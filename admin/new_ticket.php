@@ -526,6 +526,41 @@ if (!$show['show']) {
 
                                 break;
 
+                            case 'hidden':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<input type="hidden" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' />';
+
+                                break;
+
+                            case 'readonly':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group">
+                                <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' readonly></div>
+                                </div>';
+
+                                break;
+
 	                        /* Default text input */
 	                        default:
                                 //Clean up multiple dashes or whitespaces
@@ -943,6 +978,41 @@ if (!$show['show']) {
                                 echo '<div class="form-group">
                                 <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="'.htmlspecialchars($v['name']).'" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' /></div>
+                                </div>';
+
+                                break;
+
+                            case 'hidden':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<input type="hidden" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' />';
+
+                                break;
+
+                            case 'readonly':
+                                //Clean up multiple dashes or whitespaces
+                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+
+                                if (strlen($k_value) != 0)
+                                {
+                                    $v['value'] = $k_value;
+                                }
+
+                                $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+
+                                echo '<div class="form-group">
+                                <label for="'.$v['name'].'" class="col-sm-3 control-label">'.$v['name'].': '.$v['req'].'</label>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="'.$formattedId.'" name="'.$k.'" size="40" maxlength="'.$v['maxlen'].'" value="'.$v['value'].'" '.$cls.' readonly></div>
                                 </div>';
 
                                 break;

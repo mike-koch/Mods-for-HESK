@@ -490,7 +490,7 @@ for ($i=1;$i<=20;$i++)
             $set['custom_fields'][$this_field]['value'] = 'cc';
         }
 
-        if (!in_array($set['custom_fields'][$this_field]['type'],array('text','textarea','select','radio','checkbox','date','multiselect','email')))
+        if (!in_array($set['custom_fields'][$this_field]['type'],array('text','textarea','select','radio','checkbox','date','multiselect','email','hidden','readonly')))
         {
         	$set['custom_fields'][$this_field]['type'] = 'text';
         }

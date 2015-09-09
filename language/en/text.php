@@ -31,6 +31,11 @@ $hesklang['screen_resolution'] = 'Screen Resolution';
 $hesklang['display_user_agent_information'] = 'Show user agent';
 $hesklang['display_user_agent_information_help'] = 'When enabled, staff will be able to view the operating system, browser,
     and screen resolution of the device used to create the ticket.';
+$hesklang['value_colon'] = 'Value:';
+$hesklang['hidden_custom_field'] = 'Hidden text field';
+$hesklang['hidden_custom_field_help'] = 'This input is the same as a text field; however this value cannot be changed and will not be visible to the user.';
+$hesklang['readonly_custom_field'] = 'Read-only text field';
+$hesklang['readonly_custom_field_help'] = 'This input is the same as a text field; however this value cannot be changed, but will be visible to the user.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.4.0
 $hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';
