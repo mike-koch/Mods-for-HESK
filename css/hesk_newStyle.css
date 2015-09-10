@@ -337,6 +337,10 @@ button.dropdown-submit {
     color: orange;
 }
 
+.dark-orange {
+    color: darkorange;
+}
+
 .red {
     color: #FF0000;
 }
@@ -345,12 +349,20 @@ button.dropdown-submit {
     color: gray;
 }
 
+.green {
+    color: green;
+}
+
 .pad-down-20 {
     padding-top: 20px;
 }
 
 .pad-right-10 {
     padding-left: 10px;
+}
+
+.pad-right-0 {
+    padding-left: 0;
 }
 
 .pad-up-5 {
@@ -371,4 +383,12 @@ button.dropdown-submit {
 
 .move-down-4 {
     margin-top: 4px;
+}
+
+.hide {
+    display: none;
+}
+
+.font-size-120 {
+    font-size: 1.2em;
 }

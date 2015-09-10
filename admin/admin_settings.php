@@ -128,18 +128,18 @@ if ( defined('HESK_DEMO') )
 
                             if ($latest === true)
                             {
-                                echo ' - <span style="color:green">' . $hesklang['hud'] . '</span> ';
+                                echo ' - <span class="green">' . $hesklang['hud'] . '</span> ';
                             }
                             elseif ($latest != -1)
                             {
                                 // Is this a beta/dev version?
                                 if ( strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev')  || strpos($hesk_settings['hesk_version'], 'RC') )
                                 {
-                                    echo ' <span style="color:darkorange">' . $hesklang['beta'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
+                                    echo ' <span class="dark-orange">' . $hesklang['beta'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                                 }
                                 else
                                 {
-                                    echo ' - <span style="color:darkorange;font-weight:bold">' . $hesklang['hnw'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['getup']; ?></a><?php
+                                    echo ' - <span class="dark-orange bold">' . $hesklang['hnw'] . '</span> '; ?> <a href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>" target="_blank"><?php echo $hesklang['getup']; ?></a><?php
                                 }
                             }
                             else
@@ -179,10 +179,10 @@ if ( defined('HESK_DEMO') )
                         {
                             if ($latest === true)
                             {
-                                echo ' - <span style="color:green">' . $hesklang['mfh_up_to_date'] . '</span>';
+                                echo ' - <span class="green">' . $hesklang['mfh_up_to_date'] . '</span>';
                             } else
                             {
-                                ?> - <a href="https://mods-for-hesk.mkochcs.com" target="_blank" style="color:orange;font-weight:bold"><?php echo $hesklang['hnw']; ?></a>
+                                ?> - <a href="https://mods-for-hesk.mkochcs.com" target="_blank" class="orange bold"><?php echo $hesklang['hnw']; ?></a>
                            <?php
                             }
                         } else
@@ -596,7 +596,7 @@ if ( defined('HESK_DEMO') )
                     <div class="col-sm-9 col-sm-offset-3">
                         <input type="button" class="btn btn-default move-down-4" onclick="hesk_testMySQL()" value="<?php echo $hesklang['mysqltest']; ?>" />
                         <!-- START MYSQL TEST -->
-                        <div id="mysql_test" style="display:none">
+                        <div id="mysql_test" style="display: none">
                         </div>
 
                         <script language="Javascript" type="text/javascript">
@@ -1443,7 +1443,7 @@ if ( defined('HESK_DEMO') )
                     <div class="col-sm-3">
                         <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_spop']); ?>" name="s_kb_index_popart" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_index_popart']; ?>" />
                     </div>
-                    <div class="col-sm-5" style="padding-left:0px">
+                    <div class="col-sm-5 pad-right-0">
                         <p class="form-control-static"><?php echo $hesklang['s_onin']; ?></p>
                     </div>
                 </div>
@@ -1451,7 +1451,7 @@ if ( defined('HESK_DEMO') )
                     <div class="col-sm-3 col-sm-offset-4">
                         <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_spop']); ?>" name="s_kb_popart" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_popart']; ?>" />
                     </div>
-                    <div class="col-sm-5" style="padding-left:0px">
+                    <div class="col-sm-5 pad-right-0">
                         <p class="form-control-static"><?php echo $hesklang['s_onkb']; ?></p>
                     </div>
                 </div>
@@ -1460,7 +1460,7 @@ if ( defined('HESK_DEMO') )
                     <div class="col-sm-3">
                         <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_slat']); ?>" name="s_kb_index_latest" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_index_latest']; ?>" />
                     </div>
-                    <div class="col-sm-5" style="padding-left:0px">
+                    <div class="col-sm-5 pad-right-0">
                         <p class="form-control-static"><?php echo $hesklang['s_onin']; ?></p>    
                     </div>
                 </div>
@@ -1468,7 +1468,7 @@ if ( defined('HESK_DEMO') )
                     <div class="col-sm-3 col-sm-offset-4">
                         <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_slat']); ?>" name="s_kb_latest" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_latest']; ?>" />
                     </div>
-                    <div class="col-sm-5" style="padding-left:0px">
+                    <div class="col-sm-5 pad-right-0">
                         <p class="form-control-static"><?php echo $hesklang['s_onkb']; ?></p>
                     </div>
                 </div>
@@ -1477,7 +1477,7 @@ if ( defined('HESK_DEMO') )
                     <div class="col-sm-3">
                         <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['s_relart']); ?>" name="s_kb_related" size="5" maxlength="2" value="<?php echo $hesk_settings['kb_related']; ?>" />
                     </div>
-                    <div class="col-sm-5" style="padding-left:0px">
+                    <div class="col-sm-5 pad-right-0">
                         <p class="form-control-static"><?php echo $hesklang['s_onin']; ?></p>
                     </div>
                 </div>
@@ -1976,7 +1976,7 @@ if ( defined('HESK_DEMO') )
                         <div class="col-sm-3">
                             <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['loopt']); ?>" name="s_loop_time" size="5" maxlength="5" value="<?php echo $hesk_settings['loop_time']; ?>" />
                         </div>
-                        <div class="col-sm-6" style="padding-left: 0px">
+                        <div class="col-sm-6 pad-right-0">
                             <p class="form-control-static"><?php echo $hesklang['ss']; ?></p>
                         </div>
                     </div>
@@ -2090,7 +2090,7 @@ if ( defined('HESK_DEMO') )
                                 {
                                 ?>
                                     <label>
-                                        <i class="fa fa-ban bold" style="color: red; font-size: 1.2em; margin-left: -20px;"
+                                        <i class="fa fa-ban bold red font-size-120" style="margin-left: -20px;"
                                            data-toggle="popover"
                                            title="<?php echo $hesklang['feature_disabled']; ?>"
                                            data-content="<?php echo $hesklang['multi_eml_disabled']; ?>"></i> <?php echo $hesklang['meml2']; ?></label>
@@ -2250,15 +2250,15 @@ if ( defined('HESK_DEMO') )
                         <div class="col-sm-2 col-sm-offset-4">
                             <input type="text" class="form-control" name="s_diff_hours" size="5" maxlength="3" value="<?php echo $hesk_settings['diff_hours']; ?>" />
                         </div>
-                        <div class="col-sm-6" style="padding-left:0px">
+                        <div class="col-sm-6 pad-right-0">
                             <p class="form-control-static"><?php echo $hesklang['t_h']; ?></p>
                         </div>
                     </div>
-                    <div class="row" style="padding-top:5px">
+                    <div class="row pad-right-0">
                         <div class="col-sm-2 col-sm-offset-4">
                             <input type="text" class="form-control" name="s_diff_minutes" size="5" maxlength="3" value="<?php echo $hesk_settings['diff_minutes']; ?>" />    
                         </div>
-                        <div class="col-sm-6" style="padding-left: 0px">
+                        <div class="col-sm-6 pad-right-0">
                             <p class="form-control-static"><?php echo $hesklang['t_m']; ?></p>    
                         </div>
                     </div>
@@ -2323,7 +2323,7 @@ if ( defined('HESK_DEMO') )
                             <label><input type="checkbox" name="s_online" value="1" <?php if ($hesk_settings['online']) {echo 'checked="checked"';} ?>/> <?php echo $hesklang['sonline2']; ?></label>
                         </div>
                     </div>
-                    <div class="col-sm-2" style="padding-left:0px">
+                    <div class="col-sm-2 pad-right-0">
                         <input type="text" class="form-control" name="s_online_min" size="5" maxlength="4" value="<?php echo $hesk_settings['online_min']; ?>" />    
                     </div>
                 </div>
