@@ -67,7 +67,7 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="row" style="padding: 20px">
+<div class="row pad-down-20">
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active">
             <a href="#"><?php echo $hesklang['banemail']; ?> <i class="fa fa-question-circle settingsquestionmark" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['banemail_intro']); ?>')"></i></a>
@@ -141,7 +141,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </form>
             </div>
             <div class="col-md-4">
-                <h6 style="font-weight: bold"><?php echo $hesklang['banex']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['banex']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
                 <b>john@email.com</b><br />
                 <b>@domain.com</b>
@@ -202,17 +202,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                         echo '
                         <tr>
-                            <td class="'.$color.'" style="text-align:left">'.$ban['email'].'</td>
-                            <td class="'.$color.'" style="text-align:left">'.(isset($admins[$ban['banned_by']]) ? $admins[$ban['banned_by']] : $hesklang['e_udel']).'</td>
-                            <td class="'.$color.'" style="text-align:left">'.$ban['dt'].'</td>
+                            <td class="'.$color.' text-left">'.$ban['email'].'</td>
+                            <td class="'.$color.' text-left">'.(isset($admins[$ban['banned_by']]) ? $admins[$ban['banned_by']] : $hesklang['e_udel']).'</td>
+                            <td class="'.$color.' text-left">'.$ban['dt'].'</td>
                             ';
 
                             if ($can_unban)
                             {
                             echo '
-                            <td class="'.$color.'" style="text-align:left;">
+                            <td class="'.$color.' text-left>
                                 <a href="banned_emails.php?a=unban&amp;id='.$ban['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();">
-                                    <i class="fa fa-times" style="color: red; font-size: 16px;"data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'"></i>
+                                    <i class="fa fa-times red font-size-16p" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'"></i>
                                 </a>
                             </td>
                             ';
