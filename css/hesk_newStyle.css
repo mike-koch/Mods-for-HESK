@@ -353,6 +353,10 @@ button.dropdown-submit {
     color: green;
 }
 
+.blue {
+    color: blue;
+}
+
 .pad-down-20 {
     padding-top: 20px;
 }
@@ -393,12 +397,36 @@ button.dropdown-submit {
     margin-top: 4px;
 }
 
+.move-right-40 {
+    margin-left: 40px;
+}
+
+.move-right-25 {
+    margin-left: 25px;
+}
+
 .move-right-20 {
+    margin-left: 20px;
+}
+
+.move-right-10 {
+    margin-left: 10px;
+}
+
+.move-left-20 {
     margin-right: 20px;
+}
+
+.move-left-10 {
+    margin-right: 10px;
 }
 
 .hide {
     display: none;
+}
+
+.font-size-90 {
+    font-size: .9em !important;
 }
 
 .font-size-120 {
@@ -415,4 +443,8 @@ button.dropdown-submit {
 
 .font-size-16p {
     font-size: 16px !important;
+}
+
+.font-size-20p {
+    font-size: 20px !important;
 }

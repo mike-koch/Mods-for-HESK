@@ -359,6 +359,26 @@ button.dropdown-submit {
     margin-top: 20px;
 }
 
+.move-right-40 {
+    margin-right: 40px;
+}
+
+.move-right-25 {
+    margin-right: 25px;
+}
+
 .move-right-20 {
+    margin-right: 20px;
+}
+
+.move-right-10 {
+    margin-right: 10px;
+}
+
+.move-left-20 {
     margin-left: 20px;
+}
+
+.move-left-10 {
+    margin-left: 10px;
 }
