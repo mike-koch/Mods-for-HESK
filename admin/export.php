@@ -898,7 +898,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
                 </div>         
             </div>
-            <div class="form-group" style="text-align: center">
+            <div class="form-group text-center">
                 <input type="submit" value="<?php echo $hesklang['export_btn']; ?>" class="btn btn-default" />
                 <input type="hidden" name="cot" value="1" />
             </div>          
