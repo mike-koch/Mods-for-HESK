@@ -373,6 +373,10 @@ button.dropdown-submit {
     padding-down: 5px;
 }
 
+.pad-5 {
+    padding: 5px;
+}
+
 .panel-button {
     margin-top: -7px;
 }
