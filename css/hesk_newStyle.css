@@ -393,6 +393,10 @@ button.dropdown-submit {
     margin-top: 4px;
 }
 
+.move-right-20 {
+    margin-right: 20px;
+}
+
 .hide {
     display: none;
 }

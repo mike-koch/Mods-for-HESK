@@ -255,7 +255,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <form action="reports.php" method="get" name="form1" role="form">
                     <div class="form-group">
                         <label for="dtrg" class="control-label"><?php echo $hesklang['dtrg']; ?></b>:</label>
-                        <div class="radio" style="margin-left: 20px">
+                        <div class="radio move-right-20">
                             <input type="radio" name="w" value="0" id="w0" <?php echo $selected['w'][0]; ?> />
                             <select name="time" onclick="document.getElementById('w0').checked = true" onfocus="document.getElementById('w0').checked = true" style="margin-top:5px;margin-bottom:5px;">
                                 <option value="1" <?php echo $selected['time'][1]; ?>><?php echo $hesklang['r1']; ?> (<?php echo $hesklang['d'.date('w')]; ?>)</option>
@@ -272,7 +272,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <option value="12" <?php echo $selected['time'][12]; ?>><?php echo $hesklang['r12']; ?></option>
                             </select>
                         </div>
-                        <div class="radio" style="margin-left: 20px">
+                        <div class="radio move-right-20">
                             <input type="radio" name="w" value="1" id="w1" <?php echo $selected['w'][1]; ?> />
                             <?php echo $hesklang['from']; ?> <input type="text" name="datefrom" value="<?php echo $input_datefrom; ?>" id="datefrom" class="tcal" size="10" onclick="document.getElementById('w1').checked = true" onfocus="document.getElementById('w1').checked = true;this.focus;" />
                             <?php echo $hesklang['to']; ?> <input type="text" name="dateto" value="<?php echo $input_dateto; ?>" id="dateto" class="tcal" size="10" onclick="document.getElementById('w1').checked = true" onfocus="document.getElementById('w1').checked = true; this.focus;" />     
@@ -287,7 +287,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <option value="4" <?php echo $selected['type'][4]; ?>><?php echo $hesklang['t4']; ?></option>
                         </select>    
                     </div>
-                    <div class="form-group" style="text-align: center">
+                    <div class="form-group text-center">
                         <input type="submit" value="<?php echo $hesklang['dire']; ?>" class="btn btn-default" />
                         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />     
                     </div>         
