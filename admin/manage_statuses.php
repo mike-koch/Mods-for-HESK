@@ -38,7 +38,7 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="row" style="padding: 20px">
+<div class="row pad-20">
     <ul class="nav nav-tabs" role="tablist">
         <?php
         // Show a link to banned_emails.php if user has permission
@@ -121,7 +121,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             foreach ($statuses as $key => $row):
                             ?>
                                 <tr id="s<?php echo $row['ID']; ?>_row">
-                                    <td style="color: <?php echo $row['TextColor']; ?>; font-weight: bold">
+                                    <td class="bold" style="color: <?php echo $row['TextColor']; ?>">
                                         <?php echo $row['text']; ?>
                                     </td>
                                     <td>
@@ -140,13 +140,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <td>
                                         <?php
                                         if ($row['IsClosed']) {
-                                            echo '<i class="fa fa-check-circle icon-link" style="color: green;"></i>';
+                                            echo '<i class="fa fa-check-circle icon-link green"></i>';
                                         }
                                         ?>
                                     </td>
                                     <td>
                                         <span data-toggle="modal" data-target="#modal-status-<?php echo $row['ID']; ?>" style="cursor: pointer;">
-                                            <i class="fa fa-pencil icon-link" style="color: orange"
+                                            <i class="fa fa-pencil icon-link orange"
                                                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
                                         </span>
                                         <?php echoArrows($j, $numberOfStatuses, $row['ID'], $modsForHesk_settings); ?>
@@ -390,7 +390,7 @@ function echoArrows($index, $numberOfStatuses, $statusId, $modsForHesk_settings)
     if ($index !== 1) {
         // Display move up
         echo '<a href="manage_statuses.php?a=sort&move=-15&id='.$statusId.'">
-            <i class="fa fa-arrow-up icon-link" style="color: green" data-toggle="tooltip"
+            <i class="fa fa-arrow-up icon-link green" data-toggle="tooltip"
             title="'.htmlspecialchars($hesklang['move_up']).'"></i></a> ';
     } else {
         echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;"> ';
@@ -399,7 +399,7 @@ function echoArrows($index, $numberOfStatuses, $statusId, $modsForHesk_settings)
     if ($index !== $numberOfStatuses) {
         // Display move down
         echo '<a href="manage_statuses.php?a=sort&move=15&id='.$statusId.'">
-            <i class="fa fa-arrow-down icon-link" style="color: green" data-toggle="tooltip"
+            <i class="fa fa-arrow-down icon-link green" data-toggle="tooltip"
             title="'.htmlspecialchars($hesklang['move_dn']).'"></i></a>';
     } else {
         echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;">';
