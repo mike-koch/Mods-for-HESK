@@ -357,6 +357,10 @@ button.dropdown-submit {
     padding-top: 20px;
 }
 
+.pad-20 {
+    padding: 20px;
+}
+
 .pad-right-10 {
     padding-left: 10px;
 }
