@@ -163,7 +163,7 @@
 
     .ticketPropertyText:hover {
         white-space: normal;
-        overflow: none;
+        overflow: visible;
     }
 }
 
@@ -347,4 +347,28 @@ button.dropdown-submit {
 
 .pad-down-20 {
     padding-top: 20px;
+}
+
+.pad-right-10 {
+    padding-left: 10px;
+}
+
+.pad-up-5 {
+    padding-down: 5px;
+}
+
+.panel-button {
+    margin-top: -7px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.move-down-20 {
+    margin-top: 20px;
+}
+
+.move-down-4 {
+    margin-top: 4px;
 }

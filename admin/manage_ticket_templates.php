@@ -99,7 +99,7 @@ $i=1;
 $j=0;
 $num = hesk_dbNumRows($result);
 ?>
-<div class="row" style="margin-top: 20px;">
+<div class="row move-down-20">
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">

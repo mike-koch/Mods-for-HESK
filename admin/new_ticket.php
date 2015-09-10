@@ -149,7 +149,7 @@ if (!$show['show']) {
   <li><a href="admin_main.php"><?php echo $hesk_settings['hesk_title']; ?></a></li>
   <li class="active"><?php echo $hesklang['nti2']; ?></li>
 </ol>
-    <div class="row" style="margin-top: 20px">
+    <div class="row move-down-20">
         <?php if ($columnWidth == 'col-md-8'): ?>
         <div class="col-md-4">
             <div class="panel panel-default">

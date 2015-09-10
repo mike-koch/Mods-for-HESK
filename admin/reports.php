@@ -231,7 +231,7 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="row" style="margin-top: 20px">
+<div class="row move-down-20">
     <div align="left" class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">

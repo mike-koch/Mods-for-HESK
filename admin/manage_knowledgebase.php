@@ -601,7 +601,7 @@ function list_draft() {
 	        <?php echo '<a href="manage_knowledgebase.php?a=add_article&amp;catid='.$catid.'&amp;type=2"><i class="fa fa-plus" style="color: green;font-size:16px"></i></a> <a href="manage_knowledgebase.php?a=add_article&amp;catid='.$catid.'&amp;type=2"><b>'.$hesklang['kb_i_art2'].'</b></a>'; ?>
 	    </div>
 
-	    <h3 style="padding-bottom:5px;">&raquo; <?php echo $hesklang['artd']; ?></h3>
+	    <h3 class="pad-up-5">&raquo; <?php echo $hesklang['artd']; ?></h3>
 
 		<div align="center">
 		<table border="0" width="100%" cellspacing="1" cellpadding="3" class="white">

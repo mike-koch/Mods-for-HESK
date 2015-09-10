@@ -90,7 +90,7 @@ else {return false;}
         array_push($categories, $row);
     }
 ?>
-<div class="row" style="margin-top: 20px">
+<div class="row move-down-20">
     <div class="col-md-10 col-md-offset-1">
         <h3><?php echo $hesklang['manage_permission_templates']; ?> 
 			<i class="fa fa-question-circle settingsquestionmark" data-toggle="tooltip" data-placement="right" 

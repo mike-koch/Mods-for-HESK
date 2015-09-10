@@ -96,7 +96,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="panel-heading">
                             <h4>
                                 <?php echo $hesklang['statuses']; ?>
-                                <span class="nu-floatRight" style="margin-top: -7px">
+                                <span class="nu-floatRight panel-buton">
                                     <button class="btn btn-success" data-toggle="modal" data-target="#modal-status-new">
                                         <i class="fa fa-plus-circle"></i>
                                         <?php

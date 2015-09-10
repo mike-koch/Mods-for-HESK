@@ -96,7 +96,7 @@ if ( defined('HESK_DEMO') )
 
 ?>
 
-<div class="row" style="margin-top: 20px">
+<div class="row move-down-20">
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $hesklang['installation_information']; ?></div>
@@ -113,14 +113,14 @@ if ( defined('HESK_DEMO') )
 
                         if ($latest === true)
                         {
-                            $cellClass = 'class="success"';
+                            $cellClass = 'success';
                         } elseif ($latest != -1)
                         {
-                            $cellClass = 'class="warning"';
+                            $cellClass = 'warning';
                         }
                     }
                     ?>
-                    <td style="padding-left: 10px" <?php echo $cellClass; ?>>
+                    <td class="pad-right-10 <?php echo $cellClass; ?>">
                         <?php echo $hesk_settings['hesk_version']; ?>
                         <?php
                         if ($hesk_settings['check_updates'])
@@ -155,7 +155,7 @@ if ( defined('HESK_DEMO') )
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-right" style="padding-bottom: 5px">
+                    <td class="text-right pad-up-5">
                         <?php echo $hesklang['mods_for_hesk_version']; ?>:
                     </td>
                     <?php
@@ -165,14 +165,14 @@ if ( defined('HESK_DEMO') )
                         $latest = hesk_checkMfhVersion($modsForHeskVersion);
                         if ($latest === true)
                         {
-                            $cellClass = 'class="success"';
+                            $cellClass = 'success';
                         } elseif ($latest != -1)
                         {
-                            $cellClass = 'class="warning"';
+                            $cellClass = 'warning';
                         }
                     }
                     ?>
-                    <td <?php echo $cellClass; ?> style="padding-left: 10px; padding-bottom: 5px">
+                    <td class="pad-right-10 pad-up-5 <?php echo $cellClass; ?>">
                         <?php echo $modsForHeskVersion; ?>
                         <?php
                         if ($hesk_settings['check_updates'])
@@ -195,12 +195,12 @@ if ( defined('HESK_DEMO') )
                 </tr>
                 <tr><td class="text-right">
                     <?php echo $hesklang['phpv']; ?>:
-                    </td><td style="padding-left: 10px">
+                    </td><td class="pad-right-10">
                     <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : PHP_VERSION . ' ' . (function_exists('mysqli_connect') ? '(MySQLi)' : '(MySQL)'); ?>
                 </td></tr>
-                <tr><td class="text-right" style="padding-bottom: 5px">
+                <tr><td class="text-right pad-up-5">
                     <?php echo $hesklang['mysqlv']; ?>:
-                </td><td style="padding-left: 10px; padding-bottom: 5px">
+                </td><td class="pad-right-10 pad-up-5">
                     <?php echo defined('HESK_DEMO') ? $hesklang['hdemo'] : hesk_dbResult( hesk_dbQuery('SELECT VERSION() AS version') ); ?>
                 </td></tr>
                 <tr>
@@ -211,7 +211,7 @@ if ( defined('HESK_DEMO') )
                     $heskSettingsWritable = is_writable(HESK_PATH . 'hesk_settings.inc.php');
                     $cellClass = $heskSettingsWritable ? 'success' : 'danger';
                     ?>
-                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
+                    <td class="pad-right-10 <?php echo $cellClass; ?>">
                         <?php
                         if ($heskSettingsWritable) {
                             $enable_save_settings=1;
@@ -231,7 +231,7 @@ if ( defined('HESK_DEMO') )
                     $attachmentsWritable = is_writable(HESK_PATH . $hesk_settings['attach_dir']);
                     $cellClass = $attachmentsExist && $attachmentsWritable ? 'success' : 'danger';
                     ?>
-                    <td style="padding-left: 10px" class="<?php echo $cellClass; ?>">
+                    <td class="pad-right-10 <?php echo $cellClass; ?>">
                         <?php
                         if ($attachmentsExist)
                         {
@@ -500,7 +500,7 @@ if ( defined('HESK_DEMO') )
             <div class="tab-content summaryList tabPadding">
               <!-- General Settings -->
                 <div class="tab-pane fade in active" id="general">
-                <h6 style="font-weight: bold"><?php echo $hesklang['gs']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['gs']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
@@ -534,7 +534,7 @@ if ( defined('HESK_DEMO') )
                     </div>    
                 </div>
 
-                <h6 style="font-weight: bold"><?php echo $hesklang['lgs']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['lgs']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
                 <div class="form-group">
                     <label for="s_language" class="col-sm-3 control-label"><?php echo $hesklang['hesk_lang']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>general.html#9','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>  
@@ -559,7 +559,7 @@ if ( defined('HESK_DEMO') )
                     </div>
                 </div>
 
-                <h6 style="font-weight: bold"><?php echo $hesklang['db']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['db']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
@@ -594,7 +594,7 @@ if ( defined('HESK_DEMO') )
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <input type="button" class="btn btn-default" onclick="hesk_testMySQL()" value="<?php echo $hesklang['mysqltest']; ?>" style="margin-top:4px" />
+                        <input type="button" class="btn btn-default move-down-4" onclick="hesk_testMySQL()" value="<?php echo $hesklang['mysqltest']; ?>" />
                         <!-- START MYSQL TEST -->
                         <div id="mysql_test" style="display:none">
                         </div>
@@ -648,7 +648,7 @@ if ( defined('HESK_DEMO') )
 
                 <!-- Helpdesk Settings -->
               <div class="tab-pane fade in" id="helpdesk">
-                <h6 style="font-weight: bold"><?php echo $hesklang['hd']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['hd']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
@@ -724,7 +724,7 @@ if ( defined('HESK_DEMO') )
                     </div>
                 </div>
 
-                <h6 style="font-weight: bold"><?php echo $hesklang['features']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['features']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
                 <div class="row">
                     <div class="col-md-6">
@@ -1021,7 +1021,7 @@ if ( defined('HESK_DEMO') )
                     </div>
                 </div>
 
-                <h6 style="font-weight: bold"><?php echo $hesklang['sp']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['sp']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
@@ -1125,7 +1125,7 @@ if ( defined('HESK_DEMO') )
                 </div>
             </div>
             <br/>
-            <h6 style="font-weight: bold"><?php echo $hesklang['security']; ?></h6>
+            <h6 class="bold"><?php echo $hesklang['security']; ?></h6>
             <div class="footerWithBorder blankSpace"></div>
 
             <div class="form-group">
@@ -1175,7 +1175,7 @@ if ( defined('HESK_DEMO') )
                 </div>
             </div>
             <br/>
-            <h6 style="font-weight: bold"><?php echo $hesklang['attachments']; ?></h6>
+            <h6 class="bold"><?php echo $hesklang['attachments']; ?></h6>
             <div class="footerWithBorder blankSpace"></div>
 
             <div class="form-group">
@@ -1267,7 +1267,7 @@ if ( defined('HESK_DEMO') )
         </div>
 
               <div class="tab-pane fade in" id="knowledgebase">
-                <h6 style="font-weight: bold"><?php echo $hesklang['kb_set']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['kb_set']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
                 <div class="form-group">
                     <label for="s_kb_enable" class="col-sm-4 control-label"><?php echo $hesklang['s_ekb']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>knowledgebase.html#22','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></label>
@@ -1485,7 +1485,7 @@ if ( defined('HESK_DEMO') )
 
                 <!-- Custom Fields Tab -->
               <div class="tab-pane fade in" id="customFields">
-                <h6 style="font-weight: bold"><?php echo $hesklang['custom_use']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>custom.html#41','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h6>
+                <h6 class="bold"><?php echo $hesklang['custom_use']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>custom.html#41','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h6>
                   <div class="footerWithBorder blankSpace"></div>
 
 
@@ -1572,7 +1572,7 @@ if ( defined('HESK_DEMO') )
 
                 <!-- Email Tab -->    
               <div class="tab-pane fade in" id="email">
-                <h6 style="font-weight: bold"><?php echo $hesklang['emlsend']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['emlsend']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
@@ -1789,7 +1789,7 @@ if ( defined('HESK_DEMO') )
 
                     </div> <!-- END SMTP SETTINGS DIV -->   
 
-                <h6 style="font-weight: bold"><?php echo $hesklang['emlpipe']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['emlpipe']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
@@ -1805,7 +1805,7 @@ if ( defined('HESK_DEMO') )
                     </div>
                 </div>
 
-                <h6 style="font-weight: bold"><?php echo $hesklang['pop3']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['pop3']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
@@ -1897,7 +1897,7 @@ if ( defined('HESK_DEMO') )
                     </div>
                     <div class="form-group">
                         <div class="col-sm-9 col-sm-offset-3">
-                            <input type="button" class="btn btn-default" onclick="hesk_testPOP3()" value="<?php echo $hesklang['pop3test']; ?>" style="margin-top:4px" />    
+                            <input type="button" class="btn btn-default move-down-4" onclick="hesk_testPOP3()" value="<?php echo $hesklang['pop3test']; ?>" />
                         </div>
                     </div>
                     <table border="0"  width="100%">
@@ -1962,7 +1962,7 @@ if ( defined('HESK_DEMO') )
 
                     </div> <!-- END POP3 SETTINGS DIV -->
 
-                    <h6 style="font-weight: bold"><?php echo $hesklang['loops']; ?></h6>
+                    <h6 class="bold"><?php echo $hesklang['loops']; ?></h6>
                     <div class="footerWithBorder blankSpace"></div>
 
                     <div class="form-group">
@@ -1981,7 +1981,7 @@ if ( defined('HESK_DEMO') )
                         </div>
                     </div>
 
-                    <h6 style="font-weight: bold"><?php echo $hesklang['suge']; ?></h6>
+                    <h6 class="bold"><?php echo $hesklang['suge']; ?></h6>
                     <div class="footerWithBorder blankSpace"></div>
 
                     <div class="form-group">
@@ -2025,7 +2025,7 @@ if ( defined('HESK_DEMO') )
                         </table>
                     </div>
 
-                    <h6 style="font-weight: bold"><?php echo $hesklang['custnot']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#65','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h6>
+                    <h6 class="bold"><?php echo $hesklang['custnot']; ?> <a href="Javascript:void(0)" onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#65','400','500')"><i class="fa fa-question-circle settingsquestionmark"></i></a></h6>
                     <div class="footerWithBorder blankSpace"></div>
                     <div class="form-group">
                         <label for="s_notify_new" class="col-sm-3 control-label"><?php echo $hesklang['notnew']; ?></label>
@@ -2054,7 +2054,7 @@ if ( defined('HESK_DEMO') )
                         </div>
                     </div>
 
-                    <h6 style="font-weight: bold"><?php echo $hesklang['other']; ?></h6>
+                    <h6 class="bold"><?php echo $hesklang['other']; ?></h6>
                     <div class="footerWithBorder blankSpace"></div>
 
                     <div class="form-group">
@@ -2090,7 +2090,7 @@ if ( defined('HESK_DEMO') )
                                 {
                                 ?>
                                     <label>
-                                        <i class="fa fa-ban" style="color: red; font-size: 1.2em; margin-left: -20px; font-weight: bold"
+                                        <i class="fa fa-ban bold" style="color: red; font-size: 1.2em; margin-left: -20px;"
                                            data-toggle="popover"
                                            title="<?php echo $hesklang['feature_disabled']; ?>"
                                            data-content="<?php echo $hesklang['multi_eml_disabled']; ?>"></i> <?php echo $hesklang['meml2']; ?></label>
@@ -2232,7 +2232,7 @@ if ( defined('HESK_DEMO') )
 
                 <!-- Miscellaneous Tab -->
               <div class="tab-pane fade in" id="misc">
-                <h6 style="font-weight: bold"><?php echo $hesklang['dat']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['dat']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
@@ -2282,7 +2282,7 @@ if ( defined('HESK_DEMO') )
                     </div>
                 </div>
 
-                <h6 style="font-weight: bold"><?php echo $hesklang['other']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['other']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
@@ -2392,7 +2392,7 @@ if ( defined('HESK_DEMO') )
               </div>
               <!-- Mods For Hesk: Color settings -->
               <div class="tab-pane fade in" id="colors">
-                  <h6 style="font-weight: bold"><?php echo $hesklang['uiColors']; ?></h6>
+                  <h6 class="bold"><?php echo $hesklang['uiColors']; ?></h6>
                   <div class="footerWithBorder blankSpace"></div>
                   <div class="row">
                       <div class="col-sm-6 col-xs-12">
@@ -2714,7 +2714,7 @@ function hesk_cacheMfhLatestVersion($latest)
 
 function hesk_testLanguage($return_options = 0)
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
 	/* Get a list of valid emails */
     include_once(HESK_PATH . 'inc/email_functions.inc.php');

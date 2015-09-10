@@ -100,7 +100,7 @@ else {return false;}
         $options .= '>'.$mycat['name'].'</option>';
     }
 ?>
-<div class="row" style="margin-top: 20px">
+<div class="row move-down-20">
     <div align="left" class="col-md-4">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#addCat" data-toggle="tab"><?php echo $hesklang['add_cat']; ?></a></li>

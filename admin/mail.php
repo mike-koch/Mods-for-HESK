@@ -135,7 +135,7 @@ function confirm_delete()
 //-->
 </script>
 
-<div class="row" style="margin-top: 20px">
+<div class="row move-down-20">
     <div class="col-md-3">
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $hesklang['navigation']; ?></div>

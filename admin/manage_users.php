@@ -176,7 +176,7 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div style="margin-top: 20px" class="row">
+<div class="row move-down-20">
     <div class="col-md-10 col-md-offset-1">
          <script language="Javascript" type="text/javascript"><!--
             function confirm_delete()
