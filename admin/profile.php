@@ -99,7 +99,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
 <div class="row">
-    <div class="col-md-8 col-md-offset-2" style="padding-top: 20px">
+    <div class="col-md-8 col-md-offset-2 pad-down-20">
         <?php
         /* This will handle error, success and notice messages */
         hesk_handle_messages();

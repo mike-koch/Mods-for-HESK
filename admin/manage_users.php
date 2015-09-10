@@ -481,7 +481,7 @@ function edit_user()
       <li class="active"><?php echo $hesklang['editing_user'].' '.$_SESSION['original_user']; ?></li>
     </ol>
     
-    <div class="row" style="padding-top: 20px">
+    <div class="row pad-down-20">
         <div class="col-md-8 col-md-offset-2">
         	<?php
 	        /* This will handle error, success and notice messages */

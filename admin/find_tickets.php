@@ -66,7 +66,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 </tr>
 <tr>
 <td>
-<div class="row" style="padding-top: 20px">
+<div class="row pad-down-20">
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">

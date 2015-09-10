@@ -344,3 +344,7 @@ button.dropdown-submit {
 .gray {
     color: gray;
 }
+
+.pad-down-20 {
+    padding-top: 20px;
+}
