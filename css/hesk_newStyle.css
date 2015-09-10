@@ -390,5 +390,13 @@ button.dropdown-submit {
 }
 
 .font-size-120 {
-    font-size: 1.2em;
+    font-size: 1.2em !important;
+}
+
+.font-size-14p {
+    font-size: 14px !important;
+}
+
+.font-size-16p {
+    font-size: 16px !important;
 }
