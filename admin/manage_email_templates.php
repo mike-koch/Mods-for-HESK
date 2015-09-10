@@ -60,7 +60,7 @@ if ($modsForHesk_settings['html_emails']) {
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="row" style="padding: 20px">
+<div class="row pad-20">
     <ul class="nav nav-tabs" role="tablist">
         <?php
         // Show a link to banned_emails.php if user has permission
@@ -253,12 +253,12 @@ function getTemplateMarkup($template, $languageCode, $html = false) {
     $languageCodeUrl = urlencode($languageCode);
     if ($html) {
         $markup = '<a href="manage_email_templates.php?action=edit&template='.$templateUrl.'&language='.$languageCodeUrl.'&html=true">';
-        $markup .= '<i class="fa fa-html5" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_html_template'].'"></i>';
+        $markup .= '<i class="fa fa-html5 font-size-150" data-toggle="tooltip" title="'.$hesklang['edit_html_template'].'"></i>';
         $markup .= '</a>';
         return $markup;
     } else {
         $markup = '<a href="manage_email_templates.php?action=edit&template='.$templateUrl.'&language='.$languageCodeUrl.'&html=false">';
-        $markup .= '<i class="fa fa-file-text-o" style="font-size: 1.5em" data-toggle="tooltip" title="'.$hesklang['edit_plain_text_template'].'"></i>';
+        $markup .= '<i class="fa fa-file-text-o font-size-150" data-toggle="tooltip" title="'.$hesklang['edit_plain_text_template'].'"></i>';
         $markup .= '</a>';
         return $markup;
     }
