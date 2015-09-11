@@ -179,17 +179,17 @@ function hesk_insertAtCursor(myField, myValue) {
                         {
                             if ($j == 1)
                             {
-                                echo'<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"></i></a>';
+                                echo'<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"></i></a>';
                             }
                             elseif ($j == $num)
                             {
-                                echo'<a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
+                                echo'<a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                             }
                             else
                             {
                                 echo'
-                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"></i></a>
-                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size: 14px; color: green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"></i></a>
+                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_up'].'"></i></a>
+                                <a href="manage_canned.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" title="'.$hesklang['move_dn'].'"></i></a>
                                 ';
                             }
                         }
@@ -199,7 +199,7 @@ function hesk_insertAtCursor(myField, myValue) {
                         }
 
                         echo '
-                        <a href="manage_canned.php?a=remove&amp;id='.$mysaved['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i class="fa fa-times" style="font-size: 14px; color: #FF0000" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"></i></a>&nbsp;</td>
+                        <a href="manage_canned.php?a=remove&amp;id='.$mysaved['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="'.$hesklang['delete'].'"></i></a>&nbsp;</td>
                         </tr>
                         ';
                     } // End while
@@ -366,7 +366,7 @@ function hesk_insertAtCursor(myField, myValue) {
                         ?>
                 </div>     
             </div>
-            <div class="form-group" style="text-align: center">
+            <div class="form-group text-center">
                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                 <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default" />
             </div>          
