@@ -146,7 +146,7 @@ $num = hesk_dbNumRows($result);
                             echo '
                                     <tr>
                                     <td>'.$mysaved['title'].'</td>
-                                    <td style="text-align:left;">
+                                    <td class="text-left">
                                     ';
 
                             if ($num > 1)
@@ -155,17 +155,17 @@ $num = hesk_dbNumRows($result);
                                 {
                                     echo'<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />
                                         <a href="manage_ticket_templates.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'">
-                                            <i class="fa fa-arrow-down" style="font-size:16px;color:green;" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['move_dn'].'"></i></a>';
+                                            <i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['move_dn'].'"></i></a>';
                                 }
                                 elseif ($j == $num)
                                 {
-                                    echo'<a href="manage_ticket_templates.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size:16px;color:green;" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['move_up'].'"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
+                                    echo'<a href="manage_ticket_templates.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['move_up'].'"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                                 }
                                 else
                                 {
                                     echo'
-                                        <a href="manage_ticket_templates.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up" style="font-size:16px;color:green;" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['move_up'].'"></i></a>
-                                        <a href="manage_ticket_templates.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down" style="font-size:16px;color:green;" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['move_dn'].'"></i></a>
+                                        <a href="manage_ticket_templates.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=-15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['move_up'].'"></i></a>
+                                        <a href="manage_ticket_templates.php?a=order&amp;replyid='.$mysaved['id'].'&amp;move=15&amp;token='.hesk_token_echo(0).'"><i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['move_dn'].'"></i></a>
                                         ';
                                 }
                             }
@@ -175,7 +175,7 @@ $num = hesk_dbNumRows($result);
                             }
 
                             echo '
-                                    <a href="manage_ticket_templates.php?a=remove&amp;id='.$mysaved['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i class="fa fa-times" style="font-size:16px;color:red;" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delete'].'"></i></a></td>
+                                    <a href="manage_ticket_templates.php?a=remove&amp;id='.$mysaved['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delete'].'"></i></a></td>
                                     </tr>
                                     ';
                         } // End while
