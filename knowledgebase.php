@@ -419,7 +419,7 @@ function hesk_show_kb_article($artid)
                     <?php
                     foreach ($related_articles as $id => $subject)
                     {
-                        echo '<span class="glyphicon glyphicon-file" style="font-size: 16px"></span> <a href="knowledgebase.php?article='.$id.'">'.$subject.'</a><br />';
+                        echo '<span class="glyphicon glyphicon-file icon-link"></span> <a href="knowledgebase.php?article='.$id.'">'.$subject.'</a><br />';
                     }
                     ?>
                 </div>
