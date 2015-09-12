@@ -5,13 +5,13 @@ function getTasks() {
 function processUninstallation() {
     var tasks = getTasks();
     //-- Change status column to default HESK values
-    tasks.forEach(function(task) {
+    tasks.forEach(function (task) {
         startUninstallation(task);
         executeUninstallation(task);
     });
 }
 function startUninstallation(task) {
-    $('#spinner-'+task)
+    $('#spinner-' + task)
         .removeClass('fa-exclamation-triangle')
         .addClass('fa-spinner')
         .addClass('fa-pulse');
@@ -20,19 +20,19 @@ function startUninstallation(task) {
 }
 
 function changeTextTo(prefix, task, text) {
-    $('#'+prefix+'-'+task).text(text);
+    $('#' + prefix + '-' + task).text(text);
 }
 
 function changeRowTo(prefix, task, clazz) {
     //-- Remove all classes
-    $('#'+prefix+'-'+task)
+    $('#' + prefix + '-' + task)
         .removeClass('info')
         .removeClass('warning')
         .removeClass('danger')
         .removeClass('success');
 
     //-- Re-add the requested class
-    $('#'+prefix+'-'+task).addClass(clazz);
+    $('#' + prefix + '-' + task).addClass(clazz);
 }
 
 function executeUninstallation(task) {
@@ -40,16 +40,16 @@ function executeUninstallation(task) {
     $.ajax({
         type: 'POST',
         url: 'ajax/uninstall-database-ajax.php',
-        data: { task: task },
-        success: function(data) {
+        data: {task: task},
+        success: function (data) {
             markUninstallAsSuccess(task);
             checkForCompletion();
         },
-        error: function(data) {
+        error: function (data) {
             if (data.status == 400) {
-                appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>The task <code>'+ task +'</code> was not recognized. Check the value submitted and try again.</td></tr>');
+                appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>The task <code>' + task + '</code> was not recognized. Check the value submitted and try again.</td></tr>');
             } else {
-                appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>'+ data.responseText + '</td></tr>');
+                appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>' + data.responseText + '</td></tr>');
             }
             markUninstallAsFailure(task);
         }
@@ -71,8 +71,8 @@ function uninstallationFinished() {
         '<div class="col-md-12 text-center">' +
         '<i class="fa fa-check-circle fa-4x" style="color: #008000"></i><br><br>' +
         '<h4>Awesome! The automated portion of uninstalling Mods for HESK has completed. ' +
-            'Please follow <a href="http://mods-for-hesk.mkochcs.com/uninstall-instructions.php" target="_blank">these instructions</a> ' +
-            'on the Mods for HESK website to finish uninstallation.</h4>' +
+        'Please follow <a href="http://mods-for-hesk.mkochcs.com/uninstall-instructions.php" target="_blank">these instructions</a> ' +
+        'on the Mods for HESK website to finish uninstallation.</h4>' +
         '</div>' +
         '</div>';
     $('#uninstall-information').html(output);
@@ -80,7 +80,7 @@ function uninstallationFinished() {
 
 function markUninstallAsSuccess(task) {
     removeSpinner(task);
-    $('#spinner-'+task).addClass('fa-check-circle');
+    $('#spinner-' + task).addClass('fa-check-circle');
     changeTextTo('span', task, 'Completed Successfully');
     changeRowTo('row', task, 'success');
     appendToInstallConsole('<tr><td><span class="label label-success">SUCCESS</span></td><td>Uninstall for task code: <code>' + task + '</code> complete</td></tr>');
@@ -88,13 +88,13 @@ function markUninstallAsSuccess(task) {
 
 function markUninstallAsFailure(task) {
     removeSpinner(task);
-    $('#spinner-'+task).addClass('fa-times-circle');
+    $('#spinner-' + task).addClass('fa-times-circle');
     changeRowTo('row', task, 'danger');
     changeTextTo('span', task, 'Uninstall failed! Check the console for more information');
 }
 
 function removeSpinner(task) {
-    $('#spinner-'+task)
+    $('#spinner-' + task)
         .removeClass('fa-pulse')
         .removeClass('fa-spinner');
 }
