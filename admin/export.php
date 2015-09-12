@@ -705,7 +705,7 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="row" style="margin-top: 20px">
+<div class="row move-down-20">
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $hesklang['export']; ?></div>
@@ -898,7 +898,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
                 </div>         
             </div>
-            <div class="form-group" style="text-align: center">
+            <div class="form-group text-center">
                 <input type="submit" value="<?php echo $hesklang['export_btn']; ?>" class="btn btn-default" />
                 <input type="hidden" name="cot" value="1" />
             </div>          

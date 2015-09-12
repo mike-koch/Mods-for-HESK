@@ -66,11 +66,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 </tr>
 <tr>
 <td>
-<div class="row" style="padding-top: 20px">
+<div class="row pad-down-20">
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4><?php echo $hesklang['tickets_found']; ?> <span style="float: right; margin-top: -7px;"><a href="new_ticket.php" class="btn btn-success"><?php echo $hesklang['nti']; ?></a></span></h4>
+                <h4><?php echo $hesklang['tickets_found']; ?> <span class="nu-floatRight panel-button"><a href="new_ticket.php" class="btn btn-success"><?php echo $hesklang['nti']; ?></a></span></h4>
             </div>
 
 <?php

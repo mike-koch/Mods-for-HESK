@@ -70,7 +70,7 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="row" style="padding: 20px">
+<div class="row pad-20">
     <ul class="nav nav-tabs" role="tablist">
         <?php
         // Show a link to banned_emails.php if user has permission to do so
@@ -244,14 +244,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                                     ?>
                                                     <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />
                                                     <a href="service_messages.php?a=order_sm&amp;id=<?php echo $sm['id']; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>">
-                                                        <i class="fa fa-arrow-down" style="font-size: 16px; color: green" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['move_dn']; ?>"></i></a>
+                                                        <i class="fa fa-arrow-down font-size-16p green" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['move_dn']; ?>"></i></a>
                                                 <?php
                                                 }
                                                 elseif ($k == $num)
                                                 {
                                                     ?>
                                                     <a href="service_messages.php?a=order_sm&amp;id=<?php echo $sm['id']; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>">
-                                                        <i class="fa fa-arrow-up" style="font-size: 16px; color: green" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['move_up']; ?>"></i></a>
+                                                        <i class="fa fa-arrow-up font-size-16p green" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['move_up']; ?>"></i></a>
                                                     <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />
                                                 <?php
                                                 }
@@ -259,17 +259,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                                 {
                                                     ?>
                                                     <a href="service_messages.php?a=order_sm&amp;id=<?php echo $sm['id']; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>">
-                                                        <i class="fa fa-arrow-up" style="font-size: 16px; color: green" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['move_up']; ?>"></i></a>
+                                                        <i class="fa fa-arrow-up font-size-16p green" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['move_up']; ?>"></i></a>
                                                     <a href="service_messages.php?a=order_sm&amp;id=<?php echo $sm['id']; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>">
-                                                        <i class="fa fa-arrow-down" style="font-size: 16px; color: green" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['move_dn']; ?>"></i></a>
+                                                        <i class="fa fa-arrow-down font-size-16p green" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['move_dn']; ?>"></i></a>
                                                 <?php
                                                 }
                                             }
                                             ?>
                                             <a href="service_messages.php?a=edit_sm&amp;id=<?php echo $sm['id']; ?>">
-                                                <i class="fa fa-pencil" style="font-size: 16px;color:orange" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['edit']; ?>"></i></a>
+                                                <i class="fa fa-pencil font-size-16p orange" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['edit']; ?>"></i></a>
                                             <a href="service_messages.php?a=remove_sm&amp;id=<?php echo $sm['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_sm']); ?>');">
-                                                <i class="fa fa-times" style="font-size: 16px;color:red" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['delete']; ?>"></i></a>&nbsp;</td>
+                                                <i class="fa fa-times font-size-16p red" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $hesklang['delete']; ?>"></i></a>&nbsp;</td>
                                     </tr>
                                     <?php
                                     $j++;
@@ -295,7 +295,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group">
                             <label for="style" class="col-md-2 control-label"><?php echo $hesklang['sm_style']; ?></label>
                             <div class="col-md-2">
-                                <div class="radio alert" style="box-shadow: none; padding: 5px; border-radius: 4px;">
+                                <div class="radio alert pad-5" style="box-shadow: none; border-radius: 4px;">
                                     <label>
                                         <input type="radio" name="style" value="0"  onclick="setIcon('')"
                                             <?php if (!isset($_SESSION['new_sm']['style']) || (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 0) ) {echo 'checked';} ?>>
@@ -304,7 +304,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="radio alert alert-success" style="padding: 5px;">
+                                <div class="radio alert alert-success pad-5">
                                     <label style="margin-top: -5px">
                                         <input type="radio" name="style" value="1" onclick="setIcon('fa fa-check-circle')"
                                             <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 1 ) {echo 'checked';} ?>>
@@ -313,7 +313,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="radio alert alert-info" style="padding: 5px"  onclick="setIcon('fa fa-comment')">
+                                <div class="radio alert alert-info pad-5"  onclick="setIcon('fa fa-comment')">
                                     <label style="margin-top: -5px">
                                         <input type="radio" name="style" value="2"
                                             <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 2) {echo 'checked';} ?>>
@@ -322,7 +322,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="radio alert alert-warning" style="padding: 5px" onclick="setIcon('fa fa-exclamation-triangle')">
+                                <div class="radio alert alert-warning pad-5" onclick="setIcon('fa fa-exclamation-triangle')">
                                     <label style="margin-top: -5px">
                                         <input type="radio" name="style" value="3"
                                             <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 3) {echo 'checked';} ?>>
@@ -331,7 +331,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="radio alert alert-danger" style="padding: 5px" onclick="setIcon('fa fa-times-circle')">
+                                <div class="radio alert alert-danger pad-5" onclick="setIcon('fa fa-times-circle')">
                                     <label style="margin-top: -5px">
                                         <input type="radio" name="style" value="4"
                                             <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 4) {echo 'checked';} ?> >
@@ -356,7 +356,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group">
                             <label for="type" class="col-md-2 control-label"><?php echo $hesklang['sm_type']; ?></label>
                             <div class="col-md-2">
-                                <div class="radio" style="padding: 5px">
+                                <div class="radio pad-5">
                                     <label>
                                         <input type="radio" name="type" value="0"
                                             <?php if (!isset($_SESSION['new_sm']['type']) || (isset($_SESSION['new_sm']['type']) && $_SESSION['new_sm']['type'] == 0) ) {echo 'checked';} ?> >
@@ -365,7 +365,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="radio" style="padding: 5px">
+                                <div class="radio pad-5">
                                     <label>
                                         <input type="radio" name="type" value="1"
                                             <?php if (isset($_SESSION['new_sm']['type']) && $_SESSION['new_sm']['type'] == 1) {echo 'checked';} ?> >

@@ -57,9 +57,9 @@ while ($row=hesk_dbFetchAssoc($res))
 }
 
 /* What folder are we in? */
-$hesk_settings['mailtmp']['inbox']  = '<a href="mail.php"><i class="fa fa-download"></i></a> <a href="mail.php">'.$hesklang['inbox'].'</a>';
-$hesk_settings['mailtmp']['outbox'] = '<a href="mail.php?folder=outbox"><i class="fa fa-upload" style="font-size: 16px"></i></a> <a href="mail.php?folder=outbox">'.$hesklang['outbox'].'</a>';
-$hesk_settings['mailtmp']['new']    = '<a href="mail.php?a=new"><i class="fa fa-pencil-square-o" style="font-size:16px"></i></a> <a href="mail.php?a=new">'.$hesklang['m_new'].'</a>';
+$hesk_settings['mailtmp']['inbox']  = '<a href="mail.php"><i class="fa fa-download font-size-16p"></i></a> <a href="mail.php">'.$hesklang['inbox'].'</a>';
+$hesk_settings['mailtmp']['outbox'] = '<a href="mail.php?folder=outbox"><i class="font-size-16p fa fa-upload"></i></a> <a href="mail.php?folder=outbox">'.$hesklang['outbox'].'</a>';
+$hesk_settings['mailtmp']['new']    = '<a href="mail.php?a=new"><i class="font-size-16p fa fa-pencil-square-o"></i></a> <a href="mail.php?a=new">'.$hesklang['m_new'].'</a>';
 
 /* Get action */
 if ( $action = hesk_REQUEST('a') )
@@ -76,12 +76,12 @@ if (isset($_GET['folder']) && hesk_GET('folder') == 'outbox')
 	$hesk_settings['mailtmp']['this']   = 'from';
 	$hesk_settings['mailtmp']['other']  = 'to';
 	$hesk_settings['mailtmp']['m_from'] = $hesklang['m_to'];
-	$hesk_settings['mailtmp']['outbox'] = '<b><i class="fa fa-upload" style="font-size:16px"></i> '.$hesklang['outbox'].'</b>';
+	$hesk_settings['mailtmp']['outbox'] = '<b><i class="font-size-16p fa fa-upload"></i> '.$hesklang['outbox'].'</b>';
     $hesk_settings['mailtmp']['folder'] = 'outbox';
 }
 elseif ($action == 'new')
 {
-	$hesk_settings['mailtmp']['new'] = '<b><i class="fa fa-pencil-square-o" style="font-size: 16px"></i> '.$hesklang['m_new'].'</b>';
+	$hesk_settings['mailtmp']['new'] = '<b><i class="font-size-16p fa fa-pencil-square-o"></i> '.$hesklang['m_new'].'</b>';
 	$_SESSION['hide']['list'] = 1;
 
     /* Do we have a recipient selected? */
@@ -97,7 +97,7 @@ else
 	$hesk_settings['mailtmp']['m_from'] = $hesklang['m_from'];
     if ($action != 'read')
     {
-		$hesk_settings['mailtmp']['inbox']  = '<b><i class="fa fa-download" style="font-size: 16px"></i> '.$hesklang['inbox'].'</b>';
+		$hesk_settings['mailtmp']['inbox']  = '<b><i class="font-size-16p fa fa-download"></i> '.$hesklang['inbox'].'</b>';
         $hesk_settings['mailtmp']['folder'] = '';
     }
 }
@@ -135,7 +135,7 @@ function confirm_delete()
 //-->
 </script>
 
-<div class="row" style="margin-top: 20px">
+<div class="row move-down-20">
     <div class="col-md-3">
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $hesklang['navigation']; ?></div>
@@ -474,10 +474,10 @@ function show_message()
                     $folder = '&amp;folder=outbox';
                     if ($pm['to'] == $_SESSION['id'])
                     {
-                        echo '<a href="mail.php?a=mark_unread&amp;id='.$id.'&amp;token='.hesk_token_echo(0).'"><i style="font-size: 14px" class="fa fa-envelope-o"></i></a> ';
+                        echo '<a href="mail.php?a=mark_unread&amp;id='.$id.'&amp;token='.hesk_token_echo(0).'"><i class="fa fa-envelope-o font-size-14p"></i></a> ';
                         $folder = '';
                     }
-                    echo '<a href="mail.php?a=delete&amp;id='.$id.'&amp;token='.hesk_token_echo(0).$folder.'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['delm']).'?\');"><i class="fa fa-times" style="font-size: 14px; color: red"></i></a>';
+                    echo '<a href="mail.php?a=delete&amp;id='.$id.'&amp;token='.hesk_token_echo(0).$folder.'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['delm']).'?\');"><i class="fa fa-times font-size-14p red"></i></a>';
                     ?>
 
                 </td>

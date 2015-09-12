@@ -60,7 +60,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
 <div class="row">
-    <div class="col-md-12" style="padding-top: 20px">
+    <div class="col-md-12 pad-down-20">
     <?php 
         /* This will handle error, success and notice messages */
         hesk_handle_messages();
@@ -73,7 +73,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 echo '
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4>'.$hesklang['open_tickets'].' <span class="nu-floatRight" style="margin-top: -7px;"><a href="new_ticket.php" class="btn btn-success">'.$hesklang['nti'].'</a></span></h4>
+                        <h4>'.$hesklang['open_tickets'].' <span class="nu-floatRight panel-button"><a href="new_ticket.php" class="btn btn-success">'.$hesklang['nti'].'</a></span></h4>
                     </div>'; // The rest of the panel will be printed by print_tickets.inc.php
 	        }
 

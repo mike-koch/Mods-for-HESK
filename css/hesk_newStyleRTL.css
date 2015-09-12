@@ -6,10 +6,6 @@
     float: left;
 }
 
-.tabPadding {
-    padding: 10px;
-}
-
 @media (max-width:991px) {
     .close-ticket {
         text-align: right;
@@ -60,52 +56,9 @@
         padding-top: 10px;
     }    
 }
-
-.row {
-    margin-right: 0px;
-    margin-left: 0px;
-}
-
-.navbar {
-    margin-bottom: 0;
-}
-.settingsquestionmark:hover {
-    text-decoration: underline;
-}
-.h3questionmark:hover {
-    text-decoration: underline;
-}
-.form-signin {
-    max-width: 800px;
-    margin: 0 auto;
-}
-.loginError {
-    max-width: 800px;
-    padding-top: 20px;
-    margin-right: auto;
-    margin-left: auto;
-}
 .kbContent {
     padding-top: 10px;
     text-align: right;
-}
-.withBorder {
-    border-bottom: 1px solid #ddd;
-}
-.ticketMessageContainer {
-    background-color: #ededef;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-}
-.ticketName {
-    font-size: 20px;
-    font-weight: 300;
-    color: #000;
-    margin-top: 5px;
-}
-.ticketEmail {
-    font-size: 14px;
-    color: #888;
 }
 .ticketMessageTop {
     padding-top: 10px;
@@ -114,11 +67,6 @@
     margin-left: -15px;
     color: #888;
     background-color: #fff;
-}
-
-.pushMargin {
-    margin-top: -10px;
-    margin-bottom: -10px;
 }
 
 .pushMarginLeft {
@@ -135,15 +83,6 @@
     font-size: 15px;
     background-color: #fff;
 }
-.ticketMessageBottom > .message {
-    margin-bottom: 0px;
-
-}
-
-.message > * {
-    margin-top: 0;
-    margin-bottom: 0;
-}
 
 .ticketMessage {
     margin-right: 238px;
@@ -151,53 +90,6 @@
     height: 100%;
     position: relative;
 }
-.ticketPropertyTitle {
-    color: rgba(255, 255, 255, .75);
-    font-size: 11px;
-    text-transform: uppercase;
-}
-@media (min-width: 992px) {
-    .ticketPropertyText {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .ticketPropertyText:hover {
-        white-space: normal;
-        overflow: none;
-    }
-}
-.ticketPropertyText {
-    font-size: 16px;
-    line-height: 1em;
-    color: #fff;
-}
-.criticalPriority {
-    background-color: red;
-}
-.highPriority {
-    background-color: #ff6a00;
-}
-.medLowPriority {
-    background-color: #8BB467;
-}
-div.blankSpace {
-    padding-top: 20px;
-}
-div.footerWithBorder {
-    border-top: 1px solid #cfd4d6;
-}
-div.rightSideDash {
-    padding-right: 18px;
-    padding-left: 18px;
-}
-div.enclosing {
-    background-color: #fff;
-    color: #4a5571;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    width: 100%}
 div.headersm {
     width: 100%;
     color: #fff;
@@ -211,34 +103,6 @@ div.headersm {
     font-weight: 700;
     padding-right: 20px;
 }
-div.installWarning {
-    width: 70%;
-    height: 52px;
-    margin-top: 10px;
-    margin-right: auto;
-    margin-left: auto;
-}
-div.setupContainer {
-    margin: 50px;
-    text-align: center;
-}
-div.setupLogo {
-    vertical-align: middle;
-    border: 0;
-    margin-top: -2px;
-}
-div.setupButtons {
-    text-decoration: none;
-    border: 4px solid #eee;
-    background: #fff;
-    border-radius: 5px;
-    color: #61718c;
-    -webkit-box-shadow: rgba(0, 0, 0, .1)0 0 3px;
-    -moz-box-shadow: rgba(0, 0, 0, .1)0 0 3px;
-    text-align: center;
-    margin: 20px 0;
-    padding: 10px 0;
-}
 .agreementBox {
     position: relative;
     background-color: #fff;
@@ -251,90 +115,43 @@ div.setupButtons {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-.summaryList {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #ddd;
-    border-top-color: transparent;
-}
-.installRequirements {
-    margin-right: auto;
-    margin-left: auto;
-    width: 90%;
-}
-.white-readonly {
-    cursor: text !important;
-    background-color: #fff !important;
-}
-button.btn.dropdown-toggle {
-    height: 34px;
-}
-button.dropdown-submit {
-    background:none!important;
-    border:none;
-}
-
-.attachment-table > tbody > tr > td > i {
-    color: #ddd;
-    text-shadow: 2px 2px #ccc;
-}
-
-.attachment-table > tbody > tr > td {
-    vertical-align: middle;
-}
-
-.attachment-table > tbody > tr > td > span > img {
-    max-height: 80px;
-    max-width: 80px;
-    cursor: pointer;
-}
-
-.plaintext-editor {
-    font-family: monospace;
-}
-
-.table-fixed {
-    table-layout: fixed;
-}
 
 .indent-15 {
     margin-right: 15px;
 }
 
-.button-link {
-    color: #4a5571;
+.pad-down-20 {
+    padding-top: 20px;
 }
 
-.button-link:hover {
-    text-decoration: none;
-    color: #000;
+.pad-right-10 {
+    padding-right: 10px;
 }
 
-.button-link .col-xs-1 {
-    margin: 0 auto;
-    padding: 0;
+.move-down-20 {
+    margin-top: 20px;
 }
 
-.button-link .panel-body:hover {
-    background-color: #EEE;
+.move-right-40 {
+    margin-right: 40px;
 }
 
-.default-row-margins {
-    margin: 0 -15px;
+.move-right-25 {
+    margin-right: 25px;
 }
 
-.icon-link {
-    font-size: 16px;
+.move-right-20 {
+    margin-right: 20px;
 }
 
-.orange {
-    color: orange;
+.move-right-10 {
+    margin-right: 10px;
 }
 
-.red {
-    color: #FF0000;
+.move-left-20 {
+    margin-left: 20px;
 }
 
-.gray {
-    color: gray;
+.move-left-10 {
+    margin-left: 10px;
 }

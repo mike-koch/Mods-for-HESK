@@ -1,0 +1,307 @@
+
+.summaryList {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ddd;
+    border-top-color: transparent;
+}
+.installRequirements {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+
+.white-readonly {
+    cursor: text !important;
+    background-color: #fff !important;
+}
+
+button.btn.dropdown-toggle {
+    height: 34px;
+}
+
+button.dropdown-submit {
+    background:none!important;
+    border:none;
+}
+
+.attachment-table > tbody > tr > td > i {
+    color: #ddd;
+    text-shadow: 2px 2px #ccc;
+}
+
+.attachment-table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.attachment-table > tbody > tr > td > span > img {
+    max-height: 80px;
+    max-width: 80px;
+    cursor: pointer;
+}
+
+.plaintext-editor {
+    font-family: monospace;
+}
+
+.table-fixed {
+    table-layout: fixed;
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+.h3questionmark:hover {
+    text-decoration: underline;
+}
+
+.form-signin {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.loginError {
+    max-width: 800px;
+    padding-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.withBorder {
+    border-bottom: 1px solid #ddd;
+}
+
+.ticketMessageContainer {
+    background-color: #ededef;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.ticketName {
+    font-size: 20px;
+    font-weight: 300;
+    color: #000;
+    margin-top: 5px;
+}
+
+.ticketEmail {
+    font-size: 14px;
+    color: #888;
+}
+
+.pushMargin {
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
+.ticketMessageBottom > .message {
+    margin-bottom: 0px;
+}
+
+.message > * {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+@media (min-width: 992px) {
+    .ticketPropertyText {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ticketPropertyText:hover {
+        white-space: normal;
+        overflow: visible;
+    }
+}
+
+.ticketPropertyText {
+    font-size: 16px;
+    line-height: 1em;
+    color: #fff;
+    padding-bottom: 2px;
+}
+
+.highPriority {
+    background-color: #ff6a00;
+}
+
+.medLowPriority {
+    background-color: #8BB467;
+}
+
+div.blankSpace {
+    padding-top: 20px;
+}
+
+div.footerWithBorder {
+    border-top: 1px solid #cfd4d6;
+}
+
+div.rightSideDash {
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+.ticketPropertyTitle {
+    color: rgba(255, 255, 255, .75);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+div.enclosing {
+    background-color: #fff;
+    color: #4a5571;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    width: 100%
+}
+
+div.installWarning {
+    width: 70%;
+    height: 52px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.setupContainer {
+    margin: 50px;
+    text-align: center;
+}
+
+div.setupLogo {
+    vertical-align: middle;
+    border: 0;
+    margin-top: -2px;
+}
+
+div.setupButtons {
+    text-decoration: none;
+    border: 4px solid #eee;
+    background: #fff;
+    border-radius: 5px;
+    color: #61718c;
+    -webkit-box-shadow: rgba(0, 0, 0, .1)0 0 3px;
+    -moz-box-shadow: rgba(0, 0, 0, .1)0 0 3px;
+    text-align: center;
+    margin: 20px 0;
+    padding: 10px 0;
+}
+
+.hide {
+    display: none;
+}
+
+.font-size-90 {
+    font-size: .9em !important;
+}
+
+.font-size-120 {
+    font-size: 1.2em !important;
+}
+
+.font-size-150 {
+    font-size: 1.5em !important;
+}
+
+.font-size-14p {
+    font-size: 14px !important;
+}
+
+.font-size-16p {
+    font-size: 16px !important;
+}
+
+.font-size-20p {
+    font-size: 20px !important;
+}
+
+.pad-up-5 {
+    padding-down: 5px;
+}
+
+.pad-5 {
+    padding: 5px;
+}
+
+.panel-button {
+    margin-top: -7px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.move-down-20 {
+    margin-top: 20px;
+}
+
+.move-down-4 {
+    margin-top: 4px;
+}
+
+.button-link {
+    color: #4a5571;
+}
+
+.button-link:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+.button-link .col-xs-1 {
+    margin: 0 auto;
+    padding: 0;
+}
+
+.button-link .panel-body:hover {
+    background-color: #EEE;
+}
+
+.default-row-margins {
+    margin: 0 -15px;
+}
+
+.icon-link {
+    font-size: 16px !important;
+}
+
+.orange {
+    color: orange;
+}
+
+.dark-orange {
+    color: darkorange;
+}
+
+.red, .criticalPriority {
+    color: #FF0000;
+}
+
+.gray {
+    color: gray;
+}
+
+.green {
+    color: green;
+}
+
+.blue {
+    color: blue;
+}
+
+.pad-down-20 {
+    padding-top: 20px;
+}
+
+.pad-20 {
+    padding: 20px;
+}

@@ -1342,7 +1342,7 @@ function print_start()
 	if ($hesk_settings['alink'])
 	{
 		?>
-		<p style="text-align:center"><a href="<?php echo $hesk_settings['admin_dir']; ?>/" ><?php echo $hesklang['ap']; ?></a></p>
+		<p class="text-center"><a href="<?php echo $hesk_settings['admin_dir']; ?>/" ><?php echo $hesklang['ap']; ?></a></p>
 		<?php
 	}
 

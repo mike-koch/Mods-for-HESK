@@ -68,7 +68,7 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="row" style="padding: 20px">
+<div class="row pad-20">
     <ul class="nav nav-tabs" role="tablist">
         <?php
         // Show a link to banned_emails.php if user has permission to do so
@@ -143,7 +143,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </form>
             </div>
             <div class="col-md-4">
-                <h6 style="font-weight: bold"><?php echo $hesklang['banex']; ?></h6>
+                <h6 class="bold"><?php echo $hesklang['banex']; ?></h6>
                 <div class="footerWithBorder blankSpace"></div>
                 <b>123.0.0.0</b><br />
                 <b>123.0.0.1 - 123.0.0.53</b><br />
@@ -193,9 +193,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 echo '
                                     <td>
                                         <a href="banned_ips.php?a=ban&amp;ip='.urlencode($ban['ip']).'&amp;token='.hesk_token_echo(0).'">
-                                            <i class="fa fa-ban" style="color: red; font-size: 16px" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['ippermban'].'"></i></a>
+                                            <i class="fa fa-ban red font-size-16p" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['ippermban'].'"></i></a>
                                         <a href="banned_ips.php?a=unbantemp&amp;ip='.urlencode($ban['ip']).'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();">
-                                            <i class="fa fa-times" style="color: red; font-size: 16px"data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'"></i></a>
+                                            <i class="fa fa-times red font-size-16p" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'"></i></a>
                                     </td>
                                     ';
                             }
@@ -275,9 +275,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         if ($can_unban)
                         {
                             echo '
-                                <td class="'.$color.'" style="text-align:left;">
+                                <td class="'.$color.' text-left">
                                     <a href="banned_ips.php?a=unban&amp;id='.$ban['id'].'&amp;token='.hesk_token_echo(0).'" onclick="return confirm_delete();">
-                                        <i class="fa fa-times" style="color: red; font-size: 16px" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'"></i></a>
+                                        <i class="fa fa-times red font-size-16p" data-toggle="tooltip" data-placement="top" data-original-title="'.$hesklang['delban'].'"></i></a>
                                 </td>
                             ';
                         }
