@@ -353,7 +353,7 @@ if (!$show['show']) {
             <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
                         <!-- Date and Action buttons -->
-                        <p><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt'], true); ?><span style="float: right"><?php echo hesk_getCustomerButtons($i); ?></span></p>
+                        <p><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt'], true); ?><span class="nu-floatRight"><?php echo hesk_getCustomerButtons($i); ?></span></p>
                         <!-- Custom Fields Before Message -->
                         <?php
                             foreach ($hesk_settings['custom_fields'] as $k=>$v)
