@@ -5,6 +5,7 @@
     border-color: #ddd;
     border-top-color: transparent;
 }
+
 .installRequirements {
     margin-left: auto;
     margin-right: auto;
@@ -21,8 +22,8 @@ button.btn.dropdown-toggle {
 }
 
 button.dropdown-submit {
-    background:none!important;
-    border:none;
+    background: none !important;
+    border: none;
 }
 
 .attachment-table > tbody > tr > td > i {
@@ -189,8 +190,8 @@ div.setupButtons {
     background: #fff;
     border-radius: 5px;
     color: #61718c;
-    -webkit-box-shadow: rgba(0, 0, 0, .1)0 0 3px;
-    -moz-box-shadow: rgba(0, 0, 0, .1)0 0 3px;
+    -webkit-box-shadow: rgba(0, 0, 0, .1) 0 0 3px;
+    -moz-box-shadow: rgba(0, 0, 0, .1) 0 0 3px;
     text-align: center;
     margin: 20px 0;
     padding: 10px 0;

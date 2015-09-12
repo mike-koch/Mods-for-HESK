@@ -67,8 +67,8 @@ function executeUpdate(version, cssclass, formattedVersion) {
     $.ajax({
         type: 'POST',
         url: 'ajax/install-database-ajax.php',
-        data: { version: version },
-        success: function(data) {
+        data: {version: version},
+        success: function (data) {
             markUpdateAsSuccess(cssclass, formattedVersion);
             if (version == 9) {
                 migrateIpEmailBans('banmigrate', 'banmigrate');
@@ -78,8 +78,8 @@ function executeUpdate(version, cssclass, formattedVersion) {
                 processUpdates(version);
             }
         },
-        error: function(data) {
-            appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>'+ data.responseText + '</td></tr>');
+        error: function (data) {
+            appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>' + data.responseText + '</td></tr>');
             markUpdateAsFailure(cssclass);
         }
     });
@@ -91,8 +91,8 @@ function migrateIpEmailBans(version, cssclass) {
     $.ajax({
         type: 'POST',
         url: 'ajax/task-ajax.php',
-        data: { task: 'ip-email-bans' },
-        success: function(data) {
+        data: {task: 'ip-email-bans'},
+        success: function (data) {
             var parsedData = $.parseJSON(data);
             if (parsedData.status == 'ATTENTION') {
                 appendToInstallConsole('<tr><td><span class="label label-warning">WARNING</span></td><td>Your response is needed. Please check above.</td></tr>');
@@ -102,7 +102,7 @@ function migrateIpEmailBans(version, cssclass) {
                 migrateComplete();
             }
         },
-        error: function(data) {
+        error: function (data) {
             appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>' + data.responseText + '</td></tr>');
             markUpdateAsFailure(version);
         }
@@ -115,12 +115,12 @@ function initializeStatuses(version, cssclass) {
     $.ajax({
         type: 'POST',
         url: 'ajax/task-ajax.php',
-        data: { task: 'initialize-statuses' },
-        success: function(data) {
+        data: {task: 'initialize-statuses'},
+        success: function (data) {
             markUpdateAsSuccess(cssclass, 'Initializing Statuses');
             statusesInitialized();
         },
-        error: function(data) {
+        error: function (data) {
             appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>' + data.responseText + '</td></tr>');
             markUpdateAsFailure(version);
         }
@@ -141,11 +141,11 @@ function runMigration() {
     $.ajax({
         type: 'POST',
         url: 'ajax/task-ajax.php',
-        data: { task: 'migrate-bans', user: userId },
-        success: function(data) {
+        data: {task: 'migrate-bans', user: userId},
+        success: function (data) {
             migrateComplete();
         },
-        error: function(data) {
+        error: function (data) {
             appendToInstallConsole('ERROR: ' + data.responseText);
             markUpdateAsFailure('banmigrate');
         }
