@@ -227,7 +227,7 @@ if ($modsForHesk_settings['show_icons']) {
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?php echo HESK_PATH; ?>"><?php echo $hesk_settings['hesk_title'] ?></a>
+            <a class="navbar-brand" href="<?php echo $modsForHesk_settings['navbar_title_url']; ?>"><?php echo $hesk_settings['hesk_title'] ?></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
