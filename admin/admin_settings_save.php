@@ -496,6 +496,7 @@ if ($rich_text_setting == 0) {
 $set['statuses_order_column'] = empty($_POST['statuses_order_column']) ? 'sort' : 'name';
 $set['kb_attach_dir'] = hesk_POST('kb_attach_dir', 'attachments');
 $set['display_user_agent_information'] = empty($_POST['display_user_agent_information']) ? 0 : 1;
+$set['navbar_title_url'] = hesk_POST('navbar_title_url');
 
 if ($set['customer-email-verification-required']) {
     //-- Don't allow multiple emails if verification is required
@@ -539,6 +540,7 @@ mfh_updateSetting('dropdownItemTextHoverColor', $set['dropdownItemTextHoverColor
 mfh_updateSetting('questionMarkColor', $set['questionMarkColor'], true);
 mfh_updateSetting('dropdownItemTextHoverBackgroundColor', $set['dropdownItemTextHoverBackgroundColor'], true);
 mfh_updateSetting('display_user_agent_information', $set['display_user_agent_information']);
+mfh_updateSetting('navbar_title_url', $set['navbar_title_url'], true);
 
 // Prepare settings file and save it
 $settings_file_content = '<?php

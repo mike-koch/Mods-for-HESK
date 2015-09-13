@@ -592,6 +592,23 @@ if (defined('HESK_DEMO')) {
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="navbar_title_url" class="col-sm-3 control-label">
+                                <span class="label label-primary"
+                                      data-toggle="tooltip"
+                                      title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                            <?php echo $hesklang['navbar_title_url']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                               title="<?php echo $hesklang['navbar_title_url']; ?>"
+                               data-content="<?php echo $hesklang['navbar_title_url_help']; ?>"></i>
+                        </label>
+
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="navbar_title_url" size="40" maxlength="255"
+                                   value="<?php echo $modsForHesk_settings['navbar_title_url']; ?>"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['navbar_title_url']); ?>"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="s_webmaster_email"
                                class="col-sm-3 control-label"><?php echo $hesklang['email_wm']; ?> <a
                                 href="Javascript:void(0)"

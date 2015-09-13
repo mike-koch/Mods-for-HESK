@@ -829,5 +829,7 @@ function execute250Scripts()
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` ADD COLUMN `screen_resolution_height` INT");
 
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('display_user_agent_information', '0')");
+
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('navbar_title_url', '" . hesk_dbEscape($hesk_settings['hesk_url']) . "'");
 }
 // END Version 2.5.0
