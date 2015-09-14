@@ -201,6 +201,7 @@ function print_add_ticket()
                             echo ' class="isError" ';
                         } ?> placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>"
                                data-error="<?php echo htmlspecialchars($hesklang['enter_your_name']); ?>" required>
+
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -220,6 +221,7 @@ function print_add_ticket()
                             echo ' onblur="Javascript:hesk_suggestEmail(0)"';
                         } ?> placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
                                data-error="<?php echo htmlspecialchars($hesklang['enter_valid_email']); ?>" required>
+
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -231,13 +233,16 @@ function print_add_ticket()
                                 class="important">*</span></label>
 
                         <div class="col-sm-9">
-                            <input type="email" id="email2" class="form-control" name="email2" size="40" maxlength="1000"
+                            <input type="email" id="email2" class="form-control" name="email2" size="40"
+                                   maxlength="1000"
                                    value="<?php if (isset($_SESSION['c_email2'])) {
                                        echo stripslashes(hesk_input($_SESSION['c_email2']));
                                    } ?>" <?php if (in_array('email2', $_SESSION['iserror'])) {
                                 echo ' class="isError" ';
-                            } ?> placeholder="<?php echo htmlspecialchars($hesklang['confemail']); ?>" data-match="#email"
+                            } ?> placeholder="<?php echo htmlspecialchars($hesklang['confemail']); ?>"
+                                   data-match="#email"
                                    data-error="<?php echo htmlspecialchars($hesklang['confemaile']); ?>" required>
+
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -269,8 +274,8 @@ function print_add_ticket()
                                     class="form-control" pattern="[0-9]+"
                                     data-error="<?php echo htmlspecialchars($hesklang['sel_app_cat']); ?>" required
                                 <?php if (in_array('category', $_SESSION['iserror'])) {
-                                echo ' class="isError" ';
-                            } ?> ><?php
+                                    echo ' class="isError" ';
+                                } ?> ><?php
                                 // Show the "Click to select"?
                                 if ($hesk_settings['select_cat']) {
                                     echo '<option value="">' . $hesklang['select'] . '</option>';
@@ -280,6 +285,7 @@ function print_add_ticket()
                                     echo '<option value="' . $row['id'] . '"' . (($_SESSION['c_category'] == $row['id']) ? ' selected="selected"' : '') . '>' . $row['name'] . '</option>';
                                 } ?>
                             </select>
+
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -319,6 +325,7 @@ function print_add_ticket()
                                     echo 'selected="selected"';
                                 } ?>><?php echo $hesklang['high']; ?></option>
                             </select>
+
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -442,7 +449,7 @@ function print_add_ticket()
 
                             /* Large text box */
                             case 'textarea':
-                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
+                                $errorText = $required == 'required' ? 'data-error="' . htmlspecialchars($hesklang['this_field_is_required']) . '"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -533,7 +540,7 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><input type="email" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="'.htmlspecialchars($hesklang['enter_valid_email']).'" ' . $cls . ' ' . $required . '>
+					            <div class="col-sm-9"><input type="email" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="' . htmlspecialchars($hesklang['enter_valid_email']) . '" ' . $cls . ' ' . $required . '>
 					            <div class="help-block with-errors"></div>
 					            </div>
                                 </div>';
@@ -575,7 +582,7 @@ function print_add_ticket()
 
                             /* Default text input */
                             default:
-                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
+                                $errorText = $required == 'required' ? 'data-error="' . htmlspecialchars($hesklang['this_field_is_required']) . '"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -616,6 +623,7 @@ function print_add_ticket()
                             echo ' class="isError" ';
                         } ?> placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"
                                data-error="<?php echo htmlspecialchars($hesklang['enter_subject']); ?>" required>
+
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -626,10 +634,12 @@ function print_add_ticket()
                                   id="message" class="form-control htmlEditor" rows="12"
                                   cols="60" <?php if (in_array('message', $_SESSION['iserror'])) {
                             echo ' class="isError" ';
-                        } ?> data-error="<?php echo htmlspecialchars($hesklang['enter_message']); ?>" required><?php if (isset($_SESSION['c_message'])) {
+                        } ?> data-error="<?php echo htmlspecialchars($hesklang['enter_message']); ?>"
+                                  required><?php if (isset($_SESSION['c_message'])) {
                                 echo stripslashes(hesk_input($_SESSION['c_message']));
                             } ?></textarea>
-                        <div class="help-block with-errors"></div>
+
+                        <div class="help-block with-errors" id="message-help-block"></div>
                         <?php if ($modsForHesk_settings['rich_text_for_tickets_for_customers']): ?>
                             <script type="text/javascript">
                                 /* <![CDATA[ */
@@ -789,7 +799,7 @@ function print_add_ticket()
 
                             /* Large text box */
                             case 'textarea':
-                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
+                                $errorText = $required == 'required' ? 'data-error="' . htmlspecialchars($hesklang['this_field_is_required']) . '"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -878,7 +888,7 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><input type="email" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="'.htmlspecialchars($hesklang['enter_valid_email']).'" ' . $cls . ' ' . $required . '>
+					            <div class="col-sm-9"><input type="email" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="' . htmlspecialchars($hesklang['enter_valid_email']) . '" ' . $cls . ' ' . $required . '>
 					            <div class="help-block with-errors"></div>
                                 </div>';
 
@@ -919,7 +929,7 @@ function print_add_ticket()
 
                             /* Default text input */
                             default:
-                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
+                                $errorText = $required == 'required' ? 'data-error="' . htmlspecialchars($hesklang['this_field_is_required']) . '"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -992,8 +1002,8 @@ function print_add_ticket()
                 {
                 ?>
                 <div class="form-group">
-                    <label for="secimage" class="col-sm-3 control-label"><?php echo $hesklang['verify_i']; ?> <font
-                            class="important">*</font></label>
+                    <label for="secimage" class="col-sm-3 control-label"><?php echo $hesklang['verify_i']; ?> <span
+                            class="important">*</span></label>
                     <?php
                     // SPAM prevention verified for this session
                     if (isset($_SESSION['img_verified'])) {
@@ -1074,42 +1084,46 @@ function print_add_ticket()
                     endif;
 
                     if ($hesk_settings['submit_notice']) {
-                        ?>
+                    ?>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="alert alert-info">
-                                    <b><?php echo $hesklang['before_submit']; ?></b>
-                                    <ul>
-                                        <li><?php echo $hesklang['all_info_in']; ?>.</li>
-                                        <li><?php echo $hesklang['all_error_free']; ?>.</li>
-                                    </ul>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <b><?php echo $hesklang['before_submit']; ?></b>
+                                <ul>
+                                    <li><?php echo $hesklang['all_info_in']; ?>.</li>
+                                    <li><?php echo $hesklang['all_error_free']; ?>.</li>
+                                </ul>
 
 
-                                    <b><?php echo $hesklang['we_have']; ?>:</b>
-                                    <ul>
-                                        <li><?php echo hesk_htmlspecialchars($_SERVER['REMOTE_ADDR']) . ' ' . $hesklang['recorded_ip']; ?></li>
-                                        <li><?php echo $hesklang['recorded_time']; ?></li>
-                                    </ul>
-                                </div>
+                                <b><?php echo $hesklang['we_have']; ?>:</b>
+                                <ul>
+                                    <li><?php echo hesk_htmlspecialchars($_SERVER['REMOTE_ADDR']) . ' ' . $hesklang['recorded_ip']; ?></li>
+                                    <li><?php echo $hesklang['recorded_time']; ?></li>
+                                </ul>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="hidden" id="latitude" name="latitude" value="E-0">
-                                <input type="hidden" id="longitude" name="longitude" value="E-0">
-                                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
-                                <input type="submit" value="<?php echo $hesklang['sub_ticket']; ?>"
-                                       class="btn btn-default">
+                    <div class="row">
+                        <div class="col-md-9 col-md-offset-3">
+                            <input type="hidden" id="latitude" name="latitude" value="E-0">
+                            <input type="hidden" id="longitude" name="longitude" value="E-0">
+                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                            <input type="submit" value="<?php echo $hesklang['sub_ticket']; ?>"
+                                   class="btn btn-default>
                             </div>
                         </div>
+                        <script>
+                            $('#screen-resolution-height').prop('value', screen.height);
+                            $('#screen-resolution-width').prop('value', screen.width);
+                        </script>
 
                         <?php
-                    } // End IF submit_notice
-                    else {
-                        ?>
-                        <div class="row">
+                                   } // End IF submit_notice
+                                   else {
+                                   ?>
+                        <div class=" row">
                             <div class="col-md-9 col-md-offset-3">
                                 <input type="hidden" id="latitude" name="latitude" value="E-0">
                                 <input type="hidden" id="longitude" name="longitude" value="E-0">
@@ -1117,7 +1131,7 @@ function print_add_ticket()
                                 <input type="hidden" id="screen-resolution-width" name="screen_resolution_width">
                                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
                                 <input class="btn btn-default" type="submit"
-                                       value="<?php echo $hesklang['sub_ticket']; ?>">
+                                       value="<?php echo $hesklang['sub_ticket']; ?>" onclick="validateRichText()">
                                 <script>
                                     $('#screen-resolution-height').prop('value', screen.height);
                                     $('#screen-resolution-width').prop('value', screen.width);
@@ -1126,14 +1140,24 @@ function print_add_ticket()
                         </div>
 
                         <?php
-                    } // End ELSE submit_notice
-                    ?>
+                        } // End ELSE submit_notice
+                        ?>
+                        <script>
+                            function validateRichText() {
+                                var content = tinyMCE.get("message").getContent();
+                                if (content == '') {
+                                    $('#message-help-block').text("This can't be empty");
+                                    return false;
+                                }
+                                return true;
+                            }
+                        </script>
 
-                    <!-- Do not delete or modify the code below, it is used to detect simple SPAM bots -->
-                    <input type="hidden" name="hx" value="3"/><input type="hidden" name="hy" value=""/>
-                    <!-- >
-                    <input type="text" name="phone" value="3" />
-                    < -->
+                        <!-- Do not delete or modify the code below, it is used to detect simple SPAM bots -->
+                        <input type="hidden" name="hx" value="3"/><input type="hidden" name="hy" value=""/>
+                        <!-- >
+                        <input type="text" name="phone" value="3" />
+                        < -->
 
             </form>
         </div>
