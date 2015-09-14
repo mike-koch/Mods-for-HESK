@@ -209,7 +209,7 @@ function print_add_ticket()
                             class="important">*</span></label>
 
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="email" name="email" size="40" maxlength="1000"
+                        <input type="email" class="form-control" id="email" name="email" size="40" maxlength="1000"
                                value="<?php if (isset($_SESSION['c_email'])) {
                                    echo stripslashes(hesk_input($_SESSION['c_email']));
                                } ?>" <?php if (in_array('email', $_SESSION['iserror'])) {
@@ -231,7 +231,7 @@ function print_add_ticket()
                                 class="important">*</span></label>
 
                         <div class="col-sm-9">
-                            <input type="text" id="email2" class="form-control" name="email2" size="40" maxlength="1000"
+                            <input type="email" id="email2" class="form-control" name="email2" size="40" maxlength="1000"
                                    value="<?php if (isset($_SESSION['c_email2'])) {
                                        echo stripslashes(hesk_input($_SESSION['c_email2']));
                                    } ?>" <?php if (in_array('email2', $_SESSION['iserror'])) {
@@ -290,14 +290,16 @@ function print_add_ticket()
                 if ($hesk_settings['cust_urgency']) {
                     ?>
                     <div class="form-group">
-                        <label for="priority" class="col-sm-3 control-label"><?php echo $hesklang['priority']; ?>: <font
-                                class="important">*</font></label>
+                        <label for="priority" class="col-sm-3 control-label"><?php echo $hesklang['priority']; ?>: <span
+                                class="important">*</span></label>
 
                         <div class="col-sm-9">
                             <select id="priority" class="form-control"
+                                    pattern="[0-9]+"
+                                    data-error="<?php echo htmlspecialchars($hesklang['sel_app_priority']); ?>"
                                     name="priority" <?php if (in_array('priority', $_SESSION['iserror'])) {
                                 echo ' class="isError" ';
-                            } ?> >
+                            } ?> required>
                                 <?php
                                 // Show the "Click to select"?
                                 if ($hesk_settings['select_pri']) {
@@ -317,6 +319,7 @@ function print_add_ticket()
                                     echo 'selected="selected"';
                                 } ?>><?php echo $hesklang['high']; ?></option>
                             </select>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <?php
@@ -335,7 +338,8 @@ function print_add_ticket()
                             $v['name'] = $hesklang[$v['name']];
                         }
 
-                        $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
+                        $required = $v['req'] ? 'required' : '';
+                        $v['req'] = $v['req'] ? '<span class="important">*</span>' : '';
 
                         if ($v['type'] == 'checkbox') {
                             $k_value = array();
@@ -371,9 +375,10 @@ function print_add_ticket()
                                         $checked = '';
                                     }
 
-                                    echo '<label style="font-weight: normal;"><input type="radio" id="' . $formattedId . '" name="' . $k . '" value="' . $option . '" ' . $checked . ' ' . $cls . ' /> ' . $option . '</label><br />';
+                                    echo '<label style="font-weight: normal;"><input type="radio" id="' . $formattedId . '" name="' . $k . '" value="' . $option . '" ' . $checked . ' ' . $cls . ' ' . $required . ' > ' . $option . '</label><br />';
                                 }
 
+                                echo '<div class="help-block with-errors"></div>';
                                 echo '</div></div>';
                                 break;
 
@@ -438,6 +443,7 @@ function print_add_ticket()
                             /* Large text box */
                             case 'textarea':
                                 //Clean up multiple dashes or whitespaces
+                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
@@ -449,7 +455,9 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><textarea class="form-control" id="' . $formattedId . '" name="' . $k . '" rows="' . $size[0] . '" cols="' . $size[1] . '" ' . $cls . '>' . $k_value . '</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" id="' . $formattedId . '" name="' . $k . '" rows="' . $size[0] . '" cols="' . $size[1] . '" ' . $cls . ' ' . $errorText . ' ' . $required . '>' . $k_value . '</textarea>
+                                <div class="help-block with-errors"></div>
+					            </div>
                                 </div>';
                                 break;
 
@@ -525,7 +533,9 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' /></div>
+					            <div class="col-sm-9"><input type="email" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="'.htmlspecialchars($hesklang['enter_valid_email']).'" ' . $cls . ' ' . $required . '>
+					            <div class="help-block with-errors"></div>
+					            </div>
                                 </div>';
 
                                 break;
@@ -566,6 +576,7 @@ function print_add_ticket()
                             /* Default text input */
                             default:
                                 //Clean up multiple dashes or whitespaces
+                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
@@ -577,7 +588,9 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' ' . $errorText . ' ' . $required . '>
+					            <div class="help-block with-errors"></div>
+					            </div>
                                 </div>';
                         }
                     }
