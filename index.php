@@ -442,8 +442,8 @@ function print_add_ticket()
 
                             /* Large text box */
                             case 'textarea':
-                                //Clean up multiple dashes or whitespaces
                                 $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
+                                //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
@@ -575,8 +575,8 @@ function print_add_ticket()
 
                             /* Default text input */
                             default:
-                                //Clean up multiple dashes or whitespaces
                                 $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
+                                //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
@@ -605,8 +605,8 @@ function print_add_ticket()
                 <div class="blankSpace"></div>
                 <!-- ticket info -->
                 <div class="form-group">
-                    <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>: <font
-                            class="important">*</font></label>
+                    <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>: <span
+                            class="important">*</span></label>
 
                     <div class="col-sm-9">
                         <input type="text" id="subject" class="form-control" name="subject" size="40" maxlength="40"
@@ -614,7 +614,9 @@ function print_add_ticket()
                                    echo stripslashes(hesk_input($_SESSION['c_subject']));
                                } ?>" <?php if (in_array('subject', $_SESSION['iserror'])) {
                             echo ' class="isError" ';
-                        } ?> placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"/>
+                        } ?> placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"
+                               data-error="<?php echo htmlspecialchars($hesklang['enter_subject']); ?>" required>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -624,9 +626,10 @@ function print_add_ticket()
                                   id="message" class="form-control htmlEditor" rows="12"
                                   cols="60" <?php if (in_array('message', $_SESSION['iserror'])) {
                             echo ' class="isError" ';
-                        } ?> ><?php if (isset($_SESSION['c_message'])) {
+                        } ?> data-error="<?php echo htmlspecialchars($hesklang['enter_message']); ?>" required><?php if (isset($_SESSION['c_message'])) {
                                 echo stripslashes(hesk_input($_SESSION['c_message']));
                             } ?></textarea>
+                        <div class="help-block with-errors"></div>
                         <?php if ($modsForHesk_settings['rich_text_for_tickets_for_customers']): ?>
                             <script type="text/javascript">
                                 /* <![CDATA[ */
@@ -786,6 +789,7 @@ function print_add_ticket()
 
                             /* Large text box */
                             case 'textarea':
+                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -798,7 +802,8 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><textarea class="form-control" id="' . $formattedId . '" name="' . $k . '" rows="' . $size[0] . '" cols="' . $size[1] . '" ' . $cls . '>' . $k_value . '</textarea></div>
+					            <div class="col-sm-9"><textarea class="form-control" id="' . $formattedId . '" name="' . $k . '" rows="' . $size[0] . '" cols="' . $size[1] . '" ' . $cls . ' ' . $errorText . ' ' . $required . '>' . $k_value . '</textarea>
+                                <div class="help-block with-errors"></div>
                                 </div>';
                                 break;
 
@@ -873,7 +878,8 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' /></div>
+					            <div class="col-sm-9"><input type="email" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="'.htmlspecialchars($hesklang['enter_valid_email']).'" ' . $cls . ' ' . $required . '>
+					            <div class="help-block with-errors"></div>
                                 </div>';
 
                                 break;
@@ -913,6 +919,7 @@ function print_add_ticket()
 
                             /* Default text input */
                             default:
+                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -925,7 +932,8 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' /></div>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' ' . $errorText . ' ' . $required . '>
+					            <div class="help-block with-errors"></div>
                                 </div>';
                         }
                     }
