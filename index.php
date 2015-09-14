@@ -187,7 +187,7 @@ function print_add_ticket()
             <div class="footerWithBorder"></div>
             <div class="blankSpace"></div>
             <form class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1"
-                  enctype="multipart/form-data">
+                  enctype="multipart/form-data" data-toggle="validator">
                 <!-- Contact info -->
                 <div class="form-group">
                     <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>: <font
@@ -199,12 +199,14 @@ function print_add_ticket()
                                    echo stripslashes(hesk_input($_SESSION['c_name']));
                                } ?>" <?php if (in_array('name', $_SESSION['iserror'])) {
                             echo ' class="isError" ';
-                        } ?> placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>"/>
+                        } ?> placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>"
+                               data-error="<?php echo htmlspecialchars($hesklang['enter_your_name']); ?>" required>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: <font
-                            class="important">*</font></label>
+                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: <span
+                            class="important">*</span></label>
 
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="email" name="email" size="40" maxlength="1000"
@@ -216,15 +218,17 @@ function print_add_ticket()
                             echo ' class="isNotice" ';
                         } ?> <?php if ($hesk_settings['detect_typos']) {
                             echo ' onblur="Javascript:hesk_suggestEmail(0)"';
-                        } ?> placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/>
+                        } ?> placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
+                               data-error="<?php echo htmlspecialchars($hesklang['enter_valid_email']); ?>" required>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <?php
                 if ($hesk_settings['confirm_email']) {
                     ?>
                     <div class="form-group">
-                        <label for="email2" class="col-sm-3 control-label"><?php echo $hesklang['confemail']; ?>: <font
-                                class="important">*</font></label>
+                        <label for="email2" class="col-sm-3 control-label"><?php echo $hesklang['confemail']; ?>: <span
+                                class="important">*</span></label>
 
                         <div class="col-sm-9">
                             <input type="text" id="email2" class="form-control" name="email2" size="40" maxlength="1000"
@@ -232,7 +236,9 @@ function print_add_ticket()
                                        echo stripslashes(hesk_input($_SESSION['c_email2']));
                                    } ?>" <?php if (in_array('email2', $_SESSION['iserror'])) {
                                 echo ' class="isError" ';
-                            } ?> placeholder="<?php echo htmlspecialchars($hesklang['confemail']); ?>"/>
+                            } ?> placeholder="<?php echo htmlspecialchars($hesklang['confemail']); ?>" data-match="#email"
+                                   data-error="<?php echo htmlspecialchars($hesklang['confemaile']); ?>" required>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <?php
@@ -240,8 +246,6 @@ function print_add_ticket()
                 <div id="email_suggestions"></div>
                 <!-- Department and priority -->
                 <?php
-                $is_table = 0;
-
                 // Get categories
                 hesk_dbConnect();
                 $orderBy = $modsForHesk_settings['category_order_column'];
@@ -255,16 +259,16 @@ function print_add_ticket()
                     // No public categories, set it to default one
                     echo '<input type="hidden" name="category" value="1" />';
                 } else {
-                    // List available categories
-                    $is_table = 1;
                     ?>
                     <div class="form-group">
-                        <label for="category" class="col-sm-3 control-label"><?php echo $hesklang['category']; ?>: <font
-                                class="important">*</font></label>
+                        <label for="category" class="col-sm-3 control-label"><?php echo $hesklang['category']; ?>: <span
+                                class="important">*</span></label>
 
                         <div class="col-sm-9">
                             <select name="category" id="category"
-                                    class="form-control" <?php if (in_array('category', $_SESSION['iserror'])) {
+                                    class="form-control" pattern="[0-9]+"
+                                    data-error="<?php echo htmlspecialchars($hesklang['sel_app_cat']); ?>" required
+                                <?php if (in_array('category', $_SESSION['iserror'])) {
                                 echo ' class="isError" ';
                             } ?> ><?php
                                 // Show the "Click to select"?
@@ -276,6 +280,7 @@ function print_add_ticket()
                                     echo '<option value="' . $row['id'] . '"' . (($_SESSION['c_category'] == $row['id']) ? ' selected="selected"' : '') . '>' . $row['name'] . '</option>';
                                 } ?>
                             </select>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <?php
