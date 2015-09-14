@@ -686,7 +686,7 @@ function print_add_ticket()
                             $v['name'] = $hesklang[$v['name']];
                         }
 
-                        $v['req'] = $v['req'] ? '<font class="important">*</font>' : '';
+                        $v['req'] = $v['req'] ? '<span class="important">*</span>' : '';
 
                         if ($v['type'] == 'checkbox') {
                             $k_value = array();
