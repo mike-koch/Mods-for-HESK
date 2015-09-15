@@ -210,7 +210,7 @@ function print_add_ticket()
                             class="important">*</span></label>
 
                     <div class="col-sm-9">
-                        <input type="email" class="form-control" id="email" name="email" size="40" maxlength="1000"
+                        <input type="text" class="form-control" id="email" name="email" size="40" maxlength="1000"
                                value="<?php if (isset($_SESSION['c_email'])) {
                                    echo stripslashes(hesk_input($_SESSION['c_email']));
                                } ?>" <?php if (in_array('email', $_SESSION['iserror'])) {
@@ -233,7 +233,7 @@ function print_add_ticket()
                                 class="important">*</span></label>
 
                         <div class="col-sm-9">
-                            <input type="email" id="email2" class="form-control" name="email2" size="40"
+                            <input type="text" id="email2" class="form-control" name="email2" size="40"
                                    maxlength="1000"
                                    value="<?php if (isset($_SESSION['c_email2'])) {
                                        echo stripslashes(hesk_input($_SESSION['c_email2']));
@@ -540,7 +540,7 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><input type="email" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="' . htmlspecialchars($hesklang['enter_valid_email']) . '" ' . $cls . ' ' . $required . '>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="' . htmlspecialchars($hesklang['enter_valid_email']) . '" ' . $cls . ' ' . $required . '>
 					            <div class="help-block with-errors"></div>
 					            </div>
                                 </div>';
@@ -888,7 +888,7 @@ function print_add_ticket()
 
                                 echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-					            <div class="col-sm-9"><input type="email" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="' . htmlspecialchars($hesklang['enter_valid_email']) . '" ' . $cls . ' ' . $required . '>
+					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="' . htmlspecialchars($hesklang['enter_valid_email']) . '" ' . $cls . ' ' . $required . '>
 					            <div class="help-block with-errors"></div>
                                 </div>';
 
@@ -1144,10 +1144,14 @@ function print_add_ticket()
                     ?>
                     <script>
                         function validateRichText() {
+                            $('#message-help-block').text("");
+                            $('#message-group').removeClass('has-error');
+
                             var content = tinyMCE.get("message").getContent();
                             if (content == '') {
-                                $('#message-help-block').text("This can't be empty");
+                                $('#message-help-block').text("<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>").focus();
                                 $('#message-group').addClass('has-error');
+                                $('#message-group').get(0).scrollIntoView();
                                 return false;
                             }
                             return true;
