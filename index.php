@@ -187,7 +187,7 @@ function print_add_ticket()
             <div class="footerWithBorder"></div>
             <div class="blankSpace"></div>
             <form class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1"
-                  enctype="multipart/form-data" data-toggle="validator">
+                  enctype="multipart/form-data" data-toggle="validator" onsubmit="return validateRichText();">
                 <!-- Contact info -->
                 <div class="form-group">
                     <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>: <font
@@ -348,7 +348,7 @@ function print_add_ticket()
                         $required = $v['req'] ? 'required' : '';
                         $v['req'] = $v['req'] ? '<span class="important">*</span>' : '';
 
-                        if ($v['type'] == 'checkbox') {
+                        if ($v['type'] == 'checkbox' || $v['type'] == 'multiselect') {
                             $k_value = array();
                             if (isset($_SESSION["c_$k"]) && is_array($_SESSION["c_$k"])) {
                                 foreach ($_SESSION["c_$k"] as $myCB) {
@@ -627,7 +627,7 @@ function print_add_ticket()
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="message-group">
 
                     <div class="col-sm-12">
                         <textarea placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="message"
@@ -698,7 +698,7 @@ function print_add_ticket()
 
                         $v['req'] = $v['req'] ? '<span class="important">*</span>' : '';
 
-                        if ($v['type'] == 'checkbox') {
+                        if ($v['type'] == 'checkbox' || $v['type'] == 'multiselect') {
                             $k_value = array();
                             if (isset($_SESSION["c_$k"]) && is_array($_SESSION["c_$k"])) {
                                 foreach ($_SESSION["c_$k"] as $myCB) {
@@ -1084,34 +1084,34 @@ function print_add_ticket()
                     endif;
 
                     if ($hesk_settings['submit_notice']) {
-                    ?>
+                        ?>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-info">
-                                <b><?php echo $hesklang['before_submit']; ?></b>
-                                <ul>
-                                    <li><?php echo $hesklang['all_info_in']; ?>.</li>
-                                    <li><?php echo $hesklang['all_error_free']; ?>.</li>
-                                </ul>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-info">
+                                    <b><?php echo $hesklang['before_submit']; ?></b>
+                                    <ul>
+                                        <li><?php echo $hesklang['all_info_in']; ?>.</li>
+                                        <li><?php echo $hesklang['all_error_free']; ?>.</li>
+                                    </ul>
 
 
-                                <b><?php echo $hesklang['we_have']; ?>:</b>
-                                <ul>
-                                    <li><?php echo hesk_htmlspecialchars($_SERVER['REMOTE_ADDR']) . ' ' . $hesklang['recorded_ip']; ?></li>
-                                    <li><?php echo $hesklang['recorded_time']; ?></li>
-                                </ul>
+                                    <b><?php echo $hesklang['we_have']; ?>:</b>
+                                    <ul>
+                                        <li><?php echo hesk_htmlspecialchars($_SERVER['REMOTE_ADDR']) . ' ' . $hesklang['recorded_ip']; ?></li>
+                                        <li><?php echo $hesklang['recorded_time']; ?></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-9 col-md-offset-3">
-                            <input type="hidden" id="latitude" name="latitude" value="E-0">
-                            <input type="hidden" id="longitude" name="longitude" value="E-0">
-                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
-                            <input type="submit" value="<?php echo $hesklang['sub_ticket']; ?>"
-                                   class="btn btn-default>
+                        <div class="row">
+                            <div class="col-md-9 col-md-offset-3">
+                                <input type="hidden" id="latitude" name="latitude" value="E-0">
+                                <input type="hidden" id="longitude" name="longitude" value="E-0">
+                                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                                <input type="submit" value="<?php echo $hesklang['sub_ticket']; ?>"
+                                       class="btn btn-default">
                             </div>
                         </div>
                         <script>
@@ -1119,10 +1119,10 @@ function print_add_ticket()
                             $('#screen-resolution-width').prop('value', screen.width);
                         </script>
 
-                        <?php
-                                   } // End IF submit_notice
-                                   else {
-                                   ?>
+                    <?php
+                    } // End IF submit_notice
+                    else {
+                    ?>
                         <div class=" row">
                             <div class="col-md-9 col-md-offset-3">
                                 <input type="hidden" id="latitude" name="latitude" value="E-0">
@@ -1131,7 +1131,7 @@ function print_add_ticket()
                                 <input type="hidden" id="screen-resolution-width" name="screen_resolution_width">
                                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
                                 <input class="btn btn-default" type="submit"
-                                       value="<?php echo $hesklang['sub_ticket']; ?>" onclick="validateRichText()">
+                                       value="<?php echo $hesklang['sub_ticket']; ?>">
                                 <script>
                                     $('#screen-resolution-height').prop('value', screen.height);
                                     $('#screen-resolution-width').prop('value', screen.width);
@@ -1140,24 +1140,25 @@ function print_add_ticket()
                         </div>
 
                         <?php
-                        } // End ELSE submit_notice
-                        ?>
-                        <script>
-                            function validateRichText() {
-                                var content = tinyMCE.get("message").getContent();
-                                if (content == '') {
-                                    $('#message-help-block').text("This can't be empty");
-                                    return false;
-                                }
-                                return true;
+                    } // End ELSE submit_notice
+                    ?>
+                    <script>
+                        function validateRichText() {
+                            var content = tinyMCE.get("message").getContent();
+                            if (content == '') {
+                                $('#message-help-block').text("This can't be empty");
+                                $('#message-group').addClass('has-error');
+                                return false;
                             }
-                        </script>
+                            return true;
+                        }
+                    </script>
 
-                        <!-- Do not delete or modify the code below, it is used to detect simple SPAM bots -->
-                        <input type="hidden" name="hx" value="3"/><input type="hidden" name="hy" value=""/>
-                        <!-- >
-                        <input type="text" name="phone" value="3" />
-                        < -->
+                    <!-- Do not delete or modify the code below, it is used to detect simple SPAM bots -->
+                    <input type="hidden" name="hx" value="3"/><input type="hidden" name="hy" value=""/>
+                    <!-- >
+                    <input type="text" name="phone" value="3" />
+                    < -->
 
             </form>
         </div>
