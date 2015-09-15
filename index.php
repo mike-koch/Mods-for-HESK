@@ -1141,22 +1141,31 @@ function print_add_ticket()
 
                         <?php
                     } // End ELSE submit_notice
-                    ?>
-                    <script>
-                        function validateRichText() {
-                            $('#message-help-block').text("");
-                            $('#message-group').removeClass('has-error');
 
-                            var content = tinyMCE.get("message").getContent();
-                            if (content == '') {
-                                $('#message-help-block').text("<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>").focus();
-                                $('#message-group').addClass('has-error');
-                                $('#message-group').get(0).scrollIntoView();
-                                return false;
+                    if ($modsForHesk_settings['rich_text_for_tickets_for_customers']):
+                        ?>
+                        <script>
+                            function validateRichText() {
+                                $('#message-help-block').text("");
+                                $('#message-group').removeClass('has-error');
+
+                                var content = tinyMCE.get("message").getContent();
+                                if (content == '') {
+                                    $('#message-help-block').text("<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>").focus();
+                                    $('#message-group').addClass('has-error');
+                                    $('#message-group').get(0).scrollIntoView();
+                                    return false;
+                                }
+                                return true;
                             }
-                            return true;
-                        }
-                    </script>
+                        </script>
+                    <?php else: ?>
+                        <script>
+                            function validateRichText() {
+                                return true;
+                            }
+                        </script>
+                    <?php endif; ?>
 
                     <!-- Do not delete or modify the code below, it is used to detect simple SPAM bots -->
                     <input type="hidden" name="hx" value="3"/><input type="hidden" name="hy" value=""/>
