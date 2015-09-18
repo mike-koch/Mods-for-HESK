@@ -39,6 +39,7 @@ $hesklang['readonly_custom_field_help'] = 'This input is the same as a text fiel
 $hesklang['navbar_title_url'] = 'Navbar Title URL';
 $hesklang['navbar_title_url_help'] = 'Enter the URL you wish to use when a customer (or staff) clicks on the help desk title on the top-left corner of the screen. The URL must begin with http:// or https://.';
 $hesklang['this_field_is_required'] = 'This field is required';
+$hesklang['select_at_least_one_value'] = 'Please select at least one value';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.4.0
 $hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';

@@ -187,7 +187,7 @@ function print_add_ticket()
             <div class="footerWithBorder"></div>
             <div class="blankSpace"></div>
             <form class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1"
-                  enctype="multipart/form-data" data-toggle="validator" onsubmit="return validateRichText();">
+                  enctype="multipart/form-data" onsubmit="return validateRichText();">
                 <!-- Contact info -->
                 <div class="form-group">
                     <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>: <font
@@ -425,6 +425,7 @@ function print_add_ticket()
 
                             /* Checkbox */
                             case 'checkbox':
+                                $validator = $required == 'required' ? 'data-checkbox="' . $k . '"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -442,9 +443,9 @@ function print_add_ticket()
                                         $checked = '';
                                     }
 
-                                    echo '<label style="font-weight: normal;"><input id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $cls . ' /> ' . $option . '</label><br />';
+                                    echo '<label style="font-weight: normal;"><input ' . $validator . ' id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $cls . ' /> ' . $option . '</label><br />';
                                 }
-                                echo '</div></div>';
+                                echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
 
                             /* Large text box */
@@ -469,6 +470,7 @@ function print_add_ticket()
                                 break;
 
                             case 'multiselect':
+                                $validator = $required == 'required' ? 'data-multiselect="' . $k . '"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -476,7 +478,7 @@ function print_add_ticket()
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                                 echo '<div class="form-group"><label for="' . $v['name'] . '[]" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-                                <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '[]" ' . $cls . ' multiple>';
+                                <div class="col-sm-9"><select ' . $validator . ' class="form-control" id="' . $formattedId . '" name="' . $k . '[]" ' . $cls . ' multiple>';
 
                                 $options = explode('#HESK#', $v['value']);
 
@@ -494,9 +496,10 @@ function print_add_ticket()
 
                                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
-                                    <button type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
+                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
+                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
                                 </div>
+                                <div class="help-block with-errors"></div>
                                 </div></div>';
                                 break;
 
@@ -775,6 +778,7 @@ function print_add_ticket()
 
                             /* Checkbox */
                             case 'checkbox':
+                                $validator = $required == 'required' ? 'data-checkbox="' . $k . '"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -792,9 +796,9 @@ function print_add_ticket()
                                         $checked = '';
                                     }
 
-                                    echo '<label style="font-weight: normal;"><input id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $cls . ' /> ' . $option . '</label><br />';
+                                    echo '<label style="font-weight: normal;"><input ' . $validator . ' id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $cls . ' /> ' . $option . '</label><br />';
                                 }
-                                echo '</div></div>';
+                                echo '<div class="help-block with-errors"></div><</div></div>';
                                 break;
 
                             /* Large text box */
@@ -818,6 +822,7 @@ function print_add_ticket()
                                 break;
 
                             case 'multiselect':
+                                $validator = $required == 'required' ? 'data-multiselect="' . $k . '"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -825,7 +830,7 @@ function print_add_ticket()
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                                 echo '<div class="form-group"><label for="' . $v['name'] . '[]" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
-                                <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '[]" ' . $cls . ' multiple>';
+                                <div class="col-sm-9"><select class="form-control" ' . $validator . ' id="' . $formattedId . '" name="' . $k . '[]" ' . $cls . ' multiple>';
 
                                 $options = explode('#HESK#', $v['value']);
 
@@ -843,8 +848,8 @@ function print_add_ticket()
 
                                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
-                                    <button type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
+                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
+                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
                                 </div></div></div>';
                                 break;
 
@@ -1172,8 +1177,31 @@ function print_add_ticket()
                     <!-- >
                     <input type="text" name="phone" value="3" />
                     < -->
-
             </form>
+            <script>
+                $('form[name="form1"]').validator({
+                    custom: {
+                        checkbox: function($el) {
+                            var checkboxes = $('input[name="' + $el.attr('data-checkbox') + '[]"]');
+
+                            for (var checkbox in checkboxes) {
+                                if (checkboxes[checkbox].checked) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        },
+                        multiselect: function($el) {
+                            var count = $('select[name="' + $el.attr('data-multiselect') + '[]"] :selected').length;
+                            return count > 0;
+                        }
+                    },
+                    errors: {
+                        checkbox: '<?php echo addslashes($hesklang['select_at_least_one_value']); ?>',
+                        multiselect: '<?php echo addslashes($hesklang['select_at_least_one_value']); ?>'
+                    }
+                });
+            </script>
         </div>
     </div>
     <?php if ($columnWidth == 'col-md-10 col-md-offset-1'): ?>
