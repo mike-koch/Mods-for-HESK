@@ -464,14 +464,16 @@ function print_form()
 
             <div class="footerWithBorder"></div>
             <div class="blankSpace"></div>
-            <form action="ticket.php" class="form-horizontal" role="form" method="get" name="form2">
+            <form data-toggle="validator" action="ticket.php" class="form-horizontal" role="form" method="get" name="form2">
                 <div class="form-group">
                     <label for="track" class="col-sm-3 control-label"><?php echo $hesklang['ticket_trackID']; ?></label>
 
                     <div class="col-sm-9">
                         <input type="text" class="form-control" name="track" id="track" maxlength="20" size="35"
                                value="<?php echo $trackingID; ?>"
-                               placeholder="<?php echo htmlspecialchars($hesklang['ticket_trackID']); ?>">
+                               placeholder="<?php echo htmlspecialchars($hesklang['ticket_trackID']); ?>"
+                               data-error="<?php echo htmlspecialchars($hesklang['eytid']); ?>" required>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <?php
@@ -485,7 +487,9 @@ function print_form()
                         <div class="col-sm-9">
                             <input type="text" class="form-control" id="e" name="e" size="35"
                                    value="<?php echo $my_email; ?>"
-                                   placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/>
+                                   placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
+                                   data-error="<?php echo htmlspecialchars($hesklang['enmdb']); ?>" required>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div align="left" class="form-group">
@@ -516,19 +520,21 @@ function print_form()
                 <p><?php echo $hesklang['tid_mail']; ?></p>
 
                 <div class="blankSpace"></div>
-                <form action="index.php" method="post" class="form-horizontal" name="form1">
+                <form data-toggle="validator" action="index.php" method="post" class="form-horizontal" name="form1">
                     <div class="form-group">
                         <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
 
                         <div class="col-sm-9">
                             <input type="text" id="email" class="form-control" name="email" size="35"
                                    value="<?php echo $my_email; ?>"
-                                   placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/><input
-                                type="hidden" name="a" value="forgot_tid"/>
+                                   placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
+                                   data-error="<?php echo htmlspecialchars($hesklang['enter_valid_email']); ?>" required>
+                            <div class="help-block with-errors"></div>
+                            <input type="hidden" name="a" value="forgot_tid"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-12">
+                        <div class="col-sm-9 col-sm-offset-3">
                             <div class="radio">
                                 <label>
                                     <input type="radio" name="open_only"
