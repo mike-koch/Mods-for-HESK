@@ -31,6 +31,7 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', './');
 define('WYSIWYG', 1);
+define('VALIDATOR', 1);
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -186,8 +187,14 @@ function print_add_ticket()
             <div align="left" class="h3"><?php echo $hesklang['add_ticket_general_information']; ?></div>
             <div class="footerWithBorder"></div>
             <div class="blankSpace"></div>
+            <?php
+            $onsubmit = '';
+            if ($modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+                $onsubmit = 'onsubmit="return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
+            }
+            ?>
             <form class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1"
-                  enctype="multipart/form-data" onsubmit="return validateRichText();">
+                  enctype="multipart/form-data" <?php echo $onsubmit; ?>>
                 <!-- Contact info -->
                 <div class="form-group">
                     <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>: <font
@@ -1146,31 +1153,7 @@ function print_add_ticket()
 
                         <?php
                     } // End ELSE submit_notice
-
-                    if ($modsForHesk_settings['rich_text_for_tickets_for_customers']):
-                        ?>
-                        <script>
-                            function validateRichText() {
-                                $('#message-help-block').text("");
-                                $('#message-group').removeClass('has-error');
-
-                                var content = tinyMCE.get("message").getContent();
-                                if (content == '') {
-                                    $('#message-help-block').text("<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>").focus();
-                                    $('#message-group').addClass('has-error');
-                                    $('#message-group').get(0).scrollIntoView();
-                                    return false;
-                                }
-                                return true;
-                            }
-                        </script>
-                    <?php else: ?>
-                        <script>
-                            function validateRichText() {
-                                return true;
-                            }
-                        </script>
-                    <?php endif; ?>
+                    ?>
 
                     <!-- Do not delete or modify the code below, it is used to detect simple SPAM bots -->
                     <input type="hidden" name="hx" value="3"/><input type="hidden" name="hy" value=""/>

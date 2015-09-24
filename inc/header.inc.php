@@ -205,6 +205,12 @@ $modsForHesk_settings = mfh_getSettings();
     if (defined('RECAPTCHA')) {
         echo '<script src="https://www.google.com/recaptcha/api.js?hl=' . $hesklang['RECAPTCHA'] . '" async defer></script>';
     }
+
+    if (defined('VALIDATOR')) {
+        ?>
+        <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/validation-scripts.js"></script>
+    <?php
+    }
     ?>
 
 </head>

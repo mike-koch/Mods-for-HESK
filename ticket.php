@@ -32,6 +32,7 @@ define('IN_SCRIPT', 1);
 define('HESK_PATH', './');
 define('HESK_NO_ROBOTS', 1);
 define('WYSIWYG', 1);
+define('VALIDATOR', 1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -581,16 +582,24 @@ function hesk_printCustomerReplyForm($reopen = 0)
     <div class="footerWithBorder"></div>
     <div class="blankSpace"></div>
 
-    <form role="form" class="form-horizontal" method="post" action="reply_ticket.php" enctype="multipart/form-data">
-        <div class="form-group">
+    <?php
+    $onsubmit = '';
+    if ($modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+        $onsubmit = 'onclick="return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
+    }
+    ?>
+    <form data-toggle="validator" role="form" class="form-horizontal" method="post" action="reply_ticket.php"
+          enctype="multipart/form-data" <?php echo $onsubmit; ?>>
+        <div class="form-group" id="message-group">
             <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>: <span
                     class="important">*</span></label>
 
             <div class="col-sm-9">
                 <textarea name="message" class="form-control htmlEditor" rows="12"
-                          cols="60"><?php if (isset($_SESSION['ticket_message'])) {
+                          cols="60" data-error="<?php echo htmlspecialchars($hesklang['enter_message']); ?>" required><?php if (isset($_SESSION['ticket_message'])) {
                         echo stripslashes(hesk_input($_SESSION['ticket_message']));
                     } ?></textarea>
+                <div class="help-block with-errors" id="message-help-block"></div>
                 <?php if ($modsForHesk_settings['rich_text_for_tickets_for_customers']): ?>
                     <script type="text/javascript">
                         /* <![CDATA[ */
@@ -646,7 +655,7 @@ function hesk_printCustomerReplyForm($reopen = 0)
         ?>
         <div class="form-group">
             <div class="col-sm-9 col-sm-offset-3">
-                <input type="submit" value="<?php echo $hesklang['submit_reply']; ?>" class="btn btn-default"/>
+                <input type="submit" value="<?php echo $hesklang['submit_reply']; ?>" class="btn btn-default">
             </div>
         </div>
     </form>
