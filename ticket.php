@@ -489,7 +489,7 @@ function print_form()
                             <input type="text" class="form-control" id="e" name="e" size="35"
                                    value="<?php echo $my_email; ?>"
                                    placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
-                                   data-error="<?php echo htmlspecialchars($hesklang['enmdb']); ?>" required>
+                                   data-error="<?php echo htmlspecialchars($hesklang['enter_valid_email']); ?>" required>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>

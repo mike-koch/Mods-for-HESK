@@ -208,7 +208,6 @@ function print_add_ticket()
                             echo ' class="isError" ';
                         } ?> placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>"
                                data-error="<?php echo htmlspecialchars($hesklang['enter_your_name']); ?>" required>
-
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -1253,11 +1252,14 @@ function print_start()
             <div class="panel panel-default">
                 <div class="panel-heading"><?php echo $hesklang['view_ticket']; ?></div>
                 <div class="panel-body">
-                    <form role="form" class="viewTicketSidebar" action="ticket.php" method="get" name="form2">
+                    <form data-toggle="validator" role="form" class="viewTicketSidebar" action="ticket.php" method="get" name="form2">
                         <div class="form-group">
                             <br/>
                             <label for="ticketID"><?php echo $hesklang['ticket_trackID']; ?>:</label>
-                            <input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value="" placeholder="<?php echo htmlspecialchars($hesklang['ticket_trackID']); ?>">
+                            <input type="text" class="form-control" name="track" id="ticketID" maxlength="20" size="35" value=""
+                             data-error="<?php echo htmlspecialchars($hesklang['enter_id']); ?>"
+                            placeholder="<?php echo htmlspecialchars($hesklang['ticket_trackID']); ?>" required>
+                            <div class="help-block with-errors"></div>
                         </div>
                         <?php
                         $tmp = '';
@@ -1276,7 +1278,10 @@ function print_start()
                                 $do_remember = 'checked';
                             }
                             ?>
-                            <input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/>
+                            <input type="text" class="form-control" name="e" id="emailAddress" size="35" value="<?php echo $my_email; ?>"
+                            data-error="<?php echo htmlspecialchars($hesklang['enter_valid_email']); ?>"
+                            placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>" required>
+                            <div class="help-block with-errors"></div>
                         </div>
                         <div class="checkbox">
                             <label for="r">

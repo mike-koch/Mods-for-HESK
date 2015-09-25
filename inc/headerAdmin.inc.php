@@ -173,6 +173,12 @@ $modsForHesk_settings = mfh_getSettings();
         <?php
     }
 
+    if (defined('VALIDATOR')) {
+        ?>
+        <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/validation-scripts.js"></script>
+        <?php
+    }
+
     /* If page requires timer load Javascript */
     if (defined('TIMER')) {
         ?>
