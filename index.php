@@ -1161,28 +1161,8 @@ function print_add_ticket()
                     < -->
             </form>
             <script>
-                $('form[name="form1"]').validator({
-                    custom: {
-                        checkbox: function($el) {
-                            var checkboxes = $('input[name="' + $el.attr('data-checkbox') + '[]"]');
-
-                            for (var checkbox in checkboxes) {
-                                if (checkboxes[checkbox].checked) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        },
-                        multiselect: function($el) {
-                            var count = $('select[name="' + $el.attr('data-multiselect') + '[]"] :selected').length;
-                            return count > 0;
-                        }
-                    },
-                    errors: {
-                        checkbox: '<?php echo addslashes($hesklang['select_at_least_one_value']); ?>',
-                        multiselect: '<?php echo addslashes($hesklang['select_at_least_one_value']); ?>'
-                    }
-                });
+                buildValidatorForTicketSubmission("form1",
+                    "<?php echo addslashes($hesklang['select_at_least_one_value']); ?>");
             </script>
         </div>
     </div>

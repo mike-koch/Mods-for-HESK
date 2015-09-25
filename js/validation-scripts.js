@@ -11,3 +11,28 @@ function validateRichText(helpBlock, messageGroup, messageContainer, errorText) 
     }
     return true;
 }
+
+function buildValidatorForTicketSubmission(formName, validationText) {
+    $('form[name="' + formName + '"]').validator({
+        custom: {
+            checkbox: function($el) {
+                var checkboxes = $('input[name="' + $el.attr('data-checkbox') + '[]"]');
+
+                for (var checkbox in checkboxes) {
+                    if (checkboxes[checkbox].checked) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            multiselect: function($el) {
+                var count = $('select[name="' + $el.attr('data-multiselect') + '[]"] :selected').length;
+                return count > 0;
+            }
+        },
+        errors: {
+            checkbox: validationText,
+            multiselect: validationText
+        }
+    });
+}
