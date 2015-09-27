@@ -31,6 +31,7 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('WYSIWYG', 1);
+define('VALIDATOR', 1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -668,28 +669,51 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <div id="modifytime" style="display:none">
                                 <br />
 
-                                <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
-                                <table class="white">
-                                <tr>
-                                    <td class="admin_gray"><?php echo $hesklang['hh']; ?>:</td>
-                                    <td class="admin_gray"><input type="text" name="h" value="<?php echo $t[0]; ?>" size="3" /></td>
-                                </tr>
-                                <tr>
-                                    <td class="admin_gray"><?php echo $hesklang['mm']; ?>:</td>
-                                    <td class="admin_gray"><input type="text" name="m" value="<?php echo $t[1]; ?>" size="3" /></td>
-                                </tr>
-                                <tr>
-                                    <td class="admin_gray"><?php echo $hesklang['ss']; ?>:</td>
-                                    <td class="admin_gray"><input type="text" name="s" value="<?php echo $t[2]; ?>" size="3" /></td>
-                                </tr>
-                                </table>
-
-                                <br />
-
-                                <input class="btn btn-default" type="submit" value="<?php echo $hesklang['save']; ?>" />
-                                <a class="btn btn-default" href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('modifytime')"><?php echo $hesklang['cancel']; ?></a>
-                                <input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
-                                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                                <form data-toggle="validator" class="form-horizontal" method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
+                                    <div class="form-group">
+                                        <label for="h" class="col-sm-4 control-label"><?php echo $hesklang['hh']; ?></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="h" value="<?php echo $t[0]; ?>" size="3"
+                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                            placeholder="<?php echo htmlspecialchars($hesklang['hh']); ?>"
+                                            class="form-control input-sm" required>
+                                        </div>
+                                        <div class="col-sm-12 text-right">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group input-group-sm">
+                                        <label for="m" class="col-sm-4 control-label"><?php echo $hesklang['mm']; ?></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="m" value="<?php echo $t[1]; ?>" size="3"
+                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                            placeholder="<?php echo htmlspecialchars($hesklang['mm']); ?>"
+                                            class="form-control input-sm" required>
+                                        </div>
+                                        <div class="col-sm-12 text-right">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group input-group-sm">
+                                        <label for="s" class="col-sm-4 control-label"><?php echo $hesklang['ss']; ?></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="s" value="<?php echo $t[2]; ?>" size="3"
+                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                            placeholder="<?php echo htmlspecialchars($hesklang['ss']); ?>"
+                                            class="form-control input-sm" required>
+                                        </div>
+                                        <div class="col-sm-12 text-right">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="btn-group btn-group-sm text-right">
+                                            <input class="btn btn-primary" type="submit" value="<?php echo $hesklang['save']; ?>" />
+                                            <a class="btn btn-default" href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('modifytime')"><?php echo $hesklang['cancel']; ?></a>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
+                                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                                 </form>
                             </div>
 
@@ -1213,10 +1237,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 ?>
 
                 <div id="notesform" style="display:<?php echo isset($_SESSION['note_message']) ? 'block' : 'none'; ?>">
-                    <form method="post" action="admin_ticket.php" style="margin:0px; padding:0px;"
+                    <form data-toggle="validator" method="post" action="admin_ticket.php" style="margin:0px; padding:0px;"
                           enctype="multipart/form-data">
-                        <textarea class="form-control" name="notemsg" rows="6"
-                                  cols="60"><?php echo isset($_SESSION['note_message']) ? stripslashes(hesk_input($_SESSION['note_message'])) : ''; ?></textarea><br/>
+                        <div class="form-group">
+                        <textarea data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']) ?>" class="form-control" name="notemsg" rows="6"
+                                  cols="60" required><?php echo isset($_SESSION['note_message']) ? stripslashes(hesk_input($_SESSION['note_message'])) : ''; ?></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
                         <?php
                         // attachments
                         if ($hesk_settings['attachments']['use']) {
@@ -1565,13 +1592,18 @@ function print_form()
         <div class="col-sm-10 col-sm-offset-1">
             <h3 align="left"><?php echo $hesklang['view_existing']; ?></a></h3>
 
-            <form action="admin_ticket.php" method="get" class="form-horizontal">
+            <form data-toggle="validator" action="admin_ticket.php" method="get" class="form-horizontal">
                 <div class="form-group">
                     <label for="track" class="control-label col-sm-3"><?php echo $hesklang['ticket_trackID']; ?></label>
-
                     <div class="col-sm-9">
                         <input type="text" name="track" maxlength="20" size="35" value="<?php echo $trackingID; ?>"
-                               placeholder="<?php echo $hesklang['ticket_trackID']; ?>" class="form-control"><br>
+                               data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                               placeholder="<?php echo $hesklang['ticket_trackID']; ?>" class="form-control" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-3">
                         <input type="submit" value="<?php echo $hesklang['view_ticket']; ?>" class="btn btn-default">
                         <input type="hidden" name="Refresh" value="<?php echo rand(10000, 99999); ?>">
                     </div>
@@ -1678,8 +1710,14 @@ function hesk_printReplyForm()
     <div class="footerWithBorder"></div>
     <div class="blankSpace"></div>
 
-    <form role="form" class="form-horizontal" method="post" action="admin_reply_ticket.php"
-          enctype="multipart/form-data" name="form1" onsubmit="javascript:force_stop();return true;">
+    <?php
+    $onsubmit = 'onsubmit="force_stop();"';
+    if ($modsForHesk_settings['rich_text_for_tickets']) {
+        $onsubmit = 'onsubmit="force_stop();return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
+    }
+    ?>
+    <form role="form" data-toggle="validator" class="form-horizontal" method="post" action="admin_reply_ticket.php"
+          enctype="multipart/form-data" name="form1" <?php echo $onsubmit; ?>>
         <?php
 
         /* Ticket assigned to someone else? */
@@ -1697,17 +1735,19 @@ function hesk_printReplyForm()
             ?>
 
             <div class="form-group">
-                <label for="time_worked" class="col-sm-3 control-label"><?php echo $hesklang['ts']; ?>:</label>
+                <label for="time_worked" class="col-sm-3 control-label"><?php echo $hesklang['ts']; ?></label>
 
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="time_worked" id="time_worked" size="10"
                            value="<?php echo(isset($_SESSION['time_worked']) ? hesk_getTime($_SESSION['time_worked']) : '00:00:00'); ?>"/>
                 </div>
                 <div class="col-sm-3 text-right">
-                    <input type="button" class="btn btn-success" onclick="ss()" id="startb"
-                           value="<?php echo $hesklang['start']; ?>"/>
-                    <input type="button" class="btn btn-danger" onclick="r()"
-                           value="<?php echo $hesklang['reset']; ?>"/>
+                    <div class="btn-group">
+                        <input type="button" class="btn btn-success" onclick="ss()" id="startb"
+                               value="<?php echo $hesklang['start']; ?>"/>
+                        <input type="button" class="btn btn-danger" onclick="r()"
+                               value="<?php echo $hesklang['reset']; ?>"/>
+                    </div>
                 </div>
             </div>
             <?php
@@ -1716,9 +1756,7 @@ function hesk_printReplyForm()
         if (strlen($can_options)) {
             ?>
             <div class="form-group">
-                <label for="saved_replies" class="col-sm-3 control-label"><?php echo $hesklang['saved_replies']; ?>
-                    :</label>
-
+                <label for="saved_replies" class="col-sm-3 control-label"><?php echo $hesklang['saved_replies']; ?></label>
                 <div class="col-sm-9">
                     <label><input type="radio" name="mode" id="modeadd" value="1"
                                   checked="checked"/> <?php echo $hesklang['madd']; ?></label><br/>
@@ -1733,14 +1771,16 @@ function hesk_printReplyForm()
             <?php
         }
         ?>
-        <div class="form-group">
-            <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>: <font
-                    class="important">*</font></label>
+        <div class="form-group" id="message-group">
+            <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?><span
+                    class="important">*</span></label>
 
             <div class="col-sm-9">
                     <span id="HeskMsg">
                         <textarea class="form-control htmlEditor" name="message" id="message" rows="12"
-                                  placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" cols="72"><?php
+                                  placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" cols="72"
+                                  data-error="<?php echo htmlspecialchars($hesklang['enter_message']); ?>"
+                                  required><?php
 
                             // Do we have any message stored in session?
                             if (isset($_SESSION['ticket_message'])) {
@@ -1753,7 +1793,8 @@ function hesk_printReplyForm()
                                 }
                             }
 
-                            ?></textarea></span>
+                            ?></textarea>
+                        <div class="help-block with-errors" id="message-help-block"></div></span>
             </div>
         </div>
         <?php
