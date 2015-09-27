@@ -64,66 +64,85 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
         <div class="tab-content summaryList tabPadding">
             <div role="tabpanel" class="tab-pane fade in active" id="profile-info">
                 <div class="form-group">
-                    <label for="name" class="col-md-3 control-label"><?php echo $hesklang['real_name']; ?>: <font
-                            class="important">*</font></label>
+                    <label for="name" class="col-md-3 control-label"><?php echo $hesklang['real_name']; ?>
+                        <span class="important">*</span></label>
 
                     <div class="col-md-9">
                         <input type="text" class="form-control" name="name" size="40" maxlength="50"
                                value="<?php echo $_SESSION[$session_array]['name']; ?>"
-                               placeholder="<?php echo htmlspecialchars($hesklang['real_name']); ?>"/>
+                               placeholder="<?php echo htmlspecialchars($hesklang['real_name']); ?>"
+                               data-error="<?php echo htmlspecialchars($hesklang['enter_real_name']); ?>"
+                               required>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="email" class="col-md-3 control-label"><?php echo $hesklang['email']; ?>: <font
-                            class="important">*</font></label>
+                    <label for="email" class="col-md-3 control-label"><?php echo $hesklang['email']; ?>
+                        <span class="important">*</span></label>
 
                     <div class="col-md-9">
-                        <input type="text" class="form-control" name="email" size="40" maxlength="255"
+                        <input type="email" class="form-control" name="email" size="40" maxlength="255"
                                placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
-                               value="<?php echo $_SESSION[$session_array]['email']; ?>"/>
+                               value="<?php echo $_SESSION[$session_array]['email']; ?>"
+                               data-error="<?php echo htmlspecialchars($hesklang['enter_valid_email']); ?>"
+                               required>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <?php
                 if (!$is_profile_page || $_SESSION['isadmin']) {
                     ?>
                     <div class="form-group">
-                        <label for="user" class="col-md-3 control-label"><?php echo $hesklang['username']; ?>: <font
-                                class="important">*</font></label>
+                        <label for="user" class="col-md-3 control-label"><?php echo $hesklang['username']; ?>
+                            <span class="important">*</span></label>
 
                         <div class="col-md-9">
                             <input type="text" class="form-control" name="user" size="40" maxlength="20"
                                    value="<?php echo $_SESSION[$session_array]['user']; ?>"
-                                   placeholder="<?php echo htmlspecialchars($hesklang['username']); ?>"/>
+                                   placeholder="<?php echo htmlspecialchars($hesklang['username']); ?>"
+                                   data-error="<?php echo htmlspecialchars($hesklang['enter_username']); ?>"
+                                   required>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <?php
                 }
-                $passwordRequiredSpan = $action == 'create_user' ? '' : 'display:none';
+                $passwordValidator = 'data-error="'.htmlspecialchars($hesklang['password_not_valid']).'" data-minlength="5" required';
+                $confirmPasswordValidator = 'data-error="'.htmlspecialchars($hesklang['passwords_not_same']).'" data-match="#newpass" required';
+                $passwordRequiredSpan = '';
+                if ($action != 'create_user') {
+                    $passwordValidator = '';
+                    $confirmPasswordValidator = '';
+                    $passwordRequiredSpan = 'display:none';
+                }
                 ?>
                 <div class="form-group">
                     <label for="pass"
                            class="col-md-3 control-label"><?php echo $is_profile_page ? $hesklang['new_pass'] : $hesklang['pass']; ?>
-                        : <span class="important" style="<?php echo $passwordRequiredSpan; ?>">*</span></label>
+                        <span class="important" style="<?php echo $passwordRequiredSpan; ?>">*</span></label>
 
                     <div class="col-md-9">
-                        <input type="password" class="form-control" name="newpass" autocomplete="off" size="40"
+                        <input type="password" class="form-control" id="newpass" name="newpass" autocomplete="off" size="40"
                                placeholder="<?php echo htmlspecialchars($hesklang['pass']); ?>"
                                value="<?php echo isset($_SESSION[$session_array]['cleanpass']) ? $_SESSION[$session_array]['cleanpass'] : ''; ?>"
-                               onkeyup="javascript:hesk_checkPassword(this.value)"/>
+                               onkeyup="javascript:hesk_checkPassword(this.value)" <?php echo $passwordValidator; ?>>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="confirmPass" class="col-md-3 control-label"><?php echo $hesklang['confirm_pass']; ?>:
+                    <label for="confirmPass" class="col-md-3 control-label"><?php echo $hesklang['confirm_pass']; ?>
                         <span class="important" style="<?php echo $passwordRequiredSpan; ?>">*</span></label>
 
                     <div class="col-md-9">
                         <input type="password" name="newpass2" class="form-control" autocomplete="off"
                                placeholder="<?php echo htmlspecialchars($hesklang['confirm_pass']); ?>" size="40"
-                               value="<?php echo isset($_SESSION[$session_array]['cleanpass']) ? $_SESSION[$session_array]['cleanpass'] : ''; ?>"/>
+                               value="<?php echo isset($_SESSION[$session_array]['cleanpass']) ? $_SESSION[$session_array]['cleanpass'] : ''; ?>"
+                               <?php echo $confirmPasswordValidator; ?>>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="pwStrength" class="col-md-3 control-label"><?php echo $hesklang['pwdst']; ?>:</label>
+                    <label for="pwStrength" class="col-md-3 control-label"><?php echo $hesklang['pwdst']; ?></label>
 
                     <div class="col-md-9">
                         <div class="progress">
@@ -185,8 +204,8 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                     <div id="options">
                         <div class="form-group">
                             <label for="categories[]"
-                                   class="col-md-3 control-label"><?php echo $hesklang['allowed_cat']; ?>: <font
-                                    class="important">*</font></label>
+                                   class="col-md-3 control-label"><?php echo $hesklang['allowed_cat']; ?> <span
+                                    class="important">*</span></label>
 
                             <div class="col-md-9">
                                 <?php
@@ -203,8 +222,8 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                         </div>
                         <div class="form-group">
                             <label for="features[]"
-                                   class="col-md-3 control-label"><?php echo $hesklang['allow_feat']; ?>: <font
-                                    class="important">*</font></label>
+                                   class="col-md-3 control-label"><?php echo $hesklang['allow_feat']; ?> <span
+                                    class="important">*</span></label>
 
                             <div class="col-md-9">
                                 <?php
@@ -226,9 +245,7 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
             ?>
             <div role="tabpanel" class="tab-pane fade" id="signature">
                 <div class="form-group">
-                    <label for="signature" class="col-md-3 control-label"><?php echo $hesklang['signature_max']; ?>
-                        :</label>
-
+                    <label for="signature" class="col-md-3 control-label"><?php echo $hesklang['signature_max']; ?></label>
                     <div class="col-md-9">
                         <textarea class="form-control" name="signature" rows="6"
                                   placeholder="<?php echo htmlspecialchars($hesklang['sig']); ?>"
@@ -242,8 +259,7 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                 if (!$is_profile_page || $can_reply_tickets) {
                     ?>
                     <div class="form-group">
-                        <label for="afterreply" class="col-sm-3 control-label"><?php echo $hesklang['aftrep']; ?>
-                            :</label>
+                        <label for="afterreply" class="col-sm-3 control-label"><?php echo $hesklang['aftrep']; ?></label>
 
                         <div class="col-sm-9">
                             <div class="radio">
@@ -316,7 +332,7 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
             </div>
             <div role="tabpanel" class="tab-pane fade" id="notifications">
                 <?php $disabledText =
-                    (!$_SESSION[$session_array]['isadmin'] && strpos($_SESSION[$session_array]['heskprivileges'], 'can_change_notification_settings') === false)
+                    (!$_SESSION[$session_array]['isadmin'] && isset($_SESSION[$session_array]['heskprivileges']) && strpos($_SESSION[$session_array]['heskprivileges'], 'can_change_notification_settings') === false)
                         ? 'disabled' : '';
                 if (!$is_profile_page) {
                     $disabledText = '';
@@ -453,8 +469,10 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                     { ?>
                         <input type="hidden" name="a" value="new" />
                         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                        <input type="submit" value="<?php echo $hesklang['create_user']; ?>" class="btn btn-default">
-                        <a href="manage_users.php?a=reset_form" class="btn btn-danger"><?php echo $hesklang['refi']; ?></a></p>
+                        <div class="btn-group">
+                            <input type="submit" value="<?php echo $hesklang['create_user']; ?>" class="btn btn-default">
+                            <a href="manage_users.php?a=reset_form" class="btn btn-danger"><?php echo $hesklang['refi']; ?></a>
+                        </div>
                     <?php
                     } elseif ($action == 'edit_user')
                     { ?>
@@ -462,8 +480,10 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                         <input type="hidden" name="userid" value="<?php echo intval( hesk_GET('id') ); ?>" />
                         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                         <input type="hidden" name="active" value="<?php echo $_SESSION[$session_array]['active']; ?>">
-                        <input class="btn btn-default" type="submit" value="<?php echo $hesklang['save_changes']; ?>" />
-                        <a class="btn btn-danger" href="manage_users.php"><?php echo $hesklang['dich']; ?></a>
+                        <div class="btn-group">
+                            <input class="btn btn-default" type="submit" value="<?php echo $hesklang['save_changes']; ?>">
+                            <a class="btn btn-danger" href="manage_users.php"><?php echo $hesklang['dich']; ?></a>
+                        </div>
                     <?php
                     }
                     ?>

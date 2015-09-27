@@ -162,7 +162,7 @@ $hesklang['cannot_change_admin_staff'] = 'You cannot change admin/non-admin stat
 $hesklang['permission_tpl_man'] = 'Manage permission templates'; // Menu link
 $hesklang['permission_templates'] = 'Permission Templates';
 $hesklang['can_man_permission_tpl'] = 'Can manage permission templates';
-$hesklang['permission_template_colon'] = 'Permission Template:';
+$hesklang['permission_template_colon'] = 'Permission Template';
 $hesklang['permission_template'] = 'Permission Template';
 $hesklang['custom'] = 'Custom';
 

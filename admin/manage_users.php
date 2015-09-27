@@ -30,6 +30,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
+define('VALIDATOR', 1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -326,7 +327,7 @@ EOC;
 
             <div class="footerWithBorder blankSpace"></div>
 
-            <form name="form1" method="post" action="manage_users.php" class="form-horizontal" role="form">
+            <form data-toggle="validator" name="form1" method="post" action="manage_users.php" class="form-horizontal" role="form">
                 <?php hesk_profile_tab('userdata', false, 'create_user'); ?>
             </form>
         </div>
