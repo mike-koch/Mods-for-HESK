@@ -30,6 +30,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
+define('VALIDATOR', 1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -192,7 +193,7 @@ function createEditModal($template, $features, $categories)
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="manage_permission_templates.php" role="form" method="post">
+                <form action="manage_permission_templates.php" role="form" method="post" id="form">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
@@ -211,8 +212,11 @@ function createEditModal($template, $features, $categories)
                             </div>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="name"
-                                       value="<?php echo $template['name']; ?>"
-                                       placeholder="<?php echo $hesklang['template_name']; ?>">
+                                       value="<?php echo htmlspecialchars($template['name']); ?>"
+                                       placeholder="<?php echo htmlspecialchars($hesklang['template_name']); ?>"
+                                       data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                       required>
+                                <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -273,6 +277,9 @@ function createEditModal($template, $features, $categories)
                         </div>
                     </div>
                 </form>
+                <script>
+                    $('#form').validator();
+                </script>
             </div>
         </div>
     </div>
