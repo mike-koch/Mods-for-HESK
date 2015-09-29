@@ -96,35 +96,38 @@ while ($row = hesk_dbFetchAssoc($res)) {
 }
 ?>
 <div class="row move-down-20">
-    <div class="col-md-10 col-md-offset-1">
-        <h3><?php echo $hesklang['manage_permission_templates']; ?>
-            <i class="fa fa-question-circle settingsquestionmark" data-toggle="tooltip" data-placement="right"
-               title="<?php echo $hesklang['manage_permission_templates_help']; ?>"></i>
-        </h3>
-
-        <div class="footerWithBorder blankSpace"></div>
+    <div class="col-md-12">
         <?php
         hesk_handle_messages();
         ?>
-        <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success">
-            <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new_template']; ?>
-        </a>
-        <table class="table table-striped">
-            <thead>
-            <th><?php echo $hesklang['name']; ?></th>
-            <th><?php echo $hesklang['number_of_users']; ?></th>
-            <th><?php echo $hesklang['actions']; ?></th>
-            </thead>
-            <tbody>
-            <?php foreach ($templates as $row): ?>
-                <tr>
-                    <td><?php echo $row['name']; ?></td>
-                    <td><?php echo getNumberOfUsersWithPermissionGroup($row['id']); ?></td>
-                    <td>
-                        <a href="#" data-toggle="modal" data-target="#modal-template-<?php echo $row['id'] ?>">
-                            <i class="fa fa-pencil icon-link" data-toggle="tooltip"
-                               title="<?php echo $hesklang['view_permissions_for_this_template'] ?>"></i></a>
-                        <?php if ($row['id'] == 1) { ?>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4><?php echo $hesklang['manage_permission_templates']; ?>
+                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="tooltip" data-placement="right"
+                       title="<?php echo $hesklang['manage_permission_templates_help']; ?>"></i>
+                    <span class="nu-floatRight panel-button">
+                        <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success nu-floatRight">
+                            <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new_template']; ?>
+                        </a>
+                    </span>
+                </h4>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                <th><?php echo $hesklang['name']; ?></th>
+                <th><?php echo $hesklang['number_of_users']; ?></th>
+                <th><?php echo $hesklang['actions']; ?></th>
+                </thead>
+                <tbody>
+                <?php foreach ($templates as $row): ?>
+                    <tr>
+                        <td><?php echo $row['name']; ?></td>
+                        <td><?php echo getNumberOfUsersWithPermissionGroup($row['id']); ?></td>
+                        <td>
+                            <a href="#" data-toggle="modal" data-target="#modal-template-<?php echo $row['id'] ?>">
+                                <i class="fa fa-pencil icon-link" data-toggle="tooltip"
+                                   title="<?php echo $hesklang['view_permissions_for_this_template'] ?>"></i></a>
+                            <?php if ($row['id'] == 1) { ?>
                         <i class="fa fa-star icon-link orange" data-toggle="tooltip"
                            title="<?php echo $hesklang['admin_cannot_be_staff']; ?>"></i></a>
                     <?php } elseif ($row['heskprivileges'] == 'ALL' && $row['categories'] == 'ALL'){ ?>
@@ -142,17 +145,18 @@ while ($row = hesk_dbFetchAssoc($res)) {
                          title="<?php echo $hesklang['staff_cannot_be_admin']; ?>"></i>
                     <?php
                         }
-                        if ($row['id'] != 1 && $row['id'] != 2):
-                            ?>
-                            <a href="manage_permission_templates.php?a=delete&amp;id=<?php echo $row['id']; ?>">
-                                <i class="fa fa-times icon-link red" data-toggle="tooltip"
-                                   title="<?php echo $hesklang['delete']; ?>"></i></a>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+                            if ($row['id'] != 1 && $row['id'] != 2):
+                                ?>
+                                <a href="manage_permission_templates.php?a=delete&amp;id=<?php echo $row['id']; ?>">
+                                    <i class="fa fa-times icon-link red" data-toggle="tooltip"
+                                       title="<?php echo $hesklang['delete']; ?>"></i></a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <?php
