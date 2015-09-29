@@ -30,6 +30,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
+define('VALIDATOR', 1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -118,7 +119,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
         <div class="tab-content summaryList tabPadding">
             <div class="tab-pane fade in active" id="addCat">
                 <!-- CONTENT -->
-                <form action="manage_categories.php" method="post" role="form" class="form-horizontal">
+                <form action="manage_categories.php" method="post" role="form" class="form-horizontal" data-toggle="validator">
                     <h4><?php echo $hesklang['add_cat']; ?></h4>
 
                     <div class="footerWithBorder blankSpace"></div>
@@ -135,7 +136,9 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                     echo ' value="' . hesk_input($_SESSION['catname']) . '" ';
                                 }
                                 ?>
-                                />
+                                data-error="<?php echo htmlspecialchars($hesklang['enter_cat_name']); ?>"
+                                required>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -193,7 +196,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 </form>
             </div>
             <div class="tab-pane fade" id="renameCat">
-                <form action="manage_categories.php" method="post" role="form" class="form-horizontal">
+                <form action="manage_categories.php" method="post" role="form" class="form-horizontal" data-toggle="validator">
                     <h4><?php echo $hesklang['ren_cat']; ?></h4>
 
                     <div class="footerWithBorder blankSpace"></div>
@@ -212,7 +215,10 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                    placeholder="<?php echo htmlspecialchars($hesklang['cat_name']); ?>" type="text"
                                    name="name" size="40" maxlength="40" <?php if (isset($_SESSION['catname2'])) {
                                 echo ' value="' . hesk_input($_SESSION['catname2']) . '" ';
-                            } ?> />
+                            } ?>
+                                data-error="<?php echo htmlspecialchars($hesklang['enter_cat_name']); ?>"
+                                required>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="form-group text-center">
