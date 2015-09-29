@@ -193,7 +193,7 @@ function createEditModal($template, $features, $categories)
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="manage_permission_templates.php" role="form" method="post" id="form-<?php echo $template['id']; ?>">
+                <form action="manage_permission_templates.php" role="form" method="post" id="form<?php echo $template['id']; ?>">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
@@ -235,8 +235,7 @@ function createEditModal($template, $features, $categories)
                                                 if (in_array($category['id'], $enabledCategories) && !$showNotice) {
                                                     $checked = 'checked';
                                                 } ?>
-                                                <input type="checkbox" name="categories[]" data-modal="<?php echo $template['id']; ?>-categories"
-                                                       data-checkbox="categories"
+                                                <input type="checkbox" name="categories[]"
                                                        value="<?php echo $category['id']; ?>" <?php echo $checked . $disabled; ?>>
                                                 <?php echo $category['name']; ?>
                                             </label>
@@ -257,8 +256,7 @@ function createEditModal($template, $features, $categories)
                                                 if (in_array($feature, $enabledFeatures) && !$showNotice) {
                                                     $checked = 'checked';
                                                 } ?>
-                                                <input type="checkbox" name="features[]" data-modal="<?php echo $template['id']; ?>-features"
-                                                       data-checkbox="features"
+                                                <input type="checkbox" name="features[]"
                                                        value="<?php echo $feature; ?>" <?php echo $checked . $disabled; ?>>
                                                 <?php echo $hesklang[$feature]; ?>
                                             </label>
@@ -283,11 +281,6 @@ function createEditModal($template, $features, $categories)
                         </div>
                     </div>
                 </form>
-                <script>
-                    buildValidatorForExistingPermissionTemplate('form-<?php echo $template['id']; ?>',
-                        '<?php echo $hesklang['select_at_least_one_value']; ?>',
-                        '<?php echo $template['id']; ?>')
-                </script>
             </div>
         </div>
     </div>
@@ -302,7 +295,7 @@ function buildCreateModal($features, $categories)
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="manage_permission_templates.php" role="form" method="post" id="create-form">
+                <form action="manage_permission_templates.php" role="form" method="post" id="createForm">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
@@ -375,7 +368,7 @@ function buildCreateModal($features, $categories)
                     </div>
                 </form>
                 <script>
-                    buildValidatorForPermissionTemplates('create-form', '<?php echo $hesklang['select_at_least_one_value']; ?>');
+                    buildValidatorForPermissionTemplates('createForm', '<?php echo $hesklang['select_at_least_one_value']; ?>');
                 </script>
             </div>
         </div>

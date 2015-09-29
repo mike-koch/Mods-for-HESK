@@ -37,26 +37,6 @@ function buildValidatorForTicketSubmission(formName, validationText) {
     });
 }
 
-function buildValidatorForExistingPermissionTemplate(formId, validationText, templateId) {
-    $('#' + formId).validator({
-        custom: {
-            checkbox: function($el) {
-                var checkboxes = $('input[data-modal="' + templateId + '-' + $el.attr('data-checkbox') + '"]');
-
-                for (var checkbox in checkboxes) {
-                    if (checkboxes[checkbox].checked) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        },
-        errors: {
-            checkbox: validationText
-        }
-    });
-}
-
 function buildValidatorForPermissionTemplates(formId, validationText) {
     $('#' + formId).validator({
         custom: {
