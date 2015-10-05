@@ -124,15 +124,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
                 ?>
-                <form action="banned_emails.php" method="post" name="form1" role="form" class="form-horizontal">
+                <form action="banned_emails.php" method="post" name="form1" role="form" class="form-horizontal" data-toggle="validator">
                     <div class="form-group">
-                        <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['bananemail']; ?></label>
+                        <label for="text" class="col-sm-3 control-label"><?php echo $hesklang['bananemail']; ?></label>
 
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="email" size="30" maxlength="255"
-                                   placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>">
+                            <input type="email" class="form-control" name="email" size="30" maxlength="255" data-error="<?php echo htmlspecialchars($hesklang['enterbanemail']); ?>"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>" required>
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
                             <input type="hidden" name="a" value="ban"/>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="form-group">
