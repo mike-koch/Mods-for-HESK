@@ -127,15 +127,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
                 ?>
-                <form action="banned_ips.php" method="post" name="form1" role="form" class="form-horizontal">
+                <form action="banned_ips.php" method="post" name="form1" role="form" class="form-horizontal" data-toggle="validator">
                     <div class="form-group">
                         <label for="ip" class="col-sm-3 control-label"><?php echo $hesklang['bananip']; ?></label>
 
                         <div class="col-sm-9">
-                            <input type="text" name="ip" size="30" maxlength="255" class="form-control"
-                                   placeholder="<?php echo htmlspecialchars($hesklang['iprange']); ?>">
+                            <input type="text" name="ip" size="30" maxlength="255" class="form-control" data-error="<?php echo htmlspecialchars($hesklang['enterbanip']); ?>"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['iprange']); ?>" required>
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
                             <input type="hidden" name="a" value="ban"/>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="form-group">
