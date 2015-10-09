@@ -102,7 +102,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <div class="panel-heading">
                                 <h4>
                                     <?php echo $hesklang['statuses']; ?>
-                                    <span class="nu-floatRight panel-buton">
+                                    <span class="nu-floatRight panel-button">
                                     <button class="btn btn-success" data-toggle="modal" data-target="#modal-status-new">
                                         <i class="fa fa-plus-circle"></i>
                                         <?php
@@ -559,6 +559,7 @@ function buildEditModal($statusId)
         WHERE `status_id` = " . intval($statusId));
     $textArray = array();
     while ($row = hesk_dbFetchAssoc($textRs)) {
+        var_dump($row['text']);
         $textArray[$row['language']] = $row['text'];
     }
 
@@ -571,7 +572,7 @@ function buildEditModal($statusId)
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="manage_statuses.php" role="form" method="post" class="form-horizontal">
+                <form action="manage_statuses.php" role="form" method="post" class="form-horizontal" data-toggle="validator">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
@@ -613,7 +614,9 @@ function buildEditModal($statusId)
                                         <div class="col-sm-9">
                                             <input type="text" placeholder="<?php echo htmlspecialchars($language); ?>"
                                                    class="form-control" name="name[<?php echo $language; ?>]"
-                                                   value="<?php echo htmlspecialchars($text); ?>">
+                                                   data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                                   value="<?php echo htmlspecialchars($text); ?>" required>
+                                            <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
@@ -634,7 +637,9 @@ function buildEditModal($statusId)
                                     <div class="col-sm-8">
                                         <input type="text" name="text-color" class="form-control"
                                                value="<?php echo $status['TextColor']; ?>"
-                                               placeholder="<?php echo htmlspecialchars($hesklang['textColor']); ?>">
+                                               data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                               placeholder="<?php echo htmlspecialchars($hesklang['textColor']); ?>" required>
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
