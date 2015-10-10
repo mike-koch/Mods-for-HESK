@@ -559,7 +559,6 @@ function buildEditModal($statusId)
         WHERE `status_id` = " . intval($statusId));
     $textArray = array();
     while ($row = hesk_dbFetchAssoc($textRs)) {
-        var_dump($row['text']);
         $textArray[$row['language']] = $row['text'];
     }
 
