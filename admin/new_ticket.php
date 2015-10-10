@@ -31,6 +31,7 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('WYSIWYG', 1);
+define('VALIDATOR', 1);
 
 // Auto-focus first empty or error field
 define('AUTOFOCUS', true);
@@ -176,9 +177,15 @@ if (!$show['show']) {
                 });
                 /* ]]> */
             </script>
-        <?php endif; ?>
+        <?php endif;
+
+        $onsubmit = '';
+        if ($modsForHesk_settings['rich_text_for_tickets']) {
+            $onsubmit = 'onsubmit="return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
+        }
+        ?>
         <form role="form" class="form-horizontal" method="post" action="admin_submit_ticket.php" name="form1"
-              enctype="multipart/form-data">
+              enctype="multipart/form-data" <?php echo $onsubmit; ?>>
             <?php if ($hesk_settings['can_sel_lang']) { ?>
                 <div class="form-group">
                     <label for="customerLanguage" class="col-sm-3 control-label"><?php echo $hesklang['chol']; ?>:&nbsp;<span
@@ -197,8 +204,8 @@ if (!$show['show']) {
             } else {
                 echo '<div class="form-group">';
             } ?>
-            <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>: <font
-                    class="important">*</font></label>
+            <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?><span
+                    class="important">*</span></label>
 
             <div class="col-sm-9">
                 <input type="text" class="form-control" name="name" size="40" maxlength="30"
@@ -207,11 +214,13 @@ if (!$show['show']) {
                        } else if (isset($_GET['name'])) {
                            echo hesk_GET('name');
                        } ?>"
-                       placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>">
+                       data-error="<?php echo htmlspecialchars($hesklang['enter_your_name']); ?>"
+                       placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>" required>
+                <div class="help-block with-errors"></div>
             </div>
     </div>
     <div class="form-group">
-        <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>: </label>
+        <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
 
         <div class="col-sm-9">
             <input type="text" class="form-control" name="email" size="40" maxlength="1000" id="email-input"
@@ -237,11 +246,14 @@ if (!$show['show']) {
     } else {
         echo '<div class="form-group">';
     } ?>
-    <label for="category" class="col-sm-3 control-label"><?php echo $hesklang['category']; ?>: <font
-            class="important">*</font></label>
+    <label for="category" class="col-sm-3 control-label"><?php echo $hesklang['category']; ?><span
+            class="important">*</span></label>
 
     <div class="col-sm-9">
-        <select name="category" class="form-control">
+        <select name="category" class="form-control"
+            pattern="[0-9]+"
+            data-error="<?php echo htmlspecialchars($hesklang['sel_app_cat']); ?>"
+            required>
             <?php
             // Show the "Click to select"?
             if ($hesk_settings['select_cat']) {
@@ -261,6 +273,7 @@ if (!$show['show']) {
             }
             ?>
         </select>
+        <div class="help-block with-errors"></div>
     </div>
 </div>
 <?php if (in_array('priority', $_SESSION['iserror'])) {
@@ -268,10 +281,13 @@ if (!$show['show']) {
 } else {
     echo '<div class="form-group">';
 } ?>
-<label for="priority" class="col-sm-3 control-label"><?php echo $hesklang['priority']; ?>: <font
-        class="important">*</font></label>
+<label for="priority" class="col-sm-3 control-label"><?php echo $hesklang['priority']; ?><span
+        class="important">*</span></label>
 <div class="col-sm-9">
-    <select name="priority" class="form-control">
+    <select name="priority" class="form-control"
+        pattern="[0-9]+"
+        data-error="<?php echo htmlspecialchars($hesklang['sel_app_priority']); ?>"
+        required>
         <?php
         // Show the "Click to select"?
         if ($hesk_settings['select_pri']) {
@@ -303,6 +319,7 @@ if (!$show['show']) {
             echo 'selected="selected"';
         } ?>><?php echo $hesklang['critical']; ?></option>
     </select>
+    <div class="help-block with-errors"></div>
 </div>
 </div>
 <!-- Start Custom Before -->
@@ -342,7 +359,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
         switch ($v['type']) {
             /* Radio box */
             case 'radio':
-                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label><div align="left" class="col-sm-9">';
+                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . '</label><div align="left" class="col-sm-9">';
 
                 $options = explode('#HESK#', $v['value']);
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
@@ -375,7 +392,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
-                echo '<div class="form-group"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                echo '<div class="form-group"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] .  '</label>
                                 <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '" ' . $cls . '>';
 
                 // Show "Click to select"?
@@ -408,7 +425,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
-                echo '<div class="form-group"><label for="' . $v['name'] . '[]" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                echo '<div class="form-group"><label for="' . $v['name'] . '[]" class="col-sm-3 control-label">' . $v['name'] . '</label>
                                 <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '[]" ' . $cls . ' multiple>';
 
                 $options = explode('#HESK#', $v['value']);
@@ -438,7 +455,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                 $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
 
-                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label><div align="left" class="col-sm-9">';
+                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . '</label><div align="left" class="col-sm-9">';
                 $options = explode('#HESK#', $v['value']);
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
@@ -468,7 +485,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                 echo '<div class="form-group">
-                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
 					            <div class="col-sm-9"><textarea class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" rows="' . $size[0] . '" cols="' . $size[1] . '" ' . $cls . '>' . $k_value . '</textarea></div>
                                 </div>';
                 break;
@@ -486,7 +503,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 
                 echo '
                                 <div class="form-group">
-                                    <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                    <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
                                     <div class="col-sm-9">
                                         <input type="text" class="datepicker form-control white-readonly ' . $cls . '" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
                                             maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" readonly/>
@@ -512,7 +529,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                 echo '<div class="form-group">
-                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' /></div>
                                 </div>';
 
@@ -545,7 +562,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                 echo '<div class="form-group">
-                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' readonly></div>
                                 </div>';
 
@@ -564,7 +581,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                 echo '<div class="form-group">
-                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' /></div>
                                 </div>';
         }
@@ -672,7 +689,7 @@ if (hesk_dbNumRows($res)) {
 if (strlen($can_options)) {
     ?>
     <div class="form-group">
-        <label for="modeadd" class="col-sm-3 control-label"><?php echo $hesklang['ticket_tpl']; ?>:</label>
+        <label for="modeadd" class="col-sm-3 control-label"><?php echo $hesklang['ticket_tpl']; ?></label>
 
         <div class="col-sm-9">
             <div class="radio">
@@ -686,7 +703,7 @@ if (strlen($can_options)) {
         </div>
     </div>
     <div class="form-group">
-        <label for="saved_replies" class="col-sm-3 control-label"><?php echo $hesklang['select_ticket_tpl']; ?>:</label>
+        <label for="saved_replies" class="col-sm-3 control-label"><?php echo $hesklang['select_ticket_tpl']; ?></label>
 
         <div class="col-sm-9">
             <select class="form-control" name="saved_replies" onchange="setMessage(this.value)">
@@ -713,27 +730,33 @@ elseif (hesk_checkPermission('can_man_ticket_tpl', 0)) {
 } else {
     echo '<div class="form-group">';
 } ?>
-<label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>: <font
-        class="important">*</font></label>
+<label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?><span
+        class="important">*</span></label>
 <div class="col-sm-9">
     <span id="HeskSub"><input class="form-control" type="text" name="subject" id="subject" size="40" maxlength="40"
                               value="<?php if (isset($_SESSION['as_subject']) || isset($_GET['subject'])) {
                                   echo stripslashes(hesk_input($_SESSION['as_subject']));
-                              } ?>" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"/></span>
+                              } ?>" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"
+                                data-error="<?php echo htmlspecialchars($hesklang['enter_subject']); ?>"
+            required></span>
+    <div class="help-block with-errors"></div>
 </div>
 </div>
 <?php if (in_array('message', $_SESSION['iserror'])) {
-    echo '<div class="form-group has-error">';
+    echo '<div class="form-group has-error" id="message-group">';
 } else {
-    echo '<div class="form-group">';
+    echo '<div class="form-group" id="message-group">';
 } ?>
 <div class="col-sm-12">
                         <span id="HeskMsg">
                             <textarea class="form-control htmlEditor" name="message" id="message" rows="12" cols="60"
-                                      placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>"><?php if (isset($_SESSION['as_message'])) {
+                                      placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>"
+                                      data-error="<?php echo htmlspecialchars($hesklang['enter_message']); ?>"
+                                      required><?php if (isset($_SESSION['as_message'])) {
                                     echo stripslashes(hesk_input($_SESSION['as_message']));
                                 } ?></textarea>
                         </span>
+    <div class="help-block with-errors" id="message-help-block"></div>
 </div>
 </div>
 <hr/>
@@ -772,7 +795,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                 $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
 
-                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label><div align="left" class="col-sm-9">';
+                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . '</label><div align="left" class="col-sm-9">';
 
                 $options = explode('#HESK#', $v['value']);
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
@@ -800,7 +823,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
-                echo '<div class="form-group"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                echo '<div class="form-group"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
                                 <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '" ' . $cls . '>';
 
                 // Show "Click to select"?
@@ -832,7 +855,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                 $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
 
-                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label><div align="left" class="col-sm-9">';
+                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . '</label><div align="left" class="col-sm-9">';
 
                 $options = explode('#HESK#', $v['value']);
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
@@ -863,7 +886,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                 echo '<div class="form-group">
-                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
 					            <div class="col-sm-9"><textarea class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" rows="' . $size[0] . '" cols="' . $size[1] . '" ' . $cls . '>' . $k_value . '</textarea></div>
                                 </div>';
                 break;
@@ -881,7 +904,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 
                 echo '
                                 <div class="form-group">
-                                    <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                    <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
                                     <div class="col-sm-9">
                                         <input type="text" class="datepicker form-control white-readonly ' . $cls . '" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
                                             maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" readonly/>
@@ -897,7 +920,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
-                echo '<div class="form-group"><label for="' . $v['name'] . '[]" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                echo '<div class="form-group"><label for="' . $v['name'] . '[]" class="col-sm-3 control-label">' . $v['name'] . '</label>
                                 <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '[]" ' . $cls . ' multiple>';
 
                 $options = explode('#HESK#', $v['value']);
@@ -938,7 +961,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                 echo '<div class="form-group">
-                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' /></div>
                                 </div>';
 
@@ -971,7 +994,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                 echo '<div class="form-group">
-                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' readonly></div>
                                 </div>';
 
@@ -990,7 +1013,7 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
 
                 echo '<div class="form-group">
-                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
+                                <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' /></div>
                                 </div>';
         }
@@ -1108,6 +1131,10 @@ if ($modsForHesk_settings['request_location']):
     </div>
 </div>
 </form>
+<script>
+    buildValidatorForTicketSubmission("form1",
+        "<?php echo addslashes($hesklang['select_at_least_one_value']); ?>");
+</script>
 </div>
 </div>
 <?php

@@ -30,6 +30,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
+define('VALIDATOR', 1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -285,7 +286,13 @@ $num = hesk_dbNumRows($result);
 
         <div class="footerWithBorder blankSpace"></div>
 
-        <form action="manage_canned.php" method="post" name="form1" class="form-horizontal" role="form">
+        <?php
+        $onsubmit = '';
+        if ($modsForHesk_settings['rich_text_for_tickets']) {
+            $onsubmit = 'onsubmit="return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
+        }
+        ?>
+        <form action="manage_canned.php" method="post" name="form1" class="form-horizontal" role="form" data-toggle="validator" <?php echo $onsubmit; ?>>
             <h3><?php echo $hesklang['new_saved']; ?></h3>
 
             <div class="footerWithBorder blankSpace"></div>
@@ -329,24 +336,28 @@ $num = hesk_dbNumRows($result);
                     <span id="HeskTitle"><input id="subject" class="form-control"
                                                 placeholder="<?php echo htmlspecialchars($hesklang['saved_title']); ?>"
                                                 type="text" name="name" size="40"
+                                                data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                                 maxlength="50" <?php if (isset($_SESSION['canned']['name'])) {
                             echo ' value="' . stripslashes($_SESSION['canned']['name']) . '" ';
-                        } ?> /></span>
+                        } ?> required></span>
+                    <div class="help-block with-errors"></div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="message-group">
                 <label for="msg" class="col-sm-2 control-label"><?php echo $hesklang['message']; ?></label>
 
                 <div class="col-sm-10">
                     <span id="HeskMsg">
                         <textarea id="message" class="htmlEditor form-control"
                                   placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="msg"
-                                  rows="15" cols="70"><?php
+                                  data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                  rows="15" cols="70" required><?php
                             if (isset($_SESSION['canned']['msg'])) {
                                 echo stripslashes($_SESSION['canned']['msg']);
                             }
                             ?></textarea>
                     </span>
+                    <div class="help-block with-errors" id="message-help-block"></div>
                     <?php echo $hesklang['insert_special']; ?>:
                     <a href="javascript:void(0)"
                        onclick="hesk_insertTag('HESK_ID')"><?php echo $hesklang['seqid']; ?></a> |

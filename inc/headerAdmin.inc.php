@@ -88,6 +88,7 @@ $modsForHesk_settings = mfh_getSettings();
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-iconpicker.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js"></script>
     <style>
         .navbar-default {
             background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
@@ -170,6 +171,12 @@ $modsForHesk_settings = mfh_getSettings();
     if (defined('LOAD_TABS')) {
         ?>
         <link href="<?php echo HESK_PATH; ?>inc/tabs/tabber.css" type="text/css" rel="stylesheet"/>
+        <?php
+    }
+
+    if (defined('VALIDATOR')) {
+        ?>
+        <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/validation-scripts.js"></script>
         <?php
     }
 

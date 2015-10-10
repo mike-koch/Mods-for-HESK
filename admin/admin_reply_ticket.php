@@ -201,9 +201,9 @@ if (!empty($_POST['set_priority'])) {
     }
 
     $options = array(
-        0 => '<font class="critical">' . $hesklang['critical'] . '</font>',
-        1 => '<font class="important">' . $hesklang['high'] . '</font>',
-        2 => '<font class="medium">' . $hesklang['medium'] . '</font>',
+        0 => '<span class="critical">' . $hesklang['critical'] . '</span>',
+        1 => '<span class="important">' . $hesklang['high'] . '</span>',
+        2 => '<span class="medium">' . $hesklang['medium'] . '</span>',
         3 => $hesklang['low']
     );
 

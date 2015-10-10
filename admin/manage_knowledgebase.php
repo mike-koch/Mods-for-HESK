@@ -30,6 +30,7 @@
 
 define('IN_SCRIPT',1);
 define('HESK_PATH','../');
+define('VALIDATOR', 1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -351,7 +352,13 @@ if (!isset($_SESSION['hide']['new_article']))
     <h3 class="move-right-10"><a name="new_article"></a><?php echo $hesklang['new_kb_art']; ?></h3>
     <div class="footerWithBorder blankSpace move-right-10 move-left-10"></div>
 
-    <form action="manage_knowledgebase.php" role="form" method="post" name="form1" enctype="multipart/form-data">
+    <?php
+    $onsubmit = '';
+    if ($hesk_settings['kb_wysiwyg']) {
+        $onsubmit = 'onsubmit="return validateRichText(\'content-help-block\', \'content-group\', \'content\', \''.addslashes($hesklang['kb_e_cont']).'\')"';
+    }
+    ?>
+    <form action="manage_knowledgebase.php" role="form" method="post" name="form1" enctype="multipart/form-data" data-toggle="validator" <?php echo $onsubmit; ?>>
         <div class="row">
             <div class="col-md-3">
                 <div class="panel panel-default move-right-10">
@@ -405,9 +412,14 @@ if (!isset($_SESSION['hide']['new_article']))
                 </span>
                 <div class="form-group">
                     <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
-                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> />
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" data-error="<?php echo htmlspecialchars($hesklang['kb_e_subj']); ?>"
+                        name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> required>
+                    <div class="help-block with-errors"></div>
                 </div>
-                <p><textarea class="form-control" name="content" rows="25" cols="70" id="content"><?php if (isset($_SESSION['new_article']['content'])) {echo $_SESSION['new_article']['content'];} ?></textarea></p>
+                <div class="form-group" id="content-group">
+                    <textarea class="form-control" id="content" name="content" rows="25" cols="70" data-error="<?php echo htmlspecialchars($hesklang['kb_e_cont']); ?>" id="content" required><?php if (isset($_SESSION['new_article']['content'])) {echo $_SESSION['new_article']['content'];} ?></textarea>
+                    <div class="help-block with-errors" id="content-help-block"></div>
+                </div>
             </div>
             <div class="col-md-3">
                 <div class="panel panel-default move-left-10">
@@ -427,8 +439,11 @@ if (!isset($_SESSION['hide']['new_article']))
                         <div class="form-group">
                             <input type="hidden" name="a" value="new_article" />
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                            <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-default" />
-                            <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
+
+                            <div class="btn-group">
+                                <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary" />
+                                <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -497,14 +512,15 @@ if (!isset($_SESSION['hide']['new_category']))
             ?>
 	    </div>
         <div class="col-md-7 move-left-20">
-            <form action="manage_knowledgebase.php" class="form-horizontal" method="post" role="form" name="form2">
+            <form action="manage_knowledgebase.php" class="form-horizontal" method="post" role="form" name="form2" data-toggle="validator">
                 <h3><a name="new_category"></a><?php echo $hesklang['kb_cat_new']; ?></h3>
                 <div class="footerWithBorder blankSpace"></div>
 
                 <div class="form-group">
-                    <label for="title" class="col-sm-3 control-label"><?php echo $hesklang['kb_cat_title']; ?>:</label>
+                    <label for="title" class="col-sm-3 control-label"><?php echo $hesklang['kb_cat_title']; ?></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="title" size="70" maxlength="255" />
+                        <input type="text" class="form-control" name="title" size="70" maxlength="255" data-error="<?php echo htmlspecialchars($hesklang['kb_cat_e_title']); ?>" required>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -530,8 +546,10 @@ if (!isset($_SESSION['hide']['new_category']))
                     <div class="col-sm-9 col-sm-offset-3">
                         <input type="hidden" name="a" value="new_category" />
                         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                        <input type="submit" value="<?php echo $hesklang['kb_cat_add']; ?>" class="btn btn-default" />
-                        <a class="btn btn-default" href="manage_knowledgebase.php"><?php echo $hesklang['cancel']; ?></a>
+                        <div class="btn-group">
+                            <input type="submit" value="<?php echo $hesklang['kb_cat_add']; ?>" class="btn btn-primary" />
+                            <a class="btn btn-default" href="manage_knowledgebase.php"><?php echo $hesklang['cancel']; ?></a>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -1325,8 +1343,13 @@ function edit_article()
     <h3 class="move-right-10"><?php echo $hesklang['kb_art_edit']; ?></h3>
     <div class="footerWithBorder blankSpace move-right-10 move-left-10"></div>
 
-
-    <form action="manage_knowledgebase.php" role="form" method="post" name="form1" enctype="multipart/form-data">
+    <?php
+    $onsubmit = '';
+    if ($hesk_settings['kb_wysiwyg']) {
+        $onsubmit = 'onsubmit="return validateRichText(\'content-help-block\', \'content-group\', \'content\', \''.addslashes($hesklang['kb_e_cont']).'\')"';
+    }
+    ?>
+    <form action="manage_knowledgebase.php" role="form" method="post" name="form1" enctype="multipart/form-data" data-toggle="validator" <?php echo $onsubmit; ?>>
         <div class="row">
             <div class="col-md-3">
                 <div class="panel panel-default move-right-10">
@@ -1403,9 +1426,15 @@ function edit_article()
                 </span>
                 <div class="form-group">
                     <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
-                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" name="subject" size="70" maxlength="255" value="<?php echo $article['subject']; ?>" />
+                    <input type="text" data-error="<?php echo htmlspecialchars($hesklang['kb_e_subj']); ?>" class="form-control"
+                        placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" name="subject" size="70" maxlength="255" value="<?php echo $article['subject']; ?>" required>
+                    <div class="help-block with-errors"></div>
                 </div>
-                <textarea name="content" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_content']); ?>" rows="25" cols="70" id="content"><?php echo $article['content']; ?></textarea>
+                <div class="form-group" id="content-group">
+                    <textarea name="content" class="form-control" data-error="<?php echo htmlspecialchars($hesklang['kb_e_cont']); ?>" id="content"
+                    placeholder="<?php echo htmlspecialchars($hesklang['kb_content']); ?>" rows="25" cols="70" id="content" required><?php echo $article['content']; ?></textarea>
+                    <div class="help-block with-errors" id="content-help-block"></div>
+                </div>
             </div>
             <div class="col-md-3">
                 <div class="panel panel-default move-left-10">
@@ -1601,10 +1630,13 @@ function manage_category() {
                 <div class="panel panel-default">
                     <div class="panel-heading"><?php echo $hesklang['catset']; ?></div>
                     <div class="panel-body">
-                        <form action="manage_knowledgebase.php" method="post" role="form" name="form1" onsubmit="Javascript:return hesk_deleteIfSelected('dodelete','<?php echo hesk_makeJsString($hesklang['kb_delcat']); ?>')">
+                        <form action="manage_knowledgebase.php" method="post" role="form" name="form1" data-toggle="validator"
+                            onsubmit="Javascript:return hesk_deleteIfSelected('dodelete','<?php echo hesk_makeJsString($hesklang['kb_delcat']); ?>')">
                             <div class="form-group">
                                 <label for="title" class="control-label"><?php echo $hesklang['kb_cat_title']; ?></label>
-                                <input type="text" class="form-control" name="title" size="70" maxlength="255" value="<?php echo $this_cat['name']; ?>" />
+                                <input type="text" class="form-control" name="title" size="70" maxlength="255" value="<?php echo $this_cat['name']; ?>"
+                                data-error="<?php echo htmlspecialchars($hesklang['kb_cat_e_title']); ?>" required>
+                                <div class="help-block with-errors"></div>
                             </div>
                             <div class="form-group">
                                 <label for="parent" class="control-label"><?php echo $hesklang['kb_cat_parent']; ?></label>
@@ -1637,12 +1669,14 @@ function manage_category() {
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group text-center">
+                            <div class="form-group">
                                 <input type="hidden" name="a" value="edit_category" />
                                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
                                 <input type="hidden" name="catid" value="<?php echo $catid; ?>" />
-                                <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default" />
-                                <a class="btn btn-default" href="manage_knowledgebase.php?a=add_category&amp;parent='.$catid.'"><?php echo $hesklang['kb_i_cat2']; ?></a>
+                                <div class="btn-group">
+                                    <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-primary" />
+                                    <a class="btn btn-default" href="manage_knowledgebase.php?a=add_category&amp;parent='.$catid.'"><?php echo $hesklang['kb_i_cat2']; ?></a>
+                                </div>
                             </div>
                         </form>
                     </div>

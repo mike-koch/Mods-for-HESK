@@ -296,7 +296,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 class="fa fa-question-circle settingsquestionmark"></i></a></h4>
                 </div>
                 <div class="panel-body">
-                    <form action="service_messages.php" method="post" name="form1" role="form" class="form-horizontal">
+                    <form action="service_messages.php" method="post" name="form1" role="form" class="form-horizontal" data-toggle="validator">
                         <div class="form-group">
                             <label for="style"
                                    class="col-md-2 control-label"><?php echo $hesklang['sm_style']; ?></label>
@@ -415,7 +415,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                        type="text" name="title" size="70" maxlength="255"
                                     <?php if (isset($_SESSION['new_sm']['title'])) {
                                         echo 'value="' . $_SESSION['new_sm']['title'] . '"';
-                                    } ?>>
+                                    } ?> data-error="<?php echo htmlspecialchars($hesklang['sm_e_title']); ?>" required>
+                                <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -438,7 +439,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <div class="col-md-10 col-md-offset-2">
                                 <div class="btn-group" role="group">
                                     <input type="submit" name="sm_save" value="<?php echo $hesklang['sm_save']; ?>"
-                                           class="btn btn-default">
+                                           class="btn btn-primary">
                                     <input type="submit" name="sm_preview"
                                            value="<?php echo $hesklang['sm_preview']; ?>" class="btn btn-default">
                                 </div>

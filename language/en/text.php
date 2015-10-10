@@ -38,6 +38,8 @@ $hesklang['readonly_custom_field'] = 'Read-only text field';
 $hesklang['readonly_custom_field_help'] = 'This input is the same as a text field; however this value cannot be changed, but will be visible to the user.';
 $hesklang['navbar_title_url'] = 'Navbar Title URL';
 $hesklang['navbar_title_url_help'] = 'Enter the URL you wish to use when a customer (or staff) clicks on the help desk title on the top-left corner of the screen. The URL must begin with http:// or https://.';
+$hesklang['this_field_is_required'] = 'This field is required';
+$hesklang['select_at_least_one_value'] = 'Please select at least one value';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.4.0
 $hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';
@@ -160,7 +162,7 @@ $hesklang['cannot_change_admin_staff'] = 'You cannot change admin/non-admin stat
 $hesklang['permission_tpl_man'] = 'Manage permission templates'; // Menu link
 $hesklang['permission_templates'] = 'Permission Templates';
 $hesklang['can_man_permission_tpl'] = 'Can manage permission templates';
-$hesklang['permission_template_colon'] = 'Permission Template:';
+$hesklang['permission_template_colon'] = 'Permission Template';
 $hesklang['permission_template'] = 'Permission Template';
 $hesklang['custom'] = 'Custom';
 

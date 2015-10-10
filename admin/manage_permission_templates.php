@@ -30,6 +30,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
+define('VALIDATOR', 1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -95,35 +96,38 @@ while ($row = hesk_dbFetchAssoc($res)) {
 }
 ?>
 <div class="row move-down-20">
-    <div class="col-md-10 col-md-offset-1">
-        <h3><?php echo $hesklang['manage_permission_templates']; ?>
-            <i class="fa fa-question-circle settingsquestionmark" data-toggle="tooltip" data-placement="right"
-               title="<?php echo $hesklang['manage_permission_templates_help']; ?>"></i>
-        </h3>
-
-        <div class="footerWithBorder blankSpace"></div>
+    <div class="col-md-12">
         <?php
         hesk_handle_messages();
         ?>
-        <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success">
-            <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new_template']; ?>
-        </a>
-        <table class="table table-striped">
-            <thead>
-            <th><?php echo $hesklang['name']; ?></th>
-            <th><?php echo $hesklang['number_of_users']; ?></th>
-            <th><?php echo $hesklang['actions']; ?></th>
-            </thead>
-            <tbody>
-            <?php foreach ($templates as $row): ?>
-                <tr>
-                    <td><?php echo $row['name']; ?></td>
-                    <td><?php echo getNumberOfUsersWithPermissionGroup($row['id']); ?></td>
-                    <td>
-                        <a href="#" data-toggle="modal" data-target="#modal-template-<?php echo $row['id'] ?>">
-                            <i class="fa fa-pencil icon-link" data-toggle="tooltip"
-                               title="<?php echo $hesklang['view_permissions_for_this_template'] ?>"></i></a>
-                        <?php if ($row['id'] == 1) { ?>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4><?php echo $hesklang['manage_permission_templates']; ?>
+                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="tooltip" data-placement="right"
+                       title="<?php echo $hesklang['manage_permission_templates_help']; ?>"></i>
+                    <span class="nu-floatRight panel-button">
+                        <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success nu-floatRight">
+                            <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new_template']; ?>
+                        </a>
+                    </span>
+                </h4>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                <th><?php echo $hesklang['name']; ?></th>
+                <th><?php echo $hesklang['number_of_users']; ?></th>
+                <th><?php echo $hesklang['actions']; ?></th>
+                </thead>
+                <tbody>
+                <?php foreach ($templates as $row): ?>
+                    <tr>
+                        <td><?php echo $row['name']; ?></td>
+                        <td><?php echo getNumberOfUsersWithPermissionGroup($row['id']); ?></td>
+                        <td>
+                            <a href="#" data-toggle="modal" data-target="#modal-template-<?php echo $row['id'] ?>">
+                                <i class="fa fa-pencil icon-link" data-toggle="tooltip"
+                                   title="<?php echo $hesklang['view_permissions_for_this_template'] ?>"></i></a>
+                            <?php if ($row['id'] == 1) { ?>
                         <i class="fa fa-star icon-link orange" data-toggle="tooltip"
                            title="<?php echo $hesklang['admin_cannot_be_staff']; ?>"></i></a>
                     <?php } elseif ($row['heskprivileges'] == 'ALL' && $row['categories'] == 'ALL'){ ?>
@@ -141,17 +145,18 @@ while ($row = hesk_dbFetchAssoc($res)) {
                          title="<?php echo $hesklang['staff_cannot_be_admin']; ?>"></i>
                     <?php
                         }
-                        if ($row['id'] != 1 && $row['id'] != 2):
-                            ?>
-                            <a href="manage_permission_templates.php?a=delete&amp;id=<?php echo $row['id']; ?>">
-                                <i class="fa fa-times icon-link red" data-toggle="tooltip"
-                                   title="<?php echo $hesklang['delete']; ?>"></i></a>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+                            if ($row['id'] != 1 && $row['id'] != 2):
+                                ?>
+                                <a href="manage_permission_templates.php?a=delete&amp;id=<?php echo $row['id']; ?>">
+                                    <i class="fa fa-times icon-link red" data-toggle="tooltip"
+                                       title="<?php echo $hesklang['delete']; ?>"></i></a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <?php
@@ -192,7 +197,7 @@ function createEditModal($template, $features, $categories)
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="manage_permission_templates.php" role="form" method="post">
+                <form action="manage_permission_templates.php" role="form" method="post" id="form<?php echo $template['id']; ?>">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
@@ -205,14 +210,19 @@ function createEditModal($template, $features, $categories)
                                     <i class="fa fa-info-circle"></i> <?php echo $hesklang['template_is_admin_cannot_change']; ?>
                                 </div>
                             <?php endif; ?>
-                            <div class="col-sm-2">
-                                <label for="name"
-                                       class="control-label"><?php echo $hesklang['template_name']; ?></label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="name"
-                                       value="<?php echo $template['name']; ?>"
-                                       placeholder="<?php echo $hesklang['template_name']; ?>">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label for="name"
+                                           class="control-label"><?php echo $hesklang['template_name']; ?></label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="name"
+                                           value="<?php echo htmlspecialchars($template['name']); ?>"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['template_name']); ?>"
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           required>
+                                    <div class="help-block with-errors"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -220,8 +230,8 @@ function createEditModal($template, $features, $categories)
                                 <h4><?php echo $hesklang['menu_cat']; ?></h4>
 
                                 <div class="footerWithBorder blankSpace"></div>
-                                <?php foreach ($categories as $category): ?>
-                                    <div class="form-group">
+                                <div class="form-group">
+                                    <?php foreach ($categories as $category): ?>
                                         <div class="checkbox">
                                             <label>
                                                 <?php
@@ -234,15 +244,16 @@ function createEditModal($template, $features, $categories)
                                                 <?php echo $category['name']; ?>
                                             </label>
                                         </div>
-                                    </div>
-                                <?php endforeach; ?>
+                                    <?php endforeach; ?>
+                                    <div class="help-block with-errors"></div>
+                                </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <h4><?php echo $hesklang['allow_feat']; ?></h4>
 
                                 <div class="footerWithBorder blankSpace"></div>
-                                <?php foreach ($features as $feature): ?>
-                                    <div class="form-group">
+                                <div class="form-group">
+                                    <?php foreach ($features as $feature): ?>
                                         <div class="checkbox">
                                             <label><?php
                                                 $checked = '';
@@ -254,8 +265,9 @@ function createEditModal($template, $features, $categories)
                                                 <?php echo $hesklang[$feature]; ?>
                                             </label>
                                         </div>
-                                    </div>
-                                <?php endforeach; ?>
+                                    <?php endforeach; ?>
+                                    <div class="help-block with-errors"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -287,7 +299,7 @@ function buildCreateModal($features, $categories)
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="manage_permission_templates.php" role="form" method="post">
+                <form action="manage_permission_templates.php" role="form" method="post" id="createForm">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
@@ -295,13 +307,16 @@ function buildCreateModal($features, $categories)
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-sm-2">
-                                <label for="name"
-                                       class="control-label"><?php echo $hesklang['template_name']; ?></label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="name"
-                                       placeholder="<?php echo $hesklang['template_name']; ?>">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label for="name"
+                                           class="control-label"><?php echo $hesklang['template_name']; ?></label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="name"
+                                           placeholder="<?php echo $hesklang['template_name']; ?>" required>
+                                    <div class="help-block with-errors"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -309,33 +324,39 @@ function buildCreateModal($features, $categories)
                                 <h4><?php echo $hesklang['menu_cat']; ?></h4>
 
                                 <div class="footerWithBorder blankSpace"></div>
-                                <?php foreach ($categories as $category): ?>
-                                    <div class="form-group">
+                                <div class="form-group">
+                                    <?php foreach ($categories as $category): ?>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="categories[]"
+                                                       data-modal="new-categories"
+                                                       data-checkbox="categories"
                                                        value="<?php echo $category['id']; ?>">
                                                 <?php echo $category['name']; ?>
                                             </label>
                                         </div>
-                                    </div>
-                                <?php endforeach; ?>
+                                    <?php endforeach; ?>
+                                    <div class="help-block with-errors"></div>
+                                </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <h4><?php echo $hesklang['allow_feat']; ?></h4>
 
                                 <div class="footerWithBorder blankSpace"></div>
-                                <?php foreach ($features as $feature): ?>
-                                    <div class="form-group">
+                                <div class="form-group">
+                                    <?php foreach ($features as $feature): ?>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="features[]"
+                                                       data-modal="new-features"
+                                                       data-checkbox="features"
                                                        value="<?php echo $feature; ?>">
                                                 <?php echo $hesklang[$feature]; ?>
                                             </label>
                                         </div>
-                                    </div>
-                                <?php endforeach; ?>
+                                    <?php endforeach; ?>
+                                    <div class="help-block with-errors"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -350,6 +371,9 @@ function buildCreateModal($features, $categories)
                         </div>
                     </div>
                 </form>
+                <script>
+                    buildValidatorForPermissionTemplates('createForm', '<?php echo $hesklang['select_at_least_one_value']; ?>');
+                </script>
             </div>
         </div>
     </div>

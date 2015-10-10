@@ -147,7 +147,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         }
         ?>
 
-        <form role="form" class="form-horizontal" method="post" action="profile.php" name="form1">
+        <form role="form" class="form-horizontal" method="post" action="profile.php" name="form1" data-toggle="validator">
             <?php hesk_profile_tab('new'); ?>
         </form>
     </div>

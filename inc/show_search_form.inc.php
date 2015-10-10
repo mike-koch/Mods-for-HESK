@@ -402,15 +402,20 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
             <tr>
                 <td valign="top">
 
-                    <form class="form-inline" action="find_tickets.php" method="get" name="findby" id="findby">
+                    <form data-toggle="validator" class="form-inline" action="find_tickets.php" method="get" name="findby" id="findby">
 
                         <table class="table" style="width: auto" border="0" cellpadding="3" cellspacing="0">
                             <tr style="border: none">
                                 <td class="text-left" style="border: none">
                                     <b style="color: #000"><?php echo $hesklang['s_for']; ?></b><br/>
-                                    <input class="form-control" type="text" name="q" size="30" <?php if (isset($q)) {
-                                        echo 'value="' . $q . '"';
-                                    } ?> />
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="q" size="30" <?php if (isset($q)) {
+                                            echo 'value="' . $q . '"';
+                                        } ?>
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           required>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
                                 </td>
                                 <td class="text-left" style="border: none">
                                     <b style="color: #000"><?php echo $hesklang['s_in']; ?></b><br/>
