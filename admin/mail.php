@@ -541,13 +541,15 @@ function mail_list_messages()
 
             <div align="center">
                 <table class="table table-striped">
+                    <thead>
                     <tr>
                         <th><input type="checkbox" name="checkall" value="2" onclick="hesk_changeAll(this)"/></th>
                         <th><?php echo $hesklang['m_sub']; ?></th>
                         <th><?php echo $hesk_settings['mailtmp']['m_from']; ?></th>
                         <th><?php echo $hesklang['date']; ?></th>
                     </tr>
-
+                    </thead>
+                    <tbody>
                     <?php
                     $i = 0;
                     while ($pm = hesk_dbFetchAssoc($res)) {
@@ -564,17 +566,15 @@ function mail_list_messages()
                             $pm['subject'] = '<b>' . $pm['subject'] . '</b>';
                         }
                         $pm['name'] = isset($admins[$pm[$hesk_settings['mailtmp']['other']]]) ? '<a href="mail.php?a=new&amp;id=' . $pm[$hesk_settings['mailtmp']['other']] . '">' . $admins[$pm[$hesk_settings['mailtmp']['other']]] . '</a>' : (($pm['from'] == 9999) ? '<a href="http://www.hesk.com" target="_blank">HESK.com</a>' : $hesklang['e_udel']);
-                        $pm['dt'] = hesk_dateToString($pm['dt'], 0, 0, 0, true);
-
-                        echo <<<EOC
-			<tr>
-			<td><input type="checkbox" name="id[]" value="$pm[id]" />&nbsp;</td>
-			<td>$pm[subject]</td>
-			<td>$pm[name]</td>
-			<td>$pm[dt]</td>
-			</tr>
-
-EOC;
+                        $pm['dt'] = hesk_dateToString($pm['dt'], 0, 0, 0, true)
+                    ?>
+                    <tr>
+                        <td><input type="checkbox" name="id[]" value="<?php echo $pm['id']; ?>" />&nbsp;</td>
+                        <td><?php echo $pm['subject']; ?></td>
+                        <td><?php echo $pm['name']; ?></td>
+                        <td><?php echo $pm['dt']; ?></td>
+                    </tr>
+                    <?php
                     } // End while
                     ?>
                 </table>
