@@ -620,7 +620,7 @@ function show_new_form()
 global $hesk_settings, $hesklang, $admins;
 ?>
 <br/>
-<form action="mail.php" method="post" name="form2" class="form-horizontal" role="form">
+<form action="mail.php" method="post" name="form2" class="form-horizontal" role="form" data-toggle="validator">
     <h3><?php echo $hesklang['new_mail']; ?></h3>
 
     <div class="footerWithBorder blankSpace"></div>
@@ -629,7 +629,8 @@ global $hesk_settings, $hesklang, $admins;
         <label for="to" class="col-sm-3 control-label"><?php echo $hesklang['m_to']; ?></label>
 
         <div class="col-sm-9">
-            <select class="form-control" name="to">
+            <select class="form-control" name="to" type="number"
+                    data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>" required>
                 <option value="" selected="selected"><?php echo $hesklang['select']; ?></option>
                 <?php
                 foreach ($admins as $k => $v) {
@@ -643,6 +644,7 @@ global $hesk_settings, $hesklang, $admins;
                 }
                 ?>
             </select>
+            <div class="help-block with-errors"></div>
         </div>
     </div>
     <div class="form-group">
@@ -655,21 +657,25 @@ global $hesk_settings, $hesklang, $admins;
                 if (isset($_SESSION['mail']['subject'])) {
                     echo ' value="' . stripslashes($_SESSION['mail']['subject']) . '" ';
                 }
-                ?>
-                />
+                ?> data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>" required>
+            <div class="help-block with-errors"></div>
         </div>
     </div>
     <div class="form-group">
         <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
 
         <div class="col-sm-9">
-                <textarea name="message" class="form-control"
-                          placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" rows="15" cols="70"><?php
-                    if (isset($_SESSION['mail']['message'])) {
-                        echo stripslashes($_SESSION['mail']['message']);
-                    }
-                    ?></textarea>
-
+            <textarea name="message" class="form-control" data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                      placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" rows="15" cols="70" required><?php
+                if (isset($_SESSION['mail']['message'])) {
+                    echo stripslashes($_SESSION['mail']['message']);
+                }
+                ?></textarea>
+            <div class="help-block with-errors"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-9 col-sm-offset-3">
             <div class="checkbox">
                 <label>
                     <input type="checkbox" name="signature" value="1" checked>
