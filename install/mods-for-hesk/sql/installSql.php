@@ -831,5 +831,16 @@ function execute250Scripts()
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('display_user_agent_information', '0')");
 
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('navbar_title_url', '" . hesk_dbEscape($hesk_settings['hesk_url']) . "'");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` ADD COLUMN `html` MEDIUMTEXT");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` ADD COLUMN `html` MEDIUMTEXT");
+
+    $res = executeQuery("SELECT 1 FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'rich_text_for_tickets' AND `Value` = 1");
+
+    // If HTML is enabled, copy the canned responses to the html column.
+    if (hesk_dbNumRows($res) > 0) {
+        executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` SET `html` = `message`");
+        executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `html` = `message`");
+    }
+
 }
 // END Version 2.5.0
