@@ -836,11 +836,20 @@ function execute250Scripts()
 
     $res = executeQuery("SELECT 1 FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'rich_text_for_tickets' AND `Value` = 1");
 
-    // If HTML is enabled, copy the canned responses to the html column.
+    // If HTML is enabled, copy the canned responses to the html column. Unescape them so they're ready to go for editing.
     if (hesk_dbNumRows($res) > 0) {
-        executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` SET `html` = `message`");
-        executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `html` = `message`");
+        $canned_responses = executeQuery("SELECT `id`, `message` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies`");
+        while ($response = hesk_dbFetchAssoc($canned_responses)) {
+            $message = hesk_html_entity_decode($response['message']);
+            executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` SET `html` = '" .
+                hesk_dbEscape($message) . "' WHERE `id` = ".intval($response['id']));
+        }
+        $ticket_templates = executeQuery("SELECT `id`, `message` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates`");
+        while ($template = hesk_dbFetchAssoc($ticket_templates)) {
+            $message = hesk_html_entity_decode($template['message']);
+            executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `html` = '" .
+                hesk_dbEscape($message) . "' WHERE `id` = ".intval($template['id']));
+        }
     }
-
 }
 // END Version 2.5.0
