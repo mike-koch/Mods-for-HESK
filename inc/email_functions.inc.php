@@ -391,15 +391,6 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
         $innerboundary .= '1';
     }
     $plaintextMessage = $message;
-    // If HTML is enabled, let's unescape everything, and call html2text. We'll assume either setting is ok.
-    if ($modsForHesk_settings['rich_text_for_tickets']
-        || $modsForHesk_settings['rich_text_for_tickets_for_customers']) {
-        if (!function_exists('convert_html_to_text')) {
-            require(HESK_PATH . 'inc/html2text/html2text.php');
-        }
-        $plaintextMessage = convert_html_to_text($plaintextMessage);
-        $plaintextMessage = fix_newlines($plaintextMessage);
-    }
     $message = "--" . $outerboundary . "\n";
     $message .= "Content-Type: multipart/alternative; boundary=\"" . $innerboundary . "\"\n\n";
 
@@ -675,10 +666,19 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
         $msg = str_replace('%%SITE_URL%%', $hesk_settings['site_url'], $msg);
 
         if (isset($ticket['message'])) {
+            // If HTML is enabled, let's unescape everything, and call html2text.
             if ($isForHtml) {
                 $htmlMessage = nl2br($ticket['message']);
                 $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $htmlMessage, $msg);
                 return str_replace('%%MESSAGE%%', $htmlMessage, $msg);
+            }
+            if ($modsForHesk_settings['rich_text_for_tickets']
+                || $modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+                if (!function_exists('convert_html_to_text')) {
+                    require(HESK_PATH . 'inc/html2text/html2text.php');
+                }
+                $ticket['message'] = convert_html_to_text($ticket['message']);
+                $ticket['message'] = fix_newlines($ticket['message']);
             }
             $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $ticket['message'], $msg);
             return str_replace('%%MESSAGE%%', $ticket['message'], $msg);
@@ -750,6 +750,7 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
         }
     }
 
+
     // Is message tag in email template?
     if (strpos($msg, '%%MESSAGE%%') !== false) {
         // Replace message
@@ -757,7 +758,16 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
             $htmlMessage = nl2br($ticket['message']);
             $msg = str_replace('%%MESSAGE%%', $htmlMessage, $msg);
         } else {
-            $msg = str_replace('%%MESSAGE%%', $ticket['message'], $msg);
+            $plainTextMessage = $ticket['message'];
+            if ($modsForHesk_settings['rich_text_for_tickets']
+                || $modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+                if (!function_exists('convert_html_to_text')) {
+                    require(HESK_PATH . 'inc/html2text/html2text.php');
+                }
+                $plainTextMessage = convert_html_to_text($plainTextMessage);
+                $plainTextMessage = fix_newlines($plainTextMessage);
+            }
+            $msg = str_replace('%%MESSAGE%%', $plainTextMessage, $msg);
         }
 
         // Add direct links to any attachments at the bottom of the email message OR add them as attachments, depending on the settings
