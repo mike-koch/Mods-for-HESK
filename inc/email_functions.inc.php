@@ -391,6 +391,15 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
         $innerboundary .= '1';
     }
     $plaintextMessage = $message;
+    // If HTML is enabled, let's unescape everything, and call html2text. We'll assume either setting is ok.
+    if ($modsForHesk_settings['rich_text_for_tickets']
+        || $modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+        if (!function_exists('convert_html_to_text')) {
+            require(HESK_PATH . 'inc/html2text/html2text.php');
+        }
+        $plaintextMessage = convert_html_to_text($plaintextMessage);
+        $plaintextMessage = fix_newlines($plaintextMessage);
+    }
     $message = "--" . $outerboundary . "\n";
     $message .= "Content-Type: multipart/alternative; boundary=\"" . $innerboundary . "\"\n\n";
 
