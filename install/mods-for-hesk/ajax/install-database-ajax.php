@@ -53,6 +53,9 @@ if ($version == 1) {
     execute241FileUpdate();
 } elseif ($version == 242) {
     execute242Scripts();
+} elseif ($version == 250) {
+    migrateSettings();
+    execute250Scripts();
 } else {
     $response = 'The version "' . $version . '" was not recognized. Check the value submitted and try again.';
     print $response;
