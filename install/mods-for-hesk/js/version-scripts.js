@@ -1,61 +1,61 @@
 function processUpdates(startingVersion) {
-    if (startingVersion < 1) {
+    if (startingVersion < 2) {
         startVersionUpgrade('p140');
-        executeUpdate(1, 'p140', 'Pre 1.4.0');
-    } else if (startingVersion < 140) {
+        executeUpdate(2, 'p140', 'Pre 1.4.0');
+    } else if (startingVersion < 3) {
         startVersionUpgrade('140');
-        executeUpdate(140, '140', '1.4.0');
-    } else if (startingVersion < 141) {
+        executeUpdate(3, '140', '1.4.0');
+    } else if (startingVersion < 4) {
         startVersionUpgrade('141');
-        executeUpdate(141, '141', '1.4.1');
-    } else if (startingVersion < 150) {
+        executeUpdate(4, '141', '1.4.1');
+    } else if (startingVersion < 5) {
         startVersionUpgrade('150');
-        executeUpdate(150, '150', '1.5.0');
-    } else if (startingVersion < 160) {
+        executeUpdate(5, '150', '1.5.0');
+    } else if (startingVersion < 6) {
         startVersionUpgrade('160');
-        executeUpdate(160, '160', '1.6.0');
-    } else if (startingVersion < 161) {
+        executeUpdate(6, '160', '1.6.0');
+    } else if (startingVersion < 7) {
         startVersionUpgrade('161');
-        executeUpdate(161, '161', '1.6.1');
-    } else if (startingVersion < 170) {
+        executeUpdate(7, '161', '1.6.1');
+    } else if (startingVersion < 8) {
         startVersionUpgrade('170');
-        executeUpdate(170, '170', '1.7.0');
-    } else if (startingVersion < 200) {
+        executeUpdate(8, '170', '1.7.0');
+    } else if (startingVersion < 9) {
         startVersionUpgrade('200');
-        executeUpdate(200, '200', '2.0.0');
-    } else if (startingVersion < 201) {
+        executeUpdate(9, '200', '2.0.0');
+    } else if (startingVersion < 10) {
         startVersionUpgrade('201');
-        executeUpdate(201, '201', '2.0.1');
-    } else if (startingVersion < 210) {
+        executeUpdate(10, '201', '2.0.1');
+    } else if (startingVersion < 11) {
         startVersionUpgrade('210');
-        executeUpdate(210, '210', '2.1.0');
-    } else if (startingVersion < 211) {
+        executeUpdate(11, '210', '2.1.0');
+    } else if (startingVersion < 12) {
         startVersionUpgrade('211');
-        executeUpdate(211, '211', '2.1.1');
-    } else if (startingVersion < 220) {
+        executeUpdate(12, '211', '2.1.1');
+    } else if (startingVersion < 13) {
         startVersionUpgrade('220');
-        executeUpdate(220, '220', '2.2.0');
-    } else if (startingVersion < 221) {
+        executeUpdate(13, '220', '2.2.0');
+    } else if (startingVersion < 14) {
         startVersionUpgrade('221');
-        executeUpdate(221, '221', '2.2.1');
-    } else if (startingVersion < 230) {
+        executeUpdate(14, '221', '2.2.1');
+    } else if (startingVersion < 15) {
         startVersionUpgrade('230');
-        executeUpdate(230, '230', '2.3.0');
-    } else if (startingVersion < 231) {
+        executeUpdate(15, '230', '2.3.0');
+    } else if (startingVersion < 16) {
         startVersionUpgrade('231');
-        executeUpdate(231, '231', '2.3.1');
-    } else if (startingVersion < 232) {
+        executeUpdate(16, '231', '2.3.1');
+    } else if (startingVersion < 17) {
         startVersionUpgrade('232');
-        executeUpdate(232, '232', '2.3.2');
-    } else if (startingVersion < 240) {
+        executeUpdate(17, '232', '2.3.2');
+    } else if (startingVersion < 18) {
         startVersionUpgrade('240');
-        executeUpdate(240, '240', '2.4.0');
-    } else if (startingVersion < 241) {
+        executeUpdate(18, '240', '2.4.0');
+    } else if (startingVersion < 19) {
         startVersionUpgrade('241');
-        executeUpdate(241, '241', '2.4.1');
-    } else if (startingVersion < 242) {
+        executeUpdate(19, '241', '2.4.1');
+    } else if (startingVersion < 20) {
         startVersionUpgrade('242');
-        executeUpdate(242, '242', '2.4.2');
+        executeUpdate(20, '242', '2.4.2');
     } else {
         installationFinished();
     }
@@ -67,19 +67,19 @@ function executeUpdate(version, cssclass, formattedVersion) {
     $.ajax({
         type: 'POST',
         url: 'ajax/install-database-ajax.php',
-        data: { version: version },
-        success: function(data) {
+        data: {version: version},
+        success: function (data) {
             markUpdateAsSuccess(cssclass, formattedVersion);
-            if (version == 200) {
+            if (version == 9) {
                 migrateIpEmailBans('banmigrate', 'banmigrate');
-            } else if (version == 240) {
+            } else if (version == 18) {
                 initializeStatuses('initialize-statuses', 'initialize-statuses');
             } else {
                 processUpdates(version);
             }
         },
-        error: function(data) {
-            appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>'+ data.responseText + '</td></tr>');
+        error: function (data) {
+            appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>' + data.responseText + '</td></tr>');
             markUpdateAsFailure(cssclass);
         }
     });
@@ -91,8 +91,8 @@ function migrateIpEmailBans(version, cssclass) {
     $.ajax({
         type: 'POST',
         url: 'ajax/task-ajax.php',
-        data: { task: 'ip-email-bans' },
-        success: function(data) {
+        data: {task: 'ip-email-bans'},
+        success: function (data) {
             var parsedData = $.parseJSON(data);
             if (parsedData.status == 'ATTENTION') {
                 appendToInstallConsole('<tr><td><span class="label label-warning">WARNING</span></td><td>Your response is needed. Please check above.</td></tr>');
@@ -102,7 +102,7 @@ function migrateIpEmailBans(version, cssclass) {
                 migrateComplete();
             }
         },
-        error: function(data) {
+        error: function (data) {
             appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>' + data.responseText + '</td></tr>');
             markUpdateAsFailure(version);
         }
@@ -115,12 +115,12 @@ function initializeStatuses(version, cssclass) {
     $.ajax({
         type: 'POST',
         url: 'ajax/task-ajax.php',
-        data: { task: 'initialize-statuses' },
-        success: function(data) {
+        data: {task: 'initialize-statuses'},
+        success: function (data) {
             markUpdateAsSuccess(cssclass, 'Initializing Statuses');
             statusesInitialized();
         },
-        error: function(data) {
+        error: function (data) {
             appendToInstallConsole('<tr><td><span class="label label-danger">ERROR</span></td><td>' + data.responseText + '</td></tr>');
             markUpdateAsFailure(version);
         }
@@ -128,7 +128,7 @@ function initializeStatuses(version, cssclass) {
 }
 
 function statusesInitialized() {
-    processUpdates(240);
+    processUpdates(18);
 }
 
 
@@ -141,11 +141,11 @@ function runMigration() {
     $.ajax({
         type: 'POST',
         url: 'ajax/task-ajax.php',
-        data: { task: 'migrate-bans', user: userId },
-        success: function(data) {
+        data: {task: 'migrate-bans', user: userId},
+        success: function (data) {
             migrateComplete();
         },
-        error: function(data) {
+        error: function (data) {
             appendToInstallConsole('ERROR: ' + data.responseText);
             markUpdateAsFailure('banmigrate');
         }
@@ -155,7 +155,7 @@ function runMigration() {
 function migrateComplete() {
     $('#attention-row').hide();
     markUpdateAsSuccess('banmigrate', 'IP and Email address bans');
-    processUpdates(200);
+    processUpdates(9);
 }
 
 jQuery(document).ready(loadJquery);
