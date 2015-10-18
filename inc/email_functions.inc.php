@@ -672,8 +672,8 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
                 $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $htmlMessage, $msg);
                 return str_replace('%%MESSAGE%%', $htmlMessage, $msg);
             }
-            if ($modsForHesk_settings['rich_text_for_tickets']
-                || $modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+            $message_has_html = checkForHtml($ticket);
+            if ($message_has_html) {
                 if (!function_exists('convert_html_to_text')) {
                     require(HESK_PATH . 'inc/html2text/html2text.php');
                 }
@@ -759,8 +759,8 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
             $msg = str_replace('%%MESSAGE%%', $htmlMessage, $msg);
         } else {
             $plainTextMessage = $ticket['message'];
-            if ($modsForHesk_settings['rich_text_for_tickets']
-                || $modsForHesk_settings['rich_text_for_tickets_for_customers']) {
+            $message_has_html = checkForHtml($ticket);
+            if ($message_has_html) {
                 if (!function_exists('convert_html_to_text')) {
                     require(HESK_PATH . 'inc/html2text/html2text.php');
                 }
@@ -841,4 +841,15 @@ function processDirectAttachments($emailMethod, $postfields = NULL, $boundary = 
         }
         return $attachments;
     }
+}
+
+function checkForHtml($ticket) {
+    global $hesk_settings;
+
+    $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` WHERE `replyto` = ".intval($ticket['id']) . " ORDER BY `id` DESC LIMIT 1");
+    if (hesk_dbNumRows($repliesRs) != 1) {
+        return $ticket['html'];
+    }
+    $reply = hesk_dbFetchAssoc($repliesRs);
+    return $reply['html'];
 }

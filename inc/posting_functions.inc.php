@@ -168,7 +168,8 @@ function hesk_newTicket($ticket, $isVerified = true)
         'dt' => hesk_date(),
         'lastchange' => hesk_date(),
         'id' => hesk_dbInsertID(),
-        'language' => $language
+        'language' => $language,
+        'html' => $ticket['html']
     );
 
     // Add custom fields to the array
