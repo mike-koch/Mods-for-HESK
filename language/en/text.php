@@ -390,7 +390,7 @@ $hesklang['quick_help_ticket']='Here is the information on your ticket. You can 
 $hesklang['search_the_knowledgebase'] = 'Search the Knowledgebase';
 $hesklang['view_ticket_nav']='View Ticket';
 $hesklang['quick_help']='Quick Help';
-$hesklang['quick_help_submit_ticket']='Please fill out the form on the right to submit a ticket. Required fields are marked with a <font class="important">*</font>.';
+$hesklang['quick_help_submit_ticket']='Please fill out the form on the right to submit a ticket. Required fields are marked with a <span class="important">*</span>.';
 $hesklang['quick_help_view_ticket']='Please fill out the required information on the right to view your ticket. If you forgot your Ticket tracking ID, click "Forgot tracking ID".';
 $hesklang['information']='Information';
 $hesklang['admin_sidebar_ticket_id']='TICKET ID';
@@ -399,7 +399,7 @@ $hesklang['statusChange']=' - - Change Status - - ';
 $hesklang['ownerChange']=' - - Change Owner - - ';
 $hesklang['categoryChange']=' - - Change Category - - ';
 $hesklang['navigation']='Navigation';
-$hesklang['nti']='<span class="glyphicon glyphicon-plus-sign"></span> New ticket';
+$hesklang['nti']='New ticket';
 $hesklang['savedResponses']='Saved Responses';
 $hesklang['add_ticket_general_information']='General Information';
 $hesklang['add_ticket_your_message']='Your Message';

@@ -64,7 +64,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="panel-heading">
                 <h4><?php echo $hesklang['tickets']; ?> <span class="nu-floatRight panel-button"><a
                             href="new_ticket.php" class="btn btn-success"><span
-                                class="glyphicon glyphicon-plus-sign"></span> New ticket</a></span></h4>
+                                class="glyphicon glyphicon-plus-sign"></span> <?php echo $hesklang['nti']; ?></a></span></h4>
             </div>
             <?php
             /* Print the list of tickets */
