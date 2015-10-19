@@ -804,7 +804,16 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
             $htmlMessage = nl2br($ticket['message']);
             $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $htmlMessage, $msg);
         } else {
-            $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $ticket['message'], $msg);
+            $plainTextMessage = $ticket['message'];
+            $message_has_html = checkForHtml($ticket);
+            if ($message_has_html) {
+                if (!function_exists('convert_html_to_text')) {
+                    require(HESK_PATH . 'inc/html2text/html2text.php');
+                }
+                $plainTextMessage = convert_html_to_text($plainTextMessage);
+                $plainTextMessage = fix_newlines($plainTextMessage);
+            }
+            $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $plainTextMessage, $msg);
         }
     }
 

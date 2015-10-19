@@ -122,7 +122,9 @@ if (strlen($message)) {
     // Attach signature to the message?
     if (!$submit_as_customer && !empty($_POST['signature'])) {
         if ($modsForHesk_settings['rich_text_for_tickets']) {
-            $message .= "<br><br>" . nl2br($_SESSION['signature']) . "<br>";
+            $signature = nl2br($_SESSION['signature']);
+            $signature = hesk_htmlspecialchars($signature);
+            $message .= "<br><br>" . $signature . "<br>";
         } else {
             $message .= "\n\n" . addslashes($_SESSION['signature']) . "\n";
         }
