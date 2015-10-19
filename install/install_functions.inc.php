@@ -826,7 +826,7 @@ function hesk_iHeader()
     <link href="../hesk_style.css?<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../css/bootstrap-theme.css">
-    <link href="../css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+    <link href="../css/hesk_newStyle.css" type="text/css" rel="stylesheet" />
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="../js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="../hesk_javascript.js?<?php echo HESK_NEW_VERSION; ?>"></script>
