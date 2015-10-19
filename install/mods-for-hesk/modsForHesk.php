@@ -85,31 +85,7 @@ hesk_dbConnect();
                     $versionRS = hesk_dbQuery('SELECT `Value` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'settings` WHERE `Key` = \'modsForHeskVersion\'');
                     $versionArray = hesk_dbFetchAssoc($versionRS);
                     $version = $versionArray['Value'];
-                    $no_dotted_version = str_replace('.', '', $version);
-                    $int_version = intval($no_dotted_version);
-                    $int_newest_version = MODS_FOR_HESK_NEW_VERSION_INT;
-
-                    // Display file permissions if the user doesn't have 2.5.0 installed yet
-                    if ($int_version < $int_newest_version): ?>
-                    <tr>
-                        <td>
-                            modsForHesk_settings.inc.php
-                        </td>
-                        <?php
-                            $fileperm = substr(sprintf('%o', fileperms(HESK_PATH.'modsForHesk_settings.inc.php')), -4);
-                            $class =  (intval($fileperm) < 666) ? 'class="danger"' : 'class="success"';
-                        ?>
-                        <td <?php echo $class; ?>>
-                            <?php if ($class == 'class="success"') {
-                                echo '<i class="fa fa-check-circle"></i> Success';
-                            } else {
-                                echo '<i class="fa fa-times-circle"></i> CHMOD to 0666, yours is '.$fileperm;
-                                $allowInstallation = false;
-                            }
-                            ?>
-                        </td>
-                    </tr>
-                    <?php endif; ?>
+                    ?>
                     </tbody>
                 </table>
             </div>
@@ -163,7 +139,7 @@ hesk_dbConnect();
                                     $v242btn = 'btn-default';
                                 }
                                 ?>
-                                <a id="241" class="btn <?php echo $v242btn; ?> btn-block disablable"
+                                <a id="242" class="btn <?php echo $v242btn; ?> btn-block disablable"
                                    href="installModsForHesk.php?v=20">2.4.2</a>
                             </div>
                             <div class="col-md-3 col-sm-12">

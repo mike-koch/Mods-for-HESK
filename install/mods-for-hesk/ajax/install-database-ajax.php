@@ -7,53 +7,45 @@ hesk_load_database_functions();
 require('../sql/installSql.php');
 
 $version = $_POST['version'];
-if ($version == 1) {
+if ($version == 2) {
     executePre140Scripts();
-} elseif ($version == 140) {
+} elseif ($version == 3) {
     execute140Scripts();
-} elseif ($version == 141) {
+} elseif ($version == 4) {
     execute141Scripts();
-} elseif ($version == 150) {
+} elseif ($version == 5) {
     execute150Scripts();
-} elseif ($version == 160) {
+} elseif ($version == 6) {
     execute160Scripts();
-} elseif ($version == 161) {
+} elseif ($version == 7) {
     execute161Scripts();
-} elseif ($version == 170) {
+} elseif ($version == 8) {
     execute170Scripts();
-    execute170FileUpdate();
-} elseif ($version == 200) {
+} elseif ($version == 9) {
     execute200Scripts();
-    execute200FileUpdate();
-} elseif ($version == 201) {
+} elseif ($version == 10) {
     execute201Scripts();
-} elseif ($version == 210) {
+} elseif ($version == 11) {
     execute210Scripts();
-    execute210FileUpdate();
-} elseif ($version == 211) {
+} elseif ($version == 12) {
     execute211Scripts();
-    execute211FileUpdate();
-} elseif ($version == 220) {
+} elseif ($version == 13) {
     execute220Scripts();
-    execute220FileUpdate();
-} elseif ($version == 221) {
+} elseif ($version == 14) {
     execute221Scripts();
-} elseif ($version == 230) {
+} elseif ($version == 15) {
     execute230Scripts();
-    execute230FileUpdate();
-} elseif ($version == 231) {
+} elseif ($version == 16) {
     execute231Scripts();
-} elseif ($version == 232) {
+} elseif ($version == 17) {
     execute232Scripts();
-} elseif ($version == 240) {
+} elseif ($version == 18) {
     execute240Scripts();
-    execute240FileUpdate();
-} elseif ($version == 241) {
+} elseif ($version == 19) {
     execute241Scripts();
-    execute241FileUpdate();
-} elseif ($version == 242) {
+} elseif ($version == 20) {
     execute242Scripts();
-} elseif ($version == 250) {
+} elseif ($version == 21) {
     migrateSettings();
     execute250Scripts();
 } else {

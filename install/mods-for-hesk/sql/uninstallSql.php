@@ -81,8 +81,12 @@ function removeOtherColumns()
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` DROP COLUMN `html`");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` DROP COLUMN `html`");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` DROP COLUMN `html`");
-    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` DROP COLUMN `html`");
-    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` DROP COLUMN `html`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` DROP COLUMN `user_agent`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` DROP COLUMN `screen_resolution_width`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` DROP COLUMN `screen_resolution_height`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` DROP COLUMN `user_agent`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` DROP COLUMN `screen_resolution_width`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` DROP COLUMN `screen_resolution_height`");
 
 
     // These queries are ran in case someone used an unfortunate installation they may have not properly cleaned up tables

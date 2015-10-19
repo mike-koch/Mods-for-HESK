@@ -216,27 +216,6 @@ function execute170Scripts()
     )");
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '1.7.0' WHERE `Key` = 'modsForHeskVersion'");
 }
-
-function execute170FileUpdate()
-{
-
-    //-- Add the new custom field property to modsForHesk_settings.inc.php
-    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-
-    //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, 'custom_field_setting') === false) {
-        $file .= '
-
-        //-- Set this to 1 to enable custom field names as keys
-        $modsForHesk_settings[\'custom_field_setting\'] = 0;
-
-        //-- Set this to 1 to enable email verification for new customers
-        $modsForHesk_settings[\'customer_email_verification_required\'] = 0;';
-    }
-
-    return file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $file);
-}
-
 // END Version 1.7.0
 
 // BEGIN Version 2.0.0
@@ -256,27 +235,6 @@ function execute200Scripts()
         //-- Add the key
         executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD KEY `statuses` (`status`)");
     }
-}
-
-function execute200FileUpdate()
-{
-    //-- Add the new HTML email property to modsForHesk_settings.inc.php
-    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-
-    //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, 'html_emails') === false) {
-        $file .= '
-
-        //-- Set this to 1 to enable HTML-formatted emails.
-        $modsForHesk_settings[\'html_emails\'] = 0;
-
-        //-- Mailgun Settings
-        $modsForHesk_settings[\'use_mailgun\'] = 0;
-        $modsForHesk_settings[\'mailgun_api_key\'] = \'API Key\';
-        $modsForHesk_settings[\'mailgun_domain\'] = \'mail.domain.com\';';
-    }
-
-    return file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $file);
 }
 
 function checkForIpOrEmailBans()
@@ -354,23 +312,6 @@ function execute210Scripts()
     executeQuery("DROP TABLE IF EXISTS `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips`");
     executeQuery("DROP TABLE IF EXISTS `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_emails`");
 }
-
-function execute210FileUpdate()
-{
-    //-- Add the boostrap theme property to modsForHesk_settings.inc.php
-    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-
-    //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, 'use_bootstrap_theme') === false) {
-        $file .= '
-
-        //-- Set this to 1 to enable bootstrap-theme.css
-        $modsForHesk_settings[\'use_bootstrap_theme\'] = 1;';
-    }
-
-    return file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $file);
-}
-
 // END Version 2.1.0
 
 // BEGIN Version 2.1.1
@@ -395,23 +336,6 @@ function execute211Scripts()
 					ADD INDEX(`dt`)");
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.1.1' WHERE `Key` = 'modsForHeskVersion'");
 }
-
-function execute211FileUpdate()
-{
-    //-- Add the new kb article visibility property to modsForHesk_settings.inc.php
-    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-
-    //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, 'new_kb_article_visibility') === false) {
-        $file .= '
-        
-        //-- Default value for new Knowledgebase article: 0 = Published, 1 = Private, 2 = Draft
-$modsForHesk_settings[\'new_kb_article_visibility\'] = 0;';
-    }
-
-    return file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $file);
-}
-
 // END Version 2.1.1
 
 // BEGIN Version 2.2.0
@@ -429,23 +353,6 @@ function execute220Scripts()
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` SET `Closable` = 'yes'");
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.2.0' WHERE `Key` = 'modsForHeskVersion'");
 }
-
-function execute220FileUpdate()
-{
-    //-- Add the new attachment property to modsForHesk_settings.inc.php
-    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-
-    //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, '$modsForHesk_settings[\'attachments\']') === false) {
-        $file .= '
-
-        //-- Setting for adding attachments to email messages. Either 0 for default-HESK behavior, or 1 to send as attachments
-$modsForHesk_settings[\'attachments\'] = 0;';
-    }
-
-    return file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $file);
-}
-
 // END Version 2.2.0
 
 // BEGIN Version 2.2.1
@@ -520,29 +427,6 @@ function execute230Scripts()
 
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.3.0' WHERE `Key` = 'modsForHeskVersion'");
 }
-
-function execute230FileUpdate()
-{
-    //-- Add the new merged ticket property to modsForHesk_settings.inc.php
-    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-
-    //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, '$modsForHesk_settings[\'show_number_merged\']') === false) {
-        $file .= '
-
-        //-- Setting for showing number of merged tickets in the ticket search screen. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'show_number_merged\'] = 1;';
-    }
-    if (strpos($file, '$modsForHesk_settings[\'request_location\']') === false) {
-        $file .= '
-
-        //-- Setting for requesting user\'s location. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'request_location\'] = 0;';
-    }
-
-    return file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $file);
-}
-
 // END Version 2.3.0
 
 
@@ -642,36 +526,6 @@ function initializeXrefTable()
     $hesk_settings['can_sel_lang'] = $oldSetting;
     hesk_resetLanguage();
 }
-
-function execute240FileUpdate()
-{
-    global $hesk_settings;
-
-    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-
-    //-- Only add the additional settings if they aren't already there.
-    if (strpos($file, '$modsForHesk_settings[\'category_order_column\']') === false) {
-        $file .= '
-
-        //-- Column to sort categories by. Can be either \'name\' or \'cat_order\'
-$modsForHesk_settings[\'category_order_column\'] = \'cat_order\';';
-    }
-    if (strpos($file, '$modsForHesk_settings[\'rich_text_for_tickets\']') === false) {
-        $file .= '
-
-        //-- Setting for using rich-text editor for tickets. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'rich_text_for_tickets\'] = 0;';
-    }
-    if (strpos($file, '$modsForHesk_settings[\'kb_attach_dir\']') === false) {
-        $file .= '
-
-        //-- Directory to store knowledgebase articles in.
-$modsForHesk_settings[\'kb_attach_dir\'] = \'' . $hesk_settings['attach_dir'] . '\';';
-    }
-
-    return file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $file);
-}
-
 // END Version 2.4.0
 
 // BEGIN Version 2.4.1
@@ -683,22 +537,6 @@ function execute241Scripts()
 
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.4.1' WHERE `Key` = 'modsForHeskVersion'");
 }
-
-function execute241FileUpdate()
-{
-
-    $file = file_get_contents(HESK_PATH . 'modsForHesk_settings.inc.php');
-
-    if (strpos($file, '$modsForHesk_settings[\'rich_text_for_tickets_for_customers\']') === false) {
-        $file .= '
-
-        //-- Setting for using rich-text editor for customers. 0 = Disable, 1 = Enable
-$modsForHesk_settings[\'rich_text_for_tickets_for_customers\'] = 0;';
-    }
-
-    return file_put_contents(HESK_PATH . 'modsForHesk_settings.inc.php', $file);
-}
-
 // END Version 2.4.1
 
 // Version 2.4.2
@@ -715,6 +553,8 @@ function execute242Scripts()
 function migrateSettings()
 {
     global $hesk_settings;
+
+    hesk_dbConnect();
 
     if (file_exists(HESK_PATH . 'modsForHesk_settings.inc.php')) {
         require_once(HESK_PATH . 'modsForHesk_settings.inc.php');
@@ -830,6 +670,8 @@ function execute250Scripts()
 
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('display_user_agent_information', '0')");
 
-    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('navbar_title_url', '" . hesk_dbEscape($hesk_settings['hesk_url']) . "'");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('navbar_title_url', '" . hesk_dbEscape($hesk_settings['hesk_url']) . "')");
+
+    executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.5.0' WHERE `Key` = 'modsForHeskVersion'");
 }
 // END Version 2.5.0
