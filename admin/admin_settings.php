@@ -1156,8 +1156,8 @@ if (defined('HESK_DEMO')) {
                                     $on = $modsForHesk_settings['display_user_agent_information'] ? 'checked' : '';
                                     $off = $modsForHesk_settings['display_user_agent_information'] ? '' : 'checked';
                                     echo '
-								<div class="radio"><label><input type="radio" name="statuses_order_column" value="0" ' . $off . '>' . $hesklang['no'] . '</label></div>
-								<div class="radio"><label><input type="radio" name="statuses_order_column" value="1" ' . $on . '>' . $hesklang['yes'] . '</label></div>
+								<div class="radio"><label><input type="radio" name="display_user_agent_information" value="0" ' . $off . '>' . $hesklang['no'] . '</label></div>
+								<div class="radio"><label><input type="radio" name="display_user_agent_information" value="1" ' . $on . '>' . $hesklang['yes'] . '</label></div>
 								';
                                     ?>
                                 </div>
