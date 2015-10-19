@@ -15,7 +15,7 @@ hesk_dbConnect();
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>"
           type="text/css" rel="stylesheet"/>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../../css/hesk_newStyle.php" type="text/css" rel="stylesheet"/>
+    <link href="../../css/hesk_newStyle.css" type="text/css" rel="stylesheet"/>
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
     <script language="Javascript" type="text/javascript"
@@ -77,19 +77,20 @@ hesk_dbConnect();
                             * Mods for HESK is unable to check database permissions automatically.
                         </td>
                     </tr>
-                    <?php
-                    $tableSql = hesk_dbQuery('SHOW TABLES LIKE \'' . hesk_dbEscape($hesk_settings['db_pfix']) . 'settings\'');
-                    $version = NULL;
-                    $disableAllExcept = NULL;
-                    if (hesk_dbNumRows($tableSql) > 0) {
-                    $versionRS = hesk_dbQuery('SELECT `Value` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'settings` WHERE `Key` = \'modsForHeskVersion\'');
-                    $versionArray = hesk_dbFetchAssoc($versionRS);
-                    $version = $versionArray['Value'];
-                    ?>
                     </tbody>
                 </table>
             </div>
         </div>
+        <?php
+        $tableSql = hesk_dbQuery('SHOW TABLES LIKE \'' . hesk_dbEscape($hesk_settings['db_pfix']) . 'settings\'');
+        $version = NULL;
+        $disableAllExcept = NULL;
+        if (hesk_dbNumRows($tableSql) > 0) {
+            $versionRS = hesk_dbQuery('SELECT `Value` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'settings` WHERE `Key` = \'modsForHeskVersion\'');
+            $versionArray = hesk_dbFetchAssoc($versionRS);
+            $version = $versionArray['Value'];
+        }
+        ?>
         <div class="col-md-7 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Install / Upgrade</div>
@@ -127,7 +128,6 @@ hesk_dbConnect();
                                 echo '</div>';
                                 echo '</div>';
                             }
-                        }
                         ?>
                         <div class="row">
                             <div class="col-md-3 col-sm-12">
