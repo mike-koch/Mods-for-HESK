@@ -39,7 +39,25 @@ if (!function_exists('mfh_getSettings')) {
     die('Mods for HESK settings are not accessible!');
 }
 
-$modsForHesk_settings = mfh_getSettings();
+$modsForHesk_settings = array();
+if (is_dir(HESK_PATH . 'install')) {
+    $modsForHesk_settings['rtl'] = 0;
+    $modsForHesk_settings['use_bootstrap_theme'] = 1;
+    $modsForHesk_settings['navbarBackgroundColor'] = '#414a5c';
+    $modsForHesk_settings['navbarBrandColor'] = '#d4dee7';
+    $modsForHesk_settings['navbarBrandHoverColor'] = '#ffffff';
+    $modsForHesk_settings['navbarItemTextColor'] = '#d4dee7';
+    $modsForHesk_settings['navbarItemTextHoverColor'] = '#ffffff';
+    $modsForHesk_settings['navbarItemTextSelectedColor'] = '#ffffff';
+    $modsForHesk_settings['navbarItemSelectedBackgroundColor'] = '#2d3646';
+    $modsForHesk_settings['dropdownItemTextColor'] = '#333333';
+    $modsForHesk_settings['dropdownItemTextHoverColor'] = '#262626';
+    $modsForHesk_settings['dropdownItemTextHoverBackgroundColor'] = '#f5f5f5';
+    $modsForHesk_settings['questionMarkColor'] = '#000000';
+} else {
+    $modsForHesk_settings = mfh_getSettings();
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
