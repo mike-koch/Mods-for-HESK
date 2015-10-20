@@ -20,6 +20,7 @@ Mods for HESK is a set of modifications for [HESK](http://www.hesk.com) v2.6.5, 
                 <li>Custom fields in multiple languages</li>
                 <li>Create new ticket based on previous ticket</li>
                 <li>Admins can restrict users from modifying notification settings</li>
+                <li>Client-side form validation</li>
             </ul>
         </td>
         <td>
@@ -35,6 +36,8 @@ Mods for HESK is a set of modifications for [HESK](http://www.hesk.com) v2.6.5, 
                 <li>Show number of merged tickets in ticket search view</li>
                 <li>Enable / disable staff members</li>
                 <li>More-restricted settings page access</li>
+                <li>User agent tracking</li>
+                <li>New custom fields: Date, Readonly, Hidden, Email, Multiple Select</li>
             </ul>
         </td>
     </tr>
