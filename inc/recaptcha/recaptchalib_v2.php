@@ -91,27 +91,22 @@ class ReCaptcha
     private function _submitHTTPGet($path, $data)
     {
         $req = $this->_encodeQS($data);
-        // Try using cURL first. If that fails, fallback to file_get_contents
-        if (function_exists('curl_init')) {
-            $handle = curl_init($path);
-            $queryString = http_build_query($data, '', '&');
-            $options = array(
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => $queryString,
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/x-www-form-urlencoded'
-                ),
-                CURLINFO_HEADER_OUT => false,
-                CURLOPT_HEADER => false,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => true
-            );
-            curl_setopt_array($handle, $options);
-            $response = curl_exec($handle);
-            curl_close($handle);
+
+        // Try using cURL
+        if ( function_exists('curl_init') )
+        {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $path);
+            curl_setopt($ch, CURLOPT_POST, count($data) );
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data, '', '&') );
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            $response = curl_exec($ch);
+            curl_close($ch);
             return $response;
         }
 
+        // Default to file_get_contents
         $response = file_get_contents($path . $req);
         return $response;
     }
@@ -157,5 +152,3 @@ class ReCaptcha
         return $recaptchaResponse;
     }
 }
-
-?>
