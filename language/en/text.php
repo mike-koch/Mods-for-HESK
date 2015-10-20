@@ -21,6 +21,26 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.5.0
+$hesklang['ticket_message_no_attachments'] = 'Ticket/Reply message, however attachments will not be included in the email';
+$hesklang['click_for_device_information'] = 'Click for device information';
+$hesklang['device_information'] = 'Device information';
+$hesklang['operating_system'] = 'Operating System';
+$hesklang['browser'] = 'Browser';
+$hesklang['screen_resolution'] = 'Screen Resolution';
+$hesklang['display_user_agent_information'] = 'Show user agent';
+$hesklang['display_user_agent_information_help'] = 'When enabled, staff will be able to view the operating system, browser,
+    and screen resolution of the device used to create the ticket.';
+$hesklang['value_colon'] = 'Value:';
+$hesklang['hidden_custom_field'] = 'Hidden text field';
+$hesklang['hidden_custom_field_help'] = 'This input is the same as a text field; however this value cannot be changed and will not be visible to the user.';
+$hesklang['readonly_custom_field'] = 'Read-only text field';
+$hesklang['readonly_custom_field_help'] = 'This input is the same as a text field; however this value cannot be changed, but will be visible to the user.';
+$hesklang['navbar_title_url'] = 'Navbar Title URL';
+$hesklang['navbar_title_url_help'] = 'Enter the URL you wish to use when a customer (or staff) clicks on the help desk title on the top-left corner of the screen. The URL must begin with http:// or https://.';
+$hesklang['this_field_is_required'] = 'This field is required';
+$hesklang['select_at_least_one_value'] = 'Please select at least one value';
+
 // ADDED OR MODIFIED IN Mods for HESK 2.4.0
 $hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';
 $hesklang['sort_alphabetically'] = 'Sort alphabetically';
@@ -142,7 +162,7 @@ $hesklang['cannot_change_admin_staff'] = 'You cannot change admin/non-admin stat
 $hesklang['permission_tpl_man'] = 'Manage permission templates'; // Menu link
 $hesklang['permission_templates'] = 'Permission Templates';
 $hesklang['can_man_permission_tpl'] = 'Can manage permission templates';
-$hesklang['permission_template_colon'] = 'Permission Template:';
+$hesklang['permission_template_colon'] = 'Permission Template';
 $hesklang['permission_template'] = 'Permission Template';
 $hesklang['custom'] = 'Custom';
 
@@ -370,7 +390,7 @@ $hesklang['quick_help_ticket']='Here is the information on your ticket. You can 
 $hesklang['search_the_knowledgebase'] = 'Search the Knowledgebase';
 $hesklang['view_ticket_nav']='View Ticket';
 $hesklang['quick_help']='Quick Help';
-$hesklang['quick_help_submit_ticket']='Please fill out the form on the right to submit a ticket. Required fields are marked with a <font class="important">*</font>.';
+$hesklang['quick_help_submit_ticket']='Please fill out the form on the right to submit a ticket. Required fields are marked with a <span class="important">*</span>.';
 $hesklang['quick_help_view_ticket']='Please fill out the required information on the right to view your ticket. If you forgot your Ticket tracking ID, click "Forgot tracking ID".';
 $hesklang['information']='Information';
 $hesklang['admin_sidebar_ticket_id']='TICKET ID';
@@ -379,7 +399,7 @@ $hesklang['statusChange']=' - - Change Status - - ';
 $hesklang['ownerChange']=' - - Change Owner - - ';
 $hesklang['categoryChange']=' - - Change Category - - ';
 $hesklang['navigation']='Navigation';
-$hesklang['nti']='<span class="glyphicon glyphicon-plus-sign"></span> New ticket';
+$hesklang['nti']='New ticket';
 $hesklang['savedResponses']='Saved Responses';
 $hesklang['add_ticket_general_information']='General Information';
 $hesklang['add_ticket_your_message']='Your Message';
