@@ -1121,6 +1121,8 @@ function print_add_ticket()
                                 <input type="hidden" id="latitude" name="latitude" value="E-0">
                                 <input type="hidden" id="longitude" name="longitude" value="E-0">
                                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                                <input type="hidden" id="screen-resolution-height" name="screen_resolution_height">
+                                <input type="hidden" id="screen-resolution-width" name="screen_resolution_width">
                                 <input type="submit" value="<?php echo $hesklang['sub_ticket']; ?>"
                                        class="btn btn-default">
                             </div>
