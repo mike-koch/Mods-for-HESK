@@ -364,8 +364,8 @@ $tmpvar['longitude'] = hesk_POST('longitude');
 $tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets_for_customers'];
 
 // Set screen res and user agent
-$tmpvar['screen_resolution_height'] = hesk_POST('screen_resolution_height', NULL);
-$tmpvar['screen_resolution_width'] = hesk_POST('screen_resolution_width', NULL);
+$tmpvar['screen_resolution_height'] = hesk_POST('screen_resolution_height', "NULL");
+$tmpvar['screen_resolution_width'] = hesk_POST('screen_resolution_width', "NULL");
 $tmpvar['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
 // Should the helpdesk validate emails?
