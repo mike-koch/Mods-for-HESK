@@ -48,6 +48,8 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 {
     global $hesk_settings, $hesklang, $hesk_db_link, $ticket;
 
+    $modsForHesk_settings = mfh_getSettings();
+
     // Process "Reply-To:" or "From:" email
     $tmpvar['email'] = isset($results['reply-to'][0]['address']) ? hesk_validateEmail($results['reply-to'][0]['address'], 'ERR', 0) : hesk_validateEmail($results['from'][0]['address'], 'ERR', 0);
 
@@ -264,7 +266,6 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 
         // --> If ticket is assigned just notify the owner
         if ($ticket['owner']) {
-            $modsForHesk_settings = mfh_getSettings();
             hesk_notifyAssignedStaff(false, 'new_reply_by_customer', $modsForHesk_settings, 'notify_reply_my');
         } // --> No owner assigned, find and notify appropriate staff
         else {
