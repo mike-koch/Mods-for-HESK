@@ -48,6 +48,8 @@ if ($version == 2) {
 } elseif ($version == 21) {
     migrateSettings();
     execute250Scripts();
+} elseif ($version == 22) {
+    execute251Scripts();
 } else {
     $response = 'The version "' . $version . '" was not recognized. Check the value submitted and try again.';
     print $response;
