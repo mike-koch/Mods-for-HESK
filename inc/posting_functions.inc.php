@@ -147,8 +147,8 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'" . hesk_dbEscape($ticket['longitude']) . "',
 		'" . hesk_dbEscape($ticket['html']) . "',
 		'" . hesk_dbEscape($ticket['user_agent']) . "',
-		'" . hesk_dbEscape($ticket['screen_resolution_height']) . "',
-		'" . hesk_dbEscape($ticket['screen_resolution_width']) . "'
+		" . hesk_dbEscape($ticket['screen_resolution_height']) . ",
+		" . hesk_dbEscape($ticket['screen_resolution_width']) . "
 	)
 	");
 

@@ -234,8 +234,8 @@ $tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets'];
 
 // Set user agent and screen res to null
 $tmpvar['user_agent'] = NULL;
-$tmpvar['screen_resolution_height'] = NULL;
-$tmpvar['screen_resolution_width'] = NULL;
+$tmpvar['screen_resolution_height'] = "NULL";
+$tmpvar['screen_resolution_width'] = "NULL";
 
 // Insert ticket to database
 $ticket = hesk_newTicket($tmpvar);
