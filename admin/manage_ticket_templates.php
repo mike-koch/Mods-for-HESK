@@ -326,7 +326,7 @@ $num = hesk_dbNumRows($result);
                 tinymce.get("message").execCommand('mceInsertRawHTML', false, '');
             }
             else {
-                $('#message').html('');
+                $('#message').val('');
             }
             $('#subject').val('');
             return true;
@@ -336,10 +336,11 @@ $num = hesk_dbNumRows($result);
                 tinymce.get("message").setContent('');
                 tinymce.get("message").execCommand('mceInsertRawHTML', false, myMsg);
             } else {
-                $('#message').html(myMsg);
+                myMsg = $('<textarea />').html(myMsg).text();
+                $('#message').val(myMsg).trigger('input');
             }
             mySubject = $('<textarea />').html(mySubject).text();
-            $('#subject').val(mySubject);
+            $('#subject').val(mySubject).trigger('input');
         }
         else {
             document.form1.message.value = myMsg;
