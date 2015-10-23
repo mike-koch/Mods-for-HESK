@@ -43,6 +43,7 @@ $modsForHesk_settings = array();
 if (is_dir(HESK_PATH . 'install')) {
     $modsForHesk_settings['rtl'] = 0;
     $modsForHesk_settings['use_bootstrap_theme'] = 1;
+    $modsForHesk_settings['show_icons'] = 1;
     $modsForHesk_settings['navbarBackgroundColor'] = '#414a5c';
     $modsForHesk_settings['navbarBrandColor'] = '#d4dee7';
     $modsForHesk_settings['navbarBrandHoverColor'] = '#ffffff';

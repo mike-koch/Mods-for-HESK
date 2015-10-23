@@ -635,9 +635,9 @@ if (hesk_dbNumRows($res)) {
                         tinymce.get("message").execCommand('mceInsertRawHTML', false, '');
                     }
                     else {
-                        document.getElementById('message').value = '';
+                        $('#message').val('');
                     }
-                    document.getElementById('subject').value = '';
+                    $('#subject').val('');
                 }
                 return true;
             }
@@ -647,9 +647,11 @@ if (hesk_dbNumRows($res)) {
                         tinymce.get("message").setContent('');
                         tinymce.get("message").execCommand('mceInsertRawHTML', false, myMsg);
                     } else {
-                        document.getElementById('message').value = myMsg;
+                        myMsg = $('<textarea />').html(myMsg).text();
+                        $('#message').val(myMsg).trigger('input');
                     }
-                    document.getElementById('subject').value = mySubject;
+                    mySubject = $('<textarea />').html(mySubject).text();
+                    $('#subject').val(mySubject).trigger('input');
                 }
                 else {
                     if (useHtmlEditor) {
@@ -658,10 +660,12 @@ if (hesk_dbNumRows($res)) {
                         tinymce.get("message").execCommand('mceInsertRawHTML', false, oldMsg + myMsg);
                     } else {
                         var oldMsg = document.getElementById('message').value;
-                        document.getElementById('message').value = oldMsg + myMsg;
+                        var theMsg = $('<textarea />').html(oldMsg + myMsg).text();
+                        $('#message').val(theMsg).trigger('input');
                     }
                     if (document.getElementById('subject').value == '') {
-                        document.getElementById('subject').value = mySubject;
+                        mySubject = $('<textarea />').html(mySubject).text();
+                        $('#subject').val(mySubject).trigger('input');
                     }
                 }
             }
