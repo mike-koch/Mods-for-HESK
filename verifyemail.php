@@ -6,6 +6,7 @@ define('HESK_PATH', './');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
+hesk_dbConnect();
 require(HESK_PATH . 'inc/posting_functions.inc.php');
 require(HESK_PATH . 'inc/htmLawed.php');
 require(HESK_PATH . 'inc/email_functions.inc.php');
@@ -33,7 +34,6 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 
                 $submittedTickets = array();
                 $email = '';
-                hesk_dbConnect();
                 $getRs = hesk_dbQuery("SELECT `Email` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "pending_verification_emails`
                 WHERE `ActivationKey` = '" . hesk_dbEscape($key) . "'");
                 while ($result = $getRs->fetch_assoc()) {
