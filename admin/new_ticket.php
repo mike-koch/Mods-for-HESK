@@ -635,9 +635,9 @@ if (hesk_dbNumRows($res)) {
                         tinymce.get("message").execCommand('mceInsertRawHTML', false, '');
                     }
                     else {
-                        document.getElementById('message').value = '';
+                        $('#message').html('');
                     }
-                    document.getElementById('subject').value = '';
+                    $('#subject').html('');
                 }
                 return true;
             }
@@ -647,9 +647,10 @@ if (hesk_dbNumRows($res)) {
                         tinymce.get("message").setContent('');
                         tinymce.get("message").execCommand('mceInsertRawHTML', false, myMsg);
                     } else {
-                        document.getElementById('message').value = myMsg;
+                        $('#message').html(myMsg);
                     }
-                    document.getElementById('subject').value = mySubject;
+                    mySubject = $('<textarea />').html(mySubject).text();
+                    $('#subject').val(mySubject);
                 }
                 else {
                     if (useHtmlEditor) {
@@ -658,10 +659,11 @@ if (hesk_dbNumRows($res)) {
                         tinymce.get("message").execCommand('mceInsertRawHTML', false, oldMsg + myMsg);
                     } else {
                         var oldMsg = document.getElementById('message').value;
-                        document.getElementById('message').value = oldMsg + myMsg;
+                        $('#message').html(oldMsg + myMsg);
                     }
                     if (document.getElementById('subject').value == '') {
-                        document.getElementById('subject').value = mySubject;
+                        mySubject = $('<textarea />').html(mySubject).text();
+                        $('#subject').val(mySubject);
                     }
                 }
             }

@@ -326,9 +326,9 @@ $num = hesk_dbNumRows($result);
                 tinymce.get("message").execCommand('mceInsertRawHTML', false, '');
             }
             else {
-                document.getElementById('message').value = '';
+                $('#message').html('');
             }
-            document.getElementById('subject').value = '';
+            $('#subject').val('');
             return true;
         }
         if (document.getElementById) {
@@ -336,9 +336,10 @@ $num = hesk_dbNumRows($result);
                 tinymce.get("message").setContent('');
                 tinymce.get("message").execCommand('mceInsertRawHTML', false, myMsg);
             } else {
-                document.getElementById('message').value = myMsg;
+                $('#message').html(myMsg);
             }
-            document.getElementById('subject').value = mySubject;
+            mySubject = $('<textarea />').html(mySubject).text();
+            $('#subject').val(mySubject);
         }
         else {
             document.form1.message.value = myMsg;

@@ -1983,7 +1983,7 @@ function hesk_printCanned()
                         tinymce.get("message").setContent('');
                         tinymce.get("message").execCommand('mceInsertRawHTML', false, myMsg);
                     } else {
-                        document.getElementById('message').value = myMsg;
+                        $('#message').html(myMsg);
                     }
                 }
                 else {
@@ -1992,8 +1992,8 @@ function hesk_printCanned()
                         tinymce.get("message").setContent('');
                         tinymce.get("message").execCommand('mceInsertRawHTML', false, oldMsg + myMsg);
                     } else {
-                        var oldMsg = document.getElementById('message').value;
-                        document.getElementById('message').value = oldMsg + myMsg;
+                        var oldMsg = $('#message').html();
+                        $('#message').html(oldMsg + myMsg);
                     }
                 }
             }
