@@ -141,6 +141,7 @@ function print_add_ticket()
         define('RECAPTCHA', 1);
     }
 
+    define('PAGE_TITLE', 'CUSTOMER_TICKET');
     // Print header
     $hesk_settings['tmp_title'] = $hesk_settings['hesk_title'] . ' - ' . $hesklang['submit_ticket'];
     require_once(HESK_PATH . 'inc/header.inc.php');
@@ -1202,6 +1203,8 @@ function print_start()
 
     // Connect to database
     hesk_dbConnect();
+
+    define('PAGE_TITLE', 'CUSTOMER_HOME');
 
 	/* Print header */
 	require_once(HESK_PATH . 'inc/header.inc.php');
