@@ -21,6 +21,13 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.6.0
+$hesklang['manage_statuses'] = 'Manage Statuses';
+$hesklang['manage_service_messages'] = 'Manage Service Messages';
+$hesklang['manage_banned_ips'] = 'Manage Banned IPs';
+$hesklang['manage_banned_emails'] = 'Manage Banned Emails';
+$hesklang['manage_email_templates'] = 'Manage Email Templates';
+
 // ADDED OR MODIFIED IN Mods for HESK 2.5.0
 $hesklang['ticket_message_no_attachments'] = 'Ticket/Reply message, however attachments will not be included in the email';
 $hesklang['click_for_device_information'] = 'Click for device information';
