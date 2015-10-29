@@ -805,7 +805,7 @@ function print_add_ticket()
 
                                     echo '<label style="font-weight: normal;"><input ' . $validator . ' id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $cls . ' /> ' . $option . '</label><br />';
                                 }
-                                echo '<div class="help-block with-errors"></div><</div></div>';
+                                echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
 
                             /* Large text box */
@@ -825,7 +825,7 @@ function print_add_ticket()
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
 					            <div class="col-sm-9"><textarea class="form-control" id="' . $formattedId . '" name="' . $k . '" rows="' . $size[0] . '" cols="' . $size[1] . '" ' . $cls . ' ' . $errorText . ' ' . $required . '>' . $k_value . '</textarea>
                                 <div class="help-block with-errors"></div>
-                                </div>';
+                                </div></div>';
                                 break;
 
                             case 'multiselect':
@@ -902,7 +902,7 @@ function print_add_ticket()
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="' . htmlspecialchars($hesklang['enter_valid_email']) . '" ' . $cls . ' ' . $required . '>
 					            <div class="help-block with-errors"></div>
-                                </div>';
+                                </div></div>';
 
                                 break;
 
@@ -956,7 +956,7 @@ function print_add_ticket()
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' ' . $errorText . ' ' . $required . '>
 					            <div class="help-block with-errors"></div>
-                                </div>';
+                                </div></div>';
                         }
                     }
                 }
