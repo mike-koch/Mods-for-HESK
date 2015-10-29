@@ -403,7 +403,6 @@ function print_add_ticket()
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
-
                                 echo '<div class="form-group"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
                                 <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '" ' . $cls . '>';
 
@@ -506,12 +505,13 @@ function print_add_ticket()
                                     <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
                                     <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
                                 </div>
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block with-errors"></span>
                                 </div></div>';
                                 break;
 
                             case 'date':
                                 //Clean up multiple dashes or whitespaces
+                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
@@ -526,7 +526,7 @@ function print_add_ticket()
                                     <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
                                     <div class="col-sm-9">
                                         <input type="text" class="datepicker form-control white-readonly ' . $cls . '" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
-                                            maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" readonly/>
+                                            value="' . $v['value'] . '" '.$errorText. ' '.$required.' readonly>
                                         <span class="help-block">' . $hesklang['date_format'] . '</span>
                                     </div>
                                 </div>';
@@ -706,6 +706,7 @@ function print_add_ticket()
                             $v['name'] = $hesklang[$v['name']];
                         }
 
+                        $required = $v['req'] ? 'required' : '';
                         $v['req'] = $v['req'] ? '<span class="important">*</span>' : '';
 
                         if ($v['type'] == 'checkbox' || $v['type'] == 'multiselect') {
@@ -857,10 +858,13 @@ function print_add_ticket()
                                 <div class="btn-group" role="group">
                                     <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
                                     <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
-                                </div></div></div>';
+                                </div>
+                                <span class="help-block with-errors"></span>
+                                </div></div>';
                                 break;
 
                             case 'date':
+                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -876,8 +880,9 @@ function print_add_ticket()
                                     <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
                                     <div class="col-sm-9">
                                         <input type="text" class="datepicker form-control white-readonly ' . $cls . '" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
-                                            maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" readonly/>
+                                            value="' . $v['value'] . '" '.$errorText. ' readonly="readonly" '.$required.'>
                                         <span class="help-block">' . $hesklang['date_format'] . '</span>
+                                        <span class="help-block with-errors"></span>
                                     </div>
                                 </div>';
                                 break;
