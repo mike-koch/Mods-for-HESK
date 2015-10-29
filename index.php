@@ -1009,7 +1009,12 @@ function print_add_ticket()
                             $value = stripslashes(hesk_input($_SESSION['c_question']));
                         }
                         $cls = in_array('question', $_SESSION['iserror']) ? ' class="isError" ' : '';
-                        echo '<div class="col-md-9">' . $hesk_settings['question_ask'] . '<br /><input class="form-control" id="question" type="text" name="question" size="20" value="' . $value . '" ' . $cls . ' /></div>';
+                        echo '<div class="col-md-9">' . $hesk_settings['question_ask'] . '<br />
+                        <input class="form-control" id="question" type="text" name="question"
+                        data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"
+                        size="20" value="' . $value . '" ' . $cls . ' required>
+                        <div class="help-block with-errors"></div>
+                        </div>';
                         ?>
                     </div>
                     <?php
