@@ -41,6 +41,7 @@ if (!function_exists('mfh_getSettings')) {
 
 $modsForHesk_settings = array();
 if (is_dir(HESK_PATH . 'install')) {
+    $modsForHesk_settings['navbar_title_url'] = '#';
     $modsForHesk_settings['rtl'] = 0;
     $modsForHesk_settings['use_bootstrap_theme'] = 1;
     $modsForHesk_settings['show_icons'] = 1;
