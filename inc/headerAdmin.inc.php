@@ -124,7 +124,12 @@ $modsForHesk_settings = mfh_getSettings();
             background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
         }
 
-        .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {
+        .navbar-default .navbar-nav > .open > a,
+        .navbar-default .navbar-nav > .open > a:focus,
+        .navbar-default .navbar-nav > .open > a:hover,
+        .navbar-default .navbar-nav > .active > a,
+        .navbar-default .navbar-nav > .active > a:focus,
+        .navbar-default .navbar-nav > .active > a:hover {
             color: <?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>;
             background-color: <?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>;
             background-image: none;

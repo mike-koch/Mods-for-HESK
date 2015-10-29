@@ -49,6 +49,7 @@ hesk_isLoggedIn();
 
 define('CALENDAR', 1);
 define('MAIN_PAGE', 1);
+define('PAGE_TITLE', 'ADMIN_HOME');
 
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');

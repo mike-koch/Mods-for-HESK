@@ -42,6 +42,8 @@ hesk_check_maintenance();
 // Load Knowledgebase-related functions
 hesk_load_database_functions();
 
+define('PAGE_TITLE', 'CUSTOMER_KB');
+
 /* Is Knowledgebase enabled? */
 if (!$hesk_settings['kb_enable']) {
     hesk_error($hesklang['kbdis']);

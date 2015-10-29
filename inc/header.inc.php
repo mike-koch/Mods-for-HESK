@@ -41,6 +41,7 @@ if (!function_exists('mfh_getSettings')) {
 
 $modsForHesk_settings = array();
 if (is_dir(HESK_PATH . 'install')) {
+    $modsForHesk_settings['navbar_title_url'] = '#';
     $modsForHesk_settings['rtl'] = 0;
     $modsForHesk_settings['use_bootstrap_theme'] = 1;
     $modsForHesk_settings['show_icons'] = 1;
@@ -147,7 +148,12 @@ if (is_dir(HESK_PATH . 'install')) {
             background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
         }
 
-        .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {
+        .navbar-default .navbar-nav > .open > a,
+        .navbar-default .navbar-nav > .open > a:focus,
+        .navbar-default .navbar-nav > .open > a:hover,
+        .navbar-default .navbar-nav > .active > a,
+        .navbar-default .navbar-nav > .active > a:focus,
+        .navbar-default .navbar-nav > .active > a:hover {
             color: <?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>;
             background-color: <?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>;
             background-image: none;
@@ -257,10 +263,22 @@ if ($modsForHesk_settings['show_icons']) {
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="<?php echo HESK_PATH; ?>"><i
+                <?php
+                $active = '';
+                if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_HOME') {
+                    $active = 'class="active"';
+                }
+                ?>
+                <li <?php echo $active; ?>><a href="<?php echo HESK_PATH; ?>"><i
                             class="fa fa-home" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?>
                     </a></li>
-                <li class="dropdown">
+                <?php
+                $active = '';
+                if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_TICKET') {
+                    $active = ' active';
+                }
+                ?>
+                <li class="dropdown<?php echo $active; ?>">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
                             class="fa fa-ticket" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['ticket'] ?>
                         <b class="caret"></b></a>
@@ -273,8 +291,13 @@ if ($modsForHesk_settings['show_icons']) {
                             </a></li>
                     </ul>
                 </li>
-                <?php if ($hesk_settings['kb_enable']) { ?>
-                    <li><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><i
+                <?php if ($hesk_settings['kb_enable']) {
+                    $active = '';
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_KB') {
+                        $active = 'class="active"';
+                    }
+                    ?>
+                    <li <?php echo $active; ?>><a href="<?php echo HESK_PATH; ?>knowledgebase.php"><i
                                 class="fa fa-book" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['kb_text'] ?>
                         </a></li> <?php } ?>
                 <?php include('custom/header-custom.inc.php'); ?>

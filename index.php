@@ -141,6 +141,7 @@ function print_add_ticket()
         define('RECAPTCHA', 1);
     }
 
+    define('PAGE_TITLE', 'CUSTOMER_TICKET');
     // Print header
     $hesk_settings['tmp_title'] = $hesk_settings['hesk_title'] . ' - ' . $hesklang['submit_ticket'];
     require_once(HESK_PATH . 'inc/header.inc.php');
@@ -402,7 +403,6 @@ function print_add_ticket()
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
-
                                 echo '<div class="form-group"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
                                 <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '" ' . $cls . '>';
 
@@ -505,12 +505,13 @@ function print_add_ticket()
                                     <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
                                     <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
                                 </div>
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block with-errors"></span>
                                 </div></div>';
                                 break;
 
                             case 'date':
                                 //Clean up multiple dashes or whitespaces
+                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
@@ -525,7 +526,7 @@ function print_add_ticket()
                                     <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
                                     <div class="col-sm-9">
                                         <input type="text" class="datepicker form-control white-readonly ' . $cls . '" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
-                                            maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" readonly/>
+                                            value="' . $v['value'] . '" '.$errorText. ' '.$required.' readonly>
                                         <span class="help-block">' . $hesklang['date_format'] . '</span>
                                     </div>
                                 </div>';
@@ -705,6 +706,7 @@ function print_add_ticket()
                             $v['name'] = $hesklang[$v['name']];
                         }
 
+                        $required = $v['req'] ? 'required' : '';
                         $v['req'] = $v['req'] ? '<span class="important">*</span>' : '';
 
                         if ($v['type'] == 'checkbox' || $v['type'] == 'multiselect') {
@@ -804,7 +806,7 @@ function print_add_ticket()
 
                                     echo '<label style="font-weight: normal;"><input ' . $validator . ' id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $cls . ' /> ' . $option . '</label><br />';
                                 }
-                                echo '<div class="help-block with-errors"></div><</div></div>';
+                                echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
 
                             /* Large text box */
@@ -824,7 +826,7 @@ function print_add_ticket()
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
 					            <div class="col-sm-9"><textarea class="form-control" id="' . $formattedId . '" name="' . $k . '" rows="' . $size[0] . '" cols="' . $size[1] . '" ' . $cls . ' ' . $errorText . ' ' . $required . '>' . $k_value . '</textarea>
                                 <div class="help-block with-errors"></div>
-                                </div>';
+                                </div></div>';
                                 break;
 
                             case 'multiselect':
@@ -856,10 +858,13 @@ function print_add_ticket()
                                 <div class="btn-group" role="group">
                                     <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
                                     <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
-                                </div></div></div>';
+                                </div>
+                                <span class="help-block with-errors"></span>
+                                </div></div>';
                                 break;
 
                             case 'date':
+                                $errorText = $required == 'required' ? 'data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"' : '';
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
                                 $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
@@ -875,8 +880,9 @@ function print_add_ticket()
                                     <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
                                     <div class="col-sm-9">
                                         <input type="text" class="datepicker form-control white-readonly ' . $cls . '" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
-                                            maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" readonly/>
+                                            value="' . $v['value'] . '" '.$errorText. ' readonly="readonly" '.$required.'>
                                         <span class="help-block">' . $hesklang['date_format'] . '</span>
+                                        <span class="help-block with-errors"></span>
                                     </div>
                                 </div>';
                                 break;
@@ -901,7 +907,7 @@ function print_add_ticket()
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" data-error="' . htmlspecialchars($hesklang['enter_valid_email']) . '" ' . $cls . ' ' . $required . '>
 					            <div class="help-block with-errors"></div>
-                                </div>';
+                                </div></div>';
 
                                 break;
 
@@ -955,7 +961,7 @@ function print_add_ticket()
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': ' . $v['req'] . '</label>
 					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' ' . $errorText . ' ' . $required . '>
 					            <div class="help-block with-errors"></div>
-                                </div>';
+                                </div></div>';
                         }
                     }
                 }
@@ -1003,7 +1009,12 @@ function print_add_ticket()
                             $value = stripslashes(hesk_input($_SESSION['c_question']));
                         }
                         $cls = in_array('question', $_SESSION['iserror']) ? ' class="isError" ' : '';
-                        echo '<div class="col-md-9">' . $hesk_settings['question_ask'] . '<br /><input class="form-control" id="question" type="text" name="question" size="20" value="' . $value . '" ' . $cls . ' /></div>';
+                        echo '<div class="col-md-9">' . $hesk_settings['question_ask'] . '<br />
+                        <input class="form-control" id="question" type="text" name="question"
+                        data-error="'.htmlspecialchars($hesklang['this_field_is_required']).'"
+                        size="20" value="' . $value . '" ' . $cls . ' required>
+                        <div class="help-block with-errors"></div>
+                        </div>';
                         ?>
                     </div>
                     <?php
@@ -1202,6 +1213,8 @@ function print_start()
 
     // Connect to database
     hesk_dbConnect();
+
+    define('PAGE_TITLE', 'CUSTOMER_HOME');
 
 	/* Print header */
 	require_once(HESK_PATH . 'inc/header.inc.php');
