@@ -29,6 +29,7 @@
  *******************************************************************************/
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
+define('PAGE_TITLE', 'ADMIN_REPORTS');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -501,7 +502,12 @@ if (isset($_GET['w'])) {
         // Add custom fields
         foreach ($hesk_settings['custom_fields'] as $k => $v) {
             if ($v['use']) {
-                $tmp .= '<Cell><Data ss:Type="String"><![CDATA[' . hesk_msgToPlain($ticket[$k], 1, 0) . ']]></Data></Cell>  ' . "\n";
+                $output = $ticket[$k];
+                if ($v['type'] == 'date' && !empty($ticket[$k])) {
+                    $dt = date('Y-m-d', $ticket[$k]);
+                    $output = hesk_dateToString($dt, 0);
+                }
+                $tmp .= '<Cell><Data ss:Type="String"><![CDATA[' . hesk_msgToPlain($output, 1, 0) . ']]></Data></Cell>  ' . "\n";
             }
         }
 

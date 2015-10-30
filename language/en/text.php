@@ -21,6 +21,21 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.5.2
+$hesklang['manage_statuses'] = 'Manage Statuses';
+$hesklang['manage_service_messages'] = 'Manage Service Messages';
+$hesklang['manage_banned_ips'] = 'Manage Banned IPs';
+$hesklang['manage_banned_emails'] = 'Manage Banned Emails';
+$hesklang['manage_email_templates'] = 'Manage Email Templates';
+$hesklang['linked_tickets'] = 'Linked tickets';
+$hesklang['add_ticket'] = 'Add Ticket';
+$hesklang['cannot_link_ticket_to_itself'] = 'You cannot link a ticket to itself!';
+$hesklang['linked_ticket_does_not_exist'] = '<strong>%s</strong> is not a valid Tracking ID!'; //%s: the child tracking ID
+$hesklang['is_already_linked'] = '<strong>%s</strong> is already linked to this ticket.'; //%s: the child tracking ID
+$hesklang['link_added'] = 'Successfully linked <strong>%s</strong> to this ticket.'; //%s: the child tracking ID
+$hesklang['ticket_no_longer_linked'] = 'Ticket is no longer linked.';
+$hesklang['unlink'] = 'Unlink';
+
 // ADDED OR MODIFIED IN Mods for HESK 2.5.0
 $hesklang['ticket_message_no_attachments'] = 'Ticket/Reply message, however attachments will not be included in the email';
 $hesklang['click_for_device_information'] = 'Click for device information';
@@ -344,15 +359,6 @@ $hesklang['showIconsHelp'] = 'Check this box to show icons next to navigation ba
 $hesklang['maintenanceMode'] = 'Maintenance Mode';
 $hesklang['maintenanceModeHelp'] = 'Check this box to put the Help Desk in maintenance mode. Staff can still log into the backend, but the front end will be inaccessible.';
 $hesklang['none'] = 'None';
-$hesklang['parent'] = 'Parent';
-$hesklang['children'] = 'Children';
-$hesklang['add_child'] = 'Add Child';
-$hesklang['child_added'] = 'Successfully added <strong>%s</strong> as a child to this ticket.'; //%s: the child tracking ID
-$hesklang['is_child_already'] = '<strong>%s</strong> is already a child of this ticket.'; //%s: the child tracking ID
-$hesklang['child_does_not_exist'] = '<strong>%s</strong> is not a valid Tracking ID!'; //%s: the child tracking ID
-$hesklang['child_is_itself'] = 'You cannot set a ticket as a child of itself.';
-$hesklang['delete_relationship'] = 'Delete Relationship';
-$hesklang['relationship_deleted'] = 'Parent/Child relationship deleted.';
 $hesklang['autorefresh'] = 'Autorefresh:';
 $hesklang['autorefresh_restrictions'] = 'Enter value in milliseconds. Value must be greater than 1000 to use this feature. No fractional values.';
 

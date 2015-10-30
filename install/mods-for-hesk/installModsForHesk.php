@@ -74,6 +74,9 @@ function echoInitialVersionRows($version)
     if ($version < 22) {
         printRow('2.5.1');
     }
+    if ($version < 23) {
+        printRow('2.5.2');
+    }
 }
 
 function printRow($version)

@@ -33,6 +33,7 @@ define('HESK_PATH', './');
 define('HESK_NO_ROBOTS', 1);
 define('WYSIWYG', 1);
 define('VALIDATOR', 1);
+define('PAGE_TITLE', 'CUSTOMER_TICKET');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');

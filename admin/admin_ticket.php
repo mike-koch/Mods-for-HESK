@@ -429,7 +429,7 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
     $mergedTickets = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `trackid` =
         \'' . hesk_dbEscape($trackingID) . '\' AND `merged` LIKE \'%#' . hesk_dbEscape($_POST['childTrackingId']) . '#%\'');
     if ($_POST['childTrackingId'] == $trackingID || $mergedTickets->num_rows > 0) {
-        hesk_process_messages($hesklang['child_is_itself'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999));
+        hesk_process_messages($hesklang['cannot_link_ticket_to_itself'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999));
     }
 
     //-- Does the child exist?
@@ -442,30 +442,30 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
             $exist = $existRs->fetch_assoc();
             $_POST['childTrackingId'] = $exist['trackid'];
         } else {
-            hesk_process_messages(sprintf($hesklang['child_does_not_exist'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999));
+            hesk_process_messages(sprintf($hesklang['linked_ticket_does_not_exist'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999));
         }
     }
 
     //-- Check if the ticket is already a child.
     $childRs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `parent` = ' . $ticket['id'] . ' AND `trackid` = \'' . $_POST['childTrackingId'] . '\'');
     if ($childRs->num_rows > 0) {
-        hesk_process_messages(sprintf($hesklang['is_child_already'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'NOTICE');
+        hesk_process_messages(sprintf($hesklang['is_already_linked'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'NOTICE');
     }
 
     hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = ' . $ticket['id'] . ' WHERE `trackid` = \'' . $_POST['childTrackingId'] . '\'');
-    hesk_process_messages(sprintf($hesklang['child_added'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
+    hesk_process_messages(sprintf($hesklang['link_added'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 }
 
 /* Delete child action */
 if (($can_reply || $can_edit) && isset($_GET['deleteChild'])) {
     //-- Delete the relationship
     hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = NULL WHERE `ID` = ' . hesk_dbEscape($_GET['deleteChild']));
-    hesk_process_messages($hesklang['relationship_deleted'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
+    hesk_process_messages($hesklang['ticket_no_longer_linked'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 
 } elseif (($can_reply || $can_edit) && isset($_GET['deleteParent'])) {
     //-- Delete the relationship
     hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = NULL WHERE `ID` = ' . hesk_dbEscape($ticket['id']));
-    hesk_process_messages($hesklang['relationship_deleted'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
+    hesk_process_messages($hesklang['ticket_no_longer_linked'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 }
 
 /* Delete attachment action */
@@ -728,7 +728,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </li>
                 <?php } // End if time_worked ?>
                 <li class="list-group-item">
-                    <strong><?php echo $hesklang['parent']; ?></strong>
+                    <strong><?php echo $hesklang['linked_tickets']; ?></strong>
 
                     <p><?php
                         if ($ticket['parent'] != null) {
@@ -738,15 +738,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             echo '<a href="admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) . '&deleteParent=true">
                                 <i class="fa fa-times-circle" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete_relationship'] . '"></i></a>';
                             echo '&nbsp;<a href="admin_ticket.php?track=' . $parent['trackid'] . '&Refresh=' . mt_rand(10000, 99999) . '">' . $parent['trackid'] . '</a>';
-                        } else {
-                            echo $hesklang['none'];
                         }
-                        ?></p>
-                </li>
-                <li class="list-group-item">
-                    <strong><?php echo $hesklang['children']; ?></strong>
-
-                    <p><?php
                         //-- Check if any tickets have a parent set to this tracking ID
                         $hasRows = false;
                         $childrenRS = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets`
@@ -754,11 +746,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         while ($row = $childrenRS->fetch_assoc()) {
                             $hasRows = true;
                             echo '<a href="admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) . '&deleteChild=' . $row['id'] . '">
-                            <i class="fa fa-times-circle" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete_relationship'] . '"></i></a>';
+                            <i class="fa fa-times-circle font-icon red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['unlink'] . '"></i></a>';
                             echo '&nbsp;<a href="admin_ticket.php?track=' . $row['trackid'] . '&Refresh=' . mt_rand(10000, 99999) . '">' . $row['trackid'] . '</a>';
                             echo '<br>';
                         }
-                        if (!$hasRows) {
+                        if (!$hasRows && $ticket['parent'] == null) {
                             echo $hesklang['none'];
                         }
                         ?></p>
@@ -766,19 +758,28 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     if ($can_reply || $can_edit) {
                         ?>
                         <div id="addChildText">
-                            <p><?php echo '<a class="btn btn-default btn-sm" href="javascript:void(0)" onclick="toggleChildrenForm(true)">' . $hesklang['add_child'] . '</a>'; ?></p>
+                            <p><?php echo '<a class="btn btn-default btn-sm" href="javascript:void(0)" onclick="toggleChildrenForm(true)">' . $hesklang['add_ticket'] . '</a>'; ?></p>
                         </div>
                         <div id="childrenForm" style="display: none">
-                            <form action="admin_ticket.php" method="post">
-                                <div class="form-group"><label for="childTrackingId" class="control-label">Tracking
-                                        ID</label>
-                                    <input type="text" name="childTrackingId" class="form-control input-sm"></div>
-                                <input type="submit" class="btn btn-primary btn-sm"
-                                       value="<?php echo $hesklang['save']; ?>">
-                                <a class="btn btn-default btn-sm" href="javascript:void(0)"
-                                   onclick="toggleChildrenForm(false)">
-                                    <?php echo $hesklang['cancel']; ?>
-                                </a>
+                            <form action="admin_ticket.php" method="post" data-toggle="validator">
+                                <div class="form-group">
+                                    <label for="childTrackingId" class="control-label">
+                                        <?php echo $hesklang['trackID']; ?>
+                                    </label>
+                                    <input type="text" name="childTrackingId" class="form-control input-sm"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['trackID']); ?>"
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           required>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="btn-group">
+                                    <input type="submit" class="btn btn-primary btn-sm"
+                                           value="<?php echo $hesklang['save']; ?>">
+                                    <a class="btn btn-default btn-sm" href="javascript:void(0)"
+                                       onclick="toggleChildrenForm(false)">
+                                        <?php echo $hesklang['cancel']; ?>
+                                    </a>
+                                </div>
                                 <input type="hidden" name="track" value="<?php echo $trackingID; ?>"/>
                                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
                             </form>
