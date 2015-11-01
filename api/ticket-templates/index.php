@@ -22,3 +22,15 @@ if (isset($_GET['id'])) {
     print json_encode($result);
     return http_response_code(200);
 }
+
+$response = hesk_dbQuery("SELECT `id`, `message`, `title`, `tpl_order` FROM `"
+    . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates`");
+$results = [];
+while ($row = hesk_dbFetchAssoc($response)) {
+    $row['title'] = hesk_html_entity_decode($row['title']);
+    $row['message'] = hesk_html_entity_decode($row['message']);
+    $results[] = $row;
+}
+header('Content-Type: application/json');
+print json_encode($results);
+return http_response_code(200);
