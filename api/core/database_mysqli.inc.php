@@ -128,6 +128,7 @@ function hesk_dbConnect()
         {
             $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
         }
+        header('Content-Type: application/json');
         print_error($hesklang['cant_connect_db'], $message);
         http_response_code(500);
     }
@@ -176,6 +177,7 @@ function hesk_dbQuery($query)
     {
         $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
     }
+    header('Content-Type: application/json');
     print_error($hesklang['cant_sql'], $message);
     die(http_response_code(500));
 } // END hesk_dbQuery()
