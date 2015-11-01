@@ -9,8 +9,8 @@ hesk_dbConnect();
 
 // Routing
 if (isset($_GET['id'])) {
-    $response = hesk_dbQuery("SELECT `id`, `message`, `title`, `reply_order` FROM `"
-        . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` WHERE `id` = ".intval($_GET['id']));
+    $response = hesk_dbQuery("SELECT `id`, `message`, `title`, `tpl_order` FROM `"
+        . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` WHERE `id` = ".intval($_GET['id']));
     if (hesk_dbNumRows($response) == 0) {
         return http_response_code(404);
     }
