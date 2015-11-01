@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.2 from 18th March 2015
+*  Version: 2.6.5 from 28th August 2015
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -36,8 +36,8 @@
 if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 // We will be installing this HESK version:
-define('HESK_NEW_VERSION','2.6.2');
-define('MODS_FOR_HESK_NEW_VERSION','2.2.0');
+define('HESK_NEW_VERSION','2.6.5');
+define('MODS_FOR_HESK_NEW_VERSION','2.5.2');
 define('REQUIRE_PHP_VERSION','5.0.0');
 define('REQUIRE_MYSQL_VERSION','5.0.7');
 
@@ -826,7 +826,7 @@ function hesk_iHeader()
     <link href="../hesk_style.css?<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../css/bootstrap-theme.css">
-    <link href="../css/hesk_newStyle.php" type="text/css" rel="stylesheet" />
+    <link href="../css/hesk_newStyle.css" type="text/css" rel="stylesheet" />
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="../js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="../hesk_javascript.js?<?php echo HESK_NEW_VERSION; ?>"></script>

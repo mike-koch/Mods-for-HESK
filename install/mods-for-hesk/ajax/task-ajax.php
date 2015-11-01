@@ -1,6 +1,6 @@
 <?php
-define('IN_SCRIPT',1);
-define('HESK_PATH','../../../');
+define('IN_SCRIPT', 1);
+define('HESK_PATH', '../../../');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 hesk_load_database_functions();
@@ -23,8 +23,10 @@ if ($task == 'ip-email-bans') {
     print json_encode($jsonToSend);
 } elseif ($task == 'migrate-bans') {
     migrateBans($_POST['user']);
+} elseif ($task == 'initialize-statuses') {
+    initializeXrefTable();
 } else {
-    $response = 'The task "'.$task.'" was not recognized. Check your spelling and try again.';
+    $response = 'The task "' . $task . '" was not recognized. Check your spelling and try again.';
     print $response;
     http_response_code(400);
 }

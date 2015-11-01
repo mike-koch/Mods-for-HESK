@@ -1,6 +1,6 @@
 function disableAllDisablable(exclusion) {
     $('.disablable').attr('disabled', 'disabled');
-    $('#'+exclusion).removeAttr('disabled');
+    $('#' + exclusion).removeAttr('disabled');
 }
 
 function enableAllDisablable() {
@@ -9,7 +9,7 @@ function enableAllDisablable() {
 }
 
 function startVersionUpgrade(version) {
-    $('#spinner-'+version)
+    $('#spinner-' + version)
         .removeClass('fa-exclamation-triangle')
         .addClass('fa-spinner')
         .addClass('fa-pulse');
@@ -19,46 +19,46 @@ function startVersionUpgrade(version) {
 
 function markUpdateAsSuccess(version, formattedVersion) {
     removeSpinner(version);
-    $('#spinner-'+version).addClass('fa-check-circle');
+    $('#spinner-' + version).addClass('fa-check-circle');
     changeTextTo('span', version, 'Completed Successfully');
     changeRowTo('row', version, 'success');
     appendToInstallConsole('<tr><td><span class="label label-success">SUCCESS</span></td><td>Updates for ' + formattedVersion + ' complete</td></tr>');
 }
 
 function removeSpinner(version) {
-    $('#spinner-'+version)
+    $('#spinner-' + version)
         .removeClass('fa-pulse')
         .removeClass('fa-spinner');
 }
 
 function markUpdateAsAttention(version) {
     removeSpinner(version);
-    $('#spinner-'+version).addClass('fa-exclamation-triangle');
+    $('#spinner-' + version).addClass('fa-exclamation-triangle');
     changeRowTo('row', version, 'warning');
     changeTextTo('span', version, 'Attention! See below for more information');
 }
 
 function markUpdateAsFailure(version) {
     removeSpinner(version);
-    $('#spinner-'+version).addClass('fa-times-circle');
+    $('#spinner-' + version).addClass('fa-times-circle');
     changeRowTo('row', version, 'danger');
     changeTextTo('span', version, 'Update failed! Check the console for more information');
 }
 
 function changeTextTo(prefix, version, text) {
-    $('#'+prefix+'-'+version).text(text);
+    $('#' + prefix + '-' + version).text(text);
 }
 
 function changeRowTo(prefix, version, clazz) {
     //-- Remove all classes
-    $('#'+prefix+'-'+version)
+    $('#' + prefix + '-' + version)
         .removeClass('info')
         .removeClass('warning')
         .removeClass('danger')
         .removeClass('success');
 
     //-- Re-add the requested class
-    $('#'+prefix+'-'+version).addClass(clazz);
+    $('#' + prefix + '-' + version).addClass(clazz);
 }
 
 function appendToInstallConsole(text) {
@@ -83,8 +83,8 @@ function getContentForMigratePrompt(users) {
         'then click "Submit".</p>';
     var selectMarkup = '<div class="row form-horizontal"><div class="control-label col-md-3 col-xs-12" style="text-align: right;vertical-align: middle"><b>User:</b></div>' +
         '<div class="col-md-9 col-x-12"><select name="user" class="form-control" id="user-dropdown">';
-    users.forEach(function(user) {
-        selectMarkup += '<option value="'+user.id+'">'+user.name+'</option>';
+    users.forEach(function (user) {
+        selectMarkup += '<option value="' + user.id + '">' + user.name + '</option>';
     });
     selectMarkup += '</select></div></div><br>';
     var submitMarkup = '<div class="row"><div class="col-md-9 col-md-offset-3 col-xs-12"><button onclick="runMigration()" class="btn btn-default">Migrate</button> ' +

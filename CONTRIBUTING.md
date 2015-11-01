@@ -4,7 +4,7 @@ So you want to contribute to Mods for HESK? Awesome! However, there are a few gu
 ## Submitting an issue
 If all you are doing is submitting an issue, please check if your "issue" qualifies as a GitHub issue:
  - **Feature Requests:** Feature requests are now being recorded at the Mods for HESK [UserVoice page](https://mods-for-hesk.uservoice.com/forums/254758-general). Please do not open these types of issues on GitHub. Issues opened that are "feature requests" will be closed.
- - **Translations:** Translations are now being recorded at the official Mods for HESK [translations topic](http://developers.phpjunkyard.com/viewtopic.php?f=19&t=5217). Please do not open these types of issues on GitHub. Issues opened that pertain to submitting new translations will be closed.
+ - **Translations:** Translations are now being recorded at the official Mods for HESK [website](https://mods-for-hesk.mkochcs.com/download.php). Please do not open these types of issues on GitHub. Issues opened that pertain to submitting new translations will be closed.
  - **Bugs:** Yes, please open these types of issues here. :grinning:
 
 ## Getting Started

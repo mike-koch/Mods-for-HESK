@@ -2,7 +2,7 @@
 /*
 * Language file for Help Desk Software HESK (www.hesk.com)
 * Language: ENGLISH
-* Version: 2.6.1
+* Version: 2.6.3
 * Author: Klemen Stirn (http://www.hesk.com)
 *
 * !!! This file must be saved in UTF-8 encoding without byte order mark (BOM) !!!
@@ -20,6 +20,171 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
+
+// ADDED OR MODIFIED IN Mods for HESK 2.5.2
+$hesklang['manage_statuses'] = 'Manage Statuses';
+$hesklang['manage_service_messages'] = 'Manage Service Messages';
+$hesklang['manage_banned_ips'] = 'Manage Banned IPs';
+$hesklang['manage_banned_emails'] = 'Manage Banned Emails';
+$hesklang['manage_email_templates'] = 'Manage Email Templates';
+$hesklang['linked_tickets'] = 'Linked tickets';
+$hesklang['add_ticket'] = 'Add Ticket';
+$hesklang['cannot_link_ticket_to_itself'] = 'You cannot link a ticket to itself!';
+$hesklang['linked_ticket_does_not_exist'] = '<strong>%s</strong> is not a valid Tracking ID!'; //%s: the child tracking ID
+$hesklang['is_already_linked'] = '<strong>%s</strong> is already linked to this ticket.'; //%s: the child tracking ID
+$hesklang['link_added'] = 'Successfully linked <strong>%s</strong> to this ticket.'; //%s: the child tracking ID
+$hesklang['ticket_no_longer_linked'] = 'Ticket is no longer linked.';
+$hesklang['unlink'] = 'Unlink';
+
+// ADDED OR MODIFIED IN Mods for HESK 2.5.0
+$hesklang['ticket_message_no_attachments'] = 'Ticket/Reply message, however attachments will not be included in the email';
+$hesklang['click_for_device_information'] = 'Click for device information';
+$hesklang['device_information'] = 'Device information';
+$hesklang['operating_system'] = 'Operating System';
+$hesklang['browser'] = 'Browser';
+$hesklang['screen_resolution'] = 'Screen Resolution';
+$hesklang['display_user_agent_information'] = 'Show user agent';
+$hesklang['display_user_agent_information_help'] = 'When enabled, staff will be able to view the operating system, browser,
+    and screen resolution of the device used to create the ticket.';
+$hesklang['value_colon'] = 'Value:';
+$hesklang['hidden_custom_field'] = 'Hidden text field';
+$hesklang['hidden_custom_field_help'] = 'This input is the same as a text field; however this value cannot be changed and will not be visible to the user.';
+$hesklang['readonly_custom_field'] = 'Read-only text field';
+$hesklang['readonly_custom_field_help'] = 'This input is the same as a text field; however this value cannot be changed, but will be visible to the user.';
+$hesklang['navbar_title_url'] = 'Navbar Title URL';
+$hesklang['navbar_title_url_help'] = 'Enter the URL you wish to use when a customer (or staff) clicks on the help desk title on the top-left corner of the screen. The URL must begin with http:// or https://.';
+$hesklang['this_field_is_required'] = 'This field is required';
+$hesklang['select_at_least_one_value'] = 'Please select at least one value';
+
+// ADDED OR MODIFIED IN Mods for HESK 2.4.0
+$hesklang['sort_by_user_defined_order'] = 'Sort by user-defined order';
+$hesklang['sort_alphabetically'] = 'Sort alphabetically';
+$hesklang['category_sort'] = 'Category Sorting';
+$hesklang['category_sort_help'] = 'Determines if categories shown on the manage categories page and all dropdowns are sorted by the user-defined order (default), or
+sorted alphabetically.';
+$hesklang['quick_help_sections'] = 'Quick Help Sections';
+$hesklang['quick_help_sections_help'] = 'Check the checkbox to show the "Quick Help" sections on the left-hand side, or uncheck to not show.';
+$hesklang['create_ticket'] = 'Create ticket (customers)';
+$hesklang['view_ticket_form'] = 'View ticket form';
+$hesklang['knowledgebase'] = 'Knowledgebase section';
+$hesklang['staff_create_ticket'] = 'Create ticket (staff)';
+$hesklang['allow_rich_text_for_tickets'] = 'Allow rich text for tickets';
+$hesklang['allow_rich_text_for_tickets_help'] = 'Allow staff and customers to use rich text formatting when writing ticket messages / replies.';
+$hesklang['click_to_edit_name'] = 'Click to edit name';
+$hesklang['new_status'] = 'New Status';
+$hesklang['create_new_status_title'] = 'Create New Status';
+$hesklang['status_name_title'] = 'Status Name';
+$hesklang['status_name_title_help'] = 'The name of the status that should appear when viewing the ticket, for each language you have installed.';
+$hesklang['properties'] = 'Properties';
+$hesklang['closable'] = 'Closable'; // Same as $hesklang['closable_question'], but without punctuation
+$hesklang['new_status_created'] = 'New status successfully created';
+$hesklang['editing_status_x'] = 'Editing status <span style="color: %s; font-weight: bold">%s</span>'; // 1st %s: text color, 2nd %s: status name
+$hesklang['status_not_in_database'] = 'The status text for this language was not found in the database, so a suggested translation has been filled for you.
+ Please click "Save Changes" to save this translation to the database and to remove this warning.';
+$hesklang['ticket_status_updated'] = 'Ticket status successfully updated!';
+$hesklang['ticket_status_deleted'] = 'Ticket status deleted!';
+$hesklang['confirm_delete_status_question'] = 'Delete status?';
+$hesklang['confirm_delete_status'] = 'Are you sure you want to delete this status? This cannot be undone!';
+$hesklang['status_sort_updated'] = 'Ticket status sort updated!';
+$hesklang['status_sort'] = 'Status Sorting';
+$hesklang['status_sort_help'] = 'Determines if statuses shown on the manage statuses page and all dropdowns are sorted by the user-defined order (default), or sorted alphabetically.';
+$hesklang['cannot_delete_status_tickets'] = 'This status cannot be deleted because there are tickets set to this status.';
+$hesklang['default_statuses_updated'] = 'Default statuses have been updated!';
+$hesklang['download_count'] = 'Download Count';
+$hesklang['kb_attach_dir'] = 'Knowledgebase attachments folder';
+$hesklang['kb_attach_dir_help'] = 'Name of the folder, where knowledgebase attachments will be stored.<br><br>The folder needs to exist within the main HESK folder and be writable by PHP. On most systems names are CaSe SeNSiTiVe.
+    <br><br>Allowed chars (other will be removed): a-z A-Z 0-9 _ -';
+$hesklang['ticket_attach_dir'] = 'Ticket attachments folder';
+$hesklang['cannot_edit_status_demo'] = 'You cannot edit statuses while in demo mode!';
+
+// ADDED OR MODIFIED IN Mods for HESK 2.3.0
+$hesklang['sm_icon'] = 'Icon';
+$hesklang['sm_icon_type'] = 'Icon Type';
+$hesklang['sm_no_icon'] = 'No Icon';
+$hesklang['sm_search_icon'] = 'Search Icon';
+$hesklang['sm_iconpicker_footer_label'] = '{0} - {1} of {2}'; // {0}: lower bound of page, {1}: upper bound of page, {2}: total number of icons
+$hesklang['mods_for_hesk_acronym'] = 'MFH'; // THIS SHOULD NOT BE TRANSLATED
+$hesklang['added_in_mods_for_hesk'] = 'Added in Mods for HESK';
+$hesklang['statuses_intro'] = 'Here you can add, remove, and modify ticket statuses, as well as changing the default status for particular actions.';
+$hesklang['statuses_saved'] = 'Ticket statuses have been updated!';
+$hesklang['email_template_not_saved'] = 'The email template <b>%s</b> was NOT saved due to an error. Enable debug mode to see if an error message appears, and ensure that your file has CHMOD 0666'; // %s: Template file name
+$hesklang['language_key'] = 'Language Key';
+$hesklang['language_key_description'] = 'This is the language file \'key\' that contains the text you want to display';
+$hesklang['can_man_ticket_statuses'] = 'Can manage ticket statuses';
+$hesklang['key_required'] = 'Keys are required for all statuses';
+$hesklang['x_merged'] = '(+%s merged)'; // %s number of tickets merged
+$hesklang['merged_tickets'] = 'Merged tickets: ';
+$hesklang['show_number_merged'] = 'Show number of tickets merged';
+$hesklang['show_number_merged_descr'] = 'Show number of tickets merged next to Tracking ID';
+$hesklang['show_number_merged_help'] = 'If enabled, the user will be able to see which tickets were merged into the other on the ticket search screen.';
+$hesklang['latest_top_on_home'] = 'Latest/Top articles on home page';
+$hesklang['latest_top_on_home_help'] = 'Select YES to display the top and latest knowledgebase articles on the home page.
+    Otherwise, a link to the knowledgebase will appear on the home page.';
+$hesklang['location_unavailable'] = "Location unavailable. Click for more information.";
+$hesklang['click_for_map'] = "View map of user's location";
+$hesklang['request_user_location'] = "Request Location";
+$hesklang['request_user_location_help'] = "If enabled, the help desk will ask for the customer's location, allowing staff to
+ see a map of the customer's location when they created the ticket.";
+$hesklang['users_location'] = "User's Location";
+$hesklang['location_unavailable_0'] = "User's location is not available because the ticket was created before location tracking was enabled.";
+$hesklang['location_unavailable_1'] = "User's location is not available because the user refused to share it.";
+$hesklang['location_unavailable_2'] = "User's location is not available because the help desk was unable to determine the user's position.";
+$hesklang['location_unavailable_3'] = "User's location is not available because the help desk was not able to determine the user's position in
+ a reasonable amount of time.";
+$hesklang['location_unavailable_4'] = "An unknown error occurred when trying to obtain the user's location.";
+$hesklang['location_unavailable_5'] = "User's location is not available because the user's browser did not meet the minimum
+requirements for tracking their location when the ticket was submitted.";
+$hesklang['save_location'] = 'Save Location';
+$hesklang['close_modal_without_saving'] = 'Close without saving';
+$hesklang['ticket_location_updated'] = 'Ticket location has been updated!';
+$hesklang['location_colon'] = 'Location:';
+$hesklang['your_current_location'] = 'Your location';
+$hesklang['requesting_location_ellipsis'] = 'Requesting location...';
+$hesklang['unable_to_determine_location'] = 'Unable to determine your location, or you declined to share it.';
+$hesklang['save_to_see_updated_address'] = 'Save the new location to see the updated address';
+$hesklang['manager'] = 'Manager';
+$hesklang['manager_updated'] = 'Category manager has been updated.';
+$hesklang['can_set_manager'] = 'Can set category managers';
+$hesklang['no_manager'] = 'No manager';
+$hesklang['manage_permission_templates'] = 'Manage Permission Templates';
+$hesklang['manage_permission_templates_help'] = 'Here you can create and edit permission templates. These templates will appear when creating/editing a user.
+Please note that if you change the permission template\'s settings, it will NOT change the permissions of any users that are set to this permission template.';
+$hesklang['number_of_users'] = 'Number of Users';
+$hesklang['actions'] = 'Actions';
+$hesklang['view_permissions_for_this_template'] = 'View/edit permissions for this template';
+$hesklang['permission'] = 'Permission';
+$hesklang['permissions_for_template'] = 'Permissions for template <code>%s</code>'; // %s template name
+$hesklang['template_has_admin_privileges'] = 'Permission template has admin privileges. Click to set as non-admin';
+$hesklang['template_has_no_admin_privileges'] = 'Permission template does not have admin privileges. Click to set as admin';
+$hesklang['staff_cannot_be_admin'] = 'Staff permission group does not have admin access, and cannot be set as an admin';
+$hesklang['admin_cannot_be_staff'] = 'Administrator permission group has admin access, and cannot be set as non-admin';
+$hesklang['template_is_admin_cannot_change'] = 'The permission group currently has admin privileges, so you cannot set specific permissions here.';
+$hesklang['permission_template_updated'] = 'Permission template has been updated!';
+$hesklang['create_new_template'] = 'Create new permission template';
+$hesklang['create_new_template_title'] = 'Create New Permission Template'; // same as create_new_template, but in Title Case
+$hesklang['template_name'] = 'Template name';
+$hesklang['template_name_required'] = 'Template name required.';
+$hesklang['you_must_select_a_category'] = 'You must select at least one category.';
+$hesklang['you_must_select_a_feature'] = 'You must select at least one feature.';
+$hesklang['permission_template_error'] = 'The permission template could not be completed due to the following error(s): %s'; // %s: error list
+$hesklang['template_created'] = 'Permission template successfully created!';
+$hesklang['cannot_delete_admin_or_staff'] = 'The <b>Administrator</b> and <b>Staff</b> permission groups cannot be deleted!';
+$hesklang['no_templates_were_deleted'] = 'No templates were deleted!';
+$hesklang['permission_template_deleted'] = 'Permission template deleted!';
+$hesklang['permission_template_now_admin'] = 'Permission template is now designed as an admin template';
+$hesklang['permission_template_no_longer_admin'] = 'Permission template is no longer designated as an admin template';
+$hesklang['cannot_change_admin_staff'] = 'You cannot change admin/non-admin status for the <b>Administrator</b> and <b>Staff</b> templates!';
+$hesklang['permission_tpl_man'] = 'Manage permission templates'; // Menu link
+$hesklang['permission_templates'] = 'Permission Templates';
+$hesklang['can_man_permission_tpl'] = 'Can manage permission templates';
+$hesklang['permission_template_colon'] = 'Permission Template';
+$hesklang['permission_template'] = 'Permission Template';
+$hesklang['custom'] = 'Custom';
+
+// ADDED OR MODIFIED IN Mods for HESK 2.2.1
+$hesklang['popart_no_colon']='Top Knowledgebase Articles'; // same as $hesklang['popart'] but without a colon (:)
+$hesklang['latart_no_colon']='Latest Knowledgebase Articles'; // same as $hesklang['latart'] but without a colon (:)
+$hesklang['ac_no_colon']='Articles in this Category'; // same as $hesklang['ac'] but without a colon (:)
 
 // ADDED OR MODIFIED IN Mods for HESK 2.2.0
 $hesklang['email_templates'] = 'Email templates';
@@ -48,8 +213,8 @@ $hesklang['error_saving_template'] = 'An error occurred when trying to save the 
 $hesklang['can_man_email_tpl'] = 'Edit email templates';
 $hesklang['email_template_directory_not_writable'] = 'The email template <b>%s</b> is not writable by HESK. Please CHMOD it to 0666.'; // %s: template file name
 $hesklang['closable_question'] = 'Closable?';
-$hesklang['closable_description'] = '<b><i>This setting is ignored if the &quot;Closed?&quot; checkbox is checked for this status</i></b>.
-    <br><br>Determines if the customer staff is able to close a ticket in this status.
+$hesklang['closable_description'] = '<b><i>This setting is ignored if the &quot;Closed?&quot; setting is set to &quot;Yes&quot; for this status</i></b>.
+    <br><br>Determines if the customer and/or staff is able to close a ticket in this status.
     <br><br><b>Yes:</b> Both customers and staff can close a ticket in this status.
     <br><b>Customers only:</b> Customers can close a ticket in this status, but staff cannot.
     <br><b>Staff only:</b> Staff can close a ticket in this status, but customers cannot.
@@ -194,15 +359,6 @@ $hesklang['showIconsHelp'] = 'Check this box to show icons next to navigation ba
 $hesklang['maintenanceMode'] = 'Maintenance Mode';
 $hesklang['maintenanceModeHelp'] = 'Check this box to put the Help Desk in maintenance mode. Staff can still log into the backend, but the front end will be inaccessible.';
 $hesklang['none'] = 'None';
-$hesklang['parent'] = 'Parent';
-$hesklang['children'] = 'Children';
-$hesklang['add_child'] = 'Add Child';
-$hesklang['child_added'] = 'Successfully added <strong>%s</strong> as a child to this ticket.'; //%s: the child tracking ID
-$hesklang['is_child_already'] = '<strong>%s</strong> is already a child of this ticket.'; //%s: the child tracking ID
-$hesklang['child_does_not_exist'] = '<strong>%s</strong> is not a valid Tracking ID!'; //%s: the child tracking ID
-$hesklang['child_is_itself'] = 'You cannot set a ticket as a child of itself.';
-$hesklang['delete_relationship'] = 'Delete Relationship';
-$hesklang['relationship_deleted'] = 'Parent/Child relationship deleted.';
 $hesklang['autorefresh'] = 'Autorefresh:';
 $hesklang['autorefresh_restrictions'] = 'Enter value in milliseconds. Value must be greater than 1000 to use this feature. No fractional values.';
 
@@ -212,10 +368,6 @@ $hesklang['changeLanguage'] = 'Change language to';
 // ADDED OR MODIFIED IN Mods For HESK 1.2
 $hesklang['statuses'] = 'Statuses';
 $hesklang['basicProperties'] = 'Basic Properties';
-$hesklang['shortNameKey'] = 'Short Name Key';
-$hesklang['shortNameKeyDescr'] = "This is the language file 'key' that contains the text you want to display on all pages that have statuses, except for the ticket view pages (ticket.php, admin_ticket.php, and print.php)";
-$hesklang['longNameKey'] = 'Long Name Key';
-$hesklang['longNameKeyDescr'] = "This is the language file 'key' that contains the text you want to display on ticket.php, print.php, and admin_ticket.php";
 $hesklang['textColor'] = 'Text Color';
 $hesklang['textColorDescr'] = 'This is the hex color code for the status that will be used on the ticket search page and export search page';
 $hesklang['closedQuestionMark'] = 'Closed?';
@@ -227,8 +379,6 @@ $hesklang['isStaffClosedOptionMsg'] = 'When a staff member clicks the "Close tic
 $hesklang['isStaffReopenedStatusMsg'] = 'When a staff member clicks the "Open ticket" link, change the status to';
 $hesklang['isDefaultStaffReplyStatusMsg'] = 'When a staff member replies to a ticket, change the status to';
 $hesklang['lockedTicketStatusMsg'] = 'When a ticket is locked, change the status to';
-$hesklang['shortNameRequired'] = 'Short Name Key is required.';
-$hesklang['longNameRequired'] = 'Long Name Key is required.';
 $hesklang['textColorRequired'] = 'Text Color is required.';
 $hesklang['addNew'] = 'Add New';
 $hesklang['close_action']='Close Ticket'; // Close ACTION
@@ -246,7 +396,7 @@ $hesklang['quick_help_ticket']='Here is the information on your ticket. You can 
 $hesklang['search_the_knowledgebase'] = 'Search the Knowledgebase';
 $hesklang['view_ticket_nav']='View Ticket';
 $hesklang['quick_help']='Quick Help';
-$hesklang['quick_help_submit_ticket']='Please fill out the form on the right to submit a ticket. Required fields are marked with a <font class="important">*</font>.';
+$hesklang['quick_help_submit_ticket']='Please fill out the form on the right to submit a ticket. Required fields are marked with a <span class="important">*</span>.';
 $hesklang['quick_help_view_ticket']='Please fill out the required information on the right to view your ticket. If you forgot your Ticket tracking ID, click "Forgot tracking ID".';
 $hesklang['information']='Information';
 $hesklang['admin_sidebar_ticket_id']='TICKET ID';
@@ -255,7 +405,7 @@ $hesklang['statusChange']=' - - Change Status - - ';
 $hesklang['ownerChange']=' - - Change Owner - - ';
 $hesklang['categoryChange']=' - - Change Category - - ';
 $hesklang['navigation']='Navigation';
-$hesklang['nti']='<span class="glyphicon glyphicon-plus-sign"></span> New ticket';
+$hesklang['nti']='New ticket';
 $hesklang['savedResponses']='Saved Responses';
 $hesklang['add_ticket_general_information']='General Information';
 $hesklang['add_ticket_your_message']='Your Message';
@@ -784,7 +934,7 @@ $hesklang['nhid']='Notes are hidden from customers!';
 $hesklang['delt']='Delete this post';
 $hesklang['edtt']='Edit post';
 $hesklang['edt1']='Post modified';
-$hesklang['edt2']='Changes to the selecting post have been saved';
+$hesklang['edt2']='Changes to the selected post have been saved';
 $hesklang['dele']='Delete this ticket';
 $hesklang['repd']='Post deleted';
 $hesklang['repl']='Selected post has been deleted';
@@ -1017,7 +1167,7 @@ $hesklang['nwts']='A new ticket is submitted with owner:';
 $hesklang['ncrt']='Client responds to a ticket with owner:';
 $hesklang['ntam']='A ticket is assigned to me';
 $hesklang['npms']='A private message is sent to me';
-$hesklang['support_remove']='A lot of time and effort went into developing HESK. Support HESK, buy a license that will also remove the credits links <i>Powered by Help Desk Software HESK</i> from your helpdesk';
+$hesklang['support_remove']='A lot of time and effort went into developing HESK. Support HESK by purchasing a license that will remove the credits links <i>Powered by Help Desk Software HESK</i> from your helpdesk';
 $hesklang['ycvtao']='You are not allowed to view tickets assigned to others';
 $hesklang['password_not_valid']='Password must be at least 5 chars long';
 $hesklang['lkbs']='Loading knowledgebase suggestions...';
