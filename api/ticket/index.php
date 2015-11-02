@@ -22,7 +22,7 @@ if ($request_method == 'GET') {
     if ($results == NULL) {
         return http_response_code(404);
     }
-    output($results);
-} else {
-    return http_response_code(405);
+    return output($results);
 }
+
+return http_response_code(405);
