@@ -1,8 +1,10 @@
 <?php
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../../');
+define('API_PATH', '../');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+require(API_PATH . 'core/output.php');
 
 hesk_load_api_database_functions();
 hesk_dbConnect();
@@ -18,9 +20,7 @@ if (isset($_GET['id'])) {
     $result['title'] = hesk_html_entity_decode($result['title']);
     $result['message'] = hesk_html_entity_decode($result['message']);
 
-    header('Content-Type: application/json');
-    print json_encode($result);
-    return http_response_code(200);
+    output($result);
 }
 
 $response = hesk_dbQuery("SELECT `id`, `message`, `title`, `reply_order` FROM `"
