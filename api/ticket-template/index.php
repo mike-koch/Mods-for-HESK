@@ -19,6 +19,10 @@ if ($request_method == 'GET') {
     } else {
         $results = get_ticket_template($hesk_settings);
     }
+
+    if ($results == NULL) {
+        return http_response_code(404);
+    }
     output($results);
 } else {
     return http_response_code(405);

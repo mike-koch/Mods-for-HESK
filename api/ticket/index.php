@@ -5,7 +5,7 @@ define('API_PATH', '../');
 require_once(HESK_PATH . 'hesk_settings.inc.php');
 require_once(HESK_PATH . 'inc/common.inc.php');
 require_once(API_PATH . 'core/output.php');
-require_once(API_PATH . 'dao/canned_dao.php');
+require_once(API_PATH . 'dao/ticket_dao.php');
 
 hesk_load_api_database_functions();
 hesk_dbConnect();
@@ -14,9 +14,9 @@ hesk_dbConnect();
 $request_method = $_SERVER['REQUEST_METHOD'];
 if ($request_method == 'GET') {
     if (isset($_GET['id'])) {
-        $results = get_canned_response($hesk_settings, $_GET['id']);
+        $results = get_ticket_for_id($hesk_settings, $_GET['id']);
     } else {
-        $results = get_canned_response($hesk_settings);
+        $results = get_ticket_for_id($hesk_settings);
     }
 
     if ($results == NULL) {
