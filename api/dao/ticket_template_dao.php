@@ -14,6 +14,8 @@ function get_ticket_template($hesk_settings, $id = NULL) {
 
     $results = [];
     while ($row = hesk_dbFetchAssoc($response)) {
+        $row['id'] = intval($row['id']);
+        $row['tpl_order'] = intval($row['tpl_order']);
         $row['title'] = hesk_html_entity_decode($row['title']);
         $row['message'] = hesk_html_entity_decode($row['message']);
         $results[] = $row;
