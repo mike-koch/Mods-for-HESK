@@ -15,6 +15,8 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 if ($request_method == 'GET') {
     if (isset($_GET['id'])) {
         $results = get_ticket_for_id($hesk_settings, $_GET['id']);
+    } elseif (isset($_GET['trackid'])) {
+        $results = get_ticket_by_tracking_id($hesk_settings, $_GET['trackid']);
     } else {
         $results = get_ticket_for_id($hesk_settings);
     }

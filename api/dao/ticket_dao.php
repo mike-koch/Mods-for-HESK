@@ -12,6 +12,12 @@ function get_ticket_for_id($hesk_settings, $id = NULL) {
         return NULL;
     }
 
+    $results = build_results($response);
+
+    return $id == NULL ? $results : $results[0];
+}
+
+function build_results($response) {
     $results = [];
     while ($row = hesk_dbFetchAssoc($response)) {
         $row['id'] = intval($row['id']);
@@ -34,5 +40,19 @@ function get_ticket_for_id($hesk_settings, $id = NULL) {
         $results[] = $row;
     }
 
-    return $id == NULL ? $results : $results[0];
+    return $results;
+}
+
+function get_ticket_by_tracking_id($hesk_settings, $trackid) {
+    $sql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `trackid` = '"
+        . hesk_dbEscape($trackid) . "'";
+
+    $response = hesk_dbQuery($sql);
+
+    if (hesk_dbNumRows($response) == 0) {
+        return NULL;
+    }
+
+    $results = build_results($response);
+    return $results[0];
 }
