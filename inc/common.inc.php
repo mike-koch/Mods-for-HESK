@@ -1607,18 +1607,20 @@ function hesk_error($error, $showback = 1)
     </ol>
 
     <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-    <div class="alert alert-danger">
-        <b><?php echo $hesklang['error']; ?>:</b><br/><br/>
-        <?php
-        echo $error;
+        <div class="col-md-10 col-md-offset-1">
+            <div class="alert alert-danger">
+                <b><?php echo $hesklang['error']; ?>:</b><br/><br/>
+                <?php
+                echo $error;
 
-        if ($hesk_settings['debug_mode']) {
-            echo '
-            <p>&nbsp;</p>
-            <p><span style="color:red;font-weight:bold">' . $hesklang['warn'] . '</span><br />' . $hesklang['dmod'] . '</p>';
-        }
-        ?>
+                if ($hesk_settings['debug_mode']) {
+                    echo '
+                    <p>&nbsp;</p>
+                    <p><span style="color:red;font-weight:bold">' . $hesklang['warn'] . '</span><br />' . $hesklang['dmod'] . '</p>';
+                }
+                ?>
+            </div>
+        </div>
     </div>
     <br/>
 
