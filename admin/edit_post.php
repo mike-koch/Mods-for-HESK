@@ -107,13 +107,16 @@ if (isset($_POST['save'])) {
             $tmpvar['message'] = nl2br($tmpvar['message']);
         }
 
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `message`='" . hesk_dbEscape($tmpvar['message']) . "' WHERE `id`='" . intval($tmpvar['id']) . "' AND `replyto`='" . intval($ticket['id']) . "' LIMIT 1");
+        $tmpvar['html'] = hesk_POST('html');
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `html`='" . $tmpvar['html'] . "', `message`='" . hesk_dbEscape($tmpvar['message']) . "' WHERE `id`='" . intval($tmpvar['id']) . "' AND `replyto`='" . intval($ticket['id']) . "' LIMIT 1");
     } else {
         $tmpvar['language'] = hesk_POST('customerLanguage');
         $tmpvar['name'] = hesk_input(hesk_POST('name')) or $hesk_error_buffer[] = $hesklang['enter_your_name'];
         $tmpvar['email'] = hesk_validateEmail(hesk_POST('email'), 'ERR', 0);
         $tmpvar['subject'] = hesk_input(hesk_POST('subject')) or $hesk_error_buffer[] = $hesklang['enter_ticket_subject'];
         $tmpvar['message'] = hesk_input(hesk_POST('message')) or $hesk_error_buffer[] = $hesklang['enter_message'];
+        $tmpvar['html'] = hesk_POST('html');
 
         // Demo mode
         if (defined('HESK_DEMO')) {
@@ -129,8 +132,10 @@ if (isset($_POST['save'])) {
             hesk_error($myerror);
         }
 
-        $tmpvar['message'] = hesk_makeURL($tmpvar['message']);
-        $tmpvar['message'] = nl2br($tmpvar['message']);
+        if (!$tmpvar['html']) {
+            $tmpvar['message'] = hesk_makeURL($tmpvar['message']);
+            $tmpvar['message'] = nl2br($tmpvar['message']);
+        }
 
         foreach ($hesk_settings['custom_fields'] as $k => $v) {
             if ($v['use'] && isset($_POST[$k])) {
@@ -175,7 +180,8 @@ if (isset($_POST['save'])) {
 		`custom18`='" . hesk_dbEscape($tmpvar['custom18']) . "',
 		`custom19`='" . hesk_dbEscape($tmpvar['custom19']) . "',
 		`custom20`='" . hesk_dbEscape($tmpvar['custom20']) . "',
-		`language`='" . hesk_dbEscape($tmpvar['language']) . "'
+		`language`='" . hesk_dbEscape($tmpvar['language']) . "',
+		`html`='" . hesk_dbEscape($tmpvar['html']) . "'
 		WHERE `id`='" . intval($ticket['id']) . "' LIMIT 1");
     }
 
@@ -473,6 +479,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 ?>
             </div>
             <div class="form-group" style="text-align: center">
+                <?php
+                $html = $modsForHesk_settings['rich_text_for_tickets'] ? 1 : 0;
+                ?>
+                <input type="hidden" name="html" value="<?php echo $html; ?>">
                 <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default"/>
                 <?php if (isset($_REQUEST['isManager']) && $_REQUEST['isManager']): ?>
                     <input type="hidden" name="isManager" value="1">
