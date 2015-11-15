@@ -223,7 +223,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </select>
                         </div>
                     </div>
-                <?php } ?>
+                <?php } else {
+                    echo '<input type="hidden" name="customerLanguage" value="' . $ticket['language'] . '">';
+                } ?>
                 <div class="form-group">
                     <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>:</label>
 
