@@ -127,7 +127,12 @@ if (isset($_GET['kb_att'])) {
 
 // Perhaps the file has been deleted?
 if (!file_exists($realpath)) {
-    hesk_error($hesklang['attdel']);
+    // Let's try the ticket attachment folder. Legacy KB attachments are not automatically migrated.
+    $realpath = $hesk_settings['attach_dir'] . '/' . $file['saved_name'];
+
+    if (!file_exists($realpath)) {
+        hesk_error($hesklang['attdel']);
+    }
 }
 
 // Update the download count
@@ -162,4 +167,3 @@ if ($file['size'] > $chunksize) {
 }
 
 exit();
-?>
