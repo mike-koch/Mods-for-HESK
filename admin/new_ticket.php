@@ -344,13 +344,13 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                     $k_value[] = stripslashes(hesk_input($myCB));
                 }
             }
-        } elseif (isset($_SESSION["c_$k"])) {
-            $k_value = stripslashes(hesk_input($_SESSION["c_$k"]));
-        } elseif (isset($_GET["c_$k"])) {
+        } elseif (isset($_SESSION["as_$k"])) {
+            $k_value = stripslashes(hesk_input($_SESSION["as_$k"]));
+        } elseif (isset($_GET["as_$k"])) {
             if ($v['type'] == 'checkbox') {
-                $k_value = explode('-CHECKBOX-', $_GET["c_$k"]);
+                $k_value = explode('-CHECKBOX-', $_GET["as_$k"]);
             } else {
-                $k_value = stripslashes(hesk_GET("c_$k"));
+                $k_value = stripslashes(hesk_GET("as_$k"));
             }
         } else {
             $k_value = '';
