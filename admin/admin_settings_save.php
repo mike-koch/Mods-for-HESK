@@ -541,6 +541,9 @@ mfh_updateSetting('questionMarkColor', $set['questionMarkColor'], true);
 mfh_updateSetting('dropdownItemTextHoverBackgroundColor', $set['dropdownItemTextHoverBackgroundColor'], true);
 mfh_updateSetting('display_user_agent_information', $set['display_user_agent_information']);
 mfh_updateSetting('navbar_title_url', $set['navbar_title_url'], true);
+mfh_updateSetting('mailgun_api_key', $set['mailgun_api_key'], true);
+mfh_updateSetting('mailgun_domain', $set['mailgun_domain'], true);
+mfh_updateSetting('use_mailgun', $set['use_mailgun'], false);
 
 // Prepare settings file and save it
 $settings_file_content = '<?php
