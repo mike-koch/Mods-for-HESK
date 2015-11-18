@@ -136,7 +136,45 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </form>
             </div>
             <div class="tab-pane fade in" id="user-security">
-                <p>User Security Stuff here (tokens, etc)</p>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        User Security
+                    </div>
+                    <?php
+                    $userRs = hesk_dbQuery("SELECT `id`, `user`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `active` = '1'");
+                    ?>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        while ($row = hesk_dbFetchAssoc($userRs)):
+                        ?>
+                        <tr>
+                            <td><?php echo $row['user']; ?></td>
+                            <td><?php echo $row['name']; ?></td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-default btn-xs" onclick="generateToken(<?php echo $row['id']; ?>)">
+                                        <i class="fa fa-plus-circle"></i> Generate New Token
+                                    </button>
+                                    <button class="btn btn-danger btn-xs" onclick="clearTokens(<?php echo $row['id']; ?>)">
+                                        <i class="fa fa-undo"></i> Reset Tokens
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php
+                        endwhile;
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
