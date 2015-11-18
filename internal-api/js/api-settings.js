@@ -50,3 +50,11 @@ function updatePublicApi(enable) {
         }
     });
 }
+
+function generateToken(userId) {
+    alert(userId);
+}
+
+function clearTokens(userId) {
+    alert(userId);
+}
