@@ -39,11 +39,7 @@ if (is_dir(HESK_PATH . 'install')) {
 
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
-
-// Save the default language for the settings page before choosing user's preferred one
-$hesk_settings['language_default'] = $hesk_settings['language'];
 require(HESK_PATH . 'inc/common.inc.php');
-$hesk_settings['language'] = $hesk_settings['language_default'];
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 hesk_load_database_functions();
 
@@ -54,8 +50,12 @@ hesk_isLoggedIn();
 // Check permissions for this feature
 hesk_checkPermission('can_man_settings');
 
+$modsForHesk_settings = mfh_getSettings();
+
+define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/api-settings.js"></script>');
 // Print header
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
+
 
 // Print main manage users page
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
@@ -80,8 +80,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <td class="text-right">
                         External API
                     </td>
-                    <td class="pad-right-10 success">
-                        Enabled
+                    <td class="pad-right-10 success" id="public-api-sidebar">
+                        <?php
+                        $enabled = $modsForHesk_settings['public_api'] == '1' ? '' : 'hide';
+                        $disabled = $modsForHesk_settings['public_api'] == '1' ? 'hide' : '';
+                        ?>
+                        <span id="public-api-sidebar-disabled" class="<?php echo $disabled; ?>">Disabled</span>
+                        <span id="public-api-sidebar-enabled"  class="<?php echo $enabled; ?>">Enabled</span>
                     </td>
                 </tr>
             </table>
@@ -93,7 +98,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <ul class="nav nav-tabs">
             <li class="active"><a href="#general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
             <li><a href="#user-security" data-toggle="tab">User Security</a></li>
-            <li><a href="#" target="_blank">API Documentation</a></li>
+            <li><a href="#" target="_blank">API Documentation <i class="fa fa-external-link"></i></a></li>
         </ul>
         <div class="tab-content summaryList tabPadding">
             <div class="tab-pane fade in active" id="general">
@@ -106,14 +111,26 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 data-content="Enable or Disable the Public REST API."></i>
                         </label>
                         <div class="col-sm-9">
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-success active">
+                            <span class="btn-group" data-toggle="buttons">
+                                <?php
+                                $on = $modsForHesk_settings['public_api'] == '1' ? 'active' : '';
+                                $off = $modsForHesk_settings['public_api'] == '1' ? '' : 'active';
+                                ?>
+                                <label id="enable-api-button" class="btn btn-success <?php echo $on; ?>">
                                     <input type="radio" name="public-api" value="1" checked> <i class="fa fa-check-circle"></i> Enable
                                 </label>
-                                <label class="btn btn-danger">
+                                <label id="disable-api-button" class="btn btn-danger <?php echo $off; ?>">
                                     <input type="radio" name="public-api" value="0"> <i class="fa fa-times-circle"></i> Disable
                                 </label>
-                            </div>
+                            </span>
+                            <span>
+                                <i id="public-api-success" class="fa fa-check-circle fa-2x green hide media-middle"
+                                    data-toggle="tooltip" title="Changes saved!"></i>
+                                <i id="public-api-failure" class="fa fa-times-circle fa-2x red hide media-middle"
+                                    data-toggle="tooltip" title="Saving changes failed. Check the logs for more information."></i>
+                                <i id="public-api-saving" class="fa fa-spin fa-spinner fa-2x hide media-middle"
+                                    data-toggle="tooltip" title="Saving..."></i>
+                            </span>
                         </div>
                     </div>
                 </form>

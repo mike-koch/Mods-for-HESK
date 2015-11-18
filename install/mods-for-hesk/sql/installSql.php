@@ -694,3 +694,13 @@ function execute252Scripts()
 
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.5.2' WHERE `Key` = 'modsForHeskVersion'");
 }
+
+// Version 2.6.0
+function execute260Scripts()
+{
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('public_api', '1')");
+    executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.6.0' WHERE `Key` = 'modsForHeskVersion'");
+}
