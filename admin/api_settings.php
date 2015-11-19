@@ -141,36 +141,55 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         User Security
                     </div>
                     <?php
+                    $users = [];
                     $userRs = hesk_dbQuery("SELECT `id`, `user`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `active` = '1'");
+                    while ($row = hesk_dbFetchAssoc($userRs)) {
+                        $row['number_of_tokens'] = 0;
+                        $users[$row['user']] = $row;
+                    }
+                    $tokensRs = hesk_dbQuery("SELECT `user_id`, 1 FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "user_api_tokens`");
+                    while ($row = hesk_dbFetchAssoc($tokensRs)) {
+                        $users[$row['user_id']]['number_of_tokens']++;
+                    }
                     ?>
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th>Username</th>
                             <th>Name</th>
+                            <th>Number of Tokens</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php
-                        while ($row = hesk_dbFetchAssoc($userRs)):
+                        foreach ($users as $row):
                         ?>
                         <tr>
                             <td><?php echo $row['user']; ?></td>
                             <td><?php echo $row['name']; ?></td>
+                            <td><?php echo $row['number_of_tokens']; ?></td>
                             <td>
-                                <div class="btn-group">
+                                <span class="btn-group">
                                     <button class="btn btn-default btn-xs" onclick="generateToken(<?php echo $row['id']; ?>)">
                                         <i class="fa fa-plus-circle"></i> Generate New Token
                                     </button>
                                     <button class="btn btn-danger btn-xs" onclick="clearTokens(<?php echo $row['id']; ?>)">
                                         <i class="fa fa-undo"></i> Reset Tokens
                                     </button>
-                                </div>
+                                </span>
+                                <span>
+                                    <i id="token-<?php echo $row['id']; ?>-success" class="fa fa-check-circle fa-2x green hide media-middle"
+                                       data-toggle="tooltip" title="Changes saved!"></i>
+                                    <i id="token-<?php echo $row['id']; ?>-failure" class="fa fa-times-circle fa-2x red hide media-middle"
+                                       data-toggle="tooltip" title="Saving changes failed. Check the logs for more information."></i>
+                                    <i id="token-<?php echo $row['id']; ?>-saving" class="fa fa-spin fa-spinner fa-2x hide media-middle"
+                                       data-toggle="tooltip" title="Saving..."></i>
+                                </span>
                             </td>
                         </tr>
                         <?php
-                        endwhile;
+                        endforeach;
                         ?>
                         </tbody>
                     </table>

@@ -16,9 +16,7 @@ function updatePublicApi(enable) {
     };
     $('#enable-api-button').addClass('disabled');
     $('#disable-api-button').addClass('disabled');
-    $('#public-api-saving').removeClass('hide');
-    $('#public-api-success').addClass('hide');
-    $('#public-api-failure').addClass('hide');
+    markSaving('public-api');
     $.ajax({
         url: endpoint,
         data: data,
@@ -26,8 +24,7 @@ function updatePublicApi(enable) {
         success: function() {
             $('#enable-api-button').removeClass('disabled');
             $('#disable-api-button').removeClass('disabled');
-            $('#public-api-saving').addClass('hide');
-            $('#public-api-success').removeClass('hide');
+            markSuccess('public-api');
 
             if (enable == '1') {
                 $('#public-api-sidebar').addClass('success')
@@ -45,14 +42,48 @@ function updatePublicApi(enable) {
             console.error(data);
             $('#enable-api-button').removeClass('disabled');
             $('#disable-api-button').removeClass('disabled');
-            $('#public-api-saving').addClass('hide');
-            $('#public-api-failure').removeClass('hide');
+            markFailure('public-api');
         }
     });
 }
 
+function markSuccess(id) {
+    $('#' + id + '-saving').addClass('hide');
+    $('#' + id + '-failure').addClass('hide');
+    $('#' + id + '-success').removeClass('hide');
+}
+
+function markSaving(id) {
+    $('#' + id + '-saving').removeClass('hide');
+    $('#' + id + '-failure').addClass('hide');
+    $('#' + id + '-success').addClass('hide');
+}
+
+function markFailure(id) {
+    $('#' + id + '-saving').addClass('hide');
+    $('#' + id + '-failure').removeClass('hide');
+    $('#' + id + '-success').addClass('hide');
+}
+
 function generateToken(userId) {
-    alert(userId);
+    var endpoint = getHelpdeskUrl();
+    endpoint += '/internal-api/admin/api-authentication/';
+    markSaving('token-' + userId);
+    var data = {
+        userId: userId,
+        action: 'generate'
+    };
+    $.ajax({
+        url: endpoint,
+        data: data,
+        method: 'POST',
+        success: function (data) {
+            markSuccess('token-' + userId);
+        },
+        error: function (data) {
+            markFailure('token-' + userId);
+        }
+    });
 }
 
 function clearTokens(userId) {
