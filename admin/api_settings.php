@@ -188,10 +188,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </span>
                             </td>
                         </tr>
-                        <tr>
-                            <td colspan="4" id="token-<?php echo $row['id']; ?>-created" class="success hide">
+                        <tr id="token-<?php echo $row['id']; ?>-created" class="success hide">
+                            <td colspan="4">
                                 Generated Token: <code class="token"></code>
                                 <p><b>NOTE:</b> Please record this token, as this is the only time you will be able to view it!</p>
+                            </td>
+                        </tr>
+                        <tr id="token-<?php echo $row['id']; ?>-reset" class="success hide">
+                            <td colspan="4">
+                                <p>All tokens for this user have been removed!</p>
                             </td>
                         </tr>
                         <?php

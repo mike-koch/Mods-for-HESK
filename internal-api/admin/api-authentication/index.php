@@ -34,7 +34,8 @@ if ($request_method == 'POST') {
         output($token);
         return http_response_code(200);
     } elseif ($action == 'reset') {
-        //TODO
+        reset_tokens($user_id, $hesk_settings);
+        return http_response_code(204);
     } else {
         return http_response_code(400);
     }

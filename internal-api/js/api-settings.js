@@ -69,6 +69,8 @@ function generateToken(userId) {
     var endpoint = getHelpdeskUrl();
     endpoint += '/internal-api/admin/api-authentication/';
     markSaving('token-' + userId);
+    $('#token-' + userId + '-reset').addClass('hide');
+    $('#token-' + userId + '-created').addClass('hide');
     var data = {
         userId: userId,
         action: 'generate'
@@ -78,7 +80,7 @@ function generateToken(userId) {
         data: data,
         method: 'POST',
         success: function (data) {
-            $('#token-' + userId + '-created > .token').text(data);
+            $('#token-' + userId + '-created > td > .token').text(data);
             $('#token-' + userId + '-created').removeClass('hide');
             markSuccess('token-' + userId);
             var oldNumberOfTokens = parseInt($('#token-' + userId + '-count').text());
@@ -92,5 +94,27 @@ function generateToken(userId) {
 }
 
 function clearTokens(userId) {
-    alert(userId);
+    var endpoint = getHelpdeskUrl();
+    endpoint += '/internal-api/admin/api-authentication/';
+    markSaving('token-' + userId);
+    $('#token-' + userId + '-reset').addClass('hide');
+    $('#token-' + userId + '-created').addClass('hide');
+    var data = {
+        userId: userId,
+        action: 'reset'
+    };
+    $.ajax({
+        url: endpoint,
+        data: data,
+        method: 'POST',
+        success: function() {
+            $('#token-' + userId + '-reset').removeClass('hide');
+            $('#token-' + userId + '-count').text('0');
+            markSuccess('token-' + userId);
+        },
+        error: function(data) {
+            console.error(data);
+            markFailure('token-' + userId);
+        }
+    });
 }
