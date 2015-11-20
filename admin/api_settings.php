@@ -145,7 +145,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     $userRs = hesk_dbQuery("SELECT `id`, `user`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `active` = '1'");
                     while ($row = hesk_dbFetchAssoc($userRs)) {
                         $row['number_of_tokens'] = 0;
-                        $users[$row['user']] = $row;
+                        $users[$row['id']] = $row;
                     }
                     $tokensRs = hesk_dbQuery("SELECT `user_id`, 1 FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "user_api_tokens`");
                     while ($row = hesk_dbFetchAssoc($tokensRs)) {
@@ -168,7 +168,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <tr>
                             <td><?php echo $row['user']; ?></td>
                             <td><?php echo $row['name']; ?></td>
-                            <td><?php echo $row['number_of_tokens']; ?></td>
+                            <td id="token-<?php echo $row['id']; ?>-count"><?php echo $row['number_of_tokens']; ?></td>
                             <td>
                                 <span class="btn-group">
                                     <button class="btn btn-default btn-xs" onclick="generateToken(<?php echo $row['id']; ?>)">
@@ -186,6 +186,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <i id="token-<?php echo $row['id']; ?>-saving" class="fa fa-spin fa-spinner fa-2x hide media-middle"
                                        data-toggle="tooltip" title="Saving..."></i>
                                 </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" id="token-<?php echo $row['id']; ?>-created" class="success hide">
+                                Generated Token: <code class="token"></code>
+                                <p><b>NOTE:</b> Please record this token, as this is the only time you will be able to view it!</p>
                             </td>
                         </tr>
                         <?php

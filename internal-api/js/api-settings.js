@@ -78,9 +78,14 @@ function generateToken(userId) {
         data: data,
         method: 'POST',
         success: function (data) {
+            $('#token-' + userId + '-created > .token').text(data);
+            $('#token-' + userId + '-created').removeClass('hide');
             markSuccess('token-' + userId);
+            var oldNumberOfTokens = parseInt($('#token-' + userId + '-count').text());
+            $('#token-' + userId + '-count').text(++oldNumberOfTokens);
         },
         error: function (data) {
+            console.error(data);
             markFailure('token-' + userId);
         }
     });

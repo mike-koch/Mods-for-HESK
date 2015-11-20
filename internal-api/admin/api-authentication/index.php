@@ -21,10 +21,17 @@ if ($request_method == 'POST') {
     }
 
     if ($action == 'generate') {
-        $hash = hash("sha512", time());
+        $token = '';
+        $letter_array = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
+        // Pick 32 random characters. That will be the hash
+        for ($i = 0; $i < 32; $i++) {
+            $letter = $letter_array[rand(0, 15)];
+            $token .= $letter;
+        }
+        $hash = hash("sha512", $token);
         store_token($user_id, $hash, $hesk_settings);
 
-        output($hash);
+        output($token);
         return http_response_code(200);
     } elseif ($action == 'reset') {
         //TODO
