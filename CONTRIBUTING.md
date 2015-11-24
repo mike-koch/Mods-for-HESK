@@ -21,8 +21,8 @@ If you have already completed any of these steps in the past (such as creating a
  - Check for unnecessary whitespace using the `git diff --check` command. If there is trailing whitespace, your pull request will be denied.
 
 ## Submitting Changes
- - Sign the [Contributor License Agreement](https://gist.github.com/mkoch227/edf8243d8c75d104247a)
  - Push your changes to a topic branch in your fork of the repository
  - Submit a pull request to the official Mods for HESK repository (mkoch227/Mods-for-HESK)
+ - If necessary, sign the Contributor License Agreement by checking the "status checks" area of your pull request.
  - The owner of Mods for HESK will then inspect and test the code in the pull request.  Feedback will be given via GitHub comments.
  - The owner of Mods for HESK expects responses within two weeks of the original comment. If there is no feedback within that time range, the pull request will be considered abandoned and subsequently will be closed.
