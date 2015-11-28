@@ -15,6 +15,10 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 
 /**
  * @api {get} /category Retrieve a ticket category
+ * @apiVersion 0.0.0
+ * @apiName GetCategory
+ * @apiGroup Category
+ * @apiPermission none
  *
  * @apiParam {Number} [id] The ID of the category. Omit for all categories.
  *
