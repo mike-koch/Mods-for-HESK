@@ -14,9 +14,9 @@ hesk_dbConnect();
 $request_method = $_SERVER['REQUEST_METHOD'];
 
 /**
- * @api {get} /status Retrieve a status
+ * @api {get} /status Retrieve a ticket status
  *
- * @apiParam {Number} [id] The ID of the status
+ * @apiParam {Number} [id] The ID of the status. Omit for all statuses.
  *
  * @apiSuccess {Number} id ID of the status
  * @apiSuccess {String} textColor The text color used for the status on the web interface
@@ -40,6 +40,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiSuccess {String} keys.text The translated string of the status
  *
  * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
  *     {
  *          "id": 0,
  *          "textColor": "#FF0000",

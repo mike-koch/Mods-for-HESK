@@ -13,6 +13,31 @@ hesk_dbConnect();
 // Routing
 $request_method = $_SERVER['REQUEST_METHOD'];
 
+/**
+ * @api {get} /category Retrieve a ticket category
+ *
+ * @apiParam {Number} [id] The ID of the category. Omit for all categories.
+ *
+ * @apiSuccess {Number} id ID of the category
+ * @apiSuccess {String} name The name of the category
+ * @apiSuccess {Integer} cat_order The order of the category (in multiples of 10)
+ * @apiSuccess {Boolean} autoassign `true` if tickets set to this category are automatically assigned.<br>`false` otherwise
+ * @apiSuccess {Integer} type `0` - Public<br>`1` - Private
+ * @apiSuccess {Integer} priority Default priority of tickets created in this category
+ * @apiSuccess {Integer} manager User ID of the category manager, or `null` if there is no manager.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "id": 1,
+ *          "name": "General",
+ *          "cat_order": 10,
+ *          "autoassign": true,
+ *          "type": 0,
+ *          "priority": 2,
+ *          "manager": 0
+ *      }
+ */
 if ($request_method == 'GET') {
     if (isset($_GET['id'])) {
         $results = get_category($hesk_settings, $_GET['id']);

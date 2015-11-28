@@ -7,6 +7,21 @@ require_once(API_PATH . 'core/output.php');
 // Routing
 $request_method = $_SERVER['REQUEST_METHOD'];
 
+/**
+ * @api {get} /priority Retrieve a ticket priority
+ *
+ * @apiParam {Number} [id] The ID of the priority. Omit for all priorities.
+ *
+ * @apiSuccess {Number} id ID of the priority
+ * @apiSuccess {String} key The language file key of the priority
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "id": 0,
+ *          "key": "critical"
+ *      }
+ */
 if ($request_method == 'GET') {
     $results = [];
     $critical['id'] = 0;

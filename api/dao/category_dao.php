@@ -16,10 +16,10 @@ function get_category($hesk_settings, $id = NULL) {
     while ($row = hesk_dbFetchAssoc($response)) {
         $row['id'] = intval($row['id']);
         $row['cat_order'] = intval($row['cat_order']);
-        $row['autoassign'] = intval($row['autoassign']);
+        $row['autoassign'] = $row['autoassign'] == 1;
         $row['type'] = intval($row['type']);
         $row['priority'] = intval($row['priority']);
-        $row['manager'] = intval($row['manager']);
+        $row['manager'] = intval($row['manager']) == 0 ? NULL : intval($row['manager']);
         $results[] = $row;
     }
 
