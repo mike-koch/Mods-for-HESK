@@ -6,7 +6,7 @@ require_once(HESK_PATH . 'hesk_settings.inc.php');
 require_once(HESK_PATH . 'inc/common.inc.php');
 require_once(API_PATH . 'core/headers.php');
 require_once(API_PATH . 'core/output.php');
-require_once(API_PATH . 'dao/ticket_dao.php');
+require_once(API_PATH . 'businesslogic/ticket_retriever.php');
 require_once(API_PATH . 'businesslogic/security_retriever.php');
 
 hesk_load_api_database_functions();
@@ -33,22 +33,12 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiSuccess {String} subject The subject of the ticket
  * @apiSuccess {String} message The original message of the ticket
  * @apiSuccess {String} dt The date and time the ticket was submitted, in `YYYY-MM-DD hh:mm:ss`
- * @apiSuccess {String} lastchange The date and time the ticket was last changed, in `YYYY-MM-DD hh:mm:ss`
- * @apiSuccess {String} firstreply The date and time the first remply was recorded, in `YYYY-MM-DD hh:mm:ss`
- * @apiSuccess {String} closedat The date and time the ticket was closed, in `YYYY-MM-DD hh:mm:ss`
  * @apiSuccess {Integer} articles The knowledgebase article IDs suggested when the user created the ticket
  * @apiSuccess {String} ip The IP address of the submitter
  * @apiSuccess {String} language The language the ticket was submitted in
  * @apiSuccess {Integer} status The ID of the status the ticket is set to
- * @apiSuccess {Integer} openedby `0` - Ticket opened by staff<br>`1` - Ticket opened by customer
- * @apiSuccess {Integer} firstreplyby `0` - First reply by staff<br>`1` - First reply by customer
- * @apiSuccess {Integer} closedby `0` - Ticket closed by staff<br>`1` - Ticket closed by customer
- * @apiSuccess {Integer} replies Total number of replies to ticket
- * @apiSuccess {Integer} staffreplies Total number of replies to ticket from staff
  * @apiSuccess {Integer} owner The user ID of the ticket owner
  * @apiSuccess {String} time_worked The total time worked on the ticket, in `hh:mm:ss`
- * @apiSuccess {Integer} lastreplier `0` - Last reply by staff<br>`1` - Last reply by customer
- * @apiSuccess {Integer} replierid The user ID of the staff that last replied to the ticket, or `0` if the last reply was made by the customer
  * @apiSuccess {Boolean} archive `true` if the ticket is tagged<br>`false` otherwise
  * @apiSuccess {Boolean} locked `true` if the ticket is locked<br>`false` otherwise
  * @apiSuccess {Binary[]} attachments Array of attachments, in base-64 encoded binary
@@ -75,22 +65,12 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *           "subject": "test",
  *           "message": "test",
  *           "dt": "2014-12-28 00:57:26",
- *           "lastchange": "2015-03-08 23:38:59",
- *           "firstreply": "2015-01-17 10:21:16",
- *           "closedat": "2015-01-17 15:39:12",
  *           "articles": null,
- *           "ip": "::1",
+ *           "ip": "127.0.0.1",
  *           "language": null,
  *           "status": 3,
- *           "openedby": 0,
- *           "firstreplyby": "1",
- *           "closedby": "1",
- *           "replies": "11",
- *           "staffreplies": "10",
- *           "owner": "1",
+ *           "owner": 1,
  *           "time_worked": "00:05:07",
- *           "lastreplier": 1,
- *           "replierid": 1,
  *           "archive": true,
  *           "locked": true,
  *           "attachments": "",
@@ -116,7 +96,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *           "custom18": "",
  *           "custom19": "",
  *           "custom20": "",
- *           "parent": null,
+ *           "parent": 139,
  *           "latitude": "E-0",
  *           "longitude": "E-0",
  *           "html": false,
@@ -138,11 +118,9 @@ if ($request_method == 'GET') {
     }
 
     if (isset($_GET['id'])) {
-        $results = get_ticket_for_id($hesk_settings, $_GET['id']);
-    } elseif (isset($_GET['trackid'])) {
-        $results = get_ticket_by_tracking_id($hesk_settings, $_GET['trackid']);
+        $results = get_ticket($hesk_settings, $_GET['id']);
     } else {
-        $results = get_ticket_for_id($hesk_settings);
+        $results = get_ticket($hesk_settings);
     }
 
     if ($results == NULL) {

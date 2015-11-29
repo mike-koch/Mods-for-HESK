@@ -24,18 +24,15 @@ function build_results($response) {
         $row['category'] = intval($row['category']);
         $row['priority'] = intval($row['priority']);
         $row['status'] = intval($row['status']);
-        $row['openedby'] = intval($row['openedby']);
-        $row['lastreplier'] = intval($row['lastreplier']);
         $row['replierid'] = intval($row['replierid']);
         $row['archive'] = $row['archive'] == true;
         $row['locked'] = $row['locked'] == true;
         $row['html'] = $row['html'] == true;
-        $row['screen_resolution_height'] = $row['screen_resolution_height'] != NULL
-            ? intval($row['screen_resolution_height'])
-            : NULL;
-        $row['screen_resolution_width'] = $row['screen_resolution_width'] != NULL
-            ? intval($row['screen_resolution_width'])
-            : NULL;
+        $row['screen_resolution_height'] = convert_to_int($row['screen_resolution_height']);
+        $row['screen_resolution_width'] = convert_to_int($row['screen_resolution_width']);
+        $row['owner'] = convert_to_int($row['owner']);
+        $row['parent'] = convert_to_int($row['parent']);
+
 
         $results[] = $row;
     }
@@ -43,16 +40,6 @@ function build_results($response) {
     return $results;
 }
 
-function get_ticket_by_tracking_id($hesk_settings, $trackid) {
-    $sql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `trackid` = '"
-        . hesk_dbEscape($trackid) . "'";
-
-    $response = hesk_dbQuery($sql);
-
-    if (hesk_dbNumRows($response) == 0) {
-        return NULL;
-    }
-
-    $results = build_results($response);
-    return $results[0];
+function convert_to_int($item) {
+    return $item != NULL ? intval($item) : NULL;
 }
