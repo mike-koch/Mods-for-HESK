@@ -4,7 +4,7 @@ require_once(API_PATH . 'exception/AccessException.php');
 
 function get_user_for_token_hash($hash, $hesk_settings) {
     if ($hash == NULL_OR_EMPTY_STRING) {
-        throw new AccessException(404);
+        throw new AccessException(400);
     }
 
     $user_id_sql = "SELECT `user_id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "user_api_tokens`
@@ -12,7 +12,7 @@ function get_user_for_token_hash($hash, $hesk_settings) {
 
     $user_id_rs = hesk_dbQuery($user_id_sql);
     if (hesk_dbNumRows($user_id_rs) == 0) {
-        throw new AccessException(422);
+        throw new AccessException(401);
     }
     $user_id = hesk_dbFetchAssoc($user_id_rs);
 

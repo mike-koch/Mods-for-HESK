@@ -15,6 +15,10 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 
 /**
  * @api {get} /status Retrieve a ticket status
+ * @apiVersion 0.0.0
+ * @apiName GetStatus
+ * @apiGroup Status
+ * @apiPermission public
  *
  * @apiParam {Number} [id] The ID of the status. Omit for all statuses.
  *
@@ -65,7 +69,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *                  "text": "Nuevo"
  *              }
  *          ]
- *      }
+ *     }
  */
 if ($request_method == 'GET') {
     if (isset($_GET['id'])) {

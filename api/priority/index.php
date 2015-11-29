@@ -9,6 +9,10 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 
 /**
  * @api {get} /priority Retrieve a ticket priority
+ * @apiVersion 0.0.0
+ * @apiName GetPriority
+ * @apiGroup Priority
+ * @apiPermission public
  *
  * @apiParam {Number} [id] The ID of the priority. Omit for all priorities.
  *
@@ -20,7 +24,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *     {
  *          "id": 0,
  *          "key": "critical"
- *      }
+ *     }
  */
 if ($request_method == 'GET') {
     $results = [];

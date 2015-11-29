@@ -18,7 +18,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiVersion 0.0.0
  * @apiName GetCategory
  * @apiGroup Category
- * @apiPermission none
+ * @apiPermission public
  *
  * @apiParam {Number} [id] The ID of the category. Omit for all categories.
  *
@@ -40,7 +40,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *          "type": 0,
  *          "priority": 2,
  *          "manager": 0
- *      }
+ *     }
  */
 if ($request_method == 'GET') {
     if (isset($_GET['id'])) {
