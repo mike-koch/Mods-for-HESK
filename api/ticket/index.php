@@ -45,14 +45,14 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *     HTTP/1.1 200 OK
  *     {
  *           "id": 22,
- *           "trackid": "EVL-RRL-DUBG",
+ *           "trackingId": "EVL-RRL-DUBG",
  *           "name": "Test",
  *           "email": "",
  *           "category": 1,
  *           "priority": 3,
  *           "subject": "test",
  *           "message": "test",
- *           "dt": "2014-12-28 00:57:26",
+ *           "dateCreated": "2014-12-28 00:57:26",
  *           "status": 3,
  *           "archive": true,
  *           "locked": true,

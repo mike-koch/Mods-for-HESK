@@ -27,7 +27,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiSuccess {Number} id ID of the canned response
  * @apiSuccess {String} title The title of the canned response.
  * @apiSuccess {String} message The contents of the canned response, including HTML markup.
- * @apiSuccess {Integer} reply_order The position of the canned response in the list of canned responses (in multiples of 10).
+ * @apiSuccess {Integer} replyOrder The position of the canned response in the list of canned responses (in multiples of 10).
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -35,7 +35,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *          "id": 2,
  *          "title": "html",
  *          "message": "<p><strong>My<em> canned response&nbsp;</em></strong></p>\r\n<p>%%HESK_ID%%</p>",
- *          "reply_order": 10
+ *          "replyOrder": 10
  *     }
  *
  * @apiError (noTokenProvided) 400 No `X-Auth-Token` was provided where it is required

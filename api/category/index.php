@@ -24,7 +24,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *
  * @apiSuccess {Number} id ID of the category
  * @apiSuccess {String} name The name of the category
- * @apiSuccess {Integer} cat_order The order of the category (in multiples of 10)
+ * @apiSuccess {Integer} displayOrder The order of the category (in multiples of 10)
  * @apiSuccess {Boolean} autoassign `true` if tickets set to this category are automatically assigned.<br>`false` otherwise
  * @apiSuccess {Integer} type `0` - Public<br>`1` - Private
  * @apiSuccess {Integer} priority Default priority of tickets created in this category
@@ -35,11 +35,11 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *     {
  *          "id": 1,
  *          "name": "General",
- *          "cat_order": 10,
+ *          "displayOrder": 10,
  *          "autoassign": true,
  *          "type": 0,
  *          "priority": 2,
- *          "manager": 0
+ *          "manager": null
  *     }
  */
 if ($request_method == 'GET') {

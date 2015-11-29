@@ -15,10 +15,6 @@ function get_user($hesk_settings, $id = NULL) {
 
     $results = [];
     while ($row = hesk_dbFetchAssoc($response)) {
-        // Never send back a user's password, even if it is hashed.
-        unset($row['pass']);
-        unset($row['permission_template']);
-
         $row['id'] = intval($row['id']);
         $row['isadmin'] = get_boolean($row['isadmin']);
         $row['signature'] = hesk_html_entity_decode($row['signature']);

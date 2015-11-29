@@ -15,7 +15,10 @@ function get_canned_response($hesk_settings, $id = NULL) {
     $results = [];
     while ($row = hesk_dbFetchAssoc($response)) {
         $row['id'] = intval($row['id']);
-        $row['reply_order'] = intval($row['reply_order']);
+
+        $row['replyOrder'] = intval($row['reply_order']);
+        unset($row['reply_order']);
+
         $row['title'] = hesk_html_entity_decode($row['title']);
         $row['message'] = hesk_html_entity_decode($row['message']);
         $results[] = $row;
