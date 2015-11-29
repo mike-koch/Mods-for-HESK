@@ -1,7 +1,7 @@
 <?php
 define('IN_SCRIPT', 1);
-define('HESK_PATH', '../../../');
-define('API_PATH', '../../');
+define('HESK_PATH', '../../');
+define('API_PATH', '../');
 require_once(HESK_PATH . 'hesk_settings.inc.php');
 require_once(HESK_PATH . 'inc/common.inc.php');
 require_once(API_PATH . 'core/headers.php');
@@ -16,13 +16,13 @@ hesk_dbConnect();
 $request_method = $_SERVER['REQUEST_METHOD'];
 
 /**
- * @api {get} /admin/ticket Retrieve a ticket (staff-side)
+ * @api {get} /ticket Retrieve a ticket (staff-side)
  * @apiVersion 0.0.0
- * @apiName GetTicketStaff
+ * @apiName GetTicket
  * @apiGroup Ticket
  * @apiPermission protected
  *
- * @apiParam {Number} [id] The ID of the ticket. Omit for all tickets.
+ * @apiParam {Number} [id] The ID of the ticket.
  *
  * @apiSuccess {Number} id ID of the ticket
  * @apiSuccess {String} trackid The tracking id of the ticket
@@ -118,9 +118,9 @@ if ($request_method == 'GET') {
     }
 
     if (isset($_GET['id'])) {
-        $results = get_ticket_for_staff($hesk_settings, $_GET['id']);
+        $results = get_ticket($hesk_settings, $_GET['id']);
     } else {
-        $results = get_ticket_for_staff($hesk_settings);
+        return http_response_code(400);
     }
 
     if ($results == NULL) {
