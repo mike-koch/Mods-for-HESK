@@ -6,7 +6,7 @@ require_once(HESK_PATH . 'hesk_settings.inc.php');
 require_once(HESK_PATH . 'inc/common.inc.php');
 require_once(API_PATH . 'core/headers.php');
 require_once(API_PATH . 'core/output.php');
-require_once(API_PATH . 'dao/ticket_template_dao.php');
+require_once(API_PATH . 'dao/user_dao.php');
 require_once(API_PATH . 'businesslogic/security_retriever.php');
 
 hesk_load_api_database_functions();
@@ -25,9 +25,9 @@ if ($request_method == 'GET') {
     }
 
     if (isset($_GET['id'])) {
-        $results = get_ticket_template($hesk_settings, $_GET['id']);
+        $results = get_user($hesk_settings, $_GET['id']);
     } else {
-        $results = get_ticket_template($hesk_settings);
+        $results = get_user($hesk_settings);
     }
 
     if ($results == NULL) {
