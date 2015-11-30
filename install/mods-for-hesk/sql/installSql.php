@@ -694,3 +694,18 @@ function execute252Scripts()
 
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.5.2' WHERE `Key` = 'modsForHeskVersion'");
 }
+
+// BEGIN Version 2.6.0
+function execute260Scripts()
+{
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` (
+      `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `username` VARCHAR(200),
+      `message` MEDIUMTEXT NOT NULL,
+      `severity` INT NOT NULL,
+      `location` MEDIUMTEXT) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+    executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.6.0' WHERE `Key` = 'modsForHeskVersion'");
+}
