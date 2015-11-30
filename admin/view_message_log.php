@@ -58,7 +58,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-default">Search</button>
+                    <button class="btn btn-default" id="search-button">Search</button>
                 </div>
             </div>
         </div>
@@ -66,6 +66,21 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Logs
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped" id="results-table">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Location</th>
+                            <th>Message</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
