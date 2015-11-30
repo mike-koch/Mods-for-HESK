@@ -89,6 +89,12 @@ $modsForHesk_settings = mfh_getSettings();
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core.php"></script>
+    <?php
+    if (defined('EXTRA_JS')) {
+        echo EXTRA_JS;
+    }
+    ?>
     <style>
         .navbar-default {
             background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;

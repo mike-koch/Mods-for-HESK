@@ -154,6 +154,31 @@ function hesk_load_database_functions()
 } // END hesk_load_database_functions()
 
 
+function hesk_load_api_database_functions()
+{
+    require(HESK_PATH . 'api/core/json_error.php');
+    // Preferrably use the MySQLi functions
+    if (function_exists('mysqli_connect')) {
+        require(HESK_PATH . 'api/core/database_mysqli.inc.php');
+    } // Default to MySQL
+    else {
+        require(HESK_PATH . 'api/core/database.inc.php');
+    }
+} // END hesk_load_database_functions()
+
+
+function hesk_load_internal_api_database_functions()
+{
+    require(HESK_PATH . 'internal-api/core/json_error.php');
+    // Preferrably use the MySQLi functions
+    if (function_exists('mysqli_connect')) {
+        require(HESK_PATH . 'internal-api/core/database_mysqli.inc.php');
+    } // Default to MySQL
+    else {
+        require(HESK_PATH . 'internal-api/core/database.inc.php');
+    }
+} // END hesk_load_database_functions()
+
 function hesk_unlink($file, $older_than = 0)
 {
     return (is_file($file) && (!$older_than || (time() - filectime($file)) > $older_than) && @unlink($file)) ? true : false;
