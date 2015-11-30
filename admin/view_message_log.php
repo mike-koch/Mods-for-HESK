@@ -13,6 +13,10 @@ hesk_load_database_functions();
 hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
+
+
+define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/view-message-log.js"></script>');
+
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
