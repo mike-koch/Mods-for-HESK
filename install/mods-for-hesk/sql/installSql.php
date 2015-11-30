@@ -706,6 +706,7 @@ function execute260Scripts()
       `username` VARCHAR(200),
       `message` MEDIUMTEXT NOT NULL,
       `severity` INT NOT NULL,
-      `location` MEDIUMTEXT) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+      `location` MEDIUMTEXT,
+      `timestamp` TIMESTAMP NOT NULL) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.6.0' WHERE `Key` = 'modsForHeskVersion'");
 }
