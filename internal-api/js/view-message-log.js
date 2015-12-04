@@ -4,6 +4,14 @@ $(document).ready(function() {
 
     $('#search-button').click(function() {
         var location = getNullableField($('input[name="location"]').val());
+        var dateFrom = getNullableField($('input[name="from-date"]').val());
+        var dateTo = getNullableField($('input[name="to-date"]').val());
+        var severity = $('select[name="severity"]').val();
+        if (severity == -1) {
+            severity = null;
+        }
+
+        searchLogs(location, dateFrom, dateTo, severity);
     });
 });
 
