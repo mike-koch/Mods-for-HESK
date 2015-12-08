@@ -77,9 +77,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <th>Message</th>
                         </tr>
                         </thead>
-                        <tbody>
-
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>

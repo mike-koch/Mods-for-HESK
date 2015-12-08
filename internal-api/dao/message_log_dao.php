@@ -1,6 +1,10 @@
 <?php
 
 function search_log($hesk_settings, $location, $from_date, $to_date, $severity_id) {
+    if (!function_exists('hesk_date')) {
+        return null;
+    }
+
     $sql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` WHERE 1=1 ";
 
     if ($location != NULL) {
@@ -24,6 +28,7 @@ function search_log($hesk_settings, $location, $from_date, $to_date, $severity_i
 
     $results = [];
     while ($row = hesk_dbFetchAssoc($rs)) {
+        $row['timestamp'] = hesk_date($row['timestamp'], true);
         $results[] = $row;
     }
 
