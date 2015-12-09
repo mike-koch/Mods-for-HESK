@@ -28,53 +28,57 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <div class="col-sm-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Search Logs
+                    <?php echo $hesklang['search_logs']; ?>
                 </div>
                 <div class="panel-body">
                     <div class="form-horizontal">
                         <div class="form-group">
-                            <label for="location" class="control-label col-sm-4">Location</label>
+                            <label for="location" class="control-label col-sm-4">
+                                <?php echo $hesklang['custom_place']; ?>
+                            </label>
                             <div class="col-sm-8">
-                                <input type="text" name="location" class="form-control" placeholder="Location">
+                                <input type="text" name="location" class="form-control" placeholder="<?php echo hesk_htmlspecialchars($hesklang['custom_place']); ?>">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="date" class="control-label col-sm-4">Date Logged</label>
+                            <label for="date" class="control-label col-sm-4">
+                                <?php echo $hesklang['date_logged']; ?>
+                            </label>
                             <div class="col-sm-8">
-                                <input type="text" name="from-date" class="datepicker form-control white-readonly" placeholder="From Date" readonly>
-                                <input type="text" name="to-date" class="datepicker form-control white-readonly" placeholder="To Date" readonly>
+                                <input type="text" name="from-date" class="datepicker form-control white-readonly" placeholder="<?php echo hesk_htmlspecialchars($hesklang['from_date']); ?>" readonly>
+                                <input type="text" name="to-date" class="datepicker form-control white-readonly" placeholder="<?php echo hesk_htmlspecialchars($hesklang['to_date']); ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="severity" class="control-label col-sm-4">Severity</label>
+                            <label for="severity" class="control-label col-sm-4"><?php echo $hesklang['severity']; ?></label>
                             <div class="col-sm-8">
                                 <select name="severity" class="form-control">
-                                    <option value="-1" selected>All</option>
-                                    <option value="0">Debug</option>
-                                    <option value="1">Info</option>
-                                    <option value="2">Warning</option>
-                                    <option value="3">Error</option>
+                                    <option value="-1" selected><?php echo $hesklang['all']; ?></option>
+                                    <option value="0"><?php echo $hesklang['debug']; ?></option>
+                                    <option value="1"><?php echo $hesklang['info']; ?></option>
+                                    <option value="2"><?php echo $hesklang['warning_title_case']; ?></option>
+                                    <option value="3"><?php echo $hesklang['sm_error']; ?></option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-default" id="search-button">Search</button>
+                    <button class="btn btn-default" id="search-button"><?php echo $hesklang['search']; ?></button>
                 </div>
             </div>
         </div>
         <div class="col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Logs
+                    <?php echo $hesklang['logs']; ?>
                 </div>
                 <div class="panel-body">
                     <table class="table table-striped" id="results-table">
                         <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>User</th>
-                            <th>Location</th>
-                            <th>Message</th>
+                            <th><?php echo $hesklang['date']; ?></th>
+                            <th><?php echo $hesklang['user']; ?></th>
+                            <th><?php echo $hesklang['custom_place']; ?></th>
+                            <th><?php echo $hesklang['message']; ?></th>
                         </tr>
                         </thead>
                         <tbody></tbody>
