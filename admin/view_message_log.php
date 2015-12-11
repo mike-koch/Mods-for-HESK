@@ -14,6 +14,7 @@ hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
 
+hesk_checkPermission('can_view_logs');
 
 define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/view-message-log.js"></script>');
 
@@ -45,8 +46,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <?php echo $hesklang['date_logged']; ?>
                             </label>
                             <div class="col-sm-8">
-                                <input type="text" name="from-date" class="datepicker form-control white-readonly" placeholder="<?php echo hesk_htmlspecialchars($hesklang['from_date']); ?>" readonly>
-                                <input type="text" name="to-date" class="datepicker form-control white-readonly" placeholder="<?php echo hesk_htmlspecialchars($hesklang['to_date']); ?>" readonly>
+                                <input type="text" name="from-date" class="datepicker form-control white-readonly no-bottom-round-corners no-bottom-border" placeholder="<?php echo hesk_htmlspecialchars($hesklang['from_date']); ?>" readonly>
+                                <input type="text" name="to-date" class="datepicker form-control white-readonly no-top-round-corners" placeholder="<?php echo hesk_htmlspecialchars($hesklang['to_date']); ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group">
@@ -61,8 +62,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-4">
+                                <button class="btn btn-default" id="search-button"><?php echo $hesklang['search']; ?></button>
+                            </div>
+                        </div>
                     </div>
-                    <button class="btn btn-default" id="search-button"><?php echo $hesklang['search']; ?></button>
                 </div>
             </div>
         </div>

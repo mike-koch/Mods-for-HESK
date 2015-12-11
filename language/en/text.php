@@ -30,6 +30,8 @@ $hesklang['severity'] = 'Severity';
 $hesklang['debug'] = 'Debug';
 $hesklang['warning_title_case'] = 'Warning';
 $hesklang['logs'] = 'Logs';
+$hesklang['view_message_log'] = 'View Message Log';
+$hesklang['can_view_logs'] = 'Can view message logs';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

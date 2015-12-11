@@ -1761,6 +1761,7 @@ function hesk_getFeatureArray()
         'can_man_permission_tpl', /* User can manage permission templates */
         'can_man_settings', /* User can manage helpdesk settings */
         'can_change_notification_settings', /* User can change notification settings */
+        'can_view_logs', /* User can view the message logs */
     );
 }
 
@@ -1811,4 +1812,28 @@ function mfh_getSettings()
         $settings[$row['Key']] = $row['Value'];
     }
     return $settings;
+}
+
+function mfh_log($location, $message, $severity, $user) {
+    global $hesk_settings;
+
+    $sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` (`username`, `message`, `severity`, `location`, `timestamp`)
+        VALUES ('" . hesk_dbEscape($user) . "',
+        '" . hesk_dbEscape($message) . "', " . intval($severity) . ", '" . hesk_dbEscape($location) . "', NOW())";
+}
+
+function mfh_log_debug($location, $message, $user) {
+    mfh_log($location, $message, 0, $user);
+}
+
+function mfh_log_info($location, $message, $user) {
+    mfh_log($location, $message, 1, $user);
+}
+
+function mfh_log_warning($location, $message, $user) {
+    mfh_log($location, $message, 2, $user);
+}
+
+function mfh_log_error($location, $message, $user) {
+    mfh_log($location, $message, 3, $user);
 }

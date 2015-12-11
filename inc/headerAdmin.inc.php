@@ -28,8 +28,7 @@
  *  https://www.hesk.com/buy.php
  *******************************************************************************/
 
-// Define the current build
-define('MODS_FOR_HESK_BUILD', 23);
+require_once(HESK_PATH . 'build.php');
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {
@@ -90,7 +89,6 @@ $modsForHesk_settings = mfh_getSettings();
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core.php"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/common.js"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;

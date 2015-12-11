@@ -180,6 +180,10 @@ if (hesk_check_kb_only(false)) {
                     $tools_count++;
                     $dropdown_items .= '<li><a href="manage_statuses.php">' . $hesklang['manage_statuses'] . '</a></li>';
                 }
+                if (hesk_checkPermission('can_view_logs', 0)) {
+                    $tools_count++;
+                    $dropdown_items .= '<li><a href="view_message_log.php">' . $hesklang['view_message_log'] . '</a></li>';
+                }
                 $dropdown_items .= '</ul>';
 
                 if ($tools_count > 1) {
@@ -224,6 +228,12 @@ if (hesk_check_kb_only(false)) {
                             $active = ' class="active"';
                         }
                         echo '<li'.$active.'><a href="manage_statuses.php"><i class="fa fa-wrench" ' . $iconDisplay . '></i>&nbsp;' . $hesklang['tools'] . '</a></li>';
+                    } elseif (hesk_checkPermission('can_view_logs', 0)) {
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_TOOLS') {
+                            $active = ' class="active"';
+                        }
+                        echo '<li'.$active.'><a href="view_message_log.php"><i class="fa fa-wrench" ' . $iconDisplay . '></i>&nbsp;' . $hesklang['tools'] . '</a></li>';
                     }
                 }
                 if (hesk_checkPermission('can_man_settings', 0)) {
