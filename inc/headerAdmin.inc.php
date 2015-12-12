@@ -28,8 +28,7 @@
  *  https://www.hesk.com/buy.php
  *******************************************************************************/
 
-// Define the current build
-define('MODS_FOR_HESK_BUILD', 23);
+require_once(HESK_PATH . 'build.php');
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {

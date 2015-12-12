@@ -28,8 +28,7 @@
  *  https://www.hesk.com/buy.php
  *******************************************************************************/
 
-// Define the current build
-define('MODS_FOR_HESK_BUILD', 23);
+require_once(HESK_PATH . 'build.php');
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {
@@ -41,7 +40,7 @@ if (!function_exists('mfh_getSettings')) {
 
 $modsForHesk_settings = array();
 if (is_dir(HESK_PATH . 'install')) {
-    $modsForHesk_settings['navbar_title_url'] = '#';
+    $modsForHesk_settings['navbar_title_url'] = 'javascript:;';
     $modsForHesk_settings['rtl'] = 0;
     $modsForHesk_settings['use_bootstrap_theme'] = 1;
     $modsForHesk_settings['show_icons'] = 1;
