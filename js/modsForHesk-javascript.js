@@ -1,3 +1,6 @@
+//-- Turn off Dropzone autodetection.
+//Dropzone.autoDiscover = false;
+
 //-- Activate anything Mods for HESK needs, such as tooltips.
 var loadJquery = function()
 {

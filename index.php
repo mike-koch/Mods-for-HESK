@@ -36,6 +36,7 @@ define('VALIDATOR', 1);
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
 
 hesk_load_database_functions();
 hesk_dbConnect();
@@ -194,7 +195,7 @@ function print_add_ticket()
                 $onsubmit = 'onsubmit="return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
             }
             ?>
-            <form class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1"
+            <div class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1"
                   enctype="multipart/form-data" <?php echo $onsubmit; ?>>
                 <!-- Contact info -->
                 <div class="form-group">
@@ -987,8 +988,14 @@ function print_add_ticket()
                             <a href="file_limits.php" target="_blank"
                                onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
                         </div>
+                        <div class="dropzone" id="filedrop">
+                            <div class="fallback">
+                                <input name="file" type="file" multiple />
+                            </div>
+                        </div>
                     </div>
                     <?php
+                    display_dropzone_field('ticket-attachment', 'someurl');
                 }
 
                 if ($hesk_settings['question_use'] || $hesk_settings['secimg_use'])

@@ -170,3 +170,57 @@ function mfh_getFontAwesomeIconForFileExtension($fileExtension)
     }
     return $icon;
 }
+
+function output_dropzone_window() {
+    echo '
+    <div class="table table-striped" class="files" id="preview" style="display:none">
+        <div id="template" class="file-row">
+            <!-- This is used as the file preview template -->
+            <div>
+                <span class="preview"><img data-dz-thumbnail /></span>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-12">
+                    <p class="name" data-dz-name></p>
+                    <i class="fa fa-trash fa-2x" style="color: gray; cursor: pointer" title="Remove file" data-dz-remove></i>
+                </div>
+                <div class="col-md-8 col-sm-12">
+                    <p class="size" data-dz-size></p>
+                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="total-progress">
+                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <strong class="error text-danger" data-dz-errormessage></strong>
+                </div>
+            </div>
+        </div>
+    </div>';
+}
+
+function display_dropzone_field($url) {
+    global $hesk_settings, $hesklang;
+
+    output_dropzone_window();
+
+    echo "
+    <script type=\"text/javascript\">
+    Dropzone.options.filedrop = {
+        paramName: 'file',
+        url: '/some/url',
+        parallelUploads: 1,
+        uploadMultiple: false,
+        maxFiles: 1,
+        acceptedFiles: '.zip, .rar, .7z',
+        maxFilesize: 2, // MB
+        dictDefaultMessage: 'Drag or click here to select your file for submission. Files must end in .zip, .rar, or .7z.',
+        dictInvalidFileType: 'Sorry, but the file you tried to upload does not end in .zip, .rar, or .7z.',
+        dictResponseError: 'Yikes, something went wrong! Please go to the Mods for HESK forums to report this issue.',
+        previewTemplate: $('#previews').html()
+    };
+    </script>
+    ";
+
+}
