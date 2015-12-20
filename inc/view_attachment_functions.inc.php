@@ -173,7 +173,7 @@ function mfh_getFontAwesomeIconForFileExtension($fileExtension)
 
 function output_dropzone_window() {
     echo '
-    <div class="table table-striped" class="files" id="preview" style="display:none">
+    <div class="table table-striped" class="files" id="previews" style="display:none">
         <div id="template" class="file-row">
             <!-- This is used as the file preview template -->
             <div>
@@ -205,19 +205,21 @@ function display_dropzone_field($url) {
 
     output_dropzone_window();
 
+    $acceptedFiles = implode(',', $hesk_settings['attachments']['allowed_types']);
+
     echo "
     <script type=\"text/javascript\">
     Dropzone.options.filedrop = {
         paramName: 'file',
-        url: '/some/url',
+        url: '".$url."',
         parallelUploads: 1,
         uploadMultiple: false,
         maxFiles: 1,
-        acceptedFiles: '.zip, .rar, .7z',
+        acceptedFiles: '".json_encode($acceptedFiles)."',
         maxFilesize: 2, // MB
-        dictDefaultMessage: 'Drag or click here to select your file for submission. Files must end in .zip, .rar, or .7z.',
-        dictInvalidFileType: 'Sorry, but the file you tried to upload does not end in .zip, .rar, or .7z.',
-        dictResponseError: 'Yikes, something went wrong! Please go to the Mods for HESK forums to report this issue.',
+        dictDefaultMessage: ".json_encode($hesklang['attachment_viewer_message']).",
+        dictInvalidFileType: ".json_encode($hesklang['attachment_invalid_type_message']).",
+        dictResponseError: ".json_encode($hesklang['attachment_upload_error']).",
         previewTemplate: $('#previews').html()
     };
     </script>

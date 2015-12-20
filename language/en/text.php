@@ -32,6 +32,9 @@ $hesklang['warning_title_case'] = 'Warning';
 $hesklang['logs'] = 'Logs';
 $hesklang['view_message_log'] = 'View Message Log';
 $hesklang['can_view_logs'] = 'Can view message logs';
+$hesklang['attachment_viewer_message'] = 'Drag or click here to select your file for submission.';
+$hesklang['attachment_invalid_type_message'] = 'Sorry, but the file type you tried to upload is not allowed.';
+$hesklang['attachment_upload_error'] = 'An error occurred when trying to upload. Please try again later.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

@@ -195,7 +195,7 @@ function print_add_ticket()
                 $onsubmit = 'onsubmit="return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
             }
             ?>
-            <div class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1"
+            <form class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1"
                   enctype="multipart/form-data" <?php echo $onsubmit; ?>>
                 <!-- Contact info -->
                 <div class="form-group">
@@ -979,23 +979,24 @@ function print_add_ticket()
                             :</label>
 
                         <div align="left" class="col-sm-9">
-                            <?php
-                            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                                $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
-                                echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
-                            }
-                            ?>
+                            <div class="dropzone" id="filedrop">
+                                <div class="fallback">
+                                    <input type="hidden" name="use-legacy-attachments" value="1">
+                                    <?php
+                                    for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                                        $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
+                                        echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+
                             <a href="file_limits.php" target="_blank"
                                onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
                         </div>
-                        <div class="dropzone" id="filedrop">
-                            <div class="fallback">
-                                <input name="file" type="file" multiple />
-                            </div>
-                        </div>
                     </div>
                     <?php
-                    display_dropzone_field('ticket-attachment', 'someurl');
+                    display_dropzone_field('someurl');
                 }
 
                 if ($hesk_settings['question_use'] || $hesk_settings['secimg_use'])
@@ -1185,7 +1186,7 @@ function print_add_ticket()
                     "<?php echo addslashes($hesklang['select_at_least_one_value']); ?>");
             </script>
         </div>
-    </div>
+    </form>
     <?php if ($columnWidth == 'col-md-10 col-md-offset-1'): ?>
     <div class="col-md-1">&nbsp;</div></div>
 <?php endif; ?>
