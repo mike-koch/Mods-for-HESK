@@ -36,17 +36,27 @@ if (!defined('IN_SCRIPT')) {
 /***************************
  * Function hesk_uploadFiles()
  ***************************/
-function hesk_uploadFile($i, $isTicket = true, $ajax = false)
+function hesk_uploadFile($i, $isTicket = true)
 {
     global $hesk_settings, $hesklang, $trackingID, $hesk_error_buffer, $modsForHesk_settings;
 
+    $single_file = $i == -1;
     /* Return if name is empty */
-    if (empty($_FILES['attachment']['name'][$i])) {
+    $name = $single_file
+        ? $_FILES['attachment']['name']
+        : $_FILES['attachment']['name'][$i];
+
+    if (empty($name)) {
         return '';
     }
 
+
     /* Parse the name */
-    $file_realname = hesk_cleanFileName($_FILES['attachment']['name'][$i]);
+    if ($single_file) {
+        $file_realname = hesk_cleanFileName($_FILES['attachment']['name']);
+    } else {
+        $file_realname = hesk_cleanFileName($_FILES['attachment']['name'][$i]);
+    }
 
     /* Check file extension */
     $ext = strtolower(strrchr($file_realname, "."));
@@ -55,10 +65,13 @@ function hesk_uploadFile($i, $isTicket = true, $ajax = false)
     }
 
     /* Check file size */
-    if ($_FILES['attachment']['size'][$i] > $hesk_settings['attachments']['max_size']) {
+    $size = $single_file
+        ? $_FILES['attachment']['size']
+        : $_FILES['attachment']['size'][$i];
+    if ($size > $hesk_settings['attachments']['max_size']) {
         return hesk_fileError(sprintf($hesklang['file_too_large'], $file_realname));
     } else {
-        $file_size = $_FILES['attachment']['size'][$i];
+        $file_size = $size;
     }
 
     /* Generate a random file name */
@@ -68,16 +81,8 @@ function hesk_uploadFile($i, $isTicket = true, $ajax = false)
         $tmp .= $useChars{mt_rand(0, 29)};
     }
 
-    if ($ajax) {
-        // Temporary attachments are, well, temporary. We can just use the real name since they'll be deleted afterwards.
-        $file_name = $file_realname;
-    } else {
-        if (defined('KB')) {
-            $file_name = substr(md5($tmp . $file_realname), 0, 200) . $ext;
-        } else {
-            $file_name = substr($trackingID . '_' . md5($tmp . $file_realname), 0, 200) . $ext;
-        }
-    }
+
+    $file_name = substr(md5($tmp . $file_realname), 0, 200) . $ext;
 
     // Does the temporary file exist? If not, probably server-side configuration limits have been reached
     // Uncomment this for debugging purposes
@@ -93,10 +98,10 @@ function hesk_uploadFile($i, $isTicket = true, $ajax = false)
     if (!$isTicket) {
         $directory = $modsForHesk_settings['kb_attach_dir'];
     }
-    if ($ajax) {
-        $directory = $modsForHesk_settings[''];
-    }
-    if (!move_uploaded_file($_FILES['attachment']['tmp_name'][$i], dirname(dirname(__FILE__)) . '/' . $directory . '/' . $file_name)) {
+    $file_to_move = $single_file
+        ? $_FILES['attachment']['tmp_name']
+        : $_FILES['attachment']['tmp_name'][$i];
+    if (!move_uploaded_file($file_to_move, dirname(dirname(__FILE__)) . '/' . $directory . '/' . $file_name)) {
         return hesk_fileError($hesklang['cannot_move_tmp']);
     }
 

@@ -200,17 +200,34 @@ function output_dropzone_window() {
     </div>';
 }
 
+function output_attachment_id_holder_container() {
+    echo '<div id="attachment-holder" class="hide"></div>';
+}
+
 function display_dropzone_field($url) {
     global $hesk_settings, $hesklang;
 
     output_dropzone_window();
+    output_attachment_id_holder_container();
 
     $acceptedFiles = implode(',', $hesk_settings['attachments']['allowed_types']);
 
     echo "
     <script type=\"text/javascript\">
     Dropzone.options.filedrop = {
-        paramName: 'file',
+        init: function() {
+            this.on('success', function(file, response) {
+                // The response will only be the ID of the attachment in the database
+                outputAttachmentIdHolder(response);
+            });
+            this.on('removedfile', function(file) {
+                console.log(file);
+            });
+            this.on('queuecomplete', function(progress) {
+                $('#total-progress').removeClass('active');
+            });
+        },
+        paramName: 'attachment',
         url: ".json_encode($url).",
         parallelUploads: 1,
         uploadMultiple: false,
