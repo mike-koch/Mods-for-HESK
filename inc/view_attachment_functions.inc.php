@@ -211,7 +211,7 @@ function display_dropzone_field($url) {
     <script type=\"text/javascript\">
     Dropzone.options.filedrop = {
         paramName: 'file',
-        url: '".$url."',
+        url: ".json_encode($url).",
         parallelUploads: 1,
         uploadMultiple: false,
         maxFiles: 1,
