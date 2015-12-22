@@ -219,6 +219,9 @@ function display_dropzone_field($url) {
             this.on('success', function(file, response) {
                 // The response will only be the ID of the attachment in the database
                 outputAttachmentIdHolder(response);
+
+                // Add the database id to the file
+                file['databaseId'] = response;
             });
             this.on('removedfile', function(file) {
                 console.log(file);
