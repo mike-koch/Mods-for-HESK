@@ -9,3 +9,14 @@ function upload_temp_attachment($i, $isTicket) {
 
     return hesk_dbInsertID();
 }
+
+function delete_temp_attachment($id, $isTicket) {
+    global $hesk_settings;
+
+    $attachment_rs = hesk_dbQuery("SELECT `saved_name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "temp_attachment` WHERE `id` = " . intval($id));
+    $attachment = hesk_dbFetchAssoc($attachment_rs);
+
+    if (hesk_removeAttachments(array($attachment), $isTicket)) {
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "temp_attachment` WHERE `id` = " . intval($id));
+    }
+}

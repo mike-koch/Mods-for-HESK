@@ -224,7 +224,7 @@ function display_dropzone_field($url) {
                 file['databaseId'] = response;
             });
             this.on('removedfile', function(file) {
-                console.log(file);
+                removeAttachment(file['databaseId']);
             });
             this.on('queuecomplete', function(progress) {
                 $('#total-progress').removeClass('active');

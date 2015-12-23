@@ -34,7 +34,6 @@ var loadJquery = function()
             todayBtn: "linked",
             clearBtn: true,
             autoclose: true,
-            autoclose: true,
             todayHighlight: true,
             format: "yyyy-mm-dd"
         });
@@ -208,6 +207,20 @@ function getFriendlyLocation(latitude, longitude) {
 
 function outputAttachmentIdHolder(value) {
     $('#attachment-holder').append('<input type="hidden" name="attachment-ids[]" value="' + value + '">');
+}
+
+function removeAttachment(id) {
+    $('input[name="attachment-ids[]"][value="' + id + '"]').remove();
+    $.ajax({
+        url: getHelpdeskUrl() + '/internal-api/ticket/delete-attachment.php?id=' + id,
+        method: 'GET',
+        success: function() {
+            console.info('Removed attachment ' + id);
+        },
+        error: function() {
+            console.error('Error removing attachment ' + id);
+        }
+    });
 }
 
 jQuery(document).ready(loadJquery);
