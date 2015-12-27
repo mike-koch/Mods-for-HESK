@@ -143,3 +143,29 @@ function hesk_removeAttachments($attachments, $isTicket)
 
     return true;
 } // End hesk_removeAttachments()
+
+
+function mfh_getTemporaryAttachment($id) {
+    global $hesk_settings;
+
+    $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "temp_attachment` WHERE `id` = " . intval($id));
+    if (hesk_dbNumRows($rs) == 0) {
+        return NULL;
+    }
+    $row = hesk_dbFetchAssoc($rs);
+
+    $info = array(
+        'saved_name' => $row['saved_name'],
+        'real_name' => $row['file_name'],
+        'size' => $row['size']
+    );
+
+    return $info;
+}
+
+
+function mfh_deleteTemporaryAttachment($id) {
+    global $hesk_settings;
+
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "temp_attachment` WHERE `id` = ".intval($id));
+}
