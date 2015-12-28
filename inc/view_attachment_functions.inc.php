@@ -200,25 +200,25 @@ function output_dropzone_window() {
     </div>';
 }
 
-function output_attachment_id_holder_container() {
-    echo '<div id="attachment-holder" class="hide"></div>';
+function output_attachment_id_holder_container($id) {
+    echo '<div id="attachment-holder-' . $id . '" class="hide"></div>';
 }
 
-function display_dropzone_field($url) {
+function display_dropzone_field($url, $id = 'filedrop') {
     global $hesk_settings, $hesklang;
 
     output_dropzone_window();
-    output_attachment_id_holder_container();
+    output_attachment_id_holder_container($id);
 
     $acceptedFiles = implode(',', $hesk_settings['attachments']['allowed_types']);
 
     echo "
     <script type=\"text/javascript\">
-    Dropzone.options.filedrop = {
+    Dropzone.options.".$id." = {
         init: function() {
             this.on('success', function(file, response) {
                 // The response will only be the ID of the attachment in the database
-                outputAttachmentIdHolder(response);
+                outputAttachmentIdHolder(response, '".$id."');
 
                 // Add the database id to the file
                 file['databaseId'] = response;

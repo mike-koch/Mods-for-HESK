@@ -314,12 +314,27 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST')) {
         require(HESK_PATH . 'inc/htmLawed.php');
         require(HESK_PATH . 'inc/attachments.inc.php');
         $attachments = array();
-        for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-            $att = hesk_uploadFile($i);
-            if ($att !== false && !empty($att)) {
-                $attachments[$i] = $att;
+
+        $use_legacy_attachments = hesk_POST('use-legacy-attachments', 0);
+
+        if ($use_legacy_attachments) {
+            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                $att = hesk_uploadFile($i);
+                if ($att !== false && !empty($att)) {
+                    $attachments[$i] = $att;
+                }
+            }
+        } else {
+            // The user used the new drag-and-drop system.
+            $temp_attachment_ids = hesk_POST_array('attachment-ids');
+            foreach ($temp_attachment_ids as $temp_attachment_id) {
+                // Simply get the temp info and move it to the attachments table
+                $temp_attachment = mfh_getTemporaryAttachment($temp_attachment_id);
+                $attachments[] = $temp_attachment;
+                mfh_deleteTemporaryAttachment($temp_attachment_id);
             }
         }
+
     }
     $myattachments = '';
 
@@ -1238,23 +1253,32 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 ?>
 
                 <div id="notesform" style="display:<?php echo isset($_SESSION['note_message']) ? 'block' : 'none'; ?>">
-                    <form data-toggle="validator" method="post" action="admin_ticket.php" style="margin:0px; padding:0px;"
+                    <form class="form-horizontal" data-toggle="validator" method="post" action="admin_ticket.php" style="margin:0px; padding:0px;"
                           enctype="multipart/form-data">
-                        <div class="form-group">
-                        <textarea data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']) ?>" class="form-control" name="notemsg" rows="6"
-                                  cols="60" required><?php echo isset($_SESSION['note_message']) ? stripslashes(hesk_input($_SESSION['note_message'])) : ''; ?></textarea>
-                            <div class="help-block with-errors"></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <textarea style="min-height: 150px" data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']) ?>" class="form-control" name="notemsg" rows="6"
+                                              cols="60" required><?php echo isset($_SESSION['note_message']) ? stripslashes(hesk_input($_SESSION['note_message'])) : ''; ?></textarea>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dropzone" id="notesFiledrop">
+                                    <div class="fallback">
+                                        <input type="hidden" name="use-legacy-attachments" value="1">
+                                        <?php
+                                        for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                                            echo '<input type="file" name="attachment[' . $i . ']" size="50" /><br />';
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                                <a href="file_limits.php" target="_blank"
+                                   onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
+                            </div>
                         </div>
-                        <?php
-                        // attachments
-                        if ($hesk_settings['attachments']['use']) {
-                            echo '<br />';
-                            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                                echo '<input type="file" name="attachment[' . $i . ']" size="50" /><br />';
-                            }
-                            echo '<br />';
-                        }
-                        ?>
+                        <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php', 'notesFiledrop'); ?>
                         <input class="btn btn-default" type="submit" value="<?php echo $hesklang['s']; ?>"/><input
                             type="hidden" name="track" value="<?php echo $trackingID; ?>"/>
                         <i><?php echo $hesklang['nhid']; ?></i>
@@ -1806,15 +1830,23 @@ function hesk_printReplyForm()
                 <label for="attachments" class="col-sm-3 control-label"><?php echo $hesklang['attachments']; ?>:</label>
 
                 <div class="col-sm-9">
-                    <?php for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                        echo '<input type="file" name="attachment[' . $i . ']" size="50" /><br />';
-                    }
-
-                    echo '<a href="Javascript:void(0)" onclick="Javascript:hesk_window(\'../file_limits.php\',250,500);return false;">' . $hesklang['ful'] . '</a>';
-                    ?>
+                    <div class="dropzone" id="filedrop">
+                        <div class="fallback">
+                            <input type="hidden" name="use-legacy-attachments" value="1">
+                            <?php
+                            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                                $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
+                                echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <a href="file_limits.php" target="_blank"
+                       onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
                 </div>
             </div>
             <?php
+            display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
         }
         ?>
         <div class="form-group">

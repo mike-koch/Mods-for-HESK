@@ -205,8 +205,8 @@ function getFriendlyLocation(latitude, longitude) {
     });
 }
 
-function outputAttachmentIdHolder(value) {
-    $('#attachment-holder').append('<input type="hidden" name="attachment-ids[]" value="' + value + '">');
+function outputAttachmentIdHolder(value, id) {
+    $('#attachment-holder-' + id).append('<input type="hidden" name="attachment-ids[]" value="' + value + '">');
 }
 
 function removeAttachment(id) {
