@@ -37,6 +37,7 @@ define('PAGE_TITLE', 'ADMIN_KB');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
 hesk_load_database_functions();
 
 // Check for POST requests larger than what the server can handle
@@ -434,10 +435,19 @@ if (!isset($_SESSION['hide']['new_article']))
                         </div>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>
-                            <input type="file" name="attachment[1]" size="50" /><br />
-                            <input type="file" name="attachment[2]" size="50" /><br />
-                            <input type="file" name="attachment[3]" size="50" />
+                            <!-- TODO Investigate why there are only 3 attachment blocks at all times. Should the drag and drop be limited to 3, or should it go based on the helpdesk setting? -->
+                            <div class="dropzone" id="filedrop">
+                                <div class="fallback">
+                                    <input type="hidden" name="use-legacy-attachments" value="1">
+                                    <?php
+                                    for ($i = 1; $i < 4; $i++) {
+                                        echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
                         </div>
+                        <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php'); ?>
                         <br>
                         <div class="form-group">
                             <input type="hidden" name="a" value="new_article" />
@@ -1954,14 +1964,29 @@ function new_article()
 	require_once(HESK_PATH . 'inc/posting_functions.inc.php');
     require_once(HESK_PATH . 'inc/attachments.inc.php');
     $attachments = array();
-    for ($i=1;$i<=3;$i++)
-    {
-        $att = hesk_uploadFile($i, false);
-        if ( ! empty($att))
+
+    $use_legacy_attachments = hesk_POST('use-legacy-attachments', 0);
+
+    if ($use_legacy_attachments) {
+        for ($i=1; $i<=3; $i++)
         {
-            $attachments[$i] = $att;
+            $att = hesk_uploadFile($i, false);
+            if ( ! empty($att))
+            {
+                $attachments[$i] = $att;
+            }
+        }
+    } else {
+        // The user used the new drag-and-drop system.
+        $temp_attachment_ids = hesk_POST_array('attachment-ids');
+        foreach ($temp_attachment_ids as $temp_attachment_id) {
+            // Simply get the temp info and move it to the attachments table
+            $temp_attachment = mfh_getTemporaryAttachment($temp_attachment_id);
+            $attachments[] = $temp_attachment;
+            mfh_deleteTemporaryAttachment($temp_attachment_id);
         }
     }
+
 	$myattachments='';
 
     /* Any errors? */
