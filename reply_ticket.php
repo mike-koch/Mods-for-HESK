@@ -88,10 +88,23 @@ if (strlen($message) && !$modsForHesk_settings['rich_text_for_tickets_for_custom
 if ($hesk_settings['attachments']['use']) {
     require(HESK_PATH . 'inc/attachments.inc.php');
     $attachments = array();
-    for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-        $att = hesk_uploadFile($i);
-        if ($att !== false && !empty($att)) {
-            $attachments[$i] = $att;
+
+    $use_legacy_attachments = hesk_POST('use-legacy-attachments', 0);
+    if ($use_legacy_attachments) {
+        for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+            $att = hesk_uploadFile($i);
+            if ($att !== false && !empty($att)) {
+                $attachments[$i] = $att;
+            }
+        }
+    } else {
+        // The user used the new drag-and-drop system.
+        $temp_attachment_ids = hesk_POST_array('attachment-ids');
+        foreach ($temp_attachment_ids as $temp_attachment_id) {
+            // Simply get the temp info and move it to the attachments table
+            $temp_attachment = mfh_getTemporaryAttachment($temp_attachment_id);
+            $attachments[] = $temp_attachment;
+            mfh_deleteTemporaryAttachment($temp_attachment_id);
         }
     }
 }

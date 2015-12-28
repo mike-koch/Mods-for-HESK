@@ -630,18 +630,28 @@ function hesk_printCustomerReplyForm($reopen = 0)
         if ($hesk_settings['attachments']['use']) {
             ?>
             <div class="form-group">
-                <label for="attachments" class="col-sm-3 control-label"><?php echo $hesklang['attachments']; ?>:</label>
+                <label for="attachments" class="col-sm-3 control-label"><?php echo $hesklang['attachments']; ?>
+                    :</label>
 
-                <div class="col-sm-9 text-left">
-                    <?php
-                    for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                        echo '<input type="file" name="attachment[' . $i . ']" size="50" /><br />';
-                    }
-                    echo '<a href="file_limits.php" target="_blank" onclick="Javascript:hesk_window(\'file_limits.php\',250,500);return false;">' . $hesklang['ful'] . '</a>';
-                    ?>
+                <div align="left" class="col-sm-9">
+                    <div class="dropzone" id="filedrop">
+                        <div class="fallback">
+                            <input type="hidden" name="use-legacy-attachments" value="1">
+                            <?php
+                            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                                $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
+                                echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
+                            }
+                            ?>
+                        </div>
+                    </div>
+
+                    <a href="file_limits.php" target="_blank"
+                       onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
                 </div>
             </div>
             <?php
+            display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php');
         }
         ?>
         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
