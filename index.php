@@ -996,7 +996,7 @@ function print_add_ticket()
                         </div>
                     </div>
                     <?php
-                    display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php');
+                    display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
                 }
 
                 if ($hesk_settings['question_use'] || $hesk_settings['secimg_use'])

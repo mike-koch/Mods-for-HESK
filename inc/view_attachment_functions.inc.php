@@ -231,7 +231,7 @@ function display_dropzone_field($url) {
             });
         },
         paramName: 'attachment',
-        url: ".json_encode($url).",
+        url: '" . $url . "',
         parallelUploads: 1,
         uploadMultiple: false,
         maxFiles: 1,

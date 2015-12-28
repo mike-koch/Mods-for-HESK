@@ -651,7 +651,7 @@ function hesk_printCustomerReplyForm($reopen = 0)
                 </div>
             </div>
             <?php
-            display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php');
+            display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
         }
         ?>
         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
