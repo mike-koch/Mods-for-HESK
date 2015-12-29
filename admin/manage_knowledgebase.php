@@ -435,7 +435,6 @@ if (!isset($_SESSION['hide']['new_article']))
                         </div>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>
-                            <!-- TODO Investigate why there are only 3 attachment blocks at all times. Should the drag and drop be limited to 3, or should it go based on the helpdesk setting? -->
                             <div class="dropzone" id="filedrop">
                                 <div class="fallback">
                                     <input type="hidden" name="use-legacy-attachments" value="1">
@@ -1139,14 +1138,26 @@ function save_article()
     require_once(HESK_PATH . 'inc/posting_functions.inc.php');
     require_once(HESK_PATH . 'inc/attachments.inc.php');
     $attachments = array();
-    for ($i=1;$i<=3;$i++)
-    {
-        $att = hesk_uploadFile($i, false);
-        if ( ! empty($att))
-        {
-            $attachments[$i] = $att;
+    $use_legacy_attachments = hesk_POST('use-legacy-attachments', 0);
+
+    if ($use_legacy_attachments) {
+        for ($i=1;$i<=3;$i++) {
+            $att = hesk_uploadFile($i, false);
+            if ( ! empty($att)) {
+                $attachments[$i] = $att;
+            }
+        }
+    } else {
+        // The user used the new drag-and-drop system.
+        $temp_attachment_ids = hesk_POST_array('attachment-ids');
+        foreach ($temp_attachment_ids as $temp_attachment_id) {
+            // Simply get the temp info and move it to the attachments table
+            $temp_attachment = mfh_getTemporaryAttachment($temp_attachment_id);
+            $attachments[] = $temp_attachment;
+            mfh_deleteTemporaryAttachment($temp_attachment_id);
         }
     }
+
 	$myattachments='';
 
     /* Any errors? */
@@ -1478,17 +1489,27 @@ function edit_article()
                             }
                             ?>
 
-                            <input type="file" name="attachment[1]" size="50" /><br />
-                            <input type="file" name="attachment[2]" size="50" /><br />
-                            <input type="file" name="attachment[3]" size="50" />
+                            <div class="dropzone" id="filedrop">
+                                <div class="fallback">
+                                    <input type="hidden" name="use-legacy-attachments" value="1">
+                                    <?php
+                                    for ($i = 1; $i < 4; $i++) {
+                                        echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php'); ?>
 
                             <input type="hidden" name="a" value="save_article" />
                             <input type="hidden" name="id" value="<?php echo $id; ?>" />
                             <input type="hidden" name="old_type" value="<?php echo $article['type']; ?>" />
                             <input type="hidden" name="old_catid" value="<?php echo $catid; ?>" />
                             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" /><br>
-                            <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-default" />
-                            <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
+                            <div class="btn-group">
+                                <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary" />
+                                <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
+                            </div>
                         </div>
                     </div>
                 </div>
