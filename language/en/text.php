@@ -35,6 +35,10 @@ $hesklang['can_view_logs'] = 'Can view message logs';
 $hesklang['attachment_viewer_message'] = 'Drag or click here to select files to upload.';
 $hesklang['attachment_invalid_type_message'] = 'Sorry, but the file type you tried to upload is not allowed.';
 $hesklang['attachment_upload_error'] = 'An error occurred when trying to upload. Please try again later.';
+$hesklang['attachment_too_large'] = 'This attachment is larger than the max filesize permitted.';
+$hesklang['attachment_cancel'] = 'Cancel';
+$hesklang['attachment_confirm_cancel'] = 'Are you sure you want to cancel this upload?';
+$hesklang['attachment_remove'] = 'Remove attachment';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

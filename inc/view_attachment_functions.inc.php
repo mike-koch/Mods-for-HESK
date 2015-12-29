@@ -211,6 +211,8 @@ function display_dropzone_field($url, $id = 'filedrop') {
     output_attachment_id_holder_container($id);
 
     $acceptedFiles = implode(',', $hesk_settings['attachments']['allowed_types']);
+    $size = mfh_bytesToUnits($hesk_settings['attachments']['max_size']);
+    $max_files = $hesk_settings['attachments']['max_number'];
 
     echo "
     <script type=\"text/javascript\">
@@ -224,22 +226,29 @@ function display_dropzone_field($url, $id = 'filedrop') {
                 file['databaseId'] = response;
             });
             this.on('removedfile', function(file) {
+                // Remove the attachment from the database and the filesystem.
                 removeAttachment(file['databaseId']);
             });
             this.on('queuecomplete', function(progress) {
+                // Stop animating if complete.
                 $('#total-progress').removeClass('active');
             });
         },
         paramName: 'attachment',
         url: '" . $url . "',
-        parallelUploads: 1,
-        uploadMultiple: false,
-        maxFiles: 1,
+        parallelUploads: ".$max_files.",
+        uploadMultiple: true,
+        maxFiles: ".$max_files.",
         acceptedFiles: '".json_encode($acceptedFiles)."',
-        maxFilesize: 2, // MB
+        maxFilesize: ".$size.", // MB
         dictDefaultMessage: ".json_encode($hesklang['attachment_viewer_message']).",
+        dictFallbackMessage: '',
         dictInvalidFileType: ".json_encode($hesklang['attachment_invalid_type_message']).",
         dictResponseError: ".json_encode($hesklang['attachment_upload_error']).",
+        dictFileTooBig: ".json_encode($hesklang['attachment_too_large']).",
+        dictCancelUpload: ".json_encode($hesklang['attachment_cancel']).",
+        dictCancelUploadConfirmation: ".json_encode($hesklang['attachment_confirm_cancel']).",
+        dictRemoveFile: ".json_encode($hesklang['attachment_remove']).",
         previewTemplate: $('#previews').html()
     };
     </script>
