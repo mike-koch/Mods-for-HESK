@@ -1837,3 +1837,10 @@ function mfh_log_warning($location, $message, $user) {
 function mfh_log_error($location, $message, $user) {
     mfh_log($location, $message, 3, $user);
 }
+
+function mfh_bytesToUnits($size) {
+    $bytes_in_megabyte = 1048576;
+    $quotient = $size / $bytes_in_megabyte;
+
+    return intval($quotient);
+}

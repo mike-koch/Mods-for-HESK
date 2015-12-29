@@ -99,9 +99,12 @@ if (is_dir(HESK_PATH . 'install')) {
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone-basic.min.css">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/dropzone.min.js"></script>
     <script language="Javascript" type="text/javascript"
             src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
     <script language="JavaScript" type="text/javascript"
@@ -112,6 +115,7 @@ if (is_dir(HESK_PATH . 'install')) {
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core.php"></script>
     <style>
         .navbar-default {
             background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;

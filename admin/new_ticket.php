@@ -40,6 +40,7 @@ define('AUTOFOCUS', true);
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -1032,18 +1033,24 @@ if ($hesk_settings['attachments']['use']) {
         <label for="attachments" class="control-label col-sm-3"><?php echo $hesklang['attachments']; ?>:</label>
 
         <div class="col-sm-9">
-            <?php
-            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
-                echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
-            }
-            ?>
-            <a href="Javascript:void(0)"
-               onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
+            <div class="dropzone" id="filedrop">
+                <div class="fallback">
+                    <input type="hidden" name="use-legacy-attachments" value="1">
+                    <?php
+                    for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                        $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
+                        echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
+                    }
+                    ?>
+                </div>
+            </div>
+            <a href="file_limits.php" target="_blank"
+               onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
         </div>
     </div>
     <hr/>
     <?php
+    display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
 }
 ?>
 <!-- Admin options -->

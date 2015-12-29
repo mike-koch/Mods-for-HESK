@@ -1,3 +1,6 @@
+//-- Turn off Dropzone autodetection.
+//Dropzone.autoDiscover = false;
+
 //-- Activate anything Mods for HESK needs, such as tooltips.
 var loadJquery = function()
 {
@@ -30,7 +33,6 @@ var loadJquery = function()
         $('.datepicker').datepicker({
             todayBtn: "linked",
             clearBtn: true,
-            autoclose: true,
             autoclose: true,
             todayHighlight: true,
             format: "yyyy-mm-dd"
@@ -200,6 +202,24 @@ function getFriendlyLocation(latitude, longitude) {
     var URL = 'http://nominatim.openstreetmap.org/reverse?format=json&lat='+ latitude +'&lon='+ longitude +'&zoom=15&addressdetails=1';
     $.getJSON(URL, function(data) {
         $('#friendly-location').text(data.display_name);
+    });
+}
+
+function outputAttachmentIdHolder(value, id) {
+    $('#attachment-holder-' + id).append('<input type="hidden" name="attachment-ids[]" value="' + value + '">');
+}
+
+function removeAttachment(id) {
+    $('input[name="attachment-ids[]"][value="' + id + '"]').remove();
+    $.ajax({
+        url: getHelpdeskUrl() + '/internal-api/ticket/delete-attachment.php?id=' + id,
+        method: 'GET',
+        success: function() {
+            console.info('Removed attachment ' + id);
+        },
+        error: function() {
+            console.error('Error removing attachment ' + id);
+        }
     });
 }
 

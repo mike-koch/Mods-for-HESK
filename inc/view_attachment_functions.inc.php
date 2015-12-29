@@ -170,3 +170,88 @@ function mfh_getFontAwesomeIconForFileExtension($fileExtension)
     }
     return $icon;
 }
+
+function output_dropzone_window() {
+    echo '
+    <div class="table table-striped" class="files" id="previews" style="display:none">
+        <div id="template" class="file-row">
+            <!-- This is used as the file preview template -->
+            <div>
+                <span class="preview"><img data-dz-thumbnail /></span>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-12">
+                    <p class="name" data-dz-name></p>
+                    <i class="fa fa-trash fa-2x" style="color: gray; cursor: pointer" title="Remove file" data-dz-remove></i>
+                </div>
+                <div class="col-md-8 col-sm-12">
+                    <p class="size" data-dz-size></p>
+                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="total-progress">
+                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <strong class="error text-danger" data-dz-errormessage></strong>
+                </div>
+            </div>
+        </div>
+    </div>';
+}
+
+function output_attachment_id_holder_container($id) {
+    echo '<div id="attachment-holder-' . $id . '" class="hide"></div>';
+}
+
+function display_dropzone_field($url, $id = 'filedrop') {
+    global $hesk_settings, $hesklang;
+
+    output_dropzone_window();
+    output_attachment_id_holder_container($id);
+
+    $acceptedFiles = implode(',', $hesk_settings['attachments']['allowed_types']);
+    $size = mfh_bytesToUnits($hesk_settings['attachments']['max_size']);
+    $max_files = $hesk_settings['attachments']['max_number'];
+
+    echo "
+    <script type=\"text/javascript\">
+    Dropzone.options.".$id." = {
+        init: function() {
+            this.on('success', function(file, response) {
+                // The response will only be the ID of the attachment in the database
+                outputAttachmentIdHolder(response, '".$id."');
+
+                // Add the database id to the file
+                file['databaseId'] = response;
+            });
+            this.on('removedfile', function(file) {
+                // Remove the attachment from the database and the filesystem.
+                removeAttachment(file['databaseId']);
+            });
+            this.on('queuecomplete', function(progress) {
+                // Stop animating if complete.
+                $('#total-progress').removeClass('active');
+            });
+        },
+        paramName: 'attachment',
+        url: '" . $url . "',
+        parallelUploads: ".$max_files.",
+        uploadMultiple: true,
+        maxFiles: ".$max_files.",
+        acceptedFiles: '".json_encode($acceptedFiles)."',
+        maxFilesize: ".$size.", // MB
+        dictDefaultMessage: ".json_encode($hesklang['attachment_viewer_message']).",
+        dictFallbackMessage: '',
+        dictInvalidFileType: ".json_encode($hesklang['attachment_invalid_type_message']).",
+        dictResponseError: ".json_encode($hesklang['attachment_upload_error']).",
+        dictFileTooBig: ".json_encode($hesklang['attachment_too_large']).",
+        dictCancelUpload: ".json_encode($hesklang['attachment_cancel']).",
+        dictCancelUploadConfirmation: ".json_encode($hesklang['attachment_confirm_cancel']).",
+        dictRemoveFile: ".json_encode($hesklang['attachment_remove']).",
+        previewTemplate: $('#previews').html()
+    };
+    </script>
+    ";
+
+}

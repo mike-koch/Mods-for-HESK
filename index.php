@@ -36,6 +36,7 @@ define('VALIDATOR', 1);
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
 
 hesk_load_database_functions();
 hesk_dbConnect();
@@ -978,17 +979,24 @@ function print_add_ticket()
                             :</label>
 
                         <div align="left" class="col-sm-9">
-                            <?php
-                            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                                $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
-                                echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
-                            }
-                            ?>
+                            <div class="dropzone" id="filedrop">
+                                <div class="fallback">
+                                    <input type="hidden" name="use-legacy-attachments" value="1">
+                                    <?php
+                                    for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                                        $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
+                                        echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+
                             <a href="file_limits.php" target="_blank"
                                onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
                         </div>
                     </div>
                     <?php
+                    display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
                 }
 
                 if ($hesk_settings['question_use'] || $hesk_settings['secimg_use'])
@@ -1178,7 +1186,7 @@ function print_add_ticket()
                     "<?php echo addslashes($hesklang['select_at_least_one_value']); ?>");
             </script>
         </div>
-    </div>
+    </form>
     <?php if ($columnWidth == 'col-md-10 col-md-offset-1'): ?>
     <div class="col-md-1">&nbsp;</div></div>
 <?php endif; ?>
