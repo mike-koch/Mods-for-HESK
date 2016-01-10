@@ -40,14 +40,16 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
 
-// Are we in maintenance mode?
-hesk_check_maintenance();
 
 hesk_load_database_functions();
 
-hesk_session_start();
 /* Connect to database */
 hesk_dbConnect();
+
+// Are we in maintenance mode?
+hesk_check_maintenance();
+
+hesk_session_start();
 $modsForHesk_settings = mfh_getSettings();
 
 $hesk_error_buffer = array();

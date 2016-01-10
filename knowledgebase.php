@@ -36,11 +36,15 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/knowledgebase_functions.inc.php');
 
-// Are we in maintenance mode?
-hesk_check_maintenance();
 
 // Load Knowledgebase-related functions
 hesk_load_database_functions();
+
+/* Connect to database */
+hesk_dbConnect();
+
+// Are we in maintenance mode?
+hesk_check_maintenance();
 
 define('PAGE_TITLE', 'CUSTOMER_KB');
 
@@ -48,9 +52,6 @@ define('PAGE_TITLE', 'CUSTOMER_KB');
 if (!$hesk_settings['kb_enable']) {
     hesk_error($hesklang['kbdis']);
 }
-
-/* Connect to database */
-hesk_dbConnect();
 
 /* Rating? */
 if (isset($_GET['rating'])) {

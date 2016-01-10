@@ -49,6 +49,8 @@ hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
 
+$modsForHesk_settings = mfh_getSettings();
+
 /* Check permissions for this feature */
 if ( ! hesk_checkPermission('can_man_kb',0))
 {

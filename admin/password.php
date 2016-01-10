@@ -172,7 +172,6 @@ elseif (isset($_GET['h'])) {
     $hash = preg_replace('/[^a-zA-Z0-9]/', '', $_GET['h']);
 
     // Connect to database
-    hesk_load_database_functions();
     hesk_dbConnect();
 
     // Expire verification hashes older than 2 hours

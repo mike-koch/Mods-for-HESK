@@ -89,6 +89,7 @@ if ($statusRow['IsClosed']) // Closed
             hesk_error($hesklang['ticket_not_found']);
         }
         $ticket = hesk_dbFetchAssoc($result);
+        $ticket['status'] = $status;
         $ticket['dt'] = hesk_date($ticket['dt'], true);
         $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
         $ticket = hesk_ticketToPlain($ticket, 1, 0);

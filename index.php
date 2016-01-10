@@ -1065,7 +1065,8 @@ function print_add_ticket()
                     ?>
                         <div class="col-md-9">
                             <div class="g-recaptcha"
-                                 data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>"></div>
+                                 data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>">
+                            </div>
                         </div>
                         <?php
                     }
@@ -1077,9 +1078,9 @@ function print_add_ticket()
 
                         echo $hesklang['sec_enter'] . '<br />&nbsp;<br /><img src="print_sec_img.php?' . rand(10000, 99999) . '" width="150" height="40" alt="' . $hesklang['sec_img'] . '" title="' . $hesklang['sec_img'] . '" border="1" name="secimg" style="vertical-align:text-bottom" /> ' .
                             '<a href="javascript:void(0)" onclick="javascript:document.form1.secimg.src=\'print_sec_img.php?\'+ ( Math.floor((90000)*Math.random()) + 10000);"><img src="img/reload.png" height="24" width="24" alt="' . $hesklang['reload'] . '" title="' . $hesklang['reload'] . '" border="0" style="vertical-align:text-bottom" /></a>' .
-                            '<br />&nbsp;<br /><input type="text" name="mysecnum" size="20" maxlength="5" ' . $cls . ' />';
+                            '<br />&nbsp;<br /><input type="text" name="mysecnum" size="20" maxlength="5" ' . $cls . ' /></div>';
                     }
-                    echo '</div></div>';
+                    echo '</div>';
                     }
                     ?>
 
