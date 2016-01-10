@@ -65,6 +65,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 23) {
         startVersionUpgrade('252');
         executeUpdate(23, '252', '2.5.2');
+    } else if (startingVersion < 24) {
+        startVersionUpgrade('253');
+        executeUpdate(24, '253', '2.5.3');
     } else {
         installationFinished();
     }
