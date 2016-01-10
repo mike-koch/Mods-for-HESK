@@ -2693,7 +2693,7 @@ if (defined('HESK_DEMO')) {
                         <div class="form-group">
                             <div class="col-sm-9 col-sm-offset-3">
                                 <div class="checkbox">
-                                    <label><input type="checkbox" name="s_notify_new"
+                                    <label><input type="checkbox" name="s_notify_skip_spam"
                                                   value="1" <?php if ($hesk_settings['notify_skip_spam']) {
                                             echo 'checked="checked"';
                                         } ?>/> <?php echo $hesklang['enn']; ?></label>
