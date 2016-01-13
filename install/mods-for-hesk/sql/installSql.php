@@ -720,5 +720,14 @@ function execute260Scripts()
       `size` INT(10) UNSIGNED NOT NULL,
       `type` ENUM('0','1') NOT NULL,
       `date_uploaded` TIMESTAMP NOT NULL) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` (
+      `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `start` TIMESTAMP,
+      `end` TIMESTAMP,
+      `all_day` ENUM('0','1') NOT NULL,
+      `name` VARCHAR(255) NOT NULL,
+      `location` VARCHAR(255),
+      `create_ticket_date` TIMESTAMP NOT NULL,
+      `create_ticket_assign_to` INT) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.6.0' WHERE `Key` = 'modsForHeskVersion'");
 }
