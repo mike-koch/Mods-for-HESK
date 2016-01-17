@@ -28,7 +28,7 @@ var loadJquery = function()
         html: 'true'
     });
 
-    //-- Activate jQuery's date picker
+    //-- Activate Bootstrap Datepicker
     $(function() {
         $('.datepicker').datepicker({
             todayBtn: "linked",
@@ -45,6 +45,10 @@ var loadJquery = function()
         labelNoIcon: $('#no-icon').text(),
         searchText: $('#search-icon').text(),
         labelFooter: $('#footer-icon').text()
+    });
+
+    $('.clockpicker').clockpicker({
+        doneText: 'Done'
     });
 };
 

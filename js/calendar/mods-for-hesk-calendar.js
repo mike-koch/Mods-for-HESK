@@ -21,6 +21,17 @@ $(document).ready(function() {
                     console.error(data);
                 }
             });
+        },
+        dayClick: function(date, jsEvent, view) {
+            displayCreateModal(date);
+            $('#create-event-modal').modal('show');
+            console.log(date);
+            console.info(jsEvent);
+            console.warn(view);
         }
     });
 });
+
+function displayCreateModal(date) {
+    $('#create-event-modal')
+}

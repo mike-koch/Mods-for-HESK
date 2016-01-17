@@ -78,6 +78,7 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone-basic.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/fullcalendar.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
@@ -86,6 +87,7 @@ $modsForHesk_settings = mfh_getSettings();
             src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
     <script language="JavaScript" type="text/javascript"
             src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-clockpicker.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-fontawesome-4.3.0.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-iconpicker.js"></script>
