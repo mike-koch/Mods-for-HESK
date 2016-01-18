@@ -111,7 +111,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <input type="text" name="start-date" class="form-control datepicker" placeholder="Start Date"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
-                                    <input style="display: none" type="text" name="start-time" class="form-control clockpicker" placeholder="Start Time" data-placement="left" data-align="top" data-autoclose="true">
+                                    <input type="text" name="start-time" class="form-control clockpicker" placeholder="Start Time" data-placement="left" data-align="top" data-autoclose="true">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="all-day" checked> All day
+                                            <input type="checkbox" name="all-day"> All day
                                         </label>
                                     </div>
                                 </div>
