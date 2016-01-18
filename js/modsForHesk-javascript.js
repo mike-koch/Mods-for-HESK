@@ -47,9 +47,7 @@ var loadJquery = function()
         labelFooter: $('#footer-icon').text()
     });
 
-    $('.clockpicker').clockpicker({
-        doneText: 'Done'
-    });
+    $('.clockpicker').clockpicker();
 };
 
 var setIcon = function(icon) {

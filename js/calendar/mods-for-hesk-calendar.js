@@ -14,7 +14,6 @@ $(document).ready(function() {
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    console.info(data);
                     //callback w/events here!
                 },
                 error: function(data) {
@@ -24,14 +23,20 @@ $(document).ready(function() {
         },
         dayClick: function(date, jsEvent, view) {
             displayCreateModal(date);
-            $('#create-event-modal').modal('show');
-            console.log(date);
-            console.info(jsEvent);
-            console.warn(view);
         }
+    });
+
+    $('input[name="all-day"]').change(function() {
+        var hideTimeFields = $(this).is(':checked');
+
+        $('.clockpicker').css('display', hideTimeFields ? 'none' : 'block');
     });
 });
 
 function displayCreateModal(date) {
-    $('#create-event-modal')
+    var $modal = $('#create-event-modal');
+    var formattedDate = date.format('YYYY-MM-DD');
+    $modal.find('input[name="start-date"]').val(formattedDate).end()
+        .find('input[name="end-date"]').val(formattedDate);
+    $('#create-event-modal').modal('show');
 }

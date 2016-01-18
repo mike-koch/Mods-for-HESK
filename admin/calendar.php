@@ -69,7 +69,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     </div>
 </div>
 <div class="modal fade" id="create-event-modal" tabindex="-1" role="dialog" style="overflow: hidden">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="cursor: move">
                 <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -80,8 +80,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="name" class="col-sm-3 control-label">Title</label>
-                                <div class="col-sm-9">
+                                <label for="name" class="col-sm-4 control-label">Title</label>
+                                <div class="col-sm-8">
                                     <input type="text" name="name" class="form-control" placeholder="Title"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
@@ -89,36 +89,55 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="location" class="col-sm-3 control-label">Location</label>
-                                <div class="col-sm-9">
+                                <label for="location" class="col-sm-4 control-label">Location</label>
+                                <div class="col-sm-8">
                                     <input type="text" name="location" class="form-control" placeholder="Location"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="comments" class="col-sm-4 control-label">Comments</label>
+                                <div class="col-sm-8">
+                                    <textarea name="comments" class="form-control" placeholder="Comments"></textarea>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="start-date" class="col-sm-3 control-label">Start</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="start-date" class="form-control datepicker" placeholder="Start Date">
-                                    <input type="text" name="start-time" class="form-control clockpicker" placeholder="Start Time" value="13:15" data-placement="left" data-align="top" data-autoclose="true">
+                                <label for="start-date" class="col-sm-4 control-label">Start</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="start-date" class="form-control datepicker" placeholder="Start Date"
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           required>
+                                    <input style="display: none" type="text" name="start-time" class="form-control clockpicker" placeholder="Start Time" data-placement="left" data-align="top" data-autoclose="true">
+                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="end-date" class="col-sm-3 control-label">End</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="end-date" class="form-control datepicker" placeholder="End Date">
-                                    <input type="time" name="end-time" class="form-control" placeholder="End Time">
+                                <label for="end-date" class="col-sm-4 control-label">End</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="end-date" class="form-control datepicker" placeholder="End Date"
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           required>
+                                    <input type="text" name="end-time" class="form-control clockpicker" data-placement="left" data-align="top" data-autoclose="true" placeholder="End Time">
+                                    <div class="help-block with-errors"></div>
+
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="all-day" checked> All day
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-4">
+
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!--<div class="form-group">
-                        <label for=""
-                    </div>-->
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">
