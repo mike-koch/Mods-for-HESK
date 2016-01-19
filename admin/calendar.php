@@ -166,19 +166,73 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label for="create-ticket-date" class="col-sm-3 control-label">
+                                <label for="create-ticket-date" class="col-sm-6 control-label">
                                     Create Ticket Date
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
                                        title="Date to create a ticket for this event. Leave empty to not create a ticket.
                                         Set this value to today to create a ticket immediately."></i>
                                 </label>
-                                <div class="col-sm-9">
+                                <div class="col-sm-6">
                                     <input type="text" name="create-ticket-date" class="form-control datepicker" placeholder="Create Ticket Date">
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-6">
+                            <?php
+                            if (hesk_checkPermission('can_assign_others',0)) {
+                                $admins = array();
+                                $result = hesk_dbQuery("SELECT `id`,`name`,`isadmin`,`categories`,`heskprivileges` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `active` = '1' ORDER BY `name` ASC");
+                                while ($row = hesk_dbFetchAssoc($result)) {
+                                    /* Is this an administrator? */
+                                    if ($row['isadmin']) {
+                                        $admins[$row['id']] = $row['name'];
+                                        continue;
+                                    }
+
+                                    /* Not admin, is user allowed to view tickets? */
+                                    if (strpos($row['heskprivileges'], 'can_view_tickets') !== false) {
+                                        $admins[$row['id']] = $row['name'];
+                                        continue;
+                                    }
+                                }
+                            ?>
+                            <div class="form-group">
+                                <label for="assign-to" class="col-sm-6 control-label">
+                                    Assign To
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="tooltip"
+                                       title="User to assign the ticket to when it is created."></i>
+                                </label>
+                                <div class="col-sm-6">
+                                    <select name="assign-to" class="form-control">
+                                        <?php
+                                        if ($hesk_settings['autoassign']) {
+                                            echo '<option value="-2"> &gt; ' . $hesklang['aass'] . ' &lt; </option>';
+                                        }
+
+                                        $owner = isset($_SESSION['as_owner']) ? intval($_SESSION['as_owner']) : 0;
+
+                                        foreach ($admins as $k=>$v) {
+                                            if ($k == $owner) {
+                                                echo '<option value="'.$k.'" selected="selected">'.$v.'</option>';
+                                            } else {
+                                                echo '<option value="'.$k.'">'.$v.'</option>';
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <?php } elseif (hesk_checkPermission('can_assign_self',0)) { ?>
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <label><input type="checkbox" name="assing_to_self" value="1"> Assign to myself</label>
+                                    </div>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
