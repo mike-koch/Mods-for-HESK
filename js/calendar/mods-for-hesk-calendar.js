@@ -36,6 +36,7 @@ function displayCreateModal(date, viewName) {
     $('input[name="name"]').val('');
     $('input[name="location"]').val('');
     $('textarea[name="comments"]').val('');
+    $('input[name="create-ticket-date"]').val('');
 
     var $modal = $('#create-event-modal');
     var formattedDate = date.format('YYYY-MM-DD');

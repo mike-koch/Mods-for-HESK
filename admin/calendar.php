@@ -78,10 +78,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <form class="form-horizontal" data-toggle="validator">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <label for="name" class="col-sm-4 control-label">Title</label>
-                                <div class="col-sm-8">
+                                <label for="name" class="col-sm-3 control-label">
+                                    Title
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                        data-toggle="tooltip"
+                                        title="The title of the event"></i></label>
+                                <div class="col-sm-9">
                                     <input type="text" name="name" class="form-control" placeholder="Title"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
@@ -89,39 +93,35 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="location" class="col-sm-4 control-label">Location</label>
-                                <div class="col-sm-8">
+                                <label for="location" class="col-sm-3 control-label">
+                                    Location
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="tooltip"
+                                       title="The location of the event"></i>
+                                </label>
+                                <div class="col-sm-9">
                                     <input type="text" name="location" class="form-control" placeholder="Location"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="comments" class="col-sm-4 control-label">Comments</label>
-                                <div class="col-sm-8">
-                                    <textarea name="comments" class="form-control" placeholder="Comments"></textarea>
-                                </div>
-                            </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="start-date" class="col-sm-4 control-label">Start</label>
-                                <div class="col-sm-8">
+                                <label for="start-date" class="col-sm-6 control-label">
+                                    Start
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="tooltip"
+                                       title="The starting date (and time) of the event"></i>
+                                </label>
+                                <div class="col-sm-6">
                                     <input type="text" name="start-date" class="form-control datepicker" placeholder="Start Date"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
                                     <input type="text" name="start-time" class="form-control clockpicker" placeholder="Start Time" data-placement="left" data-align="top" data-autoclose="true">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="end-date" class="col-sm-4 control-label">End</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="end-date" class="form-control datepicker" placeholder="End Date"
-                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                           required>
-                                    <input type="text" name="end-time" class="form-control clockpicker" data-placement="left" data-align="top" data-autoclose="true" placeholder="End Time">
                                     <div class="help-block with-errors"></div>
 
                                     <div class="checkbox">
@@ -131,9 +131,52 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <div class="col-sm-8 col-sm-offset-4">
-
+                                <label for="end-date" class="col-sm-6 control-label">
+                                    End
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="tooltip"
+                                       title="The ending date (and time) of the event"></i>
+                                </label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="end-date" class="form-control datepicker" placeholder="End Date"
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           required>
+                                    <input type="text" name="end-time" class="form-control clockpicker" data-placement="left" data-align="top" data-autoclose="true" placeholder="End Time">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="comments" class="col-sm-3 control-label">
+                                    Comments
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="tooltip"
+                                       title="Additional comments about the event"></i>
+                                </label>
+                                <div class="col-sm-9">
+                                    <textarea name="comments" class="form-control" placeholder="Comments"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="create-ticket-date" class="col-sm-3 control-label">
+                                    Create Ticket Date
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="tooltip"
+                                       title="Date to create a ticket for this event. Leave empty to not create a ticket.
+                                        Set this value to today to create a ticket immediately."></i>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="create-ticket-date" class="form-control datepicker" placeholder="Create Ticket Date">
                                 </div>
                             </div>
                         </div>
