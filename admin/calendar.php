@@ -217,7 +217,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                         foreach ($admins as $k=>$v) {
                                             if ($k == $owner) {
-                                                echo '<option value="'.$k.'" selected="selected">'.$v.'</option>';
+                                                echo '<option value="'.$k.'" selected>'.$v.'</option>';
                                             } else {
                                                 echo '<option value="'.$k.'">'.$v.'</option>';
                                             }
@@ -237,6 +237,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" name="action" value="create">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default cancel-callback" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>

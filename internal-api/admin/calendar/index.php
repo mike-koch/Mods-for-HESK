@@ -17,11 +17,31 @@ $modsForHesk_settings = mfh_getSettings();
 // Routing
 $request_method = $_SERVER['REQUEST_METHOD'];
 if ($request_method === 'GET') {
-    $start = $_GET['start'];
-    $end = $_GET['end'];
+    $start = hesk_GET('start');
+    $end = hesk_GET('end');
     $events = get_events($start, $end, $hesk_settings);
 
     return output($events);
+} elseif ($request_method === 'POST') {
+    // Create or save event
+    $action = hesk_POST('action');
+
+    if ($action === 'create') {
+        $event['title'] = hesk_POST('title');
+        $event['location'] = hesk_POST('location');
+        $event['start'] = hesk_POST('startTime');
+        $event['end'] = hesk_POST('endTime');
+        $event['all_day'] = hesk_POST('allDay');
+        $event['comments'] = hesk_POST('comments');
+        $event['create_ticket_date'] = hesk_POST('createTicketDate');
+        $event['assign_to'] = hesk_POST('assignTo');
+
+        $id = create_event($event, $hesk_settings);
+
+        return output($id);
+    } elseif ($action === 'update') {
+        //TODO
+    }
 }
 
 return http_response_code(400);

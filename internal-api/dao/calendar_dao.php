@@ -23,3 +23,25 @@ function get_events($start, $end, $hesk_settings) {
 
     return $events;
 }
+
+/**
+ * @param $event. All times must be in milliseconds since epoch time.
+ * @param $hesk_settings
+ */
+function create_event($event, $hesk_settings) {
+
+    $event['start'] = date('Y-m-d H:i:s', $event['start']);
+    $event['end'] = date('Y-m-d H:i:s', $event['end']);
+    $event['create_ticket_date'] = date('Y-m-d H:i:s', $event['create_ticket_date']);
+    $event['all_day'] = $event['all_day'] ? 1 : 0;
+    $event['assign_to'] = $event['assign_to'] != null ? intval($event['assign_to']) : 'NULL';
+
+    $sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` (`start`, `end`, `all_day`,
+    `name`, `location`, `comments`, `create_ticket_date`, `create_ticket_assign_to`) VALUES (
+    '" . hesk_dbEscape($event['start']) . "', '" . hesk_dbEscape($event['end']) . "', '" . hesk_dbEscape($event['all_day']) . "',
+    '" . hesk_dbEscape($event['title']) . "', '" . hesk_dbEscape($event['location']) . "', '" . hesk_dbEscape($event['comments']) . "',
+    '" . hesk_dbEscape($event['create_ticket_date']) . "', " . $event['assign_to'] . ")";
+
+    hesk_dbQuery($sql);
+    return hesk_dbInsertID();
+}
