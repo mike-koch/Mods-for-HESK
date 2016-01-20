@@ -25,18 +25,67 @@ $(document).ready(function() {
         }
     });
 
-    $('input[name="all-day"]').change(function() {
+    $('#create-form input[name="all-day"]').change(function() {
         var hideTimeFields = $(this).is(':checked');
 
-        $('.clockpicker').css('display', hideTimeFields ? 'none' : 'block');
+        $('#create-form .clockpicker').css('display', hideTimeFields ? 'none' : 'block');
+    });
+
+    $('#create-form').submit(function(e) {
+        e.preventDefault();
+
+        var start = $('#create-form input[name="start-date"]').val();
+        var end = $('#create-form input[name="end-date"]').val();
+        var dateFormat = 'YYYY-MM-DD';
+        var allDay = $('#create-form input[name="all-day"]').is(':checked');
+        var createTicketDate = null;
+        var assignTo = null;
+        if ($('#create-form input[name="assign-to"]').length) {
+            assignTo = $('#create-form input[name="assign-to"]').val();
+        } else if ($('#create-form select[name="assign-to"]').length) {
+            assignTo = $('#create-form select[name="assign-to"]').val();
+        }
+
+        if ($('#create-form input[name="create-ticket-date"]').val() != '') {
+            createTicketDate = moment($('#create-form input[name="create-ticket-date"]')).format('YYYY-MM-DD');
+        }
+        if (allDay) {
+            start += ' ' + $('#create-form input[name="start-time"]').val();
+            end += ' ' + $('#create-form input[name="end-time"]').val();
+            dateFormat = 'YYYY-MM-DD HH:mm:ss';
+        }
+
+        var data = {
+            title: $('#create-form input[name="name"]').val(),
+            location: $('#create-form input[name="location"]').val(),
+            startTime: moment(start).format(dateFormat),
+            endTime: moment(end).format(dateFormat),
+            allDay: allDay,
+            comments: $('#create-form input[name="comments"]').val(),
+            createTicketDate: createTicketDate,
+            assignTo: assignTo,
+            action: 'create'
+        };
+
+        $.ajax({
+            method: 'POST',
+            url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+            data: data,
+            success: function(data) {
+                console.log(data);
+            },
+            failure: function(data) {
+                console.log(data);
+            }
+        })
     });
 });
 
 function displayCreateModal(date, viewName) {
-    $('input[name="name"]').val('');
-    $('input[name="location"]').val('');
-    $('textarea[name="comments"]').val('');
-    $('input[name="create-ticket-date"]').val('');
+    $('#create-form input[name="name"]').val('');
+    $('#create-form input[name="location"]').val('');
+    $('#create-form textarea[name="comments"]').val('');
+    $('#create-form input[name="create-ticket-date"]').val('');
 
     var $modal = $('#create-event-modal');
     var formattedDate = date.format('YYYY-MM-DD');
@@ -44,11 +93,11 @@ function displayCreateModal(date, viewName) {
         .find('input[name="end-date"]').val(formattedDate).end();
     if (viewName === 'month') {
         // Select "All Day"
-        $('input[name="all-day"]').prop('checked', true);
-        $('.clockpicker').hide();
+        $('#create-form input[name="all-day"]').prop('checked', true);
+        $('#create-form .clockpicker').hide();
     } else {
-        $('input[name="all-day"]').prop('checked', false);
-        $('.clockpicker').show();
+        $('#create-form input[name="all-day"]').prop('checked', false);
+        $('#create-form .clockpicker').show();
         var formattedTime = date.format('h:mm:ss');
         var selectedHour = date.hour();
         $modal.find('input[name="start-time"]').val(formattedTime).end()

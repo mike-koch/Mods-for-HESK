@@ -75,7 +75,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Create Event</h4>
             </div>
-            <form class="form-horizontal" data-toggle="validator">
+            <form id="create-form" class="form-horizontal" data-toggle="validator">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
@@ -229,7 +229,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <?php } elseif (hesk_checkPermission('can_assign_self',0)) { ?>
                                 <div class="form-group">
                                     <div class="col-sm-6 col-sm-offset-3">
-                                        <label><input type="checkbox" name="assing_to_self" value="1"> Assign to myself</label>
+                                        <label><input type="checkbox" name="assign-to" value="<?php echo $_SESSION['id']; ?>"> Assign to myself</label>
                                     </div>
                                 </div>
                             <?php } ?>
