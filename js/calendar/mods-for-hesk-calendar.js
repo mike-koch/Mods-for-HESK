@@ -73,8 +73,9 @@ $(document).ready(function() {
             method: 'POST',
             url: getHelpdeskUrl() + '/internal-api/admin/calendar',
             data: data,
-            success: function(data) {
-                console.log(data);
+            success: function(id) {
+                addToCalendar(id, data);
+                $('#create-event-modal').modal('hide');
             },
             failure: function(data) {
                 console.log(data);
@@ -82,6 +83,21 @@ $(document).ready(function() {
         });
     });
 });
+
+function addToCalendar(id, event) {
+    var eventObject = {
+        id: id,
+        title: event.title,
+        allDay: event.allDay,
+        start: event.startTime,
+        end: event.endTime,
+        comments: event.comments,
+        createTicketDate: event.createTicketDate,
+        assignTo: event.assignTo,
+        location: event.location
+    };
+    $('#calendar').fullCalendar('renderEvent', eventObject);
+}
 
 function displayCreateModal(date, viewName) {
     $('#create-form input[name="name"]').val('');
