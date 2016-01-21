@@ -47,9 +47,9 @@ $(document).ready(function() {
         }
 
         if ($('#create-form input[name="create-ticket-date"]').val() != '') {
-            createTicketDate = moment($('#create-form input[name="create-ticket-date"]')).format('YYYY-MM-DD');
+            createTicketDate = moment($('#create-form input[name="create-ticket-date"]').val()).format('YYYY-MM-DD');
         }
-        if (allDay) {
+        if (!allDay) {
             start += ' ' + $('#create-form input[name="start-time"]').val();
             end += ' ' + $('#create-form input[name="end-time"]').val();
             dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -61,11 +61,13 @@ $(document).ready(function() {
             startTime: moment(start).format(dateFormat),
             endTime: moment(end).format(dateFormat),
             allDay: allDay,
-            comments: $('#create-form input[name="comments"]').val(),
+            comments: $('#create-form textarea[name="comments"]').val(),
             createTicketDate: createTicketDate,
             assignTo: assignTo,
             action: 'create'
         };
+
+        console.log(data);
 
         $.ajax({
             method: 'POST',
@@ -77,7 +79,7 @@ $(document).ready(function() {
             failure: function(data) {
                 console.log(data);
             }
-        })
+        });
     });
 });
 

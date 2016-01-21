@@ -27,12 +27,13 @@ function get_events($start, $end, $hesk_settings) {
 /**
  * @param $event. All times must be in milliseconds since epoch time.
  * @param $hesk_settings
+ * @return int the event id
  */
 function create_event($event, $hesk_settings) {
 
-    $event['start'] = date('Y-m-d H:i:s', $event['start']);
-    $event['end'] = date('Y-m-d H:i:s', $event['end']);
-    $event['create_ticket_date'] = date('Y-m-d H:i:s', $event['create_ticket_date']);
+    $event['start'] = date('Y-m-d H:i:s', strtotime($event['start']));
+    $event['end'] = date('Y-m-d H:i:s', strtotime($event['end']));
+    $event['create_ticket_date'] = date('Y-m-d H:i:s', strtotime($event['create_ticket_date']));
     $event['all_day'] = $event['all_day'] ? 1 : 0;
     $event['assign_to'] = $event['assign_to'] != null ? intval($event['assign_to']) : 'NULL';
 
