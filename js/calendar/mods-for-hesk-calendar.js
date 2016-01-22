@@ -13,6 +13,13 @@ $(document).ready(function() {
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
+                    var events = [];
+                    console.log(data);
+                    $(data).each(function() {
+                        events.push(buildEvent(this.id, this));
+                    })
+                    callback(events);
+
                     //callback w/events here!
                 },
                 error: function(data) {
@@ -85,18 +92,23 @@ $(document).ready(function() {
 });
 
 function addToCalendar(id, event) {
-    var eventObject = {
-        id: id,
-        title: event.title,
-        allDay: event.allDay,
-        start: event.startTime,
-        end: event.endTime,
-        comments: event.comments,
-        createTicketDate: event.createTicketDate,
-        assignTo: event.assignTo,
-        location: event.location
-    };
+    var eventObject = buildEvent(id, event);
     $('#calendar').fullCalendar('renderEvent', eventObject);
+    $.jGrowl("Event successfully created", { theme: 'alert-success', closeTemplate: '' });
+}
+
+function buildEvent(id, dbObject) {
+    return {
+        id: id,
+        title: dbObject.title,
+        allDay: dbObject.allDay,
+        start: dbObject.startTime,
+        end: dbObject.endTime,
+        comments: dbObject.comments,
+        createTicketDate: dbObject.createTicketDate,
+        assignTo: dbObject.assignTo,
+        location: dbObject.location
+    };
 }
 
 function displayCreateModal(date, viewName) {

@@ -2,8 +2,8 @@
 
 function get_events($start, $end, $hesk_settings) {
 
-    $sql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` WHERE `start` >= " . intval($start)
-        . " AND `end` <= " . intval($end);
+    $sql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` WHERE `start` >= FROM_UNIXTIME(" . intval($start)
+        . " / 1000) AND `end` <= FROM_UNIXTIME(" . intval($end) . " / 1000)";
 
     $rs = hesk_dbQuery($sql);
 
