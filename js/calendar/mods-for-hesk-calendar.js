@@ -31,6 +31,46 @@ $(document).ready(function() {
         },
         eventClick: function(event) {
             displayEditModal(event);
+        },
+        eventDrop: function(event, delta, revertFunc) {
+            var start = event.start.format('YYYY-MM-DD');
+            if (event.end === null) {
+                event.end = event.start.clone();
+            }
+            var end = event.end.format('YYYY-MM-DD');
+            if (!event.allDay) {
+                start += ' ' + event.start.format('HH:mm:ss');
+                end += ' ' + event.end.format('HH:mm:ss');
+            }
+            var createTicketDate = event.createTicketDate;
+            if (createTicketDate != null) {
+                createTicketDate = createTicketDate.format('YYYY-MM-DD');
+            }
+            var data = {
+                id: event.id,
+                title: event.title,
+                location: event.location,
+                startTime: start,
+                endTime: end,
+                allDay: event.allDay,
+                comments: event.comments,
+                createTicketDate: createTicketDate,
+                assignTo: event.assignTo,
+                action: 'update'
+            };
+            console.log(data);
+            $.ajax({
+                method: 'POST',
+                url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+                data: data,
+                success: function() {
+                    $.jGrowl('Event successfully updated', { theme: 'alert-success', closeTemplate: '' });
+                },
+                error: function(data) {
+                    console.error(data);
+                    revertFunc();
+                }
+            });
         }
     });
 

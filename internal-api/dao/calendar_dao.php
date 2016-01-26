@@ -24,11 +24,6 @@ function get_events($start, $end, $hesk_settings) {
     return $events;
 }
 
-/**
- * @param $event. All times must be in milliseconds since epoch time.
- * @param $hesk_settings
- * @return int the event id
- */
 function create_event($event, $hesk_settings) {
 
     $event['start'] = date('Y-m-d H:i:s', strtotime($event['start']));
