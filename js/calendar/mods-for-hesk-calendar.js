@@ -21,8 +21,8 @@ $(document).ready(function() {
                     });
                     callback(events);
                 },
-                error: function(data) {
-                    console.error(data);
+                error: function() {
+                    $.jGrowl('An error occurred when trying to load events', { theme: 'alert-danger', closeTemplate: '' });
                 }
             });
         },
@@ -66,8 +66,8 @@ $(document).ready(function() {
                 success: function() {
                     $.jGrowl('Event successfully updated', { theme: 'alert-success', closeTemplate: '' });
                 },
-                error: function(data) {
-                    console.error(data);
+                error: function() {
+                    $.jGrowl('An error occurred when trying to update the event', { theme: 'alert-danger', closeTemplate: '' });
                     revertFunc();
                 }
             });
@@ -104,7 +104,7 @@ $(document).ready(function() {
                 $('#edit-event-modal').modal('hide');
             },
             error: function(data) {
-                console.error(data);
+                $.jGrowl('An error occurred when trying to delete the event', { theme: 'alert-danger', closeTemplate: '' });
             }
         });
     });
@@ -154,7 +154,7 @@ $(document).ready(function() {
                 $('#create-event-modal').modal('hide');
             },
             error: function(data) {
-                console.error(data);
+                $.jGrowl('An error occurred when trying to create the event', { theme: 'alert-danger', closeTemplate: '' });
             }
         });
     });
@@ -207,7 +207,7 @@ $(document).ready(function() {
                 $('#edit-event-modal').modal('hide');
             },
             error: function(data) {
-                console.error(data);
+                $.jGrowl('An error occurred when trying to update the event', { theme: 'alert-danger', closeTemplate: '' });
             }
         });
     });
@@ -259,10 +259,10 @@ function displayCreateModal(date, viewName) {
     } else {
         $form.find('input[name="all-day"]').prop('checked', false).end()
             .find('.clockpicker').show();
-        var formattedTime = date.format('H:mm:ss');
+        var formattedTime = date.format('HH:mm:ss');
         var selectedHour = date.hour();
         $modal.find('input[name="start-time"]').val(formattedTime).end()
-            .find('input[name="end-time"]').val(date.hour(selectedHour + 1).format('H:mm:ss'));
+            .find('input[name="end-time"]').val(date.hour(selectedHour + 1).format('HH:mm:ss'));
     }
 
     $modal.modal('show');
@@ -283,8 +283,8 @@ function displayEditModal(date) {
     } else {
         $form.find('input[name="all-day"]').prop('checked', false).end()
             .find('.clockpicker').show().end()
-            .find('input[name="start-time"]').val(date.start.format('H:mm:ss')).end()
-            .find('input[name="end-time"]').val(date.end.format('H:mm:ss')).end();
+            .find('input[name="start-time"]').val(date.start.format('HH:mm:ss')).end()
+            .find('input[name="end-time"]').val(date.end.format('HH:mm:ss')).end();
     }
 
     if (date.createTicketDate != null) {

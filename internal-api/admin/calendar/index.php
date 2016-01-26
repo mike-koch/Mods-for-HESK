@@ -30,7 +30,7 @@ if ($request_method === 'GET') {
         $event['location'] = hesk_POST('location');
         $event['start'] = hesk_POST('startTime');
         $event['end'] = hesk_POST('endTime');
-        $event['all_day'] = hesk_POST('allDay') === "true" ? true : false;
+        $event['all_day'] = hesk_POST('allDay') === 'true';
         $event['comments'] = hesk_POST('comments');
         $event['create_ticket_date'] = hesk_POST('createTicketDate');
         $event['assign_to'] = hesk_POST('assignTo');
@@ -39,7 +39,20 @@ if ($request_method === 'GET') {
 
         return output($id);
     } elseif ($action === 'update') {
-        //TODO
+        if (!isset($_POST['id'])) {
+            mfh_log_error('internal-api/admin/calendar', 'Unable to update an event as it has no ID.', $_SESSION['id']);
+            return http_response_code(400);
+        }
+        $event['id'] = hesk_POST('id');
+        $event['title'] = hesk_POST('title');
+        $event['start'] = hesk_POST('startTime');
+        $event['end'] = hesk_POST('endTime');
+        $event['all_day'] = hesk_POST('allDay') === 'true';
+        $event['comments'] = hesk_POST('comments');
+        $event['create_ticket_date'] = hesk_POST('createTicketDate');
+        $event['assign_to'] = hesk_POST('assignTo');
+
+        update_event($event, $hesk_settings);
 
         return http_response_code(200);
     } elseif ($action === 'delete') {

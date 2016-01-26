@@ -100,9 +100,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                        title="The location of the event"></i>
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="location" class="form-control" placeholder="Location"
-                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                           required>
+                                    <input type="text" name="location" class="form-control" placeholder="Location">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -286,9 +284,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                        title="The location of the event"></i>
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="location" class="form-control" placeholder="Location"
-                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                           required>
+                                    <input type="text" name="location" class="form-control" placeholder="Location">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
