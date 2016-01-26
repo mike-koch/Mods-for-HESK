@@ -171,12 +171,13 @@ function hesk_dbQuery($query)
     }
     elseif ($hesk_settings['debug_mode'])
     {
-        $message = $hesklang['mysql_said'] . ': ' . mysqli_error($hesk_db_link);
+        $message = 'Error executing SQL: ' .  $query . '; ' . $hesklang['mysql_said'] . ': ' . mysqli_error($hesk_db_link);
     }
     else
     {
         $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
     }
+    mfh_log_error('Internal API', $message, $_SESSION['id']);
     header('Content-Type: application/json');
     print_error($hesklang['cant_sql'], $message);
     die(http_response_code(500));

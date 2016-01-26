@@ -1820,6 +1820,8 @@ function mfh_log($location, $message, $severity, $user) {
     $sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` (`username`, `message`, `severity`, `location`, `timestamp`)
         VALUES ('" . hesk_dbEscape($user) . "',
         '" . hesk_dbEscape($message) . "', " . intval($severity) . ", '" . hesk_dbEscape($location) . "', NOW())";
+
+    hesk_dbQuery($sql);
 }
 
 function mfh_log_debug($location, $message, $user) {

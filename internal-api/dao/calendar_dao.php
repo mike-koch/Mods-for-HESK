@@ -16,8 +16,8 @@ function get_events($start, $end, $hesk_settings) {
         $event['title'] = $row['name'];
         $event['location'] = $row['location'];
         $event['comments'] = $row['comments'];
-        $event['create_ticket_date'] = $row['create_ticket_date'] != null ? intval($row['create_ticket_date']) : null;
-        $event['create_ticket_assign_to'] = $row['create_ticket_assign_to'] != null ? intval($row['create_ticket_assign_to']) : null;
+        $event['createTicketDate'] = $row['create_ticket_date'] != null ? $row['create_ticket_date'] : null;
+        $event['assignTo'] = $row['create_ticket_assign_to'] != null ? intval($row['create_ticket_assign_to']) : null;
         $events[] = $event;
     }
 
@@ -33,7 +33,9 @@ function create_event($event, $hesk_settings) {
 
     $event['start'] = date('Y-m-d H:i:s', strtotime($event['start']));
     $event['end'] = date('Y-m-d H:i:s', strtotime($event['end']));
-    $event['create_ticket_date'] = date('Y-m-d H:i:s', strtotime($event['create_ticket_date']));
+    if ($event['create_ticket_date'] != null) {
+        $event['create_ticket_date'] = date('Y-m-d H:i:s', strtotime($event['create_ticket_date']));
+    }
     $event['all_day'] = $event['all_day'] ? 1 : 0;
     $event['assign_to'] = $event['assign_to'] != null ? intval($event['assign_to']) : 'NULL';
 

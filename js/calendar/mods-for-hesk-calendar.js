@@ -7,6 +7,8 @@ $(document).ready(function() {
         },
         editable: true,
         eventLimit: true,
+        timeFormat: 'H:mm',
+        axisFormat: 'H:mm',
         events: function(start, end, timezone, callback) {
             $.ajax({
                 url: getHelpdeskUrl() + '/internal-api/admin/calendar/?start=' + start + '&end=' + end,
@@ -18,8 +20,6 @@ $(document).ready(function() {
                         events.push(buildEvent(this.id, this));
                     });
                     callback(events);
-
-                    //callback w/events here!
                 },
                 error: function(data) {
                     console.error(data);
@@ -28,6 +28,9 @@ $(document).ready(function() {
         },
         dayClick: function(date, jsEvent, view) {
             displayCreateModal(date, view.name);
+        },
+        eventClick: function(event) {
+            displayEditModal(event);
         }
     });
 
@@ -35,6 +38,12 @@ $(document).ready(function() {
         var hideTimeFields = $(this).is(':checked');
 
         $('#create-form .clockpicker').css('display', hideTimeFields ? 'none' : 'block');
+    });
+
+    $('#edit-form input[name="all-day"]').change(function() {
+        var hideTimeFields = $(this).is(':checked');
+
+        $('#edit-form .clockpicker').css('display', hideTimeFields ? 'none' : 'block');
     });
 
     $('#create-form').submit(function(e) {
@@ -95,6 +104,10 @@ function addToCalendar(id, event) {
 }
 
 function buildEvent(id, dbObject) {
+    var createTicketDate = null;
+    if (dbObject.createTicketDate != null) {
+        createTicketDate = moment(dbObject.createTicketDate);
+    }
     return {
         id: id,
         title: dbObject.title,
@@ -102,17 +115,18 @@ function buildEvent(id, dbObject) {
         start: moment(dbObject.startTime),
         end: moment(dbObject.endTime),
         comments: dbObject.comments,
-        createTicketDate: dbObject.createTicketDate,
+        createTicketDate: createTicketDate,
         assignTo: dbObject.assignTo,
         location: dbObject.location
     };
 }
 
 function displayCreateModal(date, viewName) {
-    $('#create-form input[name="name"]').val('');
-    $('#create-form input[name="location"]').val('');
-    $('#create-form textarea[name="comments"]').val('');
-    $('#create-form input[name="create-ticket-date"]').val('');
+    var $form = $('#create-form');
+    $form.find('input[name="name"]').val('').end()
+        .find('input[name="location"]').val('').end()
+        .find('textarea[name="comments"]').val('').end()
+        .find('input[name="create-ticket-date"]').val('').end();
 
     var $modal = $('#create-event-modal');
     var formattedDate = date.format('YYYY-MM-DD');
@@ -120,16 +134,48 @@ function displayCreateModal(date, viewName) {
         .find('input[name="end-date"]').val(formattedDate).end();
     if (viewName === 'month') {
         // Select "All Day"
-        $('#create-form input[name="all-day"]').prop('checked', true);
-        $('#create-form .clockpicker').hide();
+        $form.find('input[name="all-day"]').prop('checked', true).end()
+            .find('.clockpicker').hide();
     } else {
-        $('#create-form input[name="all-day"]').prop('checked', false);
-        $('#create-form .clockpicker').show();
-        var formattedTime = date.format('h:mm:ss');
+        $form.find('input[name="all-day"]').prop('checked', false).end()
+            .find('.clockpicker').show();
+        var formattedTime = date.format('H:mm:ss');
         var selectedHour = date.hour();
         $modal.find('input[name="start-time"]').val(formattedTime).end()
-            .find('input[name="end-time"]').val(date.hour(selectedHour + 1).format('h:mm:ss'));
+            .find('input[name="end-time"]').val(date.hour(selectedHour + 1).format('H:mm:ss'));
     }
 
-    $('#create-event-modal').modal('show');
+    $modal.modal('show');
+}
+
+function displayEditModal(date) {
+    var $form = $('#edit-form');
+
+    if (date.end === null) {
+        // FullCalendar will set the end date to null if it is the same as the start date.
+        date.end = date.start.clone();
+    }
+
+    if (date.allDay) {
+        $form.find('input[name="all-day"]').prop('checked', true).end()
+            .find('input[name="start-time"]').hide().end()
+            .find('input[name="end-time"]').hide().end();
+    } else {
+        $form.find('input[name="all-day"]').prop('checked', false).end()
+            .find('.clockpicker').show().end()
+            .find('input[name="start-time"]').val(date.start.format('H:mm:ss')).end()
+            .find('input[name="end-time"]').val(date.end.format('H:mm:ss')).end();
+    }
+
+    if (date.createTicketDate != null) {
+        $form.find('input[name="create-ticket-date"]').val(date.createTicketDate.format('YYYY-MM-DD')).end();
+    }
+
+    $form.find('input[name="name"]').val(date.title).end()
+        .find('input[name="location"]').val(date.location).end()
+        .find('textarea[name="comments"]').val(date.comments).end()
+        .find('input[name="start-date"]').val(date.start.format('YYYY-MM-DD')).end()
+        .find('input[name="end-date"]').val(date.end.format('YYYY-MM-DD')).end();
+
+    $('#edit-event-modal').modal('show');
 }

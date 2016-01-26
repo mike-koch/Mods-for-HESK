@@ -23,7 +23,6 @@ if ($request_method === 'GET') {
 
     return output($events);
 } elseif ($request_method === 'POST') {
-    // Create or save event
     $action = hesk_POST('action');
 
     if ($action === 'create') {
