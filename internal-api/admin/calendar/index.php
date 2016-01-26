@@ -40,6 +40,13 @@ if ($request_method === 'GET') {
         return output($id);
     } elseif ($action === 'update') {
         //TODO
+
+        return http_response_code(200);
+    } elseif ($action === 'delete') {
+        $id = hesk_POST('id');
+
+        delete_event($id, $hesk_settings);
+        return http_response_code(200);
     }
 }
 

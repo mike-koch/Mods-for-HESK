@@ -46,6 +46,29 @@ $(document).ready(function() {
         $('#edit-form .clockpicker').css('display', hideTimeFields ? 'none' : 'block');
     });
 
+    $('#edit-form #delete-button').click(function() {
+        var id = $('#edit-form').find('input[name="id"]').val();
+
+        var data = {
+            id: id,
+            action: 'delete'
+        };
+
+        $.ajax({
+            method: 'POST',
+            url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+            data: data,
+            success: function() {
+                removeFromCalendar(data.id);
+                $.jGrowl('Event successfully deleted', { theme: 'alert-success', closeTemplate: '' });
+                $('#edit-event-modal').modal('hide');
+            },
+            error: function(data) {
+                console.error(data);
+            }
+        });
+    });
+
     $('#create-form').submit(function(e) {
         e.preventDefault();
 
@@ -87,8 +110,61 @@ $(document).ready(function() {
             url: getHelpdeskUrl() + '/internal-api/admin/calendar',
             data: data,
             success: function(id) {
-                addToCalendar(id, data);
+                addToCalendar(id, data, "Event successfully created");
                 $('#create-event-modal').modal('hide');
+            },
+            error: function(data) {
+                console.error(data);
+            }
+        });
+    });
+
+    $('#edit-form').submit(function(e) {
+        e.preventDefault();
+
+        var $form = $('#edit-form');
+        var start = $form.find('input[name="start-date"]').val();
+        var end = $form.find('input[name="end-date"]').val();
+        var dateFormat = 'YYYY-MM-DD';
+        var allDay = $form.find('input[name="all-day"]').is(':checked');
+        var createTicketDate = null;
+        var assignTo = null;
+        if ($form.find('input[name="assign-to"]').length) {
+            assignTo = $form.find('input[name="assign-to"]').val();
+        } else if ($form.find('select[name="assign-to"]').length) {
+            assignTo = $form.find('select[name="assign-to"]').val();
+        }
+
+        if ($form.find('input[name="create-ticket-date"]').val() != '') {
+            createTicketDate = moment($form.find('input[name="create-ticket-date"]').val()).format('YYYY-MM-DD');
+        }
+        if (!allDay) {
+            start += ' ' + $form.find('input[name="start-time"]').val();
+            end += ' ' + $form.find('input[name="end-time"]').val();
+            dateFormat = 'YYYY-MM-DD HH:mm:ss';
+        }
+
+        var data = {
+            id: $form.find('input[name="id"]').val(),
+            title: $form.find('input[name="name"]').val(),
+            location: $form.find('input[name="location"]').val(),
+            startTime: moment(start).format(dateFormat),
+            endTime: moment(end).format(dateFormat),
+            allDay: allDay,
+            comments: $form.find('textarea[name="comments"]').val(),
+            createTicketDate: createTicketDate,
+            assignTo: assignTo,
+            action: 'update'
+        };
+
+        $.ajax({
+            method: 'POST',
+            url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+            data: data,
+            success: function() {
+                removeFromCalendar(data.id);
+                addToCalendar(data.id, data, "Event successfully updated");
+                $('#edit-event-modal').modal('hide');
             },
             error: function(data) {
                 console.error(data);
@@ -97,10 +173,14 @@ $(document).ready(function() {
     });
 });
 
-function addToCalendar(id, event) {
+function addToCalendar(id, event, successMessage) {
     var eventObject = buildEvent(id, event);
     $('#calendar').fullCalendar('renderEvent', eventObject);
-    $.jGrowl("Event successfully created", { theme: 'alert-success', closeTemplate: '' });
+    $.jGrowl(successMessage, { theme: 'alert-success', closeTemplate: '' });
+}
+
+function removeFromCalendar(id) {
+    $('#calendar').fullCalendar('removeEvents', id);
 }
 
 function buildEvent(id, dbObject) {
@@ -175,7 +255,8 @@ function displayEditModal(date) {
         .find('input[name="location"]').val(date.location).end()
         .find('textarea[name="comments"]').val(date.comments).end()
         .find('input[name="start-date"]').val(date.start.format('YYYY-MM-DD')).end()
-        .find('input[name="end-date"]').val(date.end.format('YYYY-MM-DD')).end();
+        .find('input[name="end-date"]').val(date.end.format('YYYY-MM-DD')).end()
+        .find('input[name="id"]').val(date.id).end();
 
     $('#edit-event-modal').modal('show');
 }

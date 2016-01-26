@@ -48,3 +48,9 @@ function create_event($event, $hesk_settings) {
     hesk_dbQuery($sql);
     return hesk_dbInsertID();
 }
+
+function delete_event($id, $hesk_settings) {
+    $sql = "DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` WHERE `id` = " . intval($id);
+
+    hesk_dbQuery($sql);
+}

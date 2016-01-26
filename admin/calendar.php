@@ -423,9 +423,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" name="action" value="create">
+                    <input type="hidden" name="id">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-danger">
+                        <button type="button" class="btn btn-danger" id="delete-button">
                             <i class="fa fa-trash"></i>
                             <span>Delete</span>
                         </button>
