@@ -10,10 +10,10 @@ function get_events($start, $end, $hesk_settings) {
     $events = [];
     while ($row = hesk_dbFetchAssoc($rs)) {
         $event['id'] = intval($row['id']);
-        $event['start'] = intval($row['start']);
-        $event['end'] = intval($row['end']);
-        $event['all_day'] = $row['all_day'] ? true : false;
-        $event['name'] = $row['name'];
+        $event['startTime'] = $row['start'];
+        $event['endTime'] = $row['end'];
+        $event['allDay'] = $row['all_day'] ? true : false;
+        $event['title'] = $row['name'];
         $event['location'] = $row['location'];
         $event['comments'] = $row['comments'];
         $event['create_ticket_date'] = $row['create_ticket_date'] != null ? intval($row['create_ticket_date']) : null;

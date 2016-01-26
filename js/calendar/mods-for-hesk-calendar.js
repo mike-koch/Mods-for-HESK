@@ -14,10 +14,9 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     var events = [];
-                    console.log(data);
                     $(data).each(function() {
                         events.push(buildEvent(this.id, this));
-                    })
+                    });
                     callback(events);
 
                     //callback w/events here!
@@ -74,8 +73,6 @@ $(document).ready(function() {
             action: 'create'
         };
 
-        console.log(data);
-
         $.ajax({
             method: 'POST',
             url: getHelpdeskUrl() + '/internal-api/admin/calendar',
@@ -84,8 +81,8 @@ $(document).ready(function() {
                 addToCalendar(id, data);
                 $('#create-event-modal').modal('hide');
             },
-            failure: function(data) {
-                console.log(data);
+            error: function(data) {
+                console.error(data);
             }
         });
     });
@@ -102,8 +99,8 @@ function buildEvent(id, dbObject) {
         id: id,
         title: dbObject.title,
         allDay: dbObject.allDay,
-        start: dbObject.startTime,
-        end: dbObject.endTime,
+        start: moment(dbObject.startTime),
+        end: moment(dbObject.endTime),
         comments: dbObject.comments,
         createTicketDate: dbObject.createTicketDate,
         assignTo: dbObject.assignTo,
