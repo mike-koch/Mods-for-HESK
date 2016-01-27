@@ -9,6 +9,7 @@ function get_events($start, $end, $hesk_settings) {
 
     $events = [];
     while ($row = hesk_dbFetchAssoc($rs)) {
+        $event['type'] = 'CALENDAR';
         $event['id'] = intval($row['id']);
         $event['startTime'] = $row['start'];
         $event['endTime'] = $row['end'];
@@ -18,6 +19,21 @@ function get_events($start, $end, $hesk_settings) {
         $event['comments'] = $row['comments'];
         $event['createTicketDate'] = $row['create_ticket_date'] != null ? $row['create_ticket_date'] : null;
         $event['assignTo'] = $row['create_ticket_assign_to'] != null ? intval($row['create_ticket_assign_to']) : null;
+        $events[] = $event;
+    }
+
+    $sql = "SELECT `trackid`, `subject`, `due_date` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets`
+    WHERE `due_date` >= FROM_UNIXTIME(" . intval($start) . " / 1000)
+    AND `due_date` <= FROM_UNIXTIME(" . intval($end) . " / 1000)
+    AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";
+
+    $rs = hesk_dbQuery($sql);
+    while ($row = hesk_dbFetchAssoc($rs)) {
+        $event['type'] = 'TICKET';
+        $event['trackingId'] = $row['trackid'];
+        $event['title'] = '[' . $row['trackid'] . '] ' . $row['subject'];
+        $event['startTime'] = $row['due_date'];
+        $event['url'] = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
         $events[] = $event;
     }
 

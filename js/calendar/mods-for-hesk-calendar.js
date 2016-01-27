@@ -21,7 +21,8 @@ $(document).ready(function() {
                     });
                     callback(events);
                 },
-                error: function() {
+                error: function(data) {
+                    console.error(data);
                     $.jGrowl('An error occurred when trying to load events', { theme: 'alert-danger', closeTemplate: '' });
                 }
             });
@@ -30,7 +31,13 @@ $(document).ready(function() {
             displayCreateModal(date, view.name);
         },
         eventClick: function(event) {
-            displayEditModal(event);
+            if (event.url) {
+                window.open(event.url, "_blank");
+                return false;
+            }
+            if (event.type !== 'TICKET') {
+                displayEditModal(event);
+            }
         },
         eventDrop: function(event, delta, revertFunc) {
             var start = event.start.format('YYYY-MM-DD');
@@ -224,6 +231,18 @@ function removeFromCalendar(id) {
 }
 
 function buildEvent(id, dbObject) {
+    if (dbObject.type == 'TICKET') {
+        return {
+            title: dbObject.title,
+            trackingId: dbObject.trackingId,
+            start: moment(dbObject.startTime),
+            url: dbObject.url,
+            color: 'green',
+            allDay: true,
+            type: dbObject.type
+        };
+    }
+
     var createTicketDate = null;
     if (dbObject.createTicketDate != null) {
         createTicketDate = moment(dbObject.createTicketDate);
@@ -237,7 +256,8 @@ function buildEvent(id, dbObject) {
         comments: dbObject.comments,
         createTicketDate: createTicketDate,
         assignTo: dbObject.assignTo,
-        location: dbObject.location
+        location: dbObject.location,
+        type: dbObject.type
     };
 }
 
