@@ -60,6 +60,13 @@ if ($request_method === 'GET') {
 
         delete_event($id, $hesk_settings);
         return http_response_code(200);
+    } elseif ($action === 'update-ticket') {
+        $ticket['due_date'] = hesk_POST('dueDate');
+        $ticket['trackid'] = hesk_POST('trackingId');
+
+        update_ticket_due_date($ticket, $hesk_settings);
+
+        return http_response_code(200);
     }
 }
 

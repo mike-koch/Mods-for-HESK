@@ -40,44 +40,62 @@ $(document).ready(function() {
             }
         },
         eventDrop: function(event, delta, revertFunc) {
-            var start = event.start.format('YYYY-MM-DD');
-            if (event.end === null) {
-                event.end = event.start.clone();
-            }
-            var end = event.end.format('YYYY-MM-DD');
-            if (!event.allDay) {
-                start += ' ' + event.start.format('HH:mm:ss');
-                end += ' ' + event.end.format('HH:mm:ss');
-            }
-            var createTicketDate = event.createTicketDate;
-            if (createTicketDate != null) {
-                createTicketDate = createTicketDate.format('YYYY-MM-DD');
-            }
-            var data = {
-                id: event.id,
-                title: event.title,
-                location: event.location,
-                startTime: start,
-                endTime: end,
-                allDay: event.allDay,
-                comments: event.comments,
-                createTicketDate: createTicketDate,
-                assignTo: event.assignTo,
-                action: 'update'
-            };
-            console.log(data);
-            $.ajax({
-                method: 'POST',
-                url: getHelpdeskUrl() + '/internal-api/admin/calendar',
-                data: data,
-                success: function() {
-                    $.jGrowl('Event successfully updated', { theme: 'alert-success', closeTemplate: '' });
-                },
-                error: function() {
-                    $.jGrowl('An error occurred when trying to update the event', { theme: 'alert-danger', closeTemplate: '' });
-                    revertFunc();
+            if (event.type === 'TICKET') {
+                $.ajax({
+                    method: 'POST',
+                    url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+                    data: {
+                        trackingId: event.trackingId,
+                        action: 'update-ticket',
+                        dueDate: event.start.format('YYYY-MM-DD')
+                    },
+                    success: function() {
+                        $.jGrowl('Ticket due date successfully updated', { theme: 'alert-success', closeTemplate: '' });
+                    },
+                    error: function() {
+                        $.jGrowl('An error occurred when trying to update the ticket due date', { theme: 'alert-danger', closeTemplate: '' });
+                        revertFunc();
+                    }
+                });
+            } else {
+                var start = event.start.format('YYYY-MM-DD');
+                if (event.end === null) {
+                    event.end = event.start.clone();
                 }
-            });
+                var end = event.end.format('YYYY-MM-DD');
+                if (!event.allDay) {
+                    start += ' ' + event.start.format('HH:mm:ss');
+                    end += ' ' + event.end.format('HH:mm:ss');
+                }
+                var createTicketDate = event.createTicketDate;
+                if (createTicketDate != null) {
+                    createTicketDate = createTicketDate.format('YYYY-MM-DD');
+                }
+                var data = {
+                    id: event.id,
+                    title: event.title,
+                    location: event.location,
+                    startTime: start,
+                    endTime: end,
+                    allDay: event.allDay,
+                    comments: event.comments,
+                    createTicketDate: createTicketDate,
+                    assignTo: event.assignTo,
+                    action: 'update'
+                };
+                $.ajax({
+                    method: 'POST',
+                    url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+                    data: data,
+                    success: function() {
+                        $.jGrowl('Event successfully updated', { theme: 'alert-success', closeTemplate: '' });
+                    },
+                    error: function() {
+                        $.jGrowl('An error occurred when trying to update the event', { theme: 'alert-danger', closeTemplate: '' });
+                        revertFunc();
+                    }
+                });
+            }
         }
     });
 

@@ -83,3 +83,11 @@ function delete_event($id, $hesk_settings) {
 
     hesk_dbQuery($sql);
 }
+
+function update_ticket_due_date($ticket, $hesk_settings) {
+    $due_date = date('Y-m-d H:i:s', strtotime($ticket['due_date']));
+    $sql = "UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `due_date` = '" . $due_date . "'
+        WHERE `trackid` = '" . hesk_dbEscape($ticket['trackid']) . "'";
+
+    hesk_dbQuery($sql);
+}
