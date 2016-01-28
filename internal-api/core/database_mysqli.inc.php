@@ -177,7 +177,7 @@ function hesk_dbQuery($query)
     {
         $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
     }
-    mfh_log_error('Internal API', $message, $_SESSION['id']);
+    mfh_log_error($_SERVER['HTTP_REFERER'], $message, $_SESSION['id']);
     header('Content-Type: application/json');
     print_error($hesklang['cant_sql'], $message);
     die(http_response_code(500));
