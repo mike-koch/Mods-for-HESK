@@ -67,10 +67,6 @@ $(document).ready(function() {
                     start += ' ' + event.start.format('HH:mm:ss');
                     end += ' ' + event.end.format('HH:mm:ss');
                 }
-                var createTicketDate = event.createTicketDate;
-                if (createTicketDate != null) {
-                    createTicketDate = createTicketDate.format('YYYY-MM-DD');
-                }
                 var data = {
                     id: event.id,
                     title: event.title,
@@ -79,8 +75,6 @@ $(document).ready(function() {
                     endTime: end,
                     allDay: event.allDay,
                     comments: event.comments,
-                    createTicketDate: createTicketDate,
-                    assignTo: event.assignTo,
                     action: 'update'
                 };
                 $.ajax({
@@ -141,17 +135,7 @@ $(document).ready(function() {
         var end = $('#create-form input[name="end-date"]').val();
         var dateFormat = 'YYYY-MM-DD';
         var allDay = $('#create-form input[name="all-day"]').is(':checked');
-        var createTicketDate = null;
-        var assignTo = null;
-        if ($('#create-form input[name="assign-to"]').length) {
-            assignTo = $('#create-form input[name="assign-to"]').val();
-        } else if ($('#create-form select[name="assign-to"]').length) {
-            assignTo = $('#create-form select[name="assign-to"]').val();
-        }
 
-        if ($('#create-form input[name="create-ticket-date"]').val() != '') {
-            createTicketDate = moment($('#create-form input[name="create-ticket-date"]').val()).format('YYYY-MM-DD');
-        }
         if (!allDay) {
             start += ' ' + $('#create-form input[name="start-time"]').val();
             end += ' ' + $('#create-form input[name="end-time"]').val();
@@ -165,9 +149,8 @@ $(document).ready(function() {
             endTime: moment(end).format(dateFormat),
             allDay: allDay,
             comments: $('#create-form textarea[name="comments"]').val(),
-            createTicketDate: createTicketDate,
-            assignTo: assignTo,
-            action: 'create'
+            action: 'create',
+            type: 'CALENDAR'
         };
 
         $.ajax({
@@ -192,17 +175,7 @@ $(document).ready(function() {
         var end = $form.find('input[name="end-date"]').val();
         var dateFormat = 'YYYY-MM-DD';
         var allDay = $form.find('input[name="all-day"]').is(':checked');
-        var createTicketDate = null;
-        var assignTo = null;
-        if ($form.find('input[name="assign-to"]').length) {
-            assignTo = $form.find('input[name="assign-to"]').val();
-        } else if ($form.find('select[name="assign-to"]').length) {
-            assignTo = $form.find('select[name="assign-to"]').val();
-        }
 
-        if ($form.find('input[name="create-ticket-date"]').val() != '') {
-            createTicketDate = moment($form.find('input[name="create-ticket-date"]').val()).format('YYYY-MM-DD');
-        }
         if (!allDay) {
             start += ' ' + $form.find('input[name="start-time"]').val();
             end += ' ' + $form.find('input[name="end-time"]').val();
@@ -217,8 +190,6 @@ $(document).ready(function() {
             endTime: moment(end).format(dateFormat),
             allDay: allDay,
             comments: $form.find('textarea[name="comments"]').val(),
-            createTicketDate: createTicketDate,
-            assignTo: assignTo,
             action: 'update'
         };
 
@@ -261,10 +232,6 @@ function buildEvent(id, dbObject) {
         };
     }
 
-    var createTicketDate = null;
-    if (dbObject.createTicketDate != null) {
-        createTicketDate = moment(dbObject.createTicketDate);
-    }
     return {
         id: id,
         title: dbObject.title,
@@ -272,8 +239,6 @@ function buildEvent(id, dbObject) {
         start: moment(dbObject.startTime),
         end: moment(dbObject.endTime),
         comments: dbObject.comments,
-        createTicketDate: createTicketDate,
-        assignTo: dbObject.assignTo,
         location: dbObject.location,
         type: dbObject.type
     };
@@ -283,8 +248,7 @@ function displayCreateModal(date, viewName) {
     var $form = $('#create-form');
     $form.find('input[name="name"]').val('').end()
         .find('input[name="location"]').val('').end()
-        .find('textarea[name="comments"]').val('').end()
-        .find('input[name="create-ticket-date"]').val('').end();
+        .find('textarea[name="comments"]').val('').end();
 
     var $modal = $('#create-event-modal');
     var formattedDate = date.format('YYYY-MM-DD');
@@ -323,10 +287,6 @@ function displayEditModal(date) {
             .find('.clockpicker').show().end()
             .find('input[name="start-time"]').val(date.start.format('HH:mm:ss')).end()
             .find('input[name="end-time"]').val(date.end.format('HH:mm:ss')).end();
-    }
-
-    if (date.createTicketDate != null) {
-        $form.find('input[name="create-ticket-date"]').val(date.createTicketDate.format('YYYY-MM-DD')).end();
     }
 
     $form.find('input[name="name"]').val(date.title).end()

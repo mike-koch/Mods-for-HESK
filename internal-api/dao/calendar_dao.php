@@ -17,8 +17,6 @@ function get_events($start, $end, $hesk_settings) {
         $event['title'] = $row['name'];
         $event['location'] = $row['location'];
         $event['comments'] = $row['comments'];
-        $event['createTicketDate'] = $row['create_ticket_date'] != null ? $row['create_ticket_date'] : null;
-        $event['assignTo'] = $row['create_ticket_assign_to'] != null ? intval($row['create_ticket_assign_to']) : null;
         $events[] = $event;
     }
 
@@ -44,17 +42,12 @@ function create_event($event, $hesk_settings) {
 
     $event['start'] = date('Y-m-d H:i:s', strtotime($event['start']));
     $event['end'] = date('Y-m-d H:i:s', strtotime($event['end']));
-    if ($event['create_ticket_date'] != null) {
-        $event['create_ticket_date'] = date('Y-m-d H:i:s', strtotime($event['create_ticket_date']));
-    }
     $event['all_day'] = $event['all_day'] ? 1 : 0;
-    $event['assign_to'] = $event['assign_to'] != null ? intval($event['assign_to']) : 'NULL';
 
     $sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` (`start`, `end`, `all_day`,
-    `name`, `location`, `comments`, `create_ticket_date`, `create_ticket_assign_to`) VALUES (
+    `name`, `location`, `comments`) VALUES (
     '" . hesk_dbEscape($event['start']) . "', '" . hesk_dbEscape($event['end']) . "', '" . hesk_dbEscape($event['all_day']) . "',
-    '" . hesk_dbEscape($event['title']) . "', '" . hesk_dbEscape($event['location']) . "', '" . hesk_dbEscape($event['comments']) . "',
-    '" . hesk_dbEscape($event['create_ticket_date']) . "', " . $event['assign_to'] . ")";
+    '" . hesk_dbEscape($event['title']) . "', '" . hesk_dbEscape($event['location']) . "', '" . hesk_dbEscape($event['comments']) . "')";
 
     hesk_dbQuery($sql);
     return hesk_dbInsertID();
@@ -72,8 +65,7 @@ function update_event($event, $hesk_settings) {
     $sql = "UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` SET `start` = '" . hesk_dbEscape($event['start'])
         . "', `end` = '" . hesk_dbEscape($event['end']) . "', `all_day` = '" . hesk_dbEscape($event['all_day']) . "', `name` = '"
         . hesk_dbEscape($event['title']) . "', `location` = '" . hesk_dbEscape($event['location']) . "', `comments` = '"
-        . hesk_dbEscape($event['comments']) . "', `create_ticket_date` = '" . hesk_dbEscape($event['create_ticket_date'])
-        . "', `create_ticket_assign_to` = " . $event['assign_to'] . " WHERE `id` = " . intval($event['id']);
+        . hesk_dbEscape($event['comments']) . "' WHERE `id` = " . intval($event['id']);
 
     hesk_dbQuery($sql);
 }

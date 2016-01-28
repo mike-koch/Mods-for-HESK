@@ -32,8 +32,6 @@ if ($request_method === 'GET') {
         $event['end'] = hesk_POST('endTime');
         $event['all_day'] = hesk_POST('allDay') === 'true';
         $event['comments'] = hesk_POST('comments');
-        $event['create_ticket_date'] = hesk_POST('createTicketDate');
-        $event['assign_to'] = hesk_POST('assignTo');
 
         $id = create_event($event, $hesk_settings);
 
@@ -49,8 +47,6 @@ if ($request_method === 'GET') {
         $event['end'] = hesk_POST('endTime');
         $event['all_day'] = hesk_POST('allDay') === 'true';
         $event['comments'] = hesk_POST('comments');
-        $event['create_ticket_date'] = hesk_POST('createTicketDate');
-        $event['assign_to'] = hesk_POST('assignTo');
 
         update_event($event, $hesk_settings);
 
