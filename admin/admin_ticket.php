@@ -33,6 +33,8 @@ define('HESK_PATH', '../');
 define('WYSIWYG', 1);
 define('VALIDATOR', 1);
 
+define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/admin-ticket.js"></script>');
+
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
@@ -657,15 +659,41 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     ?>
                 </li>
                 <li class="list-group-item">
-                    <strong><?php echo $hesklang['created_on']; ?></strong><br/>
+                    <strong><?php echo $hesklang['created_on']; ?></strong><br>
                     <?php echo hesk_date($ticket['dt'], true); ?>
                 </li>
                 <li class="list-group-item">
-                    <strong><?php echo $hesklang['last_update']; ?></strong><br/>
+                    <strong><?php echo $hesklang['last_update']; ?></strong><br>
                     <?php echo hesk_date($ticket['lastchange'], true); ?>
                 </li>
                 <li class="list-group-item">
-                    <strong><?php echo $hesklang['last_replier']; ?></strong><br/>
+                    <strong><?php echo $hesklang['due_date']; ?></strong><br>
+                    <div id="readonly-due-date">
+                        <span id="due-date">
+                        <?php
+                            $due_date = hesk_date($ticket['due_date'], false);
+                            $current_date = hesk_date();
+                            echo substr($due_date, 0, 10);
+                        ?></span><!--<span id="overdue">
+                        <?php
+                        /*if ($due_date < $current_date) {
+                            echo ' <i class="fa fa-exclamation-triangle dark-orange" data-toggle="tooltip" title="Ticket overdue!"></i>';
+                        }*/
+                        ?>
+                        </span>-->
+                        <br>
+                        <button id="due-date-button" class="btn btn-default btn-sm">Change</button>
+                    </div>
+                    <div id="editable-due-date" style="display: none">
+                        <input type="text" class="form-control datepicker" name="due-date" value="<?php echo substr($due_date, 0, 10); ?>"><br>
+                        <div class="btn-group">
+                            <button id="submit" class="btn btn-primary">Save</button>
+                            <button id="cancel" class="btn btn-default">Cancel</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <strong><?php echo $hesklang['last_replier']; ?></strong><br>
                     <?php echo $ticket['repliername']; ?>
                 </li>
                 <?php
