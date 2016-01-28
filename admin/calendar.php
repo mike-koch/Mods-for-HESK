@@ -285,6 +285,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <i class="fa fa-trash"></i>
                             <span>Delete</span>
                         </button>
+                        <button type="button" class="btn btn-primary" id="create-ticket-button">
+                            <i class="fa fa-plus"></i>
+                            <span>Create Ticket</span>
+                        </button>
                         <button type="button" class="btn btn-default cancel-callback" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>
                             <span>Cancel</span>
