@@ -296,5 +296,14 @@ function displayEditModal(date) {
         .find('input[name="end-date"]').val(date.end.format('YYYY-MM-DD')).end()
         .find('input[name="id"]').val(date.id).end();
 
+    var createTicketLink = getHelpdeskUrl() + '/' + getAdminDirectory() + '/new_ticket.php?subject=';
+    createTicketLink += encodeURI('[' + date.start.format('YYYY-MM-DD') + '] ' + date.title);
+    if (date.location != '') {
+        createTicketLink += encodeURI(' @ ' + date.location);
+    }
+    createTicketLink += encodeURI('&message=' + date.comments);
+
+    $form.find('#create-ticket-button').prop('href', createTicketLink);
+
     $('#edit-event-modal').modal('show');
 }

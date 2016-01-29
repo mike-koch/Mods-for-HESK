@@ -6,4 +6,8 @@ echo "
 function getHelpdeskUrl() {
     return '".$hesk_settings['hesk_url']."';
 }
+
+function getAdminDirectory() {
+    return '".$hesk_settings['admin_dir']."';
+}
 ";
