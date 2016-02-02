@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.6 from 2nd February 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -29,7 +29,7 @@
  *******************************************************************************/
 
 // Define the current build
-define('MODS_FOR_HESK_BUILD', 24);
+define('MODS_FOR_HESK_BUILD', 25);
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {

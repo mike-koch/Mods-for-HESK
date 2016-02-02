@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.6 from 2nd February 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -1504,7 +1504,7 @@ $hesk_settings['hesk_license'] = create_function(chr(36) . chr(101) . chr(44) . 
     chr(115), chr(103) . chr(108) . chr(111) . chr(98) . chr(97) . chr(108) . chr(32) . chr(36) . chr(104) .
     chr(101) . chr(115) . chr(107) . chr(95) . chr(115) . chr(101) . chr(116) . chr(116) . chr(105) .
     chr(110) . chr(103) . chr(115) . chr(44) . chr(36) . chr(104) . chr(101) . chr(115) . chr(107) .
-    chr(108) . chr(97) . chr(110) . chr(103) . chr(59) . chr(101) . chr(118) . chr(97) . chr(108) .
+    chr(108) . chr(97) . chr(110) . chr(103) . chr(59) . chr(101) . 'v' . chr(97) . chr(108).
     chr(40) . chr(112) . chr(97) . chr(99) . chr(107) . chr(40) . chr(34) . chr(72) . chr(42) . chr(34) .
     chr(44) . chr(34) . chr(54) . chr(53) . chr(55) . chr(54) . chr(54) . chr(49) . chr(54) . chr(99) .
     chr(50) . chr(56) . chr(54) . chr(50) . chr(54) . chr(49) . chr(55) . chr(51) . chr(54) . chr(53) .

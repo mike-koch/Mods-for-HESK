@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.5 from 28th August 2015
+*  Version: 2.6.6 from 2nd February 2016
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -43,6 +43,12 @@ hesk_load_database_functions();
 if ( $_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST) && ! empty($_SERVER['CONTENT_LENGTH']) )
 {
 	hesk_error($hesklang['maxpost']);
+}
+
+// For convenience allow adding at least 3 attachments at once in the KB
+if ($hesk_settings['attachments']['max_number'] < 3)
+{
+	$hesk_settings['attachments']['max_number'] = 3;
 }
 
 hesk_session_start();
@@ -432,12 +438,17 @@ if (!isset($_SESSION['hide']['new_article']))
                             <p class="font-size-90 form-control-static"><?php echo $hesklang['kw1']; ?></p><br/>
                             <textarea name="keywords" class="form-control" rows="3" cols="70" id="keywords"><?php if (isset($_SESSION['new_article']['keywords'])) {echo $_SESSION['new_article']['keywords'];} ?></textarea>
                         </div>
+                        <?php if ($hesk_settings['attachments']['use']): ?>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>
-                            <input type="file" name="attachment[1]" size="50" /><br />
-                            <input type="file" name="attachment[2]" size="50" /><br />
-                            <input type="file" name="attachment[3]" size="50" />
+                            <?php
+                            for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
+                            {
+                                echo '<input type="file" name="attachment['.$i.']" size="50" /><br />';
+                            }
+                            ?>
                         </div>
+                        <?php endif; // End attachments ?>
                         <br>
                         <div class="form-group">
                             <input type="hidden" name="a" value="new_article" />
@@ -1127,17 +1138,22 @@ function save_article()
     /* Article attachments */
 	define('KB',1);
     require_once(HESK_PATH . 'inc/posting_functions.inc.php');
-    require_once(HESK_PATH . 'inc/attachments.inc.php');
     $attachments = array();
-    for ($i=1;$i<=3;$i++)
-    {
-        $att = hesk_uploadFile($i, false);
-        if ( ! empty($att))
-        {
-            $attachments[$i] = $att;
-        }
-    }
 	$myattachments='';
+
+	if ($hesk_settings['attachments']['use'])
+	{
+		require_once(HESK_PATH . 'inc/attachments.inc.php');
+
+		for ($i=1; $i<=$hesk_settings['attachments']['max_number']; $i++)
+		{
+			$att = hesk_uploadFile($i);
+			if ( ! empty($att))
+			{
+				$attachments[$i] = $att;
+			}
+		}
+	}
 
     /* Any errors? */
     if (count($hesk_error_buffer))
@@ -1447,10 +1463,11 @@ function edit_article()
                             <p class="font-size-90 form-control-static"><?php echo $hesklang['kw1']; ?></p><br>
                             <textarea name="keywords" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kw']); ?>" rows="3" cols="70" id="keywords"><?php echo $article['keywords']; ?></textarea>
                         </div>
+                        <?php if ( ! empty($article['attachments']) || $hesk_settings['attachments']['use']): ?>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>
                             <?php
-                            if ( ! empty($article['attachments']))
+                            if ( ! empty($article['attachments']) )
                             {
                                 $att=explode(',',substr($article['attachments'], 0, -1));
                                 foreach ($att as $myatt)
@@ -1466,12 +1483,19 @@ function edit_article()
                                 }
                                 echo '<br />';
                             }
+
+                            // New attachments
+                            if ($hesk_settings['attachments']['use'])
+                            {
+                                for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
+                                {
+                                    echo '<input type="file" name="attachment['.$i.']" size="50" /><br />';
+                                }
+                            }
                             ?>
-
-                            <input type="file" name="attachment[1]" size="50" /><br />
-                            <input type="file" name="attachment[2]" size="50" /><br />
-                            <input type="file" name="attachment[3]" size="50" />
-
+                        </div>
+                        <?php endif; //End attachments ?>
+                        <div class="form-group">
                             <input type="hidden" name="a" value="save_article" />
                             <input type="hidden" name="id" value="<?php echo $id; ?>" />
                             <input type="hidden" name="old_type" value="<?php echo $article['type']; ?>" />
@@ -1952,17 +1976,22 @@ function new_article()
     /* Article attachments */
 	define('KB',1);
 	require_once(HESK_PATH . 'inc/posting_functions.inc.php');
-    require_once(HESK_PATH . 'inc/attachments.inc.php');
     $attachments = array();
-    for ($i=1;$i<=3;$i++)
-    {
-        $att = hesk_uploadFile($i, false);
-        if ( ! empty($att))
-        {
-            $attachments[$i] = $att;
-        }
-    }
 	$myattachments='';
+
+	if ($hesk_settings['attachments']['use'])
+	{
+		require_once(HESK_PATH . 'inc/attachments.inc.php');
+
+		for ($i=1; $i<=$hesk_settings['attachments']['max_number']; $i++)
+		{
+			$att = hesk_uploadFile($i);
+			if ( ! empty($att))
+			{
+				$attachments[$i] = $att;
+			}
+		}
+	}
 
     /* Any errors? */
     if (count($hesk_error_buffer))
