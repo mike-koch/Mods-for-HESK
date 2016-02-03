@@ -133,10 +133,10 @@ hesk_dbConnect();
                             <div class="col-md-3 col-sm-12">
                                 <?php
                                 if ($version == '2.5.3') {
-                                    $v252btn = 'btn-success';
+                                    $v253btn = 'btn-success';
                                     $disableAllExcept = '253';
                                 } else {
-                                    $v252btn = 'btn-default';
+                                    $v253btn = 'btn-default';
                                 }
                                 ?>
                                 <a id="253" class="btn <?php echo $v253btn; ?> btn-block disablable"
