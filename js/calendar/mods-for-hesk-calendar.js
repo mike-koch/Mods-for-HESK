@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $('#calendar').fullCalendar({
         header: {
-            left: 'prev,next today',
+            left: 'prevYear,prev,next,nextYear today',
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
         },
@@ -90,6 +90,20 @@ $(document).ready(function() {
                     }
                 });
             }
+        },
+        eventMouseover: function(event, jsEvent, view) {
+            $eventMarkup = $(this);
+            $eventMarkup.popover({
+                title: event.title,
+                html: true,
+                content: $('.popover-template').html(),
+                animation: true,
+                container: 'body',
+                placement: 'auto'
+            }).popover('show');
+        },
+        eventMouseout: function (event, jsEvent, view) {
+            $(this).popover('destroy');
         }
     });
 
