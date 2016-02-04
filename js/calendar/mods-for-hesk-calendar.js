@@ -271,12 +271,18 @@ function removeFromCalendar(id) {
 
 function buildEvent(id, dbObject) {
     if (dbObject.type == 'TICKET') {
+        var endOfDay = moment(dbObject.startTime)
+            .set('hour', 23)
+            .set('minute', 59)
+            .set('second', 59)
+            .set('millisecond', 999);
+
         return {
             title: dbObject.title,
             trackingId: dbObject.trackingId,
             start: moment(dbObject.startTime),
             url: dbObject.url,
-            color: 'green',
+            color: endOfDay.isBefore() ? '#dd0000' : 'green',
             allDay: true,
             type: dbObject.type
         };
