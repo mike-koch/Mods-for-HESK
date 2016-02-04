@@ -304,10 +304,18 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     </div>
 </div>
 <div class="popover-template" style="display: none">
-    <div class="row">
-        <div class="col-md-6">
-            <i class="fa fa-clock"></i>
-            <p>00:00 - 00:00</p>
+    <div>
+        <div class="popover-location">
+            <strong>Location</strong>
+            <span></span>
+        </div>
+        <div class="popover-from">
+            <strong>From</strong>
+            <span></span>
+        </div>
+        <div class="popover-to">
+            <strong>To</strong>
+            <span></span>
         </div>
     </div>
 </div>

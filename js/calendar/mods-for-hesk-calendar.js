@@ -91,21 +91,49 @@ $(document).ready(function() {
                 });
             }
         },
-        eventMouseover: function(event, jsEvent, view) {
-            $eventMarkup = $(this);
+        eventMouseover: function(event) {
+            if (event.type === 'TICKET') {
+                // Don't build a popover for tickets
+                return;
+            }
+
+            var contents = $('.popover-template').html();
+            $contents = $(contents);
+
+            var format = 'dddd, MMMM Do YYYY';
+            var endDate = event.end == null ? event.start : event.end;
+
+            if (!event.allDay) {
+                format += ', HH:mm';
+            }
+
+            if (event.location === '') {
+                $contents.find('.popover-location').hide();
+            }
+
+            $contents.find('.popover-location span').text(event.location).end()
+                .find('.popover-from span').text(event.start.format(format)).end()
+                .find('.popover-to span').text(endDate.format(format));
+            var $eventMarkup = $(this);
             $eventMarkup.popover({
                 title: event.title,
                 html: true,
-                content: $('.popover-template').html(),
+                content: $contents,
                 animation: true,
                 container: 'body',
                 placement: 'auto'
             }).popover('show');
         },
-        eventMouseout: function (event, jsEvent, view) {
+        eventMouseout: function (event) {
+            if (event.type === 'TICKET') {
+                // There's no popover to destroy
+                return;
+            }
+
             $(this).popover('destroy');
         }
     });
+
 
     $('#create-form input[name="all-day"]').change(function() {
         var hideTimeFields = $(this).is(':checked');
