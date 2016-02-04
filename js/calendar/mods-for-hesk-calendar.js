@@ -124,13 +124,21 @@ $(document).ready(function() {
                 placement: 'auto'
             }).popover('show');
         },
-        eventMouseout: function (event) {
+        eventMouseout: function(event) {
             if (event.type === 'TICKET') {
                 // There's no popover to destroy
                 return;
             }
 
             $(this).popover('destroy');
+        },
+        dayRender: function(date, cell) {
+            var $cell = $(cell);
+            $cell.tooltip({
+                container: 'body',
+                delay: { show: 250, hide: 0 },
+                title: 'Click to add event'
+            });
         }
     });
 
