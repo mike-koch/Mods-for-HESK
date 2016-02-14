@@ -1,12 +1,11 @@
 <?php
 
 function get_events($start, $end, $hesk_settings) {
-
     $sql = "SELECT `events`.*, `categories`.`name` AS `category_name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` AS `events`
         INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
             ON `events`.`category` = `categories`.`id`
-        WHERE `start` >= FROM_UNIXTIME(" . intval($start)
-        . " / 1000) AND `end` <= FROM_UNIXTIME(" . intval($end) . " / 1000)";
+        WHERE `start` >= FROM_UNIXTIME(" . hesk_dbEscape($start)
+        . " / 1000) AND `end` <= FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000)";
 
     $rs = hesk_dbQuery($sql);
 
