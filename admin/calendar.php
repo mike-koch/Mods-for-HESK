@@ -120,7 +120,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </label>
                                 <div class="col-sm-9">
                                     <select name="category" class="form-control">
-                                        <?php foreach ($categories as $category): ?>
+                                        <?php
+                                        if ($hesk_settings['select_cat']) {
+                                            echo '<option value="-1">'.$hesklang['select'].'</option>';
+                                        }
+                                        foreach ($categories as $category): ?>
                                             <option value="<?php echo $category['id']; ?>">
                                                 <?php echo $category['name']; ?>
                                             </option>
@@ -250,7 +254,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </label>
                                 <div class="col-sm-9">
                                     <select name="category" class="form-control">
-                                        <?php foreach ($categories as $category): ?>
+                                        <?php
+                                        if ($hesk_settings['select_cat']) {
+                                            echo '<option value="-1">'.$hesklang['select'].'</option>';
+                                        }
+                                        foreach ($categories as $category): ?>
                                             <option value="<?php echo $category['id']; ?>">
                                                 <?php echo $category['name']; ?>
                                             </option>
