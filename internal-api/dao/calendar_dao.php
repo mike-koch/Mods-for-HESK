@@ -2,7 +2,10 @@
 
 function get_events($start, $end, $hesk_settings) {
 
-    $sql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` WHERE `start` >= FROM_UNIXTIME(" . intval($start)
+    $sql = "SELECT `events`.*, `categories`.`name` AS `category_name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` AS `events`
+        INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
+            ON `events`.`category` = `categories`.`id`
+        WHERE `start` >= FROM_UNIXTIME(" . intval($start)
         . " / 1000) AND `end` <= FROM_UNIXTIME(" . intval($end) . " / 1000)";
 
     $rs = hesk_dbQuery($sql);
@@ -17,10 +20,15 @@ function get_events($start, $end, $hesk_settings) {
         $event['title'] = $row['name'];
         $event['location'] = $row['location'];
         $event['comments'] = $row['comments'];
+        $event['categoryId'] = $row['category'];
+        $event['categoryName'] = $row['category_name'];
         $events[] = $event;
     }
 
-    $sql = "SELECT `trackid`, `subject`, `due_date` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets`
+    $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`
+    FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets`
+    INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
+        ON `categories`.`id` = `tickets`.`category`
     WHERE `due_date` >= FROM_UNIXTIME(" . intval($start) . " / 1000)
     AND `due_date` <= FROM_UNIXTIME(" . intval($end) . " / 1000)
     AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";
@@ -32,6 +40,8 @@ function get_events($start, $end, $hesk_settings) {
         $event['title'] = '[' . $row['trackid'] . '] ' . $row['subject'];
         $event['startTime'] = $row['due_date'];
         $event['url'] = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
+        $event['categoryId'] = $row['category'];
+        $event['categoryName'] = $row['category_name'];
         $events[] = $event;
     }
 
@@ -45,9 +55,10 @@ function create_event($event, $hesk_settings) {
     $event['all_day'] = $event['all_day'] ? 1 : 0;
 
     $sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` (`start`, `end`, `all_day`,
-    `name`, `location`, `comments`) VALUES (
+    `name`, `location`, `comments`, `category`) VALUES (
     '" . hesk_dbEscape($event['start']) . "', '" . hesk_dbEscape($event['end']) . "', '" . hesk_dbEscape($event['all_day']) . "',
-    '" . hesk_dbEscape($event['title']) . "', '" . hesk_dbEscape($event['location']) . "', '" . hesk_dbEscape($event['comments']) . "')";
+    '" . hesk_dbEscape($event['title']) . "', '" . hesk_dbEscape($event['location']) . "', '" . hesk_dbEscape($event['comments']) . "',
+    " . intval($event['category']) . ")";
 
     hesk_dbQuery($sql);
     return hesk_dbInsertID();
@@ -65,7 +76,7 @@ function update_event($event, $hesk_settings) {
     $sql = "UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` SET `start` = '" . hesk_dbEscape($event['start'])
         . "', `end` = '" . hesk_dbEscape($event['end']) . "', `all_day` = '" . hesk_dbEscape($event['all_day']) . "', `name` = '"
         . hesk_dbEscape($event['title']) . "', `location` = '" . hesk_dbEscape($event['location']) . "', `comments` = '"
-        . hesk_dbEscape($event['comments']) . "' WHERE `id` = " . intval($event['id']);
+        . hesk_dbEscape($event['comments']) . "', `category` = " . intval($event['category']) . " WHERE `id` = " . intval($event['id']);
 
     hesk_dbQuery($sql);
 }

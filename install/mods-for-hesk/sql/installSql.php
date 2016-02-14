@@ -727,7 +727,8 @@ function execute260Scripts()
       `all_day` ENUM('0','1') NOT NULL,
       `name` VARCHAR(255) NOT NULL,
       `location` VARCHAR(255),
-      `comments` MEDIUMTEXT) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+      `comments` MEDIUMTEXT,
+      `category` INT) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD COLUMN `due_date` DATETIME");
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.6.0' WHERE `Key` = 'modsForHeskVersion'");
 }

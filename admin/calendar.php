@@ -49,6 +49,13 @@ hesk_isLoggedIn();
 // Define required constants
 define('MFH_CALENDAR', 1);
 
+// Get categories for the dropdown
+$rs = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ORDER BY `cat_order`");
+$categories = [];
+while ($row = hesk_dbFetchAssoc($rs)) {
+    $categories[] = $row;
+}
+
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
@@ -104,6 +111,23 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="category" class="col-sm-3 control-label">
+                                    Category
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="tooltip"
+                                       title="Category for the event"></i>
+                                </label>
+                                <div class="col-sm-9">
+                                    <select name="category" class="form-control">
+                                        <?php foreach ($categories as $category): ?>
+                                            <option value="<?php echo $category['id']; ?>">
+                                                <?php echo $category['name']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -121,7 +145,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                            required>
                                     <input type="text" name="start-time" class="form-control clockpicker" placeholder="Start Time" data-placement="left" data-align="top" data-autoclose="true">
                                     <div class="help-block with-errors"></div>
-
                                     <div class="checkbox">
                                         <label>
                                             <input type="checkbox" name="all-day"> All day
@@ -218,6 +241,23 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="category" class="col-sm-3 control-label">
+                                    Category
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="tooltip"
+                                       title="Category for the event"></i>
+                                </label>
+                                <div class="col-sm-9">
+                                    <select name="category" class="form-control">
+                                        <?php foreach ($categories as $category): ?>
+                                            <option value="<?php echo $category['id']; ?>">
+                                                <?php echo $category['name']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -307,6 +347,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <div>
         <div class="popover-location">
             <strong>Location</strong>
+            <span></span>
+        </div>
+        <div class="popover-category">
+            <strong>Category</strong>
             <span></span>
         </div>
         <div class="popover-from">

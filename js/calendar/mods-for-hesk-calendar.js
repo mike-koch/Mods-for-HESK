@@ -75,6 +75,7 @@ $(document).ready(function() {
                     endTime: end,
                     allDay: event.allDay,
                     comments: event.comments,
+                    categoryId: event.categoryId,
                     action: 'update'
                 };
                 $.ajax({
@@ -98,7 +99,7 @@ $(document).ready(function() {
             }
 
             var contents = $('.popover-template').html();
-            $contents = $(contents);
+            var $contents = $(contents);
 
             var format = 'dddd, MMMM Do YYYY';
             var endDate = event.end == null ? event.start : event.end;
@@ -111,7 +112,8 @@ $(document).ready(function() {
                 $contents.find('.popover-location').hide();
             }
 
-            $contents.find('.popover-location span').text(event.location).end()
+            $contents.find('.popover-category span').text(event.categoryName).end()
+                .find('.popover-location span').text(event.location).end()
                 .find('.popover-from span').text(event.start.format(format)).end()
                 .find('.popover-to span').text(endDate.format(format));
             var $eventMarkup = $(this);
@@ -199,6 +201,7 @@ $(document).ready(function() {
             endTime: moment(end).format(dateFormat),
             allDay: allDay,
             comments: $('#create-form textarea[name="comments"]').val(),
+            categoryId: $('#create-form select[name="category"]').val(),
             action: 'create',
             type: 'CALENDAR'
         };
@@ -240,6 +243,7 @@ $(document).ready(function() {
             endTime: moment(end).format(dateFormat),
             allDay: allDay,
             comments: $form.find('textarea[name="comments"]').val(),
+            categoryId: $form.find('select[name="category"]').val(),
             action: 'update'
         };
 
@@ -284,7 +288,8 @@ function buildEvent(id, dbObject) {
             url: dbObject.url,
             color: endOfDay.isBefore() ? '#dd0000' : 'green',
             allDay: true,
-            type: dbObject.type
+            type: dbObject.type,
+            categoryId: dbObject.categoryId
         };
     }
 
@@ -296,7 +301,9 @@ function buildEvent(id, dbObject) {
         end: moment(dbObject.endTime),
         comments: dbObject.comments,
         location: dbObject.location,
-        type: dbObject.type
+        type: dbObject.type,
+        categoryId: dbObject.categoryId,
+        categoryName: dbObject.categoryName
     };
 }
 
@@ -360,6 +367,8 @@ function displayEditModal(date) {
     createTicketLink += encodeURI('&message=' + date.comments);
 
     $form.find('#create-ticket-button').prop('href', createTicketLink);
+
+    $form.find('select[name="category"] option[value="' + date.categoryId + '"]').prop('selected', true);
 
     $('#edit-event-modal').modal('show');
 }
