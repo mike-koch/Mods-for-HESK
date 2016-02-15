@@ -166,6 +166,19 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="color" class="col-sm-4 control-label">
+                            <?php echo $hesklang['category_color']; ?>:
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo htmlspecialchars($hesklang['category_color']); ?>"
+                               data-content="<?php echo htmlspecialchars($hesklang['category_color_help']); ?>"></i>
+                        </label>
+                        <div class="col-sm-8">
+                            <input class="form-control"
+                                placeholder="<?php echo htmlspecialchars($hesklang['category_color']); ?>" type="text"
+                                name="color" maxlength="7">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="options" class="col-sm-4 control-label"><?php echo $hesklang['opt']; ?>:</label>
 
                         <div class="col-sm-8">
@@ -299,6 +312,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 <th><?php echo $hesklang['priority']; ?></th>
                 <th><?php echo $hesklang['not']; ?></th>
                 <th><?php echo $hesklang['graph']; ?></th>
+                <th><?php echo $hesklang['category_color']; ?></th>
                 <th><?php echo $hesklang['manager'] ?></th>
                 <th><?php echo $hesklang['opt']; ?></th>
             </tr>
@@ -337,7 +351,12 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 }
 
                 $tmp = $i ? 'White' : 'Blue';
-                $style = 'class="option' . $tmp . 'OFF" onmouseover="this.className=\'option' . $tmp . 'ON\'" onmouseout="this.className=\'option' . $tmp . 'OFF\'"';
+                $style = 'font-weight:normal;font-size:1em';
+                if ($mycat['color'] == null) {
+                    $style .= ';color: black';
+                } else {
+                    $style .= ';background: ' . $mycat['color'];
+                }
                 $i = $i ? 0 : 1;
 
                 /* Number of tickets and graph width */
@@ -375,7 +394,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 echo '
                 <tr>
                 <td>' . $mycat['id'] . '</td>
-                <td>' . $mycat['name'] . '</td>
+                <td><span class="label" style="'.$style.'">' . $mycat['name'] . '</span></td>
                 <td width="1" style="white-space: nowrap;">' . $priorities[$mycat['priority']]['formatted'] . '</td>
                 <td><a href="show_tickets.php?category=' . $mycat['id'] . '&amp;s_all=1&amp;s_my=1&amp;s_ot=1&amp;s_un=1" alt="' . $hesklang['list_tickets_cat'] . '" title="' . $hesklang['list_tickets_cat'] . '">' . $all . '</a></td>
                 <td>
@@ -535,6 +554,10 @@ function new_cat()
     /* Category name */
     $catname = hesk_input(hesk_POST('name'), $hesklang['enter_cat_name'], 'manage_categories.php');
 
+    $color = hesk_POST('color', null);
+    $color = str_replace('#', '', $color);
+    $color = $color != null ? "'#" . hesk_dbEscape($color) . "'" : 'NULL';
+
     /* Do we already have a category with this name? */
     $res = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `name` LIKE '" . hesk_dbEscape(hesk_dbLike($catname)) . "' LIMIT 1");
     if (hesk_dbNumRows($res) != 0) {
@@ -547,7 +570,7 @@ function new_cat()
     $row = hesk_dbFetchRow($res);
     $my_order = $row[0] + 10;
 
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` (`name`,`cat_order`,`autoassign`,`type`, `priority`) VALUES ('" . hesk_dbEscape($catname) . "','" . intval($my_order) . "','" . intval($_SESSION['cat_autoassign']) . "','" . intval($_SESSION['cat_type']) . "','{$_SESSION['cat_priority']}')");
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` (`name`,`cat_order`,`autoassign`,`type`, `priority`, `color`) VALUES ('" . hesk_dbEscape($catname) . "','" . intval($my_order) . "','" . intval($_SESSION['cat_autoassign']) . "','" . intval($_SESSION['cat_type']) . "','{$_SESSION['cat_priority']}', {$color})");
 
     hesk_cleanSessionVars('catname');
     hesk_cleanSessionVars('cat_autoassign');

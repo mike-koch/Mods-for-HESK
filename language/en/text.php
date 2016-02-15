@@ -40,6 +40,8 @@ $hesklang['attachment_cancel'] = 'Cancel';
 $hesklang['attachment_confirm_cancel'] = 'Are you sure you want to cancel this upload?';
 $hesklang['attachment_remove'] = 'Remove attachment';
 $hesklang['due_date'] = 'Due Date';
+$hesklang['category_color'] = 'Color';
+$hesklang['category_color_help'] = 'The hex code for the color to be used on the view ticket screen and calendar. Leave blank for no color';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

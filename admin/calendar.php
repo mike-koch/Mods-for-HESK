@@ -119,10 +119,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                        title="Category for the event"></i>
                                 </label>
                                 <div class="col-sm-9">
-                                    <select name="category" class="form-control">
+                                    <select name="category" class="form-control"
+                                        pattern="[0-9]+"
+                                        data-error="<?php echo htmlspecialchars($hesklang['sel_app_cat']); ?>" required>
                                         <?php
                                         if ($hesk_settings['select_cat']) {
-                                            echo '<option value="-1">'.$hesklang['select'].'</option>';
+                                            echo '<option value="">'.$hesklang['select'].'</option>';
                                         }
                                         foreach ($categories as $category): ?>
                                             <option value="<?php echo $category['id']; ?>">
@@ -130,6 +132,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                         </div>
@@ -253,10 +256,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                        title="Category for the event"></i>
                                 </label>
                                 <div class="col-sm-9">
-                                    <select name="category" class="form-control">
+                                    <select name="category" class="form-control"
+                                            pattern="[0-9]+"
+                                            data-error="<?php echo htmlspecialchars($hesklang['sel_app_cat']); ?>" required>
                                         <?php
                                         if ($hesk_settings['select_cat']) {
-                                            echo '<option value="-1">'.$hesklang['select'].'</option>';
+                                            echo '<option value="">'.$hesklang['select'].'</option>';
                                         }
                                         foreach ($categories as $category): ?>
                                             <option value="<?php echo $category['id']; ?>">
@@ -264,6 +269,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                         </div>
