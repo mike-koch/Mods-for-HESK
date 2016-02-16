@@ -50,7 +50,7 @@ hesk_isLoggedIn();
 define('MFH_CALENDAR', 1);
 
 // Get categories for the dropdown
-$rs = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ORDER BY `cat_order`");
+$rs = hesk_dbQuery("SELECT `id`, `name`, `color` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ORDER BY `cat_order`");
 $categories = [];
 while ($row = hesk_dbFetchAssoc($rs)) {
     $categories[] = $row;
@@ -127,7 +127,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             echo '<option value="">'.$hesklang['select'].'</option>';
                                         }
                                         foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category['id']; ?>">
+                                            <option value="<?php echo $category['id']; ?>" data-color="<?php echo htmlspecialchars($category['color']); ?>">
                                                 <?php echo $category['name']; ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -264,7 +264,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             echo '<option value="">'.$hesklang['select'].'</option>';
                                         }
                                         foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category['id']; ?>">
+                                            <option value="<?php echo $category['id']; ?>" data-color="<?php echo $category['color']; ?>">
                                                 <?php echo $category['name']; ?>
                                             </option>
                                         <?php endforeach; ?>

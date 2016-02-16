@@ -203,7 +203,8 @@ $(document).ready(function() {
             comments: $('#create-form textarea[name="comments"]').val(),
             categoryId: $('#create-form select[name="category"]').val(),
             action: 'create',
-            type: 'CALENDAR'
+            type: 'CALENDAR',
+            categoryColor: $('#create-form select[name="category"] :selected').attr('data-color')
         };
 
         $.ajax({
@@ -303,8 +304,31 @@ function buildEvent(id, dbObject) {
         location: dbObject.location,
         type: dbObject.type,
         categoryId: dbObject.categoryId,
-        categoryName: dbObject.categoryName
+        categoryName: dbObject.categoryName,
+        color: dbObject.categoryColor,
+        textColor: calculateTextColor(dbObject.categoryColor)
     };
+}
+
+function calculateTextColor(color) {
+    var red = 0;
+    var green = 0;
+    var blue = 0;
+
+    // If hex value is 3 characters, take each value and concatenate it to itself
+    if (color.length === 3) {
+        red = parseInt(color.substring(1, 2), 16);
+        green = parseInt(color.substring(2, 3), 16);
+        blue = parseInt(color.substring(3, 4), 16);
+    } else {
+        red = parseInt(color.substring(1, 3), 16);
+        green = parseInt(color.substring(3, 5), 16);
+        blue = parseInt(color.substring(5, 7), 16);
+    }
+
+    var gray = red * 0.299 + green * 0.587 + blue * 0.114;
+
+    return gray > 186 ? 'black' : 'white';
 }
 
 function displayCreateModal(date, viewName) {

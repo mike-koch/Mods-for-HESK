@@ -1,7 +1,8 @@
 <?php
 
 function get_events($start, $end, $hesk_settings) {
-    $sql = "SELECT `events`.*, `categories`.`name` AS `category_name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` AS `events`
+    $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`
+        FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` AS `events`
         INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
             ON `events`.`category` = `categories`.`id`
         WHERE `start` >= FROM_UNIXTIME(" . hesk_dbEscape($start)
@@ -21,6 +22,7 @@ function get_events($start, $end, $hesk_settings) {
         $event['comments'] = $row['comments'];
         $event['categoryId'] = $row['category'];
         $event['categoryName'] = $row['category_name'];
+        $event['categoryColor'] = $row['category_color'];
         $events[] = $event;
     }
 
@@ -41,6 +43,7 @@ function get_events($start, $end, $hesk_settings) {
         $event['url'] = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
         $event['categoryId'] = $row['category'];
         $event['categoryName'] = $row['category_name'];
+        $event['categoryColor'] = 'green';
         $events[] = $event;
     }
 
