@@ -214,6 +214,7 @@ $(document).ready(function() {
             success: function(id) {
                 addToCalendar(id, data, "Event successfully created");
                 $('#create-event-modal').modal('hide');
+                updateCategoryVisibility();
             },
             error: function(data) {
                 $.jGrowl('An error occurred when trying to create the event', { theme: 'alert-danger', closeTemplate: '' });
@@ -262,6 +263,8 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('input[name="category-toggle"]').change(updateCategoryVisibility);
 });
 
 function addToCalendar(id, event, successMessage) {
@@ -290,7 +293,8 @@ function buildEvent(id, dbObject) {
             color: endOfDay.isBefore() ? '#dd0000' : 'green',
             allDay: true,
             type: dbObject.type,
-            categoryId: dbObject.categoryId
+            categoryId: dbObject.categoryId,
+            className: 'category-' + dbObject.categoryId
         };
     }
 
@@ -305,6 +309,7 @@ function buildEvent(id, dbObject) {
         type: dbObject.type,
         categoryId: dbObject.categoryId,
         categoryName: dbObject.categoryName,
+        className: 'category-' + dbObject.categoryId,
         color: dbObject.categoryColor,
         textColor: calculateTextColor(dbObject.categoryColor)
     };
@@ -395,4 +400,16 @@ function displayEditModal(date) {
     $form.find('select[name="category"] option[value="' + date.categoryId + '"]').prop('selected', true);
 
     $('#edit-event-modal').modal('show');
+}
+
+function updateCategoryVisibility() {
+    $('input[name="category-toggle"]').each(function() {
+        $this = $(this);
+
+        if ($this.is(':checked')) {
+            $('.category-' + $this.val()).show();
+        } else {
+            $('.category-' + $this.val()).hide();
+        }
+    });
 }

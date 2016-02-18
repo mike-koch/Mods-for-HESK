@@ -262,11 +262,11 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         }
 
                         $tmp = $i ? 'White' : 'Blue';
-                        $style = 'font-weight:normal;font-size:1em';
+                        $style = '';
                         if ($mycat['color'] == null) {
-                            $style .= ';color: black';
+                            $style .= 'color: black; border: solid 1px #000';
                         } else {
-                            $style .= ';background: ' . $mycat['color'];
+                            $style .= 'background: ' . $mycat['color'];
                         }
                         $i = $i ? 0 : 1;
 
@@ -307,7 +307,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                     data-color="'. htmlspecialchars($mycat['color']) . '" data-priority="' . $mycat['priority'] . '"
                     data-manager="' . $mycat['manager'] . '">
                 <td style="display: none">' . $mycat['id'] . '</td>
-                <td><span class="label background-volatile" style="'.$style.'">' . $mycat['name'] . '</span></td>
+                <td><span class="label background-volatile category-label" style="'.$style.'">' . $mycat['name'] . '</span></td>
                 <td width="1" style="white-space: nowrap;">' . $priorities[$mycat['priority']]['formatted'] . '</td>
                 <td><a href="show_tickets.php?category=' . $mycat['id'] . '&amp;s_all=1&amp;s_my=1&amp;s_ot=1&amp;s_un=1" alt="' . $hesklang['list_tickets_cat'] . '" title="' . $hesklang['list_tickets_cat'] . '">' . $all . '</a></td>
                 <td>

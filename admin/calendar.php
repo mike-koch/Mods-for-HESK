@@ -53,6 +53,7 @@ define('MFH_CALENDAR', 1);
 $rs = hesk_dbQuery("SELECT `id`, `name`, `color` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ORDER BY `cat_order`");
 $categories = [];
 while ($row = hesk_dbFetchAssoc($rs)) {
+    $row['css_style'] = $row['color'] == null ? 'color: black; border: solid 1px #000' : 'background: ' . $row['color'];
     $categories[] = $row;
 }
 
@@ -64,7 +65,28 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
 <div class="row pad-20">
-    <div class="col-lg-12">
+    <div class="col-lg-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Categories</h4>
+            </div>
+            <div class="panel-body">
+                <ul class="list-unstyled">
+                <?php foreach ($categories as $category): ?>
+                    <li class="move-down-20 move-right-20">
+                        <div class="checkbox">
+                            <input type="checkbox" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
+                        </div>
+                        <span class="label background-volitaile category-label" style="<?php echo $category['css_style']; ?>">
+                            <?php echo $category['name']; ?>
+                        </span>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>Calendar</h4>
