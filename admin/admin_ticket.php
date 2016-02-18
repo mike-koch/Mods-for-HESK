@@ -671,8 +671,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div id="readonly-due-date">
                         <span id="due-date">
                         <?php
-                            $due_date = hesk_date($ticket['due_date'], false);
-                            $current_date = hesk_date();
+                            $due_date = 'None';
+                            if ($ticket['due_date'] != null) {
+                                $due_date = hesk_date($ticket['due_date'], false);
+                            }
                             echo substr($due_date, 0, 10);
                         ?></span><!--<span id="overdue">
                         <?php
@@ -685,9 +687,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <button id="due-date-button" class="btn btn-default btn-sm">Change</button>
                     </div>
                     <div id="editable-due-date" style="display: none">
-                        <input type="text" class="form-control datepicker" name="due-date" value="<?php echo substr($due_date, 0, 10); ?>"><br>
+                        <input type="text" class="form-control datepicker" name="due-date" value="<?php echo $due_date == 'None' ? '' : substr($due_date, 0, 10); ?>"><br>
                         <div class="btn-group">
                             <button id="submit" class="btn btn-primary">Save</button>
+                            <button id="clear" class="btn btn-danger">No Due Date</button>
                             <button id="cancel" class="btn btn-default">Cancel</button>
                         </div>
                     </div>

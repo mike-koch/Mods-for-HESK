@@ -77,7 +77,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="checkbox">
                             <input type="checkbox" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
                         </div>
-                        <span class="label background-volitaile category-label" style="<?php echo $category['css_style']; ?>">
+                        <span class="label background-volatile category-label" style="<?php echo $category['css_style']; ?>">
                             <?php echo $category['name']; ?>
                         </span>
                     </li>

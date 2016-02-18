@@ -43,7 +43,7 @@ $(document).ready(function() {
             if (event.type === 'TICKET') {
                 $.ajax({
                     method: 'POST',
-                    url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+                    url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
                     data: {
                         trackingId: event.trackingId,
                         action: 'update-ticket',
@@ -80,7 +80,7 @@ $(document).ready(function() {
                 };
                 $.ajax({
                     method: 'POST',
-                    url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+                    url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
                     data: data,
                     success: function() {
                         $.jGrowl('Event successfully updated', { theme: 'alert-success', closeTemplate: '' });
@@ -167,7 +167,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
             data: data,
             success: function() {
                 removeFromCalendar(data.id);
@@ -204,12 +204,13 @@ $(document).ready(function() {
             categoryId: $('#create-form select[name="category"]').val(),
             action: 'create',
             type: 'CALENDAR',
-            categoryColor: $('#create-form select[name="category"] :selected').attr('data-color')
+            categoryColor: $('#create-form select[name="category"] :selected').attr('data-color'),
+            categoryName: $('#create-form select[name="category"] :selected').text().trim()
         };
 
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
             data: data,
             success: function(id) {
                 addToCalendar(id, data, "Event successfully created");
@@ -246,12 +247,14 @@ $(document).ready(function() {
             allDay: allDay,
             comments: $form.find('textarea[name="comments"]').val(),
             categoryId: $form.find('select[name="category"]').val(),
+            categoryColor: $form.find('select[name="category"] :selected').attr('data-color'),
+            categoryName: $form.find('select[name="category"] :selected').text().trim(),
             action: 'update'
         };
 
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
             data: data,
             success: function() {
                 removeFromCalendar(data.id);
@@ -290,11 +293,12 @@ function buildEvent(id, dbObject) {
             trackingId: dbObject.trackingId,
             start: moment(dbObject.startTime),
             url: dbObject.url,
-            color: endOfDay.isBefore() ? '#dd0000' : 'green',
+            color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
             allDay: true,
             type: dbObject.type,
             categoryId: dbObject.categoryId,
-            className: 'category-' + dbObject.categoryId
+            className: 'category-' + dbObject.categoryId,
+            textColor: calculateTextColor(dbObject.categoryColor)
         };
     }
 
@@ -310,12 +314,16 @@ function buildEvent(id, dbObject) {
         categoryId: dbObject.categoryId,
         categoryName: dbObject.categoryName,
         className: 'category-' + dbObject.categoryId,
-        color: dbObject.categoryColor,
+        color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
         textColor: calculateTextColor(dbObject.categoryColor)
     };
 }
 
 function calculateTextColor(color) {
+    if (color === null || color === '') {
+        return 'black';
+    }
+
     var red = 0;
     var green = 0;
     var blue = 0;
@@ -394,6 +402,7 @@ function displayEditModal(date) {
         createTicketLink += encodeURI(' @ ' + date.location);
     }
     createTicketLink += encodeURI('&message=' + date.comments);
+    createTicketLink += encodeURI('&category=' + date.categoryId);
 
     $form.find('#create-ticket-button').prop('href', createTicketLink);
 

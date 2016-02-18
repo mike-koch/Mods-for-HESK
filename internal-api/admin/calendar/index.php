@@ -44,6 +44,7 @@ if ($request_method === 'GET') {
         }
         $event['id'] = hesk_POST('id');
         $event['title'] = hesk_POST('title');
+        $event['location'] = hesk_POST('location');
         $event['start'] = hesk_POST('startTime');
         $event['end'] = hesk_POST('endTime');
         $event['all_day'] = hesk_POST('allDay') === 'true';

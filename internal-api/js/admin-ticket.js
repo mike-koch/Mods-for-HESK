@@ -17,7 +17,7 @@ $(document).ready(function() {
         var newDueDate = $editableDueDateContainer.find('input[type="text"][name="due-date"]').val();
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar',
+            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
             data: {
                 trackingId: $('input[type="hidden"][name="track"]').val(),
                 action: 'update-ticket',

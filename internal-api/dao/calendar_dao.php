@@ -26,7 +26,8 @@ function get_events($start, $end, $hesk_settings) {
         $events[] = $event;
     }
 
-    $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`
+    $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`,
+      CASE WHEN `due_date` < CURDATE() THEN 1 ELSE 0 END AS `overdue`
     FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets`
     INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
         ON `categories`.`id` = `tickets`.`category`
@@ -43,7 +44,7 @@ function get_events($start, $end, $hesk_settings) {
         $event['url'] = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
         $event['categoryId'] = $row['category'];
         $event['categoryName'] = $row['category_name'];
-        $event['categoryColor'] = 'green';
+        $event['categoryColor'] = $row['overdue'] ? '#dd0000' : $row['category_color'];
         $events[] = $event;
     }
 
