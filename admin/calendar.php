@@ -203,6 +203,29 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
+                                <label for="reminder" class="col-sm-3 control-label">
+                                    Reminder
+                                    <i class="fa fa-question-circle settingsquestionmark"
+                                       data-toggle="tooltip"
+                                       title="Receive an e-mail reminder for this event. Only you will receive this reminder email."></i>
+                                </label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="reminder-value" class="form-control" placeholder="#">
+                                </div>
+                                <div class="col-sm-4">
+                                    <select name="reminder-unit" class="form-control">
+                                        <option value="0">minutes before event</option>
+                                        <option value="1">hours before event</option>
+                                        <option value="2">days before event</option>
+                                        <option value="3">weeks before event</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
                                 <label for="comments" class="col-sm-3 control-label">
                                     Comments
                                     <i class="fa fa-question-circle settingsquestionmark"

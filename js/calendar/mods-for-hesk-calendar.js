@@ -76,7 +76,9 @@ $(document).ready(function() {
                     allDay: event.allDay,
                     comments: event.comments,
                     categoryId: event.categoryId,
-                    action: 'update'
+                    action: 'update',
+                    reminderValue: event.reminderValue,
+                    reminderUnits: event.reminderUnits
                 };
                 $.ajax({
                     method: 'POST',
@@ -205,7 +207,9 @@ $(document).ready(function() {
             action: 'create',
             type: 'CALENDAR',
             categoryColor: $('#create-form select[name="category"] :selected').attr('data-color'),
-            categoryName: $('#create-form select[name="category"] :selected').text().trim()
+            categoryName: $('#create-form select[name="category"] :selected').text().trim(),
+            reminderValue: $('#create-form input[name="reminder-value"]').val(),
+            reminderUnits: $('#create-form select[name="reminder-unit"]').val()
         };
 
         $.ajax({
@@ -249,7 +253,9 @@ $(document).ready(function() {
             categoryId: $form.find('select[name="category"]').val(),
             categoryColor: $form.find('select[name="category"] :selected').attr('data-color'),
             categoryName: $form.find('select[name="category"] :selected').text().trim(),
-            action: 'update'
+            action: 'update',
+            reminderValue: $form.find('input[name="reminder-value"]').val(),
+            reminderUnits: $form.find('select[name="reminder-units"]').val()
         };
 
         $.ajax({
@@ -315,7 +321,9 @@ function buildEvent(id, dbObject) {
         categoryName: dbObject.categoryName,
         className: 'category-' + dbObject.categoryId,
         color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
-        textColor: calculateTextColor(dbObject.categoryColor)
+        textColor: calculateTextColor(dbObject.categoryColor),
+        reminderValue: dbObject.reminderValue == null ? '' : dbObject.reminderValue,
+        reminderUnits: dbObject.reminderUnits
     };
 }
 

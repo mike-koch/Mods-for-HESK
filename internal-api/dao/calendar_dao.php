@@ -64,7 +64,17 @@ function create_event($event, $hesk_settings) {
     " . intval($event['category']) . ")";
 
     hesk_dbQuery($sql);
-    return hesk_dbInsertID();
+    $event_id = hesk_dbInsertID();
+
+    if ($event['reminder_amount'] != null) {
+        $sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` (`user_id`, `event_id`,
+        `amount`, `unit`) VALUES (" . intval($event['reminder_user']) . ", " . intval($event_id) . ", " . intval($event['reminder_amount']) . ",
+        " . intval($event['reminder_units']) . ")";
+
+        hesk_dbQuery($sql);
+    }
+
+    return $event_id;
 }
 
 function update_event($event, $hesk_settings) {
