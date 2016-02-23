@@ -138,11 +138,7 @@ $(document).ready(function() {
         },
         dayRender: function(date, cell) {
             var $cell = $(cell);
-            $cell.tooltip({
-                container: 'body',
-                delay: { show: 250, hide: 0 },
-                title: 'Click to add event'
-            });
+            $cell.attr('title', 'Click to add event');
         }
     });
 

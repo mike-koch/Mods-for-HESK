@@ -9,6 +9,7 @@ require_once(HESK_PATH . 'inc/posting_functions.inc.php');
 require_once(INTERNAL_API_PATH . 'core/output.php');
 require_once(INTERNAL_API_PATH . 'dao/calendar_dao.php');
 
+hesk_session_start();
 hesk_load_internal_api_database_functions();
 hesk_dbConnect();
 

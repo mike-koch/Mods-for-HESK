@@ -321,3 +321,7 @@ div.setupButtons {
     font-weight: normal;
     font-size: 1em;
 }
+
+.fc-content {
+    text-overflow: ellipsis;
+}
