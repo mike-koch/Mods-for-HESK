@@ -142,6 +142,12 @@ $(document).ready(function() {
         }
     });
 
+    $('#create-event-button').click(function() {
+        // Hard-code the view name so the modal treats this as an "all-day" event.
+        var viewName = 'month';
+        displayCreateModal(moment(), viewName);
+    })
+
 
     $('#create-form input[name="all-day"]').change(function() {
         var hideTimeFields = $(this).is(':checked');

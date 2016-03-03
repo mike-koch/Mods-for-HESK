@@ -89,7 +89,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <div class="col-lg-9">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4>Calendar</h4>
+                <h4>
+                    Calendar
+                    <span class="nu-floatRight panel-button">
+                        <button class="btn btn-success" id="create-event-button">
+                            <i class="fa fa-plus-circle"></i>
+                            New Event
+                        </button>
+                    </span>
+                </h4>
             </div>
             <div class="panel-body">
                 <div id="calendar"></div>
