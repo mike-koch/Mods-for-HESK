@@ -358,7 +358,10 @@ function displayCreateModal(date, viewName) {
     var $form = $('#create-form');
     $form.find('input[name="name"]').val('').end()
         .find('input[name="location"]').val('').end()
-        .find('textarea[name="comments"]').val('').end();
+        .find('textarea[name="comments"]').val('').end()
+        .find('select[name="category"]').val('').end()
+        .find('select[name="reminder-unit"]').val(0).end()
+        .find('input[name="reminder-value"]').val('').end();
 
     var $modal = $('#create-event-modal');
     var formattedDate = date.format('YYYY-MM-DD');
