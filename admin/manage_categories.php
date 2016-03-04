@@ -116,7 +116,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 <form action="manage_categories.php" method="post" role="form" class="form-horizontal" data-toggle="validator">
                     <div class="form-group">
                         <p class="col-sm-4 control-label" style="font-size: .87em">
-                            <b><?php echo $hesklang['cat_name']; ?>:</b> (<?php echo $hesklang['max_chars']; ?>)</p>
+                            <b><?php echo $hesklang['cat_name']; ?></b> (<?php echo $hesklang['max_chars']; ?>)</p>
 
                         <div class="col-sm-8">
                             <input class="form-control"
@@ -157,7 +157,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                     </div>
                     <div class="form-group">
                         <label for="color" class="col-sm-4 control-label">
-                            <?php echo $hesklang['category_color']; ?>:
+                            <?php echo $hesklang['category_color']; ?>
                             <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                title="<?php echo htmlspecialchars($hesklang['category_color']); ?>"
                                data-content="<?php echo htmlspecialchars($hesklang['category_color_help']); ?>"></i>
@@ -169,7 +169,17 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="options" class="col-sm-4 control-label"><?php echo $hesklang['opt']; ?>:</label>
+                        <label for="usage" class="col-sm-4 control-label">Usage</label>
+                        <div class="col-sm-8">
+                            <select name="usage" class="form-control">
+                                <option value="0">Tickets and events</option>
+                                <option value="1">Tickets only</option>
+                                <option value="2">Events only</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="options" class="col-sm-4 control-label"><?php echo $hesklang['opt']; ?></label>
 
                         <div class="col-sm-8">
                             <?php
@@ -305,7 +315,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         echo '
                 <tr data-category-id="' . $mycat['id'] . '" data-name="' . htmlspecialchars($mycat['name']) . '"
                     data-color="'. htmlspecialchars($mycat['color']) . '" data-priority="' . $mycat['priority'] . '"
-                    data-manager="' . $mycat['manager'] . '">
+                    data-manager="' . $mycat['manager'] . '" data-usage="'. $mycat['usage'] .'">
                 <td style="display: none">' . $mycat['id'] . '</td>
                 <td><span class="label background-volatile category-label" style="'.$style.'">' . $mycat['name'] . '</span></td>
                 <td width="1" style="white-space: nowrap;">' . $priorities[$mycat['priority']]['formatted'] . '</td>
@@ -399,6 +409,18 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="usage" class="col-sm-3 control-label">
+                                    Usage
+                                </label>
+                                <div class="col-sm-9">
+                                    <select name="usage" class="form-control">
+                                        <option value="0">Tickets and events</option>
+                                        <option value="1">Tickets only</option>
+                                        <option value="2">Events only</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -430,6 +452,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
             var color = $row.attr('data-color');
             var priority = $row.attr('data-priority');
             var manager = $row.attr('data-manager');
+            var usage = $row.attr('data-usage');
 
             var $modal = $('#edit-category-modal');
             $modal.find('input[name="name"]').val(name).end()
@@ -437,6 +460,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 .find('select[name="priority"]').val(priority).end()
                 .find('select[name="manager"]').val(manager).end()
                 .find('input[name="id"]').val(id).end()
+                .find('select[name="usage"]').val(usage).end()
                 .modal('show');
         });
     });
@@ -566,6 +590,8 @@ function new_cat()
     $color = str_replace('#', '', $color);
     $color = $color != null ? "'#" . hesk_dbEscape($color) . "'" : 'NULL';
 
+    $usage = hesk_POST('usage', 0);
+
     /* Do we already have a category with this name? */
     $res = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `name` LIKE '" . hesk_dbEscape(hesk_dbLike($catname)) . "' LIMIT 1");
     if (hesk_dbNumRows($res) != 0) {
@@ -578,7 +604,7 @@ function new_cat()
     $row = hesk_dbFetchRow($res);
     $my_order = $row[0] + 10;
 
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` (`name`,`cat_order`,`autoassign`,`type`, `priority`, `color`) VALUES ('" . hesk_dbEscape($catname) . "','" . intval($my_order) . "','" . intval($_SESSION['cat_autoassign']) . "','" . intval($_SESSION['cat_type']) . "','{$_SESSION['cat_priority']}', {$color})");
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` (`name`,`cat_order`,`autoassign`,`type`, `priority`, `color`, `usage`) VALUES ('" . hesk_dbEscape($catname) . "','" . intval($my_order) . "','" . intval($_SESSION['cat_autoassign']) . "','" . intval($_SESSION['cat_type']) . "','{$_SESSION['cat_priority']}', {$color}, " . intval($usage) . ")");
 
     hesk_cleanSessionVars('catname');
     hesk_cleanSessionVars('cat_autoassign');
@@ -612,12 +638,14 @@ function update_category()
     $color = $color != null ? "'#" . hesk_dbEscape($color) . "'" : 'NULL';
     $manager = hesk_POST('manager', 0);
     $priority = hesk_POST('priority', 0);
+    $usage = hesk_POST('usage', 0);
 
 
     hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `name`='" . hesk_dbEscape($catname) . "',
      `priority` = '" . hesk_dbEscape($priority) . "',
      `manager` = " . intval($manager) . ",
-     `color` = " . $color . "
+     `color` = " . $color . ",
+     `usage` = " . intval($usage) . "
      WHERE `id`='" . intval($catid) . "' LIMIT 1");
 
     unset($_SESSION['selcat']);
