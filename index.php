@@ -262,7 +262,7 @@ function print_add_ticket()
                 // Get categories
                 hesk_dbConnect();
                 $orderBy = $modsForHesk_settings['category_order_column'];
-                $res = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `type`='0' ORDER BY `" . $orderBy . "` ASC");
+                $res = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `type`='0' AND `usage` <> 2 ORDER BY `" . $orderBy . "` ASC");
 
                 if (hesk_dbNumRows($res) == 1) {
                     // Only 1 public category, no need for a select box

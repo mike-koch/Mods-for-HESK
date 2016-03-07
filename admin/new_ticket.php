@@ -263,7 +263,7 @@ if (!$show['show']) {
 
             // List categories
             $orderByColumn = $modsForHesk_settings['category_order_column'];
-            $result = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` ORDER BY `' . $orderByColumn . '` ASC');
+            $result = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` WHERE `usage` <> 2 ORDER BY `' . $orderByColumn . '` ASC');
             while ($row = hesk_dbFetchAssoc($result)) {
                 if (isset($_SESSION['as_category']) && $_SESSION['as_category'] == $row['id']) {
                     $selected = ' selected="selected"';

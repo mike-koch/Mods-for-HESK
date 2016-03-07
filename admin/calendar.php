@@ -50,7 +50,7 @@ hesk_isLoggedIn();
 define('MFH_CALENDAR', 1);
 
 // Get categories for the dropdown
-$rs = hesk_dbQuery("SELECT `id`, `name`, `color` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ORDER BY `cat_order`");
+$rs = hesk_dbQuery("SELECT `id`, `name`, `color` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `usage` <> 1 ORDER BY `cat_order`");
 $categories = [];
 while ($row = hesk_dbFetchAssoc($rs)) {
     $row['css_style'] = $row['color'] == null ? 'color: black; border: solid 1px #000' : 'background: ' . $row['color'];

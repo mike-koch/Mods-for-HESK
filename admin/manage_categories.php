@@ -234,6 +234,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         <th><?php echo $hesklang['priority']; ?></th>
                         <th><?php echo $hesklang['not']; ?></th>
                         <th><?php echo $hesklang['graph']; ?></th>
+                        <th><?php echo 'Usage'; ?></th>
                         <th><?php echo $hesklang['manager']; ?></th>
                         <th><?php echo $hesklang['opt']; ?></th>
                     </tr>
@@ -260,6 +261,13 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                     $i = 1;
                     $j = 0;
                     $num = hesk_dbNumRows($res);
+
+                    $usage = array(
+                        0 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="Tickets"></i>
+                                <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="Events"></i>',
+                        1 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="Tickets"></i><i class="fa fa-fw"></i>',
+                        2 => '<i class="fa fa-fw icon-link">&nbsp;</i> <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="Events"></i>'
+                    );
 
                     while ($mycat = hesk_dbFetchAssoc($res)) {
                         $j++;
@@ -327,6 +335,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         </div>
                     </div>
                 </td>
+                <td>' . $usage[$mycat['usage']] . '</td>
                 <td>' . get_manager($mycat['manager'], $users) . '</td>
                 <td>
                 <a href="Javascript:void(0)" onclick="Javascript:hesk_window(\'manage_categories.php?a=linkcode&amp;catid=' . $mycat['id'] . '&amp;p=' . $mycat['type'] . '\',\'200\',\'500\')" id="tooltip"><i class="fa fa-code icon-link" style="color: ' . ($mycat['type'] ? 'gray' : 'green') . '" data-toggle="tooltip" data-placement="top" title="' . $hesklang['geco'] . '"></i></a>
