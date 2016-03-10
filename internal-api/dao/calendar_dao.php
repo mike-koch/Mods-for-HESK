@@ -1,12 +1,16 @@
 <?php
 
-function get_events($start, $end, $hesk_settings) {
+function get_events($start, $end, $hesk_settings, $staff = true) {
     $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`
         FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` AS `events`
         INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
             ON `events`.`category` = `categories`.`id`
         WHERE `start` >= FROM_UNIXTIME(" . hesk_dbEscape($start)
-        . " / 1000) AND `end` <= FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000)";
+        . " / 1000) AND `end` <= FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000) AND `categories`.`usage` <> 1";
+
+    if (!$staff) {
+        $sql .= " AND `categories`.`type` = '0'";
+    }
 
     $rs = hesk_dbQuery($sql);
 
@@ -26,26 +30,28 @@ function get_events($start, $end, $hesk_settings) {
         $events[] = $event;
     }
 
-    $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`,
-      CASE WHEN `due_date` < CURDATE() THEN 1 ELSE 0 END AS `overdue`
-    FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets`
-    INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
-        ON `categories`.`id` = `tickets`.`category`
-    WHERE `due_date` >= FROM_UNIXTIME(" . intval($start) . " / 1000)
-    AND `due_date` <= FROM_UNIXTIME(" . intval($end) . " / 1000)
-    AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";
+    if ($staff) {
+        $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`,
+          CASE WHEN `due_date` < CURDATE() THEN 1 ELSE 0 END AS `overdue`
+        FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets`
+        INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
+            ON `categories`.`id` = `tickets`.`category`
+        WHERE `due_date` >= FROM_UNIXTIME(" . intval($start) . " / 1000)
+        AND `due_date` <= FROM_UNIXTIME(" . intval($end) . " / 1000)
+        AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";
 
-    $rs = hesk_dbQuery($sql);
-    while ($row = hesk_dbFetchAssoc($rs)) {
-        $event['type'] = 'TICKET';
-        $event['trackingId'] = $row['trackid'];
-        $event['title'] = '[' . $row['trackid'] . '] ' . $row['subject'];
-        $event['startTime'] = $row['due_date'];
-        $event['url'] = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
-        $event['categoryId'] = $row['category'];
-        $event['categoryName'] = $row['category_name'];
-        $event['categoryColor'] = $row['overdue'] ? '#dd0000' : $row['category_color'];
-        $events[] = $event;
+        $rs = hesk_dbQuery($sql);
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            $event['type'] = 'TICKET';
+            $event['trackingId'] = $row['trackid'];
+            $event['title'] = '[' . $row['trackid'] . '] ' . $row['subject'];
+            $event['startTime'] = $row['due_date'];
+            $event['url'] = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
+            $event['categoryId'] = $row['category'];
+            $event['categoryName'] = $row['category_name'];
+            $event['categoryColor'] = $row['overdue'] ? '#dd0000' : $row['category_color'];
+            $events[] = $event;
+        }
     }
 
     return $events;

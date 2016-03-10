@@ -147,7 +147,7 @@ function buildEvent(id, dbObject) {
         };
     }
 
-    return {
+    var data = {
         id: id,
         title: dbObject.title,
         allDay: dbObject.allDay,
@@ -164,6 +164,8 @@ function buildEvent(id, dbObject) {
         reminderValue: dbObject.reminderValue == null ? '' : dbObject.reminderValue,
         reminderUnits: dbObject.reminderUnits
     };
+    console.log(data);
+    return data;
 }
 
 function calculateTextColor(color) {

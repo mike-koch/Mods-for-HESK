@@ -95,3 +95,23 @@ require_once(HESK_PATH . 'inc/header.inc.php');
         </div>
     </div>
 </div>
+<div class="popover-template" style="display: none">
+    <div>
+        <div class="popover-location">
+            <strong>Location</strong>
+            <span></span>
+        </div>
+        <div class="popover-category">
+            <strong>Category</strong>
+            <span></span>
+        </div>
+        <div class="popover-from">
+            <strong>From</strong>
+            <span></span>
+        </div>
+        <div class="popover-to">
+            <strong>To</strong>
+            <span></span>
+        </div>
+    </div>
+</div>
