@@ -1,11 +1,16 @@
 <?php
 
 function get_events($start, $end, $hesk_settings, $staff = true) {
-    $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`
+    $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`,
+        `reminders`.`amount` AS `reminder_value`, `reminders`.`unit` AS `reminder_unit`
         FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` AS `events`
         INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
-            ON `events`.`category` = `categories`.`id`
-        WHERE `start` >= FROM_UNIXTIME(" . hesk_dbEscape($start)
+            ON `events`.`category` = `categories`.`id` ";
+    if ($staff) {
+        $sql .= "LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` AS `reminders` ON
+        `reminders`.`user_id` = " . intval($_SESSION['id']) . " AND `reminders`.`event_id` = `events`.`id`";
+    }
+    $sql .= "WHERE `start` >= FROM_UNIXTIME(" . hesk_dbEscape($start)
         . " / 1000) AND `end` <= FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000) AND `categories`.`usage` <> 1";
 
     if (!$staff) {
@@ -27,6 +32,8 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         $event['categoryId'] = $row['category'];
         $event['categoryName'] = $row['category_name'];
         $event['categoryColor'] = $row['category_color'];
+        $event['reminderValue'] = $row['reminder_value'];
+        $event['reminderUnit'] = $row['reminder_unit'];
         $events[] = $event;
     }
 
