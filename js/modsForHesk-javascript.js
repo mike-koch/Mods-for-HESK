@@ -54,7 +54,8 @@ var loadJquery = function()
         $this = $(this);
         var background = $this.css('background-color');
 
-        if (background !== 'rgba(0, 0, 0, 0)') {
+        if (background !== 'rgba(0, 0, 0, 0)'
+            && background !== 'transparent') {
             var grayCount = calculateGrayCount(background);
 
             if (grayCount > 186) {
