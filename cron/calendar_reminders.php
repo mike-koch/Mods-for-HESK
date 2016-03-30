@@ -36,17 +36,18 @@ if ($hesk_settings['debug_mode']) {
  * 2 - days
  * 3 - weeks
  */
-$sql = "SELECT `reminder`.`id`, `reminder`.`user_id`, `reminder`.`event_id`,
-    CASE
+$case_statement = "CASE
       WHEN `unit` = '0' THEN DATE_SUB(`event`.`start`, INTERVAL `reminder`.`amount` MINUTE)
       WHEN `unit` = '1' THEN DATE_SUB(`event`.`start`, INTERVAL `reminder`.`amount` HOUR)
       WHEN `unit` = '2' THEN DATE_SUB(`event`.`start`, INTERVAL `reminder`.`amount` DAY)
-      WHEN `unit` = '3' THEN DATE_SUB(`event`.`start`, INTERVAL `reminder`.amount` WEEK)
-    END AS `reminder_date`
+      WHEN `unit` = '3' THEN DATE_SUB(`event`.`start`, INTERVAL `reminder`.`amount` WEEK)
+    END";
+$sql = "SELECT `reminder`.`id`, `reminder`.`user_id`, `reminder`.`event_id`,
+    " . $case_statement . " AS `reminder_date`
     FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` AS `reminder`
     INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` AS `event`
         ON `reminder`.`event_id` = `event`.`id`
-    WHERE `reminder_date` <= NOW()
+    WHERE (" . $case_statement . ") <= NOW()
     AND `email_sent` = '0'";
 
 $rs = hesk_dbQuery($sql);
