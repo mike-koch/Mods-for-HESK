@@ -55,6 +55,10 @@ if ($request_method === 'GET') {
         $event['all_day'] = hesk_POST('allDay') === 'true';
         $event['comments'] = hesk_POST('comments');
         $event['category'] = hesk_POST('categoryId');
+        $event['reminder_amount'] = hesk_POST('reminderValue');
+        $event['reminder_amount'] = $event['reminder_amount'] == '' ? null : $event['reminder_amount'];
+        $event['reminder_units'] = hesk_POST('reminderUnits');
+        $event['reminder_user'] = $_SESSION['id'];
 
         update_event($event, $hesk_settings);
 

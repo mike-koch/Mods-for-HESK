@@ -257,7 +257,7 @@ $(document).ready(function() {
             categoryName: $form.find('select[name="category"] :selected').text().trim(),
             action: 'update',
             reminderValue: $form.find('input[name="reminder-value"]').val(),
-            reminderUnits: $form.find('select[name="reminder-units"]').val()
+            reminderUnits: $form.find('select[name="reminder-unit"]').val()
         };
 
         $.ajax({

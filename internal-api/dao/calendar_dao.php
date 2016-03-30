@@ -113,6 +113,16 @@ function update_event($event, $hesk_settings) {
         . hesk_dbEscape($event['title']) . "', `location` = '" . hesk_dbEscape($event['location']) . "', `comments` = '"
         . hesk_dbEscape($event['comments']) . "', `category` = " . intval($event['category']) . " WHERE `id` = " . intval($event['id']);
 
+    if ($event['reminder_amount'] != null) {
+        $delete_sql = "DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` WHERE `event_id` = " . intval($event['id'])
+            . " AND `user_id` = " . intval($event['reminder_user']);
+        hesk_dbQuery($delete_sql);
+        $insert_sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` (`user_id`, `event_id`,
+        `amount`, `unit`) VALUES (" . intval($event['reminder_user']) . ", " . intval($event['id']) . ", " . intval($event['reminder_amount']) . ",
+        " . intval($event['reminder_units']) . ")";
+        hesk_dbQuery($insert_sql);
+    }
+
     hesk_dbQuery($sql);
 }
 
