@@ -40,7 +40,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
 
         if ($staff) {
             $event['reminderValue'] = $row['reminder_value'];
-            $event['reminderUnit'] = $row['reminder_unit'];
+            $event['reminderUnits'] = $row['reminder_unit'];
         }
 
         $events[] = $event;
