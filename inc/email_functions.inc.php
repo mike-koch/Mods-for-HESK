@@ -255,6 +255,52 @@ function hesk_notifyStaff($email_template, $sql_where, $modsForHesk_settings, $i
 
 } // END hesk_notifyStaff()
 
+function mfh_sendCalendarReminder($reminder_data, $modsForHesk_settings) {
+    global $hesk_settings, $hesklang;
+
+    if (defined('HESK_DEMO')) {
+        return true;
+    }
+
+    hesk_setLanguage($reminder_data['user_language']);
+
+    $valid_emails = hesk_validEmails();
+    $subject = NULL;
+    if (!isset($valid_emails['calendar_reminder'])) {
+        hesk_error($hesklang['inve']);
+    } else {
+        $subject = $valid_emails['calendar_reminder'];
+    }
+
+    // Format email subject and message
+    $subject = str_replace('%%TITLE%%', $reminder_data['event_name'], $subject);
+    $message = hesk_getEmailMessage('calendar_reminder', NULL, $modsForHesk_settings, 1, 0, 1);
+    $htmlMessage = hesk_getHtmlMessage('calendar_reminder', NULL, $modsForHesk_settings, 1, 0, 1);
+
+
+    if ($reminder_data['event_all_day'] == '1') {
+        $format = 'Y-m-d';
+    } else {
+        $format = $hesk_settings['timeformat'];
+    }
+
+    $start_date = strtotime($event['event_start']);
+    $formatted_start_date = date($format, $start_date);
+    $formatted_end_date = '';
+
+    if ($reminder_data['event_start'] != $reminder_data['event_end']) {
+        $end_date = strtotime($event['event_end']);
+        $formatted_end_date = ' - ' . date($format, $end_date);
+    }
+
+    // Process replaced fields
+    $message = str_replace('%%TITLE%%', $reminder_data['event_name'], $message);
+    $message = str_replace('%%LOCATION%%', $reminder_data['event_location'], $message);
+    $message = str_replace('%%CATEGORY%%', $reminder_data['category_name'], $message);
+    $message = str_replace('%%WHEN%%', $formatted_start_date . $formatted_end_date, $message);
+    $message = str_replace('%%COMMENTS%%', $reminder_data['event_comments'], $message);
+}
+
 
 function hesk_validEmails()
 {
@@ -302,6 +348,9 @@ function hesk_validEmails()
 
         // --> Staff password reset email
         'reset_password' => $hesklang['reset_password'],
+
+        // --> Calendar reminder
+        'calendar_reminder' => "Calendar Reminder",
 
     );
 } // END hesk_validEmails()
