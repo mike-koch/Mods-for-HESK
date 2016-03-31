@@ -94,7 +94,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <span class="nu-floatRight panel-button">
                         <button class="btn btn-success" id="create-event-button">
                             <i class="fa fa-plus-circle"></i>
-                            New Event
+                            <?php echo $hesklang['new_event']; ?>
                         </button>
                     </span>
                 </h4>
@@ -110,7 +110,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <div class="modal-content">
             <div class="modal-header" style="cursor: move">
                 <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Create Event</h4>
+                <h4 class="modal-title" id="myModalLabel">
+                    <?php echo $hesklang['create_event']; ?>
+                </h4>
             </div>
             <form id="create-form" class="form-horizontal" data-toggle="validator">
                 <div class="modal-body">
@@ -118,12 +120,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="name" class="col-sm-3 control-label">
-                                    Title
+                                    <?php echo $hesklang['event_title']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                         data-toggle="tooltip"
-                                        title="The title of the event"></i></label>
+                                        title="<?php echo htmlspecialchars($hesklang['event_title_tooltip']); ?>"></i></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="name" class="form-control" placeholder="Title"
+                                    <input type="text" name="name" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['event_title']); ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
                                     <div class="help-block with-errors"></div>
@@ -131,22 +133,23 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </div>
                             <div class="form-group">
                                 <label for="location" class="col-sm-3 control-label">
-                                    Location
+                                    <?php echo $hesklang['event_location']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="The location of the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_location_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="location" class="form-control" placeholder="Location">
+                                    <input type="text" name="location" class="form-control"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_location']); ?>">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="category" class="col-sm-3 control-label">
-                                    Category
+                                    <?php echo $hesklang['category']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="Category for the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_category_toolip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
                                     <select name="category" class="form-control"
@@ -171,20 +174,23 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="start-date" class="col-sm-6 control-label">
-                                    Start
+                                    <?php echo $hesklang['event_start']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="The starting date (and time) of the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_start_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="start-date" class="form-control datepicker" placeholder="Start Date"
+                                    <input type="text" name="start-date" class="form-control datepicker"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_start_date']); ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
-                                    <input type="text" name="start-time" class="form-control clockpicker" placeholder="Start Time" data-placement="left" data-align="top" data-autoclose="true">
+                                    <input type="text" name="start-time" class="form-control clockpicker"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_start_time']); ?>"
+                                           data-placement="left" data-align="top" data-autoclose="true">
                                     <div class="help-block with-errors"></div>
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="all-day"> All day
+                                            <input type="checkbox" name="all-day"> <?php echo $hesklang['event_all_day']; ?>
                                         </label>
                                     </div>
                                 </div>
@@ -193,16 +199,21 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="end-date" class="col-sm-6 control-label">
-                                    End
+                                    <?php echo $hesklang['event_end']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="The ending date (and time) of the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_end_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="end-date" class="form-control datepicker" placeholder="End Date"
+                                    <input type="text" name="end-date" class="form-control datepicker"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_end_date']); ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
-                                    <input type="text" name="end-time" class="form-control clockpicker" data-placement="left" data-align="top" data-autoclose="true" placeholder="End Time">
+                                    <input type="text" name="end-time" class="form-control clockpicker"
+                                           data-placement="left"
+                                           data-align="top"
+                                           data-autoclose="true"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_end_time']); ?>">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -212,20 +223,20 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="reminder" class="col-sm-3 control-label">
-                                    Reminder
+                                    <?php echo $hesklang['event_reminder']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="Receive an e-mail reminder for this event. Only you will receive this reminder email."></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_reminder_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-2">
                                     <input type="text" name="reminder-value" class="form-control" placeholder="#">
                                 </div>
                                 <div class="col-sm-4">
                                     <select name="reminder-unit" class="form-control">
-                                        <option value="0">minutes before event</option>
-                                        <option value="1">hours before event</option>
-                                        <option value="2">days before event</option>
-                                        <option value="3">weeks before event</option>
+                                        <option value="0"><?php echo $hesklang['event_min_before_event']; ?></option>
+                                        <option value="1"><?php echo $hesklang['event_hours_before_event']; ?></option>
+                                        <option value="2"><?php echo $hesklang['event_days_before_event']; ?></option>
+                                        <option value="3"><?php echo $hesklang['event_weeks_before_event']; ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -235,13 +246,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="comments" class="col-sm-3 control-label">
-                                    Comments
+                                    <?php echo $hesklang['event_comments']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="Additional comments about the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_comments_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
-                                    <textarea name="comments" class="form-control" placeholder="Comments"></textarea>
+                                    <textarea name="comments" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['event_comments']); ?>"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -252,11 +263,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div class="btn-group">
                         <button type="button" class="btn btn-default cancel-callback" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>
-                            <span>Cancel</span>
+                            <span><?php echo $hesklang['cancel']; ?></span>
                         </button>
                         <button type="submit" class="btn btn-success callback-btn">
                             <i class="fa fa-check-circle"></i>
-                            <span>Save</span>
+                            <span><?php echo $hesklang['save']; ?></span>
                         </button>
                     </div>
                 </div>
@@ -278,12 +289,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="name" class="col-sm-3 control-label">
-                                    Title
+                                    <?php echo $hesklang['event_title']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="The title of the event"></i></label>
+                                       title="<?php echo htmlspecialchars($hesklang['event_title_tooltip']); ?>"></i></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="name" class="form-control" placeholder="Title"
+                                    <input type="text" name="name" class="form-control"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_title']); ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
                                     <div class="help-block with-errors"></div>
@@ -291,22 +303,23 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </div>
                             <div class="form-group">
                                 <label for="location" class="col-sm-3 control-label">
-                                    Location
+                                    <?php echo $hesklang['event_location']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="The location of the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_location_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="location" class="form-control" placeholder="Location">
+                                    <input type="text" name="location" class="form-control"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_location']); ?>">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="category" class="col-sm-3 control-label">
-                                    Category
+                                    <?php echo $hesklang['category']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="Category for the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_category_toolip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
                                     <select name="category" class="form-control"
@@ -331,21 +344,24 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="start-date" class="col-sm-6 control-label">
-                                    Start
+                                    <?php echo $hesklang['event_start']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="The starting date (and time) of the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_start_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="start-date" class="form-control datepicker" placeholder="Start Date"
+                                    <input type="text" name="start-date" class="form-control datepicker"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_start_date']); ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
-                                    <input type="text" name="start-time" class="form-control clockpicker" placeholder="Start Time" data-placement="left" data-align="top" data-autoclose="true">
+                                    <input type="text" name="start-time" class="form-control clockpicker"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_start_time']); ?>"
+                                           data-placement="left" data-align="top" data-autoclose="true">
                                     <div class="help-block with-errors"></div>
 
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="all-day"> All day
+                                            <input type="checkbox" name="all-day"> <?php echo $hesklang['event_all_day']; ?>
                                         </label>
                                     </div>
                                 </div>
@@ -354,16 +370,19 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="end-date" class="col-sm-6 control-label">
-                                    End
+                                    <?php echo $hesklang['event_end']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="The ending date (and time) of the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_end_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="end-date" class="form-control datepicker" placeholder="End Date"
+                                    <input type="text" name="end-date" class="form-control datepicker"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_end_date']); ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
-                                    <input type="text" name="end-time" class="form-control clockpicker" data-placement="left" data-align="top" data-autoclose="true" placeholder="End Time">
+                                    <input type="text" name="end-time" class="form-control clockpicker"
+                                           data-placement="left" data-align="top" data-autoclose="true"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['event_end_time']); ?>">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -373,20 +392,20 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="reminder" class="col-sm-3 control-label">
-                                    Reminder
+                                    <?php echo $hesklang['event_reminder']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="Receive an e-mail reminder for this event. Only you will receive this reminder email."></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_reminder_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-2">
                                     <input type="text" name="reminder-value" class="form-control" placeholder="#">
                                 </div>
                                 <div class="col-sm-4">
                                     <select name="reminder-unit" class="form-control">
-                                        <option value="0">minutes before event</option>
-                                        <option value="1">hours before event</option>
-                                        <option value="2">days before event</option>
-                                        <option value="3">weeks before event</option>
+                                        <option value="0"><?php echo $hesklang['event_min_before_event']; ?></option>
+                                        <option value="1"><?php echo $hesklang['event_hours_before_event']; ?></option>
+                                        <option value="2"><?php echo $hesklang['event_days_before_event']; ?></option>
+                                        <option value="3"><?php echo $hesklang['event_weeks_before_event']; ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -396,13 +415,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="comments" class="col-sm-3 control-label">
-                                    Comments
+                                    <?php echo $hesklang['event_comments']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="Additional comments about the event"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_comments_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
-                                    <textarea name="comments" class="form-control" placeholder="Comments"></textarea>
+                                    <textarea name="comments" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['event_comments']); ?>"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -413,19 +432,19 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div class="btn-group">
                         <button type="button" class="btn btn-danger" id="delete-button">
                             <i class="fa fa-trash"></i>
-                            <span>Delete</span>
+                            <span><?php echo $hesklang['delete']; ?></span>
                         </button>
                         <a href="#" class="btn btn-primary" id="create-ticket-button">
                             <i class="fa fa-plus"></i>
-                            <span>Create Ticket</span>
+                            <span><?php echo $hesklang['event_create_ticket']; ?></span>
                         </a>
                         <button type="button" class="btn btn-default cancel-callback" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>
-                            <span>Cancel</span>
+                            <span><?php echo $hesklang['cancel']; ?></span>
                         </button>
                         <button type="submit" class="btn btn-success callback-btn">
                             <i class="fa fa-check-circle"></i>
-                            <span>Save</span>
+                            <span><?php echo $hesklang['save']; ?></span>
                         </button>
                     </div>
                 </div>
@@ -436,19 +455,19 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <div class="popover-template" style="display: none">
     <div>
         <div class="popover-location">
-            <strong>Location</strong>
+            <strong><?php echo $hesklang['event_location']; ?></strong>
             <span></span>
         </div>
         <div class="popover-category">
-            <strong>Category</strong>
+            <strong><?php echo $hesklang['category']; ?></strong>
             <span></span>
         </div>
         <div class="popover-from">
-            <strong>From</strong>
+            <strong><?php echo $hesklang['from']; ?></strong>
             <span></span>
         </div>
         <div class="popover-to">
-            <strong>To</strong>
+            <strong><?php echo $hesklang['to_title_case']; ?></strong>
             <span></span>
         </div>
     </div>
