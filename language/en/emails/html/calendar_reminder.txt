@@ -1,0 +1,7 @@
+<h3>An event is coming up soon!</h3>
+<hr>
+<b>Title:</b> %%TITLE%%
+<br><b>Location:</b> %%LOCATION%%
+<br><b>Category:</b> %%CATEGORY%%
+<br><b>When:</b> %%WHEN%%
+<br><b>Comments:</b> %%COMMENTS%%

@@ -17,10 +17,6 @@ if (hesk_check_maintenance(false)) {
     die($message);
 }
 
-
-// Get other required includes
-require(HESK_PATH . 'inc/email_functions.inc.php');
-
 hesk_load_internal_api_database_functions();
 hesk_dbConnect();
 
@@ -45,7 +41,7 @@ $case_statement = "CASE
 $sql = "SELECT `reminder`.`id` AS `reminder_id`, `reminder`.`user_id` AS `user_id`, `reminder`.`event_id` AS `event_id`,
     `event`.`name` AS `event_name`, `event`.`location` AS `event_location`, `event`.`comments` AS `event_comments`,
     `category`.`name` AS `event_category`, `event`.`start` AS `event_start`, `event`.`end` AS `event_end`,
-    `event`.`all_day` AS `event_all_day`, `user`.`language` AS `user_language`, `user`.`email` AS `user_email`
+    `event`.`all_day` AS `event_all_day`, `user`.`language` AS `user_language`, `user`.`email` AS `user_email`,
     " . $case_statement . " AS `reminder_date`
     FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` AS `reminder`
     INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` AS `event`
@@ -58,15 +54,39 @@ $sql = "SELECT `reminder`.`id` AS `reminder_id`, `reminder`.`user_id` AS `user_i
     AND `email_sent` = '0'";
 
 $rs = hesk_dbQuery($sql);
+$modsForHesk_settings = NULL;
+$reminders_to_flag = [];
 
-$i = 0;
+if (hesk_dbNumRows($rs) > 0) {
+    require(HESK_PATH . 'inc/email_functions.inc.php');
+    $modsForHesk_settings = mfh_getSettings();
+}
+
+$successful_emails = 0;
+$failed_emails = 0;
 while ($row = hesk_dbFetchAssoc($rs)) {
-    $i++;
+    $successful_emails++;
+    if (mfh_sendCalendarReminder($row, $modsForHesk_settings)) {
+        $reminders_to_flag[] = $row['reminder_id'];
 
-    echo "Sent e-mail reminder for event: {$row['event_name']}\n";
+        if ($hesk_settings['debug_mode']) {
+            echo "Sent e-mail reminder for event: {$row['event_name']} to {$row['user_email']}\n";
+        }
+    } else {
+        $failed_emails++;
+
+        echo "Failed to send reminder email for event: {$row['event_name']} to {$row['user_email']}. This will be re-sent next time reminders are processed.\n";
+    }
+}
+
+if (count($reminders_to_flag) > 0) {
+    foreach ($reminders_to_flag as $reminder_id) {
+        $sql = "UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` SET `email_sent` = '1' WHERE `id` = " . intval($reminder_id);
+        hesk_dbQuery($sql);
+    }
 }
 
 
 if ($hesk_settings['debug_mode']) {
-    echo "Finished Calendar Reminders. {$i} reminder e-mails sent. \n";
+    echo "Finished Calendar Reminders. {$successful_emails} reminder e-mails sent. {$failed_emails} emails failed to send.\n";
 }

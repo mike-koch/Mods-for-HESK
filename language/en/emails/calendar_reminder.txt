@@ -1,0 +1,7 @@
+An event is coming up soon!
+----
+Title: %%TITLE%%
+Location: %%LOCATION%%
+Category: %%CATEGORY%%
+When: %%WHEN%%
+Comments: %%COMMENTS%%
