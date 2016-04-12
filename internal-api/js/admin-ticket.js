@@ -25,7 +25,7 @@ $(document).ready(function() {
             },
             success: function() {
                 $.jGrowl('Ticket due date successfully updated', { theme: 'alert-success', closeTemplate: '' });
-                $readonlyDueDateContainer.find('span#due-date').text(newDueDate);
+                $readonlyDueDateContainer.find('span#due-date').text(newDueDate == '' ? 'None' : newDueDate);
                 $readonlyDueDateContainer.show();
                 $editableDueDateContainer.hide();
             },

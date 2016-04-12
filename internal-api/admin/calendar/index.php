@@ -70,6 +70,9 @@ if ($request_method === 'GET') {
         return http_response_code(200);
     } elseif ($action === 'update-ticket') {
         $ticket['due_date'] = hesk_POST('dueDate');
+        if ($ticket['due_date'] == '') {
+            $ticket['due_date'] = NULL;
+        }
         $ticket['trackid'] = hesk_POST('trackingId');
 
         update_ticket_due_date($ticket, $hesk_settings);
