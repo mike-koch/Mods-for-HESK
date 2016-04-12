@@ -1506,6 +1506,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         ?>
     </div>
 </div>
+<?php // BEGIN HIDDEN FIELDS FOR LANGUAGE STRINGS ?>
+<p style="display: none" id="lang-key"><?php echo $hesklang['save']; ?></p>
 <?php
 
 
