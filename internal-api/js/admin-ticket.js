@@ -27,13 +27,13 @@ $(document).ready(function() {
                 dueDate: newDueDate
             },
             success: function() {
-                $.jGrowl('Ticket due date successfully updated', { theme: 'alert-success', closeTemplate: '' });
-                $readonlyDueDateContainer.find('span#due-date').text(newDueDate == '' ? 'None' : newDueDate);
+                $.jGrowl($('#lang_ticket_due_date_updated').text(), { theme: 'alert-success', closeTemplate: '' });
+                $readonlyDueDateContainer.find('span#due-date').text(newDueDate == '' ? $('#lang_none').text() : newDueDate);
                 $readonlyDueDateContainer.show();
                 $editableDueDateContainer.hide();
             },
             error: function() {
-                $.jGrowl('An error occurred when trying to update the ticket due date', { theme: 'alert-danger', closeTemplate: '' });
+                $.jGrowl($('#lang_error_updating_ticket_due_date').text(), { theme: 'alert-danger', closeTemplate: '' });
             }
         });
     });

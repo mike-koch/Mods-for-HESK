@@ -685,7 +685,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         ?>
                         </span>-->
                         <br>
-                        <button id="due-date-button" class="btn btn-default btn-sm">Change</button>
+                        <button id="due-date-button" class="btn btn-default btn-sm"><?php echo $hesklang['chg']; ?></button>
                     </div>
                     <div id="editable-due-date" style="display: none">
                         <div class="form-group">
@@ -1508,7 +1508,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     </div>
 </div>
 <?php // TODO BEGIN HIDDEN FIELDS FOR LANGUAGE STRINGS ?>
-<p style="display: none" id="lang-key"><?php echo $hesklang['save']; ?></p>
+<div style="display: none">
+    <p id="lang_ticket_due_date_updated"><?php echo $hesklang['ticket_due_date_updated']; ?></p>
+    <p id="lang_none"><?php echo $hesklang['none']; ?></p>
+    <p id="lang_error_updating_ticket_due_date"><?php echo $hesklang['error_updating_ticket_due_date']; ?></p>
+</div>
 <?php
 
 
