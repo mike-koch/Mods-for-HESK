@@ -671,11 +671,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div id="readonly-due-date">
                         <span id="due-date">
                         <?php
-                            $due_date = 'None';
+                            $due_date = $hesklang['none'];
                             if ($ticket['due_date'] != null) {
-                                $due_date = hesk_date($ticket['due_date'], false);
+                                $due_date = hesk_date($ticket['due_date'], false, true, false);
+                                $due_date = date('Y-m-d', $due_date);
                             }
-                            echo substr($due_date, 0, 10);
+                            echo $due_date;
                         ?></span><!--<span id="overdue">
                         <?php
                         /*if ($due_date < $current_date) {
@@ -688,12 +689,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>
                     <div id="editable-due-date" style="display: none">
                         <div class="form-group">
-                            <input type="text" class="form-control datepicker" name="due-date" value="<?php echo $due_date == 'None' ? '' : substr($due_date, 0, 10); ?>">
-                            <p class="help-block">Clear for no due date</p>
+                            <input type="text" class="form-control datepicker" name="due-date" value="<?php echo $due_date == $hesklang['none'] ? '' : $due_date; ?>">
+                            <p class="help-block"><?php echo $hesklang['clear_for_no_due_date']; ?></p>
                         </div>
                         <div class="btn-group">
-                            <button id="submit" class="btn btn-primary">Save</button>
-                            <button id="cancel" class="btn btn-default">Cancel</button>
+                            <button id="submit" class="btn btn-primary"><?php echo $hesklang['save']; ?></button>
+                            <button id="cancel" class="btn btn-default"><?php echo $hesklang['cancel']; ?></button>
                         </div>
                     </div>
                 </li>
@@ -1506,7 +1507,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         ?>
     </div>
 </div>
-<?php // BEGIN HIDDEN FIELDS FOR LANGUAGE STRINGS ?>
+<?php // TODO BEGIN HIDDEN FIELDS FOR LANGUAGE STRINGS ?>
 <p style="display: none" id="lang-key"><?php echo $hesklang['save']; ?></p>
 <?php
 

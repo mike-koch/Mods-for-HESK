@@ -5,6 +5,9 @@ $(document).ready(function() {
     $dueDateButton.click(function() {
         $readonlyDueDateContainer.hide();
         $editableDueDateContainer.show();
+        if ($readonlyDueDateContainer.find('span#due-date').text().trim() == 'None') {
+            $editableDueDateContainer.find('input[type="text"][name="due-date"]').text('').val('');
+        }
     });
 
     $editableDueDateContainer.find('#cancel').click(function() {
