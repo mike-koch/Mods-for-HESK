@@ -72,6 +72,15 @@ $hesklang['to_title_case'] = 'To';
 $hesklang['clear_for_no_due_date'] = 'Clear for no due date';
 $hesklang['ticket_due_date_updated'] = 'Ticket due date successfully updated';
 $hesklang['error_updating_ticket_due_date'] = 'An error occurred when trying to update the ticket due date';
+$hesklang['error_loading_events'] = 'An error occurred when trying to load events';
+$hesklang['error_deleting_event'] = 'An error occurred when trying to delete the event';
+$hesklang['event_deleted'] = 'Event successfully deleted';
+$hesklang['event_created'] = 'Event successfully created';
+$hesklang['error_creating_event'] = 'An error occurred when trying to create the event';
+$hesklang['event_updated'] = 'Event successfully updated';
+$hesklang['error_updating_event'] = 'An error occurred when trying to update the event';
+$hesklang['calendar_title_case'] = 'Calendar';
+$hesklang['calendar_categories'] = 'Categories';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

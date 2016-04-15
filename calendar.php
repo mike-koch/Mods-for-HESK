@@ -64,7 +64,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
     <div class="col-lg-3">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4>Categories</h4>
+                <h4><?php echo $hesklang['calendar_categories']; ?></h4>
             </div>
             <div class="panel-body">
                 <ul class="list-unstyled">
@@ -86,7 +86,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>
-                    Calendar
+                    <?php echo $hesklang['calendar_title_case']; ?>
                 </h4>
             </div>
             <div class="panel-body">
@@ -114,4 +114,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             <span></span>
         </div>
     </div>
+</div>
+<div style="display: none">
+    <p id="lang_error_loading_events"><?php echo $hesklang['error_loading_events']; ?></p>
 </div>

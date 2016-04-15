@@ -68,7 +68,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <div class="col-lg-3">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4>Categories</h4>
+                <h4><?php echo $hesklang['calendar_categories']; ?></h4>
             </div>
             <div class="panel-body">
                 <ul class="list-unstyled">
@@ -90,7 +90,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>
-                    Calendar
+                    <?php echo $hesklang['calendar_title_case']; ?>
                     <span class="nu-floatRight panel-button">
                         <button class="btn btn-success" id="create-event-button">
                             <i class="fa fa-plus-circle"></i>
@@ -472,7 +472,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </div>
-
+<div style="display: none">
+    <p id="lang_error_loading_events"><?php echo $hesklang['error_loading_events']; ?></p>
+    <p id="lang_error_deleting_event"><?php echo $hesklang['error_deleting_event']; ?></p>
+    <p id="lang_event_deleted"><?php echo $hesklang['event_deleted']; ?></p>
+    <p id="lang_event_created"><?php echo $hesklang['event_created']; ?></p>
+    <p id="lang_error_creating_event"><?php echo $hesklang['error_creating_event']; ?></p>
+    <p id="lang_event_updated"><?php echo $hesklang['event_updated']; ?></p>
+    <p id="lang_error_updating_event"><?php echo $hesklang['error_updating_event']; ?></p>
+    <p id="lang_ticket_due_date_updated"><?php echo $hesklang['ticket_due_date_updated']; ?></p>
+    <p id="lang_error_updating_ticket_due_date"><?php echo $hesklang['error_updating_ticket_due_date']; ?></p>
+</div>
 <?php
 
 require_once(HESK_PATH . 'inc/footer.inc.php');

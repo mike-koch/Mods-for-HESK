@@ -23,7 +23,7 @@ $(document).ready(function() {
                 },
                 error: function(data) {
                     console.error(data);
-                    $.jGrowl('An error occurred when trying to load events', { theme: 'alert-danger', closeTemplate: '' });
+                    $.jGrowl($('#lang_error_loading_events').text(), { theme: 'alert-danger', closeTemplate: '' });
                 }
             });
         },
@@ -71,68 +71,11 @@ $(document).ready(function() {
         }
     });
 
-    $('#create-form').submit(function(e) {
-        e.preventDefault();
-
-        var start = $('#create-form input[name="start-date"]').val();
-        var end = $('#create-form input[name="end-date"]').val();
-        var dateFormat = 'YYYY-MM-DD';
-        var allDay = $('#create-form input[name="all-day"]').is(':checked');
-
-        if (!allDay) {
-            start += ' ' + $('#create-form input[name="start-time"]').val();
-            end += ' ' + $('#create-form input[name="end-time"]').val();
-            dateFormat = 'YYYY-MM-DD HH:mm:ss';
-        }
-
-        var data = {
-            title: $('#create-form input[name="name"]').val(),
-            location: $('#create-form input[name="location"]').val(),
-            startTime: moment(start).format(dateFormat),
-            endTime: moment(end).format(dateFormat),
-            allDay: allDay,
-            comments: $('#create-form textarea[name="comments"]').val(),
-            categoryId: $('#create-form select[name="category"]').val(),
-            action: 'create',
-            type: 'CALENDAR',
-            categoryColor: $('#create-form select[name="category"] :selected').attr('data-color'),
-            categoryName: $('#create-form select[name="category"] :selected').text().trim(),
-            reminderValue: $('#create-form input[name="reminder-value"]').val(),
-            reminderUnits: $('#create-form select[name="reminder-unit"]').val()
-        };
-
-        $.ajax({
-            method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
-            data: data,
-            success: function(id) {
-                addToCalendar(id, data, "Event successfully created");
-                $('#create-event-modal').modal('hide');
-                updateCategoryVisibility();
-            },
-            error: function(data) {
-                $.jGrowl('An error occurred when trying to create the event', { theme: 'alert-danger', closeTemplate: '' });
-            }
-        });
-    });
-
     $('input[name="category-toggle"]').change(updateCategoryVisibility);
 });
 
-function addToCalendar(id, event, successMessage) {
-    var eventObject = buildEvent(id, event);
-    $('#calendar').fullCalendar('renderEvent', eventObject);
-    $.jGrowl(successMessage, { theme: 'alert-success', closeTemplate: '' });
-}
-
 function buildEvent(id, dbObject) {
     if (dbObject.type == 'TICKET') {
-        var endOfDay = moment(dbObject.startTime)
-            .set('hour', 23)
-            .set('minute', 59)
-            .set('second', 59)
-            .set('millisecond', 999);
-
         return {
             title: dbObject.title,
             trackingId: dbObject.trackingId,

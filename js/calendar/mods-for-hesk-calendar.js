@@ -23,7 +23,7 @@ $(document).ready(function() {
                 },
                 error: function(data) {
                     console.error(data);
-                    $.jGrowl('An error occurred when trying to load events', { theme: 'alert-danger', closeTemplate: '' });
+                    $.jGrowl($('#lang_error_loading_events').text(), { theme: 'alert-danger', closeTemplate: '' });
                 }
             });
         },
@@ -122,11 +122,11 @@ $(document).ready(function() {
             data: data,
             success: function() {
                 removeFromCalendar(data.id);
-                $.jGrowl('Event successfully deleted', { theme: 'alert-success', closeTemplate: '' });
+                $.jGrowl($('#lang_event_deleted').text(), { theme: 'alert-success', closeTemplate: '' });
                 $('#edit-event-modal').modal('hide');
             },
             error: function(data) {
-                $.jGrowl('An error occurred when trying to delete the event', { theme: 'alert-danger', closeTemplate: '' });
+                $.jGrowl($('#lang_error_deleting_event').text(), { theme: 'alert-danger', closeTemplate: '' });
             }
         });
     });
@@ -166,12 +166,12 @@ $(document).ready(function() {
             url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
             data: data,
             success: function(id) {
-                addToCalendar(id, data, "Event successfully created");
+                addToCalendar(id, data, $('#lang_event_created').text());
                 $('#create-event-modal').modal('hide');
                 updateCategoryVisibility();
             },
-            error: function(data) {
-                $.jGrowl('An error occurred when trying to create the event', { theme: 'alert-danger', closeTemplate: '' });
+            error: function() {
+                $.jGrowl($('#lang_error_creating_event').text(), { theme: 'alert-danger', closeTemplate: '' });
             }
         });
     });
@@ -213,11 +213,11 @@ $(document).ready(function() {
             data: data,
             success: function() {
                 removeFromCalendar(data.id);
-                addToCalendar(data.id, data, "Event successfully updated");
+                addToCalendar(data.id, data, $('#lang_event_updated').text());
                 $('#edit-event-modal').modal('hide');
             },
-            error: function(data) {
-                $.jGrowl('An error occurred when trying to update the event', { theme: 'alert-danger', closeTemplate: '' });
+            error: function() {
+                $.jGrowl($('#lang_error_updating_event').text(), { theme: 'alert-danger', closeTemplate: '' });
             }
         });
     });
@@ -237,12 +237,6 @@ function removeFromCalendar(id) {
 
 function buildEvent(id, dbObject) {
     if (dbObject.type == 'TICKET') {
-        var endOfDay = moment(dbObject.startTime)
-            .set('hour', 23)
-            .set('minute', 59)
-            .set('second', 59)
-            .set('millisecond', 999);
-
         return {
             title: dbObject.title,
             trackingId: dbObject.trackingId,
@@ -396,10 +390,10 @@ function respondToDragAndDrop(event, delta, revertFunc) {
                 dueDate: event.start.format('YYYY-MM-DD')
             },
             success: function() {
-                $.jGrowl('Ticket due date successfully updated', { theme: 'alert-success', closeTemplate: '' });
+                $.jGrowl($('#lang_ticket_due_date_updated').text(), { theme: 'alert-success', closeTemplate: '' });
             },
             error: function() {
-                $.jGrowl('An error occurred when trying to update the ticket due date', { theme: 'alert-danger', closeTemplate: '' });
+                $.jGrowl($('#lang_error_updating_ticket_due_date').text(), { theme: 'alert-danger', closeTemplate: '' });
                 revertFunc();
             }
         });
@@ -431,10 +425,10 @@ function respondToDragAndDrop(event, delta, revertFunc) {
             url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
             data: data,
             success: function() {
-                $.jGrowl('Event successfully updated', { theme: 'alert-success', closeTemplate: '' });
+                $.jGrowl($('#lang_event_updated').text(), { theme: 'alert-success', closeTemplate: '' });
             },
             error: function() {
-                $.jGrowl('An error occurred when trying to update the event', { theme: 'alert-danger', closeTemplate: '' });
+                $.jGrowl($('#lang_error_updating_event').text(), { theme: 'alert-danger', closeTemplate: '' });
                 revertFunc();
             }
         });
