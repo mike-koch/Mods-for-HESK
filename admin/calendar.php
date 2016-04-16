@@ -47,7 +47,11 @@ hesk_isLoggedIn();
 //hesk_checkPermission('can_service_msg');
 
 // Define required constants
-define('MFH_CALENDAR', 1);
+if (hesk_checkPermission('can_man_calendar', 0)) {
+    define('MFH_CALENDAR', 1);
+} else {
+    define('MFH_CALENDAR_READONLY', 1);
+}
 
 // Get categories for the dropdown
 $rs = hesk_dbQuery("SELECT `id`, `name`, `color` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `usage` <> 1 ORDER BY `cat_order`");
@@ -90,13 +94,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>
-                    <?php echo $hesklang['calendar_title_case']; ?>
+                    <?php
+                    echo $hesklang['calendar_title_case'];
+                    if (hesk_checkPermission('can_man_calendar', 0)):
+                    ?>
                     <span class="nu-floatRight panel-button">
                         <button class="btn btn-success" id="create-event-button">
                             <i class="fa fa-plus-circle"></i>
                             <?php echo $hesklang['new_event']; ?>
                         </button>
                     </span>
+                    <?php endif; ?>
                 </h4>
             </div>
             <div class="panel-body">

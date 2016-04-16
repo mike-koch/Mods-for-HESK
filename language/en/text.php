@@ -81,6 +81,7 @@ $hesklang['event_updated'] = 'Event successfully updated';
 $hesklang['error_updating_event'] = 'An error occurred when trying to update the event';
 $hesklang['calendar_title_case'] = 'Calendar';
 $hesklang['calendar_categories'] = 'Categories';
+$hesklang['can_man_calendar'] = 'Can manage calendar events';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';
