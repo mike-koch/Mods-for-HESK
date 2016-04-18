@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.6 from 2nd February 2016
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -38,9 +38,19 @@ hesk_load_database_functions();
 
 hesk_session_start();
 
+// Do we have parameters in query string? If yes, store them in session and redirect
+if ( isset($_GET['track']) || isset($_GET['e']) )
+{
+    $_SESSION['p_track'] = hesk_GET('track');
+    $_SESSION['p_email'] = hesk_GET('e');
+
+    header('Location: print.php');
+    die();
+}
+
 
 /* Get the tracking ID */
-$trackingID = hesk_cleanID() or die("$hesklang[int_error]: $hesklang[no_trackID]");
+$trackingID = hesk_cleanID('p_track') or die("$hesklang[int_error]: $hesklang[no_trackID]");
 
 /* Connect to database */
 hesk_dbConnect();
@@ -52,7 +62,12 @@ if (empty($_SESSION['id'])) {
 
     // Verify email address match
     hesk_verifyEmailMatch($trackingID);
+    $my_email = hesk_getCustomerEmail(0, 'p_email');
+    hesk_verifyEmailMatch($trackingID, $my_email);
 }
+
+/* Clean ticket parameters from the session data, we don't need them anymore */
+hesk_cleanSessionVars( array('p_track', 'p_email') );
 
 /* Get ticket info */
 $res = hesk_dbQuery("SELECT `t1`.* , `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`Key` AS `statusKey`, `t2`.name AS `repliername`

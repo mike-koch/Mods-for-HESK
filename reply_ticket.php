@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.6 from 2nd February 2016
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -70,6 +70,10 @@ $trackingID = hesk_cleanID('orig_track') or die($hesklang['int_error'] . ': No o
 // Email required to view ticket?
 $my_email = hesk_getCustomerEmail();
 
+// Setup required session vars
+$_SESSION['t_track'] = $trackingID;
+$_SESSION['t_email'] = $my_email;
+
 // Get message
 $message = hesk_input(hesk_POST('message'));
 
@@ -118,7 +122,7 @@ if (count($hesk_error_buffer) != 0) {
     $hesk_error_buffer = $tmp;
 
     $hesk_error_buffer = $hesklang['pcer'] . '<br /><br /><ul>' . $hesk_error_buffer . '</ul>';
-    hesk_process_messages($hesk_error_buffer, 'ticket.php?track=' . $trackingID . $hesk_settings['e_param'] . '&Refresh=' . rand(10000, 99999));
+    hesk_process_messages($hesk_error_buffer,'ticket.php');
 }
 
 // Check if this IP is temporarily locked out
@@ -142,7 +146,7 @@ hesk_verifyEmailMatch($trackingID, $my_email, $ticket['email']);
 
 /* Ticket locked? */
 if ($ticket['locked']) {
-    hesk_process_messages($hesklang['tislock2'], 'ticket.php?track=' . $trackingID . $hesk_settings['e_param'] . '&Refresh=' . rand(10000, 99999));
+    hesk_process_messages($hesklang['tislock2'],'ticket.php');
     exit();
 }
 
@@ -226,6 +230,5 @@ else {
 hesk_cleanSessionVars('ticket_message');
 
 /* Show the ticket and the success message */
-hesk_process_messages($hesklang['reply_submitted_success'], 'ticket.php?track=' . $trackingID . $hesk_settings['e_param'] . '&Refresh=' . rand(10000, 99999), 'SUCCESS');
+hesk_process_messages($hesklang['reply_submitted_success'],'ticket.php','SUCCESS');
 exit();
-?>
