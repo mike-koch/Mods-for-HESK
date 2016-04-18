@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -56,20 +56,39 @@ $hesk_error_buffer = array();
 $do_remember = '';
 $display = 'none';
 
-/* Was this accessed by the form or link? */
-$is_form = isset($_GET['f']) ? 1 : 0;
-
-/* Get the tracking ID */
-$trackingID = hesk_cleanID();
-
-/* Email required to view ticket? */
-$my_email = hesk_getCustomerEmail(1);
-
 /* A message from ticket reminder? */
-if (!empty($_GET['remind'])) {
+if ( ! empty($_GET['remind']) )
+{
     $display = 'block';
     print_form();
 }
+
+// Do we have parameters in query string? If yes, store them in session and redirect
+if ( isset($_GET['track']) || isset($_GET['e']) || isset($_GET['f']) || isset($_GET['r']) )
+{
+    $_SESSION['t_track'] = hesk_GET('track');
+    $_SESSION['t_email'] = hesk_getCustomerEmail(1);
+    $_SESSION['t_form']  = hesk_GET('f');
+    $_SESSION['t_remember'] = strlen($do_remember) ? 'Y' : hesk_GET('r');
+
+    header('Location: ticket.php');
+    die();
+}
+
+/* Was this accessed by the form or link? */
+$is_form = hesk_SESSION('t_form');
+
+/* Get the tracking ID */
+$trackingID = hesk_SESSION('t_track');
+
+/* Email required to view ticket? */
+$my_email = hesk_getCustomerEmail(1, 't_email');
+
+/* Remember email address? */
+$do_remember = strlen($do_remember) || strlen(hesk_SESSION('t_remember')) ? ' checked="checked" ' : '';
+
+/* Clean ticket parameters from the session data, we don't need them anymore */
+hesk_cleanSessionVars( array('t_track', 't_email', 't_form', 't_remember') );
 
 /* Any errors? Show the form */
 if ($is_form) {
@@ -138,9 +157,8 @@ hesk_cleanBfAttempts();
 
 /* Remember email address? */
 if ($is_form) {
-    if (!empty($_GET['r'])) {
+    if ( strlen($do_remember) ) {
         setcookie('hesk_myemail', $my_email, strtotime('+1 year'));
-        $do_remember = ' checked="checked" ';
     } elseif (isset($_COOKIE['hesk_myemail'])) {
         setcookie('hesk_myemail', '');
     }
@@ -319,7 +337,7 @@ if (!$show['show']) {
         <div class="row ticketMessageContainer">
             <div class="col-md-3 col-xs-12">
                 <div class="ticketName"><?php echo $ticket['name']; ?></div>
-                <div class="ticketEmail"><?php echo $ticket['email']; ?></div>
+                <div class="ticketEmail"><a href="mailto:<?php echo $ticket['email']; ?>"><?php echo $ticket['email']; ?></a></div>
             </div>
             <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
