@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -476,7 +476,7 @@ function mail_list_messages()
 
     $maxresults = 30;
 
-    $tmp = intval(hesk_POST('page', 1));
+    $tmp = intval(hesk_GET('page', 1));
     $page = ($tmp > 1) ? $tmp : 1;
 
     /* List of private messages */
