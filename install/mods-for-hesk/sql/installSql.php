@@ -716,7 +716,7 @@ function execute254Scripts()
 // Version 2.5.5
 function execute255Scripts()
 {
-    updateVersion($version);
+    updateVersion('2.5.5');
 }
 
 function updateVersion($version) {
