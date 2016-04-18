@@ -9,76 +9,39 @@ if (!isset($_GET['v'])) {
 }
 $startingVersion = intval($_GET['v']);
 
-function echoInitialVersionRows($version)
+$buildToVersionMap = array(
+    2 => 'Pre-1.4.0',
+    3 => '1.4.0',
+    4 => '1.4.1',
+    5 => '1.5.0',
+    6 => '1.6.0',
+    7 => '1.6.1',
+    8 => '1.7.0',
+    9 => '2.0.0',
+    10 => '2.0.1',
+    11 => '2.1.0',
+    12 => '2.1.1',
+    13 => '2.2.0',
+    14 => '2.2.1',
+    15 => '2.3.0',
+    16 => '2.3.1',
+    17 => '2.3.2',
+    18 => '2.4.0',
+    19 => '2.4.1',
+    20 => '2.4.2',
+    21 => '2.5.0',
+    22 => '2.5.1',
+    23 => '2.5.2',
+    24 => '2.5.3',
+    25 => '2.5.4'
+);
+
+function echoInitialVersionRows($version, $build_to_version_map)
 {
-    if ($version < 2) {
-        printRow('Pre-1.4.0');
-    }
-    if ($version < 3) {
-        printRow('1.4.0');
-    }
-    if ($version < 4) {
-        printRow('1.4.1');
-    }
-    if ($version < 5) {
-        printRow('1.5.0');
-    }
-    if ($version < 6) {
-        printRow('1.6.0');
-    }
-    if ($version < 7) {
-        printRow('1.6.1');
-    }
-    if ($version < 8) {
-        printRow('1.7.0');
-    }
-    if ($version < 9) {
-        printRow('2.0.0');
-    }
-    if ($version < 10) {
-        printRow('2.0.1');
-    }
-    if ($version < 11) {
-        printRow('2.1.0');
-    }
-    if ($version < 12) {
-        printRow('2.1.1');
-    }
-    if ($version < 13) {
-        printRow('2.2.0');
-    }
-    if ($version < 14) {
-        printRow('2.2.1');
-    }
-    if ($version < 15) {
-        printRow('2.3.0');
-    }
-    if ($version < 16) {
-        printRow('2.3.1');
-    }
-    if ($version < 17) {
-        printRow('2.3.2');
-    }
-    if ($version < 18) {
-        printRow('2.4.0');
-    }
-    if ($version < 19) {
-        printRow('2.4.1');
-    }
-    if ($version < 20) {
-        printRow('2.4.2');
-    }
-    if ($version < 21) {
-        printRow('2.5.0');
-    }
-    if ($version < 22) {
-        printRow('2.5.1');
-    }
-    if ($version < 23) {
-        printRow('2.5.2');
-    }
-    if ($version < 24) {
-        printRow('2.5.3');
+    foreach ($build_to_version_map as $build => $display_text) {
+        if ($version < $build) {
+            printRow($display_text);
+        }
     }
 }
 
@@ -133,7 +96,7 @@ function printRow($version)
                         </tr>
                         </thead>
                         <tbody>
-                        <?php echoInitialVersionRows($startingVersion); ?>
+                        <?php echoInitialVersionRows($startingVersion, $buildToVersionMap); ?>
                         </tbody>
                     </table>
                     <?php if ($startingVersion < 18) { ?>

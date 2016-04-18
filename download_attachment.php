@@ -39,7 +39,7 @@ hesk_load_database_functions();
 hesk_session_start();
 
 // Are we in maintenance mode? (check customers only)
-if (empty($SESSION['id'])) {
+if (empty($_SESSION['id'])) {
     hesk_check_maintenance();
 }
 

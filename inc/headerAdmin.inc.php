@@ -29,7 +29,7 @@
  *******************************************************************************/
 
 // Define the current build
-define('MODS_FOR_HESK_BUILD', 24);
+define('MODS_FOR_HESK_BUILD', 25);
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {
