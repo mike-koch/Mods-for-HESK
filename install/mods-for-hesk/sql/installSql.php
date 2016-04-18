@@ -712,3 +712,17 @@ function execute254Scripts()
 
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.5.4' WHERE `Key` = 'modsForHeskVersion'");
 }
+
+// Version 2.5.5
+function execute255Scripts()
+{
+    updateVersion($version);
+}
+
+function updateVersion($version) {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+
+    executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '{$version}' WHERE `Key` = 'modsForHeskVersion'");
+}
