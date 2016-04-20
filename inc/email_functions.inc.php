@@ -313,6 +313,37 @@ function mfh_processCalendarTemplate($message, $reminder_data) {
 }
 
 
+function mfh_sendOverdueTicketReminder($ticket, $modsForHesk_settings) {
+    global $hesk_settings, $hesklang;
+
+    if (defined('HESK_DEMO')) {
+        return true;
+    }
+
+    hesk_setLanguage($ticket['user_language']);
+
+    $valid_emails = hesk_validEmails();
+    $subject = NULL;
+    if (!isset($valid_emails['overdue_ticket'])) {
+        hesk_error($hesklang['inve']);
+    } else {
+        $subject = $valid_emails['overdue_ticket'];
+    }
+
+    // Format email subject and message
+    $subject = str_replace('%%TITLE%%', $ticket['subject'], $subject);
+    $subject = str_replace('%%TRACKID%%', $ticket['trackid'], $subject);
+    $message = hesk_getEmailMessage('overdue_ticket', NULL, $modsForHesk_settings, 1, 0, 1);
+    $message = hesk_processMessage($message, $ticket, 1, 1, 0, $modsForHesk_settings);
+    $htmlMessage = hesk_getHtmlMessage('overdue_ticket', NULL, $modsForHesk_settings, 1, 0, 1);
+    $htmlMessage = hesk_processMessage($htmlMessage, $ticket, 1, 1, 0, $modsForHesk_settings, 1);
+
+    hesk_mail($ticket['user_email'], $subject, $message, $htmlMessage, $modsForHesk_settings);
+
+    return true;
+}
+
+
 function hesk_validEmails()
 {
     global $hesklang;
@@ -361,7 +392,10 @@ function hesk_validEmails()
         'reset_password' => $hesklang['reset_password'],
 
         // --> Calendar reminder
-        'calendar_reminder' => "Calendar Reminder",
+        'calendar_reminder' => $hesklang['calendar_reminder'],
+
+        // --> Overdue Ticket reminder
+        'overdue_ticket' => $hesklang['overdue_ticket'],
 
     );
 } // END hesk_validEmails()

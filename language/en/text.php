@@ -82,6 +82,8 @@ $hesklang['error_updating_event'] = 'An error occurred when trying to update the
 $hesklang['calendar_title_case'] = 'Calendar';
 $hesklang['calendar_categories'] = 'Categories';
 $hesklang['can_man_calendar'] = 'Can manage calendar events';
+$hesklang['calendar_reminder'] = 'Upcoming Event: %%TITLE%%';
+$hesklang['overdue_ticket'] = '[%%TRACKID%%] Ticket Overdue!';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';
