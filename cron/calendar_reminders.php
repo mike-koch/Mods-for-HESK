@@ -23,7 +23,7 @@ if (hesk_check_maintenance(false)) {
     die($message);
 }
 
-hesk_load_internal_api_database_functions();
+hesk_load_cron_database_functions();
 hesk_dbConnect();
 
 if ($hesk_settings['debug_mode']) {

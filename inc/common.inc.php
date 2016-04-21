@@ -179,6 +179,16 @@ function hesk_load_internal_api_database_functions()
     }
 } // END hesk_load_database_functions()
 
+function hesk_load_cron_database_functions()
+{
+    if (function_exists('mysqli_connect')) {
+        require(HESK_PATH . 'cron/core/database_mysqli.inc.php');
+    } // Default to MySQL
+    else {
+        require(HESK_PATH . 'cron/core/database.inc.php');
+    }
+} // END hesk_load_cron_database_functions()
+
 function hesk_unlink($file, $older_than = 0)
 {
     return (is_file($file) && (!$older_than || (time() - filectime($file)) > $older_than) && @unlink($file)) ? true : false;
