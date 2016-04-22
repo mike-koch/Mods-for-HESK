@@ -84,6 +84,7 @@ $hesklang['calendar_categories'] = 'Categories';
 $hesklang['can_man_calendar'] = 'Can manage calendar events';
 $hesklang['calendar_reminder'] = 'Upcoming Event: %%TITLE%%';
 $hesklang['overdue_ticket'] = '[%%TRACKID%%] Ticket Overdue!';
+$hesklang['notify_overdue_unassigned'] = 'A ticket is overdue not assigned to me';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

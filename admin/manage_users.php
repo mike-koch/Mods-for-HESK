@@ -88,6 +88,7 @@ $default_userdata = array(
     'notify_note' => 1,
     'notify_pm' => 1,
     'notify_note_unassigned' => 1,
+    'notify_overdue_unassigned' => 0,
 );
 
 $modsForHesk_settings = mfh_getSettings();
@@ -515,6 +516,7 @@ function new_user()
         `notify_pm`,
         `notify_note`,
         `notify_note_unassigned`,
+        `notify_overdue_unassigned`,
         `autorefresh`,
         `permission_template`) VALUES (
 	'" . hesk_dbEscape($myuser['user']) . "',
@@ -539,6 +541,7 @@ function new_user()
 	'" . ($myuser['notify_pm']) . "',
 	'" . ($myuser['notify_note']) . "',
 	'" . ($myuser['notify_note_unassigned']) . "',
+	'" . ($myuser['notify_overdue_unassigned']) . "',
 	" . intval($myuser['autorefresh']) . ",
 	" . intval($myuser['template']) . ")");
 
@@ -581,6 +584,7 @@ function update_user()
         $myuser['notify_pm'] = 0;
         $myuser['notify_note'] = 0;
         $myuser['notify_note_unassigned'] = 0;
+        $myuser['notify_overdue_unassigned'] = 0;
     }
 
     /* Check for duplicate usernames */
@@ -662,6 +666,7 @@ function update_user()
 	`notify_pm`='" . ($myuser['notify_pm']) . "',
 	`notify_note`='" . ($myuser['notify_note']) . "',
 	`notify_note_unassigned`='" . ($myuser['notify_note_unassigned']) . "',
+	`notify_overdue_unassigned`='" . ($myuser['notify_overdue_unassigned']) . "',
 	`autorefresh`=" . intval($myuser['autorefresh']) . ",
 	`permission_template`=" . intval($myuser['template']) . "
     WHERE `id`='" . intval($myuser['id']) . "' LIMIT 1");
@@ -774,6 +779,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     $myuser['notify_note'] = empty($_POST['notify_note']) ? 0 : 1;
     $myuser['notify_pm'] = empty($_POST['notify_pm']) ? 0 : 1;
     $myuser['notify_note_unassigned'] = empty($_POST['notify_note_unassigned']) ? 0 : 1;
+    $myuser['notify_overdue_unassigned'] = empty($_POST['notify_overdue_unassigned']) ? 0 : 1;
 
     /* Save entered info in session so we don't loose it in case of errors */
     $_SESSION['userdata'] = $myuser;
@@ -890,7 +896,7 @@ function toggle_active()
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `manager` = 0 WHERE `manager` = " . intval($myuser));
 
         $notificationSql = ", `autoassign` = 0, `notify_new_unassigned` = 0, `notify_new_my` = 0, `notify_reply_unassigned` = 0,
-        `notify_reply_my` = 0, `notify_assigned` = 0, `notify_pm` = 0, `notify_note` = 0, `notify_note_unassigned` = 0";
+        `notify_reply_my` = 0, `notify_assigned` = 0, `notify_pm` = 0, `notify_note` = 0, `notify_note_unassigned` = 0, `notify_overdue_unassigned` = 0";
     }
 
     hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `active` = '" . $active . "'" . $notificationSql . " WHERE `id` = '" . intval($myuser) . "'");

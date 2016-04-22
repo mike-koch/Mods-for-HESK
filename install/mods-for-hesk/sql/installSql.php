@@ -740,5 +740,6 @@ function execute260Scripts()
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD COLUMN `overdue_email_sent` ENUM('0','1')");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ADD COLUMN `color` VARCHAR(7)");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ADD COLUMN `usage` INT NOT NULL DEFAULT 0");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` ADD COLUMN `notify_overdue_unassigned` ENUM('0', '1') NOT NULL DEFAULT '0' AFTER `notify_note_unassigned`");
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.6.0' WHERE `Key` = 'modsForHeskVersion'");
 }
