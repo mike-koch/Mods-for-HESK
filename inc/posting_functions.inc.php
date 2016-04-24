@@ -54,6 +54,11 @@ function hesk_newTicket($ticket, $isVerified = true)
 
     $ticket['message'] = htmLawed($ticket['message'], array('safe' => 1, 'deny_attribute' => 'style'));
 
+    $due_date = 'NULL';
+    if ($ticket['due_date'] != '') {
+        $due_date = "'" . hesk_dbEscape($ticket['due_date']) . "'";
+    }
+
     // Insert ticket into database
     hesk_dbQuery("
 	INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . $tableName . "`
@@ -101,7 +106,8 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`html`,
 		`user_agent`,
 		`screen_resolution_height`,
-		`screen_resolution_width`
+		`screen_resolution_width`,
+		`due_date`
 	)
 	VALUES
 	(
@@ -148,7 +154,8 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'" . hesk_dbEscape($ticket['html']) . "',
 		'" . hesk_dbEscape($ticket['user_agent']) . "',
 		" . hesk_dbEscape($ticket['screen_resolution_height']) . ",
-		" . hesk_dbEscape($ticket['screen_resolution_width']) . "
+		" . hesk_dbEscape($ticket['screen_resolution_width']) . ",
+		{$due_date}
 	)
 	");
 
@@ -169,7 +176,8 @@ function hesk_newTicket($ticket, $isVerified = true)
         'lastchange' => hesk_date(),
         'id' => hesk_dbInsertID(),
         'language' => $language,
-        'html' => $ticket['html']
+        'html' => $ticket['html'],
+        'due_date' => $ticket['due_date']
     );
 
     // Add custom fields to the array

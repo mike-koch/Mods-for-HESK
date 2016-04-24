@@ -359,6 +359,7 @@ function displayEditModal(date) {
     }
     createTicketLink += encodeURI('&message=' + date.comments);
     createTicketLink += encodeURI('&category=' + date.categoryId);
+    createTicketLink += encodeURI('&due_date=' + date.end.format('YYYY-MM-DD'));
 
     $form.find('#create-ticket-button').prop('href', createTicketLink);
 

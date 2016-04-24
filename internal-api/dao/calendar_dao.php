@@ -52,6 +52,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets`
         INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
             ON `categories`.`id` = `tickets`.`category`
+            AND `categories`.`usage` <> 1
         WHERE `due_date` >= FROM_UNIXTIME(" . intval($start) . " / 1000)
         AND `due_date` <= FROM_UNIXTIME(" . intval($end) . " / 1000)
         AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";

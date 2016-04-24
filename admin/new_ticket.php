@@ -730,6 +730,15 @@ elseif (hesk_checkPermission('can_man_ticket_tpl', 0)) {
 }
 ?>
 
+<div class="form-group">
+    <label for="due-date" class="col-sm-3 control-label"><?php echo $hesklang['due_date']; ?></label>
+    <div class="col-sm-9">
+        <input class="form-control datepicker" name="due-date" placeholder="<?php echo htmlspecialchars($hesklang['due_date']); ?>"
+            value="<?php if (isset($_GET['due_date'])) { echo $_GET['due_date']; } ?>">
+        <span class="help-block"><?php echo $hesklang['date_format']; ?></span>
+    </div>
+</div>
+
 <?php if (in_array('subject', $_SESSION['iserror'])) {
     echo '<div class="form-group has-error">';
 } else {
