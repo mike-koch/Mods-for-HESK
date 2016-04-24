@@ -234,7 +234,8 @@ function update_profile()
     $_SESSION['new']['autorefresh'] = isset($_POST['autorefresh']) ? $_POST['autorefresh'] : 0;
 
     /* Notifications */
-    if ($_SESSION[$session_array]['isadmin'] || (isset($_SESSION[$session_array]['heskprivileges']) && strpos($_SESSION[$session_array]['heskprivileges'], 'can_change_notification_settings') !== false)) {
+    if (!(!$_SESSION[$session_array]['isadmin'] && isset($_SESSION[$session_array]['heskprivileges'])
+        && strpos($_SESSION[$session_array]['heskprivileges'], 'can_change_notification_settings') === false)) {
         $_SESSION['new']['notify_new_unassigned'] = empty($_POST['notify_new_unassigned']) || !$can_view_unassigned ? 0 : 1;
         $_SESSION['new']['notify_new_my'] = empty($_POST['notify_new_my']) ? 0 : 1;
         $_SESSION['new']['notify_reply_unassigned'] = empty($_POST['notify_reply_unassigned']) || !$can_view_unassigned ? 0 : 1;
@@ -275,6 +276,7 @@ function update_profile()
         `notify_note_unassigned`='" . intval($_SESSION['new']['notify_note_unassigned']) . "',
         `notify_customer_new`='" . $_SESSION['new']['notify_customer_new'] . "',
         `notify_customer_reply`='" . $_SESSION['new']['notify_customer_reply'] . "',
+        `notify_overdue_unassigned`='" . $_SESSION['new']['notify_overdue_unassigned'] . "',
         `show_suggested`='" . $_SESSION['new']['show_suggested'] . "'
 	    WHERE `id`='" . intval($_SESSION['id']) . "' LIMIT 1"
         );

@@ -313,7 +313,7 @@ function mfh_processCalendarTemplate($message, $reminder_data) {
 }
 
 
-function mfh_sendOverdueTicketReminder($ticket, $modsForHesk_settings) {
+function mfh_sendOverdueTicketReminder($ticket, $users, $modsForHesk_settings) {
     global $hesk_settings, $hesklang;
 
     if (defined('HESK_DEMO')) {
@@ -338,7 +338,18 @@ function mfh_sendOverdueTicketReminder($ticket, $modsForHesk_settings) {
     $htmlMessage = hesk_getHtmlMessage('overdue_ticket', NULL, $modsForHesk_settings, 1, 0, 1);
     $htmlMessage = hesk_processMessage($htmlMessage, $ticket, 1, 1, 0, $modsForHesk_settings, 1);
 
-    hesk_mail($ticket['user_email'], $subject, $message, $htmlMessage, $modsForHesk_settings);
+    $emails = [];
+    $emails[] = $ticket['user_email'];
+    foreach ($users as $user) {
+        if ($user['email'] != $ticket['user_email']
+            && ($user['isadmin'] || strpos($user['categories'], $ticket['category']) !== false)) {
+            $emails[] = $user['email'];
+        }
+    }
+
+    foreach ($emails as $email) {
+        hesk_mail($email, $subject, $message, $htmlMessage, $modsForHesk_settings);
+    }
 
     return true;
 }

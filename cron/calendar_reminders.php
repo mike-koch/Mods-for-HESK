@@ -126,7 +126,6 @@ $sql = "SELECT `ticket`.`id` AS `id`, `ticket`.`trackid` AS `trackid`, `ticket`.
     WHERE `due_date` IS NOT NULL
         AND `due_date` <= NOW()
         AND `overdue_email_sent` = '0'";
-        //AND `owner` <> 0";
 
 $successful_emails = 0;
 $failed_emails = 0;
@@ -137,9 +136,19 @@ if (hesk_dbNumRows($rs) > 0 && !$included_email_functions) {
     $included_email_functions = true;
 }
 
+$user_rs = hesk_dbQuery("SELECT `id`, `isadmin`, `categories`, `email`,
+    CASE WHEN `heskprivileges` LIKE '%can_view_unassigned%' THEN 1 ELSE 0 END AS `can_view_unassigned`
+    FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `notify_overdue_unassigned` = '1'
+    AND (`heskprivileges` LIKE '%can_view_tickets%' OR `isadmin` = '1')");
+
+$users = [];
+while ($row = hesk_dbFetchAssoc($user_rs)) {
+    $users[] = $row;
+}
+
 $tickets_to_flag = [];
 while ($row = hesk_dbFetchAssoc($rs)) {
-    if (mfh_sendOverdueTicketReminder($row, $modsForHesk_settings)) {
+    if (mfh_sendOverdueTicketReminder($row, $users, $modsForHesk_settings)) {
         $tickets_to_flag[] = $row['id'];
         $successful_emails++;
 
