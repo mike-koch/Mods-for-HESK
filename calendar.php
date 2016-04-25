@@ -47,6 +47,11 @@ hesk_session_start();
 hesk_dbConnect();
 $modsForHesk_settings = mfh_getSettings();
 
+// Is the calendar enabled?
+if ($modsForHesk_settings['enable_calendar'] != '1') {
+    hesk_error($hesklang['calendar_disabled']);
+}
+
 $categories = [];
 $orderBy = $modsForHesk_settings['category_order_column'];
 $categorySql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `usage` <> 1 AND `type` = '0' ORDER BY '" . $orderBy . "'";

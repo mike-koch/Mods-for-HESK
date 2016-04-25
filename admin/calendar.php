@@ -43,14 +43,17 @@ hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
 
-/* Check permissions for this feature */
-//hesk_checkPermission('can_service_msg');
-
 // Define required constants
 if (hesk_checkPermission('can_man_calendar', 0)) {
     define('MFH_CALENDAR', 1);
 } else {
     define('MFH_CALENDAR_READONLY', 1);
+}
+
+// Is the calendar enabled?
+$modsForHesk_settings = mfh_getSettings();
+if ($modsForHesk_settings['enable_calendar'] == '0') {
+    hesk_error($hesklang['calendar_disabled']);
 }
 
 // Get categories for the dropdown
@@ -490,6 +493,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <p id="lang_error_updating_event"><?php echo $hesklang['error_updating_event']; ?></p>
     <p id="lang_ticket_due_date_updated"><?php echo $hesklang['ticket_due_date_updated']; ?></p>
     <p id="lang_error_updating_ticket_due_date"><?php echo $hesklang['error_updating_ticket_due_date']; ?></p>
+    <p id="setting_first_day_of_week"><?php echo $modsForHesk_settings['first_day_of_week']; ?></p>
 </div>
 <?php
 

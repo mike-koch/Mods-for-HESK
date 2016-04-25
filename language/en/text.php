@@ -85,6 +85,13 @@ $hesklang['can_man_calendar'] = 'Can manage calendar events';
 $hesklang['calendar_reminder'] = 'Upcoming Event: %%TITLE%%';
 $hesklang['overdue_ticket'] = '[%%TRACKID%%] Ticket Overdue!';
 $hesklang['notify_overdue_unassigned'] = 'A ticket is overdue not assigned to me';
+$hesklang['calendar_settings'] = 'Calendar Settings';
+$hesklang['enable_calendar'] = 'Enable calendar';
+$hesklang['yes_enable_calendar'] = '<b>YES</b>, enable calendar';
+$hesklang['yes_enable_calendar_staff_only'] = '<b>YES</b>, enable calendar, but only for staff';
+$hesklang['no_disable_calendar'] = '<b>NO</b>, disable calendar';
+$hesklang['first_day_of_week'] = 'First day of week';
+$hesklang['calendar_disabled'] = 'The calendar is disabled';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';
