@@ -87,11 +87,17 @@ $hesklang['overdue_ticket'] = '[%%TRACKID%%] Ticket Overdue!';
 $hesklang['notify_overdue_unassigned'] = 'A ticket is overdue not assigned to me';
 $hesklang['calendar_settings'] = 'Calendar Settings';
 $hesklang['enable_calendar'] = 'Enable calendar';
+$hesklang['enable_calendar_help'] = 'Setting to enable / disable the calendar. The calendar can be shown to everyone, staff only, or disable the calendar entirely.';
 $hesklang['yes_enable_calendar'] = '<b>YES</b>, enable calendar';
 $hesklang['yes_enable_calendar_staff_only'] = '<b>YES</b>, enable calendar, but only for staff';
 $hesklang['no_disable_calendar'] = '<b>NO</b>, disable calendar';
 $hesklang['first_day_of_week'] = 'First day of week';
+$hesklang['first_day_of_week_help'] = 'This setting decides which day of the week to show first per week.';
 $hesklang['calendar_disabled'] = 'The calendar is disabled';
+$hesklang['default_view'] = 'Default view';
+$hesklang['default_view_help'] = 'Decide which view will be shown to customers and staff by default when viewing the calendar. Staff can change this setting via their own profile.';
+$hesklang['week'] = 'Week';
+$hesklang['agenda'] = 'Agenda';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

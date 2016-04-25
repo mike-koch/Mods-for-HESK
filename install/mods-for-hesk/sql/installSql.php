@@ -743,5 +743,6 @@ function execute260Scripts()
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` ADD COLUMN `notify_overdue_unassigned` ENUM('0', '1') NOT NULL DEFAULT '0' AFTER `notify_note_unassigned`");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('enable_calendar', '1')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('first_day_of_week', '0')");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('default_calendar_view', 'month')");
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.6.0' WHERE `Key` = 'modsForHeskVersion'");
 }
