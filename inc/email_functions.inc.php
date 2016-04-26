@@ -343,7 +343,7 @@ function mfh_sendOverdueTicketReminder($ticket, $users, $modsForHesk_settings) {
         $emails[] = $ticket['user_email'];
     }
     foreach ($users as $user) {
-        $categories = explode(',', $user['categories'])
+        $categories = explode(',', $user['categories']);
         if ($user['email'] != $ticket['user_email']
             && ($user['isadmin'] || in_array($ticket['category'], $categories))) {
             $emails[] = $user['email'];
