@@ -190,7 +190,7 @@ function closeAndReset(lat, lon) {
 
 function initializeMapForCustomer(latitude, longitude, yourLocationText) {
     map = L.map('map').setView([latitude, longitude], 15);
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     marker = L.marker([latitude, longitude], {draggable: true})
@@ -204,7 +204,7 @@ function initializeMapForCustomer(latitude, longitude, yourLocationText) {
 
 function initializeMapForStaff(latitude, longitude, usersLocationText) {
     map = L.map('map').setView([latitude, longitude], 15);
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     marker = L.marker([latitude, longitude], {draggable: true})
@@ -227,7 +227,7 @@ function initializeMapForStaff(latitude, longitude, usersLocationText) {
 }
 
 function getFriendlyLocation(latitude, longitude) {
-    var URL = 'http://nominatim.openstreetmap.org/reverse?format=json&lat='+ latitude +'&lon='+ longitude +'&zoom=15&addressdetails=1';
+    var URL = 'https://nominatim.openstreetmap.org/reverse?format=json&lat='+ latitude +'&lon='+ longitude +'&zoom=15&addressdetails=1';
     $.getJSON(URL, function(data) {
         $('#friendly-location').text(data.display_name);
     });
