@@ -10,6 +10,7 @@ $(document).ready(function() {
         timeFormat: 'H:mm',
         axisFormat: 'H:mm',
         firstDay: $('#setting_first_day_of_week').text(),
+        defaultView: $('#setting_default_view').text().trim(),
         events: function(start, end, timezone, callback) {
             $.ajax({
                 url: getHelpdeskUrl() + '/internal-api/admin/calendar/?start=' + start + '&end=' + end,

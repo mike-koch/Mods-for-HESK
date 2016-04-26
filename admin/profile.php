@@ -230,6 +230,9 @@ function update_profile()
     /* Auto-start ticket timer */
     $_SESSION['new']['autostart'] = isset($_POST['autostart']) ? 1 : 0;
 
+    /* Default calendar view */
+    $_SESSION['new']['default_calendar_view'] = hesk_POST('default-calendar-view', 0);
+
     /* Update auto-refresh time */
     $_SESSION['new']['autorefresh'] = isset($_POST['autorefresh']) ? $_POST['autorefresh'] : 0;
 
@@ -277,7 +280,8 @@ function update_profile()
         `notify_customer_new`='" . $_SESSION['new']['notify_customer_new'] . "',
         `notify_customer_reply`='" . $_SESSION['new']['notify_customer_reply'] . "',
         `notify_overdue_unassigned`='" . $_SESSION['new']['notify_overdue_unassigned'] . "',
-        `show_suggested`='" . $_SESSION['new']['show_suggested'] . "'
+        `show_suggested`='" . $_SESSION['new']['show_suggested'] . "',
+        `default_calendar_view`=" . intval($_SESSION['new']['default_calendar_view']) . "
 	    WHERE `id`='" . intval($_SESSION['id']) . "' LIMIT 1"
         );
 

@@ -94,10 +94,11 @@ $hesklang['no_disable_calendar'] = '<b>NO</b>, disable calendar';
 $hesklang['first_day_of_week'] = 'First day of week';
 $hesklang['first_day_of_week_help'] = 'This setting decides which day of the week to show first per week.';
 $hesklang['calendar_disabled'] = 'The calendar is disabled';
-$hesklang['default_view'] = 'Default view';
+$hesklang['default_view'] = 'Default Calendar View';
 $hesklang['default_view_help'] = 'Decide which view will be shown to customers and staff by default when viewing the calendar. Staff can change this setting via their own profile.';
 $hesklang['week'] = 'Week';
-$hesklang['agenda'] = 'Agenda';
+$hesklang['calendar_day'] = 'Day';
+$hesklang['calendar_index'] = 'View upcoming events';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

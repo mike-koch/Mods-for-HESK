@@ -26,6 +26,9 @@ if (hesk_check_maintenance(false)) {
 hesk_load_cron_database_functions();
 hesk_dbConnect();
 
+$modsForHesk_settings = mfh_getSettings();
+$skip_events = $modsForHesk_settings['enable_calendar'] == 0;
+
 if ($hesk_settings['debug_mode']) {
     echo "Starting Calendar Reminders...\n";
 }
@@ -60,19 +63,18 @@ $sql = "SELECT `reminder`.`id` AS `reminder_id`, `reminder`.`user_id` AS `user_i
     AND `email_sent` = '0'";
 
 $rs = hesk_dbQuery($sql);
-$modsForHesk_settings = mfh_getSettings();
 $reminders_to_flag = [];
 $tickets_to_flag = [];
 
 $included_email_functions = false;
-if (hesk_dbNumRows($rs) > 0) {
+if (hesk_dbNumRows($rs) > 0 && !$skip_events) {
     require(HESK_PATH . 'inc/email_functions.inc.php');
     $included_email_functions = true;
 }
 
 $successful_emails = 0;
 $failed_emails = 0;
-while ($row = hesk_dbFetchAssoc($rs)) {
+while ($row = hesk_dbFetchAssoc($rs) && !$skip_events) {
     if (mfh_sendCalendarReminder($row, $modsForHesk_settings)) {
         $reminders_to_flag[] = $row['reminder_id'];
         $successful_emails++;

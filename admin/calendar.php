@@ -31,7 +31,7 @@
 define('IN_SCRIPT', 1);
 define('VALIDATOR', 1);
 define('HESK_PATH', '../');
-define('PAGE_TITLE', 'ADMIN_TOOLS');
+define('PAGE_TITLE', 'ADMIN_CALENDAR');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -494,6 +494,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <p id="lang_ticket_due_date_updated"><?php echo $hesklang['ticket_due_date_updated']; ?></p>
     <p id="lang_error_updating_ticket_due_date"><?php echo $hesklang['error_updating_ticket_due_date']; ?></p>
     <p id="setting_first_day_of_week"><?php echo $modsForHesk_settings['first_day_of_week']; ?></p>
+    <p id="setting_default_view">
+        <?php
+        $view_array = array(
+            0 => 'month',
+            1 => 'agendaWeek',
+            2 => 'agendaDay',
+        );
+        echo $view_array[$_SESSION['default_calendar_view']];
+        ?>
+    </p>
 </div>
 <?php
 

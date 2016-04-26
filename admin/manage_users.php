@@ -49,6 +49,13 @@ hesk_checkPermission('can_man_users');
 
 /* Possible user features */
 $hesk_settings['features'] = hesk_getFeatureArray();
+$modsForHesk_settings = mfh_getSettings();
+$calendar_view_array = array(
+    'month' => 0,
+    'agendaWeek' => 1,
+    'agendaDay' => 2,
+);
+$default_view = $calendar_view_array[$modsForHesk_settings['default_calendar_view']];
 
 /* Set default values */
 $default_userdata = array(
@@ -78,6 +85,7 @@ $default_userdata = array(
     'notify_customer_new' => 1,
     'notify_customer_reply' => 1,
     'show_suggested' => 1,
+    'default_calendar_view' => $default_view,
 
     // Notifications
     'notify_new_unassigned' => 1,
@@ -91,7 +99,6 @@ $default_userdata = array(
     'notify_overdue_unassigned' => 0,
 );
 
-$modsForHesk_settings = mfh_getSettings();
 /* A list of all categories */
 $orderBy = $modsForHesk_settings['category_order_column'];
 $hesk_settings['categories'] = array();
@@ -518,7 +525,8 @@ function new_user()
         `notify_note_unassigned`,
         `notify_overdue_unassigned`,
         `autorefresh`,
-        `permission_template`) VALUES (
+        `permission_template`,
+        `default_calendar_view`) VALUES (
 	'" . hesk_dbEscape($myuser['user']) . "',
 	'" . hesk_dbEscape($myuser['pass']) . "',
 	'" . intval($myuser['isadmin']) . "',
@@ -543,7 +551,8 @@ function new_user()
 	'" . ($myuser['notify_note_unassigned']) . "',
 	'" . ($myuser['notify_overdue_unassigned']) . "',
 	" . intval($myuser['autorefresh']) . ",
-	" . intval($myuser['template']) . ")");
+	" . intval($myuser['template']) . ",
+	" . intval($myuser['default_calendar_view']) . ")");
 
     $_SESSION['seluser'] = hesk_dbInsertID();
 
@@ -668,7 +677,8 @@ function update_user()
 	`notify_note_unassigned`='" . ($myuser['notify_note_unassigned']) . "',
 	`notify_overdue_unassigned`='" . ($myuser['notify_overdue_unassigned']) . "',
 	`autorefresh`=" . intval($myuser['autorefresh']) . ",
-	`permission_template`=" . intval($myuser['template']) . "
+	`permission_template`=" . intval($myuser['template']) . ",
+	`default_calendar_view`=" . intval($myuser['default_calendar_view']) . "
     WHERE `id`='" . intval($myuser['id']) . "' LIMIT 1");
 
     // If they are now inactive, remove any manager rights
@@ -769,6 +779,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     $myuser['notify_customer_new'] = isset($_POST['notify_customer_new']) ? 1 : 0;
     $myuser['notify_customer_reply'] = isset($_POST['notify_customer_reply']) ? 1 : 0;
     $myuser['show_suggested'] = isset($_POST['show_suggested']) ? 1 : 0;
+    $myuser['default_calendar_view'] = hesk_POST('default-calendar-view', 0);
 
     /* Notifications */
     $myuser['notify_new_unassigned'] = empty($_POST['notify_new_unassigned']) ? 0 : 1;

@@ -2046,11 +2046,11 @@ if (defined('HESK_DEMO')) {
                                 <option value="month" <?php if ($modsForHesk_settings['default_calendar_view'] == 'month') { echo 'selected'; } ?>>
                                     <?php echo $hesklang['month']; ?>
                                 </option>
-                                <option value="week" <?php if ($modsForHesk_settings['default_calendar_view'] == 'week') { echo 'selected'; } ?>>
+                                <option value="agendaWeek" <?php if ($modsForHesk_settings['default_calendar_view'] == 'week') { echo 'selected'; } ?>>
                                     <?php echo $hesklang['week']; ?>
                                 </option>
-                                <option value="agenda" <?php if ($modsForHesk_settings['default_calendar_view'] == 'agenda') { echo 'selected'; } ?>>
-                                    <?php echo $hesklang['agenda']; ?>
+                                <option value="agendaDay" <?php if ($modsForHesk_settings['default_calendar_view'] == 'agenda') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['calendar_day']; ?>
                                 </option>
                             </select>
                         </div>

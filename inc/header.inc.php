@@ -320,10 +320,12 @@ if ($modsForHesk_settings['show_icons']) {
                 if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_CALENDAR') {
                     $active = ' active';
                 }
+                if ($modsForHesk_settings['enable_calendar'] == 1):
                 ?>
-                <li class="dropdown<?php echo $active; ?>">
+                <li class="<?php echo $active; ?>">
                     <a href="<?php echo HESK_PATH; ?>calendar.php"><i class="fa fa-calendar" <?php echo $iconDisplay; ?>></i>&nbsp;Calendar</a>
                 </li>
+                <?php endif; ?>
                 <?php include('custom/header-custom.inc.php'); ?>
             </ul>
             <?php if ($hesk_settings['can_sel_lang']) { ?>

@@ -295,6 +295,10 @@ div.setupButtons {
     color: blue;
 }
 
+.black {
+    color: black;
+}
+
 .pad-down-20 {
     padding-top: 20px;
 }

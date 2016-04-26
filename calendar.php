@@ -122,4 +122,6 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 </div>
 <div style="display: none">
     <p id="lang_error_loading_events"><?php echo $hesklang['error_loading_events']; ?></p>
+    <p id="setting_default_view"><?php echo $modsForHesk_settings['default_calendar_view']; ?></p>
+    <p id="setting_first_day_of_week"><?php echo $modsForHesk_settings['first_day_of_week']; ?></p>
 </div>
