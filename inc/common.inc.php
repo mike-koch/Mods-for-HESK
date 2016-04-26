@@ -1836,7 +1836,11 @@ function mfh_log($location, $message, $severity, $user) {
 }
 
 function mfh_log_debug($location, $message, $user) {
-    mfh_log($location, $message, 0, $user);
+    global $hesk_settings;
+
+    if ($hesk_settings['debug_mode']) {
+        mfh_log($location, $message, 0, $user);
+    }
 }
 
 function mfh_log_info($location, $message, $user) {

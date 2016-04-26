@@ -351,8 +351,12 @@ function displayEditModal(date) {
         .find('input[name="start-date"]').val(date.start.format('YYYY-MM-DD')).end()
         .find('input[name="end-date"]').val(date.end.format('YYYY-MM-DD')).end()
         .find('input[name="id"]').val(date.id).end()
-        .find('input[name="reminder-value"]').val(date.reminderValue).end()
-        .find('select[name="reminder-unit"]').val(date.reminderUnits).end();
+        .find('input[name="reminder-value"]').val(date.reminderValue).end();
+
+    if (date.reminderUnits != null) {
+        $form.find('select[name="reminder-unit"]').val(date.reminderUnits).end();
+    }
+
 
     var createTicketLink = getHelpdeskUrl() + '/' + getAdminDirectory() + '/new_ticket.php?subject=';
     createTicketLink += encodeURI('[' + date.start.format('YYYY-MM-DD') + '] ' + date.title);

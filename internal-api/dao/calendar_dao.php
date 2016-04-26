@@ -26,6 +26,13 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
 
     $events = [];
     while ($row = hesk_dbFetchAssoc($rs)) {
+        // Skip the event if the user does not have access to it
+        if (!$_SESSION['isadmin'] && !in_array($row['category'], $_SESSION['categories'])) {
+            continue;
+        }
+
+        mfh_log_debug('Calendar', "Creating event with id: {$row['id']}", '');
+
         $event['type'] = 'CALENDAR';
         $event['id'] = intval($row['id']);
         $event['startTime'] = $row['start'];
@@ -59,6 +66,11 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
 
         $rs = hesk_dbQuery($sql);
         while ($row = hesk_dbFetchAssoc($rs)) {
+            // Skip the ticket if the user does not have access to it
+            if (!$_SESSION['isadmin'] && !in_array($row['category'], $_SESSION['categories'])) {
+                continue;
+            }
+
             $event['type'] = 'TICKET';
             $event['trackingId'] = $row['trackid'];
             $event['title'] = '[' . $row['trackid'] . '] ' . $row['subject'];
@@ -75,6 +87,10 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
 }
 
 function create_event($event, $hesk_settings) {
+    // Make sure the user can create events in this category
+    if (!$_SESSION['isadmin'] && !in_array($event['category'], $_SESSION['categories'])) {
+        print_error('Access Denied', 'You cannot create an event in this category');
+    }
 
     $event['start'] = date('Y-m-d H:i:s', strtotime($event['start']));
     $event['end'] = date('Y-m-d H:i:s', strtotime($event['end']));
@@ -101,6 +117,11 @@ function create_event($event, $hesk_settings) {
 }
 
 function update_event($event, $hesk_settings) {
+    // Make sure the user can edit events in this category
+    if (!$_SESSION['isadmin'] && !in_array($event['category'], $_SESSION['categories'])) {
+        print_error('Access Denied', 'You cannot edit an event in this category');
+    }
+
     $event['start'] = date('Y-m-d H:i:s', strtotime($event['start']));
     $event['end'] = date('Y-m-d H:i:s', strtotime($event['end']));
     if ($event['create_ticket_date'] != null) {
@@ -128,6 +149,13 @@ function update_event($event, $hesk_settings) {
 }
 
 function delete_event($id, $hesk_settings) {
+    // Make sure the user can delete events in this category
+    $categoryRs = hesk_dbQuery('SELECT `category` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'calendar_event` WHERE `id` = ' . intval($id));
+    $category = hesk_dbFetchAssoc($categoryRs);
+    if (!$_SESSION['isadmin'] && !in_array($category['category'], $_SESSION['categories'])) {
+        print_error('Access Denied', 'You cannot delete events in this category');
+    }
+
     $sql = "DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` WHERE `id` = " . intval($id);
 
     hesk_dbQuery($sql);
