@@ -230,18 +230,25 @@ function update_profile()
     /* Auto-start ticket timer */
     $_SESSION['new']['autostart'] = isset($_POST['autostart']) ? 1 : 0;
 
+    /* Default calendar view */
+    $_SESSION['new']['default_calendar_view'] = hesk_POST('default-calendar-view', 0);
+
     /* Update auto-refresh time */
     $_SESSION['new']['autorefresh'] = isset($_POST['autorefresh']) ? $_POST['autorefresh'] : 0;
 
     /* Notifications */
-    $_SESSION['new']['notify_new_unassigned'] = empty($_POST['notify_new_unassigned']) || !$can_view_unassigned ? 0 : 1;
-    $_SESSION['new']['notify_new_my'] = empty($_POST['notify_new_my']) ? 0 : 1;
-    $_SESSION['new']['notify_reply_unassigned'] = empty($_POST['notify_reply_unassigned']) || !$can_view_unassigned ? 0 : 1;
-    $_SESSION['new']['notify_reply_my'] = empty($_POST['notify_reply_my']) ? 0 : 1;
-    $_SESSION['new']['notify_assigned'] = empty($_POST['notify_assigned']) ? 0 : 1;
-    $_SESSION['new']['notify_note'] = empty($_POST['notify_note']) ? 0 : 1;
-    $_SESSION['new']['notify_note_unassigned'] = empty($_POST['notify_note_unassigned']) ? 0 : 1;
-    $_SESSION['new']['notify_pm'] = empty($_POST['notify_pm']) ? 0 : 1;
+    if (!(!$_SESSION[$session_array]['isadmin'] && isset($_SESSION[$session_array]['heskprivileges'])
+        && strpos($_SESSION[$session_array]['heskprivileges'], 'can_change_notification_settings') === false)) {
+        $_SESSION['new']['notify_new_unassigned'] = empty($_POST['notify_new_unassigned']) || !$can_view_unassigned ? 0 : 1;
+        $_SESSION['new']['notify_new_my'] = empty($_POST['notify_new_my']) ? 0 : 1;
+        $_SESSION['new']['notify_reply_unassigned'] = empty($_POST['notify_reply_unassigned']) || !$can_view_unassigned ? 0 : 1;
+        $_SESSION['new']['notify_reply_my'] = empty($_POST['notify_reply_my']) ? 0 : 1;
+        $_SESSION['new']['notify_assigned'] = empty($_POST['notify_assigned']) ? 0 : 1;
+        $_SESSION['new']['notify_note'] = empty($_POST['notify_note']) ? 0 : 1;
+        $_SESSION['new']['notify_note_unassigned'] = empty($_POST['notify_note_unassigned']) ? 0 : 1;
+        $_SESSION['new']['notify_pm'] = empty($_POST['notify_pm']) ? 0 : 1;
+        $_SESSION['new']['notify_overdue_unassigned'] = empty($_POST['notify_overdue_unassigned']) ? 0 : 1;
+    }
 
     /* Any errors? */
     if (strlen($hesk_error_buffer)) {
@@ -272,7 +279,9 @@ function update_profile()
         `notify_note_unassigned`='" . intval($_SESSION['new']['notify_note_unassigned']) . "',
         `notify_customer_new`='" . $_SESSION['new']['notify_customer_new'] . "',
         `notify_customer_reply`='" . $_SESSION['new']['notify_customer_reply'] . "',
-        `show_suggested`='" . $_SESSION['new']['show_suggested'] . "'
+        `notify_overdue_unassigned`='" . $_SESSION['new']['notify_overdue_unassigned'] . "',
+        `show_suggested`='" . $_SESSION['new']['show_suggested'] . "',
+        `default_calendar_view`=" . intval($_SESSION['new']['default_calendar_view']) . "
 	    WHERE `id`='" . intval($_SESSION['id']) . "' LIMIT 1"
         );
 

@@ -244,6 +244,7 @@ $tmpvar['latitude'] = hesk_POST('latitude', 'E-4');
 $tmpvar['longitude'] = hesk_POST('longitude', 'E-4');
 
 $tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets'];
+$tmpvar['due_date'] = hesk_POST('due-date');
 
 // Set user agent and screen res to null
 $tmpvar['user_agent'] = NULL;

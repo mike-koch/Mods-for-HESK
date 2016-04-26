@@ -255,6 +255,108 @@ function hesk_notifyStaff($email_template, $sql_where, $modsForHesk_settings, $i
 
 } // END hesk_notifyStaff()
 
+function mfh_sendCalendarReminder($reminder_data, $modsForHesk_settings) {
+    global $hesk_settings, $hesklang;
+
+    if (defined('HESK_DEMO')) {
+        return true;
+    }
+
+    hesk_setLanguage($reminder_data['user_language']);
+
+    $valid_emails = hesk_validEmails();
+    $subject = NULL;
+    if (!isset($valid_emails['calendar_reminder'])) {
+        hesk_error($hesklang['inve']);
+    } else {
+        $subject = $valid_emails['calendar_reminder'];
+    }
+
+    // Format email subject and message
+    $subject = str_replace('%%TITLE%%', $reminder_data['event_name'], $subject);
+    $message = hesk_getEmailMessage('calendar_reminder', NULL, $modsForHesk_settings, 1, 0, 1);
+    $message = mfh_processCalendarTemplate($message, $reminder_data);
+    $htmlMessage = hesk_getHtmlMessage('calendar_reminder', NULL, $modsForHesk_settings, 1, 0, 1);
+    $htmlMessage = mfh_processCalendarTemplate($htmlMessage, $reminder_data);
+
+    hesk_mail($reminder_data['user_email'], $subject, $message, $htmlMessage, $modsForHesk_settings);
+
+    return true;
+}
+
+function mfh_processCalendarTemplate($message, $reminder_data) {
+    global $hesk_settings;
+
+    if ($reminder_data['event_all_day'] == '1') {
+        $format = 'Y-m-d';
+    } else {
+        $format = $hesk_settings['timeformat'];
+    }
+
+    $start_date = strtotime($reminder_data['event_start']);
+    $formatted_start_date = date($format, $start_date);
+    $formatted_end_date = '';
+
+    if ($reminder_data['event_start'] != $reminder_data['event_end']) {
+        $end_date = strtotime($reminder_data['event_end']);
+        $formatted_end_date = ' - ' . date($format, $end_date);
+    }
+
+    // Process replaced fields
+    $message = str_replace('%%TITLE%%', $reminder_data['event_name'], $message);
+    $message = str_replace('%%LOCATION%%', $reminder_data['event_location'], $message);
+    $message = str_replace('%%CATEGORY%%', $reminder_data['event_category'], $message);
+    $message = str_replace('%%WHEN%%', $formatted_start_date . $formatted_end_date, $message);
+    $message = str_replace('%%COMMENTS%%', $reminder_data['event_comments'], $message);
+
+    return $message;
+}
+
+
+function mfh_sendOverdueTicketReminder($ticket, $users, $modsForHesk_settings) {
+    global $hesk_settings, $hesklang;
+
+    if (defined('HESK_DEMO')) {
+        return true;
+    }
+
+    hesk_setLanguage($ticket['user_language']);
+
+    $valid_emails = hesk_validEmails();
+    $subject = NULL;
+    if (!isset($valid_emails['overdue_ticket'])) {
+        hesk_error($hesklang['inve']);
+    } else {
+        $subject = $valid_emails['overdue_ticket'];
+    }
+
+    // Format email subject and message
+    $subject = str_replace('%%TITLE%%', $ticket['subject'], $subject);
+    $subject = str_replace('%%TRACKID%%', $ticket['trackid'], $subject);
+    $message = hesk_getEmailMessage('overdue_ticket', NULL, $modsForHesk_settings, 1, 0, 1);
+    $message = hesk_processMessage($message, $ticket, 1, 1, 0, $modsForHesk_settings);
+    $htmlMessage = hesk_getHtmlMessage('overdue_ticket', NULL, $modsForHesk_settings, 1, 0, 1);
+    $htmlMessage = hesk_processMessage($htmlMessage, $ticket, 1, 1, 0, $modsForHesk_settings, 1);
+
+    $emails = [];
+    if ($ticket['user_email'] != NULL) {
+        $emails[] = $ticket['user_email'];
+    }
+    foreach ($users as $user) {
+        $categories = explode(',', $user['categories']);
+        if ($user['email'] != $ticket['user_email']
+            && ($user['isadmin'] || in_array($ticket['category'], $categories))) {
+            $emails[] = $user['email'];
+        }
+    }
+
+    foreach ($emails as $email) {
+        hesk_mail($email, $subject, $message, $htmlMessage, $modsForHesk_settings);
+    }
+
+    return true;
+}
+
 
 function hesk_validEmails()
 {
@@ -302,6 +404,12 @@ function hesk_validEmails()
 
         // --> Staff password reset email
         'reset_password' => $hesklang['reset_password'],
+
+        // --> Calendar reminder
+        'calendar_reminder' => $hesklang['calendar_reminder'],
+
+        // --> Overdue Ticket reminder
+        'overdue_ticket' => $hesklang['overdue_ticket'],
 
     );
 } // END hesk_validEmails()

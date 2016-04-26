@@ -77,6 +77,9 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone-basic.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/fullcalendar.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
@@ -85,13 +88,15 @@ $modsForHesk_settings = mfh_getSettings();
             src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
     <script language="JavaScript" type="text/javascript"
             src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-clockpicker.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-fontawesome-4.3.0.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-iconpicker.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core.php"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core-admin.php"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.jgrowl.min.js"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;
@@ -214,7 +219,16 @@ $modsForHesk_settings = mfh_getSettings();
             $onload .= "ss();";
         }
     }
-    ?>
+
+    if (defined('MFH_CALENDAR')) { ?>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar.js"></script>
+    <?php } else if (defined('MFH_CALENDAR_READONLY')) { ?>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-admin-readonly.js"></script>
+    <?php } ?>
 
 </head>
 <body onload="<?php echo $onload;

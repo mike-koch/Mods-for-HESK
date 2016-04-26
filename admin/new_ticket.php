@@ -263,7 +263,7 @@ if (!$show['show']) {
 
             // List categories
             $orderByColumn = $modsForHesk_settings['category_order_column'];
-            $result = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` ORDER BY `' . $orderByColumn . '` ASC');
+            $result = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` WHERE `usage` <> 2 ORDER BY `' . $orderByColumn . '` ASC');
             while ($row = hesk_dbFetchAssoc($result)) {
                 if (isset($_SESSION['as_category']) && $_SESSION['as_category'] == $row['id']) {
                     $selected = ' selected="selected"';
@@ -729,6 +729,15 @@ elseif (hesk_checkPermission('can_man_ticket_tpl', 0)) {
     <?php
 }
 ?>
+
+<div class="form-group">
+    <label for="due-date" class="col-sm-3 control-label"><?php echo $hesklang['due_date']; ?></label>
+    <div class="col-sm-9">
+        <input class="form-control datepicker" name="due-date" placeholder="<?php echo htmlspecialchars($hesklang['due_date']); ?>"
+            value="<?php if (isset($_GET['due_date'])) { echo $_GET['due_date']; } ?>">
+        <span class="help-block"><?php echo $hesklang['date_format']; ?></span>
+    </div>
+</div>
 
 <?php if (in_array('subject', $_SESSION['iserror'])) {
     echo '<div class="form-group has-error">';

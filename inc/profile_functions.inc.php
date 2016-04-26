@@ -320,11 +320,30 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                     </div>
                 <?php } ?>
                 <div class="form-group">
+                    <label for="default-calendar-view" class="col-sm-3 control-label">
+                        <?php echo $hesklang['default_view']; ?>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="default-calendar-view">
+                            <option value="0" <?php if ($_SESSION[$session_array]['default_calendar_view'] == 0) { echo 'selected'; } ?>>
+                                <?php echo $hesklang['month']; ?>
+                            </option>
+                            <option value="1" <?php if ($_SESSION[$session_array]['default_calendar_view'] == 1) { echo 'selected'; } ?>>
+                                <?php echo $hesklang['week']; ?>
+                            </option>
+                            <option value="2" <?php if ($_SESSION[$session_array]['default_calendar_view'] == 2) { echo 'selected'; } ?>>
+                                <?php echo $hesklang['calendar_day']; ?>
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="autoRefresh"
                            class="col-sm-3 control-label"><?php echo $hesklang['ticket_auto_refresh']; ?></label>
 
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="autorefresh" name="autorefresh"
+                               placeholder="<?php echo htmlspecialchars($hesklang['ticket_auto_refresh']); ?>"
                                value="<?php echo $_SESSION[$session_array]['autorefresh']; ?>">
                         <span class="help-block"><?php echo $hesklang['autorefresh_restrictions']; ?></span>
                     </div>
@@ -431,17 +450,6 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                     echo ' ' . $disabledText ?> /> <?php echo $hesklang['npms']; ?></label></div>
                         </div>
                         <?php
-                        if ($disabledText == 'disabled') { ?>
-                            <input type="hidden" name="notify_reply_my"
-                                   value="<?php echo !empty($_SESSION[$session_array]['notify_reply_my']) ? '1' : '0'; ?>">
-                            <input type="hidden" name="notify_assigned"
-                                   value="<?php echo !empty($_SESSION[$session_array]['notify_assigned']) ? '1' : '0'; ?>">
-                            <input type="hidden" name="notify_note"
-                                   value="<?php echo !empty($_SESSION[$session_array]['notify_note']) ? '1' : '0'; ?>">
-                            <input type="hidden" name="notify_pm"
-                                   value="<?php echo !empty($_SESSION[$session_array]['notify_pm']) ? '1' : '0'; ?>">
-                        <?php }
-
                         if ($_SESSION['isadmin']) { ?>
                             <div class="col-md-9 col-md-offset-3">
                                 <div class="checkbox"><label><input type="checkbox" name="notify_note_unassigned"
@@ -450,8 +458,15 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                         } ?>> <?php echo $hesklang['notify_note_unassigned']; ?></label></div>
                             </div>
                             <?php
-                        }
-                    }
+                        } ?>
+                        <div class="col-md-9 col-md-offset-3">
+                            <div class="checkbox"><label><input type="checkbox" name="notify_overdue_unassigned"
+                                                                value="1" <?php if (!empty($_SESSION[$session_array]['notify_overdue_unassigned'])) {
+                                        echo 'checked="checked"';
+                                    }
+                                    echo ' ' . $disabledText ?> /> <?php echo $hesklang['notify_overdue_unassigned']; ?></label></div>
+                        </div>
+                    <?php }
 
                     ?>
                 </div>

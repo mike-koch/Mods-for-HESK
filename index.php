@@ -262,7 +262,7 @@ function print_add_ticket()
                 // Get categories
                 hesk_dbConnect();
                 $orderBy = $modsForHesk_settings['category_order_column'];
-                $res = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `type`='0' ORDER BY `" . $orderBy . "` ASC");
+                $res = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `type`='0' AND `usage` <> 2 ORDER BY `" . $orderBy . "` ASC");
 
                 if (hesk_dbNumRows($res) == 1) {
                     // Only 1 public category, no need for a select box
@@ -1348,11 +1348,11 @@ function print_start()
                     </a>
                 </div>
             </div>
+            <div class="row default-row-margins">
             <?php
             if ($hesk_settings['kb_enable'])
             {
                 ?>
-                <div class="row default-row-margins">
                     <div class="col-sm-6 col-xs-12">
                         <a href="knowledgebase.php" class="button-link">
                             <div class="panel panel-default">
@@ -1370,11 +1370,34 @@ function print_start()
                             </div>
                         </a>
                     </div>
+            <?php } if ($modsForHesk_settings['enable_calendar'] == 1): ?>
+                <div class="col-sm-6 col-xs-12">
+                    <a href="calendar.php" class="button-link">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-1">
+                                        <i class="fa fa-calendar black" style="font-size: 32px"
+                                           title="<?php echo $hesklang['calendar_title_case']; ?>"></i>
+                                    </div>
+                                    <div class="col-xs-11">
+                                        <b><?php echo $hesklang['calendar_title_case']; ?></b><br>
+                                        <?php echo $hesklang['calendar_index']; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
+            <?php endif; ?>
+            </div>
             <?php
+            if ($hesk_settings['kb_enable'])
+            {
                 hesk_kbTopArticles($hesk_settings['kb_index_popart']);
                 hesk_kbLatestArticles($hesk_settings['kb_index_latest']);
-            }?>
+            }
+            ?>
 		</div>
 	</div>
 	<div class="blankSpace"></div>

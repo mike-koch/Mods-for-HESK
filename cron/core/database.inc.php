@@ -33,7 +33,7 @@
 *******************************************************************************/
 
 /* Check if this is a valid include */
-if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
+if (!defined('IN_SCRIPT')) {die('Invalid attempt');} 
 
 
 function hesk_dbSetNames()
@@ -42,7 +42,7 @@ function hesk_dbSetNames()
 
     if ($hesk_settings['db_vrsn'])
     {
-		mysqli_set_charset($hesk_db_link, 'utf8');
+		mysql_set_charset('utf8', $hesk_db_link);
     }
     else
     {
@@ -56,7 +56,7 @@ function hesk_dbFormatEmail($email, $field = 'email')
 {
 	global $hesk_settings;
 
-	$email = hesk_dbLike($email);
+	$email = hesk_dbLike($email);    
 
 	if ($hesk_settings['multi_eml'])
 	{
@@ -81,7 +81,7 @@ function hesk_dbEscape($in)
 {
 	global $hesk_db_link;
 
-    $in = mysqli_real_escape_string($hesk_db_link, stripslashes($in));
+    $in = mysql_real_escape_string(stripslashes($in), $hesk_db_link);
     $in = str_replace('`','&#96;',$in);
 
     return $in;
@@ -100,37 +100,43 @@ function hesk_dbConnect()
 	global $hesk_db_link;
     global $hesklang;
 
-    // Is mysqli supported?
-    if ( ! function_exists('mysqli_connect') )
+    // Is mysql supported?
+    if ( ! function_exists('mysql_connect') )
     {
     	die($hesklang['emp']);
     }
 
-	// Do we need a special port? Check and connect to the database
-	if ( strpos($hesk_settings['db_host'], ':') )
-	{
-		list($hesk_settings['db_host'], $hesk_settings['db_port']) = explode(':', $hesk_settings['db_host']);
-		$hesk_db_link = @mysqli_connect($hesk_settings['db_host'], $hesk_settings['db_user'], $hesk_settings['db_pass'], $hesk_settings['db_name'], intval($hesk_settings['db_port']) );
-	}
-	else
-	{
-		$hesk_db_link = @mysqli_connect($hesk_settings['db_host'], $hesk_settings['db_user'], $hesk_settings['db_pass'], $hesk_settings['db_name']);
-	}
+    // Connect to the database
+    $hesk_db_link = @mysql_connect($hesk_settings['db_host'], $hesk_settings['db_user'], $hesk_settings['db_pass']);
 
 	// Errors?
     if ( ! $hesk_db_link)
     {
     	if ($hesk_settings['debug_mode'])
         {
-            $message = $hesklang['mysql_said'] . ': (' . mysqli_connect_errno() . ') ' . mysqli_connect_error();
+            $message = $hesklang['mysql_said'] . ': ' . mysql_error();
         }
         else
         {
             $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
         }
-        header('Content-Type: application/json');
-        print_error($hesklang['cant_connect_db'], $message);
-        http_response_code(500);
+        echo $hesklang['cant_connect_db'] . ': ' . $message;
+        die();
+    }
+
+    if ( ! @mysql_select_db($hesk_settings['db_name'], $hesk_db_link))
+    {
+    	if ($hesk_settings['debug_mode'])
+        {
+            $message = $hesklang['mysql_said'] . ': ' . mysql_error();
+        }
+        else
+        {
+            $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
+        }
+
+        echo $hesklang['cant_connect_db'] . ': ' . $message;
+        die();
     }
 
     // Check MySQL/PHP version and set encoding to utf8
@@ -145,7 +151,7 @@ function hesk_dbClose()
 {
 	global $hesk_db_link;
 
-    return @mysqli_close($hesk_db_link);
+    return @mysql_close($hesk_db_link);
 
 } // END hesk_dbClose()
 
@@ -163,31 +169,28 @@ function hesk_dbQuery($query)
 
     $hesk_last_query = $query;
 
-    #echo "<p>EXPLAIN $query</p>\n";
-
-    if ($res = @mysqli_query($hesk_db_link, $query))
+    if ($res = @mysql_query($query, $hesk_db_link))
     {
     	return $res;
     }
     elseif ($hesk_settings['debug_mode'])
     {
-        $message = 'Error executing SQL: ' .  $query . '; ' . $hesklang['mysql_said'] . ': ' . mysqli_error($hesk_db_link);
+        $message = $hesklang['mysql_said'] . mysql_error();
     }
     else
     {
         $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
     }
-    mfh_log_error($_SERVER['HTTP_REFERER'], $message, $_SESSION['id']);
-    header('Content-Type: application/json');
-    print_error($hesklang['cant_sql'], $message);
-    die(http_response_code(500));
+    mfh_log_error('CRON', $hesklang['cant_sql'] . ': ' . $message, 'CRON');
+    die();
+
 } // END hesk_dbQuery()
 
 
 function hesk_dbFetchAssoc($res)
 {
 
-    return @mysqli_fetch_assoc($res);
+    return @mysql_fetch_assoc($res);
 
 } // END hesk_FetchAssoc()
 
@@ -195,26 +198,15 @@ function hesk_dbFetchAssoc($res)
 function hesk_dbFetchRow($res)
 {
 
-    return @mysqli_fetch_row($res);
+    return @mysql_fetch_row($res);
 
 } // END hesk_FetchRow()
 
 
 function hesk_dbResult($res, $row = 0, $column = 0)
 {
-	$i=0;
-	$res->data_seek(0);
 
-	while ($tmp = @mysqli_fetch_array($res, MYSQLI_NUM))
-    {
-		if ($i==$row)
-        {
-        	return $tmp[$column];
-        }
-		$i++;
-	}
-
-	return '';
+    return @mysql_result($res, $row, $column);
 
 } // END hesk_dbResult()
 
@@ -223,7 +215,7 @@ function hesk_dbInsertID()
 {
 	global $hesk_db_link;
 
-    if ($lastid = @mysqli_insert_id($hesk_db_link))
+    if ($lastid = @mysql_insert_id($hesk_db_link))
     {
         return $lastid;
     }
@@ -234,7 +226,7 @@ function hesk_dbInsertID()
 function hesk_dbFreeResult($res)
 {
 
-    return @mysqli_free_result($res);
+    return mysql_free_result($res);
 
 } // END hesk_dbFreeResult()
 
@@ -242,7 +234,7 @@ function hesk_dbFreeResult($res)
 function hesk_dbNumRows($res)
 {
 
-    return @mysqli_num_rows($res);
+    return @mysql_num_rows($res);
 
 } // END hesk_dbNumRows()
 
@@ -251,6 +243,6 @@ function hesk_dbAffectedRows()
 {
 	global $hesk_db_link;
 
-    return @mysqli_affected_rows($hesk_db_link);
+    return @mysql_affected_rows($hesk_db_link);
 
 } // END hesk_dbAffectedRows()

@@ -720,5 +720,30 @@ function execute260Scripts()
       `size` INT(10) UNSIGNED NOT NULL,
       `type` ENUM('0','1') NOT NULL,
       `date_uploaded` TIMESTAMP NOT NULL) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` (
+      `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `start` DATETIME,
+      `end` DATETIME,
+      `all_day` ENUM('0','1') NOT NULL,
+      `name` VARCHAR(255) NOT NULL,
+      `location` VARCHAR(255),
+      `comments` MEDIUMTEXT,
+      `category` INT NOT NULL) ENGINE = MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` (
+      `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `user_id` INT NOT NULL,
+      `event_id` INT NOT NULL,
+      `amount` INT NOT NULL,
+      `unit` INT NOT NULL,
+      `email_sent` ENUM('0', '1') NOT NULL DEFAULT '0') ENGINE = MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD COLUMN `due_date` DATETIME");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD COLUMN `overdue_email_sent` ENUM('0','1')");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ADD COLUMN `color` VARCHAR(7)");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ADD COLUMN `usage` INT NOT NULL DEFAULT 0");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` ADD COLUMN `notify_overdue_unassigned` ENUM('0', '1') NOT NULL DEFAULT '0' AFTER `notify_note_unassigned`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` ADD COLUMN `default_calendar_view` INT NOT NULL DEFAULT '0' AFTER `notify_note_unassigned`");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('enable_calendar', '1')");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('first_day_of_week', '0')");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('default_calendar_view', 'month')");
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.6.0' WHERE `Key` = 'modsForHeskVersion'");
 }

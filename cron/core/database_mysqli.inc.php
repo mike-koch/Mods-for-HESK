@@ -128,9 +128,10 @@ function hesk_dbConnect()
         {
             $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
         }
-        header('Content-Type: application/json');
-        print_error($hesklang['cant_connect_db'], $message);
-        http_response_code(500);
+        $error_message = $hesklang['cant_connect_db'] . ': ' . $message;
+        mfh_log_error('CRON', $error_message, 'CRON');
+        echo $error_message;
+        die();
     }
 
     // Check MySQL/PHP version and set encoding to utf8
@@ -178,9 +179,8 @@ function hesk_dbQuery($query)
         $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
     }
     mfh_log_error($_SERVER['HTTP_REFERER'], $message, $_SESSION['id']);
-    header('Content-Type: application/json');
-    print_error($hesklang['cant_sql'], $message);
-    die(http_response_code(500));
+    echo $hesklang['cant_sql'] . ': ' . $message;
+    die();
 } // END hesk_dbQuery()
 
 

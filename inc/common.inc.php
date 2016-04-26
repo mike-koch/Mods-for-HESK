@@ -179,6 +179,16 @@ function hesk_load_internal_api_database_functions()
     }
 } // END hesk_load_database_functions()
 
+function hesk_load_cron_database_functions()
+{
+    if (function_exists('mysqli_connect')) {
+        require(HESK_PATH . 'cron/core/database_mysqli.inc.php');
+    } // Default to MySQL
+    else {
+        require(HESK_PATH . 'cron/core/database.inc.php');
+    }
+} // END hesk_load_cron_database_functions()
+
 function hesk_unlink($file, $older_than = 0)
 {
     return (is_file($file) && (!$older_than || (time() - filectime($file)) > $older_than) && @unlink($file)) ? true : false;
@@ -1762,6 +1772,7 @@ function hesk_getFeatureArray()
         'can_man_settings', /* User can manage helpdesk settings */
         'can_change_notification_settings', /* User can change notification settings */
         'can_view_logs', /* User can view the message logs */
+        'can_man_calendar', /* User can manage calendar events */
     );
 }
 
@@ -1820,10 +1831,16 @@ function mfh_log($location, $message, $severity, $user) {
     $sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` (`username`, `message`, `severity`, `location`, `timestamp`)
         VALUES ('" . hesk_dbEscape($user) . "',
         '" . hesk_dbEscape($message) . "', " . intval($severity) . ", '" . hesk_dbEscape($location) . "', NOW())";
+
+    hesk_dbQuery($sql);
 }
 
 function mfh_log_debug($location, $message, $user) {
-    mfh_log($location, $message, 0, $user);
+    global $hesk_settings;
+
+    if ($hesk_settings['debug_mode']) {
+        mfh_log($location, $message, 0, $user);
+    }
 }
 
 function mfh_log_info($location, $message, $user) {

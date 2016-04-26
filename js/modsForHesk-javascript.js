@@ -28,7 +28,7 @@ var loadJquery = function()
         html: 'true'
     });
 
-    //-- Activate jQuery's date picker
+    //-- Activate Bootstrap Datepicker
     $(function() {
         $('.datepicker').datepicker({
             todayBtn: "linked",
@@ -46,7 +46,35 @@ var loadJquery = function()
         searchText: $('#search-icon').text(),
         labelFooter: $('#footer-icon').text()
     });
+
+    $('.clockpicker').clockpicker();
+
+    // Set the proper text color for background-volatile elements
+    $('.background-volatile').each(function() {
+        $this = $(this);
+        var background = $this.css('background-color');
+
+        if (background !== 'rgba(0, 0, 0, 0)'
+            && background !== 'transparent') {
+            var grayCount = calculateGrayCount(background);
+
+            if (grayCount > 186) {
+                $this.css('color', '#000');
+            } else {
+                $this.css('color', '#fff');
+            }
+        }
+    });
 };
+
+function calculateGrayCount(background) {
+    var parts = background.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    var red = parts[1];
+    var green = parts[2];
+    var blue = parts[3];
+
+    return red*0.299 + green*0.587 + blue*0.114;
+}
 
 var setIcon = function(icon) {
     $('[data-toggle="iconpicker"]').iconpicker('setIcon', icon);

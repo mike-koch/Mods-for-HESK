@@ -295,6 +295,10 @@ div.setupButtons {
     color: blue;
 }
 
+.black {
+    color: black;
+}
+
 .pad-down-20 {
     padding-top: 20px;
 }
@@ -315,4 +319,13 @@ div.setupButtons {
 
 .no-bottom-border {
     border-bottom: none;
+}
+
+.category-label {
+    font-weight: normal;
+    font-size: 1em;
+}
+
+.fc-content {
+    text-overflow: ellipsis;
 }

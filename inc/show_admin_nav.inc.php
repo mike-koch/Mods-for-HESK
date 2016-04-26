@@ -145,6 +145,13 @@ if (hesk_check_kb_only(false)) {
                         echo '<li'.$active.'><a href="knowledgebase_private.php"><i class="fa fa-book" ' . $iconDisplay . '></i>&nbsp;' . $hesklang['menu_kb'] . '</a></li>';
                     }
                 }
+                if ($modsForHesk_settings['enable_calendar'] != 0) {
+                    $active = '';
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CALENDAR') {
+                        $active = ' class="active"';
+                    }
+                    echo '<li'.$active.'><a href="calendar.php"><i class="fa fa-calendar" ' . $iconDisplay . '></i>&nbsp;' . $hesklang['calendar_title_case'] . '</a></li>';
+                }
                 if (hesk_checkPermission('can_run_reports', 0)) {
                     $active = '';
                     if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_REPORTS') {

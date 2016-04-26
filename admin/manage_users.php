@@ -49,6 +49,13 @@ hesk_checkPermission('can_man_users');
 
 /* Possible user features */
 $hesk_settings['features'] = hesk_getFeatureArray();
+$modsForHesk_settings = mfh_getSettings();
+$calendar_view_array = array(
+    'month' => 0,
+    'agendaWeek' => 1,
+    'agendaDay' => 2,
+);
+$default_view = $calendar_view_array[$modsForHesk_settings['default_calendar_view']];
 
 /* Set default values */
 $default_userdata = array(
@@ -78,6 +85,7 @@ $default_userdata = array(
     'notify_customer_new' => 1,
     'notify_customer_reply' => 1,
     'show_suggested' => 1,
+    'default_calendar_view' => $default_view,
 
     // Notifications
     'notify_new_unassigned' => 1,
@@ -88,9 +96,9 @@ $default_userdata = array(
     'notify_note' => 1,
     'notify_pm' => 1,
     'notify_note_unassigned' => 1,
+    'notify_overdue_unassigned' => 0,
 );
 
-$modsForHesk_settings = mfh_getSettings();
 /* A list of all categories */
 $orderBy = $modsForHesk_settings['category_order_column'];
 $hesk_settings['categories'] = array();
@@ -515,8 +523,10 @@ function new_user()
         `notify_pm`,
         `notify_note`,
         `notify_note_unassigned`,
+        `notify_overdue_unassigned`,
         `autorefresh`,
-        `permission_template`) VALUES (
+        `permission_template`,
+        `default_calendar_view`) VALUES (
 	'" . hesk_dbEscape($myuser['user']) . "',
 	'" . hesk_dbEscape($myuser['pass']) . "',
 	'" . intval($myuser['isadmin']) . "',
@@ -539,8 +549,10 @@ function new_user()
 	'" . ($myuser['notify_pm']) . "',
 	'" . ($myuser['notify_note']) . "',
 	'" . ($myuser['notify_note_unassigned']) . "',
+	'" . ($myuser['notify_overdue_unassigned']) . "',
 	" . intval($myuser['autorefresh']) . ",
-	" . intval($myuser['template']) . ")");
+	" . intval($myuser['template']) . ",
+	" . intval($myuser['default_calendar_view']) . ")");
 
     $_SESSION['seluser'] = hesk_dbInsertID();
 
@@ -581,6 +593,7 @@ function update_user()
         $myuser['notify_pm'] = 0;
         $myuser['notify_note'] = 0;
         $myuser['notify_note_unassigned'] = 0;
+        $myuser['notify_overdue_unassigned'] = 0;
     }
 
     /* Check for duplicate usernames */
@@ -662,8 +675,10 @@ function update_user()
 	`notify_pm`='" . ($myuser['notify_pm']) . "',
 	`notify_note`='" . ($myuser['notify_note']) . "',
 	`notify_note_unassigned`='" . ($myuser['notify_note_unassigned']) . "',
+	`notify_overdue_unassigned`='" . ($myuser['notify_overdue_unassigned']) . "',
 	`autorefresh`=" . intval($myuser['autorefresh']) . ",
-	`permission_template`=" . intval($myuser['template']) . "
+	`permission_template`=" . intval($myuser['template']) . ",
+	`default_calendar_view`=" . intval($myuser['default_calendar_view']) . "
     WHERE `id`='" . intval($myuser['id']) . "' LIMIT 1");
 
     // If they are now inactive, remove any manager rights
@@ -764,6 +779,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     $myuser['notify_customer_new'] = isset($_POST['notify_customer_new']) ? 1 : 0;
     $myuser['notify_customer_reply'] = isset($_POST['notify_customer_reply']) ? 1 : 0;
     $myuser['show_suggested'] = isset($_POST['show_suggested']) ? 1 : 0;
+    $myuser['default_calendar_view'] = hesk_POST('default-calendar-view', 0);
 
     /* Notifications */
     $myuser['notify_new_unassigned'] = empty($_POST['notify_new_unassigned']) ? 0 : 1;
@@ -774,6 +790,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     $myuser['notify_note'] = empty($_POST['notify_note']) ? 0 : 1;
     $myuser['notify_pm'] = empty($_POST['notify_pm']) ? 0 : 1;
     $myuser['notify_note_unassigned'] = empty($_POST['notify_note_unassigned']) ? 0 : 1;
+    $myuser['notify_overdue_unassigned'] = empty($_POST['notify_overdue_unassigned']) ? 0 : 1;
 
     /* Save entered info in session so we don't loose it in case of errors */
     $_SESSION['userdata'] = $myuser;
@@ -890,7 +907,7 @@ function toggle_active()
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `manager` = 0 WHERE `manager` = " . intval($myuser));
 
         $notificationSql = ", `autoassign` = 0, `notify_new_unassigned` = 0, `notify_new_my` = 0, `notify_reply_unassigned` = 0,
-        `notify_reply_my` = 0, `notify_assigned` = 0, `notify_pm` = 0, `notify_note` = 0, `notify_note_unassigned` = 0";
+        `notify_reply_my` = 0, `notify_assigned` = 0, `notify_pm` = 0, `notify_note` = 0, `notify_note_unassigned` = 0, `notify_overdue_unassigned` = 0";
     }
 
     hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `active` = '" . $active . "'" . $notificationSql . " WHERE `id` = '" . intval($myuser) . "'");

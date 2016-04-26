@@ -552,6 +552,14 @@ if (defined('HESK_DEMO')) {
                 <li class="active"><a href="#general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
                 <li><a href="#helpdesk" data-toggle="tab"><?php echo $hesklang['tab_2']; ?></a></li>
                 <li><a href="#knowledgebase" data-toggle="tab"><?php echo $hesklang['tab_3']; ?></a></li>
+                <li>
+                    <a href="#calendar" data-toggle="tab"><?php echo $hesklang['calendar_title_case']; ?>
+                        <span class="label label-primary" data-toggle="tooltip"
+                              title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>">
+                            <?php echo $hesklang['mods_for_hesk_acronym']; ?>
+                        </span>
+                    </a>
+                </li>
                 <li><a href="#customFields" data-toggle="tab"><?php echo $hesklang['tab_4']; ?></a></li>
                 <li><a href="#email" data-toggle="tab"><?php echo $hesklang['tab_6']; ?></a></li>
                 <li><a href="#ticket-list" data-toggle="tab"><?php echo $hesklang['tab_7']; ?></a></li>
@@ -1966,6 +1974,85 @@ if (defined('HESK_DEMO')) {
                         </div>
                         <div class="col-sm-5 pad-right-0">
                             <p class="form-control-static"><?php echo $hesklang['s_onin']; ?></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Tab -->
+                <div class="tab-pane fade in" id="calendar">
+                    <h6 class="bold"><?php echo $hesklang['calendar_settings']; ?></h6>
+                    <div class="footerWithBorder blankSpace"></div>
+                    <div class="form-group">
+                        <label for="enable_calendar" class="col-sm-4 col-xs-12 control-label">
+                            <?php echo $hesklang['enable_calendar']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo $hesklang['enable_calendar']; ?>"
+                               data-content="<?php echo $hesklang['enable_calendar_help']; ?>"></i>
+                        </label>
+                        <div class="col-sm-8 form-inline">
+                            <?php
+                            $on = $modsForHesk_settings['enable_calendar'] == 1 ? 'checked="checked"' : '';
+                            $off = $modsForHesk_settings['enable_calendar'] ? '' : 'checked="checked"';
+                            $only = $modsForHesk_settings['enable_calendar'] == 2 ? 'checked="checked"' : '';
+                            echo '
+                        <div class="radio"><label><input type="radio" name="enable_calendar" value="1" ' . $on . ' /> ' . $hesklang['yes_enable_calendar'] . '</label></div><br>
+                        <div class="radio"><label><input type="radio" name="enable_calendar" value="2" ' . $only . ' /> ' . $hesklang['yes_enable_calendar_staff_only'] . '</label></div><br>
+                        <div class="radio"><label><input type="radio" name="enable_calendar" value="0" ' . $off . ' /> ' . $hesklang['no_disable_calendar'] . '</label></div>';
+                            ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="first-day-of-week" class="col-sm-4 col-xs-12 control-label">
+                            <?php echo $hesklang['first_day_of_week']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo $hesklang['first_day_of_week']; ?>"
+                               data-content="<?php echo $hesklang['first_day_of_week_help']; ?>"></i>
+                        </label>
+                        <div class="col-sm-8 col-xs-12">
+                            <select name="first-day-of-week" class="form-control">
+                                <option value="0" <?php if ($modsForHesk_settings['first_day_of_week'] == '0') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['d0']; ?>
+                                </option>
+                                <option value="1" <?php if ($modsForHesk_settings['first_day_of_week'] == '1') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['d1']; ?>
+                                </option>
+                                <option value="2" <?php if ($modsForHesk_settings['first_day_of_week'] == '2') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['d2']; ?>
+                                </option>
+                                <option value="3" <?php if ($modsForHesk_settings['first_day_of_week'] == '3') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['d3']; ?>
+                                </option>
+                                <option value="4" <?php if ($modsForHesk_settings['first_day_of_week'] == '4') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['d4']; ?>
+                                </option>
+                                <option value="5" <?php if ($modsForHesk_settings['first_day_of_week'] == '5') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['d5']; ?>
+                                </option>
+                                <option value="6" <?php if ($modsForHesk_settings['first_day_of_week'] == '6') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['d6']; ?>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="default-view" class="col-sm-4 col-xs-12 control-label">
+                            <?php echo $hesklang['default_view']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo $hesklang['default_view']; ?>"
+                               data-content="<?php echo $hesklang['default_view_help']; ?>"></i>
+                        </label>
+                        <div class="col-sm-8 col-xs-12">
+                            <select name="default-view" class="form-control">
+                                <option value="month" <?php if ($modsForHesk_settings['default_calendar_view'] == 'month') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['month']; ?>
+                                </option>
+                                <option value="agendaWeek" <?php if ($modsForHesk_settings['default_calendar_view'] == 'week') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['week']; ?>
+                                </option>
+                                <option value="agendaDay" <?php if ($modsForHesk_settings['default_calendar_view'] == 'agenda') { echo 'selected'; } ?>>
+                                    <?php echo $hesklang['calendar_day']; ?>
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </div>
