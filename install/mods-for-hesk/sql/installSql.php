@@ -320,7 +320,7 @@ function execute211Scripts()
     global $hesk_settings;
 
     hesk_dbConnect();
-    executeQuery("ALTER IGNORE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` CHANGE `dt` `dt` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` CHANGE `dt` `dt` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets`
 					CHANGE `email` `email` VARCHAR( 1000 ) NOT NULL DEFAULT '',
 					CHANGE `ip` `ip` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
