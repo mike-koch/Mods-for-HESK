@@ -310,6 +310,7 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
     $tmpvar['user_agent'] = NULL;
     $tmpvar['screen_resolution_width'] = "NULL";
     $tmpvar['screen_resolution_height'] = "NULL";
+    $tmpvar['due_date'] = "";
 
     // Insert ticket to database
     $ticket = hesk_newTicket($tmpvar);
