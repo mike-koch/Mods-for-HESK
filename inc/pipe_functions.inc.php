@@ -220,7 +220,11 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
         $ticket['lastreplier'] = ($tmpvar['name'] == $hesklang['pde']) ? $tmpvar['email'] : $tmpvar['name'];;
 
         // If staff hasn't replied yet, keep ticket status "New", otherwise set it to "Waiting reply from staff"
-        $ticket['status'] = $ticket['status'] ? 1 : 0;
+        $new_status_rs = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsNewTicketStatus` = 1");
+        $waiting_reply_rs = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsCustomerReplyStatus` = 1");
+        $new_status = hesk_dbFetchAssoc($new_status_rs);
+        $waiting_reply_rs = hesk_dbFetchAssoc($waiting_reply_rs);
+        $ticket['status'] = $ticket['status'] ? $waiting_reply_rs['id'] : $new_status['id'];
 
         // Update ticket as necessary
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `lastchange`=NOW(),`status`='{$ticket['status']}',`replies`=`replies`+1,`lastreplier`='0' WHERE `id`='" . intval($ticket['id']) . "' LIMIT 1");
@@ -306,6 +310,7 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
     $tmpvar['user_agent'] = NULL;
     $tmpvar['screen_resolution_width'] = "NULL";
     $tmpvar['screen_resolution_height'] = "NULL";
+    $tmpvar['due_date'] = "";
 
     // Insert ticket to database
     $ticket = hesk_newTicket($tmpvar);
