@@ -1023,10 +1023,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
             <div class="row">
                 <div class="col-md-3 col-sm-12" style="padding-top: 6px">
-                    <p><?php echo $hesklang['created_on'] . ': ' . hesk_date($ticket['dt']); ?></p>
+                    <p><?php echo $hesklang['created_on'] . ': ' . hesk_date($ticket['dt'], true); ?></p>
                 </div>
                 <div class="col-md-3 col-sm-12" style="padding-top: 6px">
-                    <p><?php echo $hesklang['last_update'] . ': ' . hesk_date($ticket['lastchange']); ?></p>
+                    <p><?php echo $hesklang['last_update'] . ': ' . hesk_date($ticket['lastchange'], true); ?></p>
                 </div>
                 <div class="col-md-6 col-sm-12 close-ticket">
                     <?php
