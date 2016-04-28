@@ -1009,9 +1009,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         ?>
                             <script>
                                 var latitude = '';
-                                latitude = <?php echo $ticket['latitude']; ?>;
+                                latitude = <?php echo $ticket['latitude'] != '' ? $ticket['latitude'] : -1; ?>;
                                 var longitude = '';
-                                longitude = <?php echo $ticket['longitude']; ?>;
+                                longitude = <?php echo $ticket['longitude'] != '' ? $ticket['longitude'] : -1; ?>;
                                 initializeMapForStaff(latitude, longitude, "<?php echo $hesklang['users_location']; ?>");
                             </script>
                             <?php
@@ -1507,7 +1507,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         ?>
     </div>
 </div>
-<?php // TODO BEGIN HIDDEN FIELDS FOR LANGUAGE STRINGS ?>
 <div style="display: none">
     <p id="lang_ticket_due_date_updated"><?php echo $hesklang['ticket_due_date_updated']; ?></p>
     <p id="lang_none"><?php echo $hesklang['none']; ?></p>
@@ -2066,8 +2065,8 @@ function hesk_printCanned()
                         tinymce.get("message").setContent('');
                         tinymce.get("message").execCommand('mceInsertRawHTML', false, oldMsg + myMsg);
                     } else {
-                        var oldMsg = $('#message').text();
-                        var newMsg = $('<textarea />').html(oldMsg + myMsg).text();
+                        var oldMsg = $('#message').val();
+                        var newMsg = $('<textarea />').html(oldMsg + '\n' + myMsg).text();
                         $('#message').val(newMsg).trigger('input');
                     }
                 }
