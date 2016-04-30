@@ -158,8 +158,13 @@ if ($hesk_settings['confirm_email']) {
     // Anything entered as email confirmation?
     if (strlen($tmpvar['email2'])) {
         // Do we have multiple emails?
-        if ($hesk_settings['multi_eml'] && count(array_diff(explode(',', strtolower($tmpvar['email'])), explode(',', strtolower($tmpvar['email2'])))) == 0) {
-            $_SESSION['c_email2'] = $_POST['email2'];
+        if ($hesk_settings['multi_eml']) {
+            $tmpvar['email'] = str_replace(';', ',', $tmpvar['email']);
+            $tmpvar['email2'] = str_replace(';', ',', $tmpvar['email2']);
+
+            if (count(array_diff(explode(',', strtolower($tmpvar['email'])), explode(',', strtolower($tmpvar['email2'])))) == 0) {
+                $_SESSION['c_email2'] = $_POST['email2'];
+            }
         } // Single email address match
         elseif (!$hesk_settings['multi_eml'] && strtolower($tmpvar['email']) == strtolower($tmpvar['email2'])) {
             $_SESSION['c_email2'] = $_POST['email2'];
