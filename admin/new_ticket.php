@@ -1168,6 +1168,16 @@ if ($modsForHesk_settings['request_location']) {
     ';
 }
 
+// Set the message in the actual text box if rich text is enabled
+if ($modsForHesk_settings['rich_text_for_tickets']) {
+    echo "
+    <script>
+        tinymce.get('message').setContent('');
+        tinymce.get('message').execCommand('mceInsertRawHTML', false, '".$_SESSION['as_message']."');
+    </script>
+    ";
+}
+
 hesk_cleanSessionVars('iserror');
 hesk_cleanSessionVars('isnotice');
 
