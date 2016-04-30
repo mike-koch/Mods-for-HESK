@@ -63,6 +63,9 @@ if ($hesk_settings['can_sel_lang']) {
 }
 $tmpvar['name'] = hesk_input(hesk_POST('name')) or $hesk_error_buffer['name'] = $hesklang['enter_your_name'];
 $tmpvar['email'] = hesk_POST('email');
+if ($hesk_settings['multi_eml']) {
+    $tmpvar['email'] = str_replace(';',',', $tmpvar['email']);
+}
 $tmpvar['category'] = intval(hesk_POST('category')) or $hesk_error_buffer['category'] = $hesklang['sel_app_cat'];
 $tmpvar['priority'] = hesk_POST('priority');
 $tmpvar['priority'] = strlen($tmpvar['priority']) ? intval($tmpvar['priority']) : -1;

@@ -304,6 +304,7 @@ function hesk_verifyEmailMatch($trackingID, $my_email = 0, $ticket_email = 0, $e
 
     /* Validate email */
     if ($hesk_settings['multi_eml']) {
+        $ticket_email = str_replace(';', ',', $ticket_email);
         $valid_emails = explode(',', strtolower($ticket_email));
         if (in_array(strtolower($my_email), $valid_emails)) {
             /* Match, clean brute force attempts and return true */
