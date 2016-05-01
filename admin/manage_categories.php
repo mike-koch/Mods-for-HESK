@@ -135,7 +135,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                     <div class="form-group">
                         <label for="priority" class="col-sm-4 control-label"
                                style="font-size: .87em"><?php echo $hesklang['def_pri']; ?> <a href="#"
-                                                                                               onclick="alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')"><i
+                                    onclick="alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')"><i
                                     class="fa fa-question-circle settingsquestionmark"></i> </a> </label>
 
                         <div class="col-sm-8">
@@ -169,12 +169,12 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="usage" class="col-sm-4 control-label">Usage</label>
+                        <label for="usage" class="col-sm-4 control-label"><?php echo $hesklang['usage']; ?></label>
                         <div class="col-sm-8">
                             <select name="usage" class="form-control">
-                                <option value="0">Tickets and events</option>
-                                <option value="1">Tickets only</option>
-                                <option value="2">Events only</option>
+                                <option value="0"><?php echo $hesklang['tickets_and_events']; ?></option>
+                                <option value="1"><?php echo $hesklang['tickets_only']; ?></option>
+                                <option value="2"><?php echo $hesklang['events_only']; ?></option>
                             </select>
                         </div>
                     </div>
@@ -234,7 +234,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         <th><?php echo $hesklang['priority']; ?></th>
                         <th><?php echo $hesklang['not']; ?></th>
                         <th><?php echo $hesklang['graph']; ?></th>
-                        <th><?php echo 'Usage'; ?></th>
+                        <th><?php echo $hesklang['usage']; ?></th>
                         <th><?php echo $hesklang['manager']; ?></th>
                         <th><?php echo $hesklang['opt']; ?></th>
                     </tr>
@@ -263,10 +263,10 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                     $num = hesk_dbNumRows($res);
 
                     $usage = array(
-                        0 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="Tickets"></i>
-                                <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="Events"></i>',
-                        1 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="Tickets"></i><i class="fa fa-fw"></i>',
-                        2 => '<i class="fa fa-fw icon-link">&nbsp;</i> <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="Events"></i>'
+                        0 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="' . $hesklang['tickets'] . '"></i>
+                                <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="' . $hesklang['events'] . '"></i>',
+                        1 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="' . $hesklang['tickets'] . '"></i><i class="fa fa-fw"></i>',
+                        2 => '<i class="fa fa-fw icon-link">&nbsp;</i> <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="' . $hesklang['events'] . '"></i>'
                     );
 
                     while ($mycat = hesk_dbFetchAssoc($res)) {
@@ -380,23 +380,24 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="name" class="col-sm-3 control-label">Name</label>
+                                <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="name" class="form-control" placeholder="Name"
+                                    <input type="text" name="name" class="form-control" placeholder="<?php echo $hesklang['name']; ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="color" class="col-sm-3 control-label">Color</label>
+                                <label for="color" class="col-sm-3 control-label"><?php echo $hesklang['category_color']; ?></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="color" class="form-control category-colorpicker" placeholder="Color">
+                                    <input type="text" name="color" class="form-control category-colorpicker"
+                                           placeholder="<?php echo $hesklang['category_color']; ?>">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="priority" class="col-sm-3 control-label">Priority</label>
+                                <label for="priority" class="col-sm-3 control-label"><?php echo $hesklang['priority']; ?></label>
                                 <div class="col-sm-9">
                                     <select name="priority" class="form-control">
                                         <?php
@@ -411,7 +412,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                             </div>
                             <div class="form-group">
                                 <label for="manager" class="col-sm-3 control-label">
-                                    Manager
+                                    <?php echo $hesklang['manager']; ?>
                                 </label>
                                 <div class="col-sm-9">
                                     <?php echo output_user_dropdown($users); ?>
@@ -424,9 +425,9 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                 </label>
                                 <div class="col-sm-9">
                                     <select name="usage" class="form-control">
-                                        <option value="0">Tickets and events</option>
-                                        <option value="1">Tickets only</option>
-                                        <option value="2">Events only</option>
+                                        <option value="0"><?php echo $hesklang['tickets_and_events']; ?></option>
+                                        <option value="1"><?php echo $hesklang['tickets_only']; ?></option>
+                                        <option value="2"><?php echo $hesklang['events_only']; ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -440,11 +441,11 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                     <div class="btn-group">
                         <button type="button" class="btn btn-default cancel-callback" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>
-                            <span>Cancel</span>
+                            <span><?php echo $hesklang['cancel']; ?></span>
                         </button>
                         <button type="submit" class="btn btn-success callback-btn">
                             <i class="fa fa-check-circle"></i>
-                            <span>Save</span>
+                            <span><?php echo $hesklang['save']; ?></span>
                         </button>
                     </div>
                 </div>
