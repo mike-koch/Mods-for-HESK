@@ -99,6 +99,11 @@ $hesklang['default_view_help'] = 'Decide which view will be shown to customers a
 $hesklang['week'] = 'Week';
 $hesklang['calendar_day'] = 'Day';
 $hesklang['calendar_index'] = 'View upcoming events';
+$hesklang['usage'] = 'Usage';
+$hesklang['tickets_and_events'] = 'Tickets and events';
+$hesklang['tickets_only'] = 'Tickets only';
+$hesklang['events_only'] = 'Events only';
+$hesklang['events'] = 'Events';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

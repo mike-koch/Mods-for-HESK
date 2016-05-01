@@ -65,6 +65,11 @@ var loadJquery = function()
             }
         }
     });
+
+    // Initialize colorpicker
+    $('.colorpicker').colorpicker({
+        format: 'hex'
+    });
 };
 
 function calculateGrayCount(background) {
