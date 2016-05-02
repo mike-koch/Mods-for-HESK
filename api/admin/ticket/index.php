@@ -32,7 +32,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiSuccess {Integer} priority The ID of the priority the ticket is in
  * @apiSuccess {String} subject The subject of the ticket
  * @apiSuccess {String} message The original message of the ticket
- * @apiSuccess {String} dateCreated The date and time the ticket was submitted, in `YYYY-MM-DD hh:mm:ss`
+ * @apiSuccess {Date} dateCreated The date and time the ticket was submitted
  * @apiSuccess {Integer} articles The knowledgebase article IDs suggested when the user created the ticket
  * @apiSuccess {String} ip The IP address of the submitter
  * @apiSuccess {String} language The language the ticket was submitted in
@@ -41,7 +41,6 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiSuccess {String} timeWorked The total time worked on the ticket, in `hh:mm:ss`
  * @apiSuccess {Boolean} archive `true` if the ticket is tagged<br>`false` otherwise
  * @apiSuccess {Boolean} locked `true` if the ticket is locked<br>`false` otherwise
- * @apiSuccess {Binary[]} attachments Array of attachments, in base-64 encoded binary
  * @apiSuccess {Integer[]} merged Array of merged ticket IDs
  * @apiSuccess {String} legacyAuditTrail HTML markup of the entire "Audit Trail" section
  * @apiSuccess {String} custom1-20 Custom fields 1-20's values.
@@ -52,6 +51,8 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiSuccess {String} userAgent The user agent of the user who submitted the ticket
  * @apiSuccess {Integer} screenResolutionWidth The width of the screen resolution of the user who submitted the ticket
  * @apiSuccess {Integer} screenResolutionHeight The height of the screen resolution of the user who submitted the ticket
+ * @apiSuccess {Date} dueDate The ticket's due date, if there is one
+ * @apiSuccess {Boolean} overdueEmailSent Set to `true` if an overdue email has been sent.<br>`false` otherwise
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -102,7 +103,9 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *           "html": false,
  *           "userAgent": null,
  *           "screenResolutionWidth": null,
- *           "screenResolutionHeight": null
+ *           "screenResolutionHeight": null,
+ *           "dueDate": "2016-01-01 00:00:00",
+ *           "overdueEmailSent": "true"
  *      }
  *
  * @apiError (noTokenProvided) 400 No `X-Auth-Token` was provided where it is required
@@ -110,17 +113,18 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  */
 if ($request_method == 'GET') {
     $token = get_header('X-Auth-Token');
+    $user = NULL;
 
     try {
-        get_user_for_token($token, $hesk_settings);
+        $user = get_user_for_token($token, $hesk_settings);
     } catch (AccessException $e) {
         return http_response_code($e->getCode());
     }
 
     if (isset($_GET['id'])) {
-        $results = get_ticket_for_staff($hesk_settings, $_GET['id']);
+        $results = get_ticket_for_staff($hesk_settings, $user, $_GET['id']);
     } else {
-        $results = get_ticket_for_staff($hesk_settings);
+        $results = get_ticket_for_staff($hesk_settings, $user);
     }
 
     if ($results == NULL) {
