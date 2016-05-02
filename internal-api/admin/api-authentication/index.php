@@ -4,15 +4,23 @@ define('HESK_PATH', '../../../');
 define('INTERNAL_API_PATH', '../../');
 require_once(HESK_PATH . 'hesk_settings.inc.php');
 require_once(HESK_PATH . 'inc/common.inc.php');
+require_once(HESK_PATH . 'inc/admin_functions.inc.php');
 require_once(INTERNAL_API_PATH . 'core/output.php');
 require_once(INTERNAL_API_PATH . 'dao/api_authentication_dao.php');
 
+hesk_session_start();
 hesk_load_internal_api_database_functions();
 hesk_dbConnect();
 
 // Routing
 $request_method = $_SERVER['REQUEST_METHOD'];
 if ($request_method == 'POST') {
+
+    if (!isset($_SESSION['heskprivileges']) || !hesk_checkPermission('can_man_settings', 0)) {
+        print_error('Access Denied', 'Access Denied!');
+        return http_response_code(401);
+    }
+
     $user_id = $_POST['userId'];
     $action = $_POST['action'];
 

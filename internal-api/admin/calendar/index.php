@@ -24,6 +24,11 @@ if ($request_method === 'GET') {
 
     return output($events);
 } elseif ($request_method === 'POST') {
+    if ($request_method !== 'update-ticket' && !hesk_checkPermission('can_man_calendar', 0)) {
+        print_error('Access Denied', 'Access Denied!');
+        return http_response_code(401);
+    }
+
     $action = hesk_POST('action');
 
     if ($action === 'create') {
