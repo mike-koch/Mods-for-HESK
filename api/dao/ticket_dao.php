@@ -1,9 +1,22 @@
 <?php
 
-function get_ticket_for_id($hesk_settings, $id = NULL) {
-    $sql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ";
+function get_ticket_for_id($hesk_settings, $user, $id = NULL) {
+    $sql = "SELECT `tickets`.* FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets` ";
+    $sql .= "INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `users` ON `users`.`id` = " . intval($user['id']) . " ";
+    $used_where_clause = false;
     if ($id != NULL) {
-        $sql .= "WHERE `id` = ".intval($id);
+        $used_where_clause = true;
+        $sql .= "WHERE `tickets`.`id` = " . intval($id);
+    }
+
+    if (!$user['isadmin']) {
+        $clause = $used_where_clause ? ' AND ' : ' WHERE ';
+        $used_where_clause = true;
+
+        $sql .= $clause . ' `category` IN (' . $user['categories'] . ')';
+        $sql .= " AND ((`heskprivileges` LIKE '%can_view_tickets%' AND `owner` = " . intval($user['id']) . ")";
+        $sql .= " OR (`heskprivileges` LIKE '%can_view_unassigned%' AND `owner` = 0)";
+        $sql .= " OR (`heskprivileges` LIKE '%can_view_ass_others%' AND `owner` <> " . intval($user['id']) . "))";
     }
 
     $response = hesk_dbQuery($sql);
@@ -32,6 +45,7 @@ function build_results($response) {
         $row['screen_resolution_width'] = convert_to_int($row['screen_resolution_width']);
         $row['owner'] = convert_to_int($row['owner']);
         $row['parent'] = convert_to_int($row['parent']);
+        $row['overdue_email_sent'] = $row['overdue_email_sent'] == true;
 
 
         $results[] = $row;
