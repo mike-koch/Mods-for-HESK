@@ -78,7 +78,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *           "custom18": "",
  *           "custom19": "",
  *           "custom20": "",
- *           "html": false,
+ *           "html": false
  *      }
  *
  * @apiError (noTokenProvided) 400 No `X-Auth-Token` was provided where it is required

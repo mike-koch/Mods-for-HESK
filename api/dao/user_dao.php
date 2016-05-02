@@ -36,6 +36,8 @@ function get_user($hesk_settings, $id = NULL) {
         $row['ratingpos'] = intval($row['ratingpos']);
         $row['autorefresh'] = intval($row['autorefresh']);
         $row['active'] = get_boolean($row['active']);
+        $row['default_calendar_view'] = intval($row['default_calendar_view']);
+        $row['notify_overdue_unassigned'] = get_boolean($row['notify_overdue_unassigned']);
 
 
         // TODO: Remove this once GitHub #346 is complete

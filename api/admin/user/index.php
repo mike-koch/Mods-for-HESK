@@ -20,7 +20,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiVersion 0.0.0
  * @apiName GetUser
  * @apiGroup User
- * @apiPermission protected
+ * @apiPermission canManUsers
  *
  * @apiParam {Number} [id] The ID of the user. Omit for all users.
  *
@@ -30,7 +30,6 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiSuccess {String} name The user's name
  * @apiSuccess {String} email The user's email address
  * @apiSuccess {String} signature The user's signature, in plaintext
- * @apiSuccess {Unknown} language ??? (Unknown)
  * @apiSuccess {String[]} categories Ticket categories the user has access to. If the user is an admin, this list has one element: ""
  * @apiSuccess {Integer} afterReply Action to perform after replying to a ticket:<br>
  *     `0` - Show the ticket I just replied to<br>
@@ -55,6 +54,11 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  * @apiSuccess {String} rating The overall rating of the user, as a floating point decimal
  * @apiSuccess {Integer} autorefresh The ticket table autorefresh time for the user, in milliseconds
  * @apiSuccess {Boolean} active `true` if the user is active<br>`false` otherwise
+ * @apiSuccess {Integer} defaultCalendarView The default view displayed on the calendar screen:<br>
+ *     `0` - Month<br>
+ *     `1` - Week<br>
+ *     `2` - Day<br>
+ * @apiSuccess {Boolean} notifyOverdueUnassigned Notify user of overdue tickets assigned to others / not assigned
  *
  * @apiSuccessExample {json} Success-Response:
  *      HTTP/1.1 200 OK
@@ -65,7 +69,6 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *          "name": "Your name",
  *          "email": "mkoch227@gmail.com",
  *          "signature": "Sincerely,\r\n\r\nYour name\r\nYour website\r\nhttp://www.yourwebsite.com\r\n& < > ^ &",
- *          "language": null,
  *          "categories": [
  *              ""
  *          ],
@@ -91,19 +94,26 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *          "ratingPos": 0,
  *          "rating": "0",
  *          "autorefresh": 0,
- *          "active": true
+ *          "active": true,
+ *          "defaultCalendarView": 0,
+ *          "notifyOverdueUnassigned": true
  *      }
  *
  * @apiError (noTokenProvided) 400 No `X-Auth-Token` was provided where it is required
- * @apiError (invalidXAuthToken) 401 The `X-Auth-Token` provided was invalid
+ * @apiError (invalidXAuthToken) 401 The `X-Auth-Token` provided was invalid, or the user does not have the 'can_man_users' permission
  */
 if ($request_method == 'GET') {
     $token = get_header('X-Auth-Token');
+    $user = NULL;
 
     try {
-        get_user_for_token($token, $hesk_settings);
+        $user = get_user_for_token($token, $hesk_settings);
     } catch (AccessException $e) {
         return http_response_code($e->getCode());
+    }
+
+    if (!$user['isadmin'] && strpos($user['heskprivileges'], 'can_man_users') === false) {
+        return http_response_code(401);
     }
 
     if (isset($_GET['id'])) {

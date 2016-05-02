@@ -68,6 +68,10 @@ function convert_to_camel_case($user) {
     unset($user['ratingpos']);
     $user['heskPrivileges'] = $user['heskprivileges'];
     unset($user['heskprivileges']);
+    $user['defaultCalendarView'] = $user['default_calendar_view'];
+    unset($user['default_calendar_view']);
+    $user['notifyOverdueUnassigned'] = $user['notify_overdue_unassigned'];
+    unset($user['notify_overdue_unassigned']);
 
     return $user;
 }
