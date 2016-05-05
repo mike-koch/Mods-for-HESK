@@ -6,6 +6,7 @@ require_once(HESK_PATH . 'hesk_settings.inc.php');
 require_once(HESK_PATH . 'inc/common.inc.php');
 require_once(HESK_PATH . 'inc/attachments.inc.php');
 require_once(HESK_PATH . 'inc/posting_functions.inc.php');
+require_once(HESK_PATH . 'inc/admin_functions.inc.php');
 require_once(INTERNAL_API_PATH . 'core/output.php');
 require_once(INTERNAL_API_PATH . 'dao/calendar_dao.php');
 
@@ -24,12 +25,12 @@ if ($request_method === 'GET') {
 
     return output($events);
 } elseif ($request_method === 'POST') {
-    if ($request_method !== 'update-ticket' && !hesk_checkPermission('can_man_calendar', 0)) {
+    $action = hesk_POST('action');
+    if ($action !== 'update-ticket' && !hesk_checkPermission('can_man_calendar', 0)) {
         print_error('Access Denied', 'Access Denied!');
         return http_response_code(401);
     }
 
-    $action = hesk_POST('action');
 
     if ($action === 'create') {
         $event['title'] = hesk_POST('title');

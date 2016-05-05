@@ -104,6 +104,7 @@ if (is_dir(HESK_PATH . 'install')) {
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/fullcalendar.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
@@ -121,6 +122,7 @@ if (is_dir(HESK_PATH . 'install')) {
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core.php"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.jgrowl.min.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js"></script>
     <style>
         .navbar-default {
             background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
