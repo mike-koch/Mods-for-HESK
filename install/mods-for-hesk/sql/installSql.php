@@ -733,7 +733,7 @@ function execute260Scripts()
     global $hesk_settings;
     hesk_dbConnect();
 	
-    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('public_api', '1')");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('public_api', '0')");
 	executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` (
         `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         `username` VARCHAR(200),
