@@ -123,6 +123,9 @@ $sql = "SELECT `ticket`.`id` AS `id`, `ticket`.`trackid` AS `trackid`, `ticket`.
     `ticket`.`custom17` AS `custom17`, `ticket`.`custom18` AS `custom19`, `ticket`.`custom19` AS `custom19`, `ticket`.`custom20` AS `custom20`,
     `ticket`.`html` AS `html`
     FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `ticket`
+    INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` AS `status`
+        ON `ticket`.`status` = `status`.`ID`
+        AND `status`.`IsClosed` = 0
     LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `user`
         ON `ticket`.`owner` = `user`.`id`
     WHERE `due_date` IS NOT NULL
