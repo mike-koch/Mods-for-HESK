@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -137,7 +137,7 @@ if (hesk_dbAffectedRows() != 1) {
 
 // Show success message
 if ($status != $closedStatus) {
-    hesk_process_messages($hesklang['wrepo'], 'ticket.php?track=' . $trackingID . $hesk_settings['e_param'] . '&Refresh=' . rand(10000, 99999), 'NOTICE');
+    hesk_process_messages($hesklang['wrepo'],'ticket.php','NOTICE');
 } else {
-    hesk_process_messages($hesklang['your_ticket_been'] . ' ' . $action, 'ticket.php?track=' . $trackingID . $hesk_settings['e_param'] . '&Refresh=' . rand(10000, 99999), 'SUCCESS');
+    hesk_process_messages($hesklang['your_ticket_been'].' '.$action,'ticket.php','SUCCESS');
 }

@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.5 from 28th August 2015
+*  Version: 2.6.7 from 18th April 2016
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -44,6 +44,12 @@ hesk_load_database_functions();
 if ( $_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST) && ! empty($_SERVER['CONTENT_LENGTH']) )
 {
 	hesk_error($hesklang['maxpost']);
+}
+
+// For convenience allow adding at least 3 attachments at once in the KB
+if ($hesk_settings['attachments']['max_number'] < 3)
+{
+	$hesk_settings['attachments']['max_number'] = 3;
 }
 
 hesk_session_start();
@@ -433,20 +439,25 @@ if (!isset($_SESSION['hide']['new_article']))
                             <p class="font-size-90 form-control-static"><?php echo $hesklang['kw1']; ?></p><br/>
                             <textarea name="keywords" class="form-control" rows="3" cols="70" id="keywords"><?php if (isset($_SESSION['new_article']['keywords'])) {echo $_SESSION['new_article']['keywords'];} ?></textarea>
                         </div>
+                        <?php if ($hesk_settings['attachments']['use']): ?>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>
                             <div class="dropzone" id="filedrop">
                                 <div class="fallback">
                                     <input type="hidden" name="use-legacy-attachments" value="1">
                                     <?php
-                                    for ($i = 1; $i < 4; $i++) {
-                                        echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
-                                    }
+                                    for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
+									{
+										echo '<input type="file" name="attachment['.$i.']" size="50" /><br />';
+									}
                                     ?>
                                 </div>
                             </div>
                         </div>
-                        <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php'); ?>
+                        <?php 
+							display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php'); 
+							endif; // End attachments
+						?>
                         <br>
                         <div class="form-group">
                             <input type="hidden" name="a" value="new_article" />
@@ -1136,29 +1147,33 @@ function save_article()
     /* Article attachments */
 	define('KB',1);
     require_once(HESK_PATH . 'inc/posting_functions.inc.php');
-    require_once(HESK_PATH . 'inc/attachments.inc.php');
     $attachments = array();
     $use_legacy_attachments = hesk_POST('use-legacy-attachments', 0);
-
-    if ($use_legacy_attachments) {
-        for ($i=1;$i<=3;$i++) {
-            $att = hesk_uploadFile($i, false);
-            if ( ! empty($att)) {
-                $attachments[$i] = $att;
-            }
-        }
-    } else {
-        // The user used the new drag-and-drop system.
-        $temp_attachment_ids = hesk_POST_array('attachment-ids');
-        foreach ($temp_attachment_ids as $temp_attachment_id) {
-            // Simply get the temp info and move it to the attachments table
-            $temp_attachment = mfh_getTemporaryAttachment($temp_attachment_id);
-            $attachments[] = $temp_attachment;
-            mfh_deleteTemporaryAttachment($temp_attachment_id);
-        }
-    }
-
 	$myattachments='';
+
+	if ($hesk_settings['attachments']['use']) {
+		require_once(HESK_PATH . 'inc/attachments.inc.php');
+		
+		if ($use_legacy_attachments) {
+			for ($i=1; $i<=$hesk_settings['attachments']['max_number']; $i++)
+			{
+				$att = hesk_uploadFile($i);
+				if ( ! empty($att))
+				{
+					$attachments[$i] = $att;
+				}
+			}
+		} else {
+			// The user used the new drag-and-drop system.
+			$temp_attachment_ids = hesk_POST_array('attachment-ids');
+			foreach ($temp_attachment_ids as $temp_attachment_id) {
+				// Simply get the temp info and move it to the attachments table
+				$temp_attachment = mfh_getTemporaryAttachment($temp_attachment_id);
+				$attachments[] = $temp_attachment;
+				mfh_deleteTemporaryAttachment($temp_attachment_id);
+			}
+		}
+	}
 
     /* Any errors? */
     if (count($hesk_error_buffer))
@@ -1468,10 +1483,11 @@ function edit_article()
                             <p class="font-size-90 form-control-static"><?php echo $hesklang['kw1']; ?></p><br>
                             <textarea name="keywords" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kw']); ?>" rows="3" cols="70" id="keywords"><?php echo $article['keywords']; ?></textarea>
                         </div>
+                        <?php if ( ! empty($article['attachments']) || $hesk_settings['attachments']['use']): ?>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>
                             <?php
-                            if ( ! empty($article['attachments']))
+                            if ( ! empty($article['attachments']) )
                             {
                                 $att=explode(',',substr($article['attachments'], 0, -1));
                                 foreach ($att as $myatt)
@@ -1493,14 +1509,24 @@ function edit_article()
                                 <div class="fallback">
                                     <input type="hidden" name="use-legacy-attachments" value="1">
                                     <?php
-                                    for ($i = 1; $i < 4; $i++) {
-                                        echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
-                                    }
+                                    // New attachments
+									if ($hesk_settings['attachments']['use'])
+									{
+										for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
+										{
+											echo '<input type="file" name="attachment['.$i.']" size="50" /><br />';
+										}
+									}
                                     ?>
                                 </div>
                             </div>
                             <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php'); ?>
 
+                            
+                            ?>
+                        </div>
+                        <?php endif; //End attachments ?>
+                        <div class="form-group">
                             <input type="hidden" name="a" value="save_article" />
                             <input type="hidden" name="id" value="<?php echo $id; ?>" />
                             <input type="hidden" name="old_type" value="<?php echo $article['type']; ?>" />
@@ -1983,32 +2009,32 @@ function new_article()
     /* Article attachments */
 	define('KB',1);
 	require_once(HESK_PATH . 'inc/posting_functions.inc.php');
-    require_once(HESK_PATH . 'inc/attachments.inc.php');
     $attachments = array();
-
     $use_legacy_attachments = hesk_POST('use-legacy-attachments', 0);
-
-    if ($use_legacy_attachments) {
-        for ($i=1; $i<=3; $i++)
-        {
-            $att = hesk_uploadFile($i, false);
-            if ( ! empty($att))
-            {
-                $attachments[$i] = $att;
-            }
-        }
-    } else {
-        // The user used the new drag-and-drop system.
-        $temp_attachment_ids = hesk_POST_array('attachment-ids');
-        foreach ($temp_attachment_ids as $temp_attachment_id) {
-            // Simply get the temp info and move it to the attachments table
-            $temp_attachment = mfh_getTemporaryAttachment($temp_attachment_id);
-            $attachments[] = $temp_attachment;
-            mfh_deleteTemporaryAttachment($temp_attachment_id);
-        }
-    }
-
 	$myattachments='';
+
+	if ($hesk_settings['attachments']['use']) {
+		require_once(HESK_PATH . 'inc/attachments.inc.php');
+		if ($use_legacy_attachments) {
+			for ($i=1; $i<=$hesk_settings['attachments']['max_number']; $i++)
+			{
+				$att = hesk_uploadFile($i);
+				if ( ! empty($att))
+				{
+					$attachments[$i] = $att;
+				}
+			}
+		} else {
+			// The user used the new drag-and-drop system.
+			$temp_attachment_ids = hesk_POST_array('attachment-ids');
+			foreach ($temp_attachment_ids as $temp_attachment_id) {
+				// Simply get the temp info and move it to the attachments table
+				$temp_attachment = mfh_getTemporaryAttachment($temp_attachment_id);
+				$attachments[] = $temp_attachment;
+				mfh_deleteTemporaryAttachment($temp_attachment_id);
+			}
+		}
+	}
 
     /* Any errors? */
     if (count($hesk_error_buffer))

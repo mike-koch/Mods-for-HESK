@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -2780,7 +2780,7 @@ if (defined('HESK_DEMO')) {
                         <div class="form-group">
                             <div class="col-sm-9 col-sm-offset-3">
                                 <div class="checkbox">
-                                    <label><input type="checkbox" name="s_notify_new"
+                                    <label><input type="checkbox" name="s_notify_skip_spam"
                                                   value="1" <?php if ($hesk_settings['notify_skip_spam']) {
                                             echo 'checked="checked"';
                                         } ?>/> <?php echo $hesklang['enn']; ?></label>

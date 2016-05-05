@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -740,7 +740,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
         }
     }
 
-    if (strlen($myuser['signature']) > 255) {
+    if (strlen($myuser['signature']) > 1000) {
         $hesk_error_buffer .= '<li>' . $hesklang['signature_long'] . '</li>';
     }
 

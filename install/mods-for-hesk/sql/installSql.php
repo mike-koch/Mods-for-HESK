@@ -695,12 +695,44 @@ function execute252Scripts()
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.5.2' WHERE `Key` = 'modsForHeskVersion'");
 }
 
+// Version 2.5.3
+function execute253Scripts() 
+{
+	global $hesk_settings;
+	hesk_dbConnect();
+	
+    executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.5.3' WHERE `Key` = 'modsForHeskVersion'");
+}
+
+// Version 2.5.4
+function execute254Scripts()
+{
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '2.5.4' WHERE `Key` = 'modsForHeskVersion'");
+}
+
+// Version 2.5.5
+function execute255Scripts()
+{
+    updateVersion('2.5.5');
+}
+
+function updateVersion($version) {
+    global $hesk_settings;
+
+    hesk_dbConnect();
+
+    executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '{$version}' WHERE `Key` = 'modsForHeskVersion'");
+}
+
 // Version 2.6.0
 function execute260Scripts()
 {
     global $hesk_settings;
     hesk_dbConnect();
-
+	
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('public_api', '1')");
 	executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` (
         `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

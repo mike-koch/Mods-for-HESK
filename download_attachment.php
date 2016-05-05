@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -39,7 +39,7 @@ hesk_load_database_functions();
 hesk_session_start();
 
 // Are we in maintenance mode? (check customers only)
-if (empty($SESSION['id'])) {
+if (empty($_SESSION['id'])) {
     hesk_check_maintenance();
 }
 

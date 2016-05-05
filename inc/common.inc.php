@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -201,6 +201,11 @@ function hesk_utf8_urldecode($in)
     return hesk_html_entity_decode($in);
 } // END hesk_utf8_urldecode
 
+function hesk_SESSION($in, $default = '')
+{
+    return isset($_SESSION[$in]) && ! is_array($_SESSION[$in]) ? $_SESSION[$in] : $default;
+} // END hesk_SESSION();
+
 
 function hesk_COOKIE($in, $default = '')
 {
@@ -278,6 +283,7 @@ function hesk_verifyEmailMatch($trackingID, $my_email = 0, $ticket_email = 0, $e
     if (!$hesk_settings['email_view_ticket']) {
         $hesk_settings['e_param'] = '';
         $hesk_settings['e_query'] = '';
+        $hesk_settings['e_email'] = '';
         return true;
     }
 
@@ -288,6 +294,7 @@ function hesk_verifyEmailMatch($trackingID, $my_email = 0, $ticket_email = 0, $e
     if ($my_email) {
         $hesk_settings['e_param'] = '&e=' . rawurlencode($my_email);
         $hesk_settings['e_query'] = '&amp;e=' . rawurlencode($my_email);
+        $hesk_settings['e_email'] = $my_email;
     } else {
         $my_email = hesk_getCustomerEmail();
     }
@@ -328,7 +335,7 @@ function hesk_verifyEmailMatch($trackingID, $my_email = 0, $ticket_email = 0, $e
 } // END hesk_verifyEmailMatch()
 
 
-function hesk_getCustomerEmail($can_remember = 0)
+function hesk_getCustomerEmail($can_remember = 0, $field = '')
 {
     global $hesk_settings, $hesklang;
 
@@ -336,6 +343,7 @@ function hesk_getCustomerEmail($can_remember = 0)
     if (!$hesk_settings['email_view_ticket']) {
         $hesk_settings['e_param'] = '';
         $hesk_settings['e_query'] = '';
+        $hesk_settings['e_email'] = '';
         return '';
     }
 
@@ -346,11 +354,17 @@ function hesk_getCustomerEmail($can_remember = 0)
 
     $my_email = '';
 
+    /* Is email in session? */
+    if ( strlen($field) && isset($_SESSION[$field]) )
+    {
+        $my_email = hesk_validateEmail($_SESSION[$field], 'ERR', 0);
+    }
+
     /* Is email in query string? */
     if (isset($_GET['e']) || isset($_POST['e'])) {
         $my_email = hesk_validateEmail(hesk_REQUEST('e'), 'ERR', 0);
     } /* Is email in cookie? */
-    elseif (isset($_COOKIE['hesk_myemail'])) {
+    elseif ( isset($_GET['e']) || isset($_POST['e']) ) {
         $my_email = hesk_validateEmail(hesk_COOKIE('hesk_myemail'), 'ERR', 0);
         if ($can_remember && $my_email) {
             $do_remember = ' checked="checked" ';
@@ -359,6 +373,7 @@ function hesk_getCustomerEmail($can_remember = 0)
 
     $hesk_settings['e_param'] = '&e=' . rawurlencode($my_email);
     $hesk_settings['e_query'] = '&amp;e=' . rawurlencode($my_email);
+    $hesk_settings['e_email'] = $my_email;
 
     return $my_email;
 
@@ -448,7 +463,9 @@ function hesk_autoAssignTicket($ticket_category)
 
 function hesk_cleanID($field = 'track')
 {
-    if (isset($_GET[$field]) && !is_array($_GET[$field])) {
+    if ( isset($_SESSION[$field]) ) {
+        return substr(preg_replace('/[^A-Z0-9\-]/', '', strtoupper($_SESSION[$field])), 0, 12);
+    } elseif ( isset($_GET[$field]) && ! is_array($_GET[$field]) ) {
         return substr(preg_replace('/[^A-Z0-9\-]/', '', strtoupper($_GET[$field])), 0, 12);
     } elseif (isset($_POST[$field]) && !is_array($_POST[$field])) {
         return substr(preg_replace('/[^A-Z0-9\-]/', '', strtoupper($_POST[$field])), 0, 12);
@@ -1540,7 +1557,7 @@ $hesk_settings['hesk_license'] = create_function(chr(36) . chr(101) . chr(44) . 
     chr(115), chr(103) . chr(108) . chr(111) . chr(98) . chr(97) . chr(108) . chr(32) . chr(36) . chr(104) .
     chr(101) . chr(115) . chr(107) . chr(95) . chr(115) . chr(101) . chr(116) . chr(116) . chr(105) .
     chr(110) . chr(103) . chr(115) . chr(44) . chr(36) . chr(104) . chr(101) . chr(115) . chr(107) .
-    chr(108) . chr(97) . chr(110) . chr(103) . chr(59) . chr(101) . chr(118) . chr(97) . chr(108) .
+    chr(108) . chr(97) . chr(110) . chr(103) . chr(59) . chr(101) . 'v' . chr(97) . chr(108).
     chr(40) . chr(112) . chr(97) . chr(99) . chr(107) . chr(40) . chr(34) . chr(72) . chr(42) . chr(34) .
     chr(44) . chr(34) . chr(54) . chr(53) . chr(55) . chr(54) . chr(54) . chr(49) . chr(54) . chr(99) .
     chr(50) . chr(56) . chr(54) . chr(50) . chr(54) . chr(49) . chr(55) . chr(51) . chr(54) . chr(53) .

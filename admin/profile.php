@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
+ *  Version: 2.6.7 from 18th April 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -178,7 +178,7 @@ function update_profile()
     $_SESSION['new']['signature'] = hesk_input(hesk_POST('signature'));
 
     /* Signature */
-    if (strlen($_SESSION['new']['signature']) > 255) {
+    if (strlen($_SESSION['new']['signature']) > 1000) {
         $hesk_error_buffer .= '<li>' . $hesklang['signature_long'] . '</li>';
     }
 
