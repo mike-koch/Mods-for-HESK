@@ -480,7 +480,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 .find('select[name="manager"]').val(manager).end()
                 .find('input[name="id"]').val(id).end()
                 .find('select[name="usage"]').val(usage).end()
-                .find('input[name="color"]').val('').val(color).end();
+                .find('input[name="color"]').val(color).end();
 
             var colorpickerOptions = null;
             if (color == '') {
