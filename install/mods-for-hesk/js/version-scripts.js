@@ -74,6 +74,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 26) {
         startVersionUpgrade('255');
         executeUpdate(26, '255', '2.5.5');
+    } else if (startingVersion < 27) {
+        startVersionUpgrade('260');
+        executeUpdate(27, '260', '2.6.0');
     } else {
         installationFinished();
     }
@@ -86,7 +89,7 @@ function executeUpdate(version, cssclass, formattedVersion) {
         type: 'POST',
         url: 'ajax/install-database-ajax.php',
         data: {version: version},
-        success: function (data) {
+        success: function () {
             markUpdateAsSuccess(cssclass, formattedVersion);
             if (version == 9) {
                 migrateIpEmailBans('banmigrate', 'banmigrate');

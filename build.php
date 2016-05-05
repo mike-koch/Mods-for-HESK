@@ -1,4 +1,4 @@
 <?php
 
 // Define the current build
-define('MODS_FOR_HESK_BUILD', 23);
+define('MODS_FOR_HESK_BUILD', 27);
