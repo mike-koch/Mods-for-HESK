@@ -389,7 +389,12 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="color" class="col-sm-3 control-label"><?php echo $hesklang['category_color']; ?></label>
+                                <label for="color" class="col-sm-3 control-label">
+                                    <?php echo $hesklang['category_color']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                       title="<?php echo htmlspecialchars($hesklang['category_color']); ?>"
+                                       data-content="<?php echo htmlspecialchars($hesklang['category_color_help']); ?>"></i>
+                                </label>
                                 <div class="col-sm-9">
                                     <input type="text" name="color" class="form-control category-colorpicker"
                                            placeholder="<?php echo $hesklang['category_color']; ?>">
@@ -397,7 +402,12 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="priority" class="col-sm-3 control-label"><?php echo $hesklang['priority']; ?></label>
+                                <label for="priority" class="col-sm-3 control-label">
+                                    <?php echo $hesklang['priority']; ?>
+                                    <a href="#"
+                                       onclick="alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')"><i
+                                            class="fa fa-question-circle settingsquestionmark"></i> </a>
+                                </label>
                                 <div class="col-sm-9">
                                     <select name="priority" class="form-control">
                                         <?php
@@ -421,7 +431,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                             </div>
                             <div class="form-group">
                                 <label for="usage" class="col-sm-3 control-label">
-                                    Usage
+                                    <?php echo $hesklang['usage']; ?>
                                 </label>
                                 <div class="col-sm-9">
                                     <select name="usage" class="form-control">
@@ -466,16 +476,33 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
 
             var $modal = $('#edit-category-modal');
             $modal.find('input[name="name"]').val(name).end()
-                .find('input[name="color"]').val(color).colorpicker({format:'hex', color: color}).end()
                 .find('select[name="priority"]').val(priority).end()
                 .find('select[name="manager"]').val(manager).end()
                 .find('input[name="id"]').val(id).end()
                 .find('select[name="usage"]').val(usage).end()
-                .modal('show');
+                .find('input[name="color"]').val('').val(color).end();
+
+            var colorpickerOptions = null;
+            if (color == '') {
+                colorpickerOptions = {
+                    format: 'hex'
+                };
+            } else {
+                colorpickerOptions = {
+                    format: 'hex',
+                    color: color
+                };
+            }
+            $modal.find('input[name="color"]')
+                .colorpicker(colorpickerOptions).end().modal('show');
+
+            if (color == '') {
+                $modal.find('input[name="color"]').val('');
+            }
         });
 
         $('.cancel-callback').click(function() {
-            $('#edit-category-modal').find('input[name="color"]').colorpicker('destroy');
+            $('#edit-category-modal').find('input[name="color"]').val('').colorpicker('destroy').end();
         });
     });
 </script>
