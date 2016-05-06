@@ -16,7 +16,7 @@ $modsForHesk_settings = mfh_getSettings();
 
 if (!empty($_FILES)) {
     // Only 1 files is ever processed through this endpoint at a time.
-    $id = upload_temp_attachment(-1, false);
+    $id = upload_temp_attachment(0, false);
     print json_encode($id);
     return http_response_code(200);
 }
