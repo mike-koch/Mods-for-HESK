@@ -328,3 +328,7 @@ div.setupButtons {
 .fc-content {
     text-overflow: ellipsis;
 }
+
+.rate {
+    margin: 0;
+}
