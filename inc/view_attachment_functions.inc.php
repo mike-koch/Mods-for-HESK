@@ -232,6 +232,10 @@ function display_dropzone_field($url, $id = 'filedrop') {
             this.on('queuecomplete', function(progress) {
                 // Stop animating if complete.
                 $('#total-progress').removeClass('active');
+                $('input[type=\"submit\"]').attr('disabled', false);
+            });
+            this.on('processing', function() {
+                $('input[type=\"submit\"]').attr('disabled', true);
             });
         },
         paramName: 'attachment',
