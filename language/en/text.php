@@ -32,7 +32,7 @@ $hesklang['warning_title_case'] = 'Warning';
 $hesklang['logs'] = 'Logs';
 $hesklang['view_message_log'] = 'View Message Log';
 $hesklang['can_view_logs'] = 'Can view message logs';
-$hesklang['attachment_viewer_message'] = 'Drag or click here to select files to upload.';
+$hesklang['attachment_viewer_message'] = "Drag files here or click the 'Add File' button below to select files to upload.";
 $hesklang['attachment_invalid_type_message'] = 'Sorry, but the file type you tried to upload is not allowed.';
 $hesklang['attachment_upload_error'] = 'An error occurred when trying to upload. Please try again later.';
 $hesklang['attachment_too_large'] = 'This attachment is larger than the max filesize permitted.';
@@ -104,6 +104,7 @@ $hesklang['tickets_and_events'] = 'Tickets and events';
 $hesklang['tickets_only'] = 'Tickets only';
 $hesklang['events_only'] = 'Events only';
 $hesklang['events'] = 'Events';
+$hesklang['add_files'] = '<i class="fa fa-plus"></i> Add File';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

@@ -176,18 +176,22 @@ function output_dropzone_window() {
     <div class="table table-striped" class="files" id="previews" style="display:none">
         <div id="template" class="file-row">
             <!-- This is used as the file preview template -->
-            <div>
-                <span class="preview"><img data-dz-thumbnail /></span>
-            </div>
             <div class="row">
-                <div class="col-md-4 col-sm-12">
-                    <p class="name" data-dz-name></p>
-                    <i class="fa fa-trash fa-2x" style="color: gray; cursor: pointer" title="Remove file" data-dz-remove></i>
+                <div class="col-md-4">
+                    <span class="preview"><img data-dz-thumbnail></span>
                 </div>
-                <div class="col-md-8 col-sm-12">
-                    <p class="size" data-dz-size></p>
-                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="total-progress">
-                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <p class="name" data-dz-name></p>
+                        <i class="fa fa-trash fa-2x" style="color: gray; cursor: pointer" title="Remove file" data-dz-remove></i>
+                        <span class="size" data-dz-size></span>
+                    </div>
+                    <div class="row">
+                        <div class="progress progress-striped active" role="progressbar" id="total-progress">
+                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress>
+                                <span id="percentage"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -229,13 +233,18 @@ function display_dropzone_field($url, $id = 'filedrop') {
                 // Remove the attachment from the database and the filesystem.
                 removeAttachment(file['databaseId']);
             });
-            this.on('queuecomplete', function(progress) {
+            this.on('complete', function(file) {
                 // Stop animating if complete.
-                $('#total-progress').removeClass('active');
+                $(file.previewTemplate).find('#total-progress').removeClass('active');
+            });
+            this.on('queuecomplete', function() {
                 $('input[type=\"submit\"]').attr('disabled', false);
             });
             this.on('processing', function() {
                 $('input[type=\"submit\"]').attr('disabled', true);
+            });
+            this.on('uploadprogress', function(file, percentage) {
+                $(file.previewTemplate).find('#percentage').text(percentage + '%');
             });
         },
         paramName: 'attachment',
@@ -253,7 +262,8 @@ function display_dropzone_field($url, $id = 'filedrop') {
         dictCancelUpload: ".json_encode($hesklang['attachment_cancel']).",
         dictCancelUploadConfirmation: ".json_encode($hesklang['attachment_confirm_cancel']).",
         dictRemoveFile: ".json_encode($hesklang['attachment_remove']).",
-        previewTemplate: $('#previews').html()
+        previewTemplate: $('#previews').html(),
+        clickable: '.fileinput-button'
     };
     </script>
     ";
