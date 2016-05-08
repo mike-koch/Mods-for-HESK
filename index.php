@@ -990,7 +990,7 @@ function print_add_ticket()
                                     ?>
                                 </div>
                             </div>
-                            <button class="btn btn-default btn-xs fileinput-button"><?php echo $hesklang['add_files']; ?></button><br>
+                            <button class="btn btn-default btn-xs fileinput-button filedrop-button"><?php echo $hesklang['add_files']; ?></button><br>
                             <a href="file_limits.php" target="_blank"
                                onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
                         </div>

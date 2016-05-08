@@ -229,9 +229,26 @@ function display_dropzone_field($url, $id = 'filedrop') {
                 // Add the database id to the file
                 file['databaseId'] = response;
             });
+            this.on('addedfile', function() {
+                var numberOfFiles = $('#" . $id . " .file-row').length;
+
+                var disabled = false;
+                if (numberOfFiles >= " . $max_files . ") {
+                    disabled = true;
+                }
+                $('." . $id . "-button').attr('disabled', disabled);
+            });
             this.on('removedfile', function(file) {
                 // Remove the attachment from the database and the filesystem.
                 removeAttachment(file['databaseId']);
+
+                var numberOfFiles = $('#" . $id . " .file-row').length;
+
+                var disabled = false;
+                if (numberOfFiles >= " . $max_files . ") {
+                    disabled = true;
+                }
+                $('." . $id . "-button').attr('disabled', disabled);
             });
             this.on('complete', function(file) {
                 // Stop animating if complete.
