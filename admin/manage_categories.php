@@ -467,7 +467,12 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
     $(document).ready(function() {
         $('.category-modal-trigger').click(function() {
             var $row = $('tr[data-category-id="' + $(this).attr('data-category-id') + '"]');
-            var name = $row.attr('data-name');
+
+            // Since the data-name attribute is escaped, this needs to be converted back via this fancy method.
+            var tempNameElement = document.createElement('textarea');
+            tempNameElement.innerHTML = $row.attr('data-name');
+            var name = tempNameElement.value;
+
             var id = $row.attr('data-category-id');
             var color = $row.attr('data-color');
             var priority = $row.attr('data-priority');
