@@ -979,20 +979,7 @@ function print_add_ticket()
                             :</label>
 
                         <div align="left" class="col-sm-9">
-                            <div class="dropzone" id="filedrop">
-                                <div class="fallback">
-                                    <input type="hidden" name="use-legacy-attachments" value="1">
-                                    <?php
-                                    for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                                        $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
-                                        echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                            <button class="btn btn-default btn-xs fileinput-button filedrop-button"><?php echo $hesklang['add_files']; ?></button><br>
-                            <a href="file_limits.php" target="_blank"
-                               onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
+                            <?php build_dropzone_markup(); ?>
                         </div>
                     </div>
                     <?php

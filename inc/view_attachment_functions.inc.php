@@ -208,6 +208,23 @@ function output_attachment_id_holder_container($id) {
     echo '<div id="attachment-holder-' . $id . '" class="hide"></div>';
 }
 
+function build_dropzone_markup($id = 'filedrop') {
+    global $hesklang, $hesk_settings;
+
+    echo '<div class="dropzone" id="' . $id . '">
+        <div class="fallback">
+            <input type="hidden" name="use-legacy-attachments" value="1">';
+            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
+                echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
+            }
+        echo '</div>
+    </div>
+    <button class="btn btn-default btn-xs fileinput-button filedrop-button">' . $hesklang['add_files'] . '</button><br>
+    <a href="file_limits.php" target="_blank"
+       onclick="Javascript:hesk_window(\'file_limits.php\',250,500);return false;">'. $hesklang['ful'] . '</a>';
+}
+
 function display_dropzone_field($url, $id = 'filedrop') {
     global $hesk_settings, $hesklang;
 

@@ -442,17 +442,7 @@ if (!isset($_SESSION['hide']['new_article']))
                         <?php if ($hesk_settings['attachments']['use']): ?>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>
-                            <div class="dropzone" id="filedrop">
-                                <div class="fallback">
-                                    <input type="hidden" name="use-legacy-attachments" value="1">
-                                    <?php
-                                    for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
-									{
-										echo '<input type="file" name="attachment['.$i.']" size="50" /><br />';
-									}
-                                    ?>
-                                </div>
-                            </div>
+                            <?php build_dropzone_markup(); ?>
                         </div>
                         <?php 
 							display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php'); 
@@ -1505,24 +1495,9 @@ function edit_article()
                             }
                             ?>
 
-                            <div class="dropzone" id="filedrop">
-                                <div class="fallback">
-                                    <input type="hidden" name="use-legacy-attachments" value="1">
-                                    <?php
-                                    // New attachments
-									if ($hesk_settings['attachments']['use'])
-									{
-										for ($i=1;$i<=$hesk_settings['attachments']['max_number'];$i++)
-										{
-											echo '<input type="file" name="attachment['.$i.']" size="50" /><br />';
-										}
-									}
-                                    ?>
-                                </div>
-                            </div>
-                            <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php'); ?>
-
-                            
+                            <?php
+                            build_dropzone_markup();
+                            display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php');
                             ?>
                         </div>
                         <?php endif; //End attachments ?>
