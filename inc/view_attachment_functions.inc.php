@@ -176,18 +176,22 @@ function output_dropzone_window() {
     <div class="table table-striped" class="files" id="previews" style="display:none">
         <div id="template" class="file-row">
             <!-- This is used as the file preview template -->
-            <div>
-                <span class="preview"><img data-dz-thumbnail /></span>
-            </div>
             <div class="row">
-                <div class="col-md-4 col-sm-12">
-                    <p class="name" data-dz-name></p>
-                    <i class="fa fa-trash fa-2x" style="color: gray; cursor: pointer" title="Remove file" data-dz-remove></i>
+                <div class="col-md-4">
+                    <span class="preview"><img data-dz-thumbnail></span>
                 </div>
-                <div class="col-md-8 col-sm-12">
-                    <p class="size" data-dz-size></p>
-                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="total-progress">
-                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <p class="name" data-dz-name></p>
+                        <i class="fa fa-trash fa-2x" style="color: gray; cursor: pointer" title="Remove file" data-dz-remove></i>
+                        <span class="size" data-dz-size></span>
+                    </div>
+                    <div class="row">
+                        <div class="progress progress-striped active" role="progressbar" id="total-progress">
+                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress>
+                                <span id="percentage"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -202,6 +206,23 @@ function output_dropzone_window() {
 
 function output_attachment_id_holder_container($id) {
     echo '<div id="attachment-holder-' . $id . '" class="hide"></div>';
+}
+
+function build_dropzone_markup($id = 'filedrop') {
+    global $hesklang, $hesk_settings;
+
+    echo '<div class="dropzone" id="' . $id . '">
+        <div class="fallback">
+            <input type="hidden" name="use-legacy-attachments" value="1">';
+            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
+                echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
+            }
+        echo '</div>
+    </div>
+    <button class="btn btn-default btn-xs fileinput-button filedrop-button">' . $hesklang['add_files'] . '</button><br>
+    <a href="file_limits.php" target="_blank"
+       onclick="Javascript:hesk_window(\'file_limits.php\',250,500);return false;">'. $hesklang['ful'] . '</a>';
 }
 
 function display_dropzone_field($url, $id = 'filedrop') {
@@ -225,17 +246,39 @@ function display_dropzone_field($url, $id = 'filedrop') {
                 // Add the database id to the file
                 file['databaseId'] = response;
             });
+            this.on('addedfile', function() {
+                var numberOfFiles = $('#" . $id . " .file-row').length;
+
+                var disabled = false;
+                if (numberOfFiles >= " . $max_files . ") {
+                    disabled = true;
+                }
+                $('." . $id . "-button').attr('disabled', disabled);
+            });
             this.on('removedfile', function(file) {
                 // Remove the attachment from the database and the filesystem.
                 removeAttachment(file['databaseId']);
+
+                var numberOfFiles = $('#" . $id . " .file-row').length;
+
+                var disabled = false;
+                if (numberOfFiles >= " . $max_files . ") {
+                    disabled = true;
+                }
+                $('." . $id . "-button').attr('disabled', disabled);
             });
-            this.on('queuecomplete', function(progress) {
+            this.on('complete', function(file) {
                 // Stop animating if complete.
-                $('#total-progress').removeClass('active');
+                $(file.previewTemplate).find('#total-progress').removeClass('active');
+            });
+            this.on('queuecomplete', function() {
                 $('input[type=\"submit\"]').attr('disabled', false);
             });
             this.on('processing', function() {
                 $('input[type=\"submit\"]').attr('disabled', true);
+            });
+            this.on('uploadprogress', function(file, percentage) {
+                $(file.previewTemplate).find('#percentage').text(percentage + '%');
             });
         },
         paramName: 'attachment',
@@ -253,7 +296,8 @@ function display_dropzone_field($url, $id = 'filedrop') {
         dictCancelUpload: ".json_encode($hesklang['attachment_cancel']).",
         dictCancelUploadConfirmation: ".json_encode($hesklang['attachment_confirm_cancel']).",
         dictRemoveFile: ".json_encode($hesklang['attachment_remove']).",
-        previewTemplate: $('#previews').html()
+        previewTemplate: $('#previews').html(),
+        clickable: '.fileinput-button'
     };
     </script>
     ";

@@ -1298,18 +1298,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="dropzone" id="notesFiledrop">
-                                    <div class="fallback">
-                                        <input type="hidden" name="use-legacy-attachments" value="1">
-                                        <?php
-                                        for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                                            echo '<input type="file" name="attachment[' . $i . ']" size="50" /><br />';
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
-                                <a href="file_limits.php" target="_blank"
-                                   onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
+                                <?php build_dropzone_markup('notesFiledrop'); ?>
                             </div>
                         </div>
                         <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php', 'notesFiledrop'); ?>
@@ -1869,19 +1858,7 @@ function hesk_printReplyForm()
                 <label for="attachments" class="col-sm-3 control-label"><?php echo $hesklang['attachments']; ?>:</label>
 
                 <div class="col-sm-9">
-                    <div class="dropzone" id="filedrop">
-                        <div class="fallback">
-                            <input type="hidden" name="use-legacy-attachments" value="1">
-                            <?php
-                            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                                $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
-                                echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
-                            }
-                            ?>
-                        </div>
-                    </div>
-                    <a href="file_limits.php" target="_blank"
-                       onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
+                    <?php build_dropzone_markup(); ?>
                 </div>
             </div>
             <?php
