@@ -1042,19 +1042,7 @@ if ($hesk_settings['attachments']['use']) {
         <label for="attachments" class="control-label col-sm-3"><?php echo $hesklang['attachments']; ?>:</label>
 
         <div class="col-sm-9">
-            <div class="dropzone" id="filedrop">
-                <div class="fallback">
-                    <input type="hidden" name="use-legacy-attachments" value="1">
-                    <?php
-                    for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                        $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
-                        echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
-                    }
-                    ?>
-                </div>
-            </div>
-            <a href="file_limits.php" target="_blank"
-               onclick="Javascript:hesk_window('file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>
+            <?php build_dropzone_markup(); ?>
         </div>
     </div>
     <hr/>
