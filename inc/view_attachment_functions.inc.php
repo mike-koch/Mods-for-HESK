@@ -215,12 +215,12 @@ function build_dropzone_markup($id = 'filedrop') {
         <div class="fallback">
             <input type="hidden" name="use-legacy-attachments" value="1">';
             for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
-                $cls = ($i == 1 && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
+                $cls = ($i == 1 && isset($_SESSION['iserror']) && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
                 echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
             }
         echo '</div>
     </div>
-    <button class="btn btn-default btn-xs fileinput-button filedrop-button">' . $hesklang['add_files'] . '</button><br>
+    <div class="btn btn-default btn-xs fileinput-button filedropbutton-' . $id . '">' . $hesklang['add_files'] . '</div><br>
     <a href="file_limits.php" target="_blank"
        onclick="Javascript:hesk_window(\'file_limits.php\',250,500);return false;">'. $hesklang['ful'] . '</a>';
 }
@@ -297,7 +297,7 @@ function display_dropzone_field($url, $id = 'filedrop') {
         dictCancelUploadConfirmation: ".json_encode($hesklang['attachment_confirm_cancel']).",
         dictRemoveFile: ".json_encode($hesklang['attachment_remove']).",
         previewTemplate: $('#previews').html(),
-        clickable: '.fileinput-button'
+        clickable: '.filedropbutton-".$id."'
     };
     </script>
     ";
