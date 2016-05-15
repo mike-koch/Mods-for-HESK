@@ -178,7 +178,7 @@ function output_dropzone_window() {
             <!-- This is used as the file preview template -->
             <div class="row">
                 <div class="col-md-4">
-                    <span class="preview"><img data-dz-thumbnail></span>
+                    <span class="preview"><img class="img-responsive" data-dz-thumbnail></span>
                 </div>
                 <div class="col-md-8">
                     <div class="row">
