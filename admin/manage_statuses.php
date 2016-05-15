@@ -492,7 +492,7 @@ function buildCreateModal()
                                     </label>
 
                                     <div class="col-sm-8">
-                                        <input type="text" name="text-color" class="form-control colorpicker"
+                                        <input type="text" name="text-color" class="form-control colorpicker-trigger"
                                                data-color=""
                                                data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                                placeholder="<?php echo htmlspecialchars($hesklang['textColor']); ?>" required>
@@ -640,7 +640,7 @@ function buildEditModal($statusId)
                                     </label>
 
                                     <div class="col-sm-8">
-                                        <input type="text" name="text-color" class="form-control colorpicker"
+                                        <input type="text" name="text-color" class="form-control colorpicker-trigger"
                                                value="<?php echo $status['TextColor']; ?>"
                                                data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                                placeholder="<?php echo htmlspecialchars($hesklang['textColor']); ?>" required>

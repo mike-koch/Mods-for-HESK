@@ -163,7 +163,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                data-content="<?php echo htmlspecialchars($hesklang['category_color_help']); ?>"></i>
                         </label>
                         <div class="col-sm-8">
-                            <input class="form-control colorpicker"
+                            <input class="form-control colorpicker-trigger"
                                    placeholder="<?php echo htmlspecialchars($hesklang['category_color']); ?>" type="text"
                                    name="color" maxlength="7">
                         </div>

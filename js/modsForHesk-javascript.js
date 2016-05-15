@@ -67,7 +67,7 @@ var loadJquery = function()
     });
 
     // Initialize colorpicker
-    $('.colorpicker').colorpicker({
+    $('.colorpicker-trigger').colorpicker({
         format: 'hex'
     });
 };
