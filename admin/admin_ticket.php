@@ -1298,7 +1298,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <?php build_dropzone_markup('notesFiledrop'); ?>
+                                <div class="form-group">
+                                    <?php build_dropzone_markup('notesFiledrop'); ?>
+                                </div>
                             </div>
                         </div>
                         <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php', 'notesFiledrop'); ?>
