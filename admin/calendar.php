@@ -57,7 +57,8 @@ if ($modsForHesk_settings['enable_calendar'] == '0') {
 }
 
 // Get categories for the dropdown
-$rs = hesk_dbQuery("SELECT `id`, `name`, `color` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `usage` <> 1 ORDER BY `cat_order`");
+$order_by = $modsForHesk_settings['category_order_column'];
+$rs = hesk_dbQuery("SELECT `id`, `name`, `color` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `usage` <> 1 ORDER BY `" . hesk_dbEscape($order_by) . "`");
 $categories = [];
 while ($row = hesk_dbFetchAssoc($rs)) {
     if (!$_SESSION['isadmin'] && !in_array($row['id'], $_SESSION['categories'])) {
