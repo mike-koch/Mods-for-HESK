@@ -67,16 +67,6 @@ hesk_dbConnect();
                         <td>Database Prefix:</td>
                         <td><?php echo $hesk_settings['db_pfix']; ?></td>
                     </tr>
-                    <tr>
-                        <td>CREATE, ALTER, DROP Permissions:</td>
-                        <td class="warning"><i class="fa fa-exclamation-triangle"></i> Please check before continuing!*
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            * Mods for HESK is unable to check database permissions automatically.
-                        </td>
-                    </tr>
                     </tbody>
                 </table>
             </div>
