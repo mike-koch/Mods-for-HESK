@@ -105,6 +105,8 @@ $hesklang['tickets_only'] = 'Tickets only';
 $hesklang['events_only'] = 'Events only';
 $hesklang['events'] = 'Events';
 $hesklang['add_files'] = '<i class="fa fa-plus"></i> Add File';
+$hesklang['select_all_title_case'] = 'Select All';
+$hesklang['deselect_all_title_case'] = 'Deselect All';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';
