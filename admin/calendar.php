@@ -83,11 +83,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <h4><?php echo $hesklang['calendar_categories']; ?></h4>
             </div>
             <div class="panel-body">
+                <div class="btn-group">
+                    <button id="select-all" class="btn btn-default" data-select-all="category-toggle"><?php echo $hesklang['select_all_title_case']; ?></button>
+                    <button id="deselect-all" class="btn btn-default" data-deselect-all="category-toggle"><?php echo $hesklang['deselect_all_title_case']; ?></button>
+                </div>
                 <ul class="list-unstyled">
                 <?php foreach ($categories as $category): ?>
                     <li class="move-down-20 move-right-20">
                         <div class="checkbox">
-                            <input type="checkbox" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
+                            <input type="checkbox" data-select-target="category-toggle" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
                         </div>
                         <span class="label background-volatile category-label" style="<?php echo $category['css_style']; ?>">
                             <?php echo $category['name']; ?>

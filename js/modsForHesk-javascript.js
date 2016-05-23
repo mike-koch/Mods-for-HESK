@@ -70,6 +70,21 @@ var loadJquery = function()
     $('.colorpicker-trigger').colorpicker({
         format: 'hex'
     });
+
+    // Generic select/deselect all. Use this instead of selectAll()/deselctAll()
+    $('[data-select-all]').click(function() {
+        var toggle = $(this).attr('data-select-all');
+        $('[data-select-target="' + toggle + '"]').prop('checked', true)
+            .prop('selected', true)
+            .trigger('change');
+    });
+
+    $('[data-deselect-all]').click(function() {
+        var toggle = $(this).attr('data-deselect-all');
+        $('[data-select-target="' + toggle + '"]').prop('checked', false)
+            .prop('selected', false)
+            .trigger('change');
+    });
 };
 
 function calculateGrayCount(background) {
@@ -85,10 +100,12 @@ var setIcon = function(icon) {
     $('[data-toggle="iconpicker"]').iconpicker('setIcon', icon);
 }
 
+// Deprecated. Use data-select-all="id" instead
 function selectAll(id) {
     $('#' + id + ' option').prop('selected', true);
 }
 
+// Deprecated. Use data-deselect-all="id" instead
 function deselectAll(id) {
     $('#' + id + ' option').prop('selected', false);
 }
