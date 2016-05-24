@@ -286,7 +286,7 @@ function display_dropzone_field($url, $id = 'filedrop') {
         parallelUploads: ".$max_files.",
         uploadMultiple: true,
         maxFiles: ".$max_files.",
-        acceptedFiles: '".json_encode($acceptedFiles)."',
+        acceptedFiles: ".json_encode($acceptedFiles).",
         maxFilesize: ".$size.", // MB
         dictDefaultMessage: ".json_encode($hesklang['attachment_viewer_message']).",
         dictFallbackMessage: '',
