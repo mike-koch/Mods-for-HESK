@@ -54,15 +54,21 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
     }
 
     if ($staff) {
+        $old_time_setting = $hesk_settings['timeformat'];
+        $hesk_settings['timeformat'] = 'Y-m-d';
+        $current_date = hesk_date();
+        $hesk_settings['timeformat'] = $old_time_setting;
+
         $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`,
-          CASE WHEN `due_date` < CURDATE() THEN 1 ELSE 0 END AS `overdue`
+          CASE WHEN `due_date` < '{$current_date}' THEN 1 ELSE 0 END AS `overdue`
         FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets`
         INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
             ON `categories`.`id` = `tickets`.`category`
-            AND `categories`.`usage` <> 1
+            AND `categories`.`usage` <> 2
         WHERE `due_date` >= FROM_UNIXTIME(" . intval($start) . " / 1000)
         AND `due_date` <= FROM_UNIXTIME(" . intval($end) . " / 1000)
         AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";
+        mfh_log_debug('Calendar', $sql, '');
 
         $rs = hesk_dbQuery($sql);
         while ($row = hesk_dbFetchAssoc($rs)) {

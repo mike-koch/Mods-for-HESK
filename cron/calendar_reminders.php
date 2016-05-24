@@ -41,6 +41,10 @@ if ($hesk_settings['debug_mode']) {
  * 2 - days
  * 3 - weeks
  */
+$old_timeformat_setting = $hesklang['timeformat'];
+$hesk_settings['timeformat'] = 'Y-m-d H:i:s';
+$current_date = hesk_date();
+
 $case_statement = "CASE
       WHEN `unit` = '0' THEN DATE_SUB(`event`.`start`, INTERVAL `reminder`.`amount` MINUTE)
       WHEN `unit` = '1' THEN DATE_SUB(`event`.`start`, INTERVAL `reminder`.`amount` HOUR)
@@ -59,7 +63,7 @@ $sql = "SELECT `reminder`.`id` AS `reminder_id`, `reminder`.`user_id` AS `user_i
         ON `event`.`category` = `category`.`id`
     INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `user`
         ON `reminder`.`user_id` = `user`.`id`
-    WHERE (" . $case_statement . ") <= NOW()
+    WHERE (" . $case_statement . ") <= '{$current_date}'
     AND `email_sent` = '0'";
 
 $rs = hesk_dbQuery($sql);
@@ -129,7 +133,7 @@ $sql = "SELECT `ticket`.`id` AS `id`, `ticket`.`trackid` AS `trackid`, `ticket`.
     LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `user`
         ON `ticket`.`owner` = `user`.`id`
     WHERE `due_date` IS NOT NULL
-        AND `due_date` <= NOW()
+        AND `due_date` <= '{$current_date}'
         AND `overdue_email_sent` = '0'";
 
 $successful_emails = 0;
@@ -183,3 +187,5 @@ if ($hesk_settings['debug_mode']) {
     echo $debug_msg;
     mfh_log_debug($LOCATION, $debug_msg, 'CRON');
 }
+
+$hesk_settings['timeformat'] = $old_timeformat_setting;
