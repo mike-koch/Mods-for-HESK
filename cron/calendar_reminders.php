@@ -41,7 +41,7 @@ if ($hesk_settings['debug_mode']) {
  * 2 - days
  * 3 - weeks
  */
-$old_timeformat_setting = $hesklang['timeformat'];
+$old_timeformat_setting = $hesk_settings['timeformat'];
 $hesk_settings['timeformat'] = 'Y-m-d H:i:s';
 $current_date = hesk_date();
 
