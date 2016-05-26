@@ -73,7 +73,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             </div>
             <div class="panel-body">
                 <ul class="list-unstyled">
-                    <div class="btn-group">
+                    <div class="btn-group btn-group-sm">
                         <button id="select-all" class="btn btn-default" data-select-all="category-toggle"><?php echo $hesklang['select_all_title_case']; ?></button>
                         <button id="deselect-all" class="btn btn-default" data-deselect-all="category-toggle"><?php echo $hesklang['deselect_all_title_case']; ?></button>
                     </div>

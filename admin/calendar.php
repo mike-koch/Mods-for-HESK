@@ -83,7 +83,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <h4><?php echo $hesklang['calendar_categories']; ?></h4>
             </div>
             <div class="panel-body">
-                <div class="btn-group">
+                <div class="btn-group btn-group-sm">
                     <button id="select-all" class="btn btn-default" data-select-all="category-toggle"><?php echo $hesklang['select_all_title_case']; ?></button>
                     <button id="deselect-all" class="btn btn-default" data-deselect-all="category-toggle"><?php echo $hesklang['deselect_all_title_case']; ?></button>
                 </div>
