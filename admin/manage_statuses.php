@@ -104,13 +104,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <h4>
                                     <?php echo $hesklang['statuses']; ?>
                                     <span class="nu-floatRight panel-button">
-                                    <button class="btn btn-success" data-toggle="modal" data-target="#modal-status-new">
-                                        <i class="fa fa-plus-circle"></i>
-                                        <?php
-                                        echo $hesklang['new_status'];
-                                        ?>
-                                    </button>
-                                </span>
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-status-new">
+                                            <i class="fa fa-plus-circle"></i>
+                                            <?php
+                                            echo $hesklang['new_status'];
+                                            ?>
+                                        </button>
+                                    </span>
                                 </h4>
                             </div>
                             <table class="table table-hover">
