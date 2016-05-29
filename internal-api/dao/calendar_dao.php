@@ -1,7 +1,7 @@
 <?php
 
 function get_events($start, $end, $hesk_settings, $staff = true) {
-    global $hesk_settings;
+    global $hesk_settings, $hesklang;
 
     $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color` ";
 
@@ -62,11 +62,13 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         $hesk_settings['timeformat'] = $old_time_setting;
 
         $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`,
-          CASE WHEN `due_date` < '{$current_date}' THEN 1 ELSE 0 END AS `overdue`
+          CASE WHEN `due_date` < '{$current_date}' THEN 1 ELSE 0 END AS `overdue`, `owner`.`name` AS `owner_name`, `tickets`.`priority` AS `priority`
         FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets`
         INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
             ON `categories`.`id` = `tickets`.`category`
             AND `categories`.`usage` <> 2
+        LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `owner`
+            ON `tickets`.`owner` = `owner`.`id`
         WHERE `due_date` >= FROM_UNIXTIME(" . hesk_dbEscape($start) . " / 1000)
         AND `due_date` <= FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000)
         AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";
@@ -81,12 +83,23 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
 
             $event['type'] = 'TICKET';
             $event['trackingId'] = $row['trackid'];
+            $event['subject'] = $row['subject'];
             $event['title'] = '[' . $row['trackid'] . '] ' . $row['subject'];
             $event['startTime'] = $row['due_date'];
             $event['url'] = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
             $event['categoryId'] = $row['category'];
             $event['categoryName'] = $row['category_name'];
             $event['categoryColor'] = $row['overdue'] ? '#dd0000' : $row['category_color'];
+            $event['owner'] = $row['owner_name'];
+
+            $priorities = array(
+                0 => $hesklang['critical'],
+                1 => $hesklang['high'],
+                2 => $hesklang['medium'],
+                3 => $hesklang['low']
+            );
+            $event['priority'] = $priorities[$row['priority']];
+
             $events[] = $event;
         }
     }

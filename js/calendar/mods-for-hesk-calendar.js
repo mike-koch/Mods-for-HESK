@@ -58,11 +58,15 @@ $(document).ready(function() {
                 contents = $('.ticket-popover-template').html();
                 $contents = $(contents);
 
+                if (event.owner === null) {
+                    $contents.find('.popover-owner').hide();
+                }
+
                 $contents.find('.popover-tracking-id span').text(event.trackingId).end()
-                    .find('.popover-owner span').text('// TODO').end()
-                    .find('.popover-subject span').text(event.title).end()
+                    .find('.popover-owner span').text(event.owner).end()
+                    .find('.popover-subject span').text(event.subject).end()
                     .find('.popover-category span').text(event.categoryName).end()
-                    .find('.popover-priority span').text('// TODO');
+                    .find('.popover-priority span').text(event.priority);
             } else {
                 if (event.location === '') {
                     $contents.find('.popover-location').hide();
@@ -243,6 +247,7 @@ function buildEvent(id, dbObject) {
     if (dbObject.type == 'TICKET') {
         return {
             title: dbObject.title,
+            subject: dbObject.subject,
             trackingId: dbObject.trackingId,
             start: moment(dbObject.startTime),
             url: dbObject.url,
@@ -252,6 +257,8 @@ function buildEvent(id, dbObject) {
             categoryId: dbObject.categoryId,
             categoryName: dbObject.categoryName,
             className: 'category-' + dbObject.categoryId,
+            owner: dbObject.owner,
+            priority: dbObject.priority,
             textColor: calculateTextColor(dbObject.categoryColor)
         };
     }
