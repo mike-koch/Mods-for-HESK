@@ -58,7 +58,7 @@ $categorySql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "c
 $categoryRs = hesk_dbQuery($categorySql);
 while ($row = hesk_dbFetchAssoc($categoryRs))
 {
-    $row['css_style'] = $row['color'] == null ? 'color: black; border: solid 1px #000' : 'background: ' . $row['color'];
+    $row['css_style'] = $row['color'] == null ? 'color: black; border: solid 1px #000; padding-right: 14px' : 'background: ' . $row['color'];
     $categories[] = $row;
 }
 
@@ -82,9 +82,12 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                             <div class="checkbox">
                                 <input type="checkbox" data-select-target="category-toggle" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
                             </div>
-                        <span class="label background-volatile category-label" style="<?php echo $category['css_style']; ?>">
-                            <?php echo $category['name']; ?>
-                        </span>
+                            <div class="row">
+                                <div class="col-sm-1" style="<?php echo $category['css_style']; ?>">&nbsp;</div>
+                                <div class="col-sm-11 hide-on-overflow no-wrap">
+                                    <?php echo $category['name']; ?>
+                                </div>
+                            </div>
                         </li>
                     <?php endforeach; ?>
                 </ul>

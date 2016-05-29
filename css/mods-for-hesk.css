@@ -343,3 +343,12 @@ div.setupButtons {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.hide-on-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
