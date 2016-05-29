@@ -44,29 +44,36 @@ $(document).ready(function() {
         eventDrop: respondToDragAndDrop,
         eventResize: respondToDragAndDrop,
         eventMouseover: function(event) {
-            if (event.type === 'TICKET') {
-                // Don't build a popover for tickets
-                return;
-            }
-
             var contents = $('.popover-template').html();
             var $contents = $(contents);
 
             var format = 'dddd, MMMM Do YYYY';
             var endDate = event.end == null ? event.start : event.end;
 
-            if (!event.allDay) {
+            if (!event.allDay && event.type !== 'TICKET') {
                 format += ', HH:mm';
             }
 
-            if (event.location === '') {
-                $contents.find('.popover-location').hide();
+            if (event.type === 'TICKET') {
+                contents = $('.ticket-popover-template').html();
+                $contents = $(contents);
+
+                $contents.find('.popover-tracking-id span').text(event.trackingId).end()
+                    .find('.popover-owner span').text('// TODO').end()
+                    .find('.popover-subject span').text(event.title).end()
+                    .find('.popover-category span').text(event.categoryName).end()
+                    .find('.popover-priority span').text('// TODO');
+            } else {
+                if (event.location === '') {
+                    $contents.find('.popover-location').hide();
+                }
+
+                $contents.find('.popover-category span').text(event.categoryName).end()
+                    .find('.popover-location span').text(event.location).end()
+                    .find('.popover-from span').text(event.start.format(format)).end()
+                    .find('.popover-to span').text(endDate.format(format));
             }
 
-            $contents.find('.popover-category span').text(event.categoryName).end()
-                .find('.popover-location span').text(event.location).end()
-                .find('.popover-from span').text(event.start.format(format)).end()
-                .find('.popover-to span').text(endDate.format(format));
             var $eventMarkup = $(this);
             $eventMarkup.popover({
                 title: event.title,
@@ -78,11 +85,6 @@ $(document).ready(function() {
             }).popover('show');
         },
         eventMouseout: function(event) {
-            if (event.type === 'TICKET') {
-                // There's no popover to destroy
-                return;
-            }
-
             $(this).popover('destroy');
         },
         dayRender: function(date, cell) {
@@ -248,6 +250,7 @@ function buildEvent(id, dbObject) {
             allDay: true,
             type: dbObject.type,
             categoryId: dbObject.categoryId,
+            categoryName: dbObject.categoryName,
             className: 'category-' + dbObject.categoryId,
             textColor: calculateTextColor(dbObject.categoryColor)
         };

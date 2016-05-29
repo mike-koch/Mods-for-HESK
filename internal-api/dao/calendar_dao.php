@@ -1,6 +1,8 @@
 <?php
 
 function get_events($start, $end, $hesk_settings, $staff = true) {
+    global $hesk_settings;
+
     $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color` ";
 
     if ($staff) {
@@ -65,8 +67,8 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
             ON `categories`.`id` = `tickets`.`category`
             AND `categories`.`usage` <> 2
-        WHERE `due_date` >= FROM_UNIXTIME(" . intval($start) . " / 1000)
-        AND `due_date` <= FROM_UNIXTIME(" . intval($end) . " / 1000)
+        WHERE `due_date` >= FROM_UNIXTIME(" . hesk_dbEscape($start) . " / 1000)
+        AND `due_date` <= FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000)
         AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";
         mfh_log_debug('Calendar', $sql, '');
 

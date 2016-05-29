@@ -495,6 +495,30 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </div>
+<div class="ticket-popover-template" style="display: none">
+    <div>
+        <div class="popover-tracking-id">
+            <strong><?php echo $hesklang['trackID']; ?></strong>
+            <span></span>
+        </div>
+        <div class="popover-owner">
+            <strong><?php echo $hesklang['owner']; ?></strong>
+            <span></span>
+        </div>
+        <div class="popover-subject">
+            <strong><?php echo $hesklang['subject']; ?></strong>
+            <span></span>
+        </div>
+        <div class="popover-category">
+            <strong><?php echo $hesklang['category']; ?></strong>
+            <span></span>
+        </div>
+        <div class="popover-priority">
+            <strong><?php echo $hesklang['priority']; ?></strong>
+            <span></span>
+        </div>
+    </div>
+</div>
 <div style="display: none">
     <p id="lang_error_loading_events"><?php echo $hesklang['error_loading_events']; ?></p>
     <p id="lang_error_deleting_event"><?php echo $hesklang['error_deleting_event']; ?></p>
