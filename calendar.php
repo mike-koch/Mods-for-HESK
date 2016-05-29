@@ -82,11 +82,8 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                             <div class="checkbox">
                                 <input type="checkbox" data-select-target="category-toggle" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-1" style="<?php echo $category['css_style']; ?>">&nbsp;</div>
-                                <div class="col-sm-11 hide-on-overflow no-wrap">
-                                    <?php echo $category['name']; ?>
-                                </div>
+                            <div class="hide-on-overflow no-wrap event-category background-volatile" style="<?php echo $category['css_style']; ?>">
+                                <?php echo $category['name']; ?>
                             </div>
                         </li>
                     <?php endforeach; ?>

@@ -352,3 +352,8 @@ div.setupButtons {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.event-category {
+    border-radius: 4px;
+    padding: 5px;
+}
