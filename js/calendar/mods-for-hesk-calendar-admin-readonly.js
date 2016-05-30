@@ -30,29 +30,40 @@ $(document).ready(function() {
             });
         },
         eventMouseover: function(event) {
-            if (event.type === 'TICKET') {
-                // Don't build a popover for tickets
-                return;
-            }
-
             var contents = $('.popover-template').html();
             var $contents = $(contents);
 
             var format = 'dddd, MMMM Do YYYY';
             var endDate = event.end == null ? event.start : event.end;
 
-            if (!event.allDay) {
+            if (!event.allDay && event.type !== 'TICKET') {
                 format += ', HH:mm';
             }
 
-            if (event.location === '') {
-                $contents.find('.popover-location').hide();
+            if (event.type === 'TICKET') {
+                contents = $('.ticket-popover-template').html();
+                $contents = $(contents);
+
+                if (event.owner === null) {
+                    $contents.find('.popover-owner').hide();
+                }
+
+                $contents.find('.popover-tracking-id span').text(event.trackingId).end()
+                    .find('.popover-owner span').text(event.owner).end()
+                    .find('.popover-subject span').text(event.subject).end()
+                    .find('.popover-category span').text(event.categoryName).end()
+                    .find('.popover-priority span').text(event.priority);
+            } else {
+                if (event.location === '') {
+                    $contents.find('.popover-location').hide();
+                }
+
+                $contents.find('.popover-category span').text(event.categoryName).end()
+                    .find('.popover-location span').text(event.location).end()
+                    .find('.popover-from span').text(event.start.format(format)).end()
+                    .find('.popover-to span').text(endDate.format(format));
             }
 
-            $contents.find('.popover-category span').text(event.categoryName).end()
-                .find('.popover-location span').text(event.location).end()
-                .find('.popover-from span').text(event.start.format(format)).end()
-                .find('.popover-to span').text(endDate.format(format));
             var $eventMarkup = $(this);
             $eventMarkup.popover({
                 title: event.title,
@@ -63,12 +74,7 @@ $(document).ready(function() {
                 placement: 'auto'
             }).popover('show');
         },
-        eventMouseout: function(event) {
-            if (event.type === 'TICKET') {
-                // There's no popover to destroy
-                return;
-            }
-
+        eventMouseout: function() {
             $(this).popover('destroy');
         }
     });
@@ -80,6 +86,7 @@ function buildEvent(id, dbObject) {
     if (dbObject.type == 'TICKET') {
         return {
             title: dbObject.title,
+            subject: dbObject.subject,
             trackingId: dbObject.trackingId,
             start: moment(dbObject.startTime),
             url: dbObject.url,
@@ -87,7 +94,10 @@ function buildEvent(id, dbObject) {
             allDay: true,
             type: dbObject.type,
             categoryId: dbObject.categoryId,
+            categoryName: dbObject.categoryName,
             className: 'category-' + dbObject.categoryId,
+            owner: dbObject.owner,
+            priority: dbObject.priority,
             textColor: calculateTextColor(dbObject.categoryColor)
         };
     }

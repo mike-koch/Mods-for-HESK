@@ -29,7 +29,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
     $events = [];
     while ($row = hesk_dbFetchAssoc($rs)) {
         // Skip the event if the user does not have access to it
-        if (!$_SESSION['isadmin'] && !in_array($row['category'], $_SESSION['categories'])) {
+        if ($staff && !$_SESSION['isadmin'] && !in_array($row['category'], $_SESSION['categories'])) {
             continue;
         }
 
@@ -62,7 +62,8 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         $hesk_settings['timeformat'] = $old_time_setting;
 
         $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`,
-          CASE WHEN `due_date` < '{$current_date}' THEN 1 ELSE 0 END AS `overdue`, `owner`.`name` AS `owner_name`, `tickets`.`priority` AS `priority`
+          CASE WHEN `due_date` < '{$current_date}' THEN 1 ELSE 0 END AS `overdue`, `owner`.`name` AS `owner_name`, `tickets`.`owner` AS `owner_id`,
+           `tickets`.`priority` AS `priority`
         FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets`
         INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` AS `categories`
             ON `categories`.`id` = `tickets`.`category`
@@ -72,12 +73,13 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         WHERE `due_date` >= FROM_UNIXTIME(" . hesk_dbEscape($start) . " / 1000)
         AND `due_date` <= FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000)
         AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";
-        mfh_log_debug('Calendar', $sql, '');
 
         $rs = hesk_dbQuery($sql);
         while ($row = hesk_dbFetchAssoc($rs)) {
             // Skip the ticket if the user does not have access to it
-            if (!$_SESSION['isadmin'] && !in_array($row['category'], $_SESSION['categories'])) {
+            if (!hesk_checkPermission('can_view_tickets', 0)
+                || ($row['owner_id'] && $row['owner_id'] != $_SESSION['id'] && !hesk_checkPermission('can_view_ass_others', 0))
+                || (!$row['owner_id'] && !hesk_checkPermission('can_view_unassigned', 0))) {
                 continue;
             }
 
