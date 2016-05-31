@@ -91,7 +91,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
             $event['url'] = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
             $event['categoryId'] = $row['category'];
             $event['categoryName'] = $row['category_name'];
-            $event['categoryColor'] = $row['overdue'] ? '#dd0000' : $row['category_color'];
+            $event['categoryColor'] = $row['category_color'];
             $event['owner'] = $row['owner_name'];
 
             $priorities = array(

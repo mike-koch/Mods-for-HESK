@@ -112,7 +112,7 @@ $(document).ready(function() {
         // Hard-code the view name so the modal treats this as an "all-day" event.
         var viewName = 'month';
         displayCreateModal(moment(), viewName);
-    })
+    });
 
 
     $('#create-form input[name="all-day"]').change(function() {
@@ -271,7 +271,7 @@ function buildEvent(id, dbObject) {
             owner: dbObject.owner,
             priority: dbObject.priority,
             textColor: calculateTextColor(dbObject.categoryColor),
-            fontIconMarkup: '<i class="fa fa-ticket"></i>'
+            fontIconMarkup: getIcon(dbObject)
         };
     }
 
@@ -290,8 +290,19 @@ function buildEvent(id, dbObject) {
         color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
         textColor: calculateTextColor(dbObject.categoryColor),
         reminderValue: dbObject.reminderValue == null ? '' : dbObject.reminderValue,
-        reminderUnits: dbObject.reminderUnits
+        reminderUnits: dbObject.reminderUnits,
+        fontIconMarkup: '<i class="fa fa-calendar"></i>'
     };
+}
+
+function getIcon(dbObject) {
+    var endOfDay = moment(dbObject.startTime).endOf("day");
+
+    if (moment(endOfDay).isBefore(moment())) {
+        return '<i class="fa fa-exclamation-triangle"></i>';
+    }
+
+    return '<i class="fa fa-ticket"></i>';
 }
 
 function calculateTextColor(color) {
@@ -398,7 +409,7 @@ function displayEditModal(date) {
 
 function updateCategoryVisibility() {
     $('input[name="category-toggle"]').each(function() {
-        $this = $(this);
+        var $this = $(this);
 
         if ($this.is(':checked')) {
             $('.category-' + $this.val()).show();
@@ -419,6 +430,10 @@ function respondToDragAndDrop(event, delta, revertFunc) {
                 dueDate: event.start.format('YYYY-MM-DD')
             },
             success: function() {
+                event.fontIconMarkup = getIcon({
+                    startTime: event.start
+                });
+                $('#calendar').fullCalendar('updateEvent', event);
                 $.jGrowl($('#lang_ticket_due_date_updated').text(), { theme: 'alert-success', closeTemplate: '' });
             },
             error: function() {
