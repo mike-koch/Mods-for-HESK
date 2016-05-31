@@ -110,7 +110,7 @@ function buildEvent(id, dbObject) {
             owner: dbObject.owner,
             priority: dbObject.priority,
             textColor: calculateTextColor(dbObject.categoryColor),
-            fontIconMarkup: '<i class="fa fa-ticket"></i>'
+            fontIconMarkup: getIcon(dbObject)
         };
     }
 
@@ -129,8 +129,19 @@ function buildEvent(id, dbObject) {
         color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
         textColor: calculateTextColor(dbObject.categoryColor),
         reminderValue: dbObject.reminderValue == null ? '' : dbObject.reminderValue,
-        reminderUnits: dbObject.reminderUnits
+        reminderUnits: dbObject.reminderUnits,
+        fontIconMarkup: '<i class="fa fa-calendar"></i>'
     };
+}
+
+function getIcon(dbObject) {
+    var endOfDay = moment(dbObject.startTime).endOf("day");
+
+    if (moment(endOfDay).isBefore(moment())) {
+        return '<i class="fa fa-exclamation-triangle"></i>';
+    }
+
+    return '<i class="fa fa-ticket"></i>';
 }
 
 function calculateTextColor(color) {

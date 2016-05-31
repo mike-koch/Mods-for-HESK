@@ -101,6 +101,24 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </ul>
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4><?php echo $hesklang['legend']; ?></h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <i class="fa fa-calendar"></i> <?php echo $hesklang['event']; ?>
+                    </div>
+                    <div class="col-sm-6">
+                        <i class="fa fa-ticket"></i> <?php echo $hesklang['ticket']; ?>
+                    </div>
+                    <div class="col-sm-6">
+                        <i class="fa fa-exclamation-triangle"></i> <?php echo $hesklang['overdue_ticket']; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-lg-9">
         <div class="panel panel-default">
