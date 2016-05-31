@@ -115,20 +115,22 @@ $(document).ready(function() {
     });
 
 
-    $('#create-form input[name="all-day"]').change(function() {
+    var $createForm = $('#create-form');
+    $createForm.find('input[name="all-day"]').change(function() {
         var hideTimeFields = $(this).is(':checked');
 
-        $('#create-form .clockpicker').css('display', hideTimeFields ? 'none' : 'block');
+        $createForm.find('.clockpicker').css('display', hideTimeFields ? 'none' : 'block');
     });
 
-    $('#edit-form input[name="all-day"]').change(function() {
+    var $editForm = $('#edit-form');
+    $editForm.find('input[name="all-day"]').change(function() {
         var hideTimeFields = $(this).is(':checked');
 
-        $('#edit-form .clockpicker').css('display', hideTimeFields ? 'none' : 'block');
+        $editForm.find('.clockpicker').css('display', hideTimeFields ? 'none' : 'block');
     });
 
-    $('#edit-form #delete-button').click(function() {
-        var id = $('#edit-form').find('input[name="id"]').val();
+    $editForm.find('#delete-button').click(function() {
+        var id = $editForm.find('input[name="id"]').val();
 
         var data = {
             id: id,
@@ -144,40 +146,40 @@ $(document).ready(function() {
                 $.jGrowl($('#lang_event_deleted').text(), { theme: 'alert-success', closeTemplate: '' });
                 $('#edit-event-modal').modal('hide');
             },
-            error: function(data) {
+            error: function() {
                 $.jGrowl($('#lang_error_deleting_event').text(), { theme: 'alert-danger', closeTemplate: '' });
             }
         });
     });
 
-    $('#create-form').submit(function(e) {
+    $createForm.submit(function(e) {
         e.preventDefault();
 
-        var start = $('#create-form input[name="start-date"]').val();
-        var end = $('#create-form input[name="end-date"]').val();
+        var start = $createForm.find('input[name="start-date"]').val();
+        var end = $createForm.find('input[name="end-date"]').val();
         var dateFormat = 'YYYY-MM-DD';
-        var allDay = $('#create-form input[name="all-day"]').is(':checked');
+        var allDay = $createForm.find('input[name="all-day"]').is(':checked');
 
         if (!allDay) {
-            start += ' ' + $('#create-form input[name="start-time"]').val();
-            end += ' ' + $('#create-form input[name="end-time"]').val();
+            start += ' ' + $createForm.find('input[name="start-time"]').val();
+            end += ' ' + $createForm.find('input[name="end-time"]').val();
             dateFormat = 'YYYY-MM-DD HH:mm:ss';
         }
 
         var data = {
-            title: $('#create-form input[name="name"]').val(),
-            location: $('#create-form input[name="location"]').val(),
+            title: $createForm.find('input[name="name"]').val(),
+            location: $createForm.find('input[name="location"]').val(),
             startTime: moment(start).format(dateFormat),
             endTime: moment(end).format(dateFormat),
             allDay: allDay,
-            comments: $('#create-form textarea[name="comments"]').val(),
-            categoryId: $('#create-form select[name="category"]').val(),
+            comments: $createForm.find('textarea[name="comments"]').val(),
+            categoryId: $createForm.find('select[name="category"]').val(),
             action: 'create',
             type: 'CALENDAR',
-            categoryColor: $('#create-form select[name="category"] :selected').attr('data-color'),
-            categoryName: $('#create-form select[name="category"] :selected').text().trim(),
-            reminderValue: $('#create-form input[name="reminder-value"]').val(),
-            reminderUnits: $('#create-form select[name="reminder-unit"]').val()
+            categoryColor: $createForm.find('select[name="category"] :selected').attr('data-color'),
+            categoryName: $createForm.find('select[name="category"] :selected').text().trim(),
+            reminderValue: $createForm.find('input[name="reminder-value"]').val(),
+            reminderUnits: $createForm.find('select[name="reminder-unit"]').val()
         };
 
         $.ajax({
@@ -195,10 +197,10 @@ $(document).ready(function() {
         });
     });
 
-    $('#edit-form').submit(function(e) {
+    $editForm.submit(function(e) {
         e.preventDefault();
 
-        var $form = $('#edit-form');
+        var $form = $editForm;
         var start = $form.find('input[name="start-date"]').val();
         var end = $form.find('input[name="end-date"]').val();
         var dateFormat = 'YYYY-MM-DD';
