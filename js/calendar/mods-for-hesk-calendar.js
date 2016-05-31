@@ -79,8 +79,14 @@ $(document).ready(function() {
             }
 
             var $eventMarkup = $(this);
+
+            var eventTitle = event.title;
+            if (event.fontIconMarkup != undefined) {
+                eventTitle = event.fontIconMarkup + '&nbsp;' + eventTitle;
+            }
+
             $eventMarkup.popover({
-                title: event.title,
+                title: eventTitle,
                 html: true,
                 content: $contents,
                 animation: true,
@@ -88,12 +94,17 @@ $(document).ready(function() {
                 placement: 'auto'
             }).popover('show');
         },
-        eventMouseout: function(event) {
+        eventMouseout: function() {
             $(this).popover('destroy');
         },
         dayRender: function(date, cell) {
             var $cell = $(cell);
             $cell.attr('title', 'Click to add event');
+        },
+        eventRender: function(event, element) {
+            if (event.fontIconMarkup !== undefined) {
+                element.find('span.fc-title').html(event.fontIconMarkup + '&nbsp;' + element.find('span.fc-title').text());
+            }
         }
     });
 
@@ -259,7 +270,8 @@ function buildEvent(id, dbObject) {
             className: 'category-' + dbObject.categoryId,
             owner: dbObject.owner,
             priority: dbObject.priority,
-            textColor: calculateTextColor(dbObject.categoryColor)
+            textColor: calculateTextColor(dbObject.categoryColor),
+            fontIconMarkup: '<i class="fa fa-ticket"></i>'
         };
     }
 

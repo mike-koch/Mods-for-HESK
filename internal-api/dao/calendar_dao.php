@@ -86,7 +86,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
             $event['type'] = 'TICKET';
             $event['trackingId'] = $row['trackid'];
             $event['subject'] = $row['subject'];
-            $event['title'] = '[' . $row['trackid'] . '] ' . $row['subject'];
+            $event['title'] = $row['subject'];
             $event['startTime'] = $row['due_date'];
             $event['url'] = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
             $event['categoryId'] = $row['category'];
