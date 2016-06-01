@@ -108,7 +108,7 @@ $hesklang['add_files'] = '<i class="fa fa-plus"></i> Add File';
 $hesklang['select_all_title_case'] = 'Select All';
 $hesklang['deselect_all_title_case'] = 'Deselect All';
 $hesklang['event'] = 'Event';
-$hesklang['overdue_ticket'] = 'Overdue ticket';
+$hesklang['overdue_ticket_legend'] = 'Overdue ticket';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

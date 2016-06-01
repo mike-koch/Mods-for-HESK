@@ -114,7 +114,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <i class="fa fa-ticket"></i> <?php echo $hesklang['ticket']; ?>
                     </div>
                     <div class="col-sm-6">
-                        <i class="fa fa-exclamation-triangle"></i> <?php echo $hesklang['overdue_ticket']; ?>
+                        <i class="fa fa-exclamation-triangle"></i> <?php echo $hesklang['overdue_ticket_legend']; ?>
                     </div>
                 </div>
             </div>
