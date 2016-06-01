@@ -208,9 +208,10 @@ function output_attachment_id_holder_container($id) {
     echo '<div id="attachment-holder-' . $id . '" class="hide"></div>';
 }
 
-function build_dropzone_markup($id = 'filedrop') {
+function build_dropzone_markup($admin = false, $id = 'filedrop') {
     global $hesklang, $hesk_settings;
 
+    $directory_separator = $admin ? '../' : '';
     echo '<div class="dropzone" id="' . $id . '">
         <div class="fallback">
             <input type="hidden" name="use-legacy-attachments" value="1">';
@@ -221,8 +222,8 @@ function build_dropzone_markup($id = 'filedrop') {
         echo '</div>
     </div>
     <div class="btn btn-default btn-xs fileinput-button filedropbutton-' . $id . '">' . $hesklang['add_files'] . '</div><br>
-    <a href="file_limits.php" target="_blank"
-       onclick="Javascript:hesk_window(\'file_limits.php\',250,500);return false;">'. $hesklang['ful'] . '</a>';
+    <a href="' . $directory_separator . 'file_limits.php" target="_blank"
+       onclick="Javascript:hesk_window(\'' . $directory_separator . 'file_limits.php\',250,500);return false;">'. $hesklang['ful'] . '</a>';
 }
 
 function display_dropzone_field($url, $id = 'filedrop') {

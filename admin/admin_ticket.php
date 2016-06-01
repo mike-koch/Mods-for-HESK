@@ -1299,7 +1299,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <?php build_dropzone_markup('notesFiledrop'); ?>
+                                    <?php build_dropzone_markup(true, 'notesFiledrop'); ?>
                                 </div>
                             </div>
                         </div>
@@ -1860,7 +1860,7 @@ function hesk_printReplyForm()
                 <label for="attachments" class="col-sm-3 control-label"><?php echo $hesklang['attachments']; ?>:</label>
 
                 <div class="col-sm-9">
-                    <?php build_dropzone_markup(); ?>
+                    <?php build_dropzone_markup(true); ?>
                 </div>
             </div>
             <?php

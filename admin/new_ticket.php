@@ -1042,7 +1042,7 @@ if ($hesk_settings['attachments']['use']) {
         <label for="attachments" class="control-label col-sm-3"><?php echo $hesklang['attachments']; ?>:</label>
 
         <div class="col-sm-9">
-            <?php build_dropzone_markup(); ?>
+            <?php build_dropzone_markup(true); ?>
         </div>
     </div>
     <hr/>

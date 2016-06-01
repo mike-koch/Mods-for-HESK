@@ -442,7 +442,7 @@ if (!isset($_SESSION['hide']['new_article']))
                         <?php if ($hesk_settings['attachments']['use']): ?>
                         <div class="form-group">
                             <label for="attachments" class="control-label"><?php echo $hesklang['attachments']; ?> (<a href="Javascript:void(0)" onclick="Javascript:hesk_window('../file_limits.php',250,500);return false;"><?php echo $hesklang['ful']; ?></a>)</label>
-                            <?php build_dropzone_markup(); ?>
+                            <?php build_dropzone_markup(true); ?>
                         </div>
                         <?php 
 							display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php'); 
@@ -1496,7 +1496,7 @@ function edit_article()
                             ?>
 
                             <?php
-                            build_dropzone_markup();
+                            build_dropzone_markup(true);
                             display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php');
                             ?>
                         </div>
