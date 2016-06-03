@@ -17,8 +17,8 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         $sql .= "LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` AS `reminders` ON
         `reminders`.`user_id` = " . intval($_SESSION['id']) . " AND `reminders`.`event_id` = `events`.`id`";
     }
-    $sql .= "WHERE `start` >= FROM_UNIXTIME(" . hesk_dbEscape($start)
-        . " / 1000) AND `end` <= FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000) AND `categories`.`usage` <> 1";
+    $sql .= "WHERE `start` >= CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($start)
+        . " / 1000), @@session.time_zone, '+00:00') AND `end` <= CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000), @@session.time_zone, '+00:00') AND `categories`.`usage` <> 1";
 
     if (!$staff) {
         $sql .= " AND `categories`.`type` = '0'";
@@ -70,8 +70,9 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
             AND `categories`.`usage` <> 2
         LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `owner`
             ON `tickets`.`owner` = `owner`.`id`
-        WHERE `due_date` >= FROM_UNIXTIME(" . hesk_dbEscape($start) . " / 1000)
-        AND `due_date` <= FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000)
+        WHERE `due_date` >= CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($start)
+        . " / 1000), @@session.time_zone, '+00:00')
+        AND `due_date` <= CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000), @@session.time_zone, '+00:00')
         AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) ";
 
         $rs = hesk_dbQuery($sql);
