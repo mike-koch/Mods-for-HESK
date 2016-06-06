@@ -263,13 +263,7 @@ function removeAttachment(id) {
     $('input[name="attachment-ids[]"][value="' + id + '"]').remove();
     $.ajax({
         url: getHelpdeskUrl() + '/internal-api/ticket/delete-attachment.php?id=' + id,
-        method: 'GET',
-        success: function() {
-            console.info('Removed attachment ' + id);
-        },
-        error: function() {
-            console.error('Error removing attachment ' + id);
-        }
+        method: 'GET'
     });
 }
 
