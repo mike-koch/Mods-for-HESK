@@ -109,6 +109,7 @@ $hesklang['select_all_title_case'] = 'Select All';
 $hesklang['deselect_all_title_case'] = 'Deselect All';
 $hesklang['event'] = 'Event';
 $hesklang['overdue_ticket_legend'] = 'Overdue ticket';
+$hesklang['attachment_max_exceeded'] = 'This file will not be uploaded becuase you have already uploaded the maximum number of files allowed.';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.5.2
 $hesklang['manage_statuses'] = 'Manage Statuses';

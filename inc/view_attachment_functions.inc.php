@@ -254,7 +254,8 @@ function display_dropzone_field($url, $id = 'filedrop') {
                 if (numberOfFiles >= " . $max_files . ") {
                     disabled = true;
                 }
-                $('." . $id . "-button').attr('disabled', disabled);
+
+                $('." . $id . "button-" . $id . "').attr('disabled', disabled);
             });
             this.on('removedfile', function(file) {
                 // Remove the attachment from the database and the filesystem.
@@ -266,7 +267,7 @@ function display_dropzone_field($url, $id = 'filedrop') {
                 if (numberOfFiles >= " . $max_files . ") {
                     disabled = true;
                 }
-                $('." . $id . "-button').attr('disabled', disabled);
+                $('." . $id . "button-" . $id . "').attr('disabled', disabled);
             });
             this.on('complete', function(file) {
                 // Stop animating if complete.
@@ -280,6 +281,9 @@ function display_dropzone_field($url, $id = 'filedrop') {
             });
             this.on('uploadprogress', function(file, percentage) {
                 $(file.previewTemplate).find('#percentage').text(percentage + '%');
+            });
+            this.on('error', function(file, errorMessage, xhr) {
+                $(file.previewTemplate).addClass('alert-danger');
             });
         },
         paramName: 'attachment',
@@ -297,6 +301,7 @@ function display_dropzone_field($url, $id = 'filedrop') {
         dictCancelUpload: ".json_encode($hesklang['attachment_cancel']).",
         dictCancelUploadConfirmation: ".json_encode($hesklang['attachment_confirm_cancel']).",
         dictRemoveFile: ".json_encode($hesklang['attachment_remove']).",
+        dictMaxFilesExceeded: ".json_encode($hesklang['attachment_max_exceeded']).",
         previewTemplate: $('#previews').html(),
         clickable: '.filedropbutton-".$id."',
         uploadMultiple: false
