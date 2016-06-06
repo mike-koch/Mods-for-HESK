@@ -298,7 +298,8 @@ function display_dropzone_field($url, $id = 'filedrop') {
         dictCancelUploadConfirmation: ".json_encode($hesklang['attachment_confirm_cancel']).",
         dictRemoveFile: ".json_encode($hesklang['attachment_remove']).",
         previewTemplate: $('#previews').html(),
-        clickable: '.filedropbutton-".$id."'
+        clickable: '.filedropbutton-".$id."',
+        uploadMultiple: false
     };
     </script>
     ";

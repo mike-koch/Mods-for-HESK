@@ -41,14 +41,16 @@ function hesk_uploadFile($i, $isTicket = true)
     global $hesk_settings, $hesklang, $trackingID, $hesk_error_buffer, $modsForHesk_settings;
 
     /* Return if name is empty */
-    $name = $_FILES['attachment']['name'][$i];
+    $name = $i == -1
+        ? $_FILES['attachment']['name']
+        : $_FILES['attachment']['name'][$i];
     if (empty($name)) {
         return '';
     }
 
 
     /* Parse the name */
-    $file_realname = hesk_cleanFileName($_FILES['attachment']['name'][$i]);
+    $file_realname = hesk_cleanFileName($name);
 
     /* Check file extension */
     $ext = strtolower(strrchr($file_realname, "."));
@@ -57,7 +59,9 @@ function hesk_uploadFile($i, $isTicket = true)
     }
 
     /* Check file size */
-    $size = $_FILES['attachment']['size'][$i];
+    $size = $i == -1
+        ? $_FILES['attachment']['size']
+        : $_FILES['attachment']['size'][$i];
     if ($size > $hesk_settings['attachments']['max_size']) {
         return hesk_fileError(sprintf($hesklang['file_too_large'], $file_realname));
     } else {
@@ -88,7 +92,9 @@ function hesk_uploadFile($i, $isTicket = true)
     if (!$isTicket) {
         $directory = $modsForHesk_settings['kb_attach_dir'];
     }
-    $file_to_move = $_FILES['attachment']['tmp_name'][$i];
+    $file_to_move = $i == -1
+        ? $_FILES['attachment']['tmp_name']
+        : $_FILES['attachment']['tmp_name'][$i];
     if (!move_uploaded_file($file_to_move, dirname(dirname(__FILE__)) . '/' . $directory . '/' . $file_name)) {
         return hesk_fileError($hesklang['cannot_move_tmp']);
     }
