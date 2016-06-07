@@ -273,7 +273,7 @@ function buildEvent(id, dbObject) {
             owner: dbObject.owner,
             priority: dbObject.priority,
             textColor: calculateTextColor(dbObject.categoryColor),
-            fontIconMarkup: getIcon(dbObject)
+            fontIconMarkup: getIcon(dbObject, calculateTextColor(dbObject.categoryColor))
         };
     }
 
@@ -297,11 +297,14 @@ function buildEvent(id, dbObject) {
     };
 }
 
-function getIcon(dbObject) {
+function getIcon(dbObject, textColor) {
+    console.log(textColor);
     var endOfDay = moment(dbObject.startTime).endOf("day");
 
+    var iconColor = textColor === 'white' ? '' : 'color: red';
+
     if (moment(endOfDay).isBefore(moment())) {
-        return '<i class="fa fa-exclamation-triangle"></i>';
+        return '<i class="fa fa-exclamation-triangle" style="' + iconColor + '"></i>';
     }
 
     return '<i class="fa fa-ticket"></i>';
@@ -433,7 +436,8 @@ function respondToDragAndDrop(event, delta, revertFunc) {
             },
             success: function() {
                 event.fontIconMarkup = getIcon({
-                    startTime: event.start
+                    startTime: event.start,
+                    textColor: event.textColor
                 });
                 $('#calendar').fullCalendar('updateEvent', event);
                 $.jGrowl($('#lang_ticket_due_date_updated').text(), { theme: 'alert-success', closeTemplate: '' });
