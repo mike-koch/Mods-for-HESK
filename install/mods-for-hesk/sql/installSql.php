@@ -59,14 +59,14 @@ function executePre140Scripts()
                       `ShortNameContentKey` TEXT NOT NULL,
                       `TicketViewContentKey` TEXT NOT NULL,
                       `TextColor` TEXT NOT NULL,
-                      `IsNewTicketStatus` BIT NOT NULL DEFAULT 0,
-                      `IsClosed` BIT NOT NULL DEFAULT 0,
-                      `IsClosedByClient` BIT NOT NULL DEFAULT 0,
-                      `IsCustomerReplyStatus` BIT NOT NULL DEFAULT 0,
-                      `IsStaffClosedOption` BIT NOT NULL DEFAULT 0,
-                      `IsStaffReopenedStatus` BIT NOT NULL DEFAULT 0,
-                      `IsDefaultStaffReplyStatus` BIT NOT NULL DEFAULT 0,
-                      `LockedTicketStatus` BIT NOT NULL DEFAULT 0,
+                      `IsNewTicketStatus` INT NOT NULL DEFAULT 0,
+                      `IsClosed` INT NOT NULL DEFAULT 0,
+                      `IsClosedByClient` INT NOT NULL DEFAULT 0,
+                      `IsCustomerReplyStatus` INT NOT NULL DEFAULT 0,
+                      `IsStaffClosedOption` INT NOT NULL DEFAULT 0,
+                      `IsStaffReopenedStatus` INT NOT NULL DEFAULT 0,
+                      `IsDefaultStaffReplyStatus` INT NOT NULL DEFAULT 0,
+                      `LockedTicketStatus` INT NOT NULL DEFAULT 0,
                         PRIMARY KEY (`ID`))");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` (ID, ShortNameContentKey, TicketViewContentKey, TextColor, IsNewTicketStatus, IsClosed, IsClosedByClient, IsCustomerReplyStatus,
 		IsStaffClosedOption, IsStaffReopenedStatus, IsDefaultStaffReplyStatus, LockedTicketStatus)
@@ -778,6 +778,15 @@ function execute260Scripts()
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('first_day_of_week', '0')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('default_calendar_view', 'month')");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` ADD PRIMARY KEY ( `Key` )");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` CHANGE  `IsNewTicketStatus`  `IsNewTicketStatus` INT( 1 ) NOT NULL DEFAULT  '0',
+            CHANGE  `IsClosed`  `IsClosed` INT( 1 ) NOT NULL DEFAULT  '0',
+            CHANGE  `IsClosedByClient`  `IsClosedByClient` INT( 1 ) NOT NULL DEFAULT  '0',
+            CHANGE  `IsCustomerReplyStatus`  `IsCustomerReplyStatus` INT( 1 ) NOT NULL DEFAULT  '0',
+            CHANGE  `IsStaffClosedOption`  `IsStaffClosedOption` INT( 1 ) NOT NULL DEFAULT  '0',
+            CHANGE  `IsStaffReopenedStatus`  `IsStaffReopenedStatus` INT( 1 ) NOT NULL DEFAULT  '0',
+            CHANGE  `IsDefaultStaffReplyStatus`  `IsDefaultStaffReplyStatus` INT( 1 ) NOT NULL DEFAULT  '0',
+            CHANGE  `LockedTicketStatus`  `LockedTicketStatus` INT( 1 ) NOT NULL DEFAULT  '0'");
+
 
     updateVersion('2.6.0');
 }
