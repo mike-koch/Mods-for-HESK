@@ -94,7 +94,8 @@ if (empty($_GET['locked'])) {
 
 /* Update database */
 $statusSql = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `LockedTicketStatus` = 1';
-$statusRow = hesk_dbQuery($statusSql)->fetch_assoc();
+$statusRs = hesk_dbQuery($statusSql);
+$statusRow = hesk_dbFetchAssoc($statusSql);
 $statusId = $statusRow['ID'];
 
 hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$statusId}',`locked`='{$status}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "')  WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");

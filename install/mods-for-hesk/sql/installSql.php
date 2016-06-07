@@ -47,7 +47,7 @@ function executePre140Scripts()
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD COLUMN `status_int` INT NOT NULL DEFAULT 0 AFTER `status`;");
 
     $ticketsRS = executeQuery("SELECT `id`, `status` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets`;");
-    while ($currentResult = $ticketsRS->fetch_assoc()) {
+    while ($currentResult = hesk_dbFetchAssoc($ticketsRS)) {
 
         executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status_int` = " . $currentResult['status'] . " WHERE `id` = " . $currentResult['id']);
     }

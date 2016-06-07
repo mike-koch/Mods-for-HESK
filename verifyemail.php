@@ -36,11 +36,11 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                 $email = '';
                 $getRs = hesk_dbQuery("SELECT `Email` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "pending_verification_emails`
                 WHERE `ActivationKey` = '" . hesk_dbEscape($key) . "'");
-                while ($result = $getRs->fetch_assoc()) {
+                while ($result = hesk_dbFetchAssoc($getRs)) {
                     $email = $result['Email'];
                     $ticketRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets`
                     WHERE `email` = '" . hesk_dbEscape($result['Email']) . "'");
-                    while ($innerResult = $ticketRs->fetch_assoc()) {
+                    while ($innerResult = hesk_dbFetchAssoc($ticketRs)) {
                         $ticket = hesk_newTicket($innerResult);
                         // Notify the customer
                         $modsForHesk_settings = mfh_getSettings();
@@ -49,7 +49,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                         // Need to notify staff?
                         // --> From autoassign?
                         $getOwnerRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE ID = " . hesk_dbEscape($ticket['owner']));
-                        $autoassign_owner = $getOwnerRs->fetch_assoc();
+                        $autoassign_owner = hesk_dbFetchAssoc($getOwnerRs);
                         if ($ticket['owner'] && $autoassign_owner['notify_assigned']) {
                             hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you', $modsForHesk_settings);
                         } // --> No autoassign, find and notify appropriate staff

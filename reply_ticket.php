@@ -187,8 +187,10 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
 // If staff hasn't replied yet, don't change the status; otherwise set it to the status for customer replies.
 $customerReplyStatusQuery = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsCustomerReplyStatus` = 1';
 $defaultNewTicketStatusQuery = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsNewTicketStatus` = 1';
-$newStatus = hesk_dbQuery($customerReplyStatusQuery)->fetch_assoc();
-$defaultNewTicketStatus = hesk_dbQuery($defaultNewTicketStatusQuery)->fetch_assoc();
+$newStatusRs = hesk_dbQuery($customerReplyStatusQuery);
+$newStatus = hesk_dbFetchAssoc($newStatusRs);
+$defaultNewTicketStatusRs = hesk_dbQuery($defaultNewTicketStatusQuery);
+$defaultNewTicketStatus = hesk_dbFetchAssoc($defaultNewTicketStatusRs);
 
 $ticket['status'] = $ticket['status'] == $defaultNewTicketStatus['ID'] ? $defaultNewTicketStatus['ID'] : $newStatus['ID'];
 

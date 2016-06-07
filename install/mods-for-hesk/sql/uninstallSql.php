@@ -45,7 +45,7 @@ function replaceStatusColumn()
 
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD COLUMN `status_int` ENUM('0','1','2','3','4','5') NOT NULL AFTER `status`;");
     $ticketsRS = executeQuery("SELECT `id`, `status` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets`;");
-    while ($currentResult = $ticketsRS->fetch_assoc()) {
+    while ($currentResult = hesk_dbFetchAssoc($ticketsRS)) {
 
         executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status_int` = '" . intval($currentResult['status']) . "' WHERE `id` = " . $currentResult['id']);
     }

@@ -59,7 +59,7 @@ $statusSql = "SELECT `ID` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "
 $status_options = array();
 $results = hesk_dbQuery($statusSql);
 
-while ($row = $results->fetch_assoc()) {
+while ($row = hesk_dbFetchAssoc($results)) {
     $status_options[$row['ID']] = mfh_getDisplayTextForStatusId($row['ID']);
 }
 
