@@ -102,6 +102,10 @@ $(document).ready(function() {
             $cell.attr('title', 'Click to add event');
         },
         eventRender: function(event, element) {
+            if (event.type === 'TICKET' && moment(event.start).endOf("day").isBefore(moment())) {
+                $('[data-date="' + event.start.format('YYYY-MM-DD') + '"]').css('background', '#f2dede');
+            }
+
             if (event.fontIconMarkup !== undefined) {
                 element.find('span.fc-title').html(event.fontIconMarkup + '&nbsp;' + element.find('span.fc-title').text());
             }
@@ -273,7 +277,7 @@ function buildEvent(id, dbObject) {
             owner: dbObject.owner,
             priority: dbObject.priority,
             textColor: calculateTextColor(dbObject.categoryColor),
-            fontIconMarkup: getIcon(dbObject, calculateTextColor(dbObject.categoryColor))
+            fontIconMarkup: getIcon(dbObject)
         };
     }
 
@@ -297,14 +301,11 @@ function buildEvent(id, dbObject) {
     };
 }
 
-function getIcon(dbObject, textColor) {
-    console.log(textColor);
+function getIcon(dbObject) {
     var endOfDay = moment(dbObject.startTime).endOf("day");
 
-    var iconColor = textColor === 'white' ? '' : 'color: red';
-
     if (moment(endOfDay).isBefore(moment())) {
-        return '<i class="fa fa-exclamation-triangle" style="' + iconColor + '"></i>';
+        return '<i class="fa fa-exclamation-triangle"></i>';
     }
 
     return '<i class="fa fa-ticket"></i>';
@@ -436,8 +437,7 @@ function respondToDragAndDrop(event, delta, revertFunc) {
             },
             success: function() {
                 event.fontIconMarkup = getIcon({
-                    startTime: event.start,
-                    textColor: event.textColor
+                    startTime: event.start
                 });
                 $('#calendar').fullCalendar('updateEvent', event);
                 $.jGrowl($('#lang_ticket_due_date_updated').text(), { theme: 'alert-success', closeTemplate: '' });

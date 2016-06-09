@@ -84,6 +84,10 @@ $(document).ready(function() {
             $(this).popover('destroy');
         },
         eventRender: function(event, element) {
+            if (event.type === 'TICKET' && moment(event.start).endOf("day").isBefore(moment())) {
+                $('[data-date="' + event.start.format('YYYY-MM-DD') + '"]').css('background', '#f2dede');
+            }
+
             if (event.fontIconMarkup !== undefined) {
                 element.find('span.fc-title').html(event.fontIconMarkup + '&nbsp;' + element.find('span.fc-title').text());
             }
