@@ -8,6 +8,7 @@ require_once(HESK_PATH . 'inc/attachments.inc.php');
 require_once(HESK_PATH . 'inc/posting_functions.inc.php');
 require_once(INTERNAL_API_PATH . 'core/output.php');
 require_once(INTERNAL_API_PATH . 'dao/attachment_dao.php');
+require_once(INTERNAL_API_PATH . 'core/cors.php');
 
 hesk_load_internal_api_database_functions();
 hesk_dbConnect();

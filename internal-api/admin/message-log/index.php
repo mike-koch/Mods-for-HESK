@@ -6,6 +6,7 @@ require_once(HESK_PATH . 'hesk_settings.inc.php');
 require_once(HESK_PATH . 'inc/common.inc.php');
 require_once(INTERNAL_API_PATH . 'core/output.php');
 require_once(INTERNAL_API_PATH . 'dao/message_log_dao.php');
+require_once(INTERNAL_API_PATH . 'core/cors.php');
 
 hesk_load_internal_api_database_functions();
 hesk_dbConnect();
