@@ -445,8 +445,8 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 
                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
-                                    <button type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">'.$hesklang['select_all_title_case'].'</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">'.$hesklang['deselect_all_title_case'].'</button>
                                 </div></div></div>';
                 break;
 
@@ -953,8 +953,8 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 
                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
-                                    <button type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">'.$hesklang['select_all_title_case'].'</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">'.$hesklang['deselect_all_title_case'].'</button>
                                 </div></div></div>';
                 break;
 

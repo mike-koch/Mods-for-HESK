@@ -400,8 +400,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 }
                                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default" onclick="selectAll(\'' . $v['name'] . '\')">Select All</button>
-                                    <button type="button" class="btn btn-default" onclick="deselectAll(\'' . $v['name'] . '\')">Deselect All</button>
+                                    <button type="button" class="btn btn-default" onclick="selectAll(\'' . $v['name'] . '\')">'.$hesklang['select_all_title_case'].'</button>
+                                    <button type="button" class="btn btn-default" onclick="deselectAll(\'' . $v['name'] . '\')">'.$hesklang['deselect_all_title_case'].'</button>
                                 </div></div></div>';
                                 break;
 

@@ -503,8 +503,8 @@ function print_add_ticket()
 
                                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
-                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
+                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">'.$hesklang['select_all_title_case'].'</button>
+                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">'.$hesklang['deselect_all_title_case'].'</button>
                                 </div>
                                 <span class="help-block with-errors"></span>
                                 </div></div>';
@@ -857,8 +857,8 @@ function print_add_ticket()
 
                                 echo '</select>
                                 <div class="btn-group" role="group">
-                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">Select All</button>
-                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">Deselect All</button>
+                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="selectAll(\'' . $formattedId . '\')">'.$hesklang['select_all_title_case'].'</button>
+                                    <button ' . $validator . ' type="button" class="btn btn-default" onclick="deselectAll(\'' . $formattedId . '\')">'.$hesklang['deselect_all_title_case'].'</button>
                                 </div>
                                 <span class="help-block with-errors"></span>
                                 </div></div>';
