@@ -87,6 +87,18 @@ function removeOtherColumns()
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` DROP COLUMN `user_agent`");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` DROP COLUMN `screen_resolution_width`");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` DROP COLUMN `screen_resolution_height`");
+    executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging`");
+    executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "user_api_tokens`");
+    executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "temp_attachment`");
+    executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event`");
+    executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` DROP COLUMN `due_date`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` DROP COLUMN `overdue_email_sent`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` DROP COLUMN `color`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` DROP COLUMN `usage`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` DROP COLUMN `notify_overdue_unassigned`");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` DROP COLUMN `default_calendar_view`");
+
 
 
     // These queries are ran in case someone used an unfortunate installation they may have not properly cleaned up tables
