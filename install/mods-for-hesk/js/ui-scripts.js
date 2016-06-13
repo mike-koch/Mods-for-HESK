@@ -8,6 +8,14 @@ function enableAllDisablable() {
     $('#updateText').hide();
 }
 
+function updateLink() {
+    var version = $('select[name="current-version"]').val();
+    var format = 'installModsForHesk.php?v={0}';
+
+    var formattedLink = format.replace('{0}', version);
+    $('#upgrade-link').attr('href', formattedLink);
+}
+
 function startVersionUpgrade(version) {
     $('#spinner-' + version)
         .removeClass('fa-exclamation-triangle')
