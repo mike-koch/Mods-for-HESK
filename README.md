@@ -1,4 +1,4 @@
-## [Mods for HESK](http://mods-for-hesk.mkochcs.com)  [![Number of Downloads](https://img.shields.io/github/downloads/mkoch227/Mods-for-HESK/latest/total.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases) [![Open Issues](https://img.shields.io/github/issues-raw/mkoch227/Mods-for-HESK.svg)](https://www.github.com/mkoch227/Mods-for-HESK/issues) [![Current Release](https://img.shields.io/github/release/mkoch227/Mods-for-HESK.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases) [![Project Status](https://img.shields.io/badge/status-maintained-brightgreen.svg)](https://www.github.com/mkoch227/Mods-for-HESK)
+## [Mods for HESK](http://mods-for-hesk.mkochcs.com)  [![Number of Downloads](https://img.shields.io/github/downloads/mkoch227/Mods-for-HESK/latest/total.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases) [![Current Release](https://img.shields.io/github/release/mkoch227/Mods-for-HESK.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases) [![Project Status](https://img.shields.io/badge/status-maintained-brightgreen.svg)](https://www.github.com/mkoch227/Mods-for-HESK)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mkoch227/Mods-for-HESK/blob/master/LICENSE)
 [![Join the chat at https://gitter.im/mkoch227/Mods-for-HESK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mkoch227/Mods-for-HESK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
 
@@ -9,6 +9,7 @@ Mods for HESK is a set of modifications for [HESK](http://www.hesk.com) v2.6.x, 
     <tr>
         <td>
             <ul>
+                <li>Calendar planning module</li>
                 <li>A new, responsive user interface</li>
                 <li>Ability to create custom ticket statuses</li>
                 <li>Right-to-left text direction</li>
@@ -44,29 +45,30 @@ Mods for HESK is a set of modifications for [HESK](http://www.hesk.com) v2.6.x, 
 </table>
 
 ## Download
-You can download Mods for HESK via two ways:
- - **Stable Releases:** Commits that have a release tag associated with a commit are considered releases.  You can click on "releases" on the top of the repo, and then click the green button to download.
- - **Bleeding-edge Releases:** You can also download the latest, bleeding-edge version of Mods for HESK by simply clicking "download as zip" to the right of the repository.  This will download an exact copy of this branch in its current state, which may be contain bugs/other issues.  This is not recommended for a production use.
+The latest version available for download can be downloaded from https://mods-for-hesk.mkochcs.com. 
+The `master` branch will always contain the latest release.
 
 ## Installation
-Visit [http://mods-for-hesk.mkochcs.com/download.php](http://mods-for-hesk.mkochcs.com/download.php) for installation instructions.
+Visit [https://mods-for-hesk.mkochcs.com/download.php](https://mods-for-hesk.mkochcs.com/download.php) for installation instructions.
 
 ## Languages / Support
-Please visit http://developers.phpjunkyard.com/viewforum.php?f=19 for translation instructions and support.  
+Please visit https://developers.phpjunkyard.com/viewforum.php?f=19 for translation instructions and support.  
 Mods for HESK translations are available at http://mods-for-hesk.mkochcs.com.
 
 ## Browser Compatibility
-This list may be incomplete. Please leave a note on the PHP Junkyard forums for additional browser compatibility information.
- - **Google Chrome 33+:** Compatible
- - **Mozilla Firefox 28+:** Compatible
- - **Internet Explorer 6/7:** *NOT* Compatible
- - **Internet Explorer 8:** *PARTIAL* Compatibility
- - **Internet Explorer 9+:** Compatible
- 
-_There are no intentions of making Mods for HESK compatible with Internet Explorer 6 or 7, or any browser that is 2 or more major revisions older than its latest version._
+Mods for HESK is compatible with the following browsers:
+
+- IE 11 / Edge
+- Chrome (Current Version - 2 previous major revisions)
+- Firefox (Current Version - 2 previous major revisions)
+- Opera (Current Version - 2 previous major revisions)
+- Safari (Current Version - 2 previous major revisions)
+
+It is possible that older browsers may or may not work with Mods for HESK.
+ However, support will not be provided for older browsers.
 
 ## Versioning
-Mods for HESK will be maintained under the Semantic Versioning guidelines as much as possible. Releases will be numbered with the following format:
+Releases will be numbered with the following format:
 
 `<major>.<minor>.<patch>`
 
