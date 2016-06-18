@@ -77,8 +77,6 @@ And constructed with the following guidelines:
  - New additions, including new minor features, without breaking backward compatibility, or updates to patch versions of HESK bumps the minor (and resets the patch)
  - Bug fixes and misc minor changes bumps the patch
 
-For more information on SemVer, please visit http://semver.org.
-
 ## Credits
  - Mike Koch - Creator of Mods for HESK
  - Klemen Stirn - Creator of HESK
