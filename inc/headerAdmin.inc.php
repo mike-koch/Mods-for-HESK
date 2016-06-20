@@ -225,10 +225,12 @@ $modsForHesk_settings = mfh_getSettings();
     if (defined('MFH_CALENDAR')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/lang/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar.js"></script>
     <?php } else if (defined('MFH_CALENDAR_READONLY')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/lang/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-admin-readonly.js"></script>
     <?php } ?>
 

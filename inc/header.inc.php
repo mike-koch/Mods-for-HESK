@@ -251,6 +251,7 @@ if (is_dir(HESK_PATH . 'install')) {
         ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/lang/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
         <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-readonly.js"></script>
     <?php
     }
