@@ -325,7 +325,7 @@ if ($modsForHesk_settings['show_icons']) {
                 if ($modsForHesk_settings['enable_calendar'] == 1):
                 ?>
                 <li class="<?php echo $active; ?>">
-                    <a href="<?php echo HESK_PATH; ?>calendar.php"><i class="fa fa-calendar" <?php echo $iconDisplay; ?>></i>&nbsp;Calendar</a>
+                    <a href="<?php echo HESK_PATH; ?>calendar.php"><i class="fa fa-calendar" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['calendar_title_case']; ?></a>
                 </li>
                 <?php endif; ?>
                 <?php include('custom/header-custom.inc.php'); ?>
