@@ -639,8 +639,11 @@ function print_add_ticket()
                     </div>
                 </div>
                 <div class="form-group" id="message-group">
-
-                    <div class="col-sm-12">
+                    <label for="message" class="col-sm-3 control-label">
+                        <?php echo $hesklang['message']; ?>:
+                        <span class="important">*</span>
+                    </label>
+                    <div class="col-sm-9">
                         <textarea placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" name="message"
                                   id="message" class="form-control htmlEditor" rows="12"
                                   cols="60" <?php if (in_array('message', $_SESSION['iserror'])) {

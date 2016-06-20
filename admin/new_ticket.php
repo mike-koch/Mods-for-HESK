@@ -761,7 +761,9 @@ elseif (hesk_checkPermission('can_man_ticket_tpl', 0)) {
 } else {
     echo '<div class="form-group" id="message-group">';
 } ?>
-<div class="col-sm-12">
+<label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?><span
+        class="important">*</span></label>
+<div class="col-sm-9">
                         <span id="HeskMsg">
                             <textarea class="form-control htmlEditor" name="message" id="message" rows="12" cols="60"
                                       placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>"
