@@ -117,6 +117,7 @@ hesk_dbConnect();
                                     <div class="col-md-8">
                                         <select name="current-version" class="form-control">
                                             <optgroup label="Mods for HESK 2">
+                                                <option value="27">2.6.0</option>
                                                 <option value="26">2.5.5</option>
                                                 <option value="25">2.5.4</option>
                                                 <option value="24">2.5.3</option>

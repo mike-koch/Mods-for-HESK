@@ -790,6 +790,11 @@ function execute260Scripts()
     updateVersion('2.6.0');
 }
 
+// Version 2.6.1
+function execute261Scripts() {
+    updateVersion('2.6.1');
+}
+
 function execute270Scripts() {
     global $hesk_settings;
     hesk_dbConnect();
