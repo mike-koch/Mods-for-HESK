@@ -26,7 +26,7 @@ function search_log($hesk_settings, $location, $from_date, $to_date, $severity_i
 
     $rs = hesk_dbQuery($sql);
 
-    $results = [];
+    $results = array();
     while ($row = hesk_dbFetchAssoc($rs)) {
         $row['timestamp'] = hesk_date($row['timestamp'], true);
         $results[] = $row;

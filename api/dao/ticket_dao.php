@@ -31,7 +31,7 @@ function get_ticket_for_id($hesk_settings, $user, $id = NULL) {
 }
 
 function build_results($response) {
-    $results = [];
+    $results = array();
     while ($row = hesk_dbFetchAssoc($response)) {
         $row['id'] = intval($row['id']);
         $row['category'] = intval($row['category']);

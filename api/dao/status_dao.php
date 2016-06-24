@@ -12,7 +12,7 @@ function get_status($hesk_settings, $id = NULL) {
         return NULL;
     }
 
-    $results = [];
+    $results = array();
     while ($row = hesk_dbFetchAssoc($response)) {
         $row['id'] = intval($row['ID']);
         unset($row['ID']);
@@ -37,7 +37,7 @@ function get_status($hesk_settings, $id = NULL) {
         $language_rs = hesk_dbQuery($language_sql);
         if (hesk_dbNumRows($language_rs) > 0) {
             $row['key'] = NULL;
-            $row['keys'] = [];
+            $row['keys'] = array();
         }
         while ($language_row = hesk_dbFetchAssoc($language_rs)) {
             unset($language_row['id']);

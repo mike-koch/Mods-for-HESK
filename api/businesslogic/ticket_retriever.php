@@ -10,7 +10,7 @@ function get_ticket_for_staff($hesk_settings, $user, $id = NULL) {
 
     if ($id === NULL) {
         $original_tickets = $tickets;
-        $tickets = [];
+        $tickets = array();
         foreach ($original_tickets as $ticket) {
             $ticket = remove_common_properties($ticket);
             $ticket = convert_to_camel_case($ticket);

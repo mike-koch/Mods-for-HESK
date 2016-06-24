@@ -141,7 +141,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         User Security
                     </div>
                     <?php
-                    $users = [];
+                    $users = array();
                     $userRs = hesk_dbQuery("SELECT `id`, `user`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `active` = '1'");
                     while ($row = hesk_dbFetchAssoc($userRs)) {
                         $row['number_of_tokens'] = 0;

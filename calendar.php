@@ -52,7 +52,7 @@ if ($modsForHesk_settings['enable_calendar'] != '1') {
     hesk_error($hesklang['calendar_disabled']);
 }
 
-$categories = [];
+$categories = array();
 $orderBy = $modsForHesk_settings['category_order_column'];
 $categorySql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `usage` <> 1 AND `type` = '0' ORDER BY '" . $orderBy . "'";
 $categoryRs = hesk_dbQuery($categorySql);

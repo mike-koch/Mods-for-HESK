@@ -12,7 +12,7 @@ function get_ticket_template($hesk_settings, $id = NULL) {
         return NULL;
     }
 
-    $results = [];
+    $results = array();
     while ($row = hesk_dbFetchAssoc($response)) {
         $row['id'] = intval($row['id']);
         $row['displayOrder'] = intval($row['tpl_order']);
