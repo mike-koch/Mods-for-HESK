@@ -6,7 +6,7 @@ function retrieve_user($hesk_settings, $id = NULL) {
 
     if ($id === NULL) {
         $original_users = $users;
-        $users = [];
+        $users = array();
         foreach ($original_users as $user) {
             $user = remove_unneeded_properties($user);
             $user = convert_to_camel_case($user);

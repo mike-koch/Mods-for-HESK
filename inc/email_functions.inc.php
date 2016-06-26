@@ -338,7 +338,7 @@ function mfh_sendOverdueTicketReminder($ticket, $users, $modsForHesk_settings) {
     $htmlMessage = hesk_getHtmlMessage('overdue_ticket', NULL, $modsForHesk_settings, 1, 0, 1);
     $htmlMessage = hesk_processMessage($htmlMessage, $ticket, 1, 1, 0, $modsForHesk_settings, 1);
 
-    $emails = [];
+    $emails = array();
     if ($ticket['user_email'] != NULL) {
         $emails[] = $ticket['user_email'];
     }

@@ -67,8 +67,8 @@ $sql = "SELECT `reminder`.`id` AS `reminder_id`, `reminder`.`user_id` AS `user_i
     AND `email_sent` = '0'";
 
 $rs = hesk_dbQuery($sql);
-$reminders_to_flag = [];
-$tickets_to_flag = [];
+$reminders_to_flag = array();
+$tickets_to_flag = array();
 
 $included_email_functions = false;
 if (hesk_dbNumRows($rs) > 0 && !$skip_events) {
@@ -150,12 +150,12 @@ $user_rs = hesk_dbQuery("SELECT `id`, `isadmin`, `categories`, `email`,
     FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `notify_overdue_unassigned` = '1'
     AND (`heskprivileges` LIKE '%can_view_tickets%' OR `isadmin` = '1')");
 
-$users = [];
+$users = array();
 while ($row = hesk_dbFetchAssoc($user_rs)) {
     $users[] = $row;
 }
 
-$tickets_to_flag = [];
+$tickets_to_flag = array();
 while ($row = hesk_dbFetchAssoc($rs)) {
     if (mfh_sendOverdueTicketReminder($row, $users, $modsForHesk_settings)) {
         $tickets_to_flag[] = $row['id'];

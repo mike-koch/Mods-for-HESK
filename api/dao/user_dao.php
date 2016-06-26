@@ -13,7 +13,7 @@ function get_user($hesk_settings, $id = NULL) {
         return NULL;
     }
 
-    $results = [];
+    $results = array();
     while ($row = hesk_dbFetchAssoc($response)) {
         $row['id'] = intval($row['id']);
         $row['isadmin'] = get_boolean($row['isadmin']);

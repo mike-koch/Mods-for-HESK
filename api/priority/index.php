@@ -27,7 +27,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
  *     }
  */
 if ($request_method == 'GET') {
-    $results = [];
+    $results = array();
     $critical['id'] = 0;
     $critical['key'] = 'critical';
     $results[] = $critical;

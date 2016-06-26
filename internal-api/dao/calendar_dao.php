@@ -26,7 +26,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
 
     $rs = hesk_dbQuery($sql);
 
-    $events = [];
+    $events = array();
     while ($row = hesk_dbFetchAssoc($rs)) {
         // Skip the event if the user does not have access to it
         if ($staff && !$_SESSION['isadmin'] && !in_array($row['category'], $_SESSION['categories'])) {
