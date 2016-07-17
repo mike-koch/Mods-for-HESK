@@ -508,6 +508,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <strong><?php echo $hesklang['to_title_case']; ?></strong>
             <span></span>
         </div>
+        <div class="popover-comments">
+            <strong><?php echo $hesklang['event_comments']; ?></strong>
+            <span></span>
+        </div>
     </div>
 </div>
 <div class="ticket-popover-template" style="display: none">
