@@ -80,6 +80,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 28) {
         startVersionUpgrade('261');
         executeUpdate(28, '261', '2.6.1');
+    } else if (startingVersion < 29) {
+        startVersionUpgrade('262');
+        executeUpdate(29, '262', '2.6.2');
     } else {
         installationFinished();
     }
