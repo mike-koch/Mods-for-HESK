@@ -795,6 +795,17 @@ function execute261Scripts() {
     updateVersion('2.6.1');
 }
 
+// Version 2.6.2
+function execute262Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` ADD COLUMN `due_date` DATETIME");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` ADD COLUMN `overdue_email_sent` ENUM('0','1')");
+
+    updateVersion('2.6.2');
+}
+
 function execute270Scripts() {
     global $hesk_settings;
     hesk_dbConnect();
