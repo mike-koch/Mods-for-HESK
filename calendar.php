@@ -107,19 +107,23 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 <div class="popover-template" style="display: none">
     <div>
         <div class="popover-location">
-            <strong>Location</strong>
+            <strong><?php echo $hesklang['event_location']; ?></strong>
             <span></span>
         </div>
         <div class="popover-category">
-            <strong>Category</strong>
+            <strong><?php echo $hesklang['category']; ?></strong>
             <span></span>
         </div>
         <div class="popover-from">
-            <strong>From</strong>
+            <strong><?php echo $hesklang['from']; ?></strong>
             <span></span>
         </div>
         <div class="popover-to">
-            <strong>To</strong>
+            <strong><?php echo $hesklang['to_title_case']; ?></strong>
+            <span></span>
+        </div>
+        <div class="popover-comments">
+            <strong><?php echo $hesklang['event_comments']; ?></strong>
             <span></span>
         </div>
     </div>
