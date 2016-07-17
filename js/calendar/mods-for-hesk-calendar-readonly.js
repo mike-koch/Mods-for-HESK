@@ -52,7 +52,8 @@ $(document).ready(function() {
             $contents.find('.popover-category span').text(event.categoryName).end()
                 .find('.popover-location span').text(event.location).end()
                 .find('.popover-from span').text(event.start.format(format)).end()
-                .find('.popover-to span').text(endDate.format(format));
+                .find('.popover-to span').text(endDate.format(format)).end()
+                .find('.popover-comments span').text(event.comments);
             var $eventMarkup = $(this);
             $eventMarkup.popover({
                 title: event.title,
@@ -88,7 +89,7 @@ function buildEvent(id, dbObject) {
             type: dbObject.type,
             categoryId: dbObject.categoryId,
             className: 'category-' + dbObject.categoryId,
-            textColor: calculateTextColor(dbObject.categoryColor)
+            textColor: calculateTextColor(dbObject.categoryColor),
         };
     }
 
