@@ -16,7 +16,7 @@ hesk_dbConnect();
 $request_method = $_SERVER['REQUEST_METHOD'];
 
 /**
- * @api {get} /ticket Retrieve a ticket (staff-side)
+ * @api {get} /ticket Retrieve a ticket (customer-side)
  * @apiVersion 0.0.0
  * @apiName GetTicket
  * @apiGroup Ticket
