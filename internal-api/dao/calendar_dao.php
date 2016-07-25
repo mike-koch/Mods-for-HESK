@@ -3,6 +3,9 @@
 function get_events($start, $end, $hesk_settings, $staff = true) {
     global $hesk_settings, $hesklang;
 
+    $start_time_sql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($start) . " / 1000), @@session.time_zone, '+00:00')";
+    $end_time_sql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000), @@session.time_zone, '+00:00')";
+
     $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color` ";
 
     if ($staff) {
@@ -17,8 +20,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         $sql .= "LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` AS `reminders` ON
         `reminders`.`user_id` = " . intval($_SESSION['id']) . " AND `reminders`.`event_id` = `events`.`id`";
     }
-    $sql .= "WHERE `start` >= CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($start)
-        . " / 1000), @@session.time_zone, '+00:00') AND `end` <= CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000), @@session.time_zone, '+00:00') AND `categories`.`usage` <> 1";
+    $sql .= "WHERE NOT (`end` < {$start_time_sql} AND `start` > {$end_time_sql}) AND `categories`.`usage` <> 1";
 
     if (!$staff) {
         $sql .= " AND `categories`.`type` = '0'";

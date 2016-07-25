@@ -806,6 +806,14 @@ function execute262Scripts() {
     updateVersion('2.6.2');
 }
 
+// Version 2.6.3
+function execute263Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    updateVersion('2.6.3');
+}
+
 function execute270Scripts() {
     global $hesk_settings;
     hesk_dbConnect();

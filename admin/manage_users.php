@@ -906,8 +906,8 @@ function toggle_active()
         // Revoke any manager rights
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `manager` = 0 WHERE `manager` = " . intval($myuser));
 
-        $notificationSql = ", `autoassign` = 0, `notify_new_unassigned` = 0, `notify_new_my` = 0, `notify_reply_unassigned` = 0,
-        `notify_reply_my` = 0, `notify_assigned` = 0, `notify_pm` = 0, `notify_note` = 0, `notify_note_unassigned` = 0, `notify_overdue_unassigned` = 0";
+        $notificationSql = ", `autoassign` = '0', `notify_new_unassigned` = '0', `notify_new_my` = '0', `notify_reply_unassigned` = '0',
+        `notify_reply_my` = '0', `notify_assigned` = '0', `notify_pm` = '0', `notify_note` = '0', `notify_note_unassigned` = '0', `notify_overdue_unassigned` = '0'";
     }
 
     hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `active` = '" . $active . "'" . $notificationSql . " WHERE `id` = '" . intval($myuser) . "'");

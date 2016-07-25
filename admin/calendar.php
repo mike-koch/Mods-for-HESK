@@ -187,7 +187,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <?php echo $hesklang['category']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="<?php echo htmlspecialchars($hesklang['event_category_toolip']); ?>"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_category_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
                                     <select name="category" class="form-control"
@@ -357,7 +357,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <?php echo $hesklang['category']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark"
                                        data-toggle="tooltip"
-                                       title="<?php echo htmlspecialchars($hesklang['event_category_toolip']); ?>"></i>
+                                       title="<?php echo htmlspecialchars($hesklang['event_category_tooltip']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
                                     <select name="category" class="form-control"

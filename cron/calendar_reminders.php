@@ -78,7 +78,11 @@ if (hesk_dbNumRows($rs) > 0 && !$skip_events) {
 
 $successful_emails = 0;
 $failed_emails = 0;
-while ($row = hesk_dbFetchAssoc($rs) && !$skip_events) {
+while ($row = hesk_dbFetchAssoc($rs)) {
+    if ($skip_events) {
+        return true;
+    }
+
     if (mfh_sendCalendarReminder($row, $modsForHesk_settings)) {
         $reminders_to_flag[] = $row['reminder_id'];
         $successful_emails++;
