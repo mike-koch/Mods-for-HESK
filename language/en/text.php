@@ -21,6 +21,12 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 2.7.0
+$hesklang['you_have_x_messages'] = 'You have %s new %s'; // %s: Number of new messages, "message" or "messages", depending on # 
+$hesklang['message_lower_case'] = 'message';
+$hesklang['messages_lower_case'] = 'messages';
+$hesklang['deleted_user_title_case'] = 'Deleted User';
+
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';
 $hesklang['date_logged'] = 'Date Logged';
