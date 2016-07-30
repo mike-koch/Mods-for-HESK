@@ -65,14 +65,14 @@ if (defined('AUTOFOCUS'))
 <?php
 }
 
-// Users online
-if (defined('SHOW_ONLINE'))
-{
-	hesk_printOnline();
-}
 ?>
 <footer class="main-footer">
 	<?php
+	// Users online
+	if (defined('SHOW_ONLINE'))
+	{
+		hesk_printOnline();
+	}
 /*******************************************************************************
 The code below handles HESK licensing. Removing or modifying this code without
 purchasing a HESK license is strictly prohibited.
@@ -100,7 +100,7 @@ T48L2Rpdj4nOw0KaW5jbHVkZShIRVNLX1BBVEggLiAnZm9vdGVyLnR4dCcpOw0KZWNobyAnPC9ib2R5P
 jwvaHRtbD4nOw==',"\112");
 	?>
 </footer>
-<?php 
+<?php
 echo '</div>';
 
 exit();
