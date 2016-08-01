@@ -58,6 +58,7 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/adminlte.min.js"></script>

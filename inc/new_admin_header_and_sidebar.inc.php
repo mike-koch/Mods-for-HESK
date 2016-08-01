@@ -70,6 +70,70 @@ if (hesk_check_kb_only(false)) {
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- Messages: style can be found in dropdown.less-->
+                    <?php
+                    $number_of_maintenance_warnings = 0;
+                    if (hesk_check_maintenance(false)) {
+                        $number_of_maintenance_warnings++;
+                    }
+                    if (hesk_check_kb_only(false)) {
+                        $number_of_maintenance_warnings++;
+                    }
+                    if ($number_of_maintenance_warnings > 0): ?>
+                        <li class="dropdown messages-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                <span class="label label-warning"><?php echo $number_of_maintenance_warnings; ?></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header"><?php echo sprintf($hesklang['x_system_warnings'],
+                                        $number_of_maintenance_warnings,
+                                        $number_of_maintenance_warnings == 1
+                                            ? $hesklang['warning_title_case']
+                                            : $hesklang['warnings_title_case']); ?></li>
+                                <li>
+                                    <ul class="menu">
+                                        <?php if (hesk_check_maintenance(false)): ?>
+                                            <li>
+                                                <a href="#">
+                                                    <h4>
+                                                        <?php echo $hesklang['mma1']; ?>
+                                                    </h4>
+                                                    <p><?php echo $hesklang['mma2']; ?></p>
+                                                </a>
+                                            </li>
+                                        <?php
+                                        endif;
+                                        if (hesk_check_kb_only(false)):
+                                        ?>
+                                            <li>
+                                                <a href="#">
+                                                    <h4>
+                                                        <?php echo $hesklang['kbo1']; ?>
+                                                    </h4>
+                                                    <p><?php echo $hesklang['kbo2']; ?></p>
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php
+                    /*if (hesk_check_maintenance(false)) {
+                        echo '<div style="margin-bottom: -20px">';
+                        hesk_show_notice($hesklang['mma2'], $hesklang['mma1'], false);
+                        echo '</div>';
+                    }
+
+                    // Show a notice if we are in "Knowledgebase only" mode
+                    if (hesk_check_kb_only(false)) {
+                        echo '<div style="margin-bottom: -20px">';
+                        hesk_show_notice($hesklang['kbo2'], $hesklang['kbo1'], false);
+                        echo '</div>';
+                    }*/
+                    ?>
                     <li class="dropdown messages-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-envelope-o"></i>
@@ -357,45 +421,64 @@ if (hesk_check_kb_only(false)) {
                     if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_TOOLS') {
                         $active = 'active';
                     }
-                    echo '<li class="dropdown'.$active.'">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                  <i class="fa fa-wrench" ' . $iconDisplay . '></i>&nbsp;' . $hesklang['tools'] . '<span class="caret"></span>
-                              </a>
-                              '.$dropdown_items.'
-                          </li>';
                 ?>
                     <li class="<?php echo $active; ?> treeview">
                         <a href="#">
-                            <i class="fa fa-file-text-o" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['menu_can']; ?></span>
+                            <i class="fa fa-wrench" <?php echo $iconDisplay; ?>></i>
+                            <span><?php echo $hesklang['tools']; ?></span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li>
-                                <a href="manage_canned.php"><i class="fa fa-circle-o"></i> <?php echo $hesklang['can_man_canned']; ?></a>
-                            </li>
-                            <li>
-                                <a href="manage_ticket_templates.php"><i class="fa fa-circle-o"></i> <?php echo $hesklang['ticket_tpl_man']; ?></a>
-                            </li>
+                            <?php foreach($dropdown_items as $path => $text): ?>
+                                <li>
+                                    <a href="<?php echo $path; ?>.php"><i class="fa fa-circle-o"></i> <?php echo $text; ?></a>
+                                </li>
+                            <?php endforeach; ?>
                         </ul>
                     </li>
-                <?php endif; ?>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-files-o"></i>
-                        <span>Layout Options</span>
-                        <span class="pull-right-container">
-                            <span class="label label-primary pull-right">4</span>
-                        </span>
+                <?php
+                elseif (count($dropdown_items) == 1):
+                    $active = '';
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_TOOLS') {
+                        $active = 'active';
+                    }
+                    reset($dropdown_items);
+                    $page = key($dropdown_items);
+                ?>
+                    <li class="<?php echo $active; ?> treeview">
+                        <a href="<?php echo $page; ?>.php">
+                            <i class="fa fa-wrench" <?php echo $iconDisplay; ?>></i>
+                            <span><?php echo $dropdown_items[$page]; ?></span>
+                        </a>
+                    </li>
+                <?php
+                endif;
+                if (hesk_checkPermission('can_man_settings', 0)):
+                    $active = '';
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_SETTINGS') {
+                        $active = 'active';
+                    }
+                ?>
+                    <li class="<?php echo $active; ?> treeview">
+                        <a href="admin_settings.php">
+                            <i class="fa fa-cog" <?php echo $iconDisplay; ?>></i>
+                            <span><?php echo $hesklang['settings']; ?></span>
+                        </a>
+                    </li>
+                <?php
+                endif;
+                $active = '';
+                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_PROFILE') {
+                    $active = 'active';
+                }
+                ?>
+                <li class="<?php echo $active; ?> treeview">
+                    <a href="profile.php">
+                        <i class="fa fa-user" <?php echo $iconDisplay; ?>></i>
+                        <span><?php echo $hesklang['menu_profile']; ?></span>
                     </a>
-                    <ul class="treeview-menu">
-                        <li><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
-                        <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
-                        <li><a href="pages/layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
-                        <li><a href="pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
-                    </ul>
                 </li>
             </ul>
         </section>

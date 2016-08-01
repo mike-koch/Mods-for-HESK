@@ -27,6 +27,8 @@ $hesklang['message_lower_case'] = 'message';
 $hesklang['messages_lower_case'] = 'messages';
 $hesklang['deleted_user_title_case'] = 'Deleted User';
 $hesklang['main_navigation_uppercase'] = 'MAIN NAVIGATION';
+$hesklang['x_system_warnings'] = '%s System %s'; // %s: Number of warnings, $s: "Warning" or "Warnings", depending on #
+$hesklang['warnings_title_case'] = 'Warnings';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';
@@ -1816,7 +1818,7 @@ $hesklang['ekb_y']='<b>YES</b>, enable Knowledgebase';
 $hesklang['ekb_o']='<b>YES</b>, use HESK as a Knowledgebase only (<i>disable help desk</i>)';
 $hesklang['kb_set']='Knowledgebase settings';
 $hesklang['kbo1']='Knowledgebase-only mode';
-$hesklang['kbo2']='<br /><br />Visitors cannot submit new support tickets and are taken directly to the knowledgebase.';
+$hesklang['kbo2']='Visitors cannot submit new support tickets and are taken directly to the knowledgebase.';
 $hesklang['fpass']='Forgot your password?';
 $hesklang['passr']='Password reset';
 $hesklang['passa']='Allow users to reset a forgot password over email';

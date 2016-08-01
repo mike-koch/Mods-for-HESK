@@ -1,0 +1,4 @@
+.navbar-nav > .messages-menu > .dropdown-menu >li .menu > li > a,
+.sidebar-menu, .main-sidebar .user-panel, .sidebar-menu > li.header{
+    white-space: normal;
+}
