@@ -8,7 +8,8 @@ function mfh_get_mail_headers_for_dropdown($user_id, $hesk_settings, $hesklang) 
         LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `users`
             ON `mail`.`from` = `users`.`id`
         WHERE `to` = " . hesk_dbEscape($user_id) . "
-            AND `read` = '0'";
+            AND `read` = '0'
+        ORDER BY `mail`.`dt` DESC";
     
     $rs = hesk_dbQuery($sql);
 

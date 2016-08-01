@@ -34,20 +34,6 @@ if (!defined('IN_SCRIPT')) {
 }
 
 $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hesklang);
-
-// Show a notice if we are in maintenance mode
-/*if (hesk_check_maintenance(false)) {
-    echo '<div style="margin-bottom: -20px">';
-    hesk_show_notice($hesklang['mma2'], $hesklang['mma1'], false);
-    echo '</div>';
-}
-
-// Show a notice if we are in "Knowledgebase only" mode
-if (hesk_check_kb_only(false)) {
-    echo '<div style="margin-bottom: -20px">';
-    hesk_show_notice($hesklang['kbo2'], $hesklang['kbo1'], false);
-    echo '</div>';
-}*/
 ?>
 <div class="wrapper">
     <header class="main-header">
@@ -119,21 +105,6 @@ if (hesk_check_kb_only(false)) {
                             </ul>
                         </li>
                     <?php endif; ?>
-
-                    <?php
-                    /*if (hesk_check_maintenance(false)) {
-                        echo '<div style="margin-bottom: -20px">';
-                        hesk_show_notice($hesklang['mma2'], $hesklang['mma1'], false);
-                        echo '</div>';
-                    }
-
-                    // Show a notice if we are in "Knowledgebase only" mode
-                    if (hesk_check_kb_only(false)) {
-                        echo '<div style="margin-bottom: -20px">';
-                        hesk_show_notice($hesklang['kbo2'], $hesklang['kbo1'], false);
-                        echo '</div>';
-                    }*/
-                    ?>
                     <li class="dropdown messages-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-envelope-o"></i>
@@ -153,7 +124,7 @@ if (hesk_check_kb_only(false)) {
                                 <ul class="menu">
                                     <?php foreach ($mails as $mail): ?>
                                     <li><!-- start message -->
-                                        <a href="#">
+                                        <a href="mail.php?a=read&id=<?php echo $mail['id']; ?>">
                                             <!-- TODO User avatars -->
                                             <!--<div class="pull-left">
                                                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
@@ -169,7 +140,7 @@ if (hesk_check_kb_only(false)) {
                                     <?php endforeach; ?>
                                 </ul>
                             </li>
-                            <li class="footer"><a href="#">See All Messages</a></li>
+                            <li class="footer"><a href="mail.php">See All Messages</a></li>
                         </ul>
                     </li>
                     <!-- User Account: style can be found in dropdown.less -->
