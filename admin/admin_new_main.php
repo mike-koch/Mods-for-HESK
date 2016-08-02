@@ -56,11 +56,33 @@ define('PAGE_TITLE', 'ADMIN_HOME');
 require_once(HESK_PATH . 'inc/header_new_admin.inc.php');
 
 require_once(HESK_PATH . 'inc/new_admin_header_and_sidebar.inc.php');
-?>
 
+hesk_handle_messages();
+
+if (hesk_checkPermission('can_view_tickets', 0)) {
+?>
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+                <h1 class="box-title"><?php echo $hesklang['open_tickets']; ?></h1>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus" data-toggle="tooltip" title="Collapse"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-hover">
+                    
+                </table>
+            </div>
+        </div>
+    </section>
 
 <?php
-
+} else {
+    echo '<p><i>' . $hesklang['na_view_tickets'] . '</i></p>';
+}
 
 require_once(HESK_PATH . 'inc/new_footer.inc.php');
 exit();
