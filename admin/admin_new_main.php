@@ -64,7 +64,9 @@ if (hesk_checkPermission('can_view_tickets', 0)) {
     <section class="content">
         <div class="box">
             <div class="box-header with-border">
-                <h1 class="box-title"><?php echo $hesklang['open_tickets']; ?></h1>
+                <h1 class="box-title">
+                    <?php echo $hesklang['tickets']; ?>
+                </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
                         <i class="fa fa-minus" data-toggle="tooltip" title="Collapse"></i>
@@ -75,6 +77,9 @@ if (hesk_checkPermission('can_view_tickets', 0)) {
                 <table class="table table-hover">
                     
                 </table>
+            </div>
+            <div class="box-footer clearfix">
+                <a href="new_ticket.php" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> <?php echo $hesklang['nti']; ?></a>
             </div>
         </div>
     </section>
