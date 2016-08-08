@@ -58,8 +58,6 @@ require_once(HESK_PATH . 'inc/header_new_admin.inc.php');
 require_once(HESK_PATH . 'inc/new_admin_header_and_sidebar.inc.php');
 
 hesk_handle_messages();
-
-if (hesk_checkPermission('can_view_tickets', 0)) {
 ?>
     <section class="content">
         <div class="box">
@@ -74,9 +72,16 @@ if (hesk_checkPermission('can_view_tickets', 0)) {
                 </div>
             </div>
             <div class="box-body">
-                <table class="table table-hover">
-                    
-                </table>
+                <?php if (!hesk_checkPermission('can_view_tickets', 0)): ?>
+                    <p><i><?php echo $hesklang['na_view_tickets']; ?></i></p>
+                <?php
+                    else:
+
+                ?>
+                    <table class="table table-hover">
+
+                    </table>
+                <?php endif; ?>
             </div>
             <div class="box-footer clearfix">
                 <a href="new_ticket.php" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> <?php echo $hesklang['nti']; ?></a>
@@ -85,9 +90,6 @@ if (hesk_checkPermission('can_view_tickets', 0)) {
     </section>
 
 <?php
-} else {
-    echo '<p><i>' . $hesklang['na_view_tickets'] . '</i></p>';
-}
 
 require_once(HESK_PATH . 'inc/new_footer.inc.php');
 exit();
