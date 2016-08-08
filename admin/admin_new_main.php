@@ -54,8 +54,25 @@ define('PAGE_TITLE', 'ADMIN_HOME');
 
 /* Print header */
 require_once(HESK_PATH . 'inc/header_new_admin.inc.php');
-
 require_once(HESK_PATH . 'inc/new_admin_header_and_sidebar.inc.php');
+require_once(HESK_PATH . 'hesk_settings.inc.php');
+require_once(HESK_PATH . 'inc/common.inc.php');
+require_once(HESK_PATH . 'inc/admin_functions.inc.php');
+require_once(HESK_PATH . 'inc/status_functions.inc.php');
+require_once(HESK_PATH . 'inc/ticket/get_tickets.inc.php');
+
+$statuses = mfh_getAllStatuses();
+$search_filter = get_empty_filter();
+$search_filter['status'] = array();
+foreach ($statuses as $status) {
+    if (!$status['IsClosed']) {
+        $search_filter['status'][] = $status['ID'];
+    }
+}
+$search_filter['critical_on_top'] = true;
+
+get_tickets($search_filter, $hesk_settings);
+
 
 hesk_handle_messages();
 ?>
@@ -67,7 +84,7 @@ hesk_handle_messages();
                 </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-minus" data-toggle="tooltip" title="Collapse"></i>
+                        <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>

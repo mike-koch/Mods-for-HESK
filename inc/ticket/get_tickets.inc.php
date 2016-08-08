@@ -34,6 +34,64 @@ function get_tickets($search_filter, $hesk_settings) {
 
     // --> TICKET ASSIGNMENT
     $sql = handle_ticket_assignments($search_filter, $sql);
+    
+    // --> TICKET STATUS
+    $statuses = $search_filter['status'];
+    if (count($statuses) > 0) {
+        $sql .= " AND `status` IN ('" . implode("','", $statuses) . "') ";
+    }
+
+    // --> TICKET PRIORITY
+    $priorities = $search_filter['priority'];
+
+    if (count($priorities) > 0) {
+        $sql .= " AND `priority` IN ('" . implode("','", array_keys($priority)) . "') ";
+    }
+
+    // Sorting
+    $sql .= " ORDER BY ";
+    
+    // --> PUSH TO TOP
+    $force_to_top = $search_filter['force_to_top'];
+    $direction = $search_filter['force_direction'];
+    if ($force_to_top != NULL) {
+        if ($force_to_top == 'owner') {
+            $sql .= " CASE WHEN `owner` = '".intval($_SESSION['id'])."' THEN 1 ELSE 0 END DESC, `owner` ASC, ";
+        } else {
+            $sql .= ' `'.hesk_dbEscape($force_to_top).'` ';
+            $sql .= $direction == 'ascending' ? 'ASC, ' : 'DESC, ';
+        }
+    }
+
+    // --> CRITICAL ON TOP
+    $critical_on_top = $search_filter['critical_on_top'];
+    if ($critical_on_top) {
+        $sql .= " CASE WHEN `priority` = '0' THEN 1 ELSE 0 END DESC , ";
+    }
+
+    // --> SORT BY
+    $sort_by = $search_filter['sort_by'];
+    $sort_direction = $search_filter['sort_direction'];
+
+    if ($sort_by) {
+        $sql .= $sort_by == 'lastreplier'
+            ? " CASE WHEN `lastreplier` = '0' THEN 0 ELSE 1 END DESC, COALESCE(`replierid`, NULLIF(`lastreplier`, '0'), `name`) "
+            : ' `'.hesk_dbEscape($sort_by).'` ';
+    } else {
+        $sql .= ' `status` ';
+        $sort_by = 'status';
+    }
+
+    $sql .= $sort_direction == 'ascending'
+        ? ' ASC '
+        : ' DESC ';
+
+    if ($sort_by != 'priority') {
+        $sql .= ' , `priority` ASC ';
+    }
+
+    //Uncomment for debugging purposes
+    // echo "SQL: $sql";
 }
 
 function handle_ticket_assignments($search_filter, $sql) {
@@ -86,4 +144,22 @@ function handle_ticket_assignments($search_filter, $sql) {
     }
 
     return $sql;
+}
+
+function get_empty_filter() {
+    $search_filter['category'] = NULL;
+    $search_filter['tagged'] = NULL;
+    $search_filter['status'] = NULL;
+    $search_filter['priority'] = NULL;
+    $search_filter['force_to_top'] = NULL;
+    $search_filter['force_direction'] = NULL;
+    $search_filter['critical_on_top'] = NULL;
+    $search_filter['sort_by'] = NULL;
+    $search_filter['sort_direction'] = NULL;
+    $search_filter['assignment'] = array();
+    $search_filter['assignment']['self'] = 0;
+    $search_filter['assignment']['others'] = 0;
+    $search_filter['assignment']['no_one'] = 0;
+
+    return $search_filter;
 }
