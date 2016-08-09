@@ -41,6 +41,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -52,49 +53,52 @@ define('MAIN_PAGE', 1);
 define('PAGE_TITLE', 'ADMIN_HOME');
 
 /* Print header */
-require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
+require_once(HESK_PATH . 'inc/header_new_admin.inc.php');
+require_once(HESK_PATH . 'inc/new_admin_header_and_sidebar.inc.php');
 
-/* Print admin navigation */
-require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
+/* Reset default settings? */
+if (isset($_GET['reset']) && hesk_token_check()) {
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `default_list`='' WHERE `id` = '" . intval($_SESSION['id']) . "' LIMIT 1");
+    $_SESSION['default_list'] = '';
+} /* Get default settings */
+else {
+    parse_str($_SESSION['default_list'], $defaults);
+    $_GET = isset($_GET) && is_array($_GET) ? array_merge($_GET, $defaults) : $defaults;
+}
+
 ?>
-
-<div class="row">
-    <div class="col-md-12 pad-down-20">
-        <?php
-
-        /* Print tickets? */
-        if (hesk_checkPermission('can_view_tickets', 0)) {
-            if (!isset($_SESSION['hide']['ticket_list']))  //Number of tickets (table header. NOT ACTUAL TABLE)
-            {
-                echo '
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4>' . $hesklang['open_tickets'] . ' <span class="nu-floatRight panel-button"><a href="new_ticket.php" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> ' . $hesklang['nti'] . '</a></span></h4>
-                    </div>'; // The rest of the panel will be printed by print_tickets.inc.php
+<section class="content">
+    <?php hesk_handle_messages(); ?>
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['tickets']; ?>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <?php
+            /* Print tickets? */
+            if (hesk_checkPermission('can_view_tickets', 0)) {
+                /* Print the list of tickets */
+                require(HESK_PATH . 'inc/print_tickets.inc.php');
+                echo '<br>';
+                /* Print forms for listing and searching tickets */
+                require(HESK_PATH . 'inc/show_search_form.inc.php');
+            } else {
+                echo '<p><i>' . $hesklang['na_view_tickets'] . '</i></p>';
             }
-
-            /* Reset default settings? */
-            if (isset($_GET['reset']) && hesk_token_check()) {
-                $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `default_list`='' WHERE `id` = '" . intval($_SESSION['id']) . "' LIMIT 1");
-                $_SESSION['default_list'] = '';
-            } /* Get default settings */
-            else {
-                parse_str($_SESSION['default_list'], $defaults);
-                $_GET = isset($_GET) && is_array($_GET) ? array_merge($_GET, $defaults) : $defaults;
-            }
-
-            /* Print the list of tickets */
-            require(HESK_PATH . 'inc/print_tickets.inc.php');
-
-            echo "&nbsp;<br />";
-
-            /* Print forms for listing and searching tickets */
-            require(HESK_PATH . 'inc/show_search_form.inc.php');
-        } else {
-            echo '<p><i>' . $hesklang['na_view_tickets'] . '</i></p>';
-        }
-
-        $hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
+            ?>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-body">
+            <?php
+            $hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
         CdoZXNrX2xpY2Vuc2UucGhwJykpDQp7DQokaCA9ICghZW1wdHkoJF9TRVJWRVJbJ0hUVFBfSE9TVCddK
         SkgPyAkX1NFUlZFUlsnSFRUUF9IT1NUJ10gOiAoKCFlbXB0eSgkX1NFUlZFUlsnU0VSVkVSX05BTUUnX
         SkpID8gJF9TRVJWRVJbJ1NFUlZFUl9OQU1FJ10gOiBnZXRlbnYoJ1NFUlZFUl9OQU1FJykpOw0KJGggP
@@ -112,17 +116,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         29tL2J1eS5waHAiIHRhcmdldD0iX2JsYW5rIj4nLiRoZXNrbGFuZ1snY2xpY2tfaW5mbyddLic8L2E+P
         C9wPic7DQp9DQo=', "\112");
 
-        echo '<hr />&nbsp;<br />';
-
-        /* Clean unneeded session variables */
-        hesk_cleanSessionVars('hide');
-        ?>
+            /* Clean unneeded session variables */
+            hesk_cleanSessionVars('hide');
+            ?>
+        </div>
     </div>
-</div>
+</section>
 
 <?php
 
 
-require_once(HESK_PATH . 'inc/footer.inc.php');
+require_once(HESK_PATH . 'inc/new_footer.inc.php');
 exit();
 ?>
