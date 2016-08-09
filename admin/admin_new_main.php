@@ -71,8 +71,6 @@ foreach ($statuses as $status) {
 }
 $search_filter['critical_on_top'] = true;
 
-get_tickets($search_filter, $hesk_settings);
-
 
 hesk_handle_messages();
 ?>
@@ -93,10 +91,14 @@ hesk_handle_messages();
                     <p><i><?php echo $hesklang['na_view_tickets']; ?></i></p>
                 <?php
                     else:
-
+                        $tickets = get_tickets($search_filter, $hesk_settings);
                 ?>
                     <table class="table table-hover">
-
+                        <thead>
+                        <?php foreach ($hesk_settings['ticket_list'] as $ticket_header): ?>
+                            <th><?php echo $hesk_settings['possible_ticket_list'][$ticket_header]; ?></th>
+                        <?php endforeach; ?>
+                        </thead>
                     </table>
                 <?php endif; ?>
             </div>

@@ -91,7 +91,10 @@ function get_tickets($search_filter, $hesk_settings) {
     }
 
     //Uncomment for debugging purposes
-    // echo "SQL: $sql";
+    //echo "SQL: $sql";
+    $results = hesk_dbQuery($sql);
+
+    return $results;
 }
 
 function handle_ticket_assignments($search_filter, $sql) {
