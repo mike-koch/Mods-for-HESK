@@ -175,7 +175,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                 }
                 ?>
                 <li class="<?php echo $active; ?> treeview">
-                    <a href="admin_new_main.php">
+                    <a href="admin_main.php">
                         <i class="fa fa-home" <?php echo $iconDisplay; ?>></i> <span><?php echo $hesklang['main_page']; ?></span>
                     </a>
                 </li>
