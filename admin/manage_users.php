@@ -38,6 +38,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/profile_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -169,38 +170,39 @@ if ($action = hesk_REQUEST('a')) {
         unset($_SESSION['edit_userdata']);
     }
 
+
     /* Print header */
-    require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
-
-    /* Print main manage users page */
-    require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
+    require_once(HESK_PATH . 'inc/header_new_admin.inc.php');
+    require_once(HESK_PATH . 'inc/new_admin_header_and_sidebar.inc.php');
     ?>
-
-    <div class="row move-down-20">
-        <div class="col-md-10 col-md-offset-1">
-            <script language="Javascript" type="text/javascript"><!--
-                function confirm_delete() {
-                    if (confirm('<?php echo addslashes($hesklang['sure_remove_user']); ?>')) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
-                }
-                //-->
-            </script>
-
-            <?php
-            /* This will handle error, success and notice messages */
-            hesk_handle_messages();
-            ?>
-
-            <h3 style="padding-bottom:5px"><?php echo $hesklang['manage_users']; ?> <a href="javascript:void(0)"
-                                                                                       onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')"><i
-                        class="fa fa-question-circle settingsquestionmark"></i></a></h3>
-
-            <div class="footerWithBorder blankSpace"></div>
-
+<section class="content">
+    <?php hesk_handle_messages(); ?>
+    <script language="Javascript" type="text/javascript"><!--
+        function confirm_delete() {
+            if (confirm('<?php echo addslashes($hesklang['sure_remove_user']); ?>')) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        //-->
+    </script>
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['manage_users']; ?>
+                <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')">
+                    <i class="fa fa-question-circle settingsquestionmark"></i>
+                </a>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
             <table class="table table-hover">
                 <tr>
                     <th><b><i><?php echo $hesklang['name']; ?></i></b></th>
@@ -329,29 +331,36 @@ EOC;
             } ?>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <h3><?php echo $hesklang['add_user']; ?></h3>
-            <h6><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></h6>
-
-            <div class="footerWithBorder blankSpace"></div>
-
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['add_user']; ?>
+                <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')">
+                    <i class="fa fa-question-circle settingsquestionmark"></i>
+                </a>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <?php echo $hesklang['req_marked_with']; ?> <span class="red">*</span>
             <form data-toggle="validator" name="form1" method="post" action="manage_users.php" class="form-horizontal" role="form">
                 <?php hesk_profile_tab('userdata', false, 'create_user'); ?>
             </form>
         </div>
     </div>
-
     <script language="Javascript" type="text/javascript"><!--
         hesk_checkPassword(document.form1.newpass.value);
         //-->
     </script>
+</section>
 
-    <p>&nbsp;</p>
-
-    <?php
-    require_once(HESK_PATH . 'inc/footer.inc.php');
-    exit();
+<?php
+require_once(HESK_PATH . 'inc/new_footer.inc.php');
+exit();
 
 } // End else
 
