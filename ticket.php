@@ -275,11 +275,14 @@ if (!$show['show']) {
                         $status = hesk_dbFetchAssoc($statusRS);
                         $isClosable = $status['Closable'] == 'yes' || $status['Closable'] == 'conly';
                         $random = rand(10000, 99999);
-                        if ($ticket['isClosed'] == true && $ticket['locked'] != 1 && $hesk_settings['custopen']) {
-                            echo '<a href="change_status.php?track=' . $trackingID . $hesk_settings['e_query'] . '&amp;s=2&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '" title="' . $hesklang['open_action'] . '">' . $hesklang['open_action'] . '</a>';
-                        } elseif ($hesk_settings['custclose'] && $isClosable) {
-                            echo '<a href="change_status.php?track=' . $trackingID . $hesk_settings['e_query'] . '&amp;s=3&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '" title="' . $hesklang['close_action'] . '">' . $hesklang['close_action'] . '</a>';
-                        } ?></p>
+                        if (!$ticket['locked']) {
+                            if ($ticket['isClosed'] == true && $hesk_settings['custopen']) {
+                                echo '<a href="change_status.php?track=' . $trackingID . $hesk_settings['e_query'] . '&amp;s=2&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '" title="' . $hesklang['open_action'] . '">' . $hesklang['open_action'] . '</a>';
+                            } elseif ($hesk_settings['custclose'] && $isClosable) {
+                                echo '<a href="change_status.php?track=' . $trackingID . $hesk_settings['e_query'] . '&amp;s=3&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '" title="' . $hesklang['close_action'] . '">' . $hesklang['close_action'] . '</a>';
+                            }
+                        }
+                        ?></p>
                 </div>
             </div>
             <div class="row medLowPriority">
