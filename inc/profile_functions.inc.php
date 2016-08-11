@@ -38,7 +38,7 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
 {
     global $hesk_settings, $hesklang, $can_reply_tickets, $can_view_tickets, $can_view_unassigned;
     ?>
-    <div role="tabpanel">
+    <div role="tabpanel" class="nav-tabs-custom">
 
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">

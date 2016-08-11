@@ -53,8 +53,8 @@ define('MAIN_PAGE', 1);
 define('PAGE_TITLE', 'ADMIN_HOME');
 
 /* Print header */
-require_once(HESK_PATH . 'inc/header_new_admin.inc.php');
-require_once(HESK_PATH . 'inc/new_admin_header_and_sidebar.inc.php');
+require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
+require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 /* Reset default settings? */
 if (isset($_GET['reset']) && hesk_token_check()) {

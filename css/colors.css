@@ -2,10 +2,19 @@
     color: #fff;
 }
 
-.red {
+.red,
+.important {
     color: red;
 }
 
 .green {
     color: green;
+}
+
+.orange {
+    color: orange;
+}
+
+.gray {
+    color: grey;
 }

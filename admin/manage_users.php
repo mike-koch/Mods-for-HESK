@@ -172,8 +172,8 @@ if ($action = hesk_REQUEST('a')) {
 
 
     /* Print header */
-    require_once(HESK_PATH . 'inc/header_new_admin.inc.php');
-    require_once(HESK_PATH . 'inc/new_admin_header_and_sidebar.inc.php');
+    require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
+    require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     ?>
 <section class="content">
     <?php hesk_handle_messages(); ?>
