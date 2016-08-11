@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.7 from 18th April 2016
+*  Version: 2.6.8 from 10th August 2016
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -1112,6 +1112,11 @@ function save_article()
 	    }
         
 	    $content = hesk_getHTML( hesk_POST('content') );
+		
+		// Clean the HTML code
+		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
+		$purifier = new HTMLPurifier();
+		$content = $purifier->purify($content);
     }
 	else
     {
@@ -1969,6 +1974,11 @@ function new_article()
 	    }
 
         $content = hesk_getHTML( hesk_POST('content') );
+		
+		// Clean the HTML code
+		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
+		$purifier = new HTMLPurifier();
+		$content = $purifier->purify($content);
     }
 	else
     {
@@ -2211,7 +2221,7 @@ function show_treeMenu() {
 	<i class="fa fa-plus icon-link green"></i> = <?php echo $hesklang['kb_p_art2']; ?><br />
 	<i class="fa fa-caret-right blue" style="font-size:18px"></i> = <?php echo $hesklang['kb_p_cat2']; ?><br />
 	<i class="fa fa-gear icon-link gray"></i> = <?php echo $hesklang['kb_p_man2']; ?><br />
-    <img src="../img/blank.gif" width="1" height="16" alt="" style="padding:1px" class="optionWhiteNbOFF" />(<span class="kb_published">1</span>, <span class="kb_private">2</span>, <span class="kb_draft">3</span>) = <?php echo $hesklang['xyz']; ?></span><br />
+    <img src="../img/blank.gif" width="1" height="16" alt="" style="padding:1px" class="optionWhiteNbOFF" />(<span class="kb_published">1</span>, <span class="kb_private">2</span>, <span class="kb_draft">3</span>) = <?php echo $hesklang['xyz']; ?><br />
     <?php
 }
 
