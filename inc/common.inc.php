@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.7 from 18th April 2016
+ *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -38,6 +38,7 @@ if (!defined('IN_SCRIPT')) {
 // Set correct Content-Type header
 if (!defined('NO_HTTP_HEADER')) {
     header('Content-Type: text/html; charset=utf-8');
+	header('X-Frame-Options: SAMEORIGIN');
 }
 
 // Set backslash options
@@ -461,17 +462,23 @@ function hesk_autoAssignTicket($ticket_category)
 } // END hesk_autoAssignTicket()
 
 
-function hesk_cleanID($field = 'track')
+function hesk_cleanID($field = 'track', $in=false)
 {
-    if ( isset($_SESSION[$field]) ) {
-        return substr(preg_replace('/[^A-Z0-9\-]/', '', strtoupper($_SESSION[$field])), 0, 12);
+	$id = '';
+	
+	if ($in !== false){
+		$id = $in;
+	} elseif (isset($_SESSION[$field])) {
+		$id = $_SESSION[$field];
     } elseif ( isset($_GET[$field]) && ! is_array($_GET[$field]) ) {
-        return substr(preg_replace('/[^A-Z0-9\-]/', '', strtoupper($_GET[$field])), 0, 12);
+        $id = $_GET[$field];
     } elseif (isset($_POST[$field]) && !is_array($_POST[$field])) {
-        return substr(preg_replace('/[^A-Z0-9\-]/', '', strtoupper($_POST[$field])), 0, 12);
+		$id = $_POST[$field];
     } else {
         return false;
     }
+	
+	return substr(preg_replace('/[^A-Z0-9\-]/', '', strtoupper($id)), 0, 12);
 
 } // END hesk_cleanID()
 

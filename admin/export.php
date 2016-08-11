@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.7 from 18th April 2016
+ *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -324,8 +324,13 @@ if (isset($_GET['w'])) {
 
     // Do we have the export directory?
     if (is_dir($export_dir) || (@mkdir($export_dir, 0777) && is_writable($export_dir))) {
+		// Is there an index.htm file?
+		if (!file_exists($export_dir.'index.htm')) {
+			@file_put_contents($export_dir.'index.htm', '');
+		}
+	
         // Cleanup old files
-        $files = glob($export_dir . '*', GLOB_NOSORT);
+        $files = preg_grep('/index\.htm$/', glob($export_dir.'*', GLOB_NOSORT), PREG_GREP_INVERT);
         if (is_array($files) && count($files)) {
             foreach ($files as $file) {
                 hesk_unlink($file, 86400);

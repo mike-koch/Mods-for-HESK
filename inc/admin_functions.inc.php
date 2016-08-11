@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.7 from 18th April 2016
+ *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -386,13 +386,16 @@ function hesk_autoLogin($noredirect = 0)
 
     /* Login cookies exist, now lets limit brute force attempts */
     hesk_limitBfAttempts();
+	
+	// Admin login URL
+	$url = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/index.php?a=login&notice=1';
 
     /* Check username */
     $result = hesk_dbQuery('SELECT * FROM `' . $hesk_settings['db_pfix'] . "users` WHERE `user` = '" . hesk_dbEscape($user) . "' LIMIT 1");
     if (hesk_dbNumRows($result) != 1) {
         setcookie('hesk_username', '');
         setcookie('hesk_p', '');
-        header('Location: index.php?a=login&notice=1');
+        header('Location: '.$url);
         exit();
     }
 
@@ -402,7 +405,7 @@ function hesk_autoLogin($noredirect = 0)
     if ($hash != hesk_Pass2Hash($res['pass'] . strtolower($user) . $res['pass'])) {
         setcookie('hesk_username', '');
         setcookie('hesk_p', '');
-        header('Location: index.php?a=login&notice=1');
+        header('Location: '.$url);
         exit();
     }
 
@@ -485,6 +488,9 @@ function hesk_isLoggedIn()
 
     $referer = hesk_input($_SERVER['REQUEST_URI']);
     $referer = str_replace('&amp;', '&', $referer);
+	
+	// Admin login URL
+	$url = $hesk_settings['hesk_url'] . '/' . $hesk_settings['admin_dir'] . '/index.php?a=login&notice=1&goto='.urlencode($referer);
 
     if (empty($_SESSION['id']) || empty($_SESSION['session_verify'])) {
         if ($hesk_settings['autologin'] && hesk_autoLogin(1)) {
@@ -498,7 +504,6 @@ function hesk_isLoggedIn()
         }
 
         hesk_session_stop();
-        $url = 'index.php?a=login&notice=1&goto=' . urlencode($referer);
         header('Location: ' . $url);
         exit();
     } else {
@@ -510,7 +515,6 @@ function hesk_isLoggedIn()
         // Exit if user not found
         if (hesk_dbNumRows($res) != 1) {
             hesk_session_stop();
-            $url = 'index.php?a=login&notice=1&goto=' . urlencode($referer);
             header('Location: ' . $url);
             exit();
         }
@@ -521,7 +525,6 @@ function hesk_isLoggedIn()
         // Verify this session is still valid
         if (!hesk_activeSessionValidate($me['user'], $me['pass'], $_SESSION['session_verify'])) {
             hesk_session_stop();
-            $url = 'index.php?a=login&notice=1&goto=' . urlencode($referer);
             header('Location: ' . $url);
             exit();
         }
@@ -582,8 +585,11 @@ function hesk_verifyGoto()
         'admin_ticket.php' => '',
         'archive.php' => '',
         'assign_owner.php' => '',
+		'banned_emails.php' => '',
+		'banned_ips.php' => '',
         'change_status.php' => '',
         'edit_post.php' => '',
+		'email_templates.php' => '',
         'export.php' => '',
         'find_tickets.php' => '',
         'generate_spam_question.php' => '',
@@ -593,10 +599,12 @@ function hesk_verifyGoto()
         'manage_canned.php' => '',
         'manage_categories.php' => '',
         'manage_knowledgebase.php' => '',
+		'manage_ticket_templates.php' => '',
         'manage_users.php' => '',
         'new_ticket.php' => '',
         'profile.php' => '',
         'reports.php' => '',
+		'service_messages.php' => '',
         'show_tickets.php' => '',
     );
 

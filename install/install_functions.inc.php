@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.7 from 18th April 2016
+*  Version: 2.6.8 from 10th August 2016
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -37,8 +37,8 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 // We will be installing this HESK version:
 define('HESK_NEW_VERSION','2.6.7');
-define('MODS_FOR_HESK_NEW_VERSION','2.6.3');
-define('REQUIRE_PHP_VERSION','5.0.0');
+define('MODS_FOR_HESK_NEW_VERSION','2.6.4');
+define('REQUIRE_PHP_VERSION','5.3.0');
 define('REQUIRE_MYSQL_VERSION','5.0.7');
 
 // Other required files and settings

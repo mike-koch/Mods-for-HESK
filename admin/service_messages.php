@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.7 from 18th April 2016
+ *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -292,9 +292,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4><a name="new_article"></a><?php echo $hesklang['new_sm']; ?> <a href="javascript:void(0)"
-                                                                                        onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['sm_intro']); ?>')"><i
-                                class="fa fa-question-circle settingsquestionmark"></i></a></h4>
+                    <h4><a name="new_article"></a><?php echo hesk_SESSION('edit_sm') ? $hesklang['edit_sm'] : $hesklang['new_sm']; ?></h4>
                 </div>
                 <div class="panel-body">
                     <form action="service_messages.php" method="post" name="form1" role="form" class="form-horizontal" data-toggle="validator">
@@ -486,11 +484,15 @@ function save_sm()
     $icon = hesk_POST('icon');
     $title = hesk_input(hesk_POST('title')) or $hesk_error_buffer[] = $hesklang['sm_e_title'];
     $message = hesk_getHTML(hesk_POST('message'));
+	
+	// Clean the HTML code
+	require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
+	$purifier = new HTMLPurifier();
+	$message = $purifier->purify($message);
 
     // Any errors?
     if (count($hesk_error_buffer)) {
         $_SESSION['edit_sm'] = true;
-        $hesklang['new_sm'] = $hesklang['edit_sm'];
 
         $_SESSION['new_sm'] = array(
             'id' => $id,
@@ -515,7 +517,6 @@ function save_sm()
     if (isset($_POST['sm_preview'])) {
         $_SESSION['preview_sm'] = true;
         $_SESSION['edit_sm'] = true;
-        $hesklang['new_sm'] = $hesklang['edit_sm'];
 
         $_SESSION['new_sm'] = array(
             'id' => $id,
@@ -562,8 +563,6 @@ function edit_sm()
 
     $_SESSION['new_sm'] = $sm;
     $_SESSION['edit_sm'] = true;
-
-    $hesklang['new_sm'] = $hesklang['edit_sm'];
 
 } // End edit_sm()
 
@@ -654,6 +653,11 @@ function new_sm()
     $icon = hesk_POST('icon');
     $title = hesk_input(hesk_POST('title')) or $hesk_error_buffer[] = $hesklang['sm_e_title'];
     $message = hesk_getHTML(hesk_POST('message'));
+	
+	// Clean the HTML code
+	require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
+	$purifier = new HTMLPurifier();
+	$message = $purifier->purify($message);
 
     // Any errors?
     if (count($hesk_error_buffer)) {
