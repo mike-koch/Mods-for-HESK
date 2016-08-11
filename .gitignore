@@ -157,6 +157,7 @@ inc/calendar/tcal.php
 inc/database.inc.php
 inc/database_mysqli.inc.php
 inc/footer.inc.php
+inc/htmlpurifier
 inc/index.htm
 inc/mail/email_parser.php
 inc/mail/hesk_pipe.php
