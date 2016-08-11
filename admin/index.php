@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.7 from 18th April 2016
+ *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -294,7 +294,7 @@ function print_login()
     <div>
     <div class="panel panel-default form-signin">
         <div class="panel-heading">
-            <h4><span <?php echo $iconDisplay; ?>><span class="mega-octicon octicon-sign-in"></span>&nbsp;</span><?php echo $hesklang['admin_login']; ?></a></h4>
+            <h4><span <?php echo $iconDisplay; ?>><span class="mega-octicon octicon-sign-in"></span>&nbsp;</span><?php echo $hesklang['admin_login']; ?></h4>
         </div>
         <div class="panel-body">
             <form class="form-signin form-horizontal" role="form" action="index.php" method="post" name="form1">
