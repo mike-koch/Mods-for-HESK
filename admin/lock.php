@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.7 from 18th April 2016
+ *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -95,11 +95,10 @@ if (empty($_GET['locked'])) {
 /* Update database */
 $statusSql = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `LockedTicketStatus` = 1';
 $statusRs = hesk_dbQuery($statusSql);
-$statusRow = hesk_dbFetchAssoc($statusSql);
+$statusRow = hesk_dbFetchAssoc($statusRs);
 $statusId = $statusRow['ID'];
 
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$statusId}',`locked`='{$status}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "')  WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`= {$statusId},`locked`='{$status}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "')  WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
 
 /* Back to ticket page and show a success message */
 hesk_process_messages($tmp, 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . rand(10000, 99999), 'SUCCESS');
-?>

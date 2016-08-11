@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.7 from 18th April 2016
+ *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -1650,7 +1650,7 @@ if (defined('HESK_DEMO')) {
                                     }
                                 }
                                 ?>
-                                <select>
+							</select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -2746,7 +2746,7 @@ if (defined('HESK_DEMO')) {
                                 <textarea name="s_email_providers" class="form-control"
                                           placeholder="<?php echo htmlspecialchars($hesklang['epro']); ?>" id="d1"
                                           rows="5"
-                                          cols="40"/><?php echo implode("\n", $hesk_settings['email_providers']); ?></textarea>
+                                          cols="40"><?php echo implode("\n", $hesk_settings['email_providers']); ?></textarea>
                             </div>
                         </div>
                         <table border="0" width="100%">
@@ -2786,7 +2786,7 @@ if (defined('HESK_DEMO')) {
                                         } ?>/> <?php echo $hesklang['enn']; ?></label>
                                 </div>
                                 <textarea name="s_notify_spam_tags" rows="5" cols="40"
-                                          class="form-control"/><?php echo hesk_htmlspecialchars(implode("\n", $hesk_settings['notify_spam_tags'])); ?></textarea>
+                                          class="form-control"><?php echo hesk_htmlspecialchars(implode("\n", $hesk_settings['notify_spam_tags'])); ?></textarea>
                             </div>
                         </div>
                     </div>

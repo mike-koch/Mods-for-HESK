@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 *  Title: Help Desk Software HESK
-*  Version: 2.6.7 from 18th April 2016
+*  Version: 2.6.8 from 10th August 2016
 *  Author: Klemen Stirn
 *  Website: http://www.hesk.com
 ********************************************************************************
@@ -571,7 +571,7 @@ function show_subnav($hide='', $catid=1)
     echo $link['newa'];
     echo $link['newc'];
     ?>
-	<i class="fa fa-pencil" style="color:orange;font-size:16px"></i></a> <input type="hidden" name="a" value="edit_article" /><?php echo $hesklang['aid']; ?>: <input type="text" name="id" size="3" <?php if ($artid) echo 'value="' . $artid . '"'; ?> /> <input type="submit" value="<?php echo $hesklang['edit']; ?>" class="btn btn-default btn-xs" />
+	<i class="fa fa-pencil" style="color:orange;font-size:16px"></i> <input type="hidden" name="a" value="edit_article" /><?php echo $hesklang['aid']; ?>: <input type="text" name="id" size="3" <?php if ($artid) echo 'value="' . $artid . '"'; ?> /> <input type="submit" value="<?php echo $hesklang['edit']; ?>" class="btn btn-default btn-xs" />
 	</form>
     </div>
 
