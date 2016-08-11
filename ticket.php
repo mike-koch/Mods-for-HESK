@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
  *  Title: Help Desk Software HESK
- *  Version: 2.6.7 from 18th April 2016
+ *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
  *  Website: http://www.hesk.com
  ********************************************************************************
@@ -79,7 +79,7 @@ if ( isset($_GET['track']) || isset($_GET['e']) || isset($_GET['f']) || isset($_
 $is_form = hesk_SESSION('t_form');
 
 /* Get the tracking ID */
-$trackingID = hesk_SESSION('t_track');
+$trackingID = hesk_cleanID('', hesk_SESSION('t_track'));
 
 /* Email required to view ticket? */
 $my_email = hesk_getCustomerEmail(1, 't_email');
