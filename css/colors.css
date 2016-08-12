@@ -15,6 +15,18 @@
     color: orange;
 }
 
+.medium {
+    color: #FF9900;
+}
+
 .gray {
     color: grey;
+}
+
+.critical {
+    color: #9400d3;
+}
+
+.blue {
+    color: blue;
 }
