@@ -188,6 +188,27 @@ if ($action = hesk_REQUEST('a')) {
         }
         //-->
     </script>
+    <div class="box collapsed-box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['add_user']; ?>
+                <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')">
+                    <i class="fa fa-question-circle settingsquestionmark"></i>
+                </a>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <?php echo $hesklang['req_marked_with']; ?> <span class="red">*</span>
+            <form data-toggle="validator" name="form1" method="post" action="manage_users.php" class="form-horizontal" role="form">
+                <?php hesk_profile_tab('userdata', false, 'create_user'); ?>
+            </form>
+        </div>
+    </div>
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">
@@ -329,27 +350,6 @@ EOC;
             <?php if ($hesk_settings['online']) {
                 echo '&nbsp;&nbsp;&nbsp;<i class="fa fa-circle green"></i> ' . $hesklang['online'] . ' &nbsp;&nbsp;&nbsp; <i class="fa fa-circle gray"></i> ' . $hesklang['offline'];
             } ?>
-        </div>
-    </div>
-    <div class="box">
-        <div class="box-header with-border">
-            <h1 class="box-title">
-                <?php echo $hesklang['add_user']; ?>
-                <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')">
-                    <i class="fa fa-question-circle settingsquestionmark"></i>
-                </a>
-            </h1>
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                </button>
-            </div>
-        </div>
-        <div class="box-body">
-            <?php echo $hesklang['req_marked_with']; ?> <span class="red">*</span>
-            <form data-toggle="validator" name="form1" method="post" action="manage_users.php" class="form-horizontal" role="form">
-                <?php hesk_profile_tab('userdata', false, 'create_user'); ?>
-            </form>
         </div>
     </div>
     <script language="Javascript" type="text/javascript"><!--
