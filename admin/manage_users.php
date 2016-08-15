@@ -359,7 +359,7 @@ EOC;
 </section>
 
 <?php
-require_once(HESK_PATH . 'inc/new_footer.inc.php');
+require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
 
 } // End else
