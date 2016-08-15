@@ -60,6 +60,8 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/skins/_all-skins.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/displays.css">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/adminlte.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>

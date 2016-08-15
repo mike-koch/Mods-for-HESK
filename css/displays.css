@@ -1,0 +1,13 @@
+.hide-on-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.event-category {
+    border-radius: 4px;
+    padding: 5px;
+}
