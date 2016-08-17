@@ -658,9 +658,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </h1>
             <?php
             if (hesk_checkPermission('can_run_reports', 0)) {
-                echo '<small><a href="reports.php">' . $hesklang['reports_tab'] . '</a></small>';
+                echo '<br><small><a href="reports.php">' . $hesklang['reports_tab'] . '</a></small>';
             }
             ?>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
         </div>
         <div class="box-body">
             <?php
