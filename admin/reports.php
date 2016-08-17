@@ -229,11 +229,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <?php echo $hesklang['reports_tab']; ?> <a href="#"
                                                            onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['reports_intro']); ?>')"><i
                         class="fa fa-question-circle settingsquestionmark"></i></a>
-            </h1><br>
+            </h1>
             <?php
             // Show a link to export.php if user has permission to do so
             if ($canExport) {
-                echo '<small><a title="' . $hesklang['export'] . '" href="export.php">' . $hesklang['export'] . '</a></small><div class="blankSpace"></div>';
+                echo '<br><small><a title="' . $hesklang['export'] . '" href="export.php">' . $hesklang['export'] . '</a></small><div class="blankSpace"></div>';
             }
             ?>
             <div class="box-tools pull-right">
