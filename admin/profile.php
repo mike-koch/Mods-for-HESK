@@ -37,6 +37,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/profile_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -84,75 +85,80 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-
-<div class="row">
-    <div class="col-md-8 col-md-offset-2 pad-down-20">
-        <?php
-        /* This will handle error, success and notice messages */
-        hesk_handle_messages();
-
-        if (defined('WARN_PASSWORD')) {
-            hesk_show_notice($hesklang['chdp2'], $hesklang['security']);
-        }
-        ?>
-
-        <h3><?php echo $hesklang['profile_for'] . ' <b>' . $_SESSION['new']['user']; ?></b></h3>
-        <h6><?php echo $hesklang['req_marked_with']; ?> <span class="important">*</span></h6>
-
-        <div class="footerWithBorder blankSpace"></div>
-
-        <?php
-        if ($hesk_settings['can_sel_lang']) {
-            /* Update preferred language in the database? */
-            if (isset($_GET['save_language'])) {
-                $newlang = hesk_input(hesk_GET('language'));
-
-                /* Only update if it's a valid language */
-                if (isset($hesk_settings['languages'][$newlang])) {
-                    $newlang = ($newlang == HESK_DEFAULT_LANGUAGE) ? "NULL" : "'" . hesk_dbEscape($newlang) . "'";
-                    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `language`=$newlang WHERE `id`='" . intval($_SESSION['id']) . "' LIMIT 1");
-                }
-            }
-
-            $str = '<form class="form-horizontal" role="form" method="get" action="profile.php">';
-            $str .= '<input type="hidden" name="save_language" value="1" />';
-            $str .= '<div class="form-group">';
-            $str .= '<label for="language" class="col-sm-3 control-label">' . $hesklang['chol'] . ':</label>';
-
-            if (!isset($_GET)) {
-                $_GET = array();
-            }
-
-            foreach ($_GET as $k => $v) {
-                if ($k == 'language' || $k == 'save_language') {
-                    continue;
-                }
-                $str .= '<input type="hidden" name="' . htmlentitieshesk_htmlentities($k) . '" value="' . hesk_htmlentities($v) . '" />';
-            }
-
-            $str .= '<div class="col-sm-9"><select class="form-control" name="language" onchange="this.form.submit()">';
-            $str .= hesk_listLanguages(0);
-            $str .= '</select></div>';
-            $str .= '</div>'
-
-            ?>
-            <script language="javascript" type="text/javascript">
-                document.write('<?php echo str_replace(array('"','<','=','>',"'"),array('\42','\74','\75','\76','\47'),$str . '</form>'); ?>');
-            </script>
-            <noscript>
-                <?php
-                echo $str . '<input type="submit" value="' . $hesklang['go'] . '" /></form>';
-                ?>
-            </noscript>
+<section class="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['profile_for']; ?> <b><?php echo $_SESSION['new']['user']; ?></b>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <?php echo $hesklang['req_marked_with']; ?> <span class="important">*</span>
             <?php
-        }
-        ?>
+            /* This will handle error, success and notice messages */
+            hesk_handle_messages();
 
-        <form role="form" class="form-horizontal" method="post" action="profile.php" name="form1" data-toggle="validator">
-            <?php hesk_profile_tab('new'); ?>
-        </form>
+            if (defined('WARN_PASSWORD')) {
+                hesk_show_notice($hesklang['chdp2'], $hesklang['security']);
+            }
+
+            if ($hesk_settings['can_sel_lang']) {
+                /* Update preferred language in the database? */
+                if (isset($_GET['save_language'])) {
+                    $newlang = hesk_input(hesk_GET('language'));
+
+                    /* Only update if it's a valid language */
+                    if (isset($hesk_settings['languages'][$newlang])) {
+                        $newlang = ($newlang == HESK_DEFAULT_LANGUAGE) ? "NULL" : "'" . hesk_dbEscape($newlang) . "'";
+                        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `language`=$newlang WHERE `id`='" . intval($_SESSION['id']) . "' LIMIT 1");
+                    }
+                }
+
+                $str = '<form class="form-horizontal" role="form" method="get" action="profile.php">';
+                $str .= '<input type="hidden" name="save_language" value="1" />';
+                $str .= '<div class="form-group">';
+                $str .= '<label for="language" class="col-sm-3 control-label">' . $hesklang['chol'] . ':</label>';
+
+                if (!isset($_GET)) {
+                    $_GET = array();
+                }
+
+                foreach ($_GET as $k => $v) {
+                    if ($k == 'language' || $k == 'save_language') {
+                        continue;
+                    }
+                    $str .= '<input type="hidden" name="' . htmlentitieshesk_htmlentities($k) . '" value="' . hesk_htmlentities($v) . '" />';
+                }
+
+                $str .= '<div class="col-sm-9"><select class="form-control" name="language" onchange="this.form.submit()">';
+                $str .= hesk_listLanguages(0);
+                $str .= '</select></div>';
+                $str .= '</div>'
+
+                ?>
+                <script language="javascript" type="text/javascript">
+                    document.write('<?php echo str_replace(array('"','<','=','>',"'"),array('\42','\74','\75','\76','\47'),$str . '</form>'); ?>');
+                </script>
+                <noscript>
+                    <?php
+                    echo $str . '<input type="submit" value="' . $hesklang['go'] . '" /></form>';
+                    ?>
+                </noscript>
+                <?php
+            }
+            ?>
+
+            <form role="form" class="form-horizontal" method="post" action="profile.php" name="form1" data-toggle="validator">
+                <?php hesk_profile_tab('new'); ?>
+            </form>
+        </div>
     </div>
-</div>
+</section>
 
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
