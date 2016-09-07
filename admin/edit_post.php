@@ -81,6 +81,7 @@ if (hesk_isREQUEST('reply')) {
     }
     $reply = hesk_dbFetchAssoc($result);
     $ticket['message'] = $reply['message'];
+    $ticket['html'] = $reply['html'];
     $is_reply = 1;
 }
 
@@ -451,15 +452,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         }
                     }
                 }
-                ?>
-
-            <?php } ?>
+            } ?>
             <div class="form-group">
                 <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
 
                 <div class="col-sm-9">
                     <?php
-                    $message = $modsForHesk_settings['rich_text_for_tickets'] ? hesk_html_entity_decode($ticket['message']) : $ticket['message'];
+                    $message = $ticket['html'] ? hesk_html_entity_decode($ticket['message']) : $ticket['message'];
                     ?>
                     <textarea class="form-control htmlEditor" name="message" rows="12"
                               placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>"
@@ -480,7 +479,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
             <div class="form-group" style="text-align: center">
                 <?php
-                $html = $modsForHesk_settings['rich_text_for_tickets'] ? 1 : 0;
+                $html = $ticket['html'] ? 1 : 0;
                 ?>
                 <input type="hidden" name="html" value="<?php echo $html; ?>">
                 <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default"/>
@@ -492,7 +491,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </form>
     </div>
 </div>
-<?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+<?php if ($ticket['html']): ?>
     <script type="text/javascript">
         /* <![CDATA[ */
         tinyMCE.init({
