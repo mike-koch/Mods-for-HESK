@@ -91,9 +91,6 @@ if (defined('HESK_DEMO')) {
     $hesk_settings['recaptcha_private_key'] = $hesklang['hdemo'];
 }
 
-/* This will handle error, success and notice messages */
-hesk_handle_messages();
-
 // Check file attachment limits
 if ($hesk_settings['attachments']['use'] && !defined('HESK_DEMO')) {
     // Check number of attachments per post
@@ -386,6 +383,10 @@ $modsForHesk_settings = mfh_getSettings();
     //-->
 </script>
 <section class="content">
+    <?php
+    /* This will handle error, success and notice messages */
+    hesk_handle_messages();
+    ?>
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">

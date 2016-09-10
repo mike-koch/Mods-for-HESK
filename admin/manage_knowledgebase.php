@@ -370,9 +370,6 @@ if (!isset($_SESSION['hide']['new_article']))
     }
     ?>
     <section class="content">
-        <h2 class="move-right-10">
-            <a name="new_article"></a><?php echo $hesklang['new_kb_art']; ?>
-        </h2>
         <?php
         $catid = show_subnav('newa');
         $onsubmit = '';
@@ -381,11 +378,54 @@ if (!isset($_SESSION['hide']['new_article']))
         }
         ?>
         <form action="manage_knowledgebase.php" role="form" method="post" name="form1" enctype="multipart/form-data" data-toggle="validator" <?php echo $onsubmit; ?>>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="panel panel-default move-right-10">
-                        <div class="panel-heading"><?php echo $hesklang['information']; ?></div>
-                        <div class="panel-body">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h1 class="box-title">
+                        <a name="new_article"></a><?php echo $hesklang['new_kb_art']; ?>
+                    </h1>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <?php
+                    $displayType = $hesk_settings['kb_wysiwyg'] ? 'none' : 'block';
+                    $displayWarn = 'none';
+                    ?>
+
+                    <span id="contentType" style="display:<?php echo $displayType; ?>">
+                        <label><input type="radio" name="html" value="0" <?php if (!isset($_SESSION['new_article']['html']) || (isset($_SESSION['new_article']['html']) && $_SESSION['new_article']['html'] == 0) ) {echo 'checked="checked"';} ?> onclick="javascript:document.getElementById('kblinks').style.display = 'none'" /> <?php echo $hesklang['kb_dhtml']; ?></label><br />
+                        <label><input type="radio" name="html" value="1" <?php $display = 'none'; if (isset($_SESSION['new_article']['html']) && $_SESSION['new_article']['html'] == 1) {echo 'checked="checked"'; $displayWarn = 'block';} ?> onclick="javascript:document.getElementById('kblinks').style.display = 'block'" /> <?php echo $hesklang['kb_ehtml']; ?></label><br />
+                        <span id="kblinks" style="display:<?php echo $displayWarn; ?>"><i><?php echo $hesklang['kb_links']; ?></i></span>
+                    </span>
+                    <div class="form-group">
+                        <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
+                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" data-error="<?php echo htmlspecialchars($hesklang['kb_e_subj']); ?>"
+                               name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group" id="content-group">
+                        <textarea class="form-control" id="content" name="content" rows="25" cols="70" data-error="<?php echo htmlspecialchars($hesklang['kb_e_cont']); ?>" id="content" required><?php if (isset($_SESSION['new_article']['content'])) {echo $_SESSION['new_article']['content'];} ?></textarea>
+                        <div class="help-block with-errors" id="content-help-block"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h1 class="box-title">
+                        <?php echo $hesklang['information']; ?>
+                    </h1>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="catid" class="control-label"><?php echo $hesklang['kb_cat']; ?></label>
                                 <select name="catid" class="form-control"><?php $listBox->printMenu(); ?></select>
@@ -419,33 +459,7 @@ if (!isset($_SESSION['hide']['new_article']))
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <?php
-                    $displayType = $hesk_settings['kb_wysiwyg'] ? 'none' : 'block';
-                    $displayWarn = 'none';
-                    ?>
-
-                    <span id="contentType" style="display:<?php echo $displayType; ?>">
-                    <label><input type="radio" name="html" value="0" <?php if (!isset($_SESSION['new_article']['html']) || (isset($_SESSION['new_article']['html']) && $_SESSION['new_article']['html'] == 0) ) {echo 'checked="checked"';} ?> onclick="javascript:document.getElementById('kblinks').style.display = 'none'" /> <?php echo $hesklang['kb_dhtml']; ?></label><br />
-                    <label><input type="radio" name="html" value="1" <?php $display = 'none'; if (isset($_SESSION['new_article']['html']) && $_SESSION['new_article']['html'] == 1) {echo 'checked="checked"'; $displayWarn = 'block';} ?> onclick="javascript:document.getElementById('kblinks').style.display = 'block'" /> <?php echo $hesklang['kb_ehtml']; ?></label><br />
-                    <span id="kblinks" style="display:<?php echo $displayWarn; ?>"><i><?php echo $hesklang['kb_links']; ?></i></span>
-                </span>
-                    <div class="form-group">
-                        <label for="subject" class="control-label"><?php echo $hesklang['kb_subject']; ?></label>
-                        <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['kb_subject']); ?>" data-error="<?php echo htmlspecialchars($hesklang['kb_e_subj']); ?>"
-                               name="subject" size="70" maxlength="255" <?php if (isset($_SESSION['new_article']['subject'])) {echo 'value="'.$_SESSION['new_article']['subject'].'"';} ?> required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group" id="content-group">
-                        <textarea class="form-control" id="content" name="content" rows="25" cols="70" data-error="<?php echo htmlspecialchars($hesklang['kb_e_cont']); ?>" id="content" required><?php if (isset($_SESSION['new_article']['content'])) {echo $_SESSION['new_article']['content'];} ?></textarea>
-                        <div class="help-block with-errors" id="content-help-block"></div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="panel panel-default move-left-10">
-                        <div class="panel-body">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="keywords" class="control-label"><?php echo $hesklang['kw']; ?></label>
                                 <p class="font-size-90 form-control-static"><?php echo $hesklang['kw1']; ?></p><br/>
@@ -460,16 +474,17 @@ if (!isset($_SESSION['hide']['new_article']))
                                 display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php');
                             endif; // End attachments
                             ?>
-                            <br>
-                            <div class="form-group">
-                                <input type="hidden" name="a" value="new_article" />
-                                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <div class="form-group">
+                        <input type="hidden" name="a" value="new_article" />
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
 
-                                <div class="btn-group">
-                                    <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary" />
-                                    <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
-                                </div>
-                            </div>
+                        <div class="btn-group">
+                            <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary" />
+                            <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
                         </div>
                     </div>
                 </div>
