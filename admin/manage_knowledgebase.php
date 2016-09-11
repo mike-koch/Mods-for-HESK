@@ -804,8 +804,7 @@ function list_private() {
                                 if ($hesk_settings['kb_rating'])
                                 {
                                     $alt = $article['rating'] ? sprintf($hesklang['kb_rated'], sprintf("%01.1f", $article['rating'])) : $hesklang['kb_not_rated'];
-                                    $rat = '<td><span data-toggle="tooltip" title="' . $alt . '">' . mfh_get_stars(hesk_round_to_half($article['rating'])*10) . '</span> (' . $article['votes'] . ')</td>';
-                                    //$rat = '<td style="white-space:nowrap;"><img src="../img/star_'.(hesk_round_to_half($article['rating'])*10).'.png" width="85" height="16" alt="'.$alt.'" title="'.$alt.'" border="0" style="vertical-align:text-bottom" /> ('.$article['votes'].') </td>';
+                                    $rat = '<td><span data-toggle="tooltip" title="' . $alt . '">' . mfh_get_stars(hesk_round_to_half($article['rating'])) . '</span> (' . $article['votes'] . ')</td>';
                                 }
                                 else
                                 {
@@ -1813,7 +1812,7 @@ function manage_category() {
                                     if ($hesk_settings['kb_rating'])
                                     {
                                         $alt = $article['rating'] ? sprintf($hesklang['kb_rated'], sprintf("%01.1f", $article['rating'])) : $hesklang['kb_not_rated'];
-                                        $rat = '<td><span data-toggle="tooltip" title="' . $alt . '">' . mfh_get_stars(hesk_round_to_half($article['rating']*10)) . '</span> (' . $article['votes'] . ')</td>';
+                                        $rat = '<td><span data-toggle="tooltip" title="' . $alt . '">' . mfh_get_stars(hesk_round_to_half($article['rating'])) . '</span> (' . $article['votes'] . ')</td>';
                                     }
                                     else
                                     {
