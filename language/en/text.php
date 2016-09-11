@@ -29,6 +29,7 @@ $hesklang['deleted_user_title_case'] = 'Deleted User';
 $hesklang['main_navigation_uppercase'] = 'MAIN NAVIGATION';
 $hesklang['x_system_warnings'] = '%s System %s'; // %s: Number of warnings, $s: "Warning" or "Warnings", depending on #
 $hesklang['warnings_title_case'] = 'Warnings';
+$hesklang['articles_in_category_x'] = 'Articles in Category %s'; // %s: category name
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';

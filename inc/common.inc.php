@@ -1886,3 +1886,26 @@ function mfh_bytesToUnits($size) {
 
     return intval($quotient);
 }
+
+/**
+ * Returns the star markup based on the rating provided. Filled in stars are orange, empty stars are gray.
+ */
+function mfh_get_stars($rating) {
+    $int_value = intval($rating);
+    $has_half = $int_value === $rating;
+
+    $markup = '';
+    for ($i = 0; $i < $int_value; $i++) {
+        $markup .= '<i class="fa fa-star orange"></i>';
+    }
+
+    if ($has_half) {
+        $markup .= '<i class="fa fa-star-half-o orange"></i>';
+    }
+
+    for ($i = 0; $i < 5 - $int_value; $i++) {
+        $markup .= '<i class="fa fa-star-o gray"></i>';
+    }
+
+    return $markup;
+}
