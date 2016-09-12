@@ -32,6 +32,8 @@ $hesklang['warnings_title_case'] = 'Warnings';
 $hesklang['articles_in_category_x'] = 'Articles in Category %s'; // %s: category name
 $hesklang['private_category_star'] = 'Private categories indicated by *';
 $hesklang['private_article_star'] = 'Private articles indicated by *';
+$hesklang['ticket_details'] = 'Ticket Details';
+$hesklang['more'] = 'More';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';

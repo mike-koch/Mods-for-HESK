@@ -41,6 +41,7 @@ require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
 require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -624,9 +625,26 @@ if ($ticket['email'] != '') {
     }
 }
 
+// TODO Here we go!
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
+<section class="content">
+    <h1><?php echo $hesklang['ticket_details']; ?></h1>
+    <h2><?php echo $trackingID; ?></h2>
+    <div class="box">
+        <div class="box-header">
+            <h1 class="box-title">
+                <i class="fa fa-user"></i>
+                <?php echo $ticket['name']; ?>
+            </h1>
+            <div class="pull-right">
+            </div>
+        </div>
+        <div class="box-body">
+        </div>
+    </div>
+</section>
 <div class="row" style="padding: 20px">
     <div class="col-md-2">
         <div class="panel panel-default">
@@ -1522,29 +1540,42 @@ function hesk_getAdminButtons($reply = 0, $white = 1)
 {
     global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
 
-    $options = '<div class="btn-group" style="width: 100%">';
+    $options = '';
 
-    /* Style and mousover/mousout */
-    $tmp = $white ? 'White' : 'Blue';
-    $style = 'class="option' . $tmp . 'OFF" onmouseover="this.className=\'option' . $tmp . 'ON\'" onmouseout="this.className=\'option' . $tmp . 'OFF\'"';
+    /* Edit post */
+    if ($can_edit) {
+        $tmp = $reply ? '&amp;reply=' . $reply['id'] : '';
+        $mgr = $isManager ? '&amp;isManager=true' : '';
+        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil"></i> ' . $hesklang['edit'] . '</a> ';
+    }
+
+    $dropdown = '
+<div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        More <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="#">Action</a></li>
+        <li><a href="#">Another action</a></li>
+        <li><a href="#">Something else here</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="#">Separated link</a></li>
+    </ul>
+</div>';
+
+    $options .= $dropdown;
 
     /* Lock ticket button */
-    if ( /* ! $reply && */
-    $can_edit
-    ) {
+    if ($can_edit) {
         if ($ticket['locked']) {
-            $des = $hesklang['tul'] . ' - ' . $hesklang['isloc'];
             $options .= '<a class="btn btn-default" href="lock.php?track=' . $trackingID . '&amp;locked=0&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-unlock"></i> ' . $hesklang['tul'] . '</a> ';
         } else {
-            $des = $hesklang['tlo'] . ' - ' . $hesklang['isloc'];
             $options .= '<a class="btn btn-default" href="lock.php?track=' . $trackingID . '&amp;locked=1&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-lock"></i> ' . $hesklang['tlo'] . '</a> ';
         }
     }
 
     /* Tag ticket button */
-    if ( /* ! $reply && */
-    $can_archive
-    ) {
+    if ($can_archive) {
         if ($ticket['archive']) {
             $options .= '<a class="btn btn-default" href="archive.php?track=' . $trackingID . '&amp;archived=0&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-tag"></i>' . $hesklang['remove_archive'] . '</a> ';
         } else {
@@ -1560,12 +1591,6 @@ function hesk_getAdminButtons($reply = 0, $white = 1)
     /* Print ticket button */
     $options .= '<a class="btn btn-default" href="../print.php?track=' . $trackingID . '"><i class="fa fa-print"></i> ' . $hesklang['printer_friendly'] . '</a> ';
 
-    /* Edit post */
-    if ($can_edit) {
-        $tmp = $reply ? '&amp;reply=' . $reply['id'] : '';
-        $mgr = $isManager ? '&amp;isManager=true' : '';
-        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil"></i> ' . $hesklang['edtt'] . '</a> ';
-    }
 
 
     /* Delete ticket */
@@ -1573,12 +1598,10 @@ function hesk_getAdminButtons($reply = 0, $white = 1)
         if ($reply) {
             $url = 'admin_ticket.php';
             $tmp = 'delete_post=' . $reply['id'];
-            $img = 'delete.png';
             $txt = $hesklang['delt'];
         } else {
             $url = 'delete_tickets.php';
             $tmp = 'delete_ticket=1';
-            $img = 'delete_ticket.png';
             $txt = $hesklang['dele'];
         }
         $options .= '<a class="btn btn-default" href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . hesk_makeJsString($txt) . '?\');"><i class="fa fa-ban"></i> ' . $txt . '</a> ';
