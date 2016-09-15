@@ -31,3 +31,12 @@
 .blue {
     color: blue;
 }
+
+/* Hover colors */
+.red-on-hover:hover {
+    color: red;
+}
+
+.gray-on-hover:hover {
+    color: grey;
+}

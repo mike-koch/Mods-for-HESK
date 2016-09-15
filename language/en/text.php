@@ -34,6 +34,12 @@ $hesklang['private_category_star'] = 'Private categories indicated by *';
 $hesklang['private_article_star'] = 'Private articles indicated by *';
 $hesklang['ticket_details'] = 'Ticket Details';
 $hesklang['more'] = 'More';
+$hesklang['language_colon'] = 'Language:';
+$hesklang['created_colon'] = 'Created:';
+$hesklang['updated_colon'] = 'Updated:';
+$hesklang['last_replier_colon'] = 'Last replier:';
+$hesklang['click_to_edit'] = 'Click to edit';
+$hesklang['no_device_information'] = 'No device information';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';

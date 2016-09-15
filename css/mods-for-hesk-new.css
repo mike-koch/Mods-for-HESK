@@ -6,3 +6,22 @@
 .icon-link {
     font-size: 16px; !important;
 }
+
+#due-date:hover,
+.click-to-edit:hover {
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+.linkless-dropdown {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    white-space: nowrap;
+}
+
+.dropdown-menu>li>span>.fa {
+    margin-right: 10px;
+}
