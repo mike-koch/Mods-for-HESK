@@ -25,3 +25,60 @@
 .dropdown-menu>li>span>.fa {
     margin-right: 10px;
 }
+
+.no-margins {
+    margin: 0;
+}
+
+@media (max-width: 991px) {
+    .ticket-cell-admin {
+        border-bottom: solid 1px #ddd;
+        border-right: 0;
+        padding-top: 5px;
+        height: 100px;
+    }
+}
+
+@media (min-width: 992px) {
+    .ticket-cell-admin {
+        border-bottom: 0;
+        border-right: solid 1px #ddd;
+        margin-top: 1px;
+        height: 100px;
+        padding-top: 10px;
+    }
+}
+
+.ticket-property-title {
+    color: rgba(255, 255, 255, .75);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+@media (min-width: 992px) {
+    .ticketPropertyText {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ticketPropertyText:hover {
+        white-space: normal;
+        overflow: visible;
+    }
+}
+
+.ticketPropertyText {
+    font-size: 16px;
+    line-height: 1em;
+    color: #fff;
+    padding-bottom: 2px;
+}
+
+.status-row {
+    margin-bottom: 20px;
+}
+
+.push-down-10 {
+    margin-top: 10px;
+}

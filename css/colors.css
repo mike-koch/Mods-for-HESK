@@ -3,7 +3,8 @@
 }
 
 .red,
-.important {
+.important,
+.critical-priority {
     color: red;
 }
 
@@ -30,6 +31,14 @@
 
 .blue {
     color: blue;
+}
+
+.med-low-priority {
+    background-color: #8BB467;
+}
+
+.high-priority {
+    background-color: #ff6a00;
 }
 
 /* Hover colors */

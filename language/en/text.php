@@ -40,6 +40,7 @@ $hesklang['updated_colon'] = 'Updated:';
 $hesklang['last_replier_colon'] = 'Last replier:';
 $hesklang['click_to_edit'] = 'Click to edit';
 $hesklang['no_device_information'] = 'No device information';
+$hesklang['message_colon'] = 'Message:';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';
