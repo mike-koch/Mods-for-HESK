@@ -1106,6 +1106,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
             </div>
         </div>
+        <div class="box-footer">
+            <?php echo hesk_getAdminButtonsInTicket(0, $i); ?>
+        </div>
     </div>
 </section>
 <div class="row" style="padding: 20px">
@@ -1247,10 +1250,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
                     <!-- Action Buttons -->
-                    <?php echo hesk_getAdminButtonsInTicket(0, $i); ?>
-
-                    <!-- Date -->
-                    <p><br/><?php echo $hesklang['date']; ?>: <?php echo hesk_date($ticket['dt'], true); ?>
 
                         <!-- Custom Fields Before Message -->
 
@@ -1592,17 +1591,13 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
 {
     global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
 
-    $options = '<div class="btn-group text-right" style="width: 70%; margin-left: auto; margin-right: auto">';
-
-    /* Style and mousover/mousout */
-    $tmp = $white ? 'White' : 'Blue';
-    $style = 'class="option' . $tmp . 'OFF" onmouseover="this.className=\'option' . $tmp . 'ON\'" onmouseout="this.className=\'option' . $tmp . 'OFF\'"';
+    $options = '<div class="pull-right">';
 
     /* Edit post */
     if ($can_edit) {
         $tmp = $reply ? '&amp;reply=' . $reply['id'] : '';
         $mgr = $isManager ? '&amp;isManager=true' : '';
-        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil"></i> ' . $hesklang['edtt'] . '</a> ';
+        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['edtt'] . '</a> ';
     }
 
 
@@ -1611,15 +1606,13 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
         if ($reply) {
             $url = 'admin_ticket.php';
             $tmp = 'delete_post=' . $reply['id'];
-            $img = 'delete.png';
             $txt = $hesklang['delt'];
         } else {
             $url = 'delete_tickets.php';
             $tmp = 'delete_ticket=1';
-            $img = 'delete_ticket.png';
             $txt = $hesklang['dele'];
         }
-        $options .= '<a class="btn btn-default" href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . $txt . '?\');"><i class="fa fa-ban"></i> ' . $txt . '</a> ';
+        $options .= '<a class="btn btn-default" href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . $txt . '?\');"><i class="fa fa-times red"></i> ' . $txt . '</a> ';
     }
 
     /* Return generated HTML */
