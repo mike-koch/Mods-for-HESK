@@ -1056,6 +1056,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             ?>
         </div>
     </div>
+    <?php
+    /* Reply form on top? */
+    if ($can_reply && $hesk_settings['reply_top'] == 1) {
+        hesk_printReplyForm();
+    }
+    ?>
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">
@@ -1073,10 +1079,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             $can_options = hesk_printCanned();
             ?>
             <div class="row">
-                <div class="col-md-2 text-right">
+                <div class="col-md-3 text-right">
                     <strong><?php echo $hesklang['m_sub']; ?></strong>
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-9">
                     <?php echo $ticket['subject']; ?>
                 </div>
             </div>
@@ -1086,25 +1092,47 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         $v['name'] = $hesklang[$v['name']];
                     }
                     echo '<div class="row">';
-                    echo '<div class="col-md-2 text-right"><strong>' . $v['name'] . ':</strong></div>';
+                    echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
                     if ($v['type'] == 'date' && !empty($ticket[$k])) {
                         $dt = date('Y-m-d h:i:s', $ticket[$k]);
-                        echo '<div class="col-md-10">' . hesk_dateToString($dt, 0) . '</div>';
+                        echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
                     } else {
-                        echo '<div class="col-md-10">' . $ticket[$k] . '</div>';
+                        echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
                     }
                     echo '</div>';
                 }
             }
             ?>
             <div class="row push-down-10">
-                <div class="col-md-2 text-right">
+                <div class="col-md-3 text-right">
                     <strong><?php echo $hesklang['message_colon']; ?></strong>
                 </div>
-                <div class="col-md-10">
-                    <?php echo $ticket['subject']; ?>
+                <div class="col-md-9">
+                    <?php if ($ticket['html']) {
+                        echo hesk_html_entity_decode($ticket['message']);
+                    } else {
+                        echo $ticket['message'];
+                    } ?>
                 </div>
             </div>
+            <?php
+            foreach ($hesk_settings['custom_fields'] as $k => $v) {
+                if ($v['use'] && $v['place']) {
+                    if ($modsForHesk_settings['custom_field_setting']) {
+                        $v['name'] = $hesklang[$v['name']];
+                    }
+                    echo '<div class="row">';
+                    echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
+                    if ($v['type'] == 'date' && !empty($ticket[$k])) {
+                        $dt = date('Y-m-d h:i:s', $ticket[$k]);
+                        echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
+                    } else {
+                        echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
+                    }
+                    echo '</div>';
+                }
+            }
+            ?>
         </div>
         <div class="box-footer">
             <?php echo hesk_getAdminButtonsInTicket(0, $i); ?>
@@ -1223,18 +1251,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
             </div>
         </div>
-        <div class="blankSpace"></div>
-        <!-- END TICKET HEAD -->
-
-        <?php
-        /* Reply form on top? */
-        if ($can_reply && $hesk_settings['reply_top'] == 1) {
-            hesk_printReplyForm();
-            echo '<br />';
-        }
-        ?>
-
-        <!-- START TICKET REPLIES -->
 
         <?php
         if ($hesk_settings['new_top']) {
@@ -1248,43 +1264,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         ?>
         <div class="row ticketMessageContainer">
             <div class="col-md-9 col-xs-12 pushMarginLeft">
-                <div class="ticketMessageTop withBorder">
-                    <!-- Action Buttons -->
-
-                        <!-- Custom Fields Before Message -->
-
-                </div>
-                <div class="ticketMessageBottom">
-                    <!-- Message -->
-                    <p><b><?php echo $hesklang['message']; ?>:</b></p>
-
-                    <div class="message">
-                        <?php if ($ticket['html']) {
-                            echo hesk_html_entity_decode($ticket['message']);
-                        } else {
-                            echo $ticket['message'];
-                        } ?>
-                    </div>
-                </div>
                 <div class="ticketMessageTop">
                     <!-- Custom Fields after Message -->
                     <?php
-                    foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                        if ($v['use'] && $v['place']) {
-                            if ($modsForHesk_settings['custom_field_setting']) {
-                                $v['name'] = $hesklang[$v['name']];
-                            }
 
-                            echo '<p>' . $v['name'] . ': ';
-                            if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                                $dt = date('Y-m-d h:i:s', $ticket[$k]);
-                                echo hesk_dateToString($dt, 0);
-                            } else {
-                                echo $ticket[$k];
-                            }
-                            echo '</p>';
-                        }
-                    }
                     /* Attachments */
                     mfh_listAttachments($ticket['attachments'], 0, true);
 
@@ -1752,78 +1735,86 @@ function hesk_printReplyForm()
         });
         /* ]]> */
     </script>
-<?php endif; ?>
+    <?php endif; ?>
 
-    <h3 class="text-left"><?php echo $hesklang['add_reply']; ?></h3>
-    <div class="footerWithBorder"></div>
-    <div class="blankSpace"></div>
-
-    <?php
-    $onsubmit = 'onsubmit="force_stop();"';
-    if ($modsForHesk_settings['rich_text_for_tickets']) {
-        $onsubmit = 'onsubmit="force_stop();return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
-    }
-    ?>
-    <form role="form" data-toggle="validator" class="form-horizontal" method="post" action="admin_reply_ticket.php"
-          enctype="multipart/form-data" name="form1" <?php echo $onsubmit; ?>>
+<div class="box">
+    <div class="box-header with-border">
+        <h1 class="box-title">
+            <?php echo $hesklang['add_reply']; ?>
+        </h1>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
         <?php
-
-        /* Ticket assigned to someone else? */
-        if ($ticket['owner'] && $ticket['owner'] != $_SESSION['id'] && isset($admins[$ticket['owner']])) {
-            hesk_show_notice($hesklang['nyt'] . ' ' . $admins[$ticket['owner']]);
-        }
-
-        /* Ticket locked? */
-        if ($ticket['locked']) {
-            hesk_show_notice($hesklang['tislock']);
-        }
-
-        // Track time worked?
-        if ($hesk_settings['time_worked']) {
-            ?>
-
-            <div class="form-group">
-                <label for="time_worked" class="col-sm-3 control-label"><?php echo $hesklang['ts']; ?></label>
-
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="time_worked" id="time_worked" size="10"
-                           value="<?php echo(isset($_SESSION['time_worked']) ? hesk_getTime($_SESSION['time_worked']) : '00:00:00'); ?>"/>
-                </div>
-                <div class="col-sm-3 text-right">
-                    <div class="btn-group">
-                        <input type="button" class="btn btn-success" onclick="ss()" id="startb"
-                               value="<?php echo $hesklang['start']; ?>"/>
-                        <input type="button" class="btn btn-danger" onclick="r()"
-                               value="<?php echo $hesklang['reset']; ?>"/>
-                    </div>
-                </div>
-            </div>
-            <?php
-        }
-        /* Do we have any canned responses? */
-        if (strlen($can_options)) {
-            ?>
-            <div class="form-group">
-                <label for="saved_replies" class="col-sm-3 control-label"><?php echo $hesklang['saved_replies']; ?></label>
-                <div class="col-sm-9">
-                    <label><input type="radio" name="mode" id="modeadd" value="1"
-                                  checked="checked"/> <?php echo $hesklang['madd']; ?></label><br/>
-                    <label><input type="radio" name="mode" id="moderep" value="0"/> <?php echo $hesklang['mrep']; ?>
-                    </label>
-                    <select class="form-control" name="saved_replies" onchange="setMessage(this.value)">
-                        <option value="0"> - <?php echo $hesklang['select_empty']; ?> -</option>
-                        <?php echo $can_options; ?>
-                    </select>
-                </div>
-            </div>
-            <?php
+        $onsubmit = 'onsubmit="force_stop();"';
+        if ($modsForHesk_settings['rich_text_for_tickets']) {
+            $onsubmit = 'onsubmit="force_stop();return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
         }
         ?>
-        <div class="form-group" id="message-group">
-            <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?><span
-                    class="important">*</span></label>
+        <form role="form" data-toggle="validator" class="form-horizontal" method="post" action="admin_reply_ticket.php"
+              enctype="multipart/form-data" name="form1" <?php echo $onsubmit; ?>>
+            <?php
 
-            <div class="col-sm-9">
+            /* Ticket assigned to someone else? */
+            if ($ticket['owner'] && $ticket['owner'] != $_SESSION['id'] && isset($admins[$ticket['owner']])) {
+                hesk_show_notice($hesklang['nyt'] . ' ' . $admins[$ticket['owner']]);
+            }
+
+            /* Ticket locked? */
+            if ($ticket['locked']) {
+                hesk_show_notice($hesklang['tislock']);
+            }
+
+            // Track time worked?
+            if ($hesk_settings['time_worked']) {
+                ?>
+
+                <div class="form-group">
+                    <label for="time_worked" class="col-sm-3 control-label"><?php echo $hesklang['ts']; ?></label>
+
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="time_worked" id="time_worked" size="10"
+                               value="<?php echo(isset($_SESSION['time_worked']) ? hesk_getTime($_SESSION['time_worked']) : '00:00:00'); ?>"/>
+                    </div>
+                    <div class="col-sm-3 text-right">
+                        <div class="btn-group">
+                            <input type="button" class="btn btn-success" onclick="ss()" id="startb"
+                                   value="<?php echo $hesklang['start']; ?>"/>
+                            <input type="button" class="btn btn-danger" onclick="r()"
+                                   value="<?php echo $hesklang['reset']; ?>"/>
+                        </div>
+                    </div>
+                </div>
+                <?php
+            }
+            /* Do we have any canned responses? */
+            if (strlen($can_options)) {
+                ?>
+                <div class="form-group">
+                    <label for="saved_replies" class="col-sm-3 control-label"><?php echo $hesklang['saved_replies']; ?></label>
+                    <div class="col-sm-9">
+                        <label><input type="radio" name="mode" id="modeadd" value="1"
+                                      checked="checked"/> <?php echo $hesklang['madd']; ?></label><br/>
+                        <label><input type="radio" name="mode" id="moderep" value="0"/> <?php echo $hesklang['mrep']; ?>
+                        </label>
+                        <select class="form-control" name="saved_replies" onchange="setMessage(this.value)">
+                            <option value="0"> - <?php echo $hesklang['select_empty']; ?> -</option>
+                            <?php echo $can_options; ?>
+                        </select>
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
+            <div class="form-group" id="message-group">
+                <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?><span
+                        class="important">*</span></label>
+
+                <div class="col-sm-9">
                     <span id="HeskMsg">
                         <textarea class="form-control htmlEditor" name="message" id="message" rows="12"
                                   placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" cols="72"
@@ -1843,100 +1834,101 @@ function hesk_printReplyForm()
 
                             ?></textarea>
                         <div class="help-block with-errors" id="message-help-block"></div></span>
-            </div>
-        </div>
-        <?php
-        /* attachments */
-        if ($hesk_settings['attachments']['use']) {
-            ?>
-            <div class="form-group">
-                <label for="attachments" class="col-sm-3 control-label"><?php echo $hesklang['attachments']; ?>:</label>
-
-                <div class="col-sm-9">
-                    <?php build_dropzone_markup(true); ?>
                 </div>
             </div>
             <?php
-            display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
-        }
-        ?>
-        <div class="form-group">
-            <label for="options" class="col-sm-3 control-label"><?php echo $hesklang['addop']; ?>:</label>
-
-            <div class="col-sm-9">
-                <?php
-                if ($ticket['owner'] != $_SESSION['id'] && $can_assign_self) {
-                    if (empty($ticket['owner'])) {
-                        echo '<label><input type="checkbox" name="assign_self" value="1" checked="checked" /> <b>' . $hesklang['asss2'] . '</b></label><br />';
-                    } else {
-                        echo '<label><input type="checkbox" name="assign_self" value="1" /> ' . $hesklang['asss2'] . '</label><br />';
-                    }
-                }
-
+            /* attachments */
+            if ($hesk_settings['attachments']['use']) {
                 ?>
-                <div class="form-inline">
-                    <label>
-                        <input type="checkbox" name="set_priority"
-                               value="1"/> <?php echo $hesklang['change_priority']; ?>
-                    </label>
-                    <select class="form-control" name="priority">
-                        <?php echo implode('', $options); ?>
-                    </select>
-                </div>
-                <br/>
-                <label>
-                    <input type="checkbox" name="signature" value="1"
-                           checked="checked"/> <?php echo $hesklang['attach_sign']; ?>
-                </label>
-                (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)
-                <br/>
-                <label>
-                    <input type="checkbox" name="no_notify"
-                           value="1" <?php echo ($_SESSION['notify_customer_reply'] && !empty($ticket['email'])) ? '' : 'checked="checked" '; ?> <?php if (empty($ticket['email'])) {
-                        echo 'disabled';
-                    } ?>> <?php echo $hesklang['dsen']; ?>
-                </label><br/><br/>
-                <?php if (empty($ticket['email'])) {
-                    echo '<input type="hidden" name="no_notify" value="1">';
-                } ?>
-                <input type="hidden" name="orig_id" value="<?php echo $ticket['id']; ?>"/>
-                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+                <div class="form-group">
+                    <label for="attachments" class="col-sm-3 control-label"><?php echo $hesklang['attachments']; ?>:</label>
 
-                <div class="btn-group">
-                    <input class="btn btn-primary" type="submit" value="<?php echo $hesklang['submit_reply']; ?>">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-                            aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a>
-                                <button class="dropdown-submit" type="submit" name="submit_as_customer">
-                                    <?php echo $hesklang['sasc']; ?>
-                                </button>
-                            </a></li>
-                        <li class="divider"></li>
-                        <?php
-                        $statuses = mfh_getAllStatuses();
-                        foreach ($statuses as $status) {
-                            echo '<li><a>
+                    <div class="col-sm-9">
+                        <?php build_dropzone_markup(true); ?>
+                    </div>
+                </div>
+                <?php
+                display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
+            }
+            ?>
+            <div class="form-group">
+                <label for="options" class="col-sm-3 control-label"><?php echo $hesklang['addop']; ?>:</label>
+
+                <div class="col-sm-9">
+                    <?php
+                    if ($ticket['owner'] != $_SESSION['id'] && $can_assign_self) {
+                        if (empty($ticket['owner'])) {
+                            echo '<label><input type="checkbox" name="assign_self" value="1" checked="checked" /> <b>' . $hesklang['asss2'] . '</b></label><br />';
+                        } else {
+                            echo '<label><input type="checkbox" name="assign_self" value="1" /> ' . $hesklang['asss2'] . '</label><br />';
+                        }
+                    }
+
+                    ?>
+                    <div class="form-inline">
+                        <label>
+                            <input type="checkbox" name="set_priority"
+                                   value="1"/> <?php echo $hesklang['change_priority']; ?>
+                        </label>
+                        <select class="form-control" name="priority">
+                            <?php echo implode('', $options); ?>
+                        </select>
+                    </div>
+                    <br/>
+                    <label>
+                        <input type="checkbox" name="signature" value="1"
+                               checked="checked"/> <?php echo $hesklang['attach_sign']; ?>
+                    </label>
+                    (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)
+                    <br/>
+                    <label>
+                        <input type="checkbox" name="no_notify"
+                               value="1" <?php echo ($_SESSION['notify_customer_reply'] && !empty($ticket['email'])) ? '' : 'checked="checked" '; ?> <?php if (empty($ticket['email'])) {
+                            echo 'disabled';
+                        } ?>> <?php echo $hesklang['dsen']; ?>
+                    </label><br/><br/>
+                    <?php if (empty($ticket['email'])) {
+                        echo '<input type="hidden" name="no_notify" value="1">';
+                    } ?>
+                    <input type="hidden" name="orig_id" value="<?php echo $ticket['id']; ?>"/>
+                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+
+                    <div class="btn-group">
+                        <input class="btn btn-primary" type="submit" value="<?php echo $hesklang['submit_reply']; ?>">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a>
+                                    <button class="dropdown-submit" type="submit" name="submit_as_customer">
+                                        <?php echo $hesklang['sasc']; ?>
+                                    </button>
+                                </a></li>
+                            <li class="divider"></li>
+                            <?php
+                            $statuses = mfh_getAllStatuses();
+                            foreach ($statuses as $status) {
+                                echo '<li><a>
                                         <button class="dropdown-submit" type="submit" name="submit_as_status" value="' . $status['ID'] . '"">
                                             ' . $hesklang['submit_reply'] . ' ' . $hesklang['and_change_status_to'] . ' <b>
                                             <span style="color:' . $status['TextColor'] . '">' . mfh_getDisplayTextForStatusId($status['ID']) . '</span></b>
                                         </button>
                                     </a></li>';
-                        }
-                        ?>
-                    </ul>
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                    <input class="btn btn-default" type="submit" name="save_reply" value="<?php echo $hesklang['sacl']; ?>">
+                    <?php if ($isManager): ?>
+                        <input type="hidden" name="isManager" value="1">
+                    <?php endif; ?>
                 </div>
-                <input class="btn btn-default" type="submit" name="save_reply" value="<?php echo $hesklang['sacl']; ?>">
-                <?php if ($isManager): ?>
-                    <input type="hidden" name="isManager" value="1">
-                <?php endif; ?>
             </div>
-        </div>
-    </form>
-
+        </form>
+    </div>
+</div>
     <!-- END REPLY FORM -->
     <?php
 } // End hesk_printReplyForm()
