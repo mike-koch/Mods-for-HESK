@@ -82,3 +82,35 @@
 .push-down-10 {
     margin-top: 10px;
 }
+
+
+.attachment-table > tbody > tr > td > i {
+    color: #ddd;
+    text-shadow: 2px 2px #ccc;
+}
+
+.attachment-table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.attachment-table > tbody > tr > td > span > img {
+    max-height: 80px;
+    max-width: 80px;
+    cursor: pointer;
+}
+
+.note {
+    border-bottom: solid 1px #000;
+}
+
+.fileinput-button {
+    width: 100%;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: -2px;
+}
+
+.file-row p.name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
