@@ -1587,7 +1587,7 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
 {
     global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
 
-    $options = '<div class="pull-right">';
+    $options = $reply ? '' : '<div class="pull-right">';
 
     /* Edit post */
     if ($can_edit) {
@@ -1612,7 +1612,7 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
     }
 
     /* Return generated HTML */
-    $options .= '</div>';
+    $options .= $reply ? '' : '</div>';
     return $options;
 
 } // END hesk_getAdminButtonsInTicket()
@@ -1665,38 +1665,45 @@ function hesk_printTicketReplies()
 {
     global $hesklang, $hesk_settings, $result, $reply, $isManager, $modsForHesk_settings;
 
-    $i = $hesk_settings['new_top'] ? 0 : 1;
-
     if ($reply === false) {
-        return $i;
+        return;
     }
 
+    echo '<ul class="timeline">';
     while ($reply = hesk_dbFetchAssoc($result)) {
-        $color = 'class="ticketMessageContainer"';
-
         $reply['dt'] = hesk_date($reply['dt'], true);
         ?>
-        <div class="row ticketMessageContainer">
+        <li>
+            <i class="fa fa-reply bg-blue"></i>
+            <div class="timeline-item">
+                <span class="time"><i class="fa fa-clock-o"></i> <?php echo $reply['dt']; ?></span>
+                <h3 class="timeline-header"><?php echo $reply['name']; ?></h3>
+                <div class="timeline-body">
+                    <?php
+                    if ($reply['html']) {
+                        echo hesk_html_entity_decode($reply['message']);
+                    } else {
+                        echo $reply['message'];
+                    } ?>
+                </div>
+                <?php
+                if ($hesk_settings['attachments']['use'] && strlen($reply['attachments'])):
+                ?>
+                <div class="timeline-footer">
+                    <?php mfh_listAttachments($reply['attachments'], $reply['id'], true); ?>
+                </div>
+                <?php endif; ?>
+                <div class="timeline-footer text-right">
+                    <?php echo hesk_getAdminButtonsInTicket(); ?>
+                </div>
+            </div>
+        </li><div class="row ticketMessageContainer">
             <div class="col-md-3 col-xs-12">
-                <div class="ticketName"><?php echo $reply['name']; ?></div>
+                <div class="ticketName"></div>
             </div>
             <div class="col-md-9 col-xs-12 pushMarginLeft">
-                <div class="ticketMessageTop withBorder">
-                    <?php echo hesk_getAdminButtonsInTicket(); ?>
-                    <div class="blankSpace"></div>
-                    <p><?php echo $hesklang['date']; ?>: <?php echo $reply['dt']; ?></p>
-                </div>
-                <div class="ticketMessageBottom">
-                    <p><b><?php echo $hesklang['message']; ?>:</b></p>
-
-                    <p><?php if ($reply['html']) {
-                            echo hesk_html_entity_decode($reply['message']);
-                        } else {
-                            echo $reply['message'];
-                        } ?></p>
-                </div>
                 <div class="ticketMessageTop pushMargin">
-                    <?php mfh_listAttachments($reply['attachments'], $reply['id'], true);
+                    <?php
                     /* Staff rating */
                     if ($hesk_settings['rating'] && $reply['staffid']) {
                         if ($reply['rating'] == 1) {
@@ -1716,8 +1723,9 @@ function hesk_printTicketReplies()
         </div>
         <?php
     }
+    echo '</ul>';
 
-    return $i;
+    return;
 
 } // End hesk_printTicketReplies()
 
