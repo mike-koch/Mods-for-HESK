@@ -1674,7 +1674,11 @@ function hesk_printTicketReplies()
         $reply['dt'] = hesk_date($reply['dt'], true);
         ?>
         <li>
-            <i class="fa fa-reply bg-blue"></i>
+            <?php if ($reply['staffid']): ?>
+                <i class="fa fa-reply bg-orange"></i>
+            <?php else: ?>
+                <i class="fa fa-share bg-blue"></i>
+            <?php endif; ?>
             <div class="timeline-item">
                 <span class="time"><i class="fa fa-clock-o"></i> <?php echo $reply['dt']; ?></span>
                 <h3 class="timeline-header"><?php echo $reply['name']; ?></h3>
@@ -1693,36 +1697,34 @@ function hesk_printTicketReplies()
                     <?php mfh_listAttachments($reply['attachments'], $reply['id'], true); ?>
                 </div>
                 <?php endif; ?>
-                <div class="timeline-footer text-right">
-                    <?php echo hesk_getAdminButtonsInTicket(); ?>
+                <div class="timeline-footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?php
+                            /* Staff rating */
+                            if ($hesk_settings['rating'] && $reply['staffid']) {
+                                if ($reply['rating'] == 1) {
+                                    echo '<p class="rate">' . $hesklang['rnh'] . '</p>';
+                                } elseif ($reply['rating'] == 5) {
+                                    echo '<p class="rate">' . $hesklang['rh'] . '</p>';
+                                }
+                            }
+                            /* Show "unread reply" message? */
+                            if ($reply['staffid'] && !$reply['read']) {
+                                echo '<p class="rate">' . $hesklang['unread'] . '</p>';
+                            }
+                            ?>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <?php echo hesk_getAdminButtonsInTicket(); ?>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </li><div class="row ticketMessageContainer">
-            <div class="col-md-3 col-xs-12">
-                <div class="ticketName"></div>
-            </div>
-            <div class="col-md-9 col-xs-12 pushMarginLeft">
-                <div class="ticketMessageTop pushMargin">
-                    <?php
-                    /* Staff rating */
-                    if ($hesk_settings['rating'] && $reply['staffid']) {
-                        if ($reply['rating'] == 1) {
-                            echo '<p class="rate">' . $hesklang['rnh'] . '</p>';
-                        } elseif ($reply['rating'] == 5) {
-                            echo '<p class="rate">' . $hesklang['rh'] . '</p>';
-                        }
-                    }
-
-                    /* Show "unread reply" message? */
-                    if ($reply['staffid'] && !$reply['read']) {
-                        echo '<p class="rate">' . $hesklang['unread'] . '</p>';
-                    }
-                    ?>
-                </div>
-            </div>
-        </div>
+        </li>
         <?php
     }
+    echo '<li><i class="fa fa-clock-o bg-gray"></i></li>';
     echo '</ul>';
 
     return;
