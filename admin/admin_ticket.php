@@ -1133,7 +1133,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <?php } ?>
                 </div>
             </div>
-            <?php endwhile; endif; ?>
+            <?php
+                endwhile;
+            else:
+                ?>
+                <?php echo $hesklang['no_notes_for_this_ticket']; ?>
+            <?php endif; ?>
         </div>
         <?php if ($can_reply): ?>
         <div class="box-footer">
@@ -1189,152 +1194,40 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     if ($can_reply && $hesk_settings['reply_top'] == 1) {
         hesk_printReplyForm();
     }
+
+    /* Do we need or have any canned responses? */
+    $can_options = hesk_printCanned();
+
+    hesk_printTicketReplies();
+
+    echo '<br>';
+
+    /* Reply form on bottom? */
+    if ($can_reply && !$hesk_settings['reply_top']) {
+        hesk_printReplyForm();
+    }
+
+    /* Display ticket history */
+    if (strlen($ticket['history'])) {
+        ?>
+        <div class="box">
+            <div class="box-header with-border">
+                <h1 class="box-title">
+                    <?php echo $hesklang['thist']; ?>
+                </h1>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <?php echo $ticket['history']; ?>
+            </div>
+        </div>
+    <?php }
     ?>
-    <div class="box">
-        <div class="box-header with-border">
-            <h1 class="box-title">
-                <?php echo $hesklang['message']; ?>
-            </h1>
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                </button>
-            </div>
-        </div>
-        <div class="box-body">
-            <?php
-            /* Do we need or have any canned responses? */
-            $can_options = hesk_printCanned();
-            ?>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <strong><?php echo $hesklang['m_sub']; ?></strong>
-                </div>
-                <div class="col-md-9">
-                    <?php echo $ticket['subject']; ?>
-                </div>
-            </div>
-            <?php foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                if ($v['use'] && $v['place'] == 0) {
-                    if ($modsForHesk_settings['custom_field_setting']) {
-                        $v['name'] = $hesklang[$v['name']];
-                    }
-                    echo '<div class="row">';
-                    echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
-                    if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                        $dt = date('Y-m-d h:i:s', $ticket[$k]);
-                        echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
-                    } else {
-                        echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
-                    }
-                    echo '</div>';
-                }
-            }
-            ?>
-            <div class="row push-down-10">
-                <div class="col-md-3 text-right">
-                    <strong><?php echo $hesklang['message_colon']; ?></strong>
-                </div>
-                <div class="col-md-9">
-                    <?php if ($ticket['html']) {
-                        echo hesk_html_entity_decode($ticket['message']);
-                    } else {
-                        echo $ticket['message'];
-                    } ?>
-                </div>
-            </div>
-            <?php
-            foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                if ($v['use'] && $v['place']) {
-                    if ($modsForHesk_settings['custom_field_setting']) {
-                        $v['name'] = $hesklang[$v['name']];
-                    }
-                    echo '<div class="row">';
-                    echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
-                    if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                        $dt = date('Y-m-d h:i:s', $ticket[$k]);
-                        echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
-                    } else {
-                        echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
-                    }
-                    echo '</div>';
-                }
-            }
-            ?>
-        </div>
-        <?php if (($hesk_settings['attachments']['use'] && strlen($ticket['attachments']))
-            || ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && strlen($ticket['articles']))): ?>
-        <div class="box-footer">
-            <?php
-            /* Attachments */
-            mfh_listAttachments($ticket['attachments'], 0, true);
-
-            // Show suggested KB articles
-            if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && strlen($ticket['articles'])) {
-                $suggested = array();
-                $suggested_list = '';
-
-                // Get article info from the database
-                $articles = hesk_dbQuery("SELECT `id`,`subject` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_articles` WHERE `id` IN (" . preg_replace('/[^0-9\,]/', '', $ticket['articles']) . ")");
-                while ($article = hesk_dbFetchAssoc($articles)) {
-                $suggested[$article['id']] = '<a href="../knowledgebase.php?article=' . $article['id'] . '">' . $article['subject'] . '</a><br />';
-                }
-
-                // Loop through the IDs to preserve the order they were suggested in
-                $articles = explode(',', $ticket['articles']);
-                foreach ($articles as $article) {
-                    if (isset($suggested[$article])) {
-                        $suggested_list .= $suggested[$article];
-                    }
-                }
-
-                // Finally print suggested articles
-                if (strlen($suggested_list)) {
-                    $suggested_list = '<hr /><i>' . $hesklang['taws'] . '</i><br />' . $suggested_list . '&nbsp;';
-                    echo $_SESSION['show_suggested'] ? $suggested_list : '<a href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay(\'suggested_articles\')">' . $hesklang['sska'] . '</a><span id="suggested_articles" style="display:none">' . $suggested_list . '</span>';
-                }
-            }
-            ?>
-        </div>
-        <?php endif; ?>
-        <div class="box-footer">
-            <?php echo hesk_getAdminButtonsInTicket(0, $i); ?>
-        </div>
-    </div>
 </section>
-<div class="row" style="padding: 20px">
-    <div class="col-md-10">
-
-        <?php
-        if ($hesk_settings['new_top']) {
-            hesk_printTicketReplies() ? 0 : 1;
-        }
-
-        /* Make sure original message is in correct color if newest are on top */
-        $color = 'class="ticketMessageContainer"';
-        ?>
-        <?php
-        if (!$hesk_settings['new_top']) {
-            hesk_printTicketReplies();
-        }
-        ?>
-
-        <?php
-        /* Reply form on bottom? */
-        if ($can_reply && !$hesk_settings['reply_top']) {
-            hesk_printReplyForm();
-        }
-
-        /* Display ticket history */
-        if (strlen($ticket['history'])) {
-            ?>
-            <h3><?php echo $hesklang['thist']; ?></h3>
-            <div class="footerWithBorder blankSpace"></div>
-            <ul><?php echo $ticket['history']; ?></ul>
-        <?php }
-        ?>
-    </div>
-</div>
 <div style="display: none">
     <p id="lang_ticket_due_date_updated"><?php echo $hesklang['ticket_due_date_updated']; ?></p>
     <p id="lang_none"><?php echo $hesklang['none']; ?></p>
@@ -1660,24 +1553,137 @@ function print_form()
     exit();
 } // End print_form()
 
+function mfh_print_message() {
+    global $ticket, $hesklang, $hesk_settings, $modsForHesk_settings;
+    ?>
+    <li><i class="fa fa-comment bg-red" data-toggle="tooltip" title="<?php echo $hesklang['original_message']; ?>"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> <?php echo $ticket['dt']; ?></span>
+            <h3 class="timeline-header"><?php echo $ticket['name']; ?></h3>
+            <div class="timeline-body">
+                <div class="row">
+                    <div class="col-md-3 text-right">
+                        <strong><?php echo $hesklang['m_sub']; ?></strong>
+                    </div>
+                    <div class="col-md-9">
+                        <?php echo $ticket['subject']; ?>
+                    </div>
+                </div>
+                <?php foreach ($hesk_settings['custom_fields'] as $k => $v) {
+                    if ($v['use'] && $v['place'] == 0) {
+                        if ($modsForHesk_settings['custom_field_setting']) {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+                        echo '<div class="row">';
+                        echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
+                        if ($v['type'] == 'date' && !empty($ticket[$k])) {
+                            $dt = hesk_date($ticket[$k], false, false);
+                            echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
+                        } else {
+                            echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
+                        }
+                        echo '</div>';
+                    }
+                }
+                ?>
+                <div class="row push-down-10">
+                    <div class="col-md-3 text-right">
+                        <strong><?php echo $hesklang['message_colon']; ?></strong>
+                    </div>
+                    <div class="col-md-9">
+                        <?php if ($ticket['html']) {
+                            echo hesk_html_entity_decode($ticket['message']);
+                        } else {
+                            echo $ticket['message'];
+                        } ?>
+                    </div>
+                </div>
+                <?php
+                foreach ($hesk_settings['custom_fields'] as $k => $v) {
+                    if ($v['use'] && $v['place']) {
+                        if ($modsForHesk_settings['custom_field_setting']) {
+                            $v['name'] = $hesklang[$v['name']];
+                        }
+                        echo '<div class="row">';
+                        echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
+                        if ($v['type'] == 'date' && !empty($ticket[$k])) {
+                            $dt = hesk_date($ticket[$k], false, false);
+                            echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
+                        } else {
+                            echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
+                        }
+                        echo '</div>';
+                    }
+                }
+                ?>
+            </div>
+            <?php if (($hesk_settings['attachments']['use'] && strlen($ticket['attachments']))
+                || ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && strlen($ticket['articles']))): ?>
+                <div class="timeline-footer">
+                    <?php
+                    /* Attachments */
+                    mfh_listAttachments($ticket['attachments'], 0, true);
+
+                    // Show suggested KB articles
+                    if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && strlen($ticket['articles'])) {
+                        $suggested = array();
+                        $suggested_list = '';
+
+                        // Get article info from the database
+                        $articles = hesk_dbQuery("SELECT `id`,`subject` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_articles` WHERE `id` IN (" . preg_replace('/[^0-9\,]/', '', $ticket['articles']) . ")");
+                        while ($article = hesk_dbFetchAssoc($articles)) {
+                            $suggested[$article['id']] = '<a href="../knowledgebase.php?article=' . $article['id'] . '">' . $article['subject'] . '</a><br />';
+                        }
+
+                        // Loop through the IDs to preserve the order they were suggested in
+                        $articles = explode(',', $ticket['articles']);
+                        foreach ($articles as $article) {
+                            if (isset($suggested[$article])) {
+                                $suggested_list .= $suggested[$article];
+                            }
+                        }
+
+                        // Finally print suggested articles
+                        if (strlen($suggested_list)) {
+                            $suggested_list = '<hr /><i>' . $hesklang['taws'] . '</i><br />' . $suggested_list . '&nbsp;';
+                            echo $_SESSION['show_suggested'] ? $suggested_list : '<a href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay(\'suggested_articles\')">' . $hesklang['sska'] . '</a><span id="suggested_articles" style="display:none">' . $suggested_list . '</span>';
+                        }
+                    }
+                    ?>
+                </div>
+            <?php endif; ?>
+            <div class="timeline-footer">
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                        <?php echo hesk_getAdminButtonsInTicket(0); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+<?php
+}
+
 
 function hesk_printTicketReplies()
 {
-    global $hesklang, $hesk_settings, $result, $reply, $isManager, $modsForHesk_settings;
-
-    if ($reply === false) {
-        return;
-    }
+    global $hesklang, $hesk_settings, $result, $reply;
 
     echo '<ul class="timeline">';
+    if (!$hesk_settings['new_top']) {
+        mfh_print_message();
+    } else {
+        echo '<li class="today-top"><i class="fa fa-clock-o bg-gray" data-toggle="tooltip" title="' . $hesklang['timeline_today'] . '"></i></li>';
+    }
+
     while ($reply = hesk_dbFetchAssoc($result)) {
         $reply['dt'] = hesk_date($reply['dt'], true);
         ?>
         <li>
             <?php if ($reply['staffid']): ?>
-                <i class="fa fa-reply bg-orange"></i>
+                <i class="fa fa-reply bg-orange" data-toggle="tooltip" title="<?php echo $hesklang['reply_by_staff']; ?>"></i>
             <?php else: ?>
-                <i class="fa fa-share bg-blue"></i>
+                <i class="fa fa-share bg-blue" data-toggle="tooltip" title="<?php echo $hesklang['reply_by_customer']; ?>"></i>
             <?php endif; ?>
             <div class="timeline-item">
                 <span class="time"><i class="fa fa-clock-o"></i> <?php echo $reply['dt']; ?></span>
@@ -1724,7 +1730,12 @@ function hesk_printTicketReplies()
         </li>
         <?php
     }
-    echo '<li><i class="fa fa-clock-o bg-gray"></i></li>';
+
+    if ($hesk_settings['new_top']) {
+        mfh_print_message();
+    } else {
+        echo '<li><i class="fa fa-clock-o bg-gray" data-toggle="tooltip" title="' . $hesklang['timeline_today'] . '"></i></li>';
+    }
     echo '</ul>';
 
     return;

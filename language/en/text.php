@@ -41,6 +41,11 @@ $hesklang['last_replier_colon'] = 'Last replier:';
 $hesklang['click_to_edit'] = 'Click to edit';
 $hesklang['no_device_information'] = 'No device information';
 $hesklang['message_colon'] = 'Message:';
+$hesklang['original_message'] = 'Original message';
+$hesklang['reply_by_customer'] = 'Reply by customer';
+$hesklang['reply_by_staff'] = 'Reply by staff';
+$hesklang['timeline_today'] = 'Today';
+$hesklang['no_notes_for_this_ticket'] = 'No notes for this ticket';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';

@@ -36,6 +36,7 @@ define('WYSIWYG', 1);
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -207,176 +208,183 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <li class="active"><?php echo $hesklang['edtt']; ?></li>
 </ol>
 
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <h3><?php echo $hesklang['edtt']; ?></h3>
+<section class="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['edtt']; ?>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <form role="form" class="form-horizontal" method="post" action="edit_post.php" name="form1">
+                <?php
+                /* If it's not a reply edit all the fields */
+                if (!$is_reply) {
+                    if ($hesk_settings['can_sel_lang']) {
+                        ?>
+                        <div class="form-group">
+                            <label for="customerLanguage" class="col-sm-3 control-label"><?php echo $hesklang['chol']; ?>
+                                :</label>
 
-        <div class="footerWithBorder blankSpace"></div>
-
-        <form role="form" class="form-horizontal" method="post" action="edit_post.php" name="form1">
-            <?php
-            /* If it's not a reply edit all the fields */
-            if (!$is_reply) {
-                if ($hesk_settings['can_sel_lang']) {
-                    ?>
+                            <div class="col-sm-9">
+                                <select name="customerLanguage" id="customerLanguage" class="form-control">
+                                    <?php hesk_listLanguages(); ?>
+                                </select>
+                            </div>
+                        </div>
+                    <?php } else {
+                        echo '<input type="hidden" name="customerLanguage" value="' . $ticket['language'] . '">';
+                    } ?>
                     <div class="form-group">
-                        <label for="customerLanguage" class="col-sm-3 control-label"><?php echo $hesklang['chol']; ?>
-                            :</label>
+                        <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>:</label>
 
                         <div class="col-sm-9">
-                            <select name="customerLanguage" id="customerLanguage" class="form-control">
-                                <?php hesk_listLanguages(); ?>
-                            </select>
+                            <input class="form-control" type="text" name="subject" size="40" maxlength="40"
+                                   value="<?php echo $ticket['subject']; ?>"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"/>
                         </div>
                     </div>
-                <?php } else {
-                    echo '<input type="hidden" name="customerLanguage" value="' . $ticket['language'] . '">';
-                } ?>
-                <div class="form-group">
-                    <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>:</label>
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>:</label>
 
-                    <div class="col-sm-9">
-                        <input class="form-control" type="text" name="subject" size="40" maxlength="40"
-                               value="<?php echo $ticket['subject']; ?>"
-                               placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"/>
+                        <div class="col-sm-9">
+                            <input class="form-control" type="text" name="name" size="40" maxlength="30"
+                                   value="<?php echo $ticket['name']; ?>"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>:</label>
+                    <div class="form-group">
+                        <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>:</label>
 
-                    <div class="col-sm-9">
-                        <input class="form-control" type="text" name="name" size="40" maxlength="30"
-                               value="<?php echo $ticket['name']; ?>"
-                               placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>"/>
+                        <div class="col-sm-9">
+                            <input class="form-control" type="text" name="email" size="40" maxlength="1000"
+                                   value="<?php echo $ticket['email']; ?>"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>:</label>
+                    <?php
+                    foreach ($hesk_settings['custom_fields'] as $k => $v) {
+                        if ($v['use']) {
+                            if ($modsForHesk_settings['custom_field_setting']) {
+                                $v['name'] = $hesklang[$v['name']];
+                            }
 
-                    <div class="col-sm-9">
-                        <input class="form-control" type="text" name="email" size="40" maxlength="1000"
-                               value="<?php echo $ticket['email']; ?>"
-                               placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"/>
-                    </div>
-                </div>
-                <?php
-                foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                    if ($v['use']) {
-                        if ($modsForHesk_settings['custom_field_setting']) {
-                            $v['name'] = $hesklang[$v['name']];
-                        }
+                            $k_value = $ticket[$k];
 
-                        $k_value = $ticket[$k];
+                            if ($v['type'] == 'checkbox') {
+                                $k_value = explode('<br />', $k_value);
+                            }
 
-                        if ($v['type'] == 'checkbox') {
-                            $k_value = explode('<br />', $k_value);
-                        }
-
-                        switch ($v['type']) {
-                            /* Radio box */
-                            case 'radio':
-                                echo '
+                            switch ($v['type']) {
+                                /* Radio box */
+                                case 'radio':
+                                    echo '
 						        <div class="form-group">
 						            <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': </label>
 		                        <div class="col-sm-9">';
 
-                                $options = explode('#HESK#', $v['value']);
+                                    $options = explode('#HESK#', $v['value']);
 
-                                foreach ($options as $option) {
+                                    foreach ($options as $option) {
 
-                                    if (strlen($k_value) == 0 || $k_value == $option) {
-                                        $k_value = $option;
-                                        $checked = 'checked="checked"';
-                                    } else {
-                                        $checked = '';
+                                        if (strlen($k_value) == 0 || $k_value == $option) {
+                                            $k_value = $option;
+                                            $checked = 'checked="checked"';
+                                        } else {
+                                            $checked = '';
+                                        }
+
+                                        echo '<div class="radio"><label><input type="radio" name="' . $k . '" value="' . $option . '" ' . $checked . ' /> ' . $option . '</label></div>';
                                     }
 
-                                    echo '<div class="radio"><label><input type="radio" name="' . $k . '" value="' . $option . '" ' . $checked . ' /> ' . $option . '</label></div>';
-                                }
-
-                                echo '</div>
+                                    echo '</div>
 						        </div>
 						        ';
-                                break;
+                                    break;
 
-                            /* Select drop-down box */
-                            case 'select':
-                                echo '
+                                /* Select drop-down box */
+                                case 'select':
+                                    echo '
 						        <div class="form-group">
 						        <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': </label>
 		                        <div class="col-sm-9"><select class="form-control" name="' . $k . '">';
 
-                                // Show "Click to select"?
-                                $v['value'] = str_replace('{HESK_SELECT}', '', $v['value'], $num);
-                                if ($num) {
-                                    echo '<option value="">' . $hesklang['select'] . '</option>';
-                                }
-
-                                $options = explode('#HESK#', $v['value']);
-
-                                foreach ($options as $option) {
-
-                                    if (strlen($k_value) == 0 || $k_value == $option) {
-                                        $k_value = $option;
-                                        $selected = 'selected="selected"';
-                                    } else {
-                                        $selected = '';
+                                    // Show "Click to select"?
+                                    $v['value'] = str_replace('{HESK_SELECT}', '', $v['value'], $num);
+                                    if ($num) {
+                                        echo '<option value="">' . $hesklang['select'] . '</option>';
                                     }
 
-                                    echo '<option ' . $selected . '>' . $option . '</option>';
-                                }
+                                    $options = explode('#HESK#', $v['value']);
 
-                                echo '</select></div>
+                                    foreach ($options as $option) {
+
+                                        if (strlen($k_value) == 0 || $k_value == $option) {
+                                            $k_value = $option;
+                                            $selected = 'selected="selected"';
+                                        } else {
+                                            $selected = '';
+                                        }
+
+                                        echo '<option ' . $selected . '>' . $option . '</option>';
+                                    }
+
+                                    echo '</select></div>
 						        </div>
 						        ';
-                                break;
+                                    break;
 
-                            /* Checkbox */
-                            case 'checkbox':
-                                echo '
+                                /* Checkbox */
+                                case 'checkbox':
+                                    echo '
 						        <div class="form-group">
 						            <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': </label>
 		                            <div class="col-sm-9">';
 
-                                $options = explode('#HESK#', $v['value']);
+                                    $options = explode('#HESK#', $v['value']);
 
-                                foreach ($options as $option) {
+                                    foreach ($options as $option) {
 
-                                    if (in_array($option, $k_value)) {
-                                        $checked = 'checked="checked"';
-                                    } else {
-                                        $checked = '';
+                                        if (in_array($option, $k_value)) {
+                                            $checked = 'checked="checked"';
+                                        } else {
+                                            $checked = '';
+                                        }
+
+                                        echo '<div class="checkbox"><label><input type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' /> ' . $option . '</label></div>';
                                     }
 
-                                    echo '<div class="checkbox"><label><input type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' /> ' . $option . '</label></div>';
-                                }
-
-                                echo '</div>
+                                    echo '</div>
 						        </div>
 						        ';
-                                break;
+                                    break;
 
-                            /* Large text box */
-                            case 'textarea':
-                                $size = explode('#', $v['value']);
-                                $size[0] = empty($size[0]) ? 5 : intval($size[0]);
-                                $size[1] = empty($size[1]) ? 30 : intval($size[1]);
-                                $k_value = hesk_msgToPlain($k_value, 0, 0);
+                                /* Large text box */
+                                case 'textarea':
+                                    $size = explode('#', $v['value']);
+                                    $size[0] = empty($size[0]) ? 5 : intval($size[0]);
+                                    $size[1] = empty($size[1]) ? 30 : intval($size[1]);
+                                    $k_value = hesk_msgToPlain($k_value, 0, 0);
 
-                                echo '
+                                    echo '
 						        <div class="form-group">
 						            <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': </label>
 						            <div class="col-sm-9">
                                         <textarea class="form-control" name="' . $k . '" rows="' . $size[0] . '" placeholder="' . htmlspecialchars($v['name']) . '" cols="' . $size[1] . '">' . $k_value . '</textarea>
 						            </div>
 		                        </div>';
-                                break;
+                                    break;
 
-                            case 'date':
-                                if (strlen($k_value) != 0) {
-                                    $v['value'] = $k_value;
-                                }
-                                echo '
+                                case 'date':
+                                    if (strlen($k_value) != 0) {
+                                        $v['value'] = $k_value;
+                                    }
+                                    echo '
                                 <div class="form-group">
                                     <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': </label>
                                     <div class="col-sm-9">
@@ -384,63 +392,63 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             maxlength="' . $v['maxlen'] . '" value="' . date('Y-m-d', $v['value']) . '" readonly/>
                                     </div>
                                 </div>';
-                                break;
-                            case 'multiselect':
-                                echo '<div class="form-group"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': </label>
+                                    break;
+                                case 'multiselect':
+                                    echo '<div class="form-group"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': </label>
                                 <div class="col-sm-9"><select class="form-control" id="' . $v['name'] . '" name="' . $k . '" multiple>';
-                                $options = explode('#HESK#', $v['value']);
-                                foreach ($options as $option) {
-                                    if (strlen($k_value) == 0 || $k_value == $option) {
-                                        $k_value = $option;
-                                        $selected = 'selected="selected"';
-                                    } else {
-                                        $selected = '';
+                                    $options = explode('#HESK#', $v['value']);
+                                    foreach ($options as $option) {
+                                        if (strlen($k_value) == 0 || $k_value == $option) {
+                                            $k_value = $option;
+                                            $selected = 'selected="selected"';
+                                        } else {
+                                            $selected = '';
+                                        }
+                                        echo '<option ' . $selected . '>' . $option . '</option>';
                                     }
-                                    echo '<option ' . $selected . '>' . $option . '</option>';
-                                }
-                                echo '</select>
+                                    echo '</select>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-default" onclick="selectAll(\'' . $v['name'] . '\')">'.$hesklang['select_all_title_case'].'</button>
                                     <button type="button" class="btn btn-default" onclick="deselectAll(\'' . $v['name'] . '\')">'.$hesklang['deselect_all_title_case'].'</button>
                                 </div></div></div>';
-                                break;
+                                    break;
 
-                            case 'hidden':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+                                case 'hidden':
+                                    //Clean up multiple dashes or whitespaces
+                                    $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                    $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
-                                if (strlen($k_value) != 0) {
-                                    $v['value'] = $k_value;
-                                }
+                                    if (strlen($k_value) != 0) {
+                                        $v['value'] = $k_value;
+                                    }
 
-                                echo '<input type="hidden" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '"/>';
+                                    echo '<input type="hidden" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '"/>';
 
-                                break;
+                                    break;
 
-                            case 'readonly':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
+                                case 'readonly':
+                                    //Clean up multiple dashes or whitespaces
+                                    $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
+                                    $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
-                                if (strlen($k_value) != 0) {
-                                    $v['value'] = $k_value;
-                                }
+                                    if (strlen($k_value) != 0) {
+                                        $v['value'] = $k_value;
+                                    }
 
-                                echo '<div class="form-group">
+                                    echo '<div class="form-group">
                                 <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': </label>
 					            <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" readonly></div>
                                 </div>';
 
-                                break;
+                                    break;
 
-                            /* Default text input */
-                            default:
-                                if (strlen($k_value) != 0) {
-                                    $k_value = hesk_msgToPlain($k_value, 0, 0);
-                                    $v['value'] = $k_value;
-                                }
-                                echo '
+                                /* Default text input */
+                                default:
+                                    if (strlen($k_value) != 0) {
+                                        $k_value = hesk_msgToPlain($k_value, 0, 0);
+                                        $v['value'] = $k_value;
+                                    }
+                                    echo '
 						        <div class="form-group">
 						            <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ': </label>
 						            <div class="col-sm-9">
@@ -448,50 +456,55 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     </div>
 						        </div>
 						        ';
+                            }
                         }
                     }
-                }
-                ?>
-
-            <?php } ?>
-            <div class="form-group">
-                <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
-
-                <div class="col-sm-9">
-                    <?php
-                    $message = $modsForHesk_settings['rich_text_for_tickets'] ? hesk_html_entity_decode($ticket['message']) : $ticket['message'];
                     ?>
-                    <textarea class="form-control htmlEditor" name="message" rows="12"
-                              placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>"
-                              cols="60"><?php echo $message; ?></textarea>
+
+                <?php } ?>
+                <div class="form-group">
+                    <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
+
+                    <div class="col-sm-9">
+                        <?php
+                        $message = $modsForHesk_settings['rich_text_for_tickets'] ? hesk_html_entity_decode($ticket['message']) : $ticket['message'];
+                        ?>
+                        <textarea class="form-control htmlEditor" name="message" rows="12"
+                                  placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>"
+                                  cols="60"><?php echo $message; ?></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <input type="hidden" name="save" value="1"/><input type="hidden" name="track"
-                                                                   value="<?php echo $trackingID; ?>"/>
-                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
-                <?php
-                if ($is_reply) {
-                    ?>
-                    <input type="hidden" name="reply" value="<?php echo $tmpvar['id']; ?>"/>
+                <div class="form-group">
+                    <input type="hidden" name="save" value="1"/><input type="hidden" name="track"
+                                                                       value="<?php echo $trackingID; ?>"/>
+                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
                     <?php
-                }
-                ?>
-            </div>
-            <div class="form-group" style="text-align: center">
-                <?php
-                $html = $modsForHesk_settings['rich_text_for_tickets'] ? 1 : 0;
-                ?>
-                <input type="hidden" name="html" value="<?php echo $html; ?>">
-                <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default"/>
-                <?php if (isset($_REQUEST['isManager']) && $_REQUEST['isManager']): ?>
-                    <input type="hidden" name="isManager" value="1">
-                <?php endif; ?>
-                <a class="btn btn-default" href="javascript:history.go(-1)"><?php echo $hesklang['back']; ?></a>
-            </div>
-        </form>
+                    if ($is_reply) {
+                        ?>
+                        <input type="hidden" name="reply" value="<?php echo $tmpvar['id']; ?>"/>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <?php
+                        $html = $modsForHesk_settings['rich_text_for_tickets'] ? 1 : 0;
+                        ?>
+                        <input type="hidden" name="html" value="<?php echo $html; ?>">
+                        <?php if (isset($_REQUEST['isManager']) && $_REQUEST['isManager']): ?>
+                            <input type="hidden" name="isManager" value="1">
+                        <?php endif; ?>
+                        <div class="btn-group">
+                            <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-primary"/>
+                            <a class="btn btn-default" href="javascript:history.go(-1)"><?php echo $hesklang['back']; ?></a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</section>
 <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
     <script type="text/javascript">
         /* <![CDATA[ */
