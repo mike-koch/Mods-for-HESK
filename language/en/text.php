@@ -46,6 +46,8 @@ $hesklang['reply_by_customer'] = 'Reply by customer';
 $hesklang['reply_by_staff'] = 'Reply by staff';
 $hesklang['timeline_today'] = 'Today';
 $hesklang['no_notes_for_this_ticket'] = 'No notes for this ticket';
+$hesklang['private_message_header'] = 'Private Message';
+$hesklang['date_colon'] = 'Date:';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';
