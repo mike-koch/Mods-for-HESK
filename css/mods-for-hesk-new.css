@@ -122,3 +122,13 @@
 .timeline > .today-top {
     margin-bottom: 60px;
 }
+
+.white-readonly {
+    cursor: text !important;
+    background-color: #fff !important;
+}
+
+button.dropdown-submit {
+    background: none !important;
+    border: none;
+}

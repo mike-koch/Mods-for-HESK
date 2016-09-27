@@ -111,27 +111,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </section>
-<div class="row">
-    <div class="col-md-12 move-down-20">
-        <?php
-        /* This will handle error, success and notice messages */
-        hesk_handle_messages();
-        ?>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4><?php echo $hesklang['tickets']; ?> <span class="nu-floatRight panel-button"><a
-                            href="new_ticket.php" class="btn btn-success"><span
-                                class="glyphicon glyphicon-plus-sign"></span> <?php echo $hesklang['nti']; ?></a></span></h4>
-            </div>
-
-        </div>
-    </div>
-    <?php
+<?php
 
 
-    /* Print footer */
-    require_once(HESK_PATH . 'inc/footer.inc.php');
-    exit();
-    ?>
+/* Print footer */
+require_once(HESK_PATH . 'inc/footer.inc.php');
+exit();
+?>
 
 
