@@ -48,6 +48,23 @@ $hesklang['timeline_today'] = 'Today';
 $hesklang['no_notes_for_this_ticket'] = 'No notes for this ticket';
 $hesklang['private_message_header'] = 'Private Message';
 $hesklang['date_colon'] = 'Date:';
+$hesklang['api_information'] = 'API Information';
+$hesklang['api_version'] = 'API Version';
+$hesklang['external_api'] = 'External API';
+$hesklang['external_api_help'] = 'Enable or Disable the external REST API';
+$hesklang['disabled_title_case'] = 'Disabled';
+$hesklang['enabled_title_case'] = 'Enabled';
+$hesklang['api_settings'] = 'API Settings';
+$hesklang['user_security'] = 'User Security';
+$hesklang['api_documentation'] = 'API Documentation';
+$hesklang['changes_saved'] = 'Changes saved!';
+$hesklang['save_failed_check_logs'] = 'Saving changes failed. Check the logs for more information.';
+$hesklang['number_of_tokens'] = 'Number of Tokens';
+$hesklang['generate_new_token'] = 'Generate New Token';
+$hesklang['revoke_all_tokens'] = 'Revoke All Tokens';
+$hesklang['generated_token_colon'] = 'Generated Token:';
+$hesklang['record_this_token_warning'] = 'Please record this token, as this is the only time you will be able to view it!';
+$hesklang['all_tokens_revoked'] = 'All tokens for this user have been revoked';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';
