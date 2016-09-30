@@ -132,3 +132,22 @@ button.dropdown-submit {
     background: none !important;
     border: none;
 }
+
+.form-signin {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.loginError {
+    padding-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.login-box {
+    width: 500px;
+}
+
+.login-box-body {
+    border-radius: 5px;
+}

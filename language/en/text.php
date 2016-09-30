@@ -65,6 +65,7 @@ $hesklang['revoke_all_tokens'] = 'Revoke All Tokens';
 $hesklang['generated_token_colon'] = 'Generated Token:';
 $hesklang['record_this_token_warning'] = 'Please record this token, as this is the only time you will be able to view it!';
 $hesklang['all_tokens_revoked'] = 'All tokens for this user have been revoked';
+$hesklang['staff_login_title'] = 'Staff Login';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';

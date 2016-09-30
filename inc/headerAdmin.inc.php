@@ -140,6 +140,12 @@ $modsForHesk_settings = mfh_getSettings();
         .h3questionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
         }
+
+        <?php if (defined('PAGE_TITLE') && PAGE_TITLE == 'LOGIN'): ?>
+        body {
+            background: #d2d6de;
+        }
+        <?php endif; ?>
     </style>
 
     <?php
