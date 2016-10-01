@@ -39,7 +39,6 @@ require(HESK_PATH . 'inc/common.inc.php');
 // Connect to database and check for brute force attempts
 hesk_load_database_functions();
 hesk_dbConnect();
-hesk_limitBfAttempts();
 
 $modsForHesk_settings = mfh_getSettings();
 
@@ -113,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
+    hesk_limitBfAttempts();
 
     // Get email
     $email = hesk_validateEmail(hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer['email'] = $hesklang['enter_valid_email'];
@@ -241,9 +241,12 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 ?>
 <div class="login-box">
     <div class="login-logo">
-        <?php echo $hesklang['passr']; ?>
+        <?php echo $hesk_settings['hesk_title']; ?>
     </div>
     <div class="login-box-body">
+        <h4 class="login-box-msg">
+            <?php echo $hesklang['passr']; ?>
+        </h4>
         <form action="password.php" method="post" name="form1" class="form-horizontal" role="form">
             <?php
             /* This will handle error, success and notice messages */
@@ -291,8 +294,8 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
                                         play_again: "<?php echo hesk_slashJS($hesklang['play_again']); ?>",
                                         cant_hear_this: "<?php echo hesk_slashJS($hesklang['cant_hear_this']); ?>",
                                         incorrect_try_again: "<?php echo hesk_slashJS($hesklang['incorrect_try_again']); ?>",
-                                        image_alt_text: "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>",
-                                    },
+                                        image_alt_text: "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>"
+                                    }
                                 };
                             </script>
                         <?php

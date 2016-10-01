@@ -287,7 +287,7 @@ function print_login()
 	?>
 <div class="login-box">
     <div class="login-logo">
-        <?php echo $hesklang['staff_login_title']; ?>
+        <?php echo $hesk_settings['hesk_title']; ?>
     </div>
     <div class="login-box-body">
         <div class="loginError">
@@ -296,6 +296,9 @@ function print_login()
             hesk_handle_messages();
             ?>
         </div>
+        <h4 class="login-box-msg">
+            <?php echo $hesklang['staff_login_title']; ?>
+        </h4>
         <form class="form-horizontal" role="form" action="index.php" method="post" name="form1">
             <?php
             $has_error = '';
