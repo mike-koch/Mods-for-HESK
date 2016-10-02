@@ -35,6 +35,7 @@ define('HESK_PATH', '../');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -104,34 +105,44 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <li class="active"><?php echo $hesklang['ednote']; ?></li>
 </ol>
 
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <h3><?php echo $hesklang['ednote']; ?></h3>
+<section class="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['ednote']; ?>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <form method="post" action="edit_note.php" name="form1" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="message" class="col-md-2 control-label"><?php echo $hesklang['message']; ?></label>
 
-        <div class="footerWithBorder blankSpace"></div>
-
-        <form method="post" action="edit_note.php" name="form1" class="form-horizontal" role="form">
-            <div class="form-group">
-                <label for="message" class="col-md-2 control-label"><?php echo $hesklang['message']; ?></label>
-
-                <div class="col-md-10">
+                    <div class="col-md-10">
                     <textarea name="message" class="form-control" rows="12"
                               cols="60"><?php echo $note['message']; ?></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10 col-md-offset-2">
-                    <input type="hidden" name="save" value="1"/><input type="hidden" name="track"
-                                                                       value="<?php echo $trackingID; ?>"/>
-                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
-                    <input type="hidden" name="note" value="<?php echo $noteID; ?>"/>
-                    <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-primary">
-                    <a href="javascript:history.go(-1)" class="btn btn-default"><?php echo $hesklang['back']; ?></a>
+                <div class="form-group">
+                    <div class="col-md-10 col-md-offset-2">
+                        <input type="hidden" name="save" value="1">
+                        <input type="hidden" name="track" value="<?php echo $trackingID; ?>">
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                        <input type="hidden" name="note" value="<?php echo $noteID; ?>">
+                        <div class="btn-group">
+                            <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-primary">
+                            <a href="javascript:history.go(-1)" class="btn btn-default"><?php echo $hesklang['back']; ?></a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
+</section>
 
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');

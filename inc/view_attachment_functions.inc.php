@@ -14,7 +14,6 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
     }
 
     /* List attachments */
-    echo '<p><b>' . $hesklang['attachments'] . ':</b></p><br />';
     $att = explode(',', substr($attachments, 0, -1));
     echo '<div class="table-responsive">';
     echo '<table class="table table-striped attachment-table">';

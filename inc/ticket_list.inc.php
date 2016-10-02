@@ -58,7 +58,6 @@ $result = hesk_dbQuery($sql_count);
 $total = hesk_dbResult($result);
 
 //-- Precondition: The panel has already been created, and there is NO open <div class="panel-body"> tag yet.
-echo '<div class="panel-body">';
 if ($total > 0) {
 
     /* This query string will be used to browse pages */
@@ -244,13 +243,13 @@ if ($total > 0) {
             $owner = '';
             $first_line = '(' . $hesklang['unas'] . ')' . " \n\n";
             if ($ticket['owner'] == $_SESSION['id']) {
-                $owner = '<span class="assignedyou" title="' . $hesklang['tasy2'] . '"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="top" title="' . $hesklang['tasy2'] . '"></span></span> ';
+                $owner = '<span class="red" title="' . $hesklang['tasy2'] . '"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="top" title="' . $hesklang['tasy2'] . '"></span></span> ';
                 $first_line = $hesklang['tasy2'] . " \n\n";
             } elseif ($ticket['owner']) {
                 if (!isset($admins[$ticket['owner']])) {
                     $admins[$ticket['owner']] = $hesklang['e_udel'];
                 }
-                $owner = '<span class="assignedother" title="' . $hesklang['taso3'] . ' ' . $admins[$ticket['owner']] . '"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="top" title="' . $hesklang['taso3'] . ' ' . $admins[$ticket['owner']] . '"></span></span> ';
+                $owner = '<span class="green" title="' . $hesklang['taso3'] . ' ' . $admins[$ticket['owner']] . '"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="top" title="' . $hesklang['taso3'] . ' ' . $admins[$ticket['owner']] . '"></span></span> ';
                 $first_line = $hesklang['taso3'] . ' ' . $admins[$ticket['owner']] . " \n\n";
             }
 
@@ -422,11 +421,15 @@ if ($total > 0) {
         } // End while
         ?>
         </table>
-        </div>
-
-        &nbsp;<br/>
+        <hr>
         <table border="0" width="100%">
             <tr>
+                <td>
+                    <a href="new_ticket.php" class="btn btn-success pull-left">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
+                        <?php echo $hesklang['nti']; ?>
+                    </a>
+                </td>
                 <td width="50%" class="text-right" style="vertical-align:top">
                     <select class="form-control" name="a">
                         <option value="low"
@@ -494,8 +497,7 @@ else {
 
     echo '</div></div>';
 }
-echo '</div>
-    </div>';
+echo '</div>';
 
 
 function hesk_print_list_head()

@@ -1,0 +1,51 @@
+.white {
+    color: #fff;
+}
+
+.red,
+.important,
+.critical-priority {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.orange,
+.rating {
+    color: orange;
+}
+
+.medium {
+    color: #FF9900;
+}
+
+.gray {
+    color: grey;
+}
+
+.critical {
+    color: #9400d3;
+}
+
+.blue {
+    color: blue;
+}
+
+.med-low-priority {
+    background-color: #8BB467;
+}
+
+.high-priority {
+    background-color: #ff6a00;
+}
+
+/* Hover colors */
+.red-on-hover:hover {
+    color: red;
+}
+
+.gray-on-hover:hover {
+    color: grey;
+}

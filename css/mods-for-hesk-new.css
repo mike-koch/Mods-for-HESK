@@ -1,0 +1,153 @@
+.navbar-nav > .messages-menu > .dropdown-menu >li .menu > li > a,
+.sidebar-menu, .main-sidebar .user-panel, .sidebar-menu > li.header{
+    white-space: normal;
+}
+
+.icon-link {
+    font-size: 16px; !important;
+}
+
+#due-date:hover,
+.click-to-edit:hover {
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+.linkless-dropdown {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    white-space: nowrap;
+}
+
+.dropdown-menu>li>span>.fa {
+    margin-right: 10px;
+}
+
+.no-margins {
+    margin: 0;
+}
+
+@media (max-width: 991px) {
+    .ticket-cell-admin {
+        border-bottom: solid 1px #ddd;
+        border-right: 0;
+        padding-top: 5px;
+        height: 100px;
+    }
+}
+
+@media (min-width: 992px) {
+    .ticket-cell-admin {
+        border-bottom: 0;
+        border-right: solid 1px #ddd;
+        margin-top: 1px;
+        height: 100px;
+        padding-top: 10px;
+    }
+}
+
+.ticket-property-title {
+    color: rgba(255, 255, 255, .75);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+@media (min-width: 992px) {
+    .ticketPropertyText {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ticketPropertyText:hover {
+        white-space: normal;
+        overflow: visible;
+    }
+}
+
+.ticketPropertyText {
+    font-size: 16px;
+    line-height: 1em;
+    color: #fff;
+    padding-bottom: 2px;
+}
+
+.status-row {
+    margin-bottom: 20px;
+}
+
+.push-down-10 {
+    margin-top: 10px;
+}
+
+
+.attachment-table > tbody > tr > td > i {
+    color: #ddd;
+    text-shadow: 2px 2px #ccc;
+}
+
+.attachment-table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.attachment-table > tbody > tr > td > span > img {
+    max-height: 80px;
+    max-width: 80px;
+    cursor: pointer;
+}
+
+.note {
+    border-bottom: solid 1px #000;
+}
+
+.fileinput-button {
+    width: 100%;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: -2px;
+}
+
+.file-row p.name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.timeline-footer {
+    border-top: 1px solid #f4f4f4;
+}
+
+.timeline > .today-top {
+    margin-bottom: 60px;
+}
+
+.white-readonly {
+    cursor: text !important;
+    background-color: #fff !important;
+}
+
+button.dropdown-submit {
+    background: none !important;
+    border: none;
+}
+
+.form-signin {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.loginError {
+    padding-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.login-box {
+    width: 500px;
+}
+
+.login-box-body {
+    border-radius: 5px;
+}

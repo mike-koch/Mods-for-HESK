@@ -30,6 +30,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
+define('PAGE_TITLE', 'LOGIN');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -38,7 +39,6 @@ require(HESK_PATH . 'inc/common.inc.php');
 // Connect to database and check for brute force attempts
 hesk_load_database_functions();
 hesk_dbConnect();
-hesk_limitBfAttempts();
 
 $modsForHesk_settings = mfh_getSettings();
 
@@ -112,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
+    hesk_limitBfAttempts();
 
     // Get email
     $email = hesk_validateEmail(hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer['email'] = $hesklang['enter_valid_email'];
@@ -236,32 +237,38 @@ if ($hesk_settings['recaptcha_use'] == 2) {
 }
 
 $hesk_settings['tmp_title'] = $hesk_settings['hesk_title'] . ' - ' . $hesklang['passr'];
-require_once(HESK_PATH . 'inc/header.inc.php');
+require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 ?>
-<ol class="breadcrumb">
-    <li><a href="<?php echo $hesk_settings['site_url']; ?>"><?php echo $hesk_settings['site_title']; ?></a></li>
-    <li><a href="index.php"><?php echo $hesklang['admin_login']; ?></a></li>
-    <li class="active"><?php echo $hesklang['passr']; ?></li>
-</ol>
-
-<div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <form action="password.php" method="post" name="form1" class="form-signin form-horizontal" role="form">
+<div class="login-box">
+    <div class="login-logo">
+        <?php echo $hesk_settings['hesk_title']; ?>
+    </div>
+    <div class="login-box-body">
+        <h4 class="login-box-msg">
+            <?php echo $hesklang['passr']; ?>
+        </h4>
+        <form action="password.php" method="post" name="form1" class="form-horizontal" role="form">
             <?php
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
+
+            $has_error = '';
+            if (in_array('email', $_SESSION['a_iserror'])) {
+                $has_error = 'has-error';
+            }
+
+            $form_email = '';
+            if (isset($email)) {
+                $form_email = stripslashes(hesk_input($email));
+            }
             ?>
-            <h2><span <?php echo $iconDisplay; ?>><span
-                        class="mega-octicon octicon-sign-in"></span>&nbsp;</span><?php echo $hesklang['passr']; ?></h2>
-
-            <div class="footerWithBorder blankSpace"></div>
-            <div class="form-group <?php echo in_array('email', $_SESSION['a_iserror']) ? 'has-error' : ''; ?>">
-                <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
-
+            <div class="form-group <?php echo $has_error; ?>">
+                <label for="email" class="col-sm-3 control-label">
+                    <?php echo $hesklang['email']; ?>
+                </label>
                 <div class="col-sm-9">
-                    <input type="text" name="email" size="35" value="<?php if (isset($email)) {
-                        echo stripslashes(hesk_input($email));
-                    } ?>" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>">
+                    <input type="text" name="email" size="35" value="<?php echo $form_email; ?>"
+                           class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>">
                 </div>
             </div>
             <?php
@@ -287,8 +294,8 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                                         play_again: "<?php echo hesk_slashJS($hesklang['play_again']); ?>",
                                         cant_hear_this: "<?php echo hesk_slashJS($hesklang['cant_hear_this']); ?>",
                                         incorrect_try_again: "<?php echo hesk_slashJS($hesklang['incorrect_try_again']); ?>",
-                                        image_alt_text: "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>",
-                                    },
+                                        image_alt_text: "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>"
+                                    }
                                 };
                             </script>
                         <?php
@@ -318,19 +325,15 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             }
             ?>
             <div class="form-group">
-                <div class="col-sm-10 col-sm-offset-1">
+                <div class="col-sm-9 col-sm-offset-3">
                     <input type="submit" value="<?php echo $hesklang['passs']; ?>" class="btn btn-default">
                 </div>
             </div>
         </form>
     </div>
 </div>
-
 <?php
 // Clean session errors
 hesk_cleanSessionVars('a_iserror');
 hesk_cleanSessionVars('img_a_verified');
-
-// Print footer
-require_once(HESK_PATH . 'inc/footer.inc.php');
 ?>

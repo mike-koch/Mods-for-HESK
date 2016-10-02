@@ -9,6 +9,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -45,318 +46,325 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print main manage users page */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-
-    <div class="row pad-20">
-        <ul class="nav nav-tabs" role="tablist">
-            <?php
-            // Show a link to banned_emails.php if user has permission
-            if (hesk_checkPermission('can_ban_emails', 0)) {
-                echo '
+<section class="content">
+    <div class="box">
+        <div class="box-body">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs" role="tablist">
+                    <?php
+                    // Show a link to banned_emails.php if user has permission
+                    if (hesk_checkPermission('can_ban_emails', 0)) {
+                        echo '
             <li role="presentation">
                 <a title="' . $hesklang['banemail'] . '" href="banned_emails.php">' . $hesklang['banemail'] . '</a>
             </li>
             ';
-            }
-            if (hesk_checkPermission('can_ban_ips', 0)) {
-                echo '
+                    }
+                    if (hesk_checkPermission('can_ban_ips', 0)) {
+                        echo '
             <li role="presentation">
                 <a title="' . $hesklang['banip'] . '" href="banned_ips.php">' . $hesklang['banip'] . '</a>
             </li>';
-            }
-            // Show a link to status_message.php if user has permission to do so
-            if (hesk_checkPermission('can_service_msg', 0)) {
-                echo '
+                    }
+                    // Show a link to status_message.php if user has permission to do so
+                    if (hesk_checkPermission('can_service_msg', 0)) {
+                        echo '
             <li role="presentation">
                 <a title="' . $hesklang['sm_title'] . '" href="service_messages.php">' . $hesklang['sm_title'] . '</a>
             </li>';
-            }
-            if (hesk_checkPermission('can_man_email_tpl', 0)) {
-                echo '
+                    }
+                    if (hesk_checkPermission('can_man_email_tpl', 0)) {
+                        echo '
             <li role="presentation">
                 <a title="' . $hesklang['email_templates'] . '" href="manage_email_templates.php">' . $hesklang['email_templates'] . '</a>
             </li>
             ';
-            }
-            ?>
-            <li role="presentation" class="active">
-                <a href="#"><?php echo $hesklang['statuses']; ?> <i class="fa fa-question-circle settingsquestionmark"
-                                                                    data-toggle="popover"
-                                                                    title="<?php echo $hesklang['statuses']; ?>"
-                                                                    data-content="<?php echo $hesklang['statuses_intro']; ?>"></i></a>
-            </li>
-        </ul>
-        <div class="tab-content summaryList tabPadding">
-            <div class="row">
-                <div class="col-md-12">
-                    <?php
-                    /* This will handle error, success and notice messages */
-                    hesk_handle_messages();
-
-                    //-- We need to get all of the statuses and dump the information to the page.
-                    $numOfStatusesRS = hesk_dbQuery('SELECT 1 FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses`');
-                    $numberOfStatuses = hesk_dbNumRows($numOfStatusesRS);
-
-                    $statuses = mfh_getAllStatuses();
+                    }
                     ?>
-                    <form class="form-horizontal" method="post" action="manage_statuses.php" role="form">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4>
-                                    <?php echo $hesklang['statuses']; ?>
-                                    <span class="nu-floatRight panel-button">
-                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-status-new">
-                                            <i class="fa fa-plus-circle"></i>
-                                            <?php
-                                            echo $hesklang['new_status'];
+                    <li role="presentation" class="active">
+                        <a href="#"><?php echo $hesklang['statuses']; ?> <i class="fa fa-question-circle settingsquestionmark"
+                                                                            data-toggle="popover"
+                                                                            title="<?php echo $hesklang['statuses']; ?>"
+                                                                            data-content="<?php echo $hesklang['statuses_intro']; ?>"></i></a>
+                    </li>
+                </ul>
+                <div class="tab-content summaryList tabPadding">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            /* This will handle error, success and notice messages */
+                            hesk_handle_messages();
+
+                            //-- We need to get all of the statuses and dump the information to the page.
+                            $numOfStatusesRS = hesk_dbQuery('SELECT 1 FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses`');
+                            $numberOfStatuses = hesk_dbNumRows($numOfStatusesRS);
+
+                            $statuses = mfh_getAllStatuses();
+                            ?>
+                            <form class="form-horizontal" method="post" action="manage_statuses.php" role="form">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4>
+                                            <?php echo $hesklang['statuses']; ?>
+                                            <span style="float: right; margin-top: -7px">
+                                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-status-new">
+                                                    <i class="fa fa-plus-circle"></i>
+                                                    <?php
+                                                    echo $hesklang['new_status'];
+                                                    ?>
+                                                </button>
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th><?php echo $hesklang['name']; ?></th>
+                                            <th><?php echo $hesklang['closable_question']; ?></th>
+                                            <th><?php echo $hesklang['closedQuestionMark']; ?></th>
+                                            <th><?php echo $hesklang['actions']; ?></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        $j = 1;
+                                        foreach ($statuses as $key => $row):
                                             ?>
-                                        </button>
-                                    </span>
-                                </h4>
-                            </div>
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th><?php echo $hesklang['name']; ?></th>
-                                    <th><?php echo $hesklang['closable_question']; ?></th>
-                                    <th><?php echo $hesklang['closedQuestionMark']; ?></th>
-                                    <th><?php echo $hesklang['actions']; ?></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php
-                                $j = 1;
-                                foreach ($statuses as $key => $row):
-                                    ?>
-                                    <tr id="s<?php echo $row['ID']; ?>_row">
-                                        <td class="bold" style="color: <?php echo $row['TextColor']; ?>">
-                                            <?php echo $row['text']; ?>
-                                        </td>
-                                        <td>
-                                            <?php
-                                            if ($row['Closable'] == 'yes') {
-                                                echo $hesklang['yes_title_case'];
-                                            } elseif ($row['Closable'] == 'conly') {
-                                                echo $hesklang['customers_only'];
-                                            } elseif ($row['Closable'] == 'sonly') {
-                                                echo $hesklang['staff_only'];
-                                            } elseif ($row['Closable'] == 'no') {
-                                                echo $hesklang['no_title_case'];
-                                            }
-                                            ?>
-                                        </td>
-                                        <td>
-                                            <?php
-                                            if ($row['IsClosed']) {
-                                                echo '<i class="fa fa-check-circle icon-link green"></i>';
-                                            }
-                                            ?>
-                                        </td>
-                                        <td>
+                                            <tr id="s<?php echo $row['ID']; ?>_row">
+                                                <td class="bold" style="color: <?php echo $row['TextColor']; ?>">
+                                                    <?php echo $row['text']; ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if ($row['Closable'] == 'yes') {
+                                                        echo $hesklang['yes_title_case'];
+                                                    } elseif ($row['Closable'] == 'conly') {
+                                                        echo $hesklang['customers_only'];
+                                                    } elseif ($row['Closable'] == 'sonly') {
+                                                        echo $hesklang['staff_only'];
+                                                    } elseif ($row['Closable'] == 'no') {
+                                                        echo $hesklang['no_title_case'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if ($row['IsClosed']) {
+                                                        echo '<i class="fa fa-check-circle icon-link green"></i>';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
                                         <span data-toggle="modal" data-target="#modal-status-<?php echo $row['ID']; ?>"
                                               style="cursor: pointer;">
                                             <i class="fa fa-pencil icon-link orange"
                                                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
                                         </span>
-                                            <?php echoArrows($j, $numberOfStatuses, $row['ID'], $modsForHesk_settings); ?>
-                                            <?php
-                                            // Only show the delete button if (1) it's not a default action and (2) no tickets are set to that status
-                                            $delete = canStatusBeDeleted($row['ID']);
-                                            $cursor = 'cursor: pointer';
-                                            $iconStyle = 'color: red';
-                                            $dataTarget = 'data-target="#modal-status-delete-' . $row['ID'] . '"';
-                                            $tooltip = $hesklang['delete'];
-                                            if ($delete == 'no-default' || $delete == 'no-tickets') {
-                                                $cursor = '';
-                                                $dataTarget = '';
-                                                $iconStyle = 'color: grey';
-                                            }
-                                            if ($delete == 'no-default') {
-                                                $tooltip = $hesklang['whyCantIDeleteThisStatusReason'];
-                                            } elseif ($delete == 'no-tickets') {
-                                                $tooltip = $hesklang['cannot_delete_status_tickets'];
-                                            }
-                                            ?>
-                                            <span data-toggle="modal" <?php echo $dataTarget; ?>
-                                                  style="<?php echo $cursor; ?>;">
+                                                    <?php echoArrows($j, $numberOfStatuses, $row['ID'], $modsForHesk_settings); ?>
+                                                    <?php
+                                                    // Only show the delete button if (1) it's not a default action and (2) no tickets are set to that status
+                                                    $delete = canStatusBeDeleted($row['ID']);
+                                                    $cursor = 'cursor: pointer';
+                                                    $iconStyle = 'color: red';
+                                                    $dataTarget = 'data-target="#modal-status-delete-' . $row['ID'] . '"';
+                                                    $tooltip = $hesklang['delete'];
+                                                    if ($delete == 'no-default' || $delete == 'no-tickets') {
+                                                        $cursor = '';
+                                                        $dataTarget = '';
+                                                        $iconStyle = 'color: grey';
+                                                    }
+                                                    if ($delete == 'no-default') {
+                                                        $tooltip = $hesklang['whyCantIDeleteThisStatusReason'];
+                                                    } elseif ($delete == 'no-tickets') {
+                                                        $tooltip = $hesklang['cannot_delete_status_tickets'];
+                                                    }
+                                                    ?>
+                                                    <span data-toggle="modal" <?php echo $dataTarget; ?>
+                                                          style="<?php echo $cursor; ?>;">
                                             <i class="fa fa-times icon-link" style="<?php echo $iconStyle; ?>"
                                                data-toggle="tooltip" title="<?php echo $tooltip; ?>"></i>
                                         </span>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                    $j++;
-                                endforeach; ?>
-                                </tbody>
-                            </table>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                            $j++;
+                                        endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4><?php echo $hesklang['defaultStatusForAction']; ?></h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label for="newTicket"
+                                                   class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isNewTicketMsg']; ?></label>
+
+                                            <div class="col-sm-6 col-xs-12">
+                                                <select name="newTicket" class="form-control" id="newTicket">
+                                                    <?php
+                                                    foreach ($statuses as $key => $row) {
+                                                        if ($row['IsClosed'] == 1) {
+                                                            continue;
+                                                        }
+
+                                                        $selectedEcho = ($row['IsNewTicketStatus'] == 1) ? 'selected="selected"' : '';
+                                                        echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="closedByClient"
+                                                   class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isClosedByClientMsg']; ?></label>
+
+                                            <div class="col-sm-6 col-xs-12">
+                                                <select name="closedByClient" class="form-control" id="closedByClient">
+                                                    <?php
+                                                    foreach ($statuses as $key => $row) {
+                                                        if ($row['IsClosed'] == 0) {
+                                                            continue;
+                                                        }
+
+                                                        $selectedEcho = ($row['IsClosedByClient'] == 1) ? 'selected="selected"' : '';
+                                                        echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="replyFromClient"
+                                                   class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isRepliedByClientMsg']; ?></label>
+
+                                            <div class="col-sm-6 col-xs-12">
+                                                <select name="replyFromClient" class="form-control" id="replyFromClient">
+                                                    <?php
+                                                    foreach ($statuses as $key => $row) {
+                                                        if ($row['IsClosed'] == 1) {
+                                                            continue;
+                                                        }
+
+                                                        $selectedEcho = ($row['IsCustomerReplyStatus'] == 1) ? 'selected="selected"' : '';
+                                                        echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="staffClosedOption"
+                                                   class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isStaffClosedOptionMsg']; ?></label>
+
+                                            <div class="col-sm-6 col-xs-12">
+                                                <select name="staffClosedOption" class="form-control" id="staffClosedOption">
+                                                    <?php
+                                                    foreach ($statuses as $key => $row) {
+                                                        if ($row['IsClosed'] == 0) {
+                                                            continue;
+                                                        }
+
+                                                        $selectedEcho = ($row['IsStaffClosedOption'] == 1) ? 'selected="selected"' : '';
+                                                        echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="staffReopenedStatus"
+                                                   class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isStaffReopenedStatusMsg']; ?></label>
+
+                                            <div class="col-sm-6 col-xs-12">
+                                                <select name="staffReopenedStatus" class="form-control"
+                                                        id="staffReopenedStatus">
+                                                    <?php
+                                                    foreach ($statuses as $key => $row) {
+                                                        if ($row['IsClosed'] == 1) {
+                                                            continue;
+                                                        }
+
+                                                        $selectedEcho = ($row['IsStaffReopenedStatus'] == 1) ? 'selected="selected"' : '';
+                                                        echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="defaultStaffReplyStatus"
+                                                   class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isDefaultStaffReplyStatusMsg']; ?></label>
+
+                                            <div class="col-sm-6 col-xs-12">
+                                                <select name="defaultStaffReplyStatus" class="form-control"
+                                                        id="defaultStaffReplyStatus">
+                                                    <?php
+                                                    foreach ($statuses as $key => $row) {
+                                                        if ($row['IsClosed'] == 1) {
+                                                            continue;
+                                                        }
+
+                                                        $selectedEcho = ($row['IsDefaultStaffReplyStatus'] == 1) ? 'selected="selected"' : '';
+                                                        echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lockedTicketStatus"
+                                                   class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['lockedTicketStatusMsg']; ?></label>
+
+                                            <div class="col-sm-6 col-xs-12">
+                                                <select name="lockedTicketStatus" class="form-control" id="lockedTicketStatus">
+                                                    <?php
+                                                    foreach ($statuses as $key => $row) {
+                                                        $selectedEcho = ($row['LockedTicketStatus'] == 1) ? 'selected="selected"' : '';
+                                                        echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="autocloseTicketOption"
+                                                   class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['autoclose_ticket_status']; ?></label>
+
+                                            <div class="col-sm-6 col-xs-12">
+                                                <select name="autocloseTicketOption" class="form-control"
+                                                        id="autocloseTicketOption">
+                                                    <?php
+                                                    foreach ($statuses as $key => $row) {
+                                                        if ($row['IsClosed'] == 0) {
+                                                            continue;
+                                                        }
+
+                                                        $selectedEcho = ($row['IsAutocloseOption'] == 1) ? 'selected' : '';
+                                                        echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-sm-offset-6">
+                                    <input type="hidden" name="a" value="save">
+                                    <input type="submit" class="btn btn-default"
+                                           value="<?php echo $hesklang['save_changes']; ?>">
+                                </div>
+                            </form>
                         </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4><?php echo $hesklang['defaultStatusForAction']; ?></h4>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    <label for="newTicket"
-                                           class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isNewTicketMsg']; ?></label>
-
-                                    <div class="col-sm-6 col-xs-12">
-                                        <select name="newTicket" class="form-control" id="newTicket">
-                                            <?php
-                                            foreach ($statuses as $key => $row) {
-                                                if ($row['IsClosed'] == 1) {
-                                                    continue;
-                                                }
-
-                                                $selectedEcho = ($row['IsNewTicketStatus'] == 1) ? 'selected="selected"' : '';
-                                                echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="closedByClient"
-                                           class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isClosedByClientMsg']; ?></label>
-
-                                    <div class="col-sm-6 col-xs-12">
-                                        <select name="closedByClient" class="form-control" id="closedByClient">
-                                            <?php
-                                            foreach ($statuses as $key => $row) {
-                                                if ($row['IsClosed'] == 0) {
-                                                    continue;
-                                                }
-
-                                                $selectedEcho = ($row['IsClosedByClient'] == 1) ? 'selected="selected"' : '';
-                                                echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="replyFromClient"
-                                           class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isRepliedByClientMsg']; ?></label>
-
-                                    <div class="col-sm-6 col-xs-12">
-                                        <select name="replyFromClient" class="form-control" id="replyFromClient">
-                                            <?php
-                                            foreach ($statuses as $key => $row) {
-                                                if ($row['IsClosed'] == 1) {
-                                                    continue;
-                                                }
-
-                                                $selectedEcho = ($row['IsCustomerReplyStatus'] == 1) ? 'selected="selected"' : '';
-                                                echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="staffClosedOption"
-                                           class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isStaffClosedOptionMsg']; ?></label>
-
-                                    <div class="col-sm-6 col-xs-12">
-                                        <select name="staffClosedOption" class="form-control" id="staffClosedOption">
-                                            <?php
-                                            foreach ($statuses as $key => $row) {
-                                                if ($row['IsClosed'] == 0) {
-                                                    continue;
-                                                }
-
-                                                $selectedEcho = ($row['IsStaffClosedOption'] == 1) ? 'selected="selected"' : '';
-                                                echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="staffReopenedStatus"
-                                           class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isStaffReopenedStatusMsg']; ?></label>
-
-                                    <div class="col-sm-6 col-xs-12">
-                                        <select name="staffReopenedStatus" class="form-control"
-                                                id="staffReopenedStatus">
-                                            <?php
-                                            foreach ($statuses as $key => $row) {
-                                                if ($row['IsClosed'] == 1) {
-                                                    continue;
-                                                }
-
-                                                $selectedEcho = ($row['IsStaffReopenedStatus'] == 1) ? 'selected="selected"' : '';
-                                                echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="defaultStaffReplyStatus"
-                                           class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['isDefaultStaffReplyStatusMsg']; ?></label>
-
-                                    <div class="col-sm-6 col-xs-12">
-                                        <select name="defaultStaffReplyStatus" class="form-control"
-                                                id="defaultStaffReplyStatus">
-                                            <?php
-                                            foreach ($statuses as $key => $row) {
-                                                if ($row['IsClosed'] == 1) {
-                                                    continue;
-                                                }
-
-                                                $selectedEcho = ($row['IsDefaultStaffReplyStatus'] == 1) ? 'selected="selected"' : '';
-                                                echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lockedTicketStatus"
-                                           class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['lockedTicketStatusMsg']; ?></label>
-
-                                    <div class="col-sm-6 col-xs-12">
-                                        <select name="lockedTicketStatus" class="form-control" id="lockedTicketStatus">
-                                            <?php
-                                            foreach ($statuses as $key => $row) {
-                                                $selectedEcho = ($row['LockedTicketStatus'] == 1) ? 'selected="selected"' : '';
-                                                echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="autocloseTicketOption"
-                                           class="col-sm-6 col-xs-12 control-label"><?php echo $hesklang['autoclose_ticket_status']; ?></label>
-
-                                    <div class="col-sm-6 col-xs-12">
-                                        <select name="autocloseTicketOption" class="form-control"
-                                                id="autocloseTicketOption">
-                                            <?php
-                                            foreach ($statuses as $key => $row) {
-                                                if ($row['IsClosed'] == 0) {
-                                                    continue;
-                                                }
-
-                                                $selectedEcho = ($row['IsAutocloseOption'] == 1) ? 'selected' : '';
-                                                echo '<option value="' . $row['ID'] . '" ' . $selectedEcho . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-sm-offset-6">
-                            <input type="hidden" name="a" value="save">
-                            <input type="submit" class="btn btn-default"
-                                   value="<?php echo $hesklang['save_changes']; ?>">
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
+
+
 
 <?php
 foreach ($statuses as $status) {

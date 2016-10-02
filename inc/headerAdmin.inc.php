@@ -37,42 +37,17 @@ if (!defined('IN_SCRIPT')) {
 
 $modsForHesk_settings = mfh_getSettings();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
     <title><?php echo(isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
     <meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>"/>
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="theme-color" content="<?php echo '#414a5c'; ?>">
-    <?php if ($modsForHesk_settings['rtl']) { ?>
-        <link href="<?php echo HESK_PATH; ?>hesk_style_RTL.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } else { ?>
-        <link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=21" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=21" type="text/css"
-          rel="stylesheet" <?php if ($modsForHesk_settings['use_bootstrap_theme'] == 0) {
-        echo 'disabled';
-    } ?>>
-    <?php if ($modsForHesk_settings['rtl']) { ?>
-        <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>"
-              type="text/css" rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>"
-              type="text/css" rel="stylesheet"/>
-    <?php } else { ?>
-        <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone.min.css">
@@ -81,7 +56,14 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/displays.css">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/adminlte.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/dropzone.min.js"></script>
@@ -158,6 +140,12 @@ $modsForHesk_settings = mfh_getSettings();
         .h3questionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
         }
+
+        <?php if (defined('PAGE_TITLE') && PAGE_TITLE == 'LOGIN'): ?>
+        body {
+            background: #d2d6de;
+        }
+        <?php endif; ?>
     </style>
 
     <?php
@@ -236,7 +224,7 @@ $modsForHesk_settings = mfh_getSettings();
 
 </head>
 <body onload="<?php echo $onload;
-unset($onload); ?>">
+unset($onload); ?>" class="hold-transition skin-blue sidebar-mini">
 
 <?php
 include(HESK_PATH . 'header.txt');
