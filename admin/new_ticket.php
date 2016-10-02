@@ -233,6 +233,64 @@ $show_quick_help = $show['show'];
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
+
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="email" size="40" maxlength="1000" id="email-input"
+                               value="<?php if (isset($_SESSION['as_email'])) {
+                                   echo stripslashes(hesk_input($_SESSION['as_email']));
+                               } else if (isset($_GET['email'])) {
+                                   echo hesk_GET('email');
+                               } ?>" <?php if ($hesk_settings['detect_typos']) {
+                            echo ' onblur="Javascript:hesk_suggestEmail(1)"';
+                        } ?>
+                               placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
+                               onkeyup="disableIfEmpty('email-input','notify-email')">
+                    </div>
+
+                </div>
+                <div id="email_suggestions"></div>
+                <!-- Department and Priority -->
+                <?php
+                $has_error = '';
+
+                if (in_array('category', $_SESSION['iserror'])) {
+                    $has_error = 'has-error';
+                } elseif (in_array('category', $_SESSION['isnotice'])) {
+                    $has_error = 'has-warning';
+                }
+                ?>
+                <div class="form-group <?php echo $has_error; ?>">
+                    <label for="category" class="col-sm-3 control-label"><?php echo $hesklang['category']; ?><span
+                            class="important">*</span></label>
+
+                    <div class="col-sm-9">
+                        <select name="category" class="form-control"
+                                pattern="[0-9]+"
+                                data-error="<?php echo htmlspecialchars($hesklang['sel_app_cat']); ?>"
+                                required>
+                            <?php
+                            // Show the "Click to select"?
+                            if ($hesk_settings['select_cat']) {
+                                echo '<option value="">' . $hesklang['select'] . '</option>';
+                            }
+                            // List categories
+                            $orderByColumn = $modsForHesk_settings['category_order_column'];
+                            $result = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` WHERE `usage` <> 2 ORDER BY `' . $orderByColumn . '` ASC');
+                            while ($row = hesk_dbFetchAssoc($result)) {
+                                if (isset($_SESSION['as_category']) && $_SESSION['as_category'] == $row['id']) {
+                                    $selected = ' selected="selected"';
+                                } else {
+                                    $selected = '';
+                                }
+                                echo '<option value="' . $row['id'] . '"' . $selected . '>' . $row['name'] . '</option>';
+                            }
+                            ?>
+                        </select>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
                 <?php
                 $has_error = '';
                 if (in_array('priority', $_SESSION['iserror'])) {

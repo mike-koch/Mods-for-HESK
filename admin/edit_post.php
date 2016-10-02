@@ -82,6 +82,7 @@ if (hesk_isREQUEST('reply')) {
     }
     $reply = hesk_dbFetchAssoc($result);
     $ticket['message'] = $reply['message'];
+    $ticket['html'] = $reply['html'];
     $is_reply = 1;
 }
 
@@ -465,47 +466,42 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="form-group">
                     <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
 
-                    <div class="col-sm-9">
-                        <?php
-                        $message = $modsForHesk_settings['rich_text_for_tickets'] ? hesk_html_entity_decode($ticket['message']) : $ticket['message'];
-                        ?>
-                        <textarea class="form-control htmlEditor" name="message" rows="12"
-                                  placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>"
-                                  cols="60"><?php echo $message; ?></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="hidden" name="save" value="1"/><input type="hidden" name="track"
-                                                                       value="<?php echo $trackingID; ?>"/>
-                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+                <div class="col-sm-9">
                     <?php
-                    if ($is_reply) {
-                        ?>
-                        <input type="hidden" name="reply" value="<?php echo $tmpvar['id']; ?>"/>
-                        <?php
-                    }
+                    $message = $ticket['html'] ? hesk_html_entity_decode($ticket['message']) : $ticket['message'];
                     ?>
+                    <textarea class="form-control htmlEditor" name="message" rows="12"
+                              placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>"
+                              cols="60"><?php echo $message; ?></textarea>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-9 col-md-offset-3">
-                        <?php
-                        $html = $modsForHesk_settings['rich_text_for_tickets'] ? 1 : 0;
-                        ?>
-                        <input type="hidden" name="html" value="<?php echo $html; ?>">
-                        <?php if (isset($_REQUEST['isManager']) && $_REQUEST['isManager']): ?>
-                            <input type="hidden" name="isManager" value="1">
-                        <?php endif; ?>
-                        <div class="btn-group">
-                            <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-primary"/>
-                            <a class="btn btn-default" href="javascript:history.go(-1)"><?php echo $hesklang['back']; ?></a>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="save" value="1"/><input type="hidden" name="track"
+                                                                   value="<?php echo $trackingID; ?>"/>
+                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+                <?php
+                if ($is_reply) {
+                    ?>
+                    <input type="hidden" name="reply" value="<?php echo $tmpvar['id']; ?>"/>
+                    <?php
+                }
+                ?>
+            </div>
+            <div class="form-group" style="text-align: center">
+                <?php
+                $html = $ticket['html'] ? 1 : 0;
+                ?>
+                <input type="hidden" name="html" value="<?php echo $html; ?>">
+                <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default"/>
+                <?php if (isset($_REQUEST['isManager']) && $_REQUEST['isManager']): ?>
+                    <input type="hidden" name="isManager" value="1">
+                <?php endif; ?>
+                <a class="btn btn-default" href="javascript:history.go(-1)"><?php echo $hesklang['back']; ?></a>
+            </div>
+        </form>
     </div>
-</section>
-<?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
+</div>
+<?php if ($ticket['html']): ?>
     <script type="text/javascript">
         /* <![CDATA[ */
         tinyMCE.init({
