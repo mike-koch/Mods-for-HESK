@@ -51,6 +51,7 @@ hesk_isLoggedIn();
 define('CALENDAR', 1);
 define('MAIN_PAGE', 1);
 define('PAGE_TITLE', 'ADMIN_HOME');
+define('AUTO_RELOAD', 1);
 
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
@@ -58,7 +59,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 /* Reset default settings? */
 if (isset($_GET['reset']) && hesk_token_check()) {
-    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `default_list`='' WHERE `id` = '" . intval($_SESSION['id']) . "' LIMIT 1");
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `default_list`='' WHERE `id` = '" . intval($_SESSION['id']) . "'");
     $_SESSION['default_list'] = '';
 } /* Get default settings */
 else {
@@ -81,6 +82,12 @@ else {
             </div>
         </div>
         <div class="box-body">
+            <label>
+                <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
+                <?php $hesklang['arp']; ?>
+                <span id="timer"></span>
+            </label>
+            <script type="text/javascript">heskCheckReloading();</script>
             <?php
             /* Print tickets? */
             if (hesk_checkPermission('can_view_tickets', 0)) {
