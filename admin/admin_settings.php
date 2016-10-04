@@ -56,6 +56,9 @@ hesk_isLoggedIn();
 // Check permissions for this feature
 hesk_checkPermission('can_man_settings');
 
+// Load custom fields
+//require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
 // Test languages function
 if (isset($_GET['test_languages'])) {
     hesk_testLanguage(0);
@@ -89,6 +92,9 @@ if (defined('HESK_DEMO')) {
     $hesk_settings['pop3_password'] = $hesklang['hdemo'];
     $hesk_settings['recaptcha_public_key'] = $hesklang['hdemo'];
     $hesk_settings['recaptcha_private_key'] = $hesklang['hdemo'];
+    $hesk_settings['imap_host_name']	= $hesklang['hdemo'];
+    $hesk_settings['imap_user']			= $hesklang['hdemo'];
+    $hesk_settings['imap_password']		= $hesklang['hdemo'];
 }
 
 // Check file attachment limits
@@ -214,109 +220,11 @@ $modsForHesk_settings = mfh_getSettings();
 
         // MISC
 
-        // CUSTOM FIELDS
-        if (d.s_custom1_use.checked && d.s_custom1_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom2_use.checked && d.s_custom2_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom3_use.checked && d.s_custom3_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom4_use.checked && d.s_custom4_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom5_use.checked && d.s_custom5_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom6_use.checked && d.s_custom6_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom7_use.checked && d.s_custom7_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom8_use.checked && d.s_custom8_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom9_use.checked && d.s_custom9_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom10_use.checked && d.s_custom10_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom11_use.checked && d.s_custom11_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom12_use.checked && d.s_custom12_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom13_use.checked && d.s_custom13_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom14_use.checked && d.s_custom14_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom15_use.checked && d.s_custom15_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom16_use.checked && d.s_custom16_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom17_use.checked && d.s_custom17_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom18_use.checked && d.s_custom18_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom19_use.checked && d.s_custom19_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-        if (d.s_custom20_use.checked && d.s_custom20_name.value == '') {
-            alert('<?php echo addslashes($hesklang['err_custname']); ?>');
-            return false;
-        }
-
-
         // DISABLE SUBMIT BUTTON
         d.submitbutton.disabled = true;
         d.submitbutton.value = '<?php echo addslashes($hesklang['saving']); ?>';
 
         return true;
-    }
-
-    function hesk_customOptions(cID, fID, fTYPE, maxlenID, oldTYPE) {
-        var t = document.getElementById(fTYPE).value;
-        if (t == oldTYPE) {
-            var d = document.getElementById(fID).value;
-            var m = document.getElementById(maxlenID).value;
-        }
-        else {
-            var d = '';
-            var m = 255;
-        }
-        var myURL = "options.php?i=" + cID + "&q=" + encodeURIComponent(d) + "&t=" + t + "&m=" + m;
-        window.open(myURL, "Hesk_window", "height=400,width=500,menubar=0,location=0,toolbar=0,status=0,resizable=1,scrollbars=1");
-        return false;
     }
 
     function hesk_toggleLayer(nr, setto) {
@@ -379,6 +287,20 @@ $modsForHesk_settings = mfh_getSettings();
             i = "0" + i;
         }
         return i;
+    }
+
+    function checkRequiredEmail(field) {
+        if (document.getElementById('s_require_email_0').checked && document.getElementById('s_email_view_ticket').checked) {
+            if (field == 's_require_email_0' && confirm('<?php echo addslashes($hesklang['re_confirm1']); ?>')) {
+                document.getElementById('s_email_view_ticket').checked = false;
+                return true;
+            } else if (field == 's_email_view_ticket' && confirm('<?php echo addslashes($hesklang['re_confirm2']); ?>')) {
+                document.getElementById('s_require_email_1').checked = true;
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
     //-->
 </script>
@@ -981,6 +903,41 @@ $modsForHesk_settings = mfh_getSettings();
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="s_require_email" class="col-sm-6 control-label"><?php echo $hesklang['req_email']; ?>
+                                <a href="Javascript:void(0)"
+                                   onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#73','400','500')"><i
+                                        class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $hesk_settings['require_email'] ? 'checked="checked"' : '';
+                                $off = $hesk_settings['require_email'] ? '' : 'checked="checked"';
+                                echo '
+                                <div class="radio"><label><input type="radio" id="s_require_email_0" name="s_require_email" value="0" onclick="return checkRequiredEmail(\'s_require_email_0\');" ' . $off . ' /> ' . $hesklang['off'] . '</div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" id="s_require_email_1" name="s_require_email" value="1" ' . $on . ' /> ' . $hesklang['on'] . '</div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="s_require_message"
+                                   class="col-sm-6 control-label"><?php echo $hesklang['req_msg']; ?> <a
+                                    href="Javascript:void(0)"
+                                    onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#74','400','500')"><i
+                                        class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $hesk_settings['require_message'] == 1 ? 'checked="checked"' : '';
+                                $off = $hesk_settings['require_message'] == 0 ? '' : 'checked="checked"';
+                                $hide = $hesk_settings['require_message'] == -1 ? '' : 'checked="checked"';
+                                echo '
+                                <div class="radio"><label><input type="radio" name="s_require_message" value="0" ' . $off . ' /> ' . $hesklang['off'] . '</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_require_message" value="1" ' . $on . ' /> ' . $hesklang['on'] . '</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_require_message" value="-1" ' . $hide . ' /> ' . $hesklang['off-hide'] . '</label></div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="s_custclose" class="col-sm-6 control-label"><?php echo $hesklang['ccct']; ?>
                                 <a href="Javascript:void(0)"
                                    onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#67','400','500')"><i
@@ -1190,6 +1147,25 @@ $modsForHesk_settings = mfh_getSettings();
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="s_require_subject"
+                                   class="col-sm-6 control-label"><?php echo $hesklang['req_sub']; ?> <a
+                                    href="Javascript:void(0)"
+                                    onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#72','400','500')"><i
+                                        class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $hesk_settings['require_subject'] == 1 ? 'checked="checked"' : '';
+                                $off = $hesk_settings['require_subject'] == 0 ? '' : 'checked="checked"';
+                                $hide = $hesk_settings['require_subject'] == -1 ? '' : 'checked="checked"';
+                                echo '
+                                <div class="radio"><label><input type="radio" name="s_require_subject" value="0" ' . $off . ' /> ' . $hesklang['off'] . '</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_require_subject" value="1" ' . $on . ' /> ' . $hesklang['on'] . '</label></div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_require_subject" value="-1" ' . $hide . ' /> ' . $hesklang['off-hide'] . '</label></div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="s_rating" class="col-sm-6 control-label"><?php echo $hesklang['urate']; ?>
                                 <a href="Javascript:void(0)"
                                    onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#17','400','500')"><i
@@ -1324,6 +1300,19 @@ $modsForHesk_settings = mfh_getSettings();
                                     <?php
                                 endwhile;
                                 ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="s_cat_show_select" class="col-sm-3 control-label"><?php echo $hesklang['scat']; ?> <a
+                                    href="Javascript:void(0)"
+                                    onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#71','400','500')"><i
+                                        class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control"
+                                       placeholder="<?php echo htmlspecialchars($hesklang['scat']); ?>" name="s_cat_show_select"
+                                       size="5" maxlength="3" value="<?php echo $hesk_settings['cat_show_select']; ?>">
+                                <?php echo $hesklang['scat2']; ?>
                             </div>
                         </div>
                     </div>
