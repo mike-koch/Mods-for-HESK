@@ -62,7 +62,22 @@ if ($hesk_settings['can_sel_lang']) {
     $tmpvar['language'] = hesk_POST('customerLanguage');
 }
 $tmpvar['name'] = hesk_input(hesk_POST('name')) or $hesk_error_buffer['name'] = $hesklang['enter_your_name'];
-$tmpvar['email'] = hesk_POST('email');
+$email_available = true;
+
+if ($hesk_settings['require_email']) {
+    $tmpvar['email'] = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer['email']=$hesklang['enter_valid_email'];
+} else {
+    $tmpvar['email'] = hesk_validateEmail( hesk_POST('email'), 'ERR', 0);
+
+    // Not required, but must be valid if it is entered
+    if ($tmpvar['email'] == '') {
+        $email_available = false;
+
+        if (strlen(hesk_POST('email'))) {
+            $hesk_error_buffer['email'] = $hesklang['not_valid_email'];
+        }
+    }
+}
 if ($hesk_settings['multi_eml']) {
     $tmpvar['email'] = str_replace(';',',', $tmpvar['email']);
 }
@@ -80,11 +95,22 @@ if ($tmpvar['priority'] < 0 || $tmpvar['priority'] > 3) {
     }
 }
 
-$tmpvar['subject'] = hesk_input(hesk_POST('subject')) or $hesk_error_buffer['subject'] = $hesklang['enter_ticket_subject'];
-$tmpvar['message'] = hesk_input(hesk_POST('message')) or $hesk_error_buffer['message'] = $hesklang['enter_message'];
+$tmpvar['subject'] = hesk_input( hesk_POST('subject') );
+if ($hesk_settings['require_subject'] == 1 && $tmpvar['subject'] == '') {
+    $hesk_error_buffer['subject'] = $hesklang['enter_ticket_subject'];
+}
+
+$tmpvar['message']  = hesk_input( hesk_POST('message') );
+if ($hesk_settings['require_message'] == 1 && $tmpvar['message'] == '') {
+    $hesk_error_buffer['message'] = $hesklang['enter_message'];
+}
 
 // Is category a valid choice?
 if ($tmpvar['category']) {
+    if ( ! hesk_checkPermission('can_submit_any_cat', 0) && ! hesk_okCategory($tmpvar['category'], 0) ) {
+        hesk_process_messages($hesklang['noauth_submit'],'new_ticket.php');
+    }
+
     hesk_verifyCategory(1);
 
     // Is auto-assign of tickets disabled in this category?
@@ -94,19 +120,70 @@ if ($tmpvar['category']) {
 }
 
 // Custom fields
-foreach ($hesk_settings['custom_fields'] as $k => $v) {
-    if ($v['use'] && isset($_POST[$k])) {
-        // Date will be handled by the jQuery datepicker
-        if ($v['type'] == 'date' && $_POST[$k] != '') {
-            $tmpvar[$k] = strtotime($_POST[$k]);
-        } else if (is_array($_POST[$k])) {
-            $tmpvar[$k] = '';
-            foreach ($_POST[$k] as $myCB) {
-                $tmpvar[$k] .= (is_array($myCB) ? '' : hesk_input($myCB)) . '<br />';
+foreach ($hesk_settings['custom_fields'] as $k=>$v) {
+    if ($v['use'] && hesk_is_custom_field_in_category($k, $tmpvar['category'])) {
+        if ($v['type'] == 'checkbox') {
+            $tmpvar[$k]='';
+
+            if (isset($_POST[$k]) && is_array($_POST[$k])) {
+                foreach ($_POST[$k] as $myCB) {
+                    $tmpvar[$k] .= ( is_array($myCB) ? '' : hesk_input($myCB) ) . '<br />';;
+                }
+                $tmpvar[$k]=substr($tmpvar[$k],0,-6);
+            } else {
+                if ($v['req'] == 2) {
+                    $hesk_error_buffer[$k]=$hesklang['fill_all'].': '.$v['name'];
+                }
+                $_POST[$k] = '';
             }
-            $tmpvar[$k] = substr($tmpvar[$k], 0, -6);
+        } elseif ($v['type'] == 'date') {
+            $tmpvar[$k] = hesk_POST($k);
+            $_SESSION["as_$k"] = '';
+
+            if (preg_match("/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/", $tmpvar[$k])) {
+                $date = strtotime($tmpvar[$k] . ' t00:00:00');
+                $dmin = strlen($v['value']['dmin']) ? strtotime($v['value']['dmin'] . ' t00:00:00') : false;
+                $dmax = strlen($v['value']['dmax']) ? strtotime($v['value']['dmax'] . ' t00:00:00') : false;
+
+                $_SESSION["as_$k"] = $tmpvar[$k];
+
+                if ($dmin && $dmin > $date) {
+                    $hesk_error_buffer[$k] = sprintf($hesklang['d_emin'], $v['name'], hesk_custom_date_display_format($dmin, $v['value']['date_format']));
+                } elseif ($dmax && $dmax < $date) {
+                    $hesk_error_buffer[$k] = sprintf($hesklang['d_emax'], $v['name'], hesk_custom_date_display_format($dmax, $v['value']['date_format']));
+                } else {
+                    $tmpvar[$k] = $date;
+                }
+            } else {
+                $tmpvar[$k] = '';
+
+                if ($v['req'] == 2) {
+                    $hesk_error_buffer[$k]=$hesklang['fill_all'].': '.$v['name'];
+                }
+            }
+        } elseif ($v['type'] == 'email')
+        {
+            $tmp = $hesk_settings['multi_eml'];
+            $hesk_settings['multi_eml'] = $v['value']['multiple'];
+            $tmpvar[$k] = hesk_validateEmail( hesk_POST($k), 'ERR', 0);
+            $hesk_settings['multi_eml'] = $tmp;
+
+            if ($tmpvar[$k] != '') {
+                $_SESSION["as_$k"] = hesk_input($tmpvar[$k]);
+            } else {
+                $_SESSION["as_$k"] = '';
+
+                if ($v['req'] == 2) {
+                    $hesk_error_buffer[$k] = $v['value']['multiple'] ? sprintf($hesklang['cf_noem'], $v['name']) : sprintf($hesklang['cf_noe'], $v['name']);
+                }
+            }
+        } elseif ($v['req'] == 2) {
+            $tmpvar[$k]=hesk_makeURL(nl2br(hesk_input( hesk_POST($k) )));
+            if ($tmpvar[$k] == '') {
+                $hesk_error_buffer[$k]=$hesklang['fill_all'].': '.$v['name'];
+            }
         } else {
-            $tmpvar[$k] = hesk_makeURL(nl2br(hesk_input($_POST[$k])));
+            $tmpvar[$k]=hesk_makeURL(nl2br(hesk_input(hesk_POST($k))));
         }
     } else {
         $tmpvar[$k] = '';
@@ -202,7 +279,6 @@ if (count($hesk_error_buffer) != 0) {
 
     $_SESSION['as_name'] = hesk_POST('name');
     $_SESSION['as_email'] = hesk_POST('email');
-    $_SESSION['as_category'] = hesk_POST('category');
     $_SESSION['as_priority'] = $tmpvar['priority'];
     $_SESSION['as_subject'] = hesk_POST('subject');
     $_SESSION['as_message'] = hesk_POST('message');
@@ -211,7 +287,7 @@ if (count($hesk_error_buffer) != 0) {
     $_SESSION['as_show'] = $show;
 
     foreach ($hesk_settings['custom_fields'] as $k => $v) {
-        if ($v['use']) {
+        if ($v['use'] && ! in_array($v['type'], array('date', 'email'))) {
             $_SESSION["as_$k"] = ($v['type'] == 'checkbox') ? hesk_POST_array($k) : hesk_POST($k);
         }
     }
@@ -228,7 +304,7 @@ if (count($hesk_error_buffer) != 0) {
     }
 
     $hesk_error_buffer = $hesklang['pcer'] . '<br /><br /><ul>' . $hesk_error_buffer . '</ul>';
-    hesk_process_messages($hesk_error_buffer, 'new_ticket.php');
+    hesk_process_messages($hesk_error_buffer,'new_ticket.php?category='.$tmpvar['category']);
 }
 
 if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
@@ -258,7 +334,7 @@ $tmpvar['screen_resolution_width'] = "NULL";
 $ticket = hesk_newTicket($tmpvar);
 
 // Notify the customer about the ticket?
-if ($notify) {
+if ($notify && $email_available) {
     hesk_notifyCustomer($modsForHesk_settings);
 }
 
@@ -305,4 +381,3 @@ if ($show) {
 } else {
     hesk_process_messages($hesklang['new_ticket_submitted'] . '. <a href="admin_ticket.php?track=' . $ticket['trackid'] . '&Refresh=' . mt_rand(10000, 99999) . '">' . $hesklang['view_ticket'] . '</a>', 'new_ticket.php', 'SUCCESS');
 }
-?>
