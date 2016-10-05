@@ -2608,6 +2608,202 @@ $modsForHesk_settings = mfh_getSettings();
                 </div>
                 <!-- END POP3 SETTINGS DIV -->
 
+                <!-- IMAP Fetching -->
+                <h4 class="bold"><?php echo $hesklang['imap']; ?></h4>
+
+                <div class="form-group">
+                    <label for="s_pop3" class="col-sm-3 control-label"><?php echo $hesklang['imap']; ?> <a
+                            href="Javascript:void(0)"
+                            onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#67','400','500')"><i
+                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                    <div class="col-sm-9 form-inline">
+                        <?php
+                        $on = '';
+                        $off = '';
+                        $onload_div = 'none';
+                        $onload_status = '';
+
+                        if ($hesk_settings['imap']) {
+                            $on = 'checked';
+                            $onload_div = 'block';
+                        } else {
+                            $off = 'checked';
+                            $onload_status = ' disabled ';
+                        }
+
+                        echo '
+                        <div class="radio"><label><input type="radio" name="s_imap" value="0" onclick="hesk_attach_disable(new Array(\'i0\',\'i1\',\'i2\',\'i3\',\'i4\',\'i5\',\'i6\',\'i7\',\'i8\',\'i9\'))" onchange="hesk_toggleLayerDisplay(\'imap_settings\');" ' . $off . '> ' . $hesklang['off'] . '</label></div>&nbsp;&nbsp;&nbsp;
+                        <div class="radio"><label><input type="radio" name="s_imap" value="1" onclick="hesk_attach_enable(new Array(\'i0\',\'i1\',\'i2\',\'i3\',\'i4\',\'i5\',\'i6\',\'i7\',\'i8\',\'i9\'))" onchange="hesk_toggleLayerDisplay(\'imap_settings\');"  ' . $on . '> ' . $hesklang['on'] . '</label></div>';
+                        ?>
+                        <input type="hidden" name="tmp_imap_host_name" value="<?php echo $hesk_settings['imap_host_name']; ?>">
+                        <input type="hidden" name="tmp_imap_host_port" value="<?php echo $hesk_settings['imap_host_port']; ?>">
+                        <input type="hidden" name="tmp_imap_user" value="<?php echo $hesk_settings['imap_user']; ?>">
+                        <input type="hidden" name="tmp_imap_password" value="<?php echo $hesk_settings['imap_password']; ?>">
+                        <input type="hidden" name="tmp_imap_enc" value="<?php echo $hesk_settings['imap_enc']; ?>">
+                        <input type="hidden" name="tmp_imap_keep" value="<?php echo $hesk_settings['imap_keep']; ?>">
+                    </div>
+                </div>
+                <div id="imap_settings" style="display:<?php echo $onload_div; ?>">
+                    <div class="form-group">
+                        <label for="s_imap_job_wait" class="col-sm-3 control-label"><?php echo $hesklang['pjt']; ?>
+                            <a href="Javascript:void(0)"
+                               onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#67','400','500')"><i
+                                    class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['pjt']); ?>" id="i0"
+                                   name="s_imap_job_wait" size="5" maxlength="5"
+                                   value="<?php echo $hesk_settings['imap_job_wait']; ?>" <?php echo $onload_status; ?>> <?php echo $hesklang['pjt2']; ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="s_imap_host_name" class="col-sm-3 control-label"><?php echo $hesklang['imaph']; ?>
+                            <a href="Javascript:void(0)"
+                               onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#67','400','500')"><i
+                                    class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['imaph']); ?>" id="i1"
+                                   name="s_imap_host_name" size="40" maxlength="255"
+                                   value="<?php echo $hesk_settings['imap_host_name']; ?>" <?php echo $onload_status; ?>>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="s_imap_host_port" class="col-sm-3 control-label"><?php echo $hesklang['imapp']; ?>
+                            <a href="Javascript:void(0)"
+                               onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#67','400','500')"><i
+                                    class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['imapp']); ?>" id="i2"
+                                   name="s_imap_host_port" size="5" maxlength="255"
+                                   value="<?php echo $hesk_settings['imap_host_port']; ?>" <?php echo $onload_status; ?>>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="s_imap_enc" class="col-sm-3 control-label"><?php echo $hesklang['enc']; ?>
+                            <a href="Javascript:void(0)"
+                               onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#67','400','500')"><i
+                                    class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                        <div class="col-sm-9 form-inline">
+                            <?php
+                            $none = $hesk_settings['imap_enc'] == '' ? 'checked' : '';
+                            $ssl = $hesk_settings['imap_enc'] == 'ssl' ? 'checked' : '';
+                            $tls = $hesk_settings['imap_enc'] == 'tls' ? 'checked' : '';
+                            echo '
+		<div class="radio"><label><input type="radio" name="s_imap_enc" value="ssl" id="i9" '.$ssl.' '.$onload_status.'> '.$hesklang['ssl'].'</label></div>&nbsp;&nbsp;&nbsp;
+		<div class="radio"><label><input type="radio" name="s_imap_enc" value="tls" id="i4" '.$tls.' '.$onload_status.'> '.$hesklang['tls'].'</label></div>&nbsp;&nbsp;&nbsp;
+		<div class="radio"><label><input type="radio" name="s_imap_enc" value="" id="i3" '.$none.' '.$onload_status.'> '.$hesklang['none'].'</label></div>
+		';
+                            ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="s_imap_keep" class="col-sm-3 control-label"><?php echo $hesklang['pop3keep']; ?>
+                            <a href="Javascript:void(0)"
+                               onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#67','400','500')"><i
+                                    class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                        <div class="col-sm-9 form-inline">
+                            <?php
+                            $on = $hesk_settings['imap_keep'] ? 'checked="checked"' : '';
+                            $off = $hesk_settings['imap_keep'] ? '' : 'checked="checked"';
+                            echo '
+		<div class="radio"><label><input type="radio" name="s_imap_keep" value="0" id="i7" '.$off.' '.$onload_status.'> '.$hesklang['off'].'</label></div>&nbsp;&nbsp;&nbsp;
+		<div class="radio"><label><input type="radio" name="s_imap_keep" value="1" id="i8" '.$on.' '.$onload_status.'> '.$hesklang['on'].'</label></div>
+		';
+                            ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="s_imap_user" class="col-sm-3 control-label"><?php echo $hesklang['imapu']; ?>
+                            <a href="Javascript:void(0)"
+                               onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#67','400','500')"><i
+                                    class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['imapu']); ?>" id="i5"
+                                   name="s_imap_user" size="40" maxlength="255"
+                                   value="<?php echo $hesk_settings['imap_user']; ?>" <?php echo $onload_status; ?> autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="s_imap_password" class="col-sm-3 control-label"><?php echo $hesklang['imapw']; ?>
+                            <a href="Javascript:void(0)"
+                               onclick="Javascript:hesk_window('<?php echo $help_folder; ?>email.html#67','400','500')"><i
+                                    class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['imapw']); ?>" id="i6"
+                                   name="s_imap_password" size="40" maxlength="255"
+                                   value="<?php echo $hesk_settings['imap_password']; ?>" <?php echo $onload_status; ?> autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-9 col-sm-offset-3">
+                            <input type="button" class="btn btn-default"
+                                   onclick="hesk_testIMAP()" value="<?php echo $hesklang['imaptest']; ?>">
+                        </div>
+                    </div>
+
+                    <!-- START IMAP TEST -->
+                    <div id="imap_test" style="display:none">
+                    </div>
+
+                    <script language="Javascript" type="text/javascript"><!--
+                        function hesk_testIMAP()
+                        {
+                            var element = document.getElementById('imap_test');
+                            element.innerHTML = '<img src="<?php echo HESK_PATH; ?>img/loading.gif" width="24" height="24" alt="" border="0" style="vertical-align:text-bottom" /> <i><?php echo addslashes($hesklang['contest']); ?></i>';
+                            element.style.display = 'block';
+
+                            var s_imap_host_name = document.getElementById('i1').value;
+                            var s_imap_host_port = document.getElementById('i2').value;
+                            var s_imap_user      = document.getElementById('i5').value;
+                            var s_imap_password  = document.getElementById('i6').value;
+                            var s_imap_enc       = document.getElementById('i4').checked ? 'tls' : (document.getElementById('i9').checked ? 'ssl' : '');
+
+                            var params = "test=imap" +
+                                "&s_imap_host_name="  + encodeURIComponent( s_imap_host_name ) +
+                                "&s_imap_host_port=" + encodeURIComponent( s_imap_host_port ) +
+                                "&s_imap_user="      + encodeURIComponent( s_imap_user ) +
+                                "&s_imap_password="  + encodeURIComponent( s_imap_password ) +
+                                "&s_imap_enc="       + encodeURIComponent( s_imap_enc );
+
+                            xmlHttp=GetXmlHttpObject();
+                            if (xmlHttp==null)
+                            {
+                                return;
+                            }
+
+                            xmlHttp.open('POST','test_connection.php',true);
+                            xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            xmlHttp.setRequestHeader("Content-length", params.length);
+                            xmlHttp.setRequestHeader("Connection", "close");
+
+                            xmlHttp.onreadystatechange = function()
+                            {
+                                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                                {
+                                    element.innerHTML = xmlHttp.responseText;
+                                }
+                            }
+
+                            xmlHttp.send(params);
+                        }
+                        //-->
+                    </script>
+                    <!-- END IMAP TEST -->
+
+                </div> <!-- END IMAP SETTINGS DIV -->
+
                 <h4 class="bold"><?php echo $hesklang['loops']; ?></h4>
                 <div class="form-group">
                     <label for="s_loop_hits" class="col-sm-3 control-label"><?php echo $hesklang['looph']; ?> <a
@@ -3635,7 +3831,7 @@ $modsForHesk_settings = mfh_getSettings();
                     }
 
                     /* Check if language file is for current version */
-                    if (strpos($tmp, '$hesklang[\'ms01\']') === false) {
+                    if (strpos($tmp, '$hesklang[\'imap\']') === false) {
                         $err .= "              |---->  WRONG VERSION (not " . $hesk_settings['hesk_version'] . ")\n";
                     }
 
