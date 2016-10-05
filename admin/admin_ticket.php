@@ -60,13 +60,18 @@ $can_archive = hesk_checkPermission('can_add_archive', 0);
 $can_assign_self = hesk_checkPermission('can_assign_self', 0);
 $can_view_unassigned = hesk_checkPermission('can_view_unassigned', 0);
 $can_change_cat = hesk_checkPermission('can_change_cat', 0);
+$can_change_own_cat  = hesk_checkPermission('can_change_own_cat',0);
 $can_ban_emails = hesk_checkPermission('can_ban_emails', 0);
 $can_unban_emails = hesk_checkPermission('can_unban_emails', 0);
 $can_ban_ips = hesk_checkPermission('can_ban_ips', 0);
 $can_unban_ips = hesk_checkPermission('can_unban_ips', 0);
+$can_resolve		 = hesk_checkPermission('can_resolve', 0);
 
 // Get ticket ID
 $trackingID = hesk_cleanID() or print_form();
+
+// Load custom fields
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
 
 $_SERVER['PHP_SELF'] = 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999);
 

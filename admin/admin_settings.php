@@ -47,6 +47,8 @@ require(HESK_PATH . 'inc/common.inc.php');
 $hesk_settings['language'] = $hesk_settings['language_default'];
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/mail_functions.inc.php');
+// Load custom fields
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -56,8 +58,6 @@ hesk_isLoggedIn();
 // Check permissions for this feature
 hesk_checkPermission('can_man_settings');
 
-// Load custom fields
-//require_once(HESK_PATH . 'inc/custom_fields.inc.php');
 
 // Test languages function
 if (isset($_GET['test_languages'])) {
