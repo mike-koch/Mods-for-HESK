@@ -84,10 +84,10 @@ else {
         <div class="box-body">
             <label>
                 <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
-                <?php $hesklang['arp']; ?>
+                <?php echo $hesklang['arp']; ?>
                 <span id="timer"></span>
             </label>
-            <script type="text/javascript">heskCheckReloading();</script>
+            <script type="text/javascript">heskCheckReloading();</script><br>
             <?php
             /* Print tickets? */
             if (hesk_checkPermission('can_view_tickets', 0)) {

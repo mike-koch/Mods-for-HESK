@@ -928,8 +928,8 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-6 form-inline">
                                 <?php
                                 $on = $hesk_settings['require_message'] == 1 ? 'checked="checked"' : '';
-                                $off = $hesk_settings['require_message'] == 0 ? '' : 'checked="checked"';
-                                $hide = $hesk_settings['require_message'] == -1 ? '' : 'checked="checked"';
+                                $off = $hesk_settings['require_message'] == 0 ? 'checked="checked"' : '';
+                                $hide = $hesk_settings['require_message'] == -1 ? 'checked="checked"' : '';
                                 echo '
                                 <div class="radio"><label><input type="radio" name="s_require_message" value="0" ' . $off . ' /> ' . $hesklang['off'] . '</label></div>&nbsp;&nbsp;&nbsp;
                                 <div class="radio"><label><input type="radio" name="s_require_message" value="1" ' . $on . ' /> ' . $hesklang['on'] . '</label></div>&nbsp;&nbsp;&nbsp;
@@ -1156,8 +1156,8 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-6 form-inline">
                                 <?php
                                 $on = $hesk_settings['require_subject'] == 1 ? 'checked="checked"' : '';
-                                $off = $hesk_settings['require_subject'] == 0 ? '' : 'checked="checked"';
-                                $hide = $hesk_settings['require_subject'] == -1 ? '' : 'checked="checked"';
+                                $off = $hesk_settings['require_subject'] == 0 ? 'checked="checked"' : '';
+                                $hide = $hesk_settings['require_subject'] == -1 ? 'checked="checked"' : '';
                                 echo '
                                 <div class="radio"><label><input type="radio" name="s_require_subject" value="0" ' . $off . ' /> ' . $hesklang['off'] . '</label></div>&nbsp;&nbsp;&nbsp;
                                 <div class="radio"><label><input type="radio" name="s_require_subject" value="1" ' . $on . ' /> ' . $hesklang['on'] . '</label></div>&nbsp;&nbsp;&nbsp;
@@ -1303,12 +1303,12 @@ $modsForHesk_settings = mfh_getSettings();
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="s_cat_show_select" class="col-sm-3 control-label"><?php echo $hesklang['scat']; ?> <a
+                            <label for="s_cat_show_select" class="col-sm-6 control-label"><?php echo $hesklang['scat']; ?> <a
                                     href="Javascript:void(0)"
                                     onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#71','400','500')"><i
                                         class="fa fa-question-circle settingsquestionmark"></i></a></label>
 
-                            <div class="col-sm-3">
+                            <div class="col-sm-6">
                                 <input type="text" class="form-control"
                                        placeholder="<?php echo htmlspecialchars($hesklang['scat']); ?>" name="s_cat_show_select"
                                        size="5" maxlength="3" value="<?php echo $hesk_settings['cat_show_select']; ?>">
@@ -1505,9 +1505,45 @@ $modsForHesk_settings = mfh_getSettings();
                     <div class="col-sm-8">
                         <div class="checkbox">
                             <label><input type="checkbox" name="s_email_view_ticket"
+                                          id="s_email_view_ticket" onclick="return checkRequiredEmail('s_email_view_ticket');"
                                           value="1" <?php if ($hesk_settings['email_view_ticket']) {
                                     echo 'checked="checked"';
                                 } ?>/> <?php echo $hesklang['reqetv']; ?></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="s_x_frame_opt"
+                           class="col-sm-4 control-label"><?php echo $hesklang['frames']; ?> <a
+                            href="Javascript:void(0)"
+                            onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#76','400','500')"><i
+                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                    <div class="col-sm-8">
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="s_x_frame_opt"
+                                          value="1" <?php if ($hesk_settings['x_frame_opt']) {
+                                    echo 'checked="checked"';} ?>> <?php echo $hesklang['frames2']; ?></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="s_force_ssl"
+                           class="col-sm-4 control-label"><?php echo $hesklang['ssl']; ?> <a
+                            href="Javascript:void(0)"
+                            onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#75','400','500')"><i
+                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                    <div class="col-sm-8">
+                        <div class="checkbox">
+                            <?php if (HESK_SSL): ?>
+                            <label><input type="checkbox" name="s_force_ssl"
+                                          value="1" <?php if ($hesk_settings['force_ssl']) {
+                                    echo 'checked="checked"';} ?>>
+                                <?php echo $hesklang['frames2']; ?>
+                            </label>
+                            <?php else: echo $hesklang['d_ssl']; ?>
+                            <?php endif ?>
                         </div>
                     </div>
                 </div>
@@ -2057,119 +2093,6 @@ $modsForHesk_settings = mfh_getSettings();
                         </select>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Custom Field Settings -->
-        <div class="box collapsed-box">
-            <div class="box-header with-border">
-                <h1 class="box-title">
-                    <?php echo $hesklang['tab_4']; ?>
-                </h1>
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-plus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="box-body">
-                <h4 class="bold"><?php echo $hesklang['custom_use']; ?> <a href="Javascript:void(0)"
-                                                                           onclick="Javascript:hesk_window('<?php echo $help_folder; ?>custom.html#41','400','500')"><i
-                            class="fa fa-question-circle settingsquestionmark"></i></a></h4>
-
-
-                <div class="form-group">
-                    <label for="custom-field-setting" class="col-sm-4 col-xs-12 control-label">
-                          <span class="label label-primary"
-                                data-toggle="tooltip"
-                                title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
-                        <?php echo $hesklang['custom_field_setting']; ?>
-                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                           title="<?php echo $hesklang['custom_field_setting']; ?>"
-                           data-content="<?php echo $hesklang['custom_field_setting_help']; ?>"></i>
-                    </label>
-
-                    <div class="col-sm-8 col-xs-12">
-                        <div class="checkbox">
-                            <label>
-                                <input id="custom-field-setting"
-                                       name="custom-field-setting"
-                                       type="checkbox"
-                                       onchange="changeText('fieldNameHeader',
-                                           '<?php echo $hesklang['custom_language_key']; ?>',
-                                           '<?php echo $hesklang['custom_n']; ?>',
-                                           this)"
-                                    <?php if ($modsForHesk_settings['custom_field_setting']) {
-                                        echo 'checked';
-                                    } ?>> <?php echo $hesklang['enable_custom_field_language']; ?>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <table class="table table-hover">
-                    <tr>
-                        <th><?php echo $hesklang['enable']; ?></th>
-                        <th><?php echo $hesklang['s_type']; ?></th>
-                        <th><?php echo $hesklang['custom_r']; ?></th>
-                        <th id="fieldNameHeader">
-                            <?php if ($modsForHesk_settings['custom_field_setting']) {
-                                echo $hesklang['custom_language_key'];
-                            } else {
-                                echo $hesklang['custom_n'];
-                            } ?>
-                        </th>
-                        <th><?php echo $hesklang['custom_place']; ?></th>
-                        <th><?php echo $hesklang['opt']; ?></th>
-                    </tr>
-
-                    <?php
-                    for ($i = 1; $i <= 20; $i++) {
-                        $this_field = $hesk_settings['custom_fields']['custom' . $i];
-
-                        $onload_locally = $this_field['use'] ? '' : ' disabled="disabled" ';
-
-                        echo '
-                    <tr>
-                    <td><div class="checkbox"><label><input type="checkbox" name="s_custom' . $i . '_use" value="1" id="c' . $i . '1" ';
-                        if ($this_field['use']) {
-                            echo 'checked="checked"';
-                        }
-                        echo ' onclick="hesk_attach_toggle(\'c' . $i . '1\',new Array(\'s_custom' . $i . '_type\',\'s_custom' . $i . '_req\',\'s_custom' . $i . '_name\',\'c' . $i . '5\',\'c' . $i . '6\'))" /> ' . $hesklang['yes'] . '</label></div></td>
-                    <td>
-                        <select class="form-control" name="s_custom' . $i . '_type" id="s_custom' . $i . '_type" ' . $onload_locally . '>
-                        <option value="text"     ' . ($this_field['type'] == 'text' ? 'selected="selected"' : '') . '>' . $hesklang['stf'] . '</option>
-                        <option value="textarea" ' . ($this_field['type'] == 'textarea' ? 'selected="selected"' : '') . '>' . $hesklang['stb'] . '</option>
-                        <option value="radio"    ' . ($this_field['type'] == 'radio' ? 'selected="selected"' : '') . '>' . $hesklang['srb'] . '</option>
-                        <option value="select"   ' . ($this_field['type'] == 'select' ? 'selected="selected"' : '') . '>' . $hesklang['ssb'] . '</option>
-                        <option value="checkbox" ' . ($this_field['type'] == 'checkbox' ? 'selected="selected"' : '') . '>' . $hesklang['scb'] . '</option>
-                        <option value="date" ' . ($this_field['type'] == 'date' ? 'selected="selected"' : '') . '>' . $hesklang['date_custom_field'] . '</option>
-                        <option value="multiselect" ' . ($this_field['type'] == 'multiselect' ? 'selected="selected"' : '') . '>' . $hesklang['multiple_select_custom_field'] . '</option>
-                        <option value="email" ' . ($this_field['type'] == 'email' ? 'selected="selected"' : '') . '>' . $hesklang['email_custom_field'] . '</option>
-                        <option value="hidden" ' . ($this_field['type'] == 'hidden' ? 'selected="selected"' : '') . '>' . $hesklang['hidden_custom_field'] . '</option>
-                        <option value="readonly" ' . ($this_field['type'] == 'readonly' ? 'selected="selected"' : '') . '>' . $hesklang['readonly_custom_field'] . '</option>
-                        </select>
-                    </td>
-                    <td><div class="checkbox"><label><input type="checkbox" name="s_custom' . $i . '_req" value="1" id="s_custom' . $i . '_req" ';
-                        if ($this_field['req']) {
-                            echo 'checked="checked"';
-                        }
-                        echo $onload_locally . ' /> ' . $hesklang['yes'] . '</label></div></td>
-                    <td><input class="form-control" type="text" name="s_custom' . $i . '_name" size="20" maxlength="255" id="s_custom' . $i . '_name" value="' . $this_field['name'] . '"' . $onload_locally . ' /></td>
-                    <td>
-                        <div class="radio"><label><input type="radio" name="s_custom' . $i . '_place" value="0" id="c' . $i . '5" ' . ($this_field['place'] ? '' : 'checked="checked"') . '  ' . $onload_locally . ' /> ' . $hesklang['place_before'] . '</label></div><br />
-                        <div class="radio"><label><input type="radio" name="s_custom' . $i . '_place" value="1" id="c' . $i . '6" ' . ($this_field['place'] ? 'checked="checked"' : '') . '  ' . $onload_locally . ' /> ' . $hesklang['place_after'] . '</label></div>
-                    </td>
-                    <td>
-                    <input type="hidden" name="s_custom' . $i . '_val" id="s_custom' . $i . '_val" value="' . $this_field['value'] . '" />
-                    <input type="hidden" name="s_custom' . $i . '_maxlen" id="s_custom' . $i . '_maxlen" value="' . $this_field['maxlen'] . '" />
-                    <a href="Javascript:void(0)" onclick="Javascript:return hesk_customOptions(\'custom' . $i . '\',\'s_custom' . $i . '_val\',\'s_custom' . $i . '_type\',\'s_custom' . $i . '_maxlen\',\'' . $this_field['type'] . '\')">' . $hesklang['opt'] . '</a>
-                    </td>
-
-                    </tr>
-                    ';
-                    } // End FOR
-                    ?>
-                </table>
             </div>
         </div>
 
