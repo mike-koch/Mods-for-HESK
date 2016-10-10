@@ -111,6 +111,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </li>
             ';
                     }
+                    if (hesk_checkPermission('can_man_settings', 0)) {
+                        echo '
+            <li role="presentation">
+                <a title="' . $hesklang['tab_4'] . '" href="custom_fields.php">' . $hesklang['tab_4'] . '</a>
+            </li>';
+                    }
                     ?>
                 </ul>
                 <div class="tab-content summaryList tabPadding">
@@ -375,7 +381,7 @@ function ban_ip()
 
     // Delete temporary bans from logins table
     if ($ip_to == $ip_from) {
-        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logins` WHERE `ip`='" . hesk_dbEscape($ip_display) . "' LIMIT 1");
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logins` WHERE `ip`='" . hesk_dbEscape($ip_display) . "'");
     }
 
     // Redirect either to banned ips or ticket page from now on
@@ -407,7 +413,7 @@ function unban_temp_ip()
     $ip = preg_replace('/[^0-9\.\-\/\*]/', '', hesk_REQUEST('ip'));
 
     // Delete from bans
-    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logins` WHERE `ip`='" . hesk_dbEscape($ip) . "' LIMIT 1");
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logins` WHERE `ip`='" . hesk_dbEscape($ip) . "'");
 
     // Show success
     hesk_process_messages($hesklang['ip_tempun'], 'banned_ips.php', 'SUCCESS');
@@ -423,7 +429,7 @@ function unban_ip()
     hesk_token_check();
 
     // Delete from bans
-    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "banned_ips` WHERE `id`=" . intval(hesk_GET('id')) . " LIMIT 1");
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "banned_ips` WHERE `id`=" . intval(hesk_GET('id')));
 
     // Redirect either to banned ips or ticket page from now on
     $redirect_to = ($trackingID = hesk_cleanID()) ? 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) : 'banned_ips.php';
