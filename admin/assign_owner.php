@@ -70,7 +70,7 @@ $owner = intval(hesk_REQUEST('owner'));
 /* If ID is -1 the ticket will be unassigned */
 if ($owner == -1) {
     $revision = sprintf($hesklang['thist2'], hesk_date(), '<i>' . $hesklang['unas'] . '</i>', $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`=0 , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`=0 , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
     hesk_process_messages($hesklang['tunasi2'], $_SERVER['PHP_SELF'], 'SUCCESS');
 } elseif ($owner < 1) {
@@ -89,10 +89,31 @@ if (!$row['isadmin']) {
     }
 }
 
+// Make sure two people don't assign a ticket to a different user at the same time
+if ($ticket['owner'] && $ticket['owner'] != $owner && hesk_REQUEST('unassigned') && hesk_GET('confirm') != 'Y') {
+    $new_owner = ($owner == $_SESSION['id']) ? $hesklang['scoy'] : sprintf($hesklang['scot'], $row['name']);
+
+    $res = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='{$ticket['owner']}' LIMIT 1");
+
+    if (hesk_dbNumRows($res) == 1) {
+        $row = hesk_dbFetchAssoc($res);
+
+        hesk_process_messages(
+            sprintf($hesklang['taat'], $row['name']) .
+            '<br /><br />' .
+            $new_owner .
+            '<br /><br />' .
+            '<a href="assign_owner.php?track='.$ticket['trackid'].'&amp;owner='.$owner.'&amp;token='.hesk_token_echo(0).'&amp;unassigned=1&amp;confirm=Y">'.$hesklang['ycto'].'</a> | ' .
+            '<a href="admin_ticket.php?track='.$ticket['trackid'].'">'.$hesklang['ncto'].'</a>',
+            $_SERVER['PHP_SELF'], 'NOTICE'
+        );
+    }
+}
+
 /* Assigning to self? */
 if ($can_assign_others || ($owner == $_SESSION['id'] && $can_assign_self)) {
     $revision = sprintf($hesklang['thist2'], hesk_date(), $row['name'] . ' (' . $row['user'] . ')', $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`={$owner} , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`={$owner} , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
     if ($owner != $_SESSION['id'] && !hesk_checkPermission('can_view_ass_others', 0)) {
         $_SERVER['PHP_SELF'] = 'admin_main.php';
