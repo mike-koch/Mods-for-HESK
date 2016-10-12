@@ -1001,7 +1001,7 @@ function remove_kb_att()
     // Remove attachment from article
     $art['attachments'] = str_replace($att_id.'#'.$att['real_name'].',','',$art['attachments']);
 
-	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `attachments`='".hesk_dbEscape($art['attachments'])."', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($id)."' LIMIT 1");
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `attachments`='".hesk_dbEscape($art['attachments'])."', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($id)."'");
 
     hesk_process_messages($hesklang['kb_att_rem'],'manage_knowledgebase.php?a=edit_article&id='.$id,'SUCCESS');
 } // END remove_kb_att()
@@ -1074,7 +1074,7 @@ function edit_category()
         }
 
         // Now delete the category
-        hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `id`='".intval($catid)."' LIMIT 1");
+        hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `id`='".intval($catid)."'");
 
 		$_SESSION['hide'] = array(
 			//'treemenu' => 1,
@@ -1085,7 +1085,7 @@ function edit_category()
         hesk_process_messages($hesklang['kb_cat_dlt'],'./manage_knowledgebase.php','SUCCESS');
     }
 
-	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `name`='".hesk_dbEscape($title)."',`parent`=".intval($parent).",`type`='".intval($type)."' WHERE `id`='".intval($catid)."' LIMIT 1");
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `name`='".hesk_dbEscape($title)."',`parent`=".intval($parent).",`type`='".intval($type)."' WHERE `id`='".intval($catid)."'");
 
     unset($_SESSION['hide']);
 
@@ -1124,9 +1124,9 @@ function save_article()
 	    $content = hesk_getHTML( hesk_POST('content') );
 		
 		// Clean the HTML code
-		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
-		$purifier = new HTMLPurifier();
-		$content = $purifier->purify($content);
+		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.php');
+		$purifier = new HeskHTMLPurifier();
+		$content = $purifier->heskPurify($content);
     }
 	else
     {
@@ -1236,7 +1236,7 @@ function save_article()
     `html`='".intval($html)."',
     `sticky`='".intval($sticky)."',
     `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."')
-    WHERE `id`='".intval($id)."' LIMIT 1");
+    WHERE `id`='".intval($id)."'");
 
     $_SESSION['artord'] = $id;
 
@@ -1984,9 +1984,9 @@ function new_article()
         $content = hesk_getHTML( hesk_POST('content') );
 		
 		// Clean the HTML code
-		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
-		$purifier = new HTMLPurifier();
-		$content = $purifier->purify($content);
+		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.php');
+		$purifier = new HeskHTMLPurifier();
+		$content = $purifier->heskPurify($content);
     }
 	else
     {
@@ -2137,7 +2137,7 @@ function remove_article()
     $article = hesk_dbFetchAssoc($result);
 	$catid = intval($article['catid']);
 
-    $result = hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `id`='".intval($id)."' LIMIT 1");
+    $result = hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `id`='".intval($id)."'");
 
     // Remove any attachments
     delete_kb_attachments($article['attachments']);
@@ -2172,7 +2172,7 @@ function order_category()
 
     $_SESSION['newcat'] = $catid;
 
-	$result = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `cat_order`=`cat_order`+".intval($move)." WHERE `id`='".intval($catid)."' LIMIT 1");
+	$result = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `cat_order`=`cat_order`+".intval($move)." WHERE `id`='".intval($catid)."'");
 	if (hesk_dbAffectedRows() != 1)
     {
     	hesk_error($hesklang['kb_cat_inv']);
@@ -2198,7 +2198,7 @@ function order_article()
 
     $_SESSION['artord'] = $id;
 
-	$result = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `art_order`=`art_order`+".intval($move)." WHERE `id`='".intval($id)."' LIMIT 1");
+	$result = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `art_order`=`art_order`+".intval($move)." WHERE `id`='".intval($id)."'");
 	if (hesk_dbAffectedRows() != 1)
     {
     	hesk_error($hesklang['kb_art_id']);
@@ -2306,7 +2306,7 @@ function toggle_sticky()
     $_SESSION['artord'] = $id;
 
 	/* Update article "sticky" status */
-	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `sticky`='" . intval($sticky) . " ' WHERE `id`='" . intval($id) . "' LIMIT 1");
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `sticky`='" . intval($sticky) . " ' WHERE `id`='" . intval($id) . "'");
 
     /* Update article order */
     update_article_order($catid);
@@ -2336,7 +2336,7 @@ function update_article_order($catid)
 			$previous_sticky = $article['sticky'];
 		}
 
-	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `art_order`=".intval($i)." WHERE `id`='".intval($article['id'])."' LIMIT 1");
+	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `art_order`=".intval($i)." WHERE `id`='".intval($article['id'])."'");
 	    $i += 10;
 	}
 
@@ -2356,7 +2356,7 @@ function update_category_order()
 	while ( $category = hesk_dbFetchAssoc($res) )
 	{
 
-	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `cat_order`=".intval($i)." WHERE `id`='".intval($category['id'])."' LIMIT 1");
+	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `cat_order`=".intval($i)." WHERE `id`='".intval($category['id'])."'");
 	    $i += 10;
 	}
 
@@ -2396,7 +2396,7 @@ function update_count($show_success=0)
     	$value['articles'] = isset($value['articles']) ? $value['articles'] : 0;
     	$value['articles_private'] = isset($value['articles_private']) ? $value['articles_private'] : 0;
     	$value['articles_draft'] = isset($value['articles_draft']) ? $value['articles_draft'] : 0;
-		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `articles`={$value['articles']}, `articles_private`={$value['articles_private']}, `articles_draft`={$value['articles_draft']} WHERE `id`='{$catid}' LIMIT 1");
+		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `articles`={$value['articles']}, `articles_private`={$value['articles_private']}, `articles_draft`={$value['articles_draft']} WHERE `id`='{$catid}'");
     }
 
 	// Show a success message?
@@ -2469,7 +2469,7 @@ function delete_kb_attachments($attachments)
 			hesk_unlink(HESK_PATH.$hesk_settings['attach_dir'].'/'.$file['saved_name']);
 		}
 
-		$result = hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` WHERE `att_id`='".intval($att_id)."' LIMIT 1");
+		$result = hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` WHERE `att_id`='".intval($att_id)."'");
 	}
 
     return true;
@@ -2485,7 +2485,7 @@ function hesk_stray_article($id)
     $article['catid'] = 1;
 
     // Update database
-    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `catid`=1 WHERE `id`='".intval($id)."' LIMIT 1");
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `catid`=1 WHERE `id`='".intval($id)."'");
 
     // Update count of articles in categories
     update_count();
