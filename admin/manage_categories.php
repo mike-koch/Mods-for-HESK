@@ -549,7 +549,7 @@ function change_priority()
         $priority = 3;
     }
 
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `priority`='{$priority}' WHERE `id`='" . intval($catid) . "' LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `priority`='{$priority}' WHERE `id`='" . intval($catid) . "'");
 
     hesk_cleanSessionVars('cat_ch_priority');
 
@@ -703,7 +703,7 @@ function update_category()
      `manager` = " . intval($manager) . ",
      `color` = " . $color . ",
      `usage` = " . intval($usage) . "
-     WHERE `id`='" . intval($catid) . "' LIMIT 1");
+     WHERE `id`='" . intval($catid) . "'");
 
     unset($_SESSION['selcat']);
     unset($_SESSION['catname2']);
@@ -726,7 +726,7 @@ function remove()
         hesk_process_messages($hesklang['cant_del_default_cat'], $_SERVER['PHP_SELF']);
     }
 
-    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `id`='" . intval($mycat) . "' LIMIT 1");
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `id`='" . intval($mycat) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_error("$hesklang[int_error]: $hesklang[cat_not_found].");
     }
@@ -749,7 +749,7 @@ function order_cat()
 
     $cat_move = intval(hesk_GET('move'));
 
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `cat_order`=`cat_order`+" . intval($cat_move) . " WHERE `id`='" . intval($catid) . "' LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `cat_order`=`cat_order`+" . intval($cat_move) . " WHERE `id`='" . intval($catid) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_error("$hesklang[int_error]: $hesklang[cat_not_found].");
     }
@@ -759,7 +759,7 @@ function order_cat()
 
     $i = 10;
     while ($mycat = hesk_dbFetchAssoc($res)) {
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `cat_order`=" . intval($i) . " WHERE `id`='" . intval($mycat['id']) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `cat_order`=" . intval($i) . " WHERE `id`='" . intval($mycat['id']) . "'");
         $i += 10;
     }
 
@@ -787,7 +787,7 @@ function toggle_autoassign()
     }
 
     /* Update auto-assign settings */
-    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `autoassign`='" . intval($autoassign) . "' WHERE `id`='" . intval($catid) . "' LIMIT 1");
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `autoassign`='" . intval($autoassign) . "' WHERE `id`='" . intval($catid) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_process_messages($hesklang['int_error'] . ': ' . $hesklang['cat_not_found'], './manage_categories.php');
     }
@@ -816,7 +816,7 @@ function toggle_type()
     }
 
     /* Update auto-assign settings */
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `type`='{$type}' WHERE `id`='" . intval($catid) . "' LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `type`='{$type}' WHERE `id`='" . intval($catid) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_process_messages($hesklang['int_error'] . ': ' . $hesklang['cat_not_found'], './manage_categories.php');
     }

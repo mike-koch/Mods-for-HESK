@@ -48,6 +48,9 @@ define('WYSIWYG', 1);
 /* Check permissions for this feature */
 hesk_checkPermission('can_man_canned');
 
+// Load custom fields
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
 /* What should we do? */
 if ($action = hesk_REQUEST('a')) {
     if (defined('HESK_DEMO')) {
@@ -442,7 +445,7 @@ function edit_saved()
         hesk_process_messages($hesk_error_buffer, 'manage_canned.php?saved_replies=' . $id);
     }
 
-    $result = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` SET `title`='" . hesk_dbEscape($savename) . "',`message`='" . hesk_dbEscape($msg) . "' WHERE `id`='" . intval($id) . "' LIMIT 1");
+    $result = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` SET `title`='" . hesk_dbEscape($savename) . "',`message`='" . hesk_dbEscape($msg) . "' WHERE `id`='" . intval($id) . "'");
 
     unset($_SESSION['canned']['what']);
     unset($_SESSION['canned']['id']);
@@ -501,7 +504,7 @@ function remove()
 
     $mysaved = intval(hesk_GET('id')) or hesk_error($hesklang['id_not_valid']);
 
-    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` WHERE `id`='" . intval($mysaved) . "' LIMIT 1");
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` WHERE `id`='" . intval($mysaved) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_error("$hesklang[int_error]: $hesklang[reply_not_found].");
     }
@@ -522,7 +525,7 @@ function order_saved()
 
     $reply_move = intval(hesk_GET('move'));
 
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` SET `reply_order`=`reply_order`+" . intval($reply_move) . " WHERE `id`='" . intval($replyid) . "' LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` SET `reply_order`=`reply_order`+" . intval($reply_move) . " WHERE `id`='" . intval($replyid) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_error("$hesklang[int_error]: $hesklang[reply_not_found].");
     }
@@ -532,7 +535,7 @@ function order_saved()
 
     $i = 10;
     while ($myreply = hesk_dbFetchAssoc($result)) {
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` SET `reply_order`=" . intval($i) . " WHERE `id`='" . intval($myreply['id']) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` SET `reply_order`=" . intval($i) . " WHERE `id`='" . intval($myreply['id']) . "'");
         $i += 10;
     }
 
