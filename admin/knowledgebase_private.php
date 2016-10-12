@@ -225,7 +225,7 @@ function hesk_show_kb_article($artid)
 	hesk_kb_header($hesk_settings['kb_link'], $article['catid']);
 
     // Update views by 1
-    hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `views`=`views`+1 WHERE `id`={$artid} LIMIT 1");
+    hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `views`=`views`+1 WHERE `id`={$artid}");
 
 ?>
 	<section class="content">
@@ -329,7 +329,15 @@ function hesk_show_kb_article($artid)
 						<table border="0">
 							<tr>
 								<td><?php echo $hesklang['aid']; ?>: </td>
-								<td><?php echo $article['id']; ?></td>
+								<td>
+									<?php
+									echo $article['id'];
+									if ($article['type'] == 0)
+									{
+										echo ' [<a href="' . $hesk_settings['hesk_url'] . '/knowledgebase.php?article=' . $article['id'] . '">' . $hesklang['public_link'] . '</a>]';
+									}
+									?>
+								</td>
 							</tr>
 							<tr>
 								<td><?php echo $hesklang['category']; ?>: </td>
