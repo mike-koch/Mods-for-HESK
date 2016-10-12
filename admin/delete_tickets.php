@@ -131,7 +131,7 @@ if (array_key_exists($_POST['a'], $priorities)) {
         hesk_okCategory($ticket['category']);
 
         $revision = sprintf($hesklang['thist8'], hesk_date(), $priority['formatted'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `priority`='{$priority['value']}', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`={$this_id} LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `priority`='{$priority['value']}', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`={$this_id}");
 
         $i++;
     }
@@ -223,7 +223,7 @@ elseif ($_POST['a'] == 'tag' || $_POST['a'] == 'untag') {
 
         hesk_okCategory($ticket['category']);
 
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `archive`='$archived' WHERE `id`='" . intval($this_id) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `archive`='$archived' WHERE `id`='" . intval($this_id) . "'");
         $i++;
     }
 
@@ -233,6 +233,7 @@ else {
     /* Check permissions for this feature */
     hesk_checkPermission('can_view_tickets');
     hesk_checkPermission('can_reply_tickets');
+    hesk_checkPermission('can_resolve');
 
     /* A security check */
     hesk_token_check('POST');
@@ -255,7 +256,7 @@ else {
         $closedStatusRS = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsStaffClosedOption` = 1");
         $closedStatus = hesk_dbFetchAssoc($closedStatusRS);
 
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='" . $closedStatus['ID'] . "', `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($this_id) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='" . $closedStatus['ID'] . "', `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($this_id) . "'");
         $i++;
 
         // Notify customer of closed ticket?
