@@ -51,6 +51,9 @@ hesk_checkPermission('can_view_tickets');
 
 $_SERVER['PHP_SELF'] = './admin_main.php';
 
+// Load custom fields
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
