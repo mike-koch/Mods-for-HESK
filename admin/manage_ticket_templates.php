@@ -408,7 +408,7 @@ function edit_saved()
         hesk_process_messages($hesk_error_buffer, 'manage_ticket_templates.php?saved_replies=' . $id);
     }
 
-    $result = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `title`='" . hesk_dbEscape($savename) . "',`message`='" . hesk_dbEscape($msg) . "' WHERE `id`='" . intval($id) . "' LIMIT 1");
+    $result = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `title`='" . hesk_dbEscape($savename) . "',`message`='" . hesk_dbEscape($msg) . "' WHERE `id`='" . intval($id) . "'");
 
     unset($_SESSION['canned']['what']);
     unset($_SESSION['canned']['id']);
@@ -467,7 +467,7 @@ function remove()
 
     $mysaved = intval(hesk_GET('id')) or hesk_error($hesklang['id_not_valid']);
 
-    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` WHERE `id`='" . intval($mysaved) . "' LIMIT 1");
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` WHERE `id`='" . intval($mysaved) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_error("$hesklang[int_error]: $hesklang[ticket_tpl_not_found].");
     }
@@ -488,7 +488,7 @@ function order_saved()
 
     $tpl_move = intval(hesk_GET('move'));
 
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `tpl_order`=`tpl_order`+" . intval($tpl_move) . " WHERE `id`='" . intval($tplid) . "' LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `tpl_order`=`tpl_order`+" . intval($tpl_move) . " WHERE `id`='" . intval($tplid) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_error("$hesklang[int_error]: $hesklang[ticket_tpl_not_found].");
     }
@@ -498,7 +498,7 @@ function order_saved()
 
     $i = 10;
     while ($mytpl = hesk_dbFetchAssoc($result)) {
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `tpl_order`=" . intval($i) . " WHERE `id`='" . intval($mytpl['id']) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `tpl_order`=" . intval($i) . " WHERE `id`='" . intval($mytpl['id']) . "'");
         $i += 10;
     }
 
