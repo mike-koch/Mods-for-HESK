@@ -389,6 +389,9 @@ if (isset($_GET['w'])) {
   <Style ss:ID="s62">
    <NumberFormat ss:Format="General Date"/>
   </Style>
+  <Style ss:ID="s63">
+   <NumberFormat ss:Format="Short Date"/>
+  </Style>
   <Style ss:ID="s65">
    <NumberFormat ss:Format="[h]:mm:ss"/>
   </Style>
@@ -416,7 +419,15 @@ if (isset($_GET['w'])) {
 
     foreach ($hesk_settings['custom_fields'] as $k => $v) {
         if ($v['use']) {
-            $tmp .= '<Column ss:AutoFitWidth="0" ss:Width="80"/>' . "\n";
+            switch ($v['type']) {
+                case 'date':
+                    $tmp_dt = hesk_custom_date_display_format($ticket[$k], 'Y-m-d\T00:00:00.000');
+                    $tmp .= strlen($tmp_dt) ? '<Cell ss:StyleID="s63"><Data ss:Type="DateTime">'.$tmp_dt : '<Cell><Data ss:Type="String">';
+                    $tmp .= "</Data></Cell> \n";
+                    break;
+                default:
+                    $tmp .= '<Cell><Data ss:Type="String"><![CDATA['.hesk_msgToPlain($ticket[$k], 1, 0).']]></Data></Cell>  ' . "\n";
+            }
         }
     }
 
