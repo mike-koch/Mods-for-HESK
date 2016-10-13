@@ -44,7 +44,9 @@ hesk_isLoggedIn();
 $modsForHesk_settings = mfh_getSettings();
 
 /* Check permissions for this feature */
-hesk_checkPermission('can_change_cat');
+if (hesk_checkPermission('can_change_cat', 0)) {
+    hesk_checkPermission('can_change_own_cat');
+}
 
 /* A security check */
 hesk_token_check('POST');
@@ -72,6 +74,11 @@ if (!$row['autoassign']) {
 
 /* Is user allowed to view tickets in new category? */
 $category_ok = hesk_okCategory($category, 0);
+
+// Is user allowed to move tickets to this category?
+if (!$category_ok && !hesk_checkPermission('can_submit_any_cat', 0)) {
+    hesk_process_messages($hesklang['noauth_move'],'admin_main.php');
+}
 
 /* Get details about the original ticket */
 $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
@@ -113,7 +120,7 @@ if ($need_to_reassign || !$ticket['owner']) {
     }
 }
 
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `category`='" . intval($category) . "', `owner`='" . intval($ticket['owner']) . "' , `history`=CONCAT(`history`,'" . hesk_dbEscape($history) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `category`='" . intval($category) . "', `owner`='" . intval($ticket['owner']) . "' , `history`=CONCAT(`history`,'" . hesk_dbEscape($history) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
 $ticket['category'] = $category;
 
