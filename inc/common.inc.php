@@ -1769,8 +1769,11 @@ function hesk_getFeatureArray()
         'can_del_tickets',        /* User can delete tickets */
         'can_edit_tickets',        /* User can edit tickets */
         'can_merge_tickets',    /* User can merge tickets */
+        'can_resolve',			/* User can resolve tickets */
+        'can_submit_any_cat',	/* User can submit a ticket to any category/department */
         'can_del_notes',        /* User can delete ticket notes posted by other staff members */
-        'can_change_cat',        /* User can move ticke to a new category/department */
+        'can_change_cat',		/* User can move ticket to any category/department */
+        'can_change_own_cat',	/* User can move ticket to a category/department he/she has access to */
         'can_man_kb',            /* User can manage knowledgebase articles and categories */
         'can_man_users',        /* User can create and edit staff accounts */
         'can_man_cat',            /* User can manage categories/departments */
@@ -1790,7 +1793,7 @@ function hesk_getFeatureArray()
         'can_ban_ips',            /* User can ban IP addresses */
         'can_unban_ips',        /* User can delete IP bans. Also enables "can_ban_ips" */
         'can_service_msg',        /* User can manage service messages shown in customer interface */
-        'can_man_email_tpl',    /* User can manage email templates */
+        'can_email_tpl',    /* User can manage email templates */
         'can_man_ticket_statuses', /* User can manage ticket statuses */
         'can_set_manager', /* User can set category managers */
         'can_man_permission_tpl', /* User can manage permission templates */
