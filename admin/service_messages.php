@@ -113,20 +113,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </li>
             ';
                     }
+                    // Show a link to custom_fields.php if user has permission to do so
+                    if ( hesk_checkPermission('can_man_settings',0) ) {
+                        echo '
+            <li role="presentation">
+                <a title="' . $hesklang['tab_4'] . '" href="custom_fields.php">' . $hesklang['tab_4'] . '</a>
+            </li>
+            ';
+                    }
                     ?>
                 </ul>
                 <div class="tab-content summaryList tabPadding">
-                    <script language="javascript" type="text/javascript"><!--
-                        function confirm_delete() {
-                            if (confirm('<?php echo hesk_makeJsString($hesklang['delban_confirm']); ?>')) {
-                                return true;
-                            }
-                            else {
-                                return false;
-                            }
-                        }
-                        //-->
-                    </script>
                     <div class="row">
                         <div class="col-sm-12">
                             <?php
@@ -494,9 +491,9 @@ function save_sm()
     $message = hesk_getHTML(hesk_POST('message'));
 	
 	// Clean the HTML code
-	require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
-	$purifier = new HTMLPurifier();
-	$message = $purifier->purify($message);
+	require(HESK_PATH . 'inc/htmlpurifier/HeskHTMLPurifier.php');
+	$purifier = new HeskHTMLPurifier();
+	$message = $purifier->heskPurify($message);
 
     // Any errors?
     if (count($hesk_error_buffer)) {
@@ -547,7 +544,7 @@ function save_sm()
 	`style` = '{$style}',
 	`type` = '{$type}',
 	`icon` = '{$icon}'
-	WHERE `id`={$id} LIMIT 1");
+	WHERE `id`={$id}");
 
     $_SESSION['smord'] = $id;
     hesk_process_messages($hesklang['sm_mdf'], 'service_messages.php', 'SUCCESS');
@@ -588,7 +585,7 @@ function order_sm()
     $_SESSION['smord'] = $id;
 
     // Update article details
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages` SET `order`=`order`+" . intval($move) . " WHERE `id`={$id} LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages` SET `order`=`order`+" . intval($move) . " WHERE `id`={$id}");
 
     // Update order of all service messages
     update_sm_order();
@@ -610,7 +607,7 @@ function update_sm_order()
     // Update database
     $i = 10;
     while ($sm = hesk_dbFetchAssoc($res)) {
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages` SET `order`=" . intval($i) . " WHERE `id`='" . intval($sm['id']) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages` SET `order`=" . intval($i) . " WHERE `id`='" . intval($sm['id']) . "'");
         $i += 10;
     }
 
@@ -630,7 +627,7 @@ function remove_sm()
     $id = intval(hesk_GET('id')) or hesk_error($hesklang['sm_e_id']);
 
     // Delete the service message
-    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages` WHERE `id`={$id} LIMIT 1");
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages` WHERE `id`={$id}");
 
     // Were we successful?
     if (hesk_dbAffectedRows() == 1) {
@@ -663,9 +660,9 @@ function new_sm()
     $message = hesk_getHTML(hesk_POST('message'));
 	
 	// Clean the HTML code
-	require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
-	$purifier = new HTMLPurifier();
-	$message = $purifier->purify($message);
+	require(HESK_PATH . 'inc/htmlpurifier/HeskHTMLPurifier.php');
+	$purifier = new HeskHTMLPurifier();
+	$message = $purifier->heskPurify($message);
 
     // Any errors?
     if (count($hesk_error_buffer)) {
