@@ -1118,4 +1118,79 @@ hesk_cleanSessionVars('isnotice');
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
-?>
+
+/*** START FUNCTIONS ***/
+
+
+function print_select_category($number_of_categories) {
+    global $hesk_settings, $hesklang;
+
+    // A category needs to be selected
+    if (isset($_GET['category']) && empty($_GET['category'])) {
+        hesk_process_messages($hesklang['sel_app_cat'],'NOREDIRECT','NOTICE');
+    }
+
+    /* This will handle error, success and notice messages */
+    hesk_handle_messages();
+    ?>
+
+    <div style="text-align: center">
+
+        <h3><?php echo $hesklang['select_category_staff']; ?></h3>
+
+        <div class="select_category">
+            <?php
+            // Print a select box if number of categories is large
+            if ($number_of_categories > $hesk_settings['cat_show_select'])
+            {
+                ?>
+                <form action="new_ticket.php" method="get">
+                    <select name="category" id="select_category">
+                        <?php
+                        if ($hesk_settings['select_cat'])
+                        {
+                            echo '<option value="">'.$hesklang['select'].'</option>';
+                        }
+                        foreach ($hesk_settings['categories'] as $k=>$v)
+                        {
+                            echo '<option value="'.$k.'">'.$v.'</option>';
+                        }
+                        ?>
+                    </select>
+
+                    &nbsp;<br />
+
+                    <div style="text-align:center">
+                        <input type="submit" value="<?php echo $hesklang['c2c']; ?>" class="btn btn-default">
+                    </div>
+                </form>
+                <?php
+            }
+            // Otherwise print quick links
+            else
+            {
+                ?>
+                <ul id="ul_category">
+                    <?php
+                    foreach ($hesk_settings['categories'] as $k=>$v)
+                    {
+                        echo '<li><a href="new_ticket.php?a=add&amp;category='.$k.'">&raquo; '.$v.'</a></li>';
+                    }
+                    ?>
+                </ul>
+                <?php
+            }
+            ?>
+        </div>
+    </div>
+
+    <p>&nbsp;</p>
+
+    <?php
+
+    hesk_cleanSessionVars('iserror');
+    hesk_cleanSessionVars('isnotice');
+
+    require_once(HESK_PATH . 'inc/footer.inc.php');
+    exit();
+} // END print_select_category()
