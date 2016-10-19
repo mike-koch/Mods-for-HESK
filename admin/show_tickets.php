@@ -45,6 +45,7 @@ hesk_dbConnect();
 hesk_isLoggedIn();
 
 define('CALENDAR', 1);
+define('AUTO_RELOAD',1);
 
 /* Check permissions for this feature */
 hesk_checkPermission('can_view_tickets');
@@ -69,6 +70,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
         </div>
         <div class="box-body">
+            <label>
+                <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
+                <?php echo $hesklang['arp']; ?>
+                <span id="timer"></span>
+            </label>
+            <script type="text/javascript">heskCheckReloading();</script>
             <?php
             /* Print the list of tickets */
             $is_search = 1;
