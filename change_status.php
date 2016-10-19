@@ -107,11 +107,21 @@ hesk_dbConnect();
 // Verify email address match if needed
 hesk_verifyEmailMatch($trackingID);
 
+// Setup required session vars
+$_SESSION['t_track'] = $trackingID;
+$_SESSION['t_email'] = $hesk_settings['e_email'];
+
+// Load statuses
+require_once(HESK_PATH . 'inc/statuses.inc.php');
+
+// Is current ticket status even changeable by customers?
+$ticket = hesk_dbFetchAssoc( hesk_dbQuery( "SELECT `status`, `staffreplies`, `lastreplier` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1") );
+if (!hesk_can_customer_change_status($ticket['status'])) {
+    hesk_process_messages($hesklang['scno'],'ticket.php');
+}
+
 // Lets make status assignment a bit smarter when reopening tickets
 if ($oldStatus == 2) {
-    // Get number of replies and last replier (customer or staff)
-    $ticket = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `staffreplies`, `lastreplier` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1"));
-
     // If ticket has no staff replies set the status to "New"
     if ($ticket['staffreplies'] < 1) {
         $statusRes = hesk_dbQuery('SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsNewTicketStatus` = 1');
@@ -128,11 +138,11 @@ if ($oldStatus == 2) {
 
 
 // Modify values in the database
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' AND `locked` != '1' LIMIT 1");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' AND `locked` != '1'");
 
 // Did we modify anything*
 if (hesk_dbAffectedRows() != 1) {
-    hesk_error($hesklang['elocked']);
+    hesk_process_messages($hesklang['elocked'],'ticket.php');
 }
 
 // Show success message
