@@ -38,7 +38,12 @@ if (!defined('IN_SCRIPT')) {
 // Set correct Content-Type header
 if (!defined('NO_HTTP_HEADER')) {
     header('Content-Type: text/html; charset=utf-8');
-	header('X-Frame-Options: SAMEORIGIN');
+
+    // Don't allow HESK to be loaded in a frame on third party domains
+    if ($hesk_settings['x_frame_opt'])
+    {
+        header('X-Frame-Options: SAMEORIGIN');
+    }
 }
 
 // Set backslash options
@@ -56,11 +61,46 @@ if (!defined('ENT_XHTML')) {
     define('ENT_XHTML', 0);
 }
 
+// Is this is a SSL connection?
+if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') {
+    define('HESK_SSL', true);
+
+    // Use https-only cookies
+    @ini_set('session.cookie_secure', 1);
+} else {
+    // Force redirect?
+    if ($hesk_settings['force_ssl']) {
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        exit();
+    }
+
+    define('HESK_SSL', false);
+}
+
+// Prevents javascript XSS attacks aimed to steal the session ID
+@ini_set('session.cookie_httponly', 1);
+
+// **PREVENTING SESSION FIXATION**
+// Session ID cannot be passed through URLs
+@ini_set('session.use_only_cookies', 1);
+
+
 // Load language file
 hesk_getLanguage();
 
 
 /*** FUNCTIONS ***/
+
+function hesk_setcookie($name, $value, $expire=0, $path=""){
+    if (HESK_SSL) {
+        setcookie($name, $value, $expire, $path, "", true, true);
+    } else {
+        setcookie($name, $value, $expire, $path, "", false, true);
+    }
+
+    return true;
+} // END hesk_setcookie()
 
 function hesk_service_message($sm)
 {
@@ -145,6 +185,11 @@ function hesk_clean_utf8($in)
 
 function hesk_load_database_functions()
 {
+    // Already loaded?
+    if (function_exists('hesk_dbQuery')) {
+        return true;
+    }
+
     // Preferrably use the MySQLi functions
     if (function_exists('mysqli_connect')) {
         require(HESK_PATH . 'inc/database_mysqli.inc.php');
@@ -204,7 +249,11 @@ function hesk_utf8_urldecode($in)
 
 function hesk_SESSION($in, $default = '')
 {
-    return isset($_SESSION[$in]) && ! is_array($_SESSION[$in]) ? $_SESSION[$in] : $default;
+    if (is_array($in)) {
+        return isset($_SESSION[$in[0]][$in[1]]) && ! is_array(isset($_SESSION[$in[0]][$in[1]])) ? $_SESSION[$in[0]][$in[1]] : $default;
+    } else {
+        return isset($_SESSION[$in]) && ! is_array($_SESSION[$in]) ? $_SESSION[$in] : $default;
+    }
 } // END hesk_SESSION();
 
 
@@ -327,7 +376,7 @@ function hesk_verifyEmailMatch($trackingID, $my_email = 0, $ticket_email = 0, $e
 
     /* Email doesn't match, clean cookies and error out */
     if ($error) {
-        setcookie('hesk_myemail', '');
+        hesk_setcookie('hesk_myemail', '');
         hesk_process_messages($hesklang['enmdb'], 'ticket.php?track=' . $trackingID . '&Refresh=' . rand(10000, 99999));
     } else {
         return false;
@@ -1105,7 +1154,7 @@ function hesk_getLanguage()
     }
 
     /* Remember and set the selected language */
-    setcookie('hesk_language', $hesk_settings['language'], time() + 31536000, '/');
+    hesk_setcookie('hesk_language', $hesk_settings['language'], time() + 31536000, '/');
     return hesk_returnLanguage();
 } // END hesk_getLanguage()
 
@@ -1113,10 +1162,45 @@ function hesk_getLanguage()
 function hesk_returnLanguage()
 {
     global $hesk_settings, $hesklang;
-    require(HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/text.php');
-    $customLanguagePath = HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/custom-text.php';
-    if (file_exists($customLanguagePath)) {
-        include($customLanguagePath);
+    // Variable that will be set to true if a language file was loaded
+    $language_loaded = false;
+
+    // Load requested language file
+    $language_file = HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/text.php';
+    if (file_exists($language_file)) {
+        require($language_file);
+        $language_loaded = true;
+    }
+
+    // Requested language file not found, try to load default installed language
+    if (!$language_loaded && $hesk_settings['language'] != HESK_DEFAULT_LANGUAGE) {
+        $language_file = HESK_PATH . 'language/' . $hesk_settings['languages'][HESK_DEFAULT_LANGUAGE]['folder'] . '/text.php';
+        if (file_exists($language_file)) {
+            require($language_file);
+            $language_loaded = true;
+            $hesk_settings['language'] = HESK_DEFAULT_LANGUAGE;
+        }
+    }
+
+    // Requested language file not found, can we at least load English?
+    if (!$language_loaded && $hesk_settings['language'] != 'English' && HESK_DEFAULT_LANGUAGE != 'English') {
+        $language_file = HESK_PATH . 'language/en/text.php';
+        if (file_exists($language_file)) {
+            require($language_file);
+            $language_loaded = true;
+            $hesk_settings['language'] = 'English';
+        }
+    }
+
+    // If a language is still not loaded, give up
+    if (!$language_loaded) {
+        die('Count not load a valid language file.');
+    }
+
+    // Load a custom text file if available
+    $language_file = HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/custom-text.php';
+    if (file_exists($language_file)) {
+        require($language_file);
     }
     return true;
 } // END hesk_returnLanguage()
