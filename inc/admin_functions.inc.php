@@ -249,7 +249,7 @@ function hesk_mergeTickets($merge_these, $merge_into)
     }
 
     /* Update history (log) and merged IDs of target ticket */
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET $replies_sql `time_worked`=ADDTIME(`time_worked`, '" . hesk_dbEscape($sec_worked) . "'), `merged`=CONCAT(`merged`,'" . hesk_dbEscape($merged . '#') . "'), `history`=CONCAT(`history`,'" . hesk_dbEscape($history) . "') WHERE `id`='" . intval($merge_into) . "' LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET $replies_sql `time_worked`=ADDTIME(`time_worked`, '" . hesk_dbEscape($sec_worked) . "'), `merged`=CONCAT(`merged`,'" . hesk_dbEscape($merged . '#') . "'), `history`=CONCAT(`history`,'" . hesk_dbEscape($history) . "') WHERE `id`='" . intval($merge_into) . "'");
 
     return true;
 
