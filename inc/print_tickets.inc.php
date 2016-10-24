@@ -33,6 +33,9 @@ if (!defined('IN_SCRIPT')) {
     die('Invalid attempt');
 }
 
+// Load custom fields
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
 // This SQL code will be used to retrieve results
 $sql_final = "SELECT
 `id`,
