@@ -98,6 +98,7 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
 
                         <div class="col-md-9">
                             <input type="text" class="form-control" name="user" size="40" maxlength="20"
+                                   autocomplete="off"
                                    value="<?php echo $_SESSION[$session_array]['user']; ?>"
                                    placeholder="<?php echo htmlspecialchars($hesklang['username']); ?>"
                                    data-error="<?php echo htmlspecialchars($hesklang['enter_username']); ?>"
@@ -297,7 +298,30 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                 </div>
                                 <?php
                             }
+
+                            if (empty($_SESSION[$session_array]['autoreload'])) {
+                                $reload_time = 30;
+                                $sec = 'selected';
+                                $min = '';
+                            } else {
+                                $reload_time = intval($_SESSION[$session_array]['autoreload']);
+
+                                if ($reload_time >= 60 && $reload_time % 60 == 0) {
+                                    $reload_time = $reload_time / 60;
+                                    $sec = '';
+                                    $min = 'selected';
+                                } else {
+                                    $sec = 'selected';
+                                    $min = '';
+                                }
+                            }
                             ?>
+                            <label><input type="checkbox" name="autoreload" value="1" <?php if (!empty($_SESSION[$session_array]['autoreload'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['arpp']; ?></label>
+                            <input type="text" name="reload_time" value="<?php echo $reload_time; ?>" size="5" maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]+/,'')" />
+                            <select name="secmin">
+                                <option value="sec" <?php echo $sec; ?>><?php echo $hesklang['seconds']; ?></option>
+                                <option value="min" <?php echo $min; ?>><?php echo $hesklang['minutes']; ?></option>
+                            </select>
                             <div class="checkbox">
                                 <label><input type="checkbox" name="notify_customer_new"
                                               value="1" <?php if (!empty($_SESSION[$session_array]['notify_customer_new'])) {
