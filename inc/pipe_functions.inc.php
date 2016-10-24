@@ -227,7 +227,7 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
         $ticket['status'] = $ticket['status'] ? $waiting_reply_rs['id'] : $new_status['id'];
 
         // Update ticket as necessary
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `lastchange`=NOW(),`status`='{$ticket['status']}',`replies`=`replies`+1,`lastreplier`='0' WHERE `id`='" . intval($ticket['id']) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `lastchange`=NOW(),`status`='{$ticket['status']}',`replies`=`replies`+1,`lastreplier`='0' WHERE `id`='" . intval($ticket['id']) . "'");
 
         // If customer replied, we assume staff replies have been read (no way to be sure if ticket.php hasn't been opened)
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `read` = '1' WHERE `replyto` = '" . intval($ticket['id']) . "' AND `staffid` != '0' ");
@@ -475,7 +475,7 @@ function hesk_isEmailLoop($email, $message_hash)
         }
 
         // Update DB entry
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "pipe_loops` SET `hits` = `hits` + 1, `message_hash` = '" . hesk_dbEscape($message_hash) . "' WHERE `email` LIKE '{$email_like}' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "pipe_loops` SET `hits` = `hits` + 1, `message_hash` = '" . hesk_dbEscape($message_hash) . "' WHERE `email` LIKE '{$email_like}'");
     } else {
         // First instance, insert a new database row
         hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "pipe_loops` (`email`, `message_hash`) VALUES ('" . hesk_dbEscape($email) . "', '" . hesk_dbEscape($message_hash) . "')");
