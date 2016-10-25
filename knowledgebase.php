@@ -91,7 +91,7 @@ if (isset($_GET['rating'])) {
 					");
     }
 
-    setcookie('hesk_kb_rate', $_COOKIE['hesk_kb_rate'] . 'a' . $artid . '%', time() + 2592000);
+    hesk_setcookie('hesk_kb_rate', $_COOKIE['hesk_kb_rate'] . 'a' . $artid . '%', time() + 2592000);
     header('Location: knowledgebase.php?article=' . $artid . '&rated=1');
     exit();
 }
@@ -263,7 +263,7 @@ if (!$show['show']) {
 
             // Update views by 1 - exclude known bots and reloads because of ratings
             if (!isset($_GET['rated']) && !hesk_detect_bots()) {
-                hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_articles` SET `views`=`views`+1 WHERE `id`={$artid} LIMIT 1");
+                hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_articles` SET `views`=`views`+1 WHERE `id`={$artid}");
             }
             if (!isset($_GET['suggest'])) {
                 $historyNumber = isset($_GET['rated']) ? '-2' : '-1';
