@@ -3832,7 +3832,7 @@ $modsForHesk_settings = mfh_getSettings();
                     }
 
                     /* Check if language file is for current version */
-                    if (strpos($tmp, '$hesklang[\'imap\']') === false) {
+                    if (strpos($tmp, '$hesklang[\'rcheck\']') === false) {
                         $err .= "              |---->  WRONG VERSION (not " . $hesk_settings['hesk_version'] . ")\n";
                     }
 

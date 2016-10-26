@@ -258,7 +258,7 @@ if ($set['smtp']) {
         $set['smtp'] = 0;
     }
 } else {
-    $set['smtp_host_name'] = hesk_input(hesk_POST('tmp_smtp_host_name', 'mail.domain.com'));
+    $set['smtp_host_name'] = hesk_input(hesk_POST('tmp_smtp_host_name', 'mail.example.com'));
     $set['smtp_host_port'] = intval(hesk_POST('tmp_smtp_host_port', 25));
     $set['smtp_timeout'] = intval(hesk_POST('tmp_smtp_timeout', 10));
     $set['smtp_ssl'] = empty($_POST['tmp_smtp_ssl']) ? 0 : 1;
@@ -291,7 +291,7 @@ if ($set['pop3']) {
     }
 } else {
     $set['pop3_job_wait'] = intval(hesk_POST('s_pop3_job_wait', 15));
-    $set['pop3_host_name'] = hesk_input(hesk_POST('tmp_pop3_host_name', 'mail.domain.com'));
+    $set['pop3_host_name'] = hesk_input(hesk_POST('tmp_pop3_host_name', 'mail.example.com'));
     $set['pop3_host_port'] = intval(hesk_POST('tmp_pop3_host_port', 110));
     $set['pop3_tls'] = empty($_POST['tmp_pop3_tls']) ? 0 : 1;
     $set['pop3_keep'] = empty($_POST['tmp_pop3_keep']) ? 0 : 1;
@@ -316,10 +316,10 @@ if ($set['imap']) {
     }
 } else {
     $set['imap_job_wait']	= intval( hesk_POST('s_imap_job_wait', 15) );
-    $set['imap_host_name']	= hesk_input( hesk_POST('tmp_imap_host_name', 'mail.domain.com') );
+    $set['imap_host_name']	= hesk_input( hesk_POST('tmp_imap_host_name', 'mail.example.com') );
     $set['imap_host_port']	= intval( hesk_POST('tmp_imap_host_port', 110) );
-    $set['imap_enc']		= hesk_POST('s_imap_enc');
-    $set['imap_enc']		= ($set['tmp_imap_enc'] == 'ssl' || $set['tmp_imap_enc'] == 'tls') ? $set['tmp_imap_enc'] : '';
+    $set['imap_enc']		= hesk_POST('tmp_imap_enc');
+    $set['imap_enc']		= ($set['imap_enc'] == 'ssl' || $set['imap_enc'] == 'tls') ? $set['imap_enc'] : '';
     $set['imap_keep']		= empty($_POST['tmp_imap_keep']) ? 0 : 1;
     $set['imap_user']		= hesk_input( hesk_POST('tmp_imap_user') );
     $set['imap_password']	= hesk_input( hesk_POST('tmp_imap_password') );
@@ -424,7 +424,8 @@ foreach ($hesk_settings['possible_ticket_list'] as $key => $title) {
 
 // We need at least one of these: id, trackid, subject
 if (!in_array('id', $set['ticket_list']) && !in_array('trackid', $set['ticket_list']) && !in_array('subject', $set['ticket_list'])) {
-    $set['ticket_list'][] = 'trackid';
+    // None of the required fields are there, add "trackid" as the first one
+    array_unshift($set['ticket_list'], 'trackid');
 }
 
 $set['ticket_list'] = count($set['ticket_list']) ? "'" . implode("','", $set['ticket_list']) . "'" : 'trackid';
@@ -838,7 +839,7 @@ function hesk_getLanguagesArray($returnArray = 0)
                     $add = 0;
                 } elseif (!preg_match('/\$hesklang\[\'EMAIL_HR\'\]\=\'(.*)\'\;/', $tmp, $hr)) {
                     $add = 0;
-                } elseif (!preg_match('/\$hesklang\[\'imap\'\]/', $tmp)) {
+                } elseif (!preg_match('/\$hesklang\[\'rcheck\'\]/', $tmp)) {
                     $add = 0;
                 }
             } else {
