@@ -155,8 +155,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <h6 class="bold"><?php echo $hesklang['banex']; ?></h6>
 
                             <div class="footerWithBorder blankSpace"></div>
-                            <b>john@email.com</b><br/>
-                            <b>@domain.com</b>
+                            <b>john@example.com</b><br/>
+                            <b>@example.com</b>
                         </div>
                     </div>
                     <div class="row">

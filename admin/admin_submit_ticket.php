@@ -364,9 +364,7 @@ hesk_cleanSessionVars('as_owner');
 hesk_cleanSessionVars('as_notify');
 hesk_cleanSessionVars('as_show');
 foreach ($hesk_settings['custom_fields'] as $k => $v) {
-    if ($v['use']) {
-        hesk_cleanSessionVars("as_$k");
-    }
+    hesk_cleanSessionVars("as_$k");
 }
 
 // If ticket has been assigned to the person submitting it lets show a message saying so

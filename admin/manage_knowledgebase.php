@@ -473,18 +473,33 @@ if (!isset($_SESSION['hide']['new_article']))
                                 <?php
                                 display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php');
                             endif; // End attachments
+
+                            // Redirect to the correct page
+                            switch ($from)
+                            {
+                                case 'draft':
+                                    $redirect_action = 'a=list_draft';
+                                    break;
+                                case 'private':
+                                    $redirect_action = 'a=list_private';
+                                    break;
+                                default:
+                                    $redirect_action = 'a=manage_cat&amp;catid='.$catid;
+                                    break;
+                            }
                             ?>
                         </div>
                     </div>
                 </div>
                 <div class="box-footer">
                     <div class="form-group">
-                        <input type="hidden" name="a" value="new_article" />
-                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                        <input type="hidden" name="a" value="new_article">
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                        <input type="hidden" name="from" value="<?php echo $from; ?>">
 
                         <div class="btn-group">
-                            <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary" />
-                            <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
+                            <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary">
+                            <a class="btn btn-default" href="manage_knowledgebase.php?<?php echo $redirect_action; ?>"><?php echo $hesklang['cancel']; ?></a>
                         </div>
                     </div>
                 </div>
@@ -670,8 +685,8 @@ function list_draft() {
                                 <td><?php echo $kb_cat[$article['catid']]; ?></td>
                                 <td style="white-space:nowrap;">
                                     <a href="knowledgebase_private.php?article=<?php echo $article['id']; ?>&amp;back=1<?php if ($article['type'] == 2) {echo '&amp;draft=1';} ?>" target="_blank"><i class="fa fa-file-o" data-toggle="tooltip" title="<?php echo $hesklang['viewart']; ?>"></i></a>
-                                    <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
-                                    <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times icon-link red" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a></td>
+                                    <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>&amp;from=draft"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
+                                    <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>&amp;from=draft" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times icon-link red" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a></td>
                             </tr>
                             <?php
                             $j++;
@@ -820,8 +835,8 @@ function list_private() {
                                     <?php echo $rat; ?>
                                     <td class="text-center">
                                         <a href="knowledgebase_private.php?article=<?php echo $article['id']; ?>&amp;back=1<?php if ($article['type'] == 2) {echo '&amp;draft=1';} ?>" target="_blank"><i class="fa fa-file-o icon-link" data-toggle="tooltip" title="<?php echo $hesklang['viewart']; ?>"></i></a>
-                                        <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
-                                        <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times red icon-link" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a>&nbsp;</td>
+                                        <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>&amp;from=private"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
+                                        <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>&amp;from=private" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times red icon-link" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a>&nbsp;</td>
                                 </tr>
                                 <?php
                                 $j++;
@@ -1111,6 +1126,7 @@ function save_article()
     $old_catid = intval( hesk_POST('old_catid') );
     $old_type  = intval( hesk_POST('old_type') );
     $old_type  = ($old_type < 0 || $old_type > 2) ? 0 : $old_type;
+    $from = hesk_POST('from');
 
     $subject = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer[] = $hesklang['kb_e_subj'];
 
@@ -1209,7 +1225,7 @@ function save_article()
 		$hesk_error_buffer = $tmp;
 
     	$hesk_error_buffer = $hesklang['rfm'].'<br /><br /><ul>'.$hesk_error_buffer.'</ul>';
-    	hesk_process_messages($hesk_error_buffer,'./manage_knowledgebase.php?a=edit_article&id='.$id);
+        hesk_process_messages($hesk_error_buffer,'./manage_knowledgebase.php?a=edit_article&id='.$id.'&from='.$from);
     }
 
 	/* Add to database */
@@ -1247,7 +1263,20 @@ function save_article()
     // Update article order
     update_article_order($catid);
 
-    hesk_process_messages($hesklang['your_kb_mod'],'./manage_knowledgebase.php?a=manage_cat&catid='.$catid,'SUCCESS');
+    // Redirect to the correct page
+    switch ($from) {
+        case 'draft':
+            $redirect_action = 'a=list_draft';
+            break;
+        case 'private':
+            $redirect_action = 'a=list_private';
+            break;
+        default:
+            $redirect_action = 'a=manage_cat&catid='.$catid;
+            break;
+    }
+
+    hesk_process_messages($hesklang['your_kb_mod'],'./manage_knowledgebase.php?'.$redirect_action,'SUCCESS');
 } // END save_article()
 
 
@@ -1277,6 +1306,8 @@ function edit_article()
     }
 
     $catid = $article['catid'];
+
+    $from = hesk_GET('from');
 
     if (isset($_SESSION['edit_article']))
     {
@@ -2136,6 +2167,7 @@ function remove_article()
 
     $article = hesk_dbFetchAssoc($result);
 	$catid = intval($article['catid']);
+    $from = hesk_GET('from');
 
     $result = hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `id`='".intval($id)."'");
 
@@ -2156,7 +2188,20 @@ function remove_article()
 	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `articles_draft`=`articles_draft`-1 WHERE `id`='{$catid}'");
 	}
 
-	hesk_process_messages($hesklang['your_kb_deleted'],'./manage_knowledgebase.php?a=manage_cat&catid='.$catid,'SUCCESS');
+    // Redirect to the correct page
+    switch ($from) {
+        case 'draft':
+            $redirect_action = 'a=list_draft';
+            break;
+        case 'private':
+            $redirect_action = 'a=list_private';
+            break;
+        default:
+            $redirect_action = 'a=manage_cat&catid='.$catid;
+            break;
+    }
+
+    hesk_process_messages($hesklang['your_kb_deleted'],'./manage_knowledgebase.php?'.$redirect_action,'SUCCESS');
 } // End remove_article()
 
 

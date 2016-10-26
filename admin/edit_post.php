@@ -347,7 +347,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
 
                                     foreach ($v['value']['radio_options'] as $option) {
-                                        if (strlen($k_value) == 0 || $k_value == $option) {
+                                        if (strlen($k_value) == 0) {
+                                            $k_value = $option;
+                                            $checked = empty($v['value']['no_default']) ? 'checked="checked"' : '';
+                                        } elseif ($k_value == $option) {
                                             $k_value = $option;
                                             $checked = 'checked="checked"';
                                         } else {
@@ -460,20 +463,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 					';
                                     break;
 
-                                // Hidden
+                                // Hidden (same as text for staff)
                                 case 'hidden':
-                                    if (strlen($k_value) != 0) {
-                                        $v['value']['hidden_default_value'] = $k_value;
-                                    }
-                                    echo '
-					<tr>
-					<td style="text-align:right" width="150">'.$v['name:'].' '.$v['req'].'</td>
-					<td width="80%"><input type="text" name="'.$k.'" size="40" value="'.$v['value']['hidden_default_value'].'" '.$cls.' /> ('.$hesklang['sch'].')</td>
-					</tr>
-					';
-                                    break;
-
-                                /* Default text input */
                                 default:
                                     if (strlen($k_value) != 0) {
                                         $v['value']['default_value'] = $k_value;
