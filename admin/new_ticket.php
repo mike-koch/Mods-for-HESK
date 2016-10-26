@@ -286,7 +286,7 @@ $show_quick_help = $show['show'];
                                } else if (isset($_GET['email'])) {
                                    echo hesk_GET('email');
                                } ?>" <?php if ($hesk_settings['detect_typos']) {
-                            echo ' onblur="Javascript:hesk_suggestEmail(1)"';
+                            echo ' onblur="Javascript:Javascript:hesk_suggestEmail(\'email\', \'email_suggestions\', 1, 1)"';
                         } ?>
                                placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
                                onkeyup="disableIfEmpty('email','notify-email')">

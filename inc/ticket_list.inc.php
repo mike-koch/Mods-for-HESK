@@ -27,7 +27,6 @@
  *  a license please visit the page below:
  *  https://www.hesk.com/buy.php
  *******************************************************************************/
-define('MINIMUM_REFRESH_THRESHOLD_IN_SECONDS', 1);
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {
     die('Invalid attempt');
@@ -106,15 +105,7 @@ if ($total > 0) {
     $next_page = ($page + 1 > $pages) ? 0 : $page + 1;
     $autorefreshInSeconds = $_SESSION['autorefresh'] / 1000;
     $autorefresh = '';
-    if ($autorefreshInSeconds >= MINIMUM_REFRESH_THRESHOLD_IN_SECONDS) {
-        $autorefresh = ' | ' . $hesklang['autorefresh'] . ' ' . $autorefreshInSeconds . ' ' . $hesklang['abbr']['second'];
-        ?>
-        <script>
-            (function () {
-                setTimeout("location.reload(true);", <?php echo $_SESSION['autorefresh']; ?>);
-            })();
-        </script>
-    <?php }
+
     echo sprintf($hesklang['tickets_on_pages'], $total, $pages) . $autorefresh . ' <br />';
 
     if ($pages > 1) {
@@ -403,14 +394,11 @@ if ($total > 0) {
             // Print custom fields
             foreach ($hesk_settings['custom_fields'] as $key => $value) {
                 if ($value['use'] && hesk_show_column($key)) {
-                    echo '<td class="' . $color . '">';
-                    if ($value['type'] == 'date' && !empty($ticket[$key])) {
-                        $dt = date('Y-m-d h:i:s', $ticket[$key]);
-                        echo hesk_dateToString($dt, 0);
-                    } else {
-                        echo $ticket[$key];
-                    }
-                    echo '</td>';
+                    echo '<td class="'.$color.'">'.
+                        ($value['type'] == 'date'
+                            ? hesk_custom_date_display_format($ticket[$key], $value['value']['date_format'])
+                            : $ticket[$key]).
+                        '</td>';
                 }
             }
 
@@ -439,8 +427,13 @@ if ($total > 0) {
                         <option value="high"><?php echo $hesklang['set_pri_to'] . ' ' . $hesklang['high']; ?></option>
                         <option
                             value="critical"><?php echo $hesklang['set_pri_to'] . ' ' . $hesklang['critical']; ?></option>
-                        <option value="close"><?php echo $hesklang['close_selected']; ?></option>
                         <?php
+                        if (hesk_checkPermission('can_resolve', 0)) {
+                            ?>
+                            <option value="close"><?php echo $hesklang['close_selected']; ?></option>
+                            <?php
+                        }
+
                         if (hesk_checkPermission('can_add_archive', 0)) {
                             ?>
                             <option value="tag"><?php echo $hesklang['add_archive_quick']; ?></option>
@@ -477,17 +470,6 @@ if ($total > 0) {
 else {
     echo '<div class="row"><div class="col-sm-12">';
     $autorefreshInSeconds = $_SESSION['autorefresh'] / 1000;
-
-    if ($autorefreshInSeconds >= MINIMUM_REFRESH_THRESHOLD_IN_SECONDS) {
-        echo $hesklang['autorefresh'] . ' ' . $autorefreshInSeconds . ' ' . $hesklang['abbr']['second'];
-        ?>
-        <script>
-            (function () {
-                setTimeout("location.reload(true);", <?php echo $_SESSION['autorefresh']; ?>);
-            })();
-        </script>
-        <?php
-    }
 
     if (isset($is_search) || $href == 'find_tickets.php') {
         hesk_show_notice($hesklang['no_tickets_crit']);
