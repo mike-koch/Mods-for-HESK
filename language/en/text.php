@@ -2045,6 +2045,9 @@ $hesklang['status_limit']='You have 100 custom statuses, no new can be created.'
 $hesklang['public_link']='Public link'; // Link to the public KB article in the private KB pages
 $hesklang['frames']='Frames';
 $hesklang['frames2']='Prevent loading HESK in frames on third party domains';
+$hesklang['numsub']='Submitted tickets'; // Will show how many tickets this user submitted
+$hesklang['hidf']='Hidden inputs are not visible to customers on the Submit a ticket form (the value will still be visible on ticket details page if they are set as public). They behave as normal text fields for staff members.';
+$hesklang['rcheck']='Do not select a default option';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

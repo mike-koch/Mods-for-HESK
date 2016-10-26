@@ -244,6 +244,8 @@ function update_profile()
         if ($_SESSION['new']['autoreload'] < 0 || $_SESSION['new']['autoreload'] > 65535) {
             $_SESSION['new']['autoreload'] = 30;
         }
+    } else {
+        hesk_setcookie('autorefresh', '');
     }
 
     /* Auto-start ticket timer */

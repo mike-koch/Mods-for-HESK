@@ -35,8 +35,13 @@ if (!defined('IN_SCRIPT')) {
 
 #error_reporting(E_ALL);
 
-// Set correct Content-Type header
-if (!defined('NO_HTTP_HEADER')) {
+/*
+ * If code is executed from CLI, don't force SSL
+ * else set correct Content-Type header
+ */
+if (defined('NO_HTTP_HEADER')) {
+    $hesk_settings['force_ssl'] = false;
+} else {
     header('Content-Type: text/html; charset=utf-8');
 
     // Don't allow HESK to be loaded in a frame on third party domains

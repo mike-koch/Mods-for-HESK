@@ -344,13 +344,8 @@ $show_quick_help = $show['show'];
                 </div>
                 <?php
                 /* custom fields BEFORE comments */
-                $hidden_cf_buffer = '';
                 foreach ($hesk_settings['custom_fields'] as $k => $v) {
                     if ($v['use'] && $v['place'] == 0 && hesk_is_custom_field_in_category($k, $category)) {
-                        if ($modsForHesk_settings['custom_field_setting']) {
-                            $v['name'] = $hesklang[$v['name']];
-                        }
-
                         $v['req'] = $v['req']==2 ? '<span class="important">*</span>' : '';
 
                         if ($v['type'] == 'checkbox' && !isset($_GET["c_$k"])) {
@@ -381,7 +376,10 @@ $show_quick_help = $show['show'];
 
                                 foreach ($v['value']['radio_options'] as $option) {
 
-                                    if (strlen($k_value) == 0 || $k_value == $option) {
+                                    if (strlen($k_value) == 0) {
+                                        $k_value = $option;
+                                        $checked = empty($v['value']['no_default']) ? 'checked="checked"' : '';
+                                    } elseif ($k_value == $option) {
                                         $k_value = $option;
                                         $checked = 'checked="checked"';
                                     } else {
@@ -509,36 +507,9 @@ $show_quick_help = $show['show'];
 
                                 break;
 
+                            // Hidden and read-only should work the same as text
                             case 'hidden':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
-                                if (strlen($k_value) != 0) {
-                                    $v['value']['hidden_default_value'] = $k_value;
-                                }
-                                $hidden_cf_buffer .= '<input type="hidden" name="'.$k.'" value="'.$v['value']['hidden_default_value'].'">';
-                                break;
-
                             case 'readonly':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
-                                if (strlen($k_value) != 0) {
-                                    $v['value'] = $k_value;
-                                }
-
-                                $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
-
-                                echo '<div class="form-group">
-                        <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
-                        <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' readonly></div>
-                        </div>';
-
-                                break;
-
-                            /* Default text input */
                             default:
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
@@ -926,35 +897,7 @@ $show_quick_help = $show['show'];
                                 break;
 
                             case 'hidden':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
-                                if (strlen($k_value) != 0) {
-                                    $v['value']['hidden_default_value'] = $k_value;
-                                }
-                                $hidden_cf_buffer .= '<input type="hidden" name="'.$k.'" value="'.$v['value']['hidden_default_value'].'">';
-                                break;
-
                             case 'readonly':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
-                                if (strlen($k_value) != 0) {
-                                    $v['value'] = $k_value;
-                                }
-
-                                $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
-
-                                echo '<div class="form-group">
-                        <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
-                        <div class="col-sm-9"><input type="text" class="form-control" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' readonly></div>
-                        </div>';
-
-                                break;
-
-                            /* Default text input */
                             default:
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);

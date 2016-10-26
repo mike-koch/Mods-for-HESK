@@ -473,8 +473,10 @@ function print_add_ticket()
 
                                 foreach ($v['value']['radio_options'] as $option)
                                 {
-                                    if (strlen($k_value) == 0 || $k_value == $option)
-                                    {
+                                    if (strlen($k_value) == 0) {
+                                        $k_value = $option;
+                                        $checked = empty($v['value']['no_default']) ? 'checked="checked"' : '';
+                                    } elseif ($k_value == $option) {
                                         $k_value = $option;
                                         $checked = 'checked="checked"';
                                     }
@@ -597,11 +599,11 @@ function print_add_ticket()
 
                             // Hidden
                             case 'hidden':
-                                if (strlen($k_value) != 0)
+                                if (strlen($k_value) != 0 || isset($_SESSION["c_$k"]))
                                 {
-                                    $v['value']['hidden_default_value'] = $k_value;
+                                    $v['value']['default_value'] = $k_value;
                                 }
-                                $hidden_cf_buffer .= '<input type="hidden" name="'.$k.'" value="'.$v['value']['hidden_default_value'].'" />';
+                                $hidden_cf_buffer .= '<input type="hidden" name="'.$k.'" value="'.$v['value']['default_value'].'">';
                                 break;
 
                             /* Default text input */
@@ -766,8 +768,10 @@ function print_add_ticket()
 
                                 foreach ($v['value']['radio_options'] as $option)
                                 {
-                                    if (strlen($k_value) == 0 || $k_value == $option)
-                                    {
+                                    if (strlen($k_value) == 0) {
+                                        $k_value = $option;
+                                        $checked = empty($v['value']['no_default']) ? 'checked="checked"' : '';
+                                    } elseif ($k_value == $option) {
                                         $k_value = $option;
                                         $checked = 'checked="checked"';
                                     }
@@ -890,7 +894,10 @@ function print_add_ticket()
 
                             // Hidden
                             case 'hidden':
-                                $hidden_cf_buffer .= '<input type="hidden" name="'.$k.'" value="'.$k_value.'" />';
+                                if (strlen($k_value) != 0 || isset($_SESSION["c_$k"])) {
+                                    $v['value']['default_value'] = $k_value;
+                                }
+                                $hidden_cf_buffer .= '<input type="hidden" name="'.$k.'" value="'.$v['value']['default_value'].'">';
                                 break;
 
                             /* Default text input */

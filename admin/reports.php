@@ -530,7 +530,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                 // Some variables we will need
                 $tickets = array();
-                $totals = array('asstickets' => 0, 'resolved' => 0, 'tickets' => 0, 'replies' => 0, 'worked' => 0);
+                $totals = array('asstickets' => 0, 'resolved' => 0, 'tickets' => 0, 'replies' => 0, 'worked' => 0, 'openedby' => 0);
 
                 // Get list of users
                 $admins = array();
@@ -550,6 +550,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             'tickets' => 0,
                             'replies' => 0,
                             'worked' => '',
+                            'openedby' => 0,
                         );
                     }
 
@@ -625,10 +626,21 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 // Convert total seconds worked to HH:MM:SS
                 $totals['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($totals['worked']) : 0;
 
+                // Get total opened by tickets
+                $res = hesk_dbQuery("SELECT `openedby`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `openedby` IN ('" . implode("','", array_keys($admins) ) . "') AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `openedby`");
+
+                // -> update ticket list values
+                while ($row = hesk_dbFetchAssoc($res))
+                {
+                    $tickets[$row['openedby']]['openedby'] += $row['cnt'];
+                    $totals['openedby'] += $row['cnt'];
+                }
+
                 ?>
                 <table class="table table-striped table-condensed">
                     <tr>
                         <th><?php echo $hesklang['user']; ?></th>
+                        <th><?php echo $hesklang['numsub']; ?></th>
                         <th><?php echo $hesklang['ticass']; ?></th>
                         <th><?php echo $hesklang['topen']; ?></th>
                         <th><?php echo $hesklang['closed_title']; ?></th>
@@ -647,6 +659,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         ?>
                         <tr>
                             <td><b><?php echo $hesklang['totals']; ?></b></td>
+                            <td><b><?php echo $totals['openedby']; ?></b></td>
                             <td><b><?php echo $totals['asstickets']; ?></b></td>
                             <td><b><?php echo $totals['asstickets'] - $totals['resolved']; ?></b></td>
                             <td><b><?php echo $totals['resolved']; ?></b></td>
@@ -666,6 +679,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         ?>
                         <tr>
                             <td><?php echo $admins[$k]; ?></td>
+                            <td><?php echo $d['openedby']; ?></td>
                             <td><?php echo $d['asstickets']; ?></td>
                             <td><?php echo $d['asstickets'] - $d['resolved']; ?></td>
                             <td><?php echo $d['resolved']; ?></td>
@@ -682,6 +696,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     ?>
                     <tr>
                         <td><b><?php echo $hesklang['totals']; ?></b></td>
+                        <td><b><?php echo $totals['openedby']; ?></b></td>
                         <td><b><?php echo $totals['asstickets']; ?></b></td>
                         <td><b><?php echo $totals['asstickets'] - $totals['resolved']; ?></b></td>
                         <td><b><?php echo $totals['resolved']; ?></b></td>
