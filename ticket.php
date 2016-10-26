@@ -118,6 +118,8 @@ if ($is_form) {
 /* Limit brute force attempts */
 hesk_limitBfAttempts();
 
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
 /* Get ticket info */
 $res = hesk_dbQuery("SELECT `t1`.* , `t2`.name AS `repliername`, `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`Key` AS `statusKey`  FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `t1` INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` AS `ticketStatus` ON `t1`.`status` = `ticketStatus`.`ID` LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `t2` ON `t1`.`replierid` = `t2`.`id` WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
 
@@ -158,9 +160,9 @@ hesk_cleanBfAttempts();
 /* Remember email address? */
 if ($is_form) {
     if ( strlen($do_remember) ) {
-        setcookie('hesk_myemail', $my_email, strtotime('+1 year'));
+        hesk_setcookie('hesk_myemail', $my_email, strtotime('+1 year'));
     } elseif (isset($_COOKIE['hesk_myemail'])) {
-        setcookie('hesk_myemail', '');
+        hesk_setcookie('hesk_myemail', '');
     }
 }
 
@@ -175,7 +177,7 @@ if ($ticket['lastreplier']) {
 
 // If IP is unknown (tickets via email pipe/pop3 fetching) assume current visitor IP as customer IP
 if ($ticket['ip'] == 'Unknown' || $ticket['ip'] == $hesklang['unknown']) {
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `ip` = '" . hesk_dbEscape($_SERVER['REMOTE_ADDR']) . "' WHERE `id`=" . intval($ticket['id']) . " LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `ip` = '" . hesk_dbEscape($_SERVER['REMOTE_ADDR']) . "' WHERE `id`=" . intval($ticket['id']));
 }
 
 /* Get category name and ID */
@@ -340,7 +342,9 @@ if (!$show['show']) {
         <div class="row ticketMessageContainer">
             <div class="col-md-3 col-xs-12">
                 <div class="ticketName"><?php echo $ticket['name']; ?></div>
-                <div class="ticketEmail"><a href="mailto:<?php echo $ticket['email']; ?>"><?php echo $ticket['email']; ?></a></div>
+                <?php if ($ticket['email'] != '') { ?>
+                    <div class="ticketEmail"><a href="mailto:<?php echo $ticket['email']; ?>"><?php echo $ticket['email']; ?></a></div>
+                <?php } ?>
             </div>
             <div class="col-md-9 col-xs-12 pushMarginLeft">
                 <div class="ticketMessageTop withBorder">
@@ -350,53 +354,53 @@ if (!$show['show']) {
                     <!-- Custom Fields Before Message -->
                     <?php
                     foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                        if ($v['use'] && $v['place'] == 0) {
-                            if ($modsForHesk_settings['custom_field_setting']) {
-                                $v['name'] = $hesklang[$v['name']];
-                            }
-
+                        if ($v['use'] == 1 && $v['place'] == 0 && hesk_is_custom_field_in_category($k, $ticket['category'])) {
                             echo '<p>' . $v['name'] . ': ';
-                            if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                                $dt = date('Y-m-d h:i:s', $ticket[$k]);
-                                echo hesk_dateToString($dt, 0);
-                            } else {
-                                echo $ticket[$k];
+                            switch ($v['type'])
+                            {
+                                case 'email':
+                                    $ticket[$k] = '<a href="mailto:'.$ticket[$k].'">'.$ticket[$k].'</a>';
+                                    break;
+                                case 'date':
+                                    $ticket[$k] = hesk_custom_date_display_format($ticket[$k], $v['value']['date_format']);
+                                    break;
                             }
-                            echo '</p>';
+                            echo $ticket[$k].'</p>';
                         }
                     }
                     ?>
                 </div>
                 <div class="ticketMessageBottom">
-                    <!-- Message -->
-                    <p><b><?php echo $hesklang['message']; ?>:</b></p>
+                    <?php if ($ticket['message'] != '') { ?>
+                        <!-- Message -->
+                        <p><b><?php echo $hesklang['message']; ?>:</b></p>
 
-                    <div class="message">
-                        <?php if ($ticket['html']) {
-                            echo hesk_html_entity_decode($ticket['message']);
-                        } else {
-                            echo $ticket['message'];
-                        }
-                        ?>
-                    </div>
+                        <div class="message">
+                            <?php if ($ticket['html']) {
+                                echo hesk_html_entity_decode($ticket['message']);
+                            } else {
+                                echo $ticket['message'];
+                            }
+                            ?>
+                        </div>
+                    <?php } ?>
                 </div>
                 <div class="ticketMessageTop">
                     <!-- Custom Fields after Message -->
                     <?php
                     foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                        if ($v['use'] && $v['place']) {
-                            if ($modsForHesk_settings['custom_field_setting']) {
-                                $v['name'] = $hesklang[$v['name']];
-                            }
-
+                        if ($v['use'] == 1 && $v['place'] && hesk_is_custom_field_in_category($k, $ticket['category'])) {
                             echo '<p>' . $v['name'] . ': ';
-                            if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                                $dt = date('Y-m-d h:i:s', $ticket[$k]);
-                                echo hesk_dateToString($dt, 0);
-                            } else {
-                                echo $ticket[$k];
+                            switch ($v['type'])
+                            {
+                                case 'email':
+                                    $ticket[$k] = '<a href="mailto:'.$ticket[$k].'">'.$ticket[$k].'</a>';
+                                    break;
+                                case 'date':
+                                    $ticket[$k] = hesk_custom_date_display_format($ticket[$k], $v['value']['date_format']);
+                                    break;
                             }
-                            echo '</p>';
+                            echo $ticket[$k].'</p>';
                         }
                     }
                     /* Attachments */
