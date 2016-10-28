@@ -1,14 +1,12 @@
 admin/admin_suggest_articles.php
 admin/archive.php
+admin/custom_statuses.php
+admin/email_templates.php
 admin/generate_spam_question.php
 admin/priority.php
 admin/test_connection.php
 attachments/index.htm
-docs/changelog.html
-docs/docs_style.css
-docs/index.html
-docs/quick-guide.html
-docs/step-by-step-guide.html
+docs/
 file_limits.php
 footer.txt
 header.txt
@@ -27,6 +25,7 @@ img/clip.png
 img/code.png
 img/code_off.png
 img/delete.png
+img/delete_off.png
 img/delete_ticket.png
 img/edit.png
 img/error.png
@@ -159,7 +158,9 @@ inc/database_mysqli.inc.php
 inc/footer.inc.php
 inc/htmlpurifier
 inc/index.htm
+inc/jscolor/
 inc/mail/email_parser.php
+inc/mail/hesk_imap.php
 inc/mail/hesk_pipe.php
 inc/mail/hesk_pop3.php
 inc/mail/index.htm
@@ -184,6 +185,7 @@ inc/recaptcha/recaptchalib.php
 inc/reporting_functions.inc.php
 inc/secimg.inc.php
 inc/setup_functions.inc.php
+inc/statuses.inc.php
 inc/tabs/index.htm
 inc/tabs/tabber-minimized.js
 inc/tabs/tabber.css
