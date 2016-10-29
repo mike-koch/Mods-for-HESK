@@ -379,6 +379,11 @@ function hesk_stripQuotedText($message)
     foreach ($hesk_settings['languages'] as $language => $settings) {
         if (($found = strpos($message, $settings['hr'])) !== false) {
             // "Reply above this line" tag found, strip quoted reply
+            if (preg_match('/'.$hesklang['m_from'].'.*'.$hesk_settings['noreply_name'].' \[mailto:'.$hesk_settings['noreply_mail'].'\]/', $message, $matches, PREG_OFFSET_CAPTURE)) {
+				if ($found > $matches[0][1]) { 
+						$found = $matches[0][1];
+					}	
+			}
             $message = substr($message, 0, $found);
             $message .= "\n" . $hesklang['qrr'];
 
