@@ -103,6 +103,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </li>
             ';
                     }
+
+                    if (hesk_checkPermission('can_man_settings', 0)) {
+                        echo '
+                    <li role="presentation">
+						<a title="' . $hesklang['tab_4'] . '" href="custom_fields.php">' .
+                            $hesklang['tab_4']
+                            . '</a>
+					</li>
+                        ';
+                    }
                     ?>
                 </ul>
                 <div class="tab-content summaryList tabPadding">

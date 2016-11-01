@@ -113,7 +113,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 						<a title="<?php echo $hesklang['tab_4']; ?>" href="custom_fields.php">
 							<?php echo $hesklang['tab_4']; ?>
 							<i class="fa fa-question-circle settingsquestionmark"
-							   onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['cf_intro']); ?>')"></i>
+							   onclick="alert('<?php echo hesk_makeJsString($hesklang['cf_intro']); ?>')"></i>
 						</a>
 					</li>
 				</ul>
