@@ -131,6 +131,8 @@ function hesk_custom_field_type($type)
 			return $hesklang['date'];
 		case 'hidden':
 			return $hesklang['sch'];
+		case 'readonly':
+			return $hesklang['readonly'];
 		default:
 			return false;
 	}

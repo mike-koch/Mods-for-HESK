@@ -179,8 +179,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 												<option value="checkbox" <?php if ($type == 'checkbox') {echo 'selected';} ?> ><?php echo $hesklang['scb']; ?></option>
 												<option value="date"     <?php if ($type == 'date') {echo 'selected';} ?> ><?php echo $hesklang['date']; ?></option>
 												<option value="email"    <?php if ($type == 'email') {echo 'selected';} ?> ><?php echo $hesklang['email']; ?></option>
+												<option value="readonly"    <?php if ($type == 'readonly') {echo 'selected';} ?> ><?php echo $hesklang['readonly_custom_field']; ?></option>
 												<option value="hidden"   <?php if ($type == 'hidden') {echo 'selected';} ?> ><?php echo $hesklang['sch']; ?></option>
-											</select>
+											</select><br>
 											<?php
 											$value = hesk_SESSION(array('new_cf','value'));
 
@@ -190,7 +191,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 											}
 											?>
 
-											<div id="text" style="display:<?php echo ($type == 'text') ? 'block;margin-top:10px' : 'none' ?>">
+											<div id="text" style="display:<?php echo ($type == 'text') ? 'block' : 'none' ?>">
 												<div class="form-group">
 													<label class="col-sm-3 control-label" for="max_length">
 														<?php echo $hesklang['custom_l']; ?>
@@ -211,7 +212,20 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 												</div>
 											</div>
 
-											<div id="textarea" style="display:<?php echo ($type == 'textarea') ? 'block;margin-top:10px' : 'none' ?>">
+
+											<div id="readonly" style="display:<?php echo ($type == 'readonly') ? 'block' : 'none' ?>">
+												<div class="form-group">
+													<label class="col-sm-3 control-label" for="value">
+														<?php echo $hesklang['value']; ?>
+													</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="value"
+															   value="<?php echo isset($value['value']) ? $value['value'] : ''; ?>" size="30">
+													</div>
+												</div>
+											</div>
+
+											<div id="textarea" style="display:<?php echo ($type == 'textarea') ? 'block' : 'none' ?>">
 												<div class="form-group">
 													<label class="col-sm-3 control-label" for="rows">
 														<?php echo $hesklang['rows']; ?>
@@ -624,7 +638,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 						}
 
 						function hesk_setType(myType) {
-							var divs = ["text", "textarea", "radio", "select", "checkbox", "date", "email", "hidden"];
+							var divs = ["text", "textarea", "radio", "select", "checkbox", "date", "email", "hidden", "readonly"];
 							var index;
 							var setTo;
 
@@ -677,10 +691,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 									</thead>
 									<tbody>
 									<?php
-									$i = 1;
-									$j = 1;
-									$k = 1;
-
 									$before = true;
 									$after = true;
 									$hide_up = false;
@@ -749,18 +759,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 															<i class="fa fa-arrow-down fa-fw icon-link green" data-toggle="tooltip" title="<?php echo $hesklang['move_dn']; ?>"></i>
 														</a>
 														<?php
-													}
-													elseif ($k == $hesk_settings['num_custom_fields'] || $k == $num_before)
-													{
+													} elseif ($k == $hesk_settings['num_custom_fields'] || $k == $num_before) {
 														?>
 														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $id; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>">
 															<i class="fa fa-arrow-up fa-fw icon-link green" data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
 														</a>
 														<i class="fa fa-fw icon-link">&nbsp;</i>
 														<?php
-													}
-													else
-													{
+													} else {
 														?>
 														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $id; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>">
 															<i class="fa fa-arrow-up fa-fw icon-link green" data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
@@ -1155,6 +1161,11 @@ function cf_validate()
 			$cf['hidden_max_length'] = hesk_checkMinMax(intval(hesk_POST('hidden_max_length')), 1, 10000, 255);
 			$cf['hidden_default_value'] = stripslashes(hesk_input(hesk_POST('hidden_default_value'), 0, 0, HESK_SLASH));
 			$cf['value'] = array('max_length' => $cf['hidden_max_length'], 'default_value' => $cf['hidden_default_value']);
+			break;
+
+		case 'readonly':
+			$value = hesk_POST('value');
+			$cf['value'] = array('value' => $value);
 			break;
 
 		default:

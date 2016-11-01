@@ -67,6 +67,8 @@ $hesklang['record_this_token_warning'] = 'Please record this token, as this is t
 $hesklang['all_tokens_revoked'] = 'All tokens for this user have been revoked';
 $hesklang['staff_login_title'] = 'Staff Login';
 $hesklang['manage_custom_fields'] = 'Manage Custom Fields';
+$hesklang['value'] = 'Value';
+$hesklang['readonly'] = 'Readonly';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';
