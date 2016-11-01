@@ -478,12 +478,35 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 														</div>
 													</div>
 												</div>
-												<table border="0">
-													<tr>
-														<td>
-														</td>
-													</tr>
-												</table>
+												<div class="form-group">
+													<label for="email_type" class="col-sm-4 control-label">
+														<?php echo $hesklang['email_custom_field_label']; ?>
+													</label>
+													<div class="col-sm-8">
+														<?php $address_type = empty($value['email_type']) ? 'none' : $value['email_type']; ?>
+														<div class="radio">
+															<label>
+																<input type="radio" name="email_type" value="none"
+																	<?php if ($address_type == 'none') {echo 'checked';} ?>>
+																<?php echo $hesklang['none']; ?>
+															</label>
+														</div>
+														<div class="radio">
+															<label>
+																<input type="radio" name="email_type" value="cc"
+																	<?php if ($address_type == 'cc') {echo 'checked';} ?>>
+																<?php echo $hesklang['cc']; ?>
+															</label>
+														</div>
+														<div class="radio">
+															<label>
+																<input type="radio" name="email_type" value="bcc"
+																	<?php if ($address_type == 'bcc') {echo 'checked';} ?>>
+																<?php echo $hesklang['bcc']; ?>
+															</label>
+														</div>
+													</div>
+												</div>
 											</div>
 
 											<div id="hidden" style="display:<?php echo ($type == 'hidden') ? 'block' : 'none' ?>">
@@ -1154,7 +1177,8 @@ function cf_validate()
 
 		case 'email':
 			$cf['email_multi'] = hesk_POST('email_multi') ? 1 : 0;
-			$cf['value'] = array('multiple' => $cf['email_multi']);
+			$cf['email_type'] = hesk_POST('email_type', 'none');
+			$cf['value'] = array('multiple' => $cf['email_multi'], 'email_type' => $cf['email_type']);
 			break;
 
 		case 'hidden':
