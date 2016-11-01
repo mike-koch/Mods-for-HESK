@@ -125,10 +125,6 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                     <?php foreach ($mails as $mail): ?>
                                     <li><!-- start message -->
                                         <a href="mail.php?a=read&id=<?php echo $mail['id']; ?>">
-                                            <!-- TODO User avatars -->
-                                            <!--<div class="pull-left">
-                                                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                                            </div>-->
                                             <h4>
                                                 <?php echo $mail['from']; ?>
                                                 <small><i class="fa fa-clock-o"></i> <?php echo hesk_dateToString($mail['date'], 0, 0, 0, true); ?></small>
@@ -381,6 +377,10 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                 if (hesk_checkPermission('can_man_ticket_statuses', 0)) {
                     $tools_count++;
                     $dropdown_items['manage_statuses'] = $hesklang['manage_statuses'];
+                }
+                if (hesk_checkPermission('can_man_settings', 0)) {
+                    $tools_count++;
+                    $dropdown_items['custom_fields'] = $hesklang['manage_custom_fields'];
                 }
                 if (hesk_checkPermission('can_view_logs', 0)) {
                     $tools_count++;
