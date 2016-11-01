@@ -289,7 +289,9 @@ $show_quick_help = $show['show'];
                             echo ' onblur="Javascript:Javascript:hesk_suggestEmail(\'email\', \'email_suggestions\', 1, 1)"';
                         } ?>
                                placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
-                               onkeyup="disableIfEmpty('email','notify-email')">
+                               onkeyup="disableIfEmpty('email','notify-email')"
+                                <?php if ($hesk_settings['require_email']) {echo 'data-error="'.htmlspecialchars($hesklang['enter_valid_email']).'" required';} ?>>
+                        <div class="help-block with-errors"></div>
                     </div>
 
                 </div>
