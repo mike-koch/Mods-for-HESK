@@ -42,15 +42,30 @@ hesk_dbConnect();
             </thead>
             <tbody>
             <?php
+            output_header_row('1.0.0 - 1.3.x');
             run_table_check('statuses');
+            run_column_check('statuses', '`ID`');
+            run_column_check('statuses', '`TextColor`');
+            run_column_check('statuses', '`IsNewTicketStatus`');
+            run_column_check('statuses', '`IsClosed`');
+            run_column_check('statuses', '`IsClosedByClient`');
+            run_column_check('statuses', '`IsCustomerReplyStatus`');
+            run_column_check('statuses', '`IsStaffClosedOption`');
+            run_column_check('statuses', '`IsStaffReopenedStatus`');
+            run_column_check('statuses', '`IsDefaultStaffReplyStatus`');
+            run_column_check('statuses', '`LockedTicketStatus`');
             run_column_check('statuses', '`IsAutocloseOption`');
             run_column_check('statuses', '`Closable`');
+            output_header_row('1.5.0');
             run_column_check('users', '`active`');
             run_column_check('users', '`notify_note_unassigned`');
+            output_header_row('1.6.0');
             run_table_check('settings');
+            output_header_row('1.7.0');
             run_table_check('verified_emails');
             run_table_check('pending_verification_emails');
             run_table_check('stage_tickets');
+            output_header_row('2.3.0');
             run_column_check('service_messages', '`icon`');
             run_column_check('statuses', '`Key`');
             run_column_check('tickets', '`latitude`');
@@ -64,6 +79,7 @@ hesk_dbConnect();
             run_column_check('permission_templates', '`name`');
             run_column_check('permission_templates', '`heskprivileges`');
             run_column_check('permission_templates', '`categories`');
+            output_header_row('2.4.0');
             run_table_check('quick_help_sections');
             run_column_check('quick_help_sections', '`id`');
             run_column_check('quick_help_sections', '`location`');
@@ -79,12 +95,14 @@ hesk_dbConnect();
             run_column_check('tickets', '`html`');
             run_column_check('stage_tickets', '`html`');
             run_column_check('replies', '`html`');
+            output_header_row('2.5.0');
             run_column_check('tickets', '`user_agent`');
             run_column_check('tickets', '`screen_resolution_width`');
             run_column_check('tickets', '`screen_resolution_height`');
             run_column_check('stage_tickets', '`user_agent`');
             run_column_check('stage_tickets', '`screen_resolution_width`');
             run_column_check('stage_tickets', '`screen_resolution_height`');
+            output_header_row('2.6.0');
             run_table_check('logging');
             run_column_check('logging', '`id`');
             run_column_check('logging', '`username`');
@@ -125,6 +143,7 @@ hesk_dbConnect();
             run_column_check('categories', '`usage`');
             run_column_check('users', '`notify_overdue_unassigned`');
             run_column_check('users', '`default_calendar_view`');
+            output_header_row('2.6.2');
             run_column_check('stage_tickets', '`due_date`');
             run_column_check('stage_tickets', '`overdue_email_sent`');
             ?>
@@ -184,4 +203,8 @@ function output_result($change_title, $success) {
     $formatted_text = sprintf('<tr><td>%s</td><td style="color: %s">%s</td></tr>', $change_title, $css_color, $text);
 
     echo $formatted_text;
+}
+
+function output_header_row($text) {
+    echo '<tr><td colspan="2" style="font-size: 1.2em"><i class="fa fa-chevron-right"></i> ' . $text . '</td></tr>';
 }
