@@ -287,7 +287,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 															$dmin_type = $matches[3];
 														}
 														// Minimum date is in "MM/DD/YYYY" format
-														elseif (preg_match("/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/", $dmin))
+														elseif (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $dmin))
 														{
 															$dmin_rf = 1;
 														}
@@ -359,7 +359,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 															$dmax_type = $matches[3];
 														}
 														// Minimum date is in "MM/DD/YYYY" format
-														elseif (preg_match("/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/", $dmax))
+														elseif (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $dmax))
 														{
 															$dmax_rf = 1;
 														}
@@ -1110,7 +1110,7 @@ function cf_validate()
             {
             	$dmin = hesk_POST('dmin');
 
-            	if (preg_match("/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/", $dmin))
+            	if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $dmin))
                 {
                 	$cf['dmin'] = $dmin;
                 }
@@ -1135,7 +1135,7 @@ function cf_validate()
             {
             	$dmax = hesk_POST('dmax');
 
-            	if (preg_match("/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/", $dmax))
+            	if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $dmax))
                 {
                 	$cf['dmax'] = $dmax;
                 }
