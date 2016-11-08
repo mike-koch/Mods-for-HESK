@@ -350,49 +350,42 @@ $show_quick_help = $show['show'];
                     if ($v['use'] && $v['place'] == 0 && hesk_is_custom_field_in_category($k, $category)) {
                         $v['req'] = $v['req']==2 ? '<span class="important">*</span>' : '';
 
-                        if ($v['type'] == 'checkbox' && !isset($_GET["c_$k"])) {
+                        if ($v['type'] == 'checkbox') {
                             $k_value = array();
-                            if (isset($_SESSION["c_$k"]) && is_array($_SESSION["c_$k"])) {
-                                foreach ($_SESSION["c_$k"] as $myCB) {
+                            if (isset($_SESSION["as_$k"]) && is_array($_SESSION["as_$k"])) {
+                                foreach ($_SESSION["as_$k"] as $myCB) {
                                     $k_value[] = stripslashes(hesk_input($myCB));
                                 }
                             }
                         } elseif (isset($_SESSION["as_$k"])) {
-                            $k_value = stripslashes(hesk_input($_SESSION["as_$k"]));
-                        } elseif (isset($_GET["as_$k"])) {
-                            if ($v['type'] == 'checkbox') {
-                                $k_value = explode('-CHECKBOX-', $_GET["as_$k"]);
-                            } else {
-                                $k_value = stripslashes(hesk_GET("as_$k"));
-                            }
+                            $k_value  = stripslashes(hesk_input($_SESSION["as_$k"]));
                         } else {
-                            $k_value = '';
+                            $k_value  = '';
                         }
 
                         switch ($v['type']) {
                             /* Radio box */
                             case 'radio':
-                                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . '</label><div align="left" class="col-sm-9">';
-
-                                $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
+                                $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
+                                echo '<div class="form-group' . $cls . '"><label class="col-sm-3 control-label">' . $v['name'] . '</label><div align="left" class="col-sm-9">';
 
                                 foreach ($v['value']['radio_options'] as $option) {
 
                                     if (strlen($k_value) == 0) {
                                         $k_value = $option;
-                                        $checked = empty($v['value']['no_default']) ? 'checked="checked"' : '';
+                                        $checked = empty($v['value']['no_default']) ? 'checked' : '';
                                     } elseif ($k_value == $option) {
                                         $k_value = $option;
-                                        $checked = 'checked="checked"';
+                                        $checked = 'checked';
                                     } else {
                                         $checked = '';
                                     }
 
                                     //Clean up multiple dashes or whitespaces
                                     $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                    $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+                                    $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
-                                    echo '<label style="font-weight: normal;"><input type="radio" id="' . $formattedId . '" name="' . $k . '" value="' . $option . '" ' . $checked . ' ' . $cls . ' /> ' . $option . '</label><br>';
+                                    echo '<div class="radio"><label><input type="radio" id="' . $formattedId . '" name="' . $k . '" value="' . $option . '" ' . $checked . ' /> ' . $option . '</label></div>';
                                 }
 
                                 echo '</div></div>';
@@ -403,12 +396,12 @@ $show_quick_help = $show['show'];
 
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
-                                $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
+                                $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
-                                echo '<div class="form-group"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] .  '</label>
-                        <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '" ' . $cls . '>';
+                                echo '<div class="form-group' . $cls . '"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] .  '</label>
+                        <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '">';
 
                                 // Show "Click to select"?
                                 if (!empty($v['value']['show_select'])) {
@@ -418,7 +411,7 @@ $show_quick_help = $show['show'];
                                 foreach ($v['value']['select_options'] as $option) {
                                     if ($k_value == $option) {
                                         $k_value = $option;
-                                        $selected = 'selected="selected"';
+                                        $selected = 'selected';
                                     } else {
                                         $selected = '';
                                     }
@@ -433,19 +426,19 @@ $show_quick_help = $show['show'];
                             case 'checkbox':
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
-                                echo '<div class="form-group"><label class="col-sm-3 control-label">' . $v['name'] . '</label><div align="left" class="col-sm-9">';
-                                $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
+                                $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
+                                echo '<div class="form-group' . $cls . '"><label class="col-sm-3 control-label">' . $v['name'] . '</label><div align="left" class="col-sm-9">';
 
                                 foreach ($v['value']['checkbox_options'] as $option) {
                                     if (in_array($option, $k_value)) {
-                                        $checked = 'checked="checked"';
+                                        $checked = 'checked';
                                     } else {
                                         $checked = '';
                                     }
 
-                                    echo '<label style="font-weight: normal;"><input id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $cls . ' /> ' . $option . '</label><br>';
+                                    echo '<div class="checkbox"><label><input id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . '> ' . $option . '</label></div>';
                                 }
                                 echo '</div></div>';
                                 break;
@@ -454,33 +447,29 @@ $show_quick_help = $show['show'];
                             case 'textarea':
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
-                                $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
+                                $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
-                                echo '<div class="form-group">
+                                echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
-                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $cls . '>' . $k_value . '</textarea></div>
+                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '">' . $k_value . '</textarea></div>
                         </div>';
                                 break;
 
                             case 'date':
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
-                                if (strlen($k_value) != 0) {
-                                    $v['value'] = $k_value;
-                                }
-
-                                $cls = in_array($k, $_SESSION['iserror']) ? ' isError ' : '';
+                                $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
                                 echo '
-                        <div class="form-group">
-                            <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name:'].' '.$v['req'] . '</label>
+                        <div class="form-group' . $cls . '">
+                            <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                             <div class="col-sm-9">
-                                <input type="text" class="datepicker form-control white-readonly ' . $cls . '" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
-                                    maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" readonly>
+                                <input type="text" class="datepicker form-control white-readonly" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
+                                    value="' . $k_value . '" readonly>
                             </div>
                         </div>';
                                 break;
@@ -491,20 +480,11 @@ $show_quick_help = $show['show'];
 
                                 $suggest = $hesk_settings['detect_typos'] ? 'onblur="Javascript:hesk_suggestEmail(\''.$k.'\', \''.$k.'_suggestions\', 0, 1'.($v['value']['multiple'] ? ',1' : '').')"' : '';
 
-                                if (strlen($k_value) != 0) {
-                                    $v['value'] = $k_value;
-                                }
+                                $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
-                                if ($v['value'] == 'cc' || $v['value'] == 'bcc') {
-                                    // (b)cc isn't a valid email but is the "value" used by settings. Just remove it.
-                                    $v['value'] = '';
-                                }
-
-                                $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
-
-                                echo '<div class="form-group">
+                                echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
-                        <div class="col-sm-9"><input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . $v['maxlen'] . '" value="' . $v['value'] . '" ' . $cls . ' '.$suggest.'></div>
+                        <div class="col-sm-9"><input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" value="' . $k_value . '" '.$suggest.'></div>
                         </div><div id="'.$k.'_suggestions"></div>';
 
                                 break;
@@ -515,15 +495,20 @@ $show_quick_help = $show['show'];
                             default:
                                 //Clean up multiple dashes or whitespaces
                                 $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
+                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
                                 if (strlen($k_value) != 0 || isset($_SESSION["as_$k"])) {
                                     $v['value']['default_value'] = $k_value;
                                 }
 
-                                $cls = in_array($k, $_SESSION['iserror']) ? ' class="isError" ' : '';
+                                $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
-                                echo '<div class="form-group">
+                                if ($v['type'] == 'readonly') {
+                                    $v['value']['max_length'] = 0;
+                                    $v['value']['default_value'] = $v['value']['value'];
+                                }
+
+                                echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . '</label>
                         <div class="col-sm-9"><input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $cls . ' /></div>
                         </div>';
