@@ -619,7 +619,7 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="'.$k.'" size="40" value="'.$v['value']['value'].'" readonly>
+                            <input type="text" class="form-control" name="'.$k.'" size="40" value="'.$v['value']['default_value'].'" readonly>
                         </div>
                     </div>';
                                 break;
@@ -927,7 +927,7 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="'.$k.'" size="40" value="'.$v['value']['value'].'" readonly>
+                            <input type="text" class="form-control" name="'.$k.'" size="40" value="'.$v['value']['default_value'].'" readonly>
                         </div>
                     </div>';
                                 break;

@@ -215,12 +215,21 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 											<div id="readonly" style="display:<?php echo ($type == 'readonly') ? 'block' : 'none' ?>">
 												<div class="form-group">
-													<label class="col-sm-3 control-label" for="value">
-														<?php echo $hesklang['value']; ?>
+													<label class="col-sm-3 control-label" for="max_length">
+														<?php echo $hesklang['custom_l']; ?>
 													</label>
 													<div class="col-sm-3">
-														<input type="text" class="form-control" name="value"
-															   value="<?php echo isset($value['value']) ? $value['value'] : ''; ?>" size="30">
+														<input type="text" class="form-control" name="max_length"
+															   value="<?php echo isset($value['max_length']) ? intval($value['max_length']) : '255'; ?>" size="5">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-3 control-label" for="value">
+														<?php echo $hesklang['defw']; ?>
+													</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="default_value"
+															   value="<?php echo isset($value['default_value']) ? $value['default_value'] : ''; ?>" size="30">
 													</div>
 												</div>
 											</div>
@@ -1188,8 +1197,9 @@ function cf_validate()
 			break;
 
 		case 'readonly':
-			$value = hesk_POST('value');
-			$cf['value'] = array('value' => $value);
+			$max_length = hesk_POST('max_length');
+			$value = hesk_POST('default_value');
+			$cf['value'] = array('default_value' => $value, 'max_length' => $max_length);
 			break;
 
 		default:
