@@ -6,6 +6,7 @@ admin/generate_spam_question.php
 admin/priority.php
 admin/test_connection.php
 attachments/index.htm
+cache/
 docs/
 file_limits.php
 footer.txt
@@ -113,6 +114,7 @@ img/print.png
 img/private.png
 img/public.png
 img/reload.png
+img/refresh.png
 img/roundcornersb.jpg
 img/roundcornerslb.jpg
 img/roundcornerslm.jpg
