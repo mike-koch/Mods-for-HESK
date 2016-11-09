@@ -90,86 +90,78 @@ function print_select_category($number_of_categories)
         <li><a href="<?php echo $hesk_settings['hesk_url']; ?>"><?php echo $hesk_settings['hesk_title']; ?></a></li>
         <li class="active"><?php echo $hesklang['submit_ticket']; ?></li>
     </ol>
+    <?php
+    /* This will handle error, success and notice messages */
+    hesk_handle_messages();
+    ?>
 
-    <tr>
-        <td>
+    <div style="text-align: center">
 
-            &nbsp;<br />
+        <h3><?php echo $hesklang['select_category_text']; ?></h3>
 
+        <div class="select_category">
             <?php
-            /* This will handle error, success and notice messages */
-            hesk_handle_messages();
-            ?>
-
-            <div style="text-align: center">
-
-                <h3><?php echo $hesklang['select_category_text']; ?></h3>
-
-                <div class="select_category">
-                    <?php
-                    // Print a select box if number of categories is large
-                    if ($number_of_categories > $hesk_settings['cat_show_select'])
-                    {
-                        ?>
-                        <form action="index.php" method="get">
-                            <select name="category" id="select_category" class="form-control">
-                                <?php
-                                if ($hesk_settings['select_cat'])
-                                {
-                                    echo '<option value="">'.$hesklang['select'].'</option>';
-                                }
-                                foreach ($hesk_settings['categories'] as $k=>$v)
-                                {
-                                    echo '<option value="'.$k.'">'.$v.'</option>';
-                                }
-                                ?>
-                            </select>
-
-                            &nbsp;<br />
-
-                            <div style="text-align:center">
-                                <input type="submit" value="<?php echo $hesklang['c2c']; ?>" class="orangebutton"  onmouseover="hesk_btn(this,'orangebuttonover');" onmouseout="hesk_btn(this,'orangebutton');" />
-                                <input type="hidden" name="a" value="add" />
-                            </div>
-                        </form>
+            // Print a select box if number of categories is large
+            if ($number_of_categories > $hesk_settings['cat_show_select'])
+            {
+                ?>
+                <form action="index.php" method="get">
+                    <select name="category" id="select_category" class="form-control">
                         <?php
-                    }
-                    // Otherwise print quick links
-                    else
-                    {
-                        $new_row = 1;
-
-                        foreach ($hesk_settings['categories'] as $k=>$v):
-                            if ($new_row == 1) {
-                                echo '<div class="row">';
-                                $new_row = -1;
-                            }
+                        if ($hesk_settings['select_cat'])
+                        {
+                            echo '<option value="">'.$hesklang['select'].'</option>';
+                        }
+                        foreach ($hesk_settings['categories'] as $k=>$v)
+                        {
+                            echo '<option value="'.$k.'">'.$v.'</option>';
+                        }
                         ?>
-                            <div class="col-md-5 col-sm-10 col-md-offset-1 col-sm-offset-1">
-                                <a href="index.php?a=add&category=<?php echo $k; ?>" class="button-link">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-xs-12">
-                                                    <?php echo $v; ?>
-                                                </div>
-                                            </div>
+                    </select>
+
+                    &nbsp;<br />
+
+                    <div style="text-align:center">
+                        <input type="submit" value="<?php echo $hesklang['c2c']; ?>" class="btn btn-default">
+                        <input type="hidden" name="a" value="add" />
+                    </div>
+                </form>
+                <?php
+            }
+            // Otherwise print quick links
+            else
+            {
+                $new_row = 1;
+
+                foreach ($hesk_settings['categories'] as $k=>$v):
+                    if ($new_row == 1) {
+                        echo '<div class="row">';
+                        $new_row = -1;
+                    }
+                ?>
+                    <div class="col-md-5 col-sm-10 col-md-offset-1 col-sm-offset-1">
+                        <a href="index.php?a=add&category=<?php echo $k; ?>" class="button-link">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <?php echo $v; ?>
                                         </div>
                                     </div>
-                                </a>
+                                </div>
                             </div>
-                        <?php
-                            $new_row++;
-                            if ($new_row == 1) {
-                                echo '</div>';
-                            }
-                        endforeach;
+                        </a>
+                    </div>
+                <?php
+                    $new_row++;
+                    if ($new_row == 1) {
+                        echo '</div>';
                     }
-                    ?>
-                </div>
-            </div>
-
-            <p>&nbsp;</p>
+                endforeach;
+            }
+            ?>
+        </div>
+    </div>
 
     <?php
     return true;

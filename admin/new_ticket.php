@@ -1042,58 +1042,79 @@ function print_select_category($number_of_categories) {
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
     ?>
-
-    <div style="text-align: center">
-
-        <h3><?php echo $hesklang['select_category_staff']; ?></h3>
-
-        <div class="select_category">
-            <?php
-            // Print a select box if number of categories is large
-            if ($number_of_categories > $hesk_settings['cat_show_select'])
-            {
-                ?>
-                <form action="new_ticket.php" method="get">
-                    <select name="category" id="select_category">
-                        <?php
-                        if ($hesk_settings['select_cat'])
-                        {
-                            echo '<option value="">'.$hesklang['select'].'</option>';
-                        }
-                        foreach ($hesk_settings['categories'] as $k=>$v)
-                        {
-                            echo '<option value="'.$k.'">'.$v.'</option>';
-                        }
-                        ?>
-                    </select>
-
-                    &nbsp;<br />
-
-                    <div style="text-align:center">
-                        <input type="submit" value="<?php echo $hesklang['c2c']; ?>" class="btn btn-default">
-                    </div>
-                </form>
-                <?php
-            }
-            // Otherwise print quick links
-            else
-            {
-                ?>
-                <ul id="ul_category">
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+                <h1 class="box-title">
+                    <?php echo $hesklang['select_category_staff']; ?>
+                </h1>
+            </div>
+            <div class="box-body">
+                <div class="select_category">
                     <?php
-                    foreach ($hesk_settings['categories'] as $k=>$v)
+                    // Print a select box if number of categories is large
+                    if ($number_of_categories > $hesk_settings['cat_show_select'])
                     {
-                        echo '<li><a href="new_ticket.php?a=add&amp;category='.$k.'">&raquo; '.$v.'</a></li>';
+                        ?>
+                        <form action="new_ticket.php" method="get">
+                            <select name="category" id="select_category" class="form-control">
+                                <?php
+                                if ($hesk_settings['select_cat'])
+                                {
+                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                }
+                                foreach ($hesk_settings['categories'] as $k=>$v)
+                                {
+                                    echo '<option value="'.$k.'">'.$v.'</option>';
+                                }
+                                ?>
+                            </select>
+
+                            &nbsp;<br />
+
+                            <div style="text-align:center">
+                                <input type="submit" value="<?php echo $hesklang['c2c']; ?>" class="btn btn-default">
+                            </div>
+                        </form>
+                        <?php
+                    }
+                    // Otherwise print quick links
+                    else
+                    {
+                        // echo '<li><a href="new_ticket.php?a=add&amp;category='.$k.'">&raquo; '.$v.'</a></li>';
+                        $new_row = 1;
+
+                        foreach ($hesk_settings['categories'] as $k=>$v):
+                            if ($new_row == 1) {
+                                echo '<div class="row">';
+                                $new_row = -1;
+                            }
+                            ?>
+                            <div class="col-md-5 col-sm-12 <?php if ($new_row == -1) {echo 'col-md-offset-1';} ?>">
+                                <a href="new_ticket.php?a=add&category=<?php echo $k; ?>" class="button-link">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <?php echo $v; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <?php
+                            $new_row++;
+                            if ($new_row == 1) {
+                                echo '</div>';
+                            }
+                        endforeach;
                     }
                     ?>
-                </ul>
-                <?php
-            }
-            ?>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <p>&nbsp;</p>
+    </section>
 
     <?php
 
