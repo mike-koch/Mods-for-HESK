@@ -85,9 +85,6 @@ if (isset($lang[1]) && in_array($lang[1], hesk_getLanguagesArray(1))) {
     hesk_error($hesklang['err_lang']);
 }
 
-/* --> Database settings */
-hesk_dbClose();
-
 if (hesk_testMySQL()) {
     // Database connection OK
 } elseif ($mysql_log) {
@@ -461,7 +458,6 @@ $set['check_updates'] = empty($_POST['s_check_updates']) ? 0 : 1;
 $set['hesk_version'] = $hesk_settings['hesk_version'];
 
 // Process quick help sections
-hesk_dbConnect();
 hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "quick_help_sections` SET `show` = '0'");
 $postArray = hesk_POST_array('quick_help_sections');
 foreach ($postArray as $value) {
