@@ -37,6 +37,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/mail_functions.inc.php');
+require(HESK_PATH . 'inc/custom_fields.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -240,7 +241,7 @@ if (isset($_POST['save'])) {
 		`message`='" . hesk_dbEscape($tmpvar['message']) . "',
 		`language`='" . hesk_dbEscape($tmpvar['language']) . "',
 		`html`='" . hesk_dbEscape($tmpvar['html']) . "',
-		$custom_sql
+		$custom_SQL
 		WHERE `id`='" . intval($ticket['id']) . "' LIMIT 1");
     }
 
@@ -286,8 +287,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     if ($hesk_settings['can_sel_lang']) {
                         ?>
                         <div class="form-group">
-                            <label for="customerLanguage" class="col-sm-3 control-label"><?php echo $hesklang['chol']; ?>
-                                :</label>
+                            <label for="customerLanguage" class="col-sm-3 control-label"><?php echo $hesklang['chol']; ?></label>
 
                             <div class="col-sm-9">
                                 <select name="customerLanguage" id="customerLanguage" class="form-control">
@@ -299,7 +299,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         echo '<input type="hidden" name="customerLanguage" value="' . $ticket['language'] . '">';
                     } ?>
                     <div class="form-group">
-                        <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?>:</label>
+                        <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject']; ?></label>
 
                         <div class="col-sm-9">
                             <input class="form-control" type="text" name="subject" size="40" maxlength="40"
@@ -308,7 +308,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?>:</label>
+                        <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?></label>
 
                         <div class="col-sm-9">
                             <input class="form-control" type="text" name="name" size="40" maxlength="30"
@@ -317,7 +317,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?>:</label>
+                        <label for="email" class="col-sm-3 control-label"><?php echo $hesklang['email']; ?></label>
 
                         <div class="col-sm-9">
                             <input class="form-control" type="text" name="email" size="40" maxlength="1000"
@@ -331,120 +331,115 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             $k_value  = $ticket[$k];
 
                             if ($v['type'] == 'checkbox') {
-                                $k_value = explode('<br />',$k_value);
+                                $k_value = explode('<br>',$k_value);
                             }
 
-                            $v['req'] = $v['req']==2 ? '<font class="important">*</font>' : '';
+                            $v['req'] = $v['req']==2 ? '<span class="important">*</span>' : '';
 
                             switch ($v['type']) {
                                 /* Radio box */
                                 case 'radio':
+                                    $cls = in_array($k,$_SESSION['iserror']) ? ' isError' : '';
                                     echo '
-					<tr>
-					<td style="text-align:right" width="150" valign="top">'.$v['name:'].' '.$v['req'].'</td>
-	                <td width="80%">';
+                    <div class="form-group'.$cls.'">
+                        <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
+                        <div class="col-sm-9">';
+                            foreach ($v['value']['radio_options'] as $option) {
+                                if (strlen($k_value) == 0) {
+                                    $k_value = $option;
+                                    $checked = empty($v['value']['no_default']) ? 'checked="checked"' : '';
+                                } elseif ($k_value == $option) {
+                                    $k_value = $option;
+                                    $checked = 'checked="checked"';
+                                } else {
+                                    $checked = '';
+                                }
 
-                                    $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+                                echo '<div class="radio"><label><input type="radio" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label></div>';
+                            }
+                        echo '</div>
+                    </div>';
 
-                                    foreach ($v['value']['radio_options'] as $option) {
-                                        if (strlen($k_value) == 0) {
-                                            $k_value = $option;
-                                            $checked = empty($v['value']['no_default']) ? 'checked="checked"' : '';
-                                        } elseif ($k_value == $option) {
-                                            $k_value = $option;
-                                            $checked = 'checked="checked"';
-                                        } else {
-                                            $checked = '';
-                                        }
-
-                                        echo '<label><input type="radio" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
-                                    }
-
-                                    echo '</td>
-					</tr>
-					';
                                     break;
 
                                 /* Select drop-down box */
                                 case 'select':
 
-                                    $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+                                    $cls = in_array($k,$_SESSION['iserror']) ? ' isError' : '';
 
                                     echo '
-					<tr>
-					<td style="text-align:right" width="150">'.$v['name:'].' '.$v['req'].'</td>
-	                <td width="80%"><select name="'.$k.'" '.$cls.'>';
+                    <div class="form-group">
+                        <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
+                        <div class="col-sm-9">
+                            <select name="'.$k.'" class="form-control">';
+                                // Show "Click to select"?
+                                if ( ! empty($v['value']['show_select'])) {
+                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                }
 
-                                    // Show "Click to select"?
-                                    if ( ! empty($v['value']['show_select'])) {
-                                        echo '<option value="">'.$hesklang['select'].'</option>';
+                                foreach ($v['value']['select_options'] as $option) {
+                                    if ($k_value == $option) {
+                                        $k_value = $option;
+                                        $selected = 'selected';
+                                    } else {
+                                        $selected = '';
                                     }
 
-                                    foreach ($v['value']['select_options'] as $option) {
-                                        if ($k_value == $option) {
-                                            $k_value = $option;
-                                            $selected = 'selected="selected"';
-                                        } else {
-                                            $selected = '';
-                                        }
+                                    echo '<option '.$selected.'>'.$option.'</option>';
+                                }
 
-                                        echo '<option '.$selected.'>'.$option.'</option>';
-                                    }
-
-                                    echo '</select></td>
-					</tr>
-					';
+                                echo '</select>
+                        </div>
+                    </div>';
                                     break;
 
                                 /* Checkbox */
                                 case 'checkbox':
+                                    $cls = in_array($k,$_SESSION['iserror']) ? ' isError' : '';
                                     echo '
-					<tr>
-					<td style="text-align:right" width="150" valign="top">'.$v['name:'].' '.$v['req'].'</td>
-	                <td width="80%">';
+                    <div class="form-group'.$cls.'">
+                        <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
+                        <div class="col-sm-9">';
+                            foreach ($v['value']['checkbox_options'] as $option) {
+                                if (in_array($option,$k_value)) {
+                                    $checked = 'checked';
+                                } else {
+                                    $checked = '';
+                                }
 
-                                    $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
-
-                                    foreach ($v['value']['checkbox_options'] as $option) {
-                                        if (in_array($option,$k_value)) {
-                                            $checked = 'checked="checked"';
-                                        } else {
-                                            $checked = '';
-                                        }
-
-                                        echo '<label><input type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label><br />';
-                                    }
-
-                                    echo '</td>
-					</tr>
-					';
+                                echo '<div class="checkbox"><label><input type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label></div>';
+                            }
+                        echo '</div>
+                    </div>';
                                     break;
 
                                 /* Large text box */
                                 case 'textarea':
-                                    $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+                                    $cls = in_array($k,$_SESSION['iserror']) ? ' isError' : '';
                                     $k_value = hesk_msgToPlain($k_value,0,0);
 
                                     echo '
-					<tr>
-					<td style="text-align:right" width="150" valign="top">'.$v['name:'].' '.$v['req'].'</td>
-					<td width="80%"><textarea name="'.$k.'" rows="'.intval($v['value']['rows']).'" cols="'.intval($v['value']['cols']).'" '.$cls.'>'.$k_value.'</textarea></td>
-					</tr>
-	                ';
+                    <div class="form-group'.$cls.'">
+                        <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
+                        <div class="col-sm-9">
+                            <textarea name="'.$k.'" class="form-control" rows="'.intval($v['value']['rows']).'" cols="'.intval($v['value']['cols']).'">'.$k_value.'</textarea>
+                        </div>
+                    </div>';
                                     break;
 
                                 // Date
                                 case 'date':
-                                    $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+                                    $cls = in_array($k,$_SESSION['iserror']) ? ' isError' : '';
 
-                                    $k_value = hesk_custom_date_display_format($k_value, 'm/d/Y');
+                                    $k_value = hesk_custom_date_display_format($k_value, 'Y-m-d');
 
                                     echo '
-					<tr>
-					<td style="text-align:right" width="150">'.$v['name:'].' '.$v['req'].'</td>
-					<td width="80%"><input type="text" name="'.$k.'" value="'.$k_value.'" class="tcal'.(in_array($k,$_SESSION['iserror']) ? ' isError' : '').'" size="10" '.$cls.' /></td>
-					</tr>
-					';
+                    <div class="form-group'.$cls.'">
+                        <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="'.$k.'" value="'.$k_value.'" class="datepicker form-control" size="10">
+                        </div>
+                    </div>';
                                     break;
 
                                 // Email
@@ -454,29 +449,33 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     $suggest = $hesk_settings['detect_typos'] ? 'onblur="Javascript:hesk_suggestEmail(\''.$k.'\', \''.$k.'_suggestions\', 0, 1'.($v['value']['multiple'] ? ',1' : '').')"' : '';
 
                                     echo '
-					<tr>
-					<td style="text-align:right" width="150">'.$v['name:'].' '.$v['req'].'</td>
-					<td width="80%"><input type="text" name="'.$k.'" id="'.$k.'" value="'.$k_value.'" size="40" '.$cls.' '.$suggest.' />
+                    <div class="form-group'.$cls.'">
+                        <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" type="text" name="'.$k.'" id="'.$k.'" value="'.$k_value.'" size="40" '.$suggest.'>
+                        </div>
                     	<div id="'.$k.'_suggestions"></div>
-                    </td>
-					</tr>
+                    </div>
 					';
                                     break;
 
                                 // Hidden (same as text for staff)
                                 case 'hidden':
+                                case 'readonly':
                                 default:
                                     if (strlen($k_value) != 0) {
                                         $v['value']['default_value'] = $k_value;
                                     }
 
-                                    $cls = in_array($k,$_SESSION['iserror']) ? ' class="isError" ' : '';
+                                    $cls = in_array($k,$_SESSION['iserror']) ? ' isError' : '';
 
                                     echo '
-					<tr>
-					<td style="text-align:right" width="150">'.$v['name:'].' '.$v['req'].'</td>
-					<td width="80%"><input type="text" name="'.$k.'" size="40" maxlength="'.intval($v['value']['max_length']).'" value="'.$v['value']['default_value'].'" '.$cls.' /></td>
-					</tr>
+                    <div class="form-group'.$cls.'">
+                        <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="'.$k.'" size="40" maxlength="'.intval($v['value']['max_length']).'" value="'.$v['value']['default_value'].'">
+                        </div>
+                    </div>
 					';
                             }
                         }
@@ -485,7 +484,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                 <?php } ?>
                 <div class="form-group">
-                    <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
+                    <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?></label>
 
                 <div class="col-sm-9">
                     <?php
@@ -498,12 +497,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
             <div class="form-group">
                 <input type="hidden" name="save" value="1"/><input type="hidden" name="track"
-                                                                   value="<?php echo $trackingID; ?>"/>
-                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+                                                                   value="<?php echo $trackingID; ?>">
+                <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
                 <?php
                 if ($is_reply) {
                     ?>
-                    <input type="hidden" name="reply" value="<?php echo $tmpvar['id']; ?>"/>
+                    <input type="hidden" name="reply" value="<?php echo $tmpvar['id']; ?>">
                     <?php
                 }
                 ?>
@@ -513,7 +512,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 $html = $ticket['html'] ? 1 : 0;
                 ?>
                 <input type="hidden" name="html" value="<?php echo $html; ?>">
-                <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default"/>
+                <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default">
                 <?php if (isset($_REQUEST['isManager']) && $_REQUEST['isManager']): ?>
                     <input type="hidden" name="isManager" value="1">
                 <?php endif; ?>

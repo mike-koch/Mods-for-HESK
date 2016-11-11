@@ -1599,7 +1599,7 @@ function mfh_print_message() {
         <div class="timeline-item">
             <span class="time"><i class="fa fa-clock-o"></i> <?php echo $ticket['dt']; ?></span>
             <h3 class="timeline-header"><?php echo $ticket['name']; ?></h3>
-            <div class="timeline-body">
+            <div class="timeline-header header-info">
                 <div class="row">
                     <div class="col-md-3 text-right">
                         <strong><?php echo $hesklang['m_sub']; ?></strong>
@@ -1608,51 +1608,12 @@ function mfh_print_message() {
                         <?php echo $ticket['subject']; ?>
                     </div>
                 </div>
-                <?php foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                    if ($v['use'] && $v['place'] == 0 && hesk_is_custom_field_in_category($k, $ticket['category'])) {
-                        if ($modsForHesk_settings['custom_field_setting']) {
-                            $v['name'] = $hesklang[$v['name']];
-                        }
-                        echo '<div class="row">';
-                        echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
-                        if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                            $dt = hesk_date($ticket[$k], false, false);
-                            echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
-                        } elseif ($v['type'] == 'email') {
-                            echo '<div class="col-md-9"><a href="mailto:'.$ticket[$k].'">'.$ticket[$k].'</a></div>';
-                        } else {
-                            echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
-                        }
-                        echo '</div>';
-                    }
-                }
-                if ($ticket['message'] != '') {
-                ?>
-                <div class="row push-down-10">
-                    <div class="col-md-3 text-right">
-                        <strong><?php echo $hesklang['message_colon']; ?></strong>
-                    </div>
-                    <div class="col-md-9">
-                        <?php if ($ticket['html']) {
-                            echo hesk_html_entity_decode($ticket['message']);
-                        } else {
-                            echo $ticket['message'];
-                        } ?>
-                    </div>
-                </div>
                 <?php
-                }
                 foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                    if ($v['use'] && $v['place'] && hesk_is_custom_field_in_category($k, $ticket['category'])) {
-                        if ($modsForHesk_settings['custom_field_setting']) {
-                            $v['name'] = $hesklang[$v['name']];
-                        }
+                    if ($v['use'] && $v['place'] == 0 && hesk_is_custom_field_in_category($k, $ticket['category'])) {
                         echo '<div class="row">';
                         echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
-                        if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                            $dt = hesk_date($ticket[$k], false, false);
-                            echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
-                        } elseif ($v['type'] == 'email') {
+                        if ($v['type'] == 'email') {
                             echo '<div class="col-md-9"><a href="mailto:'.$ticket[$k].'">'.$ticket[$k].'</a></div>';
                         } else {
                             echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
@@ -1662,6 +1623,39 @@ function mfh_print_message() {
                 }
                 ?>
             </div>
+            <div class="timeline-body">
+                <?php
+                if ($ticket['message'] != '') {
+                    if ($ticket['html']) {
+                        echo hesk_html_entity_decode($ticket['message']);
+                    } else {
+                        echo $ticket['message'];
+                    }
+                }
+                ?>
+            </div>
+            <?php
+            $first = true;
+            foreach ($hesk_settings['custom_fields'] as $k => $v) {
+                if ($v['use'] && $v['place'] && hesk_is_custom_field_in_category($k, $ticket['category'])) {
+                    if ($first) {
+                        echo '<div class="timeline-footer">';
+                        $first = false;
+                    }
+                    echo '<div class="row">';
+                    echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
+                    if ($v['type'] == 'email') {
+                        echo '<div class="col-md-9"><a href="mailto:'.$ticket[$k].'">'.$ticket[$k].'</a></div>';
+                    } else {
+                        echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
+                    }
+                    echo '</div>';
+                }
+            }
+            if (!$first) {
+                echo '</div>';
+            }
+            ?>
             <?php if (($hesk_settings['attachments']['use'] && strlen($ticket['attachments']))
                 || ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && strlen($ticket['articles']))): ?>
                 <div class="timeline-footer">

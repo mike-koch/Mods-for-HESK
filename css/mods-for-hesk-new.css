@@ -169,3 +169,7 @@ button.dropdown-submit {
 .button-link .panel-body:hover {
     background-color: #EEE;
 }
+
+.timeline-header.header-info {
+    font-size: 14px !important;
+}
