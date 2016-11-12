@@ -70,6 +70,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
         </div>
         <div class="box-body">
+            
             <label>
                 <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
                 <?php echo $hesklang['arp']; ?>

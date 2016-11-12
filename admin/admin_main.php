@@ -82,11 +82,13 @@ else {
             </div>
         </div>
         <div class="box-body">
-            <label>
-                <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
-                <?php echo $hesklang['arp']; ?>
-                <span id="timer"></span>
-            </label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
+                    <?php echo $hesklang['arp']; ?>
+                    <span id="timer"></span>
+                </label>
+            </div>
             <script type="text/javascript">heskCheckReloading();</script><br>
             <?php
             /* Print tickets? */

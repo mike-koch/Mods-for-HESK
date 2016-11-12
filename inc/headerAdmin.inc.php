@@ -210,6 +210,50 @@ $modsForHesk_settings = mfh_getSettings();
         }
     }
 
+    // Auto reload
+    if (defined('AUTO_RELOAD') && hesk_checkPermission('can_view_tickets',0) && ! isset($_SESSION['hide']['ticket_list'])) {
+        ?>
+        <script type="text/javascript">
+            var count = <?php echo empty($_SESSION['autoreload']) ? 30 : intval($_SESSION['autoreload']); ?>;
+            var reloadcounter;
+            var countstart = count;
+
+            function heskReloadTimer() {
+                count = count-1;
+                if (count <= 0) {
+                    clearInterval(reloadcounter);
+                    window.location.reload();
+                    return;
+                }
+
+                document.getElementById("timer").innerHTML = "(" + count + ")";
+            }
+
+            function heskCheckReloading() {
+                if (<?php if ($_SESSION['autoreload']) echo "getCookie('autorefresh') == null || "; ?>getCookie('autorefresh') == '1') {
+                    document.getElementById("reloadCB").checked=true;
+                    document.getElementById("timer").innerHTML = "(" + count + ")";
+                    reloadcounter = setInterval(heskReloadTimer, 1000);
+                }
+            }
+
+            function toggleAutoRefresh(cb) {
+                if (cb.checked) {
+                    setCookie('autorefresh', '1');
+                    document.getElementById("timer").innerHTML = "(" + count + ")";
+                    reloadcounter = setInterval(heskReloadTimer, 1000);
+                } else {
+                    setCookie('autorefresh', '0');
+                    count = countstart;
+                    clearInterval(reloadcounter);
+                    document.getElementById("timer").innerHTML = "";
+                }
+            }
+
+        </script>
+        <?php
+    }
+
     if (defined('MFH_CALENDAR')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
