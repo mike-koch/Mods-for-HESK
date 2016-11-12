@@ -492,7 +492,7 @@ function save_sm()
 	
 	// Clean the HTML code
 	require(HESK_PATH . 'inc/htmlpurifier/HeskHTMLPurifier.php');
-	$purifier = new HeskHTMLPurifier();
+	$purifier = new HeskHTMLPurifier($hesk_settings['cache_dir']);
 	$message = $purifier->heskPurify($message);
 
     // Any errors?
@@ -661,7 +661,7 @@ function new_sm()
 	
 	// Clean the HTML code
 	require(HESK_PATH . 'inc/htmlpurifier/HeskHTMLPurifier.php');
-	$purifier = new HeskHTMLPurifier();
+	$purifier = new HeskHTMLPurifier($hesk_settings['cache_dir']);
 	$message = $purifier->heskPurify($message);
 
     // Any errors?

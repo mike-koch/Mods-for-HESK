@@ -48,6 +48,13 @@ hesk_isLoggedIn();
 hesk_checkPermission('can_export');
 $modsForHesk_settings = mfh_getSettings();
 
+// Just a delete file action?
+$delete = hesk_GET('delete');
+if (strlen($delete) && preg_match('/^hesk_export_[0-9_\-]+$/', $delete)) {
+    hesk_unlink(HESK_PATH.$hesk_settings['cache_dir'].'/'.$delete.'.zip');
+    hesk_process_messages($hesklang['fd'], 'export.php','SUCCESS');
+}
+
 // Set default values
 define('CALENDAR', 1);
 define('MAIN_PAGE', 1);
@@ -317,7 +324,7 @@ if (isset($_GET['w'])) {
     }
 
     // This will be the export directory
-    $export_dir = HESK_PATH . $hesk_settings['attach_dir'] . '/export/';
+    $export_dir = HESK_PATH.$hesk_settings['cache_dir'].'/';
 
     // This will be the name of the export and the XML file
     $export_name = 'hesk_export_' . date('Y-m-d_H-i-s') . '_' . mt_rand(10000, 99999);
@@ -331,12 +338,7 @@ if (isset($_GET['w'])) {
 		}
 	
         // Cleanup old files
-        $files = preg_grep('/index\.htm$/', glob($export_dir.'*', GLOB_NOSORT), PREG_GREP_INVERT);
-        if (is_array($files) && count($files)) {
-            foreach ($files as $file) {
-                hesk_unlink($file, 86400);
-            }
-        }
+        hesk_purge_cache('export', 86400);
     } else {
         hesk_error($hesklang['ede']);
     }
@@ -348,6 +350,7 @@ if (isset($_GET['w'])) {
     }
 
     // Start generating the report message and generating the export
+    $success_msg = '';
     $flush_me = '<br /><br />';
     $flush_me .= hesk_date() . " | {$hesklang['inite']} ";
 
@@ -648,7 +651,10 @@ if (isset($_GET['w'])) {
 
         // We're done!
         $flush_me .= hesk_date() . " | {$hesklang['fZIP']}<br /><br />";
-        $flush_me .= '<a href="' . $save_to_zip . '">' . $hesklang['ch2d'] . "</a>\n";
+
+        // Success message
+        $success_msg .= $hesk_settings['debug_mode'] ? $flush_me : '<br /><br />';
+        $success_msg .= $hesklang['step1'] . ': <a href="' . $save_to_zip . '">' . $hesklang['ch2d'] . '</a><br /><br />' . $hesklang['step2'] . ': <a href="export.php?delete='.urlencode($export_name).'">' . $hesklang['dffs'] . '</a>';
     } // No tickets exported, cleanup
     else {
         hesk_unlink($save_to);
@@ -684,9 +690,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             hesk_handle_messages();
 
             // If an export was generated, show the link to download
-            if (isset($flush_me)) {
+            if (isset($success_msg)) {
                 if ($tickets_exported > 0) {
-                    hesk_show_success($flush_me);
+                    hesk_show_success($success_msg);
                 } else {
                     hesk_show_notice($hesklang['n2ex']);
                 }

@@ -173,3 +173,7 @@ button.dropdown-submit {
 .timeline-header.header-info {
     font-size: 14px !important;
 }
+
+.full-width {
+    width: 100%;
+}

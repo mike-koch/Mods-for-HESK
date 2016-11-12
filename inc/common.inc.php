@@ -246,6 +246,12 @@ function hesk_unlink($file, $older_than = 0)
 } // END hesk_unlink()
 
 
+function hesk_unlink_callable($file, $key, $older_than=0)
+{
+    return hesk_unlink($file, $older_than);
+} // END hesk_unlink_callable()
+
+
 function hesk_utf8_urldecode($in)
 {
     $in = preg_replace("/%u([0-9a-f]{3,4})/i", "&#x\\1;", urldecode($in));
@@ -1726,9 +1732,43 @@ function hesk_check_maintenance($dodie = true)
 
     <div class="alert alert-warning" style="margin: 20px">
         <i class="fa fa-exclamation-triangle"></i>
-        <b><?php echo $hesklang['mm1']; ?></b><br/><br/>
-        <?php echo $hesklang['mm2']; ?><br/><br/>
-        <?php echo $hesklang['mm3']; ?>
+        <?php
+        // Has the help desk been installed yet?
+        if (
+            $hesk_settings['maintenance_mode'] == 0 &&
+            $hesk_settings['question_ans'] == 'PB6YM' &&
+
+            $hesk_settings['site_title'] == 'My Web site' &&
+            $hesk_settings['site_url'] == 'http://www.example.com' &&
+            $hesk_settings['webmaster_mail'] == 'support@example.com' &&
+            $hesk_settings['noreply_mail'] == 'support@example.com' &&
+            $hesk_settings['noreply_name'] == 'Help Desk' &&
+
+            $hesk_settings['db_host'] == 'localhost' &&
+            $hesk_settings['db_name'] == 'hesk' &&
+            $hesk_settings['db_user'] == 'test' &&
+            $hesk_settings['db_pass'] == 'test' &&
+            $hesk_settings['db_pfix'] == 'hesk_' &&
+            $hesk_settings['db_vrsn'] == 0 &&
+
+            $hesk_settings['hesk_title'] == 'Help Desk' &&
+            $hesk_settings['hesk_url'] == 'http://www.example.com/helpdesk'
+        )
+        {
+            echo "
+        <b>{$hesklang['hni1']}</b><br /><br />
+        {$hesklang['hni2']}<br /><br />
+        {$hesklang['hni3']}";
+        }
+        // Hesk appears to be installed, show a "Maintenance in progress" message
+        else
+        {
+            echo "
+        <b>{$hesklang['mm1']}</b><br /><br />
+        {$hesklang['mm2']}<br /><br />
+        {$hesklang['mm3']}";
+        }
+        ?>
     </div>
     <?php
     require_once(HESK_PATH . 'inc/footer.inc.php');

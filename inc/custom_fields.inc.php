@@ -38,8 +38,8 @@ function hesk_load_custom_fields($category=0, $use_cache=1)
 	global $hesk_settings, $hesklang;
 
 	// Do we have a cached version available
-	$cache_dir = dirname(dirname(__FILE__)).'/'.$hesk_settings['attach_dir'].'/cf/';
-    $cache_file = $cache_dir . sha1($hesk_settings['language']).'.cache.php';
+	$cache_dir = dirname(dirname(__FILE__)).'/'.$hesk_settings['cache_dir'].'/';
+	$cache_file = $cache_dir . 'cf_' . sha1($hesk_settings['language']).'.cache.php';
 
 	if ($use_cache && file_exists($cache_file))
 	{

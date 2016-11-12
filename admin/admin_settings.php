@@ -465,6 +465,31 @@ $modsForHesk_settings = mfh_getSettings();
                         ?>
                     </td>
                 </tr>
+                <tr>
+                    <td class="text-right">
+                        /<?php echo $hesk_settings['cache_dir']; ?>
+                    </td>
+                    <?php
+                    $attachmentsExist = is_dir(HESK_PATH . $hesk_settings['cache_dir']);
+                    $attachmentsWritable = is_writable(HESK_PATH . $hesk_settings['cache_dir']);
+                    $cellClass = $attachmentsExist && $attachmentsWritable ? 'success' : 'danger';
+                    ?>
+                    <td class="pad-right-10 <?php echo $cellClass; ?>">
+                        <?php
+                        if ($attachmentsExist) {
+                            echo '<span class="success">' . $hesklang['exists'] . '</span>, ';
+                            if ($attachmentsWritable) {
+                                $enable_use_attachments = 1;
+                                echo '<span class="success">' . $hesklang['writable'] . '</span>';
+                            } else {
+                                echo '<span class="error">' . $hesklang['not_writable'] . '</span><br>' . $hesklang['e_cdir'];
+                            }
+                        } else {
+                            echo '<span class="error">' . $hesklang['no_exists'] . '</span>, <span class="error">' . $hesklang['not_writable'] . '</span><br>' . $hesklang['e_cdir'];
+                        }
+                        ?>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -796,6 +821,20 @@ $modsForHesk_settings = mfh_getSettings();
                                placeholder="<?php echo htmlspecialchars($hesklang['ticket_attach_dir']); ?>"
                                name="s_attach_dir" size="40" maxlength="255"
                                value="<?php echo $hesk_settings['attach_dir']; ?>"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="s_cache_dir"
+                           class="col-sm-3 control-label"><?php echo $hesklang['cf']; ?> <a
+                            href="Javascript:void(0)"
+                            onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#77','400','500')"><i
+                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control"
+                               placeholder="<?php echo htmlspecialchars($hesklang['ticket_attach_dir']); ?>"
+                               name="s_cache_dir" size="40" maxlength="255"
+                               value="<?php echo $hesk_settings['cache_dir']; ?>"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -3676,8 +3715,8 @@ $modsForHesk_settings = mfh_getSettings();
         global $hesk_settings;
 
         // Do we have a cached version file?
-        if (file_exists(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest.txt')) {
-            if (preg_match('/^(\d+)\|([\d.]+)+$/', @file_get_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest.txt'), $matches) && (time() - intval($matches[1])) < 3600) {
+        if (file_exists(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest.txt')) {
+            if (preg_match('/^(\d+)\|([\d.]+)+$/', @file_get_contents(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest.txt'), $matches) && (time() - intval($matches[1])) < 3600) {
                 return $matches[2];
             }
         }
@@ -3710,7 +3749,7 @@ $modsForHesk_settings = mfh_getSettings();
     {
         global $hesk_settings;
 
-        @file_put_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest.txt', time() . '|' . $latest);
+        @file_put_contents(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest.txt', time() . '|' . $latest);
 
         return $latest;
 
@@ -3736,8 +3775,8 @@ $modsForHesk_settings = mfh_getSettings();
         global $hesk_settings;
 
         // Do we have a cached version file?
-        if (file_exists(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest-mfh.txt')) {
-            if (preg_match('/^(\d+)\|([\d.]+)+$/', @file_get_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest-mfh.txt'), $matches) && (time() - intval($matches[1])) < 3600) {
+        if (file_exists(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest-mfh.txt')) {
+            if (preg_match('/^(\d+)\|([\d.]+)+$/', @file_get_contents(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest-mfh.txt'), $matches) && (time() - intval($matches[1])) < 3600) {
                 return $matches[2];
             }
         }
@@ -3769,7 +3808,7 @@ $modsForHesk_settings = mfh_getSettings();
     {
         global $hesk_settings;
 
-        @file_put_contents(HESK_PATH . $hesk_settings['attach_dir'] . '/__latest-mfh.txt', time() . '|' . $latest);
+        @file_put_contents(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest-mfh.txt', time() . '|' . $latest);
 
         return $latest;
 
@@ -3832,7 +3871,7 @@ $modsForHesk_settings = mfh_getSettings();
                     }
 
                     /* Check if language file is for current version */
-                    if (strpos($tmp, '$hesklang[\'rcheck\']') === false) {
+                    if (strpos($tmp, '$hesklang[\'refresh_page\']') === false) {
                         $err .= "              |---->  WRONG VERSION (not " . $hesk_settings['hesk_version'] . ")\n";
                     }
 

@@ -259,8 +259,14 @@ if (!$show['show']) {
         <div class="blankSpace"></div>
         <div class="table-bordered">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-10">
                     <h2><?php echo $ticket['subject']; ?></h2>
+                </div>
+                <div class="col-md-2 pull-right pad-down-20">
+                    <a href="ticket.php?track=<?php echo $trackingID.$hesk_settings['e_query']; ?>">
+                        <i class="fa fa-refresh"></i>
+                        <?php echo $hesklang['refresh_page']; ?>
+                    </a>
                 </div>
             </div>
             <div class="row">
@@ -284,7 +290,8 @@ if (!$show['show']) {
                                 echo '<a href="change_status.php?track=' . $trackingID . $hesk_settings['e_query'] . '&amp;s=3&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '" title="' . $hesklang['close_action'] . '">' . $hesklang['close_action'] . '</a>';
                             }
                         }
-                        ?></p>
+                        ?>
+                    </p>
                 </div>
             </div>
             <div class="row medLowPriority">

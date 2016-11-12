@@ -122,6 +122,7 @@ if ( ! is_writable(HESK_PATH . $set['attach_dir']) )
 }
 */
 
+$set['cache_dir'] = isset($_POST['s_cache_dir']) && ! is_array($_POST['s_cache_dir']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $_POST['s_cache_dir']) : 'cache';
 $set['max_listings'] = hesk_checkMinMax(intval(hesk_POST('s_max_listings')), 1, 999, 10);
 $set['print_font_size'] = hesk_checkMinMax(intval(hesk_POST('s_print_font_size')), 1, 99, 12);
 $set['autoclose'] = hesk_checkMinMax(intval(hesk_POST('s_autoclose')), 0, 999, 7);
@@ -584,6 +585,7 @@ $hesk_settings[\'hesk_title\']=\'' . $set['hesk_title'] . '\';
 $hesk_settings[\'hesk_url\']=\'' . $set['hesk_url'] . '\';
 $hesk_settings[\'admin_dir\']=\'' . $set['admin_dir'] . '\';
 $hesk_settings[\'attach_dir\']=\'' . $set['attach_dir'] . '\';
+$hesk_settings[\'cache_dir\']=\'' . $set['cache_dir'] . '\';
 $hesk_settings[\'max_listings\']=' . $set['max_listings'] . ';
 $hesk_settings[\'print_font_size\']=' . $set['print_font_size'] . ';
 $hesk_settings[\'autoclose\']=' . $set['autoclose'] . ';
@@ -835,7 +837,7 @@ function hesk_getLanguagesArray($returnArray = 0)
                     $add = 0;
                 } elseif (!preg_match('/\$hesklang\[\'EMAIL_HR\'\]\=\'(.*)\'\;/', $tmp, $hr)) {
                     $add = 0;
-                } elseif (!preg_match('/\$hesklang\[\'rcheck\'\]/', $tmp)) {
+                } elseif (!preg_match('/\$hesklang\[\'refresh_page\'\]/', $tmp)) {
                     $add = 0;
                 }
             } else {

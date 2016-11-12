@@ -1140,8 +1140,8 @@ function save_article()
 	    $content = hesk_getHTML( hesk_POST('content') );
 		
 		// Clean the HTML code
-		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.php');
-		$purifier = new HeskHTMLPurifier();
+		require(HESK_PATH . 'inc/htmlpurifier/HeskHTMLPurifier.php');
+		$purifier = new HeskHTMLPurifier($hesk_settings['cache_dir']);
 		$content = $purifier->heskPurify($content);
     }
 	else
@@ -1404,11 +1404,6 @@ function edit_article()
 	require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	?>
 
-	</td>
-	</tr>
-	<tr>
-	<td>
-
     <ol class="breadcrumb">
         <li><a href="manage_knowledgebase.php"><?php echo $hesklang['kb']; ?></a></li>
         <li><a href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['kb_cat_man']; ?></a></li>
@@ -1548,14 +1543,15 @@ function edit_article()
                         </div>
                         <?php endif; //End attachments ?>
                         <div class="form-group">
-                            <input type="hidden" name="a" value="save_article" />
-                            <input type="hidden" name="id" value="<?php echo $id; ?>" />
-                            <input type="hidden" name="old_type" value="<?php echo $article['type']; ?>" />
-                            <input type="hidden" name="old_catid" value="<?php echo $catid; ?>" />
-                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" /><br>
-                            <div class="btn-group">
+                            <input type="hidden" name="a" value="save_article">
+                            <input type="hidden" name="id" value="<?php echo $id; ?>">
+                            <input type="hidden" name="old_type" value="<?php echo $article['type']; ?>">
+                            <input type="hidden" name="old_catid" value="<?php echo $catid; ?>">
+                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                            <div class="btn-group-vertical full-width">
                                 <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary" />
                                 <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
+                                <a class="btn btn-danger" href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><?php echo $hesklang['del_kbaa']; ?></a>
                             </div>
                         </div>
                     </div>
@@ -2015,8 +2011,8 @@ function new_article()
         $content = hesk_getHTML( hesk_POST('content') );
 		
 		// Clean the HTML code
-		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.php');
-		$purifier = new HeskHTMLPurifier();
+		require(HESK_PATH . 'inc/htmlpurifier/HeskHTMLPurifier.php');
+		$purifier = new HeskHTMLPurifier($hesk_settings['cache_dir']);
 		$content = $purifier->heskPurify($content);
     }
 	else

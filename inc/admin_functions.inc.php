@@ -709,3 +709,53 @@ function hesk_checkPermission($feature, $showerror = 1)
     }
 
 } // END hesk_checkPermission()
+
+function hesk_purge_cache($type = '', $expire_after_seconds = 0)
+{
+    global $hesk_settings;
+
+    $cache_dir = dirname(dirname(__FILE__)).'/'.$hesk_settings['cache_dir'].'/';
+
+    if ( ! is_dir($cache_dir))
+    {
+        return false;
+    }
+
+    switch ($type)
+    {
+        case 'export':
+            $files = glob($cache_dir.'hesk_export_*', GLOB_NOSORT);
+            break;
+        case 'status':
+            $files = glob($cache_dir.'status_*', GLOB_NOSORT);
+            break;
+        case 'cf':
+            $files = glob($cache_dir.'cf_*', GLOB_NOSORT);
+            break;
+        default:
+            hesk_rrmdir(trim($cache_dir, '/'), true);
+            return true;
+    }
+
+    if (is_array($files))
+    {
+        array_walk($files, 'hesk_unlink_callable', $expire_after_seconds);
+    }
+
+    return true;
+
+} // END hesk_purge_cache()
+
+
+function hesk_rrmdir($dir, $keep_top_level=false)
+{
+    $files = $keep_top_level ? array_diff(scandir($dir), array('.','..','index.htm')) : array_diff(scandir($dir), array('.','..'));
+
+    foreach ($files as $file)
+    {
+        (is_dir("$dir/$file")) ? hesk_rrmdir("$dir/$file") : @unlink("$dir/$file");
+    }
+
+    return $keep_top_level ? true : @rmdir($dir);
+
+} // END hesk_rrmdir()

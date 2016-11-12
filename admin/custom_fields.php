@@ -884,7 +884,7 @@ function save_cf()
 	WHERE `id`={$id}");
 
 	// Clear cache
-	clear_cf_cache();
+	hesk_purge_cache('cf');
 
 	// Show success
 	$_SESSION['cford'] = $id;
@@ -947,7 +947,7 @@ function order_cf()
 	update_cf_order();
 
 	// Clear cache
-	clear_cf_cache();
+	hesk_purge_cache('cf');
 
 	// Finish
 	header('Location: custom_fields.php');
@@ -998,7 +998,7 @@ function remove_cf()
 		update_cf_order();
 
 		// Clear cache
-		clear_cf_cache();
+		hesk_purge_cache('cf');
 
 		// Delete custom field data from tickets
 		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `custom{$id}`=''");
@@ -1308,26 +1308,9 @@ function new_cf()
 	update_cf_order();
 
 	// Clear cache
-	clear_cf_cache();
+	hesk_purge_cache('cf');
 
 	// Show success
 	hesk_process_messages($hesklang['cf_added'],'custom_fields.php','SUCCESS');
 
 } // End new_cf()
-
-
-function clear_cf_cache()
-{
-	global $hesk_settings;
-
-    $cache_dir = dirname(dirname(__FILE__)).'/'.$hesk_settings['attach_dir'].'/cf/';
-
-    if (is_dir($cache_dir))
-    {
-        $files = preg_grep('/index\.htm$/', glob($cache_dir.'*', GLOB_NOSORT), PREG_GREP_INVERT);
-        array_walk($files, 'hesk_unlink');
-    }
-
-	return true;
-
-} // END clear_cf_cache()
