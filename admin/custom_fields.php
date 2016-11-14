@@ -148,7 +148,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 												<?php foreach ($hesk_settings['languages'] as $lang => $info): ?>
 												<tr>
 												<td><?php echo $lang; ?></td>
-												<td><input type="text" class="form-control" name="name['.$lang.']" size="30" value="'.(isset($names[$lang]) ? $names[$lang] : '').'" /></td>
+												<td><input type="text" class="form-control" name="name[<?php echo $lang; ?>]" size="30" value="<?php echo (isset($names[$lang]) ? $names[$lang] : ''); ?>"></td>
 												</tr>
 												<?php endforeach; ?>
 											</table>
@@ -737,6 +737,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 										}
 									}
 
+									$k = 1;
 									foreach ($hesk_settings['custom_fields'] as $id => $cf) {
 										$id = intval(str_replace('custom', '', $id));
 
@@ -820,8 +821,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 											</td>
 										</tr>
 										<?php
+										$k++;
 									} // End while
-
 									?>
 									</tbody>
 								</table>
