@@ -436,7 +436,13 @@ function print_add_ticket()
                 {
                     if ($v['use']==1 && $v['place']==0 && hesk_is_custom_field_in_category($k, $category) )
                     {
-                        $v['req'] = $v['req'] ? '<span class="important">*</span>' : '';
+                        if ($v['req']) {
+                            $v['req']=  '<span class="important">*</span>';
+                            $required_attribute = 'data-error="' . $hesklang['this_field_is_required'] . '" required';
+                        } else {
+                            $v['req'] = '';
+                            $required_attribute = '';
+                        }
 
                         if ($v['type'] == 'checkbox')
                         {
@@ -479,9 +485,10 @@ function print_add_ticket()
                                         $checked = '';
                                     }
 
-                                    echo '<div class="radio"><label><input type="radio" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label></div>';
+                                    echo '<div class="radio"><label><input type="radio" name="'.$k.'" value="'.$option.'" '.$checked.' ' . $required_attribute . '> '.$option.'</label></div>';
                                 }
                         echo '
+                        <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                                 break;
@@ -495,7 +502,7 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <select name="'.$k.'" class="form-control">';
+                            <select name="'.$k.'" class="form-control" ' . $required_attribute . '>';
                                 // Show "Click to select"?
                                 if ( ! empty($v['value']['show_select']))
                                 {
@@ -518,6 +525,7 @@ function print_add_ticket()
                                 }
 
                                 echo '</select>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                                 break;
@@ -541,9 +549,11 @@ function print_add_ticket()
                                     $checked = '';
                                 }
 
-                                echo '<div class="checkbox"><label><input type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label></div>';
+                                echo '<div class="checkbox"><label><input type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$required_attribute.'> '.$option.'</label></div>';
                             }
-                        echo '</div>
+                        echo '
+                        <div class="help-block with-errors"></div>
+                        </div>
                     </div>';
                                 break;
 
@@ -555,20 +565,26 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <textarea class="form-control" name="'.$k.'" rows="'.intval($v['value']['rows']).'" cols="'.intval($v['value']['cols']).'" '.$cls.'>'.$k_value.'</textarea>
+                            <textarea class="form-control" name="'.$k.'" rows="'.intval($v['value']['rows']).'" cols="'.intval($v['value']['cols']).'" '.$required_attribute.'>'.$k_value.'</textarea>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                                 break;
 
                             // Date
                             case 'date':
+                                if ($required_attribute != '') {
+                                    $required_attribute .= ' pattern="[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])"';
+                                }
+
                                 $cls = in_array($k,$_SESSION['iserror']) ? 'isError' : '';
 
                                 echo '
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" name="'.$k.'" value="'.$k_value.'" class="form-control datepicker" size="10">
+                            <input type="text" name="'.$k.'" value="'.$k_value.'" class="form-control datepicker" size="10" ' . $required_attribute . '>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                                 break;
@@ -583,7 +599,8 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" name="'.$k.'" id="'.$k.'" value="'.$k_value.'" size="40" class="form-control" '.$suggest.'>
+                            <input type="text" name="'.$k.'" id="'.$k.'" value="'.$k_value.'" size="40" class="form-control" '.$suggest.' '.$required_attribute.'>
+                            <div class="help-block with-errors"></div>
                         </div>
                         <div id="'.$k.'_suggestions"></div>
                     </div>';
@@ -611,7 +628,7 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="'.$k.'" size="40" value="'.$v['value']['default_value'].'" readonly>
+                            <input type="text" class="form-control white-readonly" name="'.$k.'" size="40" value="'.$v['value']['default_value'].'" readonly>
                         </div>
                     </div>';
                                 break;
@@ -629,7 +646,8 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="'.$k.'" size="40" maxlength="'.intval($v['value']['max_length']).'" value="'.$v['value']['default_value'].'">
+                            <input type="text" class="form-control" name="'.$k.'" size="40" maxlength="'.intval($v['value']['max_length']).'" value="'.$v['value']['default_value'].'" '.$required_attribute.'>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                         }
@@ -744,7 +762,13 @@ function print_add_ticket()
                 {
                     if ($v['use']==1 && $v['place']==1 && hesk_is_custom_field_in_category($k, $category) )
                     {
-                        $v['req'] = $v['req'] ? '<span class="important">*</span>' : '';
+                        if ($v['req']) {
+                            $v['req']=  '<span class="important">*</span>';
+                            $required_attribute = 'data-error="' . $hesklang['this_field_is_required'] . '" required';
+                        } else {
+                            $v['req'] = '';
+                            $required_attribute = '';
+                        }
 
                         if ($v['type'] == 'checkbox')
                         {
@@ -787,9 +811,10 @@ function print_add_ticket()
                                         $checked = '';
                                     }
 
-                                    echo '<div class="radio"><label><input type="radio" name="'.$k.'" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label></div>';
+                                    echo '<div class="radio"><label><input type="radio" name="'.$k.'" value="'.$option.'" '.$checked.' '.$required_attribute.'> '.$option.'</label></div>';
                                 }
                                 echo '
+                                <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                                 break;
@@ -803,7 +828,7 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <select name="'.$k.'" class="form-control">';
+                            <select name="'.$k.'" class="form-control" '.$required_attribute.'>';
                                 // Show "Click to select"?
                                 if ( ! empty($v['value']['show_select']))
                                 {
@@ -826,6 +851,7 @@ function print_add_ticket()
                                 }
 
                                 echo '</select>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                                 break;
@@ -849,9 +875,11 @@ function print_add_ticket()
                                         $checked = '';
                                     }
 
-                                    echo '<div class="checkbox"><label><input type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$cls.' /> '.$option.'</label></div>';
+                                    echo '<div class="checkbox"><label><input type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$required_attribute.'> '.$option.'</label></div>';
                                 }
-                                echo '</div>
+                                echo '
+                            <div class="help-block with-errors"></div>
+                        </div>
                     </div>';
                                 break;
 
@@ -863,20 +891,26 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <textarea class="form-control" name="'.$k.'" rows="'.intval($v['value']['rows']).'" cols="'.intval($v['value']['cols']).'" '.$cls.'>'.$k_value.'</textarea>
+                            <textarea class="form-control" name="'.$k.'" rows="'.intval($v['value']['rows']).'" cols="'.intval($v['value']['cols']).'" '.$required_attribute.'>'.$k_value.'</textarea>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                                 break;
 
                             // Date
                             case 'date':
+                                if ($required_attribute != '') {
+                                    $required_attribute .= ' pattern="[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])"';
+                                }
+
                                 $cls = in_array($k,$_SESSION['iserror']) ? 'isError' : '';
 
                                 echo '
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" name="'.$k.'" value="'.$k_value.'" class="form-control datepicker" size="10">
+                            <input type="text" name="'.$k.'" value="'.$k_value.'" class="form-control datepicker" size="10" '.$required_attribute.'>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                                 break;
@@ -891,7 +925,8 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" name="'.$k.'" id="'.$k.'" value="'.$k_value.'" size="40" class="form-control" '.$suggest.'>
+                            <input type="text" name="'.$k.'" id="'.$k.'" value="'.$k_value.'" size="40" class="form-control" '.$suggest.' '.$required_attribute.'>
+                            <div class="help-block with-errors"></div>
                         </div>
                         <div id="'.$k.'_suggestions"></div>
                     </div>';
@@ -919,7 +954,7 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="'.$k.'" size="40" value="'.$v['value']['default_value'].'" readonly>
+                            <input type="text" class="form-control white-readonly" name="'.$k.'" size="40" value="'.$v['value']['default_value'].'" readonly>
                         </div>
                     </div>';
                                 break;
@@ -937,7 +972,8 @@ function print_add_ticket()
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="'.$k.'" size="40" maxlength="'.intval($v['value']['max_length']).'" value="'.$v['value']['default_value'].'">
+                            <input type="text" class="form-control" name="'.$k.'" size="40" maxlength="'.intval($v['value']['max_length']).'" value="'.$v['value']['default_value'].'" ' . $required_attribute . '>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>';
                         }
