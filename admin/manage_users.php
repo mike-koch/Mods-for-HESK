@@ -79,7 +79,6 @@ $default_userdata = array(
 
     // Preferences
     'afterreply' => 0,
-    'autorefresh' => 0,
 
     // Defaults
     'autostart' => 1,
@@ -457,27 +456,29 @@ function edit_user()
         <li class="active"><?php echo $hesklang['editing_user'] . ' ' . $_SESSION['original_user']; ?></li>
     </ol>
 
-    <div class="row pad-down-20">
-        <div class="col-md-8 col-md-offset-2">
-            <?php
-            /* This will handle error, success and notice messages */
-            hesk_handle_messages();
-            ?>
-
-            <h3><?php echo $hesklang['editing_user'] . ' ' . $_SESSION['original_user']; ?></h3>
-            <h6><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></h6>
-
-            <div class="footerWithBorder blankSpace"></div>
-
-            <form role="form" class="form-horizontal" name="form1" method="post" action="manage_users.php">
-                <?php hesk_profile_tab('userdata', false, 'edit_user'); ?>
-            </form>
-            <script language="Javascript" type="text/javascript"><!--
-                hesk_checkPassword(document.form1.newpass.value);
-                //-->
-            </script>
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+                <h1 class="box-title">
+                    <?php echo $hesklang['editing_user'] . ' <b>' . $_SESSION['original_user'] . '</b>'; ?>
+                </h1>
+            </div>
+            <div class="box-body">
+                <?php
+                /* This will handle error, success and notice messages */
+                hesk_handle_messages();
+                ?>
+                <h6><?php echo $hesklang['req_marked_with']; ?> <span class="important">*</span></h6>
+                <form role="form" class="form-horizontal" name="form1" method="post" action="manage_users.php">
+                    <?php hesk_profile_tab('userdata', false, 'edit_user'); ?>
+                </form>
+                <script language="Javascript" type="text/javascript"><!--
+                    hesk_checkPassword(document.form1.newpass.value);
+                    //-->
+                </script>
+            </div>
         </div>
-    </div>
+    </section>
 
     <?php
     require_once(HESK_PATH . 'inc/footer.inc.php');
