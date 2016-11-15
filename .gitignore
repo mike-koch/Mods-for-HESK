@@ -157,7 +157,6 @@ inc/calendar/tcal.js
 inc/calendar/tcal.php
 inc/database.inc.php
 inc/database_mysqli.inc.php
-inc/footer.inc.php
 inc/htmlpurifier
 inc/index.htm
 inc/jscolor/

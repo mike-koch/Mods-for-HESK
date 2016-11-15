@@ -104,10 +104,8 @@ else {
             ?>
         </div>
     </div>
-    <div class="box">
-        <div class="box-body">
-            <?php
-            $hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
+    <?php
+    $hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
         CdoZXNrX2xpY2Vuc2UucGhwJykpDQp7DQokaCA9ICghZW1wdHkoJF9TRVJWRVJbJ0hUVFBfSE9TVCddK
         SkgPyAkX1NFUlZFUlsnSFRUUF9IT1NUJ10gOiAoKCFlbXB0eSgkX1NFUlZFUlsnU0VSVkVSX05BTUUnX
         SkpID8gJF9TRVJWRVJbJ1NFUlZFUl9OQU1FJ10gOiBnZXRlbnYoJ1NFUlZFUl9OQU1FJykpOw0KJGggP
@@ -125,11 +123,9 @@ else {
         29tL2J1eS5waHAiIHRhcmdldD0iX2JsYW5rIj4nLiRoZXNrbGFuZ1snY2xpY2tfaW5mbyddLic8L2E+P
         C9wPic7DQp9DQo=', "\112");
 
-            /* Clean unneeded session variables */
-            hesk_cleanSessionVars('hide');
-            ?>
-        </div>
-    </div>
+    /* Clean unneeded session variables */
+    hesk_cleanSessionVars('hide');
+    ?>
 </section>
 
 <?php

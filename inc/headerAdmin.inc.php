@@ -35,6 +35,8 @@ if (!defined('IN_SCRIPT')) {
     die('Invalid attempt');
 }
 
+define('ADMIN_PAGE', true);
+
 $modsForHesk_settings = mfh_getSettings();
 ?>
 <!DOCTYPE html>
