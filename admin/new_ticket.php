@@ -163,6 +163,7 @@ $show_quick_help = $show['show'];
     <li><a href="admin_main.php"><?php echo $hesk_settings['hesk_title']; ?></a></li>
     <?php if ($number_of_categories > 1): ?>
         <li><a href="new_ticket.php"><?php echo $hesklang['nti2']; ?></a></li>
+        <li class="active"><?php echo $hesk_settings['categories'][$category]; ?></li>
     <?php else: ?>
         <li class="active"><?php echo $hesklang['nti2']; ?></li>
     <?php endif; ?>
