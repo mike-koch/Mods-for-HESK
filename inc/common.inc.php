@@ -425,7 +425,7 @@ function hesk_getCustomerEmail($can_remember = 0, $field = '')
     if (isset($_GET['e']) || isset($_POST['e'])) {
         $my_email = hesk_validateEmail(hesk_REQUEST('e'), 'ERR', 0);
     } /* Is email in cookie? */
-    elseif ( isset($_GET['e']) || isset($_POST['e']) ) {
+    elseif (isset($_COOKIE['hesk_myemail'])) {
         $my_email = hesk_validateEmail(hesk_COOKIE('hesk_myemail'), 'ERR', 0);
         if ($can_remember && $my_email) {
             $do_remember = ' checked="checked" ';
