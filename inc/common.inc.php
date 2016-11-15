@@ -1030,7 +1030,7 @@ function hesk_showTopBar($page_title)
     echo $page_title;
 } // END hesk_showTopBar()
 
-function hesk_getLanguagesAsFormIfNecessary()
+function hesk_getLanguagesAsFormIfNecessary($trackingID = false)
 {
 
     global $hesk_settings, $hesklang;
@@ -1038,6 +1038,14 @@ function hesk_getLanguagesAsFormIfNecessary()
     if ($hesk_settings['can_sel_lang']) {
 
         $str = '<form method="get" action="" role="form" style="margin:0;padding:0;border:0;white-space:nowrap;">';
+
+        if ($trackingID !== false) {
+            $str .= '<input type="hidden" name="track" value="'.hesk_htmlentities($trackingID).'">';
+
+            if ($hesk_settings['email_view_ticket'] && isset($hesk_settings['e_email'])) {
+                $str .= '<input type="hidden" name="e" value="'.hesk_htmlentities($hesk_settings['e_email']).'">';
+            }
+        }
 
         if (!isset($_GET)) {
             $_GET = array();

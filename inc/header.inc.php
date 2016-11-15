@@ -333,7 +333,13 @@ if ($modsForHesk_settings['show_icons']) {
             </ul>
             <?php if ($hesk_settings['can_sel_lang']) { ?>
                 <div class="navbar-form navbar-right" role="search" style="margin-right: 20px; min-width: 80px;">
-                    <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
+                    <?php 
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_TICKET') {
+                        hesk_getLanguagesAsFormIfNecessary($trackingID);
+                    } else {
+                        hesk_getLanguagesAsFormIfNecessary();
+                    }
+                    ?>
                 </div>
             <?php } ?>
 
