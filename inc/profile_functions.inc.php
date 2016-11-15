@@ -316,12 +316,14 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                 }
                             }
                             ?>
-                            <label><input type="checkbox" name="autoreload" value="1" <?php if (!empty($_SESSION[$session_array]['autoreload'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['arpp']; ?></label>
-                            <input type="text" name="reload_time" value="<?php echo $reload_time; ?>" size="5" maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]+/,'')" />
-                            <select name="secmin">
-                                <option value="sec" <?php echo $sec; ?>><?php echo $hesklang['seconds']; ?></option>
-                                <option value="min" <?php echo $min; ?>><?php echo $hesklang['minutes']; ?></option>
-                            </select>
+                            <div class="checkbox form-inline">
+                                <label><input type="checkbox" name="autoreload" value="1" <?php if (!empty($_SESSION[$session_array]['autoreload'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['arpp']; ?></label>
+                                <input type="text" class="form-control" name="reload_time" value="<?php echo $reload_time; ?>" size="5" maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]+/,'')" />
+                                <select name="secmin" class="form-control">
+                                    <option value="sec" <?php echo $sec; ?>><?php echo $hesklang['seconds']; ?></option>
+                                    <option value="min" <?php echo $min; ?>><?php echo $hesklang['minutes']; ?></option>
+                                </select>
+                            </div>
                             <div class="checkbox">
                                 <label><input type="checkbox" name="notify_customer_new"
                                               value="1" <?php if (!empty($_SESSION[$session_array]['notify_customer_new'])) {
@@ -359,17 +361,6 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                 <?php echo $hesklang['calendar_day']; ?>
                             </option>
                         </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="autoRefresh"
-                           class="col-sm-3 control-label"><?php echo $hesklang['ticket_auto_refresh']; ?></label>
-
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="autorefresh" name="autorefresh"
-                               placeholder="<?php echo htmlspecialchars($hesklang['ticket_auto_refresh']); ?>"
-                               value="<?php echo $_SESSION[$session_array]['autorefresh']; ?>">
-                        <span class="help-block"><?php echo $hesklang['autorefresh_restrictions']; ?></span>
                     </div>
                 </div>
             </div>

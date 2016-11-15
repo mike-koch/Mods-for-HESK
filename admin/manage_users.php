@@ -277,11 +277,11 @@ if ($action = hesk_REQUEST('a')) {
 
                     /* To edit yourself go to "Profile" page, not here. */
                     if ($myuser['id'] == $_SESSION['id']) {
-                        $edit_code = '<a href="profile.php"><i class="fa fa-pencil icon-link" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
+                        $edit_code = '<a href="profile.php"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
                     } elseif ($myuser['id'] == 1) {
                         $edit_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                     } else {
-                        $edit_code = '<a href="manage_users.php?a=edit&amp;id=' . $myuser['id'] . '"><i class="fa fa-pencil icon-link" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
+                        $edit_code = '<a href="manage_users.php?a=edit&amp;id=' . $myuser['id'] . '"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
                     }
 
                     if ($myuser['isadmin']) {
@@ -535,7 +535,6 @@ function new_user()
         `notify_note`,
         `notify_note_unassigned`,
         `notify_overdue_unassigned`,
-        `autorefresh`,
         `permission_template`,
         `default_calendar_view`) VALUES (
 	'" . hesk_dbEscape($myuser['user']) . "',
@@ -562,7 +561,6 @@ function new_user()
 	'" . ($myuser['notify_note']) . "',
 	'" . ($myuser['notify_note_unassigned']) . "',
 	'" . ($myuser['notify_overdue_unassigned']) . "',
-	" . intval($myuser['autorefresh']) . ",
 	" . intval($myuser['template']) . ",
 	" . intval($myuser['default_calendar_view']) . ")");
 
@@ -689,7 +687,6 @@ function update_user()
 	`notify_note`='" . ($myuser['notify_note']) . "',
 	`notify_note_unassigned`='" . ($myuser['notify_note_unassigned']) . "',
 	`notify_overdue_unassigned`='" . ($myuser['notify_overdue_unassigned']) . "',
-	`autorefresh`=" . intval($myuser['autorefresh']) . ",
 	`permission_template`=" . intval($myuser['template']) . ",
 	`default_calendar_view`=" . intval($myuser['default_calendar_view']) . "
     WHERE `id`='" . intval($myuser['id']) . "'");
@@ -785,7 +782,6 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     if ($myuser['afterreply'] != 1 && $myuser['afterreply'] != 2) {
         $myuser['afterreply'] = 0;
     }
-    $myuser['autorefresh'] = intval(hesk_POST('autorefresh'));
 
     // Defaults
     $myuser['autostart'] = isset($_POST['autostart']) ? 1 : 0;
