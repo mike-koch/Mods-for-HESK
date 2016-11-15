@@ -959,6 +959,22 @@ $modsForHesk_settings = mfh_getSettings();
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="s_require_owner" class="col-sm-6 control-label"><?php echo $hesklang['fass']; ?>
+                                <a href="Javascript:void(0)"
+                                   onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#70','400','500')"><i
+                                        class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                            <div class="col-sm-6 form-inline">
+                                <?php
+                                $on = $hesk_settings['require_owner'] ? 'checked="checked"' : '';
+                                $off = $hesk_settings['require_owner'] ? '' : 'checked="checked"';
+                                echo '
+                                <div class="radio"><label><input type="radio" name="s_require_owner" value="0" ' . $off . '> ' . $hesklang['off'] . '</div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input type="radio" name="s_require_owner" value="1" ' . $on . '> ' . $hesklang['on'] . '</div>';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="s_require_message"
                                    class="col-sm-6 control-label"><?php echo $hesklang['req_msg']; ?> <a
                                     href="Javascript:void(0)"
