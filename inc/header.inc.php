@@ -283,33 +283,38 @@ if ($modsForHesk_settings['show_icons']) {
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <?php
-                $active = '';
-                if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_HOME') {
-                    $active = 'class="active"';
-                }
+                if ($hesk_settings['kb_enable'] !== 2) {
+                    $active = '';
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_HOME') {
+                        $active = 'class="active"';
+                    }
                 ?>
-                <li <?php echo $active; ?>><a href="<?php echo HESK_PATH; ?>"><i
-                            class="fa fa-home" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?>
-                    </a></li>
+                    <li <?php echo $active; ?>><a href="<?php echo HESK_PATH; ?>"><i
+                                class="fa fa-home" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?>
+                        </a></li>
+                    <?php
+                    $active = '';
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_TICKET') {
+                        $active = ' active';
+                    }
+                    ?>
+                    <li class="dropdown<?php echo $active; ?>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                                class="fa fa-ticket" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['ticket'] ?>
+                            <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i
+                                        class="fa fa-plus-circle" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['sub_support'] ?>
+                                </a></li>
+                            <li><a href="<?php echo HESK_PATH; ?>ticket.php"><i
+                                        class="fa fa-search" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['view_ticket_nav'] ?>
+                                </a></li>
+                        </ul>
+                    </li>
                 <?php
-                $active = '';
-                if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_TICKET') {
-                    $active = ' active';
                 }
                 ?>
-                <li class="dropdown<?php echo $active; ?>">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                            class="fa fa-ticket" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['ticket'] ?>
-                        <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i
-                                    class="fa fa-plus-circle" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['sub_support'] ?>
-                            </a></li>
-                        <li><a href="<?php echo HESK_PATH; ?>ticket.php"><i
-                                    class="fa fa-search" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['view_ticket_nav'] ?>
-                            </a></li>
-                    </ul>
-                </li>
+
                 <?php if ($hesk_settings['kb_enable']) {
                     $active = '';
                     if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_KB') {
