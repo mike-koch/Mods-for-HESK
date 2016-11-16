@@ -68,7 +68,11 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                         <li class="dropdown messages-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-exclamation-triangle"></i>
-                                <span class="label label-warning"><?php echo $number_of_maintenance_warnings; ?></span>
+                                <?php echo sprintf($hesklang['x_system_warnings'],
+                                    $number_of_maintenance_warnings,
+                                    $number_of_maintenance_warnings == 1
+                                        ? $hesklang['warning_title_case']
+                                        : $hesklang['warnings_title_case']); ?>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="header"><?php echo sprintf($hesklang['x_system_warnings'],
@@ -81,6 +85,9 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                         <?php if (hesk_check_maintenance(false)): ?>
                                             <li>
                                                 <a href="#">
+                                                    <div class="pull-left">
+                                                        <i class="fa fa-exclamation-triangle orange fa-2x"></i>
+                                                    </div>
                                                     <h4>
                                                         <?php echo $hesklang['mma1']; ?>
                                                     </h4>
@@ -93,6 +100,9 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                         ?>
                                             <li>
                                                 <a href="#">
+                                                    <div class="pull-left">
+                                                        <i class="fa fa-exclamation-triangle orange fa-2x"></i>
+                                                    </div>
                                                     <h4>
                                                         <?php echo $hesklang['kbo1']; ?>
                                                     </h4>
