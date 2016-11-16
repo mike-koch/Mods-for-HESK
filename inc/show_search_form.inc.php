@@ -411,10 +411,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                     <div class="form-group">
                                         <input class="form-control" type="text" name="q" size="30" <?php if (isset($q)) {
                                             echo 'value="' . $q . '"';
-                                        } ?>
-                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                           required>
-                                        <div class="help-block with-errors"></div>
+                                        } ?>>
                                     </div>
                                 </td>
                                 <td class="text-left" style="border: none">
@@ -515,7 +512,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                 <tr>
                                     <td class="alignMiddle"><b><?php echo $hesklang['date']; ?></b>: &nbsp; </td>
                                     <td class="alignMiddle">
-                                        <div class="col-md-3" style="padding-left: 0px"><input class="form-control tcal"
+                                        <div class="col-md-3" style="padding-left: 0px"><input class="form-control datepicker"
                                                                                                type="text" name="dt"
                                                                                                id="dt"
                                                                                                size="10" <?php if ($date_input) {

@@ -93,32 +93,28 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             ?>
         </div>
     </div>
-    <div class="box">
-        <div class="box-body">
-            <?php
-            $hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
-        CdoZXNrX2xpY2Vuc2UucGhwJykpDQp7DQokaCA9ICghZW1wdHkoJF9TRVJWRVJbJ0hUVFBfSE9TVCddK
-        SkgPyAkX1NFUlZFUlsnSFRUUF9IT1NUJ10gOiAoKCFlbXB0eSgkX1NFUlZFUlsnU0VSVkVSX05BTUUnX
-        SkpID8gJF9TRVJWRVJbJ1NFUlZFUl9OQU1FJ10gOiBnZXRlbnYoJ1NFUlZFUl9OQU1FJykpOw0KJGggP
-        SBzdHJfcmVwbGFjZSgnd3d3LicsJycsc3RydG9sb3dlcigkaCkpOw0KaW5jbHVkZShIRVNLX1BBVEggL
-        iAnaGVza19saWNlbnNlLnBocCcpOw0KaWYgKGlzc2V0KCRoZXNrX3NldHRpbmdzWydsaWNlbnNlJ10pI
-        CYmIHN0cnBvcygkaGVza19zZXR0aW5nc1snbGljZW5zZSddLHNoYTEoJGguJ2gzJkZwMiNMYUEmNTkhd
-        yg4LlpjXSordVI1MTInKSkgIT09IGZhbHNlKQ0Kew0KJHMgPSAwOw0KfQ0KZWxzZQ0Kew0KZWNobyAnP
-        HAgc3R5bGU9InRleHQtYWxpZ246Y2VudGVyO2NvbG9yOnJlZDsiPklOVkFMSUQgTElDRU5TRSAoTk9UI
-        FJFR0lTVEVSRUQgRk9SICcuJGguJykhPC9wPic7DQp9DQp9DQppZiAoJHMpDQp7DQplY2hvICc8aHIgL
-        z48dGFibGUgYm9yZGVyPSIwIiB3aWR0aD0iMTAwJSI+PHRyPjx0ZD48Yj4nLiRoZXNrbGFuZ1sncmVtb
-        3ZlX3N0YXRlbWVudCddLic8L2I+PC90ZD48dGQgc3R5bGU9InRleHQtYWxpZ246cmlnaHQiPjxhIGhyZ
-        WY9IkphdmFzY3JpcHQ6dm9pZCgwKSIgb25jbGljaz0iYWxlcnQoXCcnLiRoZXNrbGFuZ1snc3VwcG9yd
-        F9ub3RpY2UnXS4nXCcpIj4nLiRoZXNrbGFuZ1snc2gnXS4nPC9hPjwvdGQ+PC90cj48L3RhYmxlPjxwP
-        icuJGhlc2tsYW5nWydzdXBwb3J0X3JlbW92ZSddLicuIDxhIGhyZWY9Imh0dHBzOi8vd3d3Lmhlc2suY
-        29tL2J1eS5waHAiIHRhcmdldD0iX2JsYW5rIj4nLiRoZXNrbGFuZ1snY2xpY2tfaW5mbyddLic8L2E+P
-        C9wPic7DQp9DQo=', "\112");
+    <?php
+    $hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
+CdoZXNrX2xpY2Vuc2UucGhwJykpDQp7DQokaCA9ICghZW1wdHkoJF9TRVJWRVJbJ0hUVFBfSE9TVCddK
+SkgPyAkX1NFUlZFUlsnSFRUUF9IT1NUJ10gOiAoKCFlbXB0eSgkX1NFUlZFUlsnU0VSVkVSX05BTUUnX
+SkpID8gJF9TRVJWRVJbJ1NFUlZFUl9OQU1FJ10gOiBnZXRlbnYoJ1NFUlZFUl9OQU1FJykpOw0KJGggP
+SBzdHJfcmVwbGFjZSgnd3d3LicsJycsc3RydG9sb3dlcigkaCkpOw0KaW5jbHVkZShIRVNLX1BBVEggL
+iAnaGVza19saWNlbnNlLnBocCcpOw0KaWYgKGlzc2V0KCRoZXNrX3NldHRpbmdzWydsaWNlbnNlJ10pI
+CYmIHN0cnBvcygkaGVza19zZXR0aW5nc1snbGljZW5zZSddLHNoYTEoJGguJ2gzJkZwMiNMYUEmNTkhd
+yg4LlpjXSordVI1MTInKSkgIT09IGZhbHNlKQ0Kew0KJHMgPSAwOw0KfQ0KZWxzZQ0Kew0KZWNobyAnP
+HAgc3R5bGU9InRleHQtYWxpZ246Y2VudGVyO2NvbG9yOnJlZDsiPklOVkFMSUQgTElDRU5TRSAoTk9UI
+FJFR0lTVEVSRUQgRk9SICcuJGguJykhPC9wPic7DQp9DQp9DQppZiAoJHMpDQp7DQplY2hvICc8aHIgL
+z48dGFibGUgYm9yZGVyPSIwIiB3aWR0aD0iMTAwJSI+PHRyPjx0ZD48Yj4nLiRoZXNrbGFuZ1sncmVtb
+3ZlX3N0YXRlbWVudCddLic8L2I+PC90ZD48dGQgc3R5bGU9InRleHQtYWxpZ246cmlnaHQiPjxhIGhyZ
+WY9IkphdmFzY3JpcHQ6dm9pZCgwKSIgb25jbGljaz0iYWxlcnQoXCcnLiRoZXNrbGFuZ1snc3VwcG9yd
+F9ub3RpY2UnXS4nXCcpIj4nLiRoZXNrbGFuZ1snc2gnXS4nPC9hPjwvdGQ+PC90cj48L3RhYmxlPjxwP
+icuJGhlc2tsYW5nWydzdXBwb3J0X3JlbW92ZSddLicuIDxhIGhyZWY9Imh0dHBzOi8vd3d3Lmhlc2suY
+29tL2J1eS5waHAiIHRhcmdldD0iX2JsYW5rIj4nLiRoZXNrbGFuZ1snY2xpY2tfaW5mbyddLic8L2E+P
+C9wPic7DQp9DQo=', "\112");
 
-            /* Clean unneeded session variables */
-            hesk_cleanSessionVars('hide');
-            ?>
-        </div>
-    </div>
+    /* Clean unneeded session variables */
+    hesk_cleanSessionVars('hide');
+    ?>
 </section>
 <?php
 
