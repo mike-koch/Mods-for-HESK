@@ -821,26 +821,3 @@ function execute264Scripts() {
 
     updateVersion('2.6.4');
 }
-
-function execute270Scripts() {
-    global $hesk_settings;
-    hesk_dbConnect();
-
-    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element` (
-        `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        `location` INT NOT NULL,
-        `image_url` VARCHAR(255),
-        `font_icon` VARCHAR(255),
-        `header_text_key` VARCHAR(255) NOT NULL,
-        `description_key` VARCHAR(255),
-        `url` VARCHAR(255) NOT NULL
-    ) ENGINE = MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
-
-    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "text_to_nav_element_xref` (
-        `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        `language` VARCHAR(200) NOT NULL,
-        `text` VARCHAR(200) NOT NULL,
-        `nav_element_id` INT NOT NULL,
-        `nav_element_text_type` INT NOT NULL
-    )");
-}
