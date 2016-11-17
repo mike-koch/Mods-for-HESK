@@ -185,17 +185,19 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
 }
 
 // If staff hasn't replied yet, don't change the status; otherwise set it to the status for customer replies.
-$customerReplyStatusQuery = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsCustomerReplyStatus` = 1';
-$defaultNewTicketStatusQuery = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsNewTicketStatus` = 1';
-$newStatusRs = hesk_dbQuery($customerReplyStatusQuery);
-$newStatus = hesk_dbFetchAssoc($newStatusRs);
-$defaultNewTicketStatusRs = hesk_dbQuery($defaultNewTicketStatusQuery);
-$defaultNewTicketStatus = hesk_dbFetchAssoc($defaultNewTicketStatusRs);
+if (hesk_can_customer_change_status($ticket['status'])) {
+    $customerReplyStatusQuery = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsCustomerReplyStatus` = 1';
+    $defaultNewTicketStatusQuery = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsNewTicketStatus` = 1';
+    $newStatusRs = hesk_dbQuery($customerReplyStatusQuery);
+    $newStatus = hesk_dbFetchAssoc($newStatusRs);
+    $defaultNewTicketStatusRs = hesk_dbQuery($defaultNewTicketStatusQuery);
+    $defaultNewTicketStatus = hesk_dbFetchAssoc($defaultNewTicketStatusRs);
 
-$ticket['status'] = $ticket['status'] == $defaultNewTicketStatus['ID'] ? $defaultNewTicketStatus['ID'] : $newStatus['ID'];
+    $ticket['status'] = $ticket['status'] == $defaultNewTicketStatus['ID'] ? $defaultNewTicketStatus['ID'] : $newStatus['ID'];
+}
 
 /* Update ticket as necessary */
-$res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `lastchange`=NOW(), `status`='{$ticket['status']}', `replies`=`replies`+1, `lastreplier`='0' WHERE `id`='{$ticket['id']}' LIMIT 1");
+$res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `lastchange`=NOW(), `status`='{$ticket['status']}', `replies`=`replies`+1, `lastreplier`='0' WHERE `id`='{$ticket['id']}'");
 
 // Insert reply into database
 $modsForHesk_settings = mfh_getSettings();

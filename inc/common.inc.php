@@ -35,10 +35,20 @@ if (!defined('IN_SCRIPT')) {
 
 #error_reporting(E_ALL);
 
-// Set correct Content-Type header
-if (!defined('NO_HTTP_HEADER')) {
+/*
+ * If code is executed from CLI, don't force SSL
+ * else set correct Content-Type header
+ */
+if (defined('NO_HTTP_HEADER')) {
+    $hesk_settings['force_ssl'] = false;
+} else {
     header('Content-Type: text/html; charset=utf-8');
-	header('X-Frame-Options: SAMEORIGIN');
+
+    // Don't allow HESK to be loaded in a frame on third party domains
+    if ($hesk_settings['x_frame_opt'])
+    {
+        header('X-Frame-Options: SAMEORIGIN');
+    }
 }
 
 // Set backslash options
@@ -56,11 +66,46 @@ if (!defined('ENT_XHTML')) {
     define('ENT_XHTML', 0);
 }
 
+// Is this is a SSL connection?
+if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') {
+    define('HESK_SSL', true);
+
+    // Use https-only cookies
+    @ini_set('session.cookie_secure', 1);
+} else {
+    // Force redirect?
+    if ($hesk_settings['force_ssl']) {
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        exit();
+    }
+
+    define('HESK_SSL', false);
+}
+
+// Prevents javascript XSS attacks aimed to steal the session ID
+@ini_set('session.cookie_httponly', 1);
+
+// **PREVENTING SESSION FIXATION**
+// Session ID cannot be passed through URLs
+@ini_set('session.use_only_cookies', 1);
+
+
 // Load language file
 hesk_getLanguage();
 
 
 /*** FUNCTIONS ***/
+
+function hesk_setcookie($name, $value, $expire=0, $path=""){
+    if (HESK_SSL) {
+        setcookie($name, $value, $expire, $path, "", true, true);
+    } else {
+        setcookie($name, $value, $expire, $path, "", false, true);
+    }
+
+    return true;
+} // END hesk_setcookie()
 
 function hesk_service_message($sm)
 {
@@ -145,6 +190,11 @@ function hesk_clean_utf8($in)
 
 function hesk_load_database_functions()
 {
+    // Already loaded?
+    if (function_exists('hesk_dbQuery')) {
+        return true;
+    }
+
     // Preferrably use the MySQLi functions
     if (function_exists('mysqli_connect')) {
         require(HESK_PATH . 'inc/database_mysqli.inc.php');
@@ -196,6 +246,12 @@ function hesk_unlink($file, $older_than = 0)
 } // END hesk_unlink()
 
 
+function hesk_unlink_callable($file, $key, $older_than=0)
+{
+    return hesk_unlink($file, $older_than);
+} // END hesk_unlink_callable()
+
+
 function hesk_utf8_urldecode($in)
 {
     $in = preg_replace("/%u([0-9a-f]{3,4})/i", "&#x\\1;", urldecode($in));
@@ -204,7 +260,11 @@ function hesk_utf8_urldecode($in)
 
 function hesk_SESSION($in, $default = '')
 {
-    return isset($_SESSION[$in]) && ! is_array($_SESSION[$in]) ? $_SESSION[$in] : $default;
+    if (is_array($in)) {
+        return isset($_SESSION[$in[0]][$in[1]]) && ! is_array(isset($_SESSION[$in[0]][$in[1]])) ? $_SESSION[$in[0]][$in[1]] : $default;
+    } else {
+        return isset($_SESSION[$in]) && ! is_array($_SESSION[$in]) ? $_SESSION[$in] : $default;
+    }
 } // END hesk_SESSION();
 
 
@@ -327,7 +387,7 @@ function hesk_verifyEmailMatch($trackingID, $my_email = 0, $ticket_email = 0, $e
 
     /* Email doesn't match, clean cookies and error out */
     if ($error) {
-        setcookie('hesk_myemail', '');
+        hesk_setcookie('hesk_myemail', '');
         hesk_process_messages($hesklang['enmdb'], 'ticket.php?track=' . $trackingID . '&Refresh=' . rand(10000, 99999));
     } else {
         return false;
@@ -365,7 +425,7 @@ function hesk_getCustomerEmail($can_remember = 0, $field = '')
     if (isset($_GET['e']) || isset($_POST['e'])) {
         $my_email = hesk_validateEmail(hesk_REQUEST('e'), 'ERR', 0);
     } /* Is email in cookie? */
-    elseif ( isset($_GET['e']) || isset($_POST['e']) ) {
+    elseif (isset($_COOKIE['hesk_myemail'])) {
         $my_email = hesk_validateEmail(hesk_COOKIE('hesk_myemail'), 'ERR', 0);
         if ($can_remember && $my_email) {
             $do_remember = ' checked="checked" ';
@@ -970,7 +1030,7 @@ function hesk_showTopBar($page_title)
     echo $page_title;
 } // END hesk_showTopBar()
 
-function hesk_getLanguagesAsFormIfNecessary()
+function hesk_getLanguagesAsFormIfNecessary($trackingID = false)
 {
 
     global $hesk_settings, $hesklang;
@@ -978,6 +1038,14 @@ function hesk_getLanguagesAsFormIfNecessary()
     if ($hesk_settings['can_sel_lang']) {
 
         $str = '<form method="get" action="" role="form" style="margin:0;padding:0;border:0;white-space:nowrap;">';
+
+        if ($trackingID !== false) {
+            $str .= '<input type="hidden" name="track" value="'.hesk_htmlentities($trackingID).'">';
+
+            if ($hesk_settings['email_view_ticket'] && isset($hesk_settings['e_email'])) {
+                $str .= '<input type="hidden" name="e" value="'.hesk_htmlentities($hesk_settings['e_email']).'">';
+            }
+        }
 
         if (!isset($_GET)) {
             $_GET = array();
@@ -1105,7 +1173,7 @@ function hesk_getLanguage()
     }
 
     /* Remember and set the selected language */
-    setcookie('hesk_language', $hesk_settings['language'], time() + 31536000, '/');
+    hesk_setcookie('hesk_language', $hesk_settings['language'], time() + 31536000, '/');
     return hesk_returnLanguage();
 } // END hesk_getLanguage()
 
@@ -1113,10 +1181,45 @@ function hesk_getLanguage()
 function hesk_returnLanguage()
 {
     global $hesk_settings, $hesklang;
-    require(HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/text.php');
-    $customLanguagePath = HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/custom-text.php';
-    if (file_exists($customLanguagePath)) {
-        include($customLanguagePath);
+    // Variable that will be set to true if a language file was loaded
+    $language_loaded = false;
+
+    // Load requested language file
+    $language_file = HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/text.php';
+    if (file_exists($language_file)) {
+        require($language_file);
+        $language_loaded = true;
+    }
+
+    // Requested language file not found, try to load default installed language
+    if (!$language_loaded && $hesk_settings['language'] != HESK_DEFAULT_LANGUAGE) {
+        $language_file = HESK_PATH . 'language/' . $hesk_settings['languages'][HESK_DEFAULT_LANGUAGE]['folder'] . '/text.php';
+        if (file_exists($language_file)) {
+            require($language_file);
+            $language_loaded = true;
+            $hesk_settings['language'] = HESK_DEFAULT_LANGUAGE;
+        }
+    }
+
+    // Requested language file not found, can we at least load English?
+    if (!$language_loaded && $hesk_settings['language'] != 'English' && HESK_DEFAULT_LANGUAGE != 'English') {
+        $language_file = HESK_PATH . 'language/en/text.php';
+        if (file_exists($language_file)) {
+            require($language_file);
+            $language_loaded = true;
+            $hesk_settings['language'] = 'English';
+        }
+    }
+
+    // If a language is still not loaded, give up
+    if (!$language_loaded) {
+        die('Count not load a valid language file.');
+    }
+
+    // Load a custom text file if available
+    $language_file = HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/custom-text.php';
+    if (file_exists($language_file)) {
+        require($language_file);
     }
     return true;
 } // END hesk_returnLanguage()
@@ -1637,9 +1740,43 @@ function hesk_check_maintenance($dodie = true)
 
     <div class="alert alert-warning" style="margin: 20px">
         <i class="fa fa-exclamation-triangle"></i>
-        <b><?php echo $hesklang['mm1']; ?></b><br/><br/>
-        <?php echo $hesklang['mm2']; ?><br/><br/>
-        <?php echo $hesklang['mm3']; ?>
+        <?php
+        // Has the help desk been installed yet?
+        if (
+            $hesk_settings['maintenance_mode'] == 0 &&
+            $hesk_settings['question_ans'] == 'PB6YM' &&
+
+            $hesk_settings['site_title'] == 'My Web site' &&
+            $hesk_settings['site_url'] == 'http://www.example.com' &&
+            $hesk_settings['webmaster_mail'] == 'support@example.com' &&
+            $hesk_settings['noreply_mail'] == 'support@example.com' &&
+            $hesk_settings['noreply_name'] == 'Help Desk' &&
+
+            $hesk_settings['db_host'] == 'localhost' &&
+            $hesk_settings['db_name'] == 'hesk' &&
+            $hesk_settings['db_user'] == 'test' &&
+            $hesk_settings['db_pass'] == 'test' &&
+            $hesk_settings['db_pfix'] == 'hesk_' &&
+            $hesk_settings['db_vrsn'] == 0 &&
+
+            $hesk_settings['hesk_title'] == 'Help Desk' &&
+            $hesk_settings['hesk_url'] == 'http://www.example.com/helpdesk'
+        )
+        {
+            echo "
+        <b>{$hesklang['hni1']}</b><br /><br />
+        {$hesklang['hni2']}<br /><br />
+        {$hesklang['hni3']}";
+        }
+        // Hesk appears to be installed, show a "Maintenance in progress" message
+        else
+        {
+            echo "
+        <b>{$hesklang['mm1']}</b><br /><br />
+        {$hesklang['mm2']}<br /><br />
+        {$hesklang['mm3']}";
+        }
+        ?>
     </div>
     <?php
     require_once(HESK_PATH . 'inc/footer.inc.php');
@@ -1769,8 +1906,11 @@ function hesk_getFeatureArray()
         'can_del_tickets',        /* User can delete tickets */
         'can_edit_tickets',        /* User can edit tickets */
         'can_merge_tickets',    /* User can merge tickets */
+        'can_resolve',			/* User can resolve tickets */
+        'can_submit_any_cat',	/* User can submit a ticket to any category/department */
         'can_del_notes',        /* User can delete ticket notes posted by other staff members */
-        'can_change_cat',        /* User can move ticke to a new category/department */
+        'can_change_cat',		/* User can move ticket to any category/department */
+        'can_change_own_cat',	/* User can move ticket to a category/department he/she has access to */
         'can_man_kb',            /* User can manage knowledgebase articles and categories */
         'can_man_users',        /* User can create and edit staff accounts */
         'can_man_cat',            /* User can manage categories/departments */
@@ -1790,7 +1930,7 @@ function hesk_getFeatureArray()
         'can_ban_ips',            /* User can ban IP addresses */
         'can_unban_ips',        /* User can delete IP bans. Also enables "can_ban_ips" */
         'can_service_msg',        /* User can manage service messages shown in customer interface */
-        'can_man_email_tpl',    /* User can manage email templates */
+        'can_email_tpl',    /* User can manage email templates */
         'can_man_ticket_statuses', /* User can manage ticket statuses */
         'can_set_manager', /* User can set category managers */
         'can_man_permission_tpl', /* User can manage permission templates */

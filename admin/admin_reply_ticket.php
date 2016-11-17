@@ -74,6 +74,11 @@ if (hesk_dbNumRows($result) != 1) {
 $ticket = hesk_dbFetchAssoc($result);
 $trackingID = $ticket['trackid'];
 
+// Do we require owner before allowing to reply?
+if ($hesk_settings['require_owner'] && ! $ticket['owner']) {
+    hesk_process_messages($hesklang['atbr'],'admin_ticket.php?track='.$ticket['trackid'].'&Refresh='.rand(10000,99999));
+}
+
 $hesk_error_buffer = array();
 
 // Get the message
@@ -87,7 +92,7 @@ if (strlen($message)) {
     // Save message for later and ignore the rest?
     if (isset($_POST['save_reply'])) {
         // Delete any existing drafts from this owner for this ticket
-        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` WHERE `owner`=" . intval($_SESSION['id']) . " AND `ticket`=" . intval($ticket['id']) . " LIMIT 1");
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` WHERE `owner`=" . intval($_SESSION['id']) . " AND `ticket`=" . intval($ticket['id']));
 
         // Save the message draft
         hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` (`owner`, `ticket`, `message`) VALUES (" . intval($_SESSION['id']) . ", " . intval($ticket['id']) . ", '" . hesk_dbEscape($message) . "')");
@@ -237,6 +242,7 @@ $lockedTicketStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID` FROM `" . hesk
 
 // Get new ticket status
 $sql_status = '';
+$change_status = true;
 // -> If locked, keep it resolved
 if ($ticket['locked']) {
     $new_status = $lockedTicketStatus['ID'];
@@ -248,7 +254,7 @@ if ($ticket['locked']) {
         $newStatusRs = hesk_dbQuery('SELECT `IsClosed`, `Key` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `ID` = ' . hesk_dbEscape($new_status));
         $newStatus = hesk_dbFetchAssoc($newStatusRs);
 
-        if ($newStatus['IsClosed']) {
+        if ($newStatus['IsClosed'] && hesk_checkPermission('can_resolve', 0)) {
             $revision = sprintf($hesklang['thist3'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
             $sql_status = " , `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
 
@@ -257,7 +263,7 @@ if ($ticket['locked']) {
                 $sql_status .= " , `locked`='1' ";
             }
         } else {
-            // Ticket isn't being closed, just add the history to the sql query
+            // Ticket isn't being closed, just add the history to the sql query (or tried to close but doesn't have permission)
             $revision = sprintf($hesklang['thist9'], hesk_date(), $hesklang[$newStatus['Key']], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
             $sql_status = " , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
         }
@@ -310,12 +316,12 @@ $sql .= " , `replies`=`replies`+1 ";
 $sql .= $submit_as_customer ? '' : " , `staffreplies`=`staffreplies`+1 ";
 
 // End and execute the query
-$sql .= " WHERE `id`='{$replyto}' LIMIT 1";
+$sql .= " WHERE `id`='{$replyto}'";
 hesk_dbQuery($sql);
 unset($sql);
 
 /* Update number of replies in the users table */
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `replies`=`replies`+1 WHERE `id`='" . intval($_SESSION['id']) . "' LIMIT 1");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `replies`=`replies`+1 WHERE `id`='" . intval($_SESSION['id']) . "'");
 
 // --> Prepare reply message
 
@@ -357,7 +363,7 @@ elseif (!isset($_POST['no_notify']) || intval(hesk_POST('no_notify')) != 1) {
 }
 
 // Delete any existing drafts from this owner for this ticket
-hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` WHERE `owner`=" . intval($_SESSION['id']) . " AND `ticket`=" . intval($ticket['id']) . " LIMIT 1");
+hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` WHERE `owner`=" . intval($_SESSION['id']) . " AND `ticket`=" . intval($ticket['id']));
 
 /* Set reply submitted message */
 $_SESSION['HESK_SUCCESS'] = TRUE;

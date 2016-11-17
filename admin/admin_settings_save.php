@@ -85,9 +85,6 @@ if (isset($lang[1]) && in_array($lang[1], hesk_getLanguagesArray(1))) {
     hesk_error($hesklang['err_lang']);
 }
 
-/* --> Database settings */
-hesk_dbClose();
-
 if (hesk_testMySQL()) {
     // Database connection OK
 } elseif ($mysql_log) {
@@ -125,6 +122,7 @@ if ( ! is_writable(HESK_PATH . $set['attach_dir']) )
 }
 */
 
+$set['cache_dir'] = isset($_POST['s_cache_dir']) && ! is_array($_POST['s_cache_dir']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $_POST['s_cache_dir']) : 'cache';
 $set['max_listings'] = hesk_checkMinMax(intval(hesk_POST('s_max_listings')), 1, 999, 10);
 $set['print_font_size'] = hesk_checkMinMax(intval(hesk_POST('s_print_font_size')), 1, 99, 12);
 $set['autoclose'] = hesk_checkMinMax(intval(hesk_POST('s_autoclose')), 0, 999, 7);
@@ -135,6 +133,10 @@ $set['reply_top'] = empty($_POST['s_reply_top']) ? 0 : 1;
 /* --> Features */
 $set['autologin'] = empty($_POST['s_autologin']) ? 0 : 1;
 $set['autoassign'] = empty($_POST['s_autoassign']) ? 0 : 1;
+$set['require_email']	= empty($_POST['s_require_email']) ? 0 : 1;
+$set['require_owner']	= empty($_POST['s_require_owner']) ? 0 : 1;
+$set['require_subject']	= hesk_checkMinMax( intval( hesk_POST('s_require_subject') ) , -1, 1, 1);
+$set['require_message']	= hesk_checkMinMax( intval( hesk_POST('s_require_message') ) , -1, 1, 1);
 $set['custclose'] = empty($_POST['s_custclose']) ? 0 : 1;
 $set['custopen'] = empty($_POST['s_custopen']) ? 0 : 1;
 $set['rating'] = empty($_POST['s_rating']) ? 0 : 1;
@@ -147,6 +149,7 @@ $set['debug_mode'] = empty($_POST['s_debug_mode']) ? 0 : 1;
 $set['short_link'] = empty($_POST['s_short_link']) ? 0 : 1;
 $set['select_cat'] = empty($_POST['s_select_cat']) ? 0 : 1;
 $set['select_pri'] = empty($_POST['s_select_pri']) ? 0 : 1;
+$set['cat_show_select'] = hesk_checkMinMax( intval( hesk_POST('s_cat_show_select') ) , 0, 999, 10);
 
 /* --> SPAM prevention */
 $set['secimg_use'] = empty($_POST['s_secimg_use']) ? 0 : (hesk_POST('s_secimg_use') == 2 ? 2 : 1);
@@ -168,7 +171,14 @@ if ($set['attempt_limit'] > 0) {
 }
 $set['attempt_banmin'] = hesk_checkMinMax(intval(hesk_POST('s_attempt_banmin')), 5, 99999, 60);
 $set['reset_pass'] = empty($_POST['s_reset_pass']) ? 0 : 1;
-$set['email_view_ticket'] = empty($_POST['s_email_view_ticket']) ? 0 : 1;
+$set['email_view_ticket'] = ($set['require_email'] == 0) ? 0 : (empty($_POST['s_email_view_ticket']) ? 0 : 1);
+$set['x_frame_opt'] = empty($_POST['s_x_frame_opt']) ? 0 : 1;
+$set['force_ssl'] = HESK_SSL && isset($_POST['s_force_ssl']) && $_POST['s_force_ssl'] == 1 ? 1 : 0;
+
+// Make sure help desk URL starts with https if forcing SSL
+if ($set['force_ssl']) {
+    $set['hesk_url'] = preg_replace('/^http:/i', 'https:', $set['hesk_url']);
+}
 
 /* --> Attachments */
 $set['attachments']['use'] = empty($_POST['s_attach_use']) ? 0 : 1;
@@ -246,7 +256,7 @@ if ($set['smtp']) {
         $set['smtp'] = 0;
     }
 } else {
-    $set['smtp_host_name'] = hesk_input(hesk_POST('tmp_smtp_host_name', 'mail.domain.com'));
+    $set['smtp_host_name'] = hesk_input(hesk_POST('tmp_smtp_host_name', 'mail.example.com'));
     $set['smtp_host_port'] = intval(hesk_POST('tmp_smtp_host_port', 25));
     $set['smtp_timeout'] = intval(hesk_POST('tmp_smtp_timeout', 10));
     $set['smtp_ssl'] = empty($_POST['tmp_smtp_ssl']) ? 0 : 1;
@@ -279,12 +289,38 @@ if ($set['pop3']) {
     }
 } else {
     $set['pop3_job_wait'] = intval(hesk_POST('s_pop3_job_wait', 15));
-    $set['pop3_host_name'] = hesk_input(hesk_POST('tmp_pop3_host_name', 'mail.domain.com'));
+    $set['pop3_host_name'] = hesk_input(hesk_POST('tmp_pop3_host_name', 'mail.example.com'));
     $set['pop3_host_port'] = intval(hesk_POST('tmp_pop3_host_port', 110));
     $set['pop3_tls'] = empty($_POST['tmp_pop3_tls']) ? 0 : 1;
     $set['pop3_keep'] = empty($_POST['tmp_pop3_keep']) ? 0 : 1;
     $set['pop3_user'] = hesk_input(hesk_POST('tmp_pop3_user'));
     $set['pop3_password'] = hesk_input(hesk_POST('tmp_pop3_password'));
+}
+
+/* --> IMAP fetching */
+$imap_OK = true;
+$set['imap'] = empty($_POST['s_imap']) ? 0 : 1;
+
+if ($set['imap']) {
+    // Get IMAP fetching timeout
+    $set['imap_job_wait'] = hesk_checkMinMax( intval( hesk_POST('s_imap_job_wait') ) , 0, 1440, 15);
+
+    // Test IMAP connection
+    $imap_OK = hesk_testIMAP(true);
+
+    // If IMAP not working, disable it
+    if ( ! $imap_OK) {
+        $set['imap'] = 0;
+    }
+} else {
+    $set['imap_job_wait']	= intval( hesk_POST('s_imap_job_wait', 15) );
+    $set['imap_host_name']	= hesk_input( hesk_POST('tmp_imap_host_name', 'mail.example.com') );
+    $set['imap_host_port']	= intval( hesk_POST('tmp_imap_host_port', 110) );
+    $set['imap_enc']		= hesk_POST('tmp_imap_enc');
+    $set['imap_enc']		= ($set['imap_enc'] == 'ssl' || $set['imap_enc'] == 'tls') ? $set['imap_enc'] : '';
+    $set['imap_keep']		= empty($_POST['tmp_imap_keep']) ? 0 : 1;
+    $set['imap_user']		= hesk_input( hesk_POST('tmp_imap_user') );
+    $set['imap_password']	= hesk_input( hesk_POST('tmp_imap_password') );
 }
 
 /* --> Email loops */
@@ -323,10 +359,10 @@ if (!empty($_POST['s_email_providers']) && !is_array($_POST['s_email_providers']
 
 if (!$set['detect_typos'] || count($set['email_providers']) < 1) {
     $set['detect_typos'] = 0;
-    $set['email_providers'] = array('gmail.com', 'hotmail.com', 'hotmail.co.uk', 'yahoo.com', 'yahoo.co.uk', 'aol.com', 'aol.co.uk', 'msn.com', 'live.com', 'live.co.uk', 'mail.com', 'googlemail.com', 'btinternet.com', 'btopenworld.com');
+    $set['email_providers']=array('aim.com','aol.co.uk','aol.com','att.net','bellsouth.net','blueyonder.co.uk','bt.com','btinternet.com','btopenworld.com','charter.net','comcast.net','cox.net','earthlink.net','email.com','facebook.com','fastmail.fm','free.fr','freeserve.co.uk','gmail.com','gmx.at','gmx.ch','gmx.com','gmx.de','gmx.fr','gmx.net','gmx.us','googlemail.com','hotmail.be','hotmail.co.uk','hotmail.com','hotmail.com.ar','hotmail.com.mx','hotmail.de','hotmail.es','hotmail.fr','hushmail.com','icloud.com','inbox.com','laposte.net','lavabit.com','list.ru','live.be','live.co.uk','live.com','live.com.ar','live.com.mx','live.de','live.fr','love.com','lycos.com','mac.com','mail.com','mail.ru','me.com','msn.com','nate.com','naver.com','neuf.fr','ntlworld.com','o2.co.uk','online.de','orange.fr','orange.net','outlook.com','pobox.com','prodigy.net.mx','qq.com','rambler.ru','rocketmail.com','safe-mail.net','sbcglobal.net','t-online.de','talktalk.co.uk','tiscali.co.uk','verizon.net','virgin.net','virginmedia.com','wanadoo.co.uk','wanadoo.fr','yahoo.co.id','yahoo.co.in','yahoo.co.jp','yahoo.co.kr','yahoo.co.uk','yahoo.com','yahoo.com.ar','yahoo.com.mx','yahoo.com.ph','yahoo.com.sg','yahoo.de','yahoo.fr','yandex.com','yandex.ru','ymail.com');
 }
 
-$set['email_providers'] = count($set['email_providers']) ? "'" . implode("','", $set['email_providers']) . "'" : '';
+$set['email_providers'] = count($set['email_providers']) ?  "'" . implode("','", array_unique($set['email_providers'])) . "'" : '';
 
 
 /* --> Notify customer when */
@@ -386,7 +422,8 @@ foreach ($hesk_settings['possible_ticket_list'] as $key => $title) {
 
 // We need at least one of these: id, trackid, subject
 if (!in_array('id', $set['ticket_list']) && !in_array('trackid', $set['ticket_list']) && !in_array('subject', $set['ticket_list'])) {
-    $set['ticket_list'][] = 'trackid';
+    // None of the required fields are there, add "trackid" as the first one
+    array_unshift($set['ticket_list'], 'trackid');
 }
 
 $set['ticket_list'] = count($set['ticket_list']) ? "'" . implode("','", $set['ticket_list']) . "'" : 'trackid';
@@ -419,49 +456,9 @@ $set['submit_notice'] = empty($_POST['s_submit_notice']) ? 0 : 1;
 $set['online'] = empty($_POST['s_online']) ? 0 : 1;
 $set['online_min'] = hesk_checkMinMax(intval(hesk_POST('s_online_min')), 1, 999, 10);
 $set['check_updates'] = empty($_POST['s_check_updates']) ? 0 : 1;
-
-/*** CUSTOM FIELDS ***/
-
-for ($i = 1; $i <= 20; $i++) {
-    $this_field = 'custom' . $i;
-    $set['custom_fields'][$this_field]['use'] = !empty($_POST['s_custom' . $i . '_use']) ? 1 : 0;
-
-    if ($set['custom_fields'][$this_field]['use']) {
-        $set['custom_fields'][$this_field]['place'] = empty($_POST['s_custom' . $i . '_place']) ? 0 : 1;
-        $set['custom_fields'][$this_field]['type'] = hesk_htmlspecialchars(hesk_POST('s_custom' . $i . '_type', 'text'));
-        $set['custom_fields'][$this_field]['req'] = !empty($_POST['s_custom' . $i . '_req']) ? 1 : 0;
-        $set['custom_fields'][$this_field]['name'] = hesk_input(hesk_POST('s_custom' . $i . '_name'), $hesklang['err_custname']);
-        $set['custom_fields'][$this_field]['maxlen'] = intval(hesk_POST('s_custom' . $i . '_maxlen', 255));
-        $set['custom_fields'][$this_field]['value'] = hesk_input(hesk_POST('s_custom' . $i . '_val'));
-
-        if ($set['custom_fields'][$this_field]['type'] == 'email' && $set['custom_fields'][$this_field]['value'] == '') {
-            // New custom field without any options set. Default to Cc
-            $set['custom_fields'][$this_field]['value'] = 'cc';
-        }
-
-        if (!in_array($set['custom_fields'][$this_field]['type'], array('text', 'textarea', 'select', 'radio', 'checkbox', 'date', 'multiselect', 'email', 'hidden', 'readonly'))) {
-            $set['custom_fields'][$this_field]['type'] = 'text';
-        }
-
-        // Try to detect if field type changed to anything except "select"
-        if ($set['custom_fields'][$this_field]['type'] != 'select') {
-            // If type is "radio" or "checkbox" remove "please select", keep other options
-            $set['custom_fields'][$this_field]['value'] = str_replace('{HESK_SELECT}', '', $set['custom_fields'][$this_field]['value']);
-
-            // Field type changed to "text" or "textarea", clear default value if it contains "#HESK#" separator
-            if (in_array($set['custom_fields'][$this_field]['type'], array('text', 'textarea')) && !in_array($hesk_settings['custom_fields'][$this_field]['type'], array('text', 'textarea')) && strpos($set['custom_fields'][$this_field]['value'], '#HESK#') !== false) {
-                $set['custom_fields'][$this_field]['value'] = '';
-            }
-        }
-    } else {
-        $set['custom_fields'][$this_field] = array('use' => 0, 'place' => 0, 'type' => 'text', 'req' => 0, 'name' => 'Custom field ' . $i, 'maxlen' => 255, 'value' => '');
-    }
-}
-
 $set['hesk_version'] = $hesk_settings['hesk_version'];
 
 // Process quick help sections
-hesk_dbConnect();
 hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "quick_help_sections` SET `show` = '0'");
 $postArray = hesk_POST_array('quick_help_sections');
 foreach ($postArray as $value) {
@@ -516,6 +513,7 @@ $set['dropdownItemTextColor'] = hesk_input(hesk_POST('dropdownItemTextColor'));
 $set['dropdownItemTextHoverColor'] = hesk_input(hesk_POST('dropdownItemTextHoverColor'));
 $set['questionMarkColor'] = hesk_input(hesk_POST('questionMarkColor'));
 $set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownItemTextHoverBackgroundColor'));
+$set['admin_color_scheme'] = hesk_input(hesk_POST('admin-color-scheme'));
 mfh_updateSetting('rtl', $set['rtl']);
 mfh_updateSetting('show_icons', $set['show-icons']);
 mfh_updateSetting('custom_field_setting', $set['custom-field-setting']);
@@ -552,6 +550,7 @@ mfh_updateSetting('use_mailgun', $set['use_mailgun'], false);
 mfh_updateSetting('enable_calendar', $set['enable_calendar'], false);
 mfh_updateSetting('first_day_of_week', $set['first_day_of_week'], false);
 mfh_updateSetting('default_calendar_view', $set['default_view'], true);
+mfh_updateSetting('admin_color_scheme', $set['admin_color_scheme'], true);
 
 // Prepare settings file and save it
 $settings_file_content = '<?php
@@ -588,6 +587,7 @@ $hesk_settings[\'hesk_title\']=\'' . $set['hesk_title'] . '\';
 $hesk_settings[\'hesk_url\']=\'' . $set['hesk_url'] . '\';
 $hesk_settings[\'admin_dir\']=\'' . $set['admin_dir'] . '\';
 $hesk_settings[\'attach_dir\']=\'' . $set['attach_dir'] . '\';
+$hesk_settings[\'cache_dir\']=\'' . $set['cache_dir'] . '\';
 $hesk_settings[\'max_listings\']=' . $set['max_listings'] . ';
 $hesk_settings[\'print_font_size\']=' . $set['print_font_size'] . ';
 $hesk_settings[\'autoclose\']=' . $set['autoclose'] . ';
@@ -598,6 +598,10 @@ $hesk_settings[\'reply_top\']=' . $set['reply_top'] . ';
 // --> Features
 $hesk_settings[\'autologin\']=' . $set['autologin'] . ';
 $hesk_settings[\'autoassign\']=' . $set['autoassign'] . ';
+$hesk_settings[\'require_email\']=' . $set['require_email'] . ';
+$hesk_settings[\'require_owner\']=' . $set['require_owner'] . ';
+$hesk_settings[\'require_subject\']=' . $set['require_subject'] . ';
+$hesk_settings[\'require_message\']=' . $set['require_message'] . ';
 $hesk_settings[\'custclose\']=' . $set['custclose'] . ';
 $hesk_settings[\'custopen\']=' . $set['custopen'] . ';
 $hesk_settings[\'rating\']=' . $set['rating'] . ';
@@ -610,6 +614,7 @@ $hesk_settings[\'debug_mode\']=' . $set['debug_mode'] . ';
 $hesk_settings[\'short_link\']=' . $set['short_link'] . ';
 $hesk_settings[\'select_cat\']=' . $set['select_cat'] . ';
 $hesk_settings[\'select_pri\']=' . $set['select_pri'] . ';
+$hesk_settings[\'cat_show_select\']=' . $set['cat_show_select'] . ';
 
 // --> SPAM Prevention
 $hesk_settings[\'secimg_use\']=' . $set['secimg_use'] . ';
@@ -626,6 +631,8 @@ $hesk_settings[\'attempt_limit\']=' . $set['attempt_limit'] . ';
 $hesk_settings[\'attempt_banmin\']=' . $set['attempt_banmin'] . ';
 $hesk_settings[\'reset_pass\']=' . $set['reset_pass'] . ';
 $hesk_settings[\'email_view_ticket\']=' . $set['email_view_ticket'] . ';
+$hesk_settings[\'x_frame_opt\']=' . $set['x_frame_opt'] . ';
+$hesk_settings[\'force_ssl\']=' . $set['force_ssl'] . ';
 
 // --> Attachments
 $hesk_settings[\'attachments\']=array (
@@ -635,6 +642,15 @@ $hesk_settings[\'attachments\']=array (
 \'allowed_types\' => array(\'' . implode('\',\'', $set['attachments']['allowed_types']) . '\')
 );
 
+// --> IMAP Fetching
+$hesk_settings[\'imap\']=' . $set['imap'] . ';
+$hesk_settings[\'imap_job_wait\']=' . $set['imap_job_wait'] . ';
+$hesk_settings[\'imap_host_name\']=\'' . $set['imap_host_name'] . '\';
+$hesk_settings[\'imap_host_port\']=' . $set['imap_host_port'] . ';
+$hesk_settings[\'imap_enc\']=\'' . $set['imap_enc'] . '\';
+$hesk_settings[\'imap_keep\']=' . $set['imap_keep'] . ';
+$hesk_settings[\'imap_user\']=\'' . $set['imap_user'] . '\';
+$hesk_settings[\'imap_password\']=\'' . $set['imap_password'] . '\';
 
 // ==> KNOWLEDGEBASE
 
@@ -731,22 +747,6 @@ $hesk_settings[\'online_min\']=' . $set['online_min'] . ';
 $hesk_settings[\'check_updates\']=' . $set['check_updates'] . ';
 
 
-// ==> CUSTOM FIELDS
-
-$hesk_settings[\'custom_fields\']=array (
-';
-
-for ($i = 1; $i <= 20; $i++) {
-    $settings_file_content .= '\'custom' . $i . '\'=>array(\'use\'=>' . $set['custom_fields']['custom' . $i]['use'] . ',\'place\'=>' . $set['custom_fields']['custom' . $i]['place'] . ',\'type\'=>\'' . $set['custom_fields']['custom' . $i]['type'] . '\',\'req\'=>' . $set['custom_fields']['custom' . $i]['req'] . ',\'name\'=>\'' . $set['custom_fields']['custom' . $i]['name'] . '\',\'maxlen\'=>' . $set['custom_fields']['custom' . $i]['maxlen'] . ',\'value\'=>\'' . $set['custom_fields']['custom' . $i]['value'] . '\')';
-    if ($i != 20) {
-        $settings_file_content .= ',
-';
-    }
-}
-
-$settings_file_content .= '
-);
-
 #############################
 #     DO NOT EDIT BELOW     #
 #############################
@@ -796,14 +796,6 @@ function mfh_updateSetting($key, $value, $isString = false)
     hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = " . $formattedValue . " WHERE `Key` = '" . $key . "'");
 }
 
-function hesk_checkMinMax($myint, $min, $max, $defval)
-{
-    if ($myint > $max || $myint < $min) {
-        return $defval;
-    }
-    return $myint;
-} // END hesk_checkMinMax()
-
 
 function hesk_getLanguagesArray($returnArray = 0)
 {
@@ -847,7 +839,7 @@ function hesk_getLanguagesArray($returnArray = 0)
                     $add = 0;
                 } elseif (!preg_match('/\$hesklang\[\'EMAIL_HR\'\]\=\'(.*)\'\;/', $tmp, $hr)) {
                     $add = 0;
-                } elseif (!preg_match('/\$hesklang\[\'ms01\'\]/', $tmp)) {
+                } elseif (!preg_match('/\$hesklang\[\'refresh_page\'\]/', $tmp)) {
                     $add = 0;
                 }
             } else {

@@ -65,23 +65,23 @@ $is_all_time = 0;
 /* Default this month to date */
 $date_from = date('Y-m-d', mktime(0, 0, 0, date("m"), 1, date("Y")));
 $date_to = date('Y-m-d');
-$input_datefrom = date('m/d/Y', strtotime('last month'));
-$input_dateto = date('m/d/Y');
+$input_datefrom = date('Y-m-d', strtotime('last month'));
+$input_dateto = date('Y-m-d');
 
 /* Date */
 if (!empty($_GET['w'])) {
     $df = preg_replace('/[^0-9]/', '', hesk_GET('datefrom'));
     if (strlen($df) == 8) {
-        $date_from = substr($df, 4, 4) . '-' . substr($df, 0, 2) . '-' . substr($df, 2, 2);
-        $input_datefrom = substr($df, 0, 2) . '/' . substr($df, 2, 2) . '/' . substr($df, 4, 4);
+        $date_from = substr($df, 0, 4) . '-' . substr($df, 4, 2) . '-' . substr($df, 6, 2);
+        $input_datefrom = $date_from;
     } else {
         $date_from = date('Y-m-d', strtotime('last month'));
     }
 
     $dt = preg_replace('/[^0-9]/', '', hesk_GET('dateto'));
     if (strlen($dt) == 8) {
-        $date_to = substr($dt, 4, 4) . '-' . substr($dt, 0, 2) . '-' . substr($dt, 2, 2);
-        $input_dateto = substr($dt, 0, 2) . '/' . substr($dt, 2, 2) . '/' . substr($dt, 4, 4);
+        $date_to = substr($dt, 0, 4) . '-' . substr($dt, 4, 2) . '-' . substr($dt, 6, 2);
+        $input_dateto = $date_to;
     } else {
         $date_to = date('Y-m-d');
     }
@@ -247,9 +247,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="form-group">
                     <label for="dtrg" class="control-label"><?php echo $hesklang['dtrg']; ?>:</label>
 
-                    <div class="radio move-right-20">
-                        <input type="radio" name="w" value="0" id="w0" <?php echo $selected['w'][0]; ?> />
+                    <div class="radio form-inline move-right-20">
+                        <input type="radio" name="w" value="0" id="w0" <?php echo $selected['w'][0]; ?> style="position: relative">
                         <select name="time" onclick="document.getElementById('w0').checked = true"
+                                class="form-control"
                                 onfocus="document.getElementById('w0').checked = true"
                                 style="margin-top:5px;margin-bottom:5px;">
                             <option value="1" <?php echo $selected['time'][1]; ?>><?php echo $hesklang['r1']; ?>
@@ -288,16 +289,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 value="12" <?php echo $selected['time'][12]; ?>><?php echo $hesklang['r12']; ?></option>
                         </select>
                     </div>
-                    <div class="radio move-right-20">
-                        <input type="radio" name="w" value="1" id="w1" <?php echo $selected['w'][1]; ?> />
+                    <div class="radio form-inline move-right-20">
+                        <input type="radio" name="w" value="1" id="w1" <?php echo $selected['w'][1]; ?> style="position: relative">
                         <?php echo $hesklang['from']; ?> <input type="text" name="datefrom"
                                                                 value="<?php echo $input_datefrom; ?>"
-                                                                id="datefrom" class="tcal" size="10"
+                                                                id="datefrom" class="datepicker form-control" size="10"
                                                                 onclick="document.getElementById('w1').checked = true"
                                                                 onfocus="document.getElementById('w1').checked = true;this.focus;"/>
                         <?php echo $hesklang['to']; ?> <input type="text" name="dateto"
                                                               value="<?php echo $input_dateto; ?>" id="dateto"
-                                                              class="tcal" size="10"
+                                                              class="datepicker form-control" size="10"
                                                               onclick="document.getElementById('w1').checked = true"
                                                               onfocus="document.getElementById('w1').checked = true; this.focus;"/>
                     </div>
@@ -530,7 +531,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                 // Some variables we will need
                 $tickets = array();
-                $totals = array('asstickets' => 0, 'resolved' => 0, 'tickets' => 0, 'replies' => 0, 'worked' => 0);
+                $totals = array('asstickets' => 0, 'resolved' => 0, 'tickets' => 0, 'replies' => 0, 'worked' => 0, 'openedby' => 0);
 
                 // Get list of users
                 $admins = array();
@@ -550,6 +551,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             'tickets' => 0,
                             'replies' => 0,
                             'worked' => '',
+                            'openedby' => 0,
                         );
                     }
 
@@ -625,10 +627,21 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 // Convert total seconds worked to HH:MM:SS
                 $totals['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($totals['worked']) : 0;
 
+                // Get total opened by tickets
+                $res = hesk_dbQuery("SELECT `openedby`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `openedby` IN ('" . implode("','", array_keys($admins) ) . "') AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `openedby`");
+
+                // -> update ticket list values
+                while ($row = hesk_dbFetchAssoc($res))
+                {
+                    $tickets[$row['openedby']]['openedby'] += $row['cnt'];
+                    $totals['openedby'] += $row['cnt'];
+                }
+
                 ?>
                 <table class="table table-striped table-condensed">
                     <tr>
                         <th><?php echo $hesklang['user']; ?></th>
+                        <th><?php echo $hesklang['numsub']; ?></th>
                         <th><?php echo $hesklang['ticass']; ?></th>
                         <th><?php echo $hesklang['topen']; ?></th>
                         <th><?php echo $hesklang['closed_title']; ?></th>
@@ -647,6 +660,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         ?>
                         <tr>
                             <td><b><?php echo $hesklang['totals']; ?></b></td>
+                            <td><b><?php echo $totals['openedby']; ?></b></td>
                             <td><b><?php echo $totals['asstickets']; ?></b></td>
                             <td><b><?php echo $totals['asstickets'] - $totals['resolved']; ?></b></td>
                             <td><b><?php echo $totals['resolved']; ?></b></td>
@@ -666,6 +680,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         ?>
                         <tr>
                             <td><?php echo $admins[$k]; ?></td>
+                            <td><?php echo $d['openedby']; ?></td>
                             <td><?php echo $d['asstickets']; ?></td>
                             <td><?php echo $d['asstickets'] - $d['resolved']; ?></td>
                             <td><?php echo $d['resolved']; ?></td>
@@ -682,6 +697,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     ?>
                     <tr>
                         <td><b><?php echo $hesklang['totals']; ?></b></td>
+                        <td><b><?php echo $totals['openedby']; ?></b></td>
                         <td><b><?php echo $totals['asstickets']; ?></b></td>
                         <td><b><?php echo $totals['asstickets'] - $totals['resolved']; ?></b></td>
                         <td><b><?php echo $totals['resolved']; ?></b></td>

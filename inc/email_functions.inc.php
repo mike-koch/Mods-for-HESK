@@ -33,6 +33,9 @@ if (!defined('IN_SCRIPT')) {
     die('Invalid attempt');
 }
 
+// Make sure custom fields are loaded
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
 /* Get includes for SMTP */
 if ($hesk_settings['smtp']) {
     require(HESK_PATH . 'inc/mail/smtp.php');
@@ -63,7 +66,9 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
     // Add Cc / Bcc recipents if needed
     $ccEmails = array();
     $bccEmails = array();
-    foreach ($hesk_settings['custom_fields'] as $k => $v) {
+
+    //TODO Update the email custom field to handle this properly
+    /*foreach ($hesk_settings['custom_fields'] as $k => $v) {
         if ($v['use']) {
             if ($v['type'] == 'email' && !empty($ticket[$k])) {
                 if ($v['value'] == 'cc') {
@@ -75,7 +80,7 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
                 }
             }
         }
-    }
+    }*/
 
     hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, $ccEmails, $bccEmails, $hasMessage);
 }
@@ -106,7 +111,9 @@ function hesk_notifyCustomer($modsForHesk_settings, $email_template = 'new_ticke
     // Add Cc / Bcc recipents if needed
     $ccEmails = array();
     $bccEmails = array();
-    foreach ($hesk_settings['custom_fields'] as $k => $v) {
+
+    //TODO Update the email custom field to handle this properly
+    /*foreach ($hesk_settings['custom_fields'] as $k => $v) {
         if ($v['use']) {
             if ($v['type'] == 'email' && !empty($ticket[$k])) {
                 if ($v['value'] == 'cc') {
@@ -116,7 +123,7 @@ function hesk_notifyCustomer($modsForHesk_settings, $email_template = 'new_ticke
                 }
             }
         }
-    }
+    }*/
 
     // Send e-mail
     hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, $ccEmails, $bccEmails, $hasMessage);
@@ -846,15 +853,24 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     $msg = str_replace('%%ID%%', $ticket['id'], $msg);
 
     /* All custom fields */
-    foreach ($hesk_settings['custom_fields'] as $k => $v) {
-        if ($v['use']) {
-            if ($v['type'] == 'checkbox') {
-                $ticket[$k] = str_replace("<br />", "\n", $ticket[$k]);
+    for ($i=1; $i<=50; $i++) {
+        $k = 'custom'.$i;
+
+        if (isset($hesk_settings['custom_fields'][$k])) {
+            $v = $hesk_settings['custom_fields'][$k];
+
+            switch ($v['type']) {
+                case 'checkbox':
+                    $ticket[$k] = str_replace("<br>","\n",$ticket[$k]);
+                    break;
+                case 'date':
+                    $ticket[$k] = hesk_custom_date_display_format($ticket[$k], $v['value']['date_format']);
+                    break;
             }
 
-            $msg = str_replace('%%' . strtoupper($k) . '%%', stripslashes($ticket[$k]), $msg);
+            $msg = str_replace('%%'.strtoupper($k).'%%',stripslashes($ticket[$k]),$msg);
         } else {
-            $msg = str_replace('%%' . strtoupper($k) . '%%', '', $msg);
+            $msg = str_replace('%%'.strtoupper($k).'%%','',$msg);
         }
     }
 

@@ -211,10 +211,10 @@ function mail_delete()
     if ($ids) {
         foreach ($ids as $id) {
             /* If both correspondents deleted the mail remove it from database, otherwise mark as deleted by this user */
-            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `deletedby`='" . intval($_SESSION['id']) . "' WHERE `id`='" . intval($id) . "' AND (`to`='" . intval($_SESSION['id']) . "' OR `from`='" . intval($_SESSION['id']) . "') AND `deletedby`=0 LIMIT 1");
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `deletedby`='" . intval($_SESSION['id']) . "' WHERE `id`='" . intval($id) . "' AND (`to`='" . intval($_SESSION['id']) . "' OR `from`='" . intval($_SESSION['id']) . "') AND `deletedby`=0");
 
             if (hesk_dbAffectedRows() != 1) {
-                hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` WHERE `id`='" . intval($id) . "' AND (`to`='" . intval($_SESSION['id']) . "' OR `from`='" . intval($_SESSION['id']) . "') AND `deletedby`!=0 LIMIT 1");
+                hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` WHERE `id`='" . intval($id) . "' AND (`to`='" . intval($_SESSION['id']) . "' OR `from`='" . intval($_SESSION['id']) . "') AND `deletedby`!=0");
             }
         }
 
@@ -236,7 +236,7 @@ function mail_mark_unread()
 
     if ($ids) {
         foreach ($ids as $id) {
-            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `read`='0' WHERE `id`='" . intval($id) . "' AND `to`='" . intval($_SESSION['id']) . "' LIMIT 1");
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `read`='0' WHERE `id`='" . intval($id) . "' AND `to`='" . intval($_SESSION['id']) . "'");
         }
 
         hesk_process_messages($hesklang['smmu'], 'NOREDIRECT', 'SUCCESS');
@@ -257,7 +257,7 @@ function mail_mark_read()
 
     if ($ids) {
         foreach ($ids as $id) {
-            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `read`='1' WHERE `id`='" . intval($id) . "' AND `to`='" . intval($_SESSION['id']) . "' LIMIT 1");
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `read`='1' WHERE `id`='" . intval($id) . "' AND `to`='" . intval($_SESSION['id']) . "'");
         }
 
         hesk_process_messages($hesklang['smmr'], 'NOREDIRECT', 'SUCCESS');
@@ -421,7 +421,7 @@ function show_message()
 	        /* Mark as read */
 	        if ($hesk_settings['mailtmp']['this'] == 'to' && !$pm['read'])
 	        {
-				$res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` SET `read`='1' WHERE `id`='".intval($id)."' LIMIT 1");
+				hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` SET `read`='1' WHERE `id`='".intval($id)."'");
 	        }
 
 	        $pm['name'] = isset($admins[$pm[$hesk_settings['mailtmp']['other']]]) ? '<a href="mail.php?a=new&amp;id='.$pm[$hesk_settings['mailtmp']['other']].'">'.$admins[$pm[$hesk_settings['mailtmp']['other']]].'</a>' : (($pm['from'] == 9999) ? '<a href="http://www.hesk.com" target="_blank">HESK.com</a>' : $hesklang['e_udel']);

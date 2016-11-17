@@ -68,7 +68,11 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                         <li class="dropdown messages-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-exclamation-triangle"></i>
-                                <span class="label label-warning"><?php echo $number_of_maintenance_warnings; ?></span>
+                                <?php echo sprintf($hesklang['x_system_warnings'],
+                                    $number_of_maintenance_warnings,
+                                    $number_of_maintenance_warnings == 1
+                                        ? $hesklang['warning_title_case']
+                                        : $hesklang['warnings_title_case']); ?>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="header"><?php echo sprintf($hesklang['x_system_warnings'],
@@ -81,6 +85,9 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                         <?php if (hesk_check_maintenance(false)): ?>
                                             <li>
                                                 <a href="#">
+                                                    <div class="pull-left">
+                                                        <i class="fa fa-exclamation-triangle orange fa-2x"></i>
+                                                    </div>
                                                     <h4>
                                                         <?php echo $hesklang['mma1']; ?>
                                                     </h4>
@@ -93,6 +100,9 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                         ?>
                                             <li>
                                                 <a href="#">
+                                                    <div class="pull-left">
+                                                        <i class="fa fa-exclamation-triangle orange fa-2x"></i>
+                                                    </div>
                                                     <h4>
                                                         <?php echo $hesklang['kbo1']; ?>
                                                     </h4>
@@ -125,10 +135,6 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                     <?php foreach ($mails as $mail): ?>
                                     <li><!-- start message -->
                                         <a href="mail.php?a=read&id=<?php echo $mail['id']; ?>">
-                                            <!-- TODO User avatars -->
-                                            <!--<div class="pull-left">
-                                                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                                            </div>-->
                                             <h4>
                                                 <?php echo $mail['from']; ?>
                                                 <small><i class="fa fa-clock-o"></i> <?php echo hesk_dateToString($mail['date'], 0, 0, 0, true); ?></small>
@@ -381,6 +387,10 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                 if (hesk_checkPermission('can_man_ticket_statuses', 0)) {
                     $tools_count++;
                     $dropdown_items['manage_statuses'] = $hesklang['manage_statuses'];
+                }
+                if (hesk_checkPermission('can_man_settings', 0)) {
+                    $tools_count++;
+                    $dropdown_items['custom_fields'] = $hesklang['manage_custom_fields'];
                 }
                 if (hesk_checkPermission('can_view_logs', 0)) {
                     $tools_count++;

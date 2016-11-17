@@ -107,6 +107,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </li>
             ';
                     }
+                    if (hesk_checkPermission('can_man_settings', 0)) {
+                        echo '<li role="presentation"><a title="' . $hesklang['tab_4'] . '" href="custom_fields.php">' . $hesklang['tab_4'] . '</a></li> ';
+                    }
                     ?>
                 </ul>
                 <div class="tab-content summaryList tabPadding">
@@ -152,8 +155,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <h6 class="bold"><?php echo $hesklang['banex']; ?></h6>
 
                             <div class="footerWithBorder blankSpace"></div>
-                            <b>john@email.com</b><br/>
-                            <b>@domain.com</b>
+                            <b>john@example.com</b><br/>
+                            <b>@example.com</b>
                         </div>
                     </div>
                     <div class="row">
@@ -307,7 +310,7 @@ function unban_email()
     hesk_token_check();
 
     // Delete from bans
-    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "banned_emails` WHERE `id`=" . intval(hesk_GET('id')) . " LIMIT 1");
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "banned_emails` WHERE `id`=" . intval(hesk_GET('id')));
 
     // Redirect either to banned emails or ticket page from now on
     $redirect_to = ($trackingID = hesk_cleanID()) ? 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) : 'banned_emails.php';

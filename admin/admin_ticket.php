@@ -60,13 +60,21 @@ $can_archive = hesk_checkPermission('can_add_archive', 0);
 $can_assign_self = hesk_checkPermission('can_assign_self', 0);
 $can_view_unassigned = hesk_checkPermission('can_view_unassigned', 0);
 $can_change_cat = hesk_checkPermission('can_change_cat', 0);
+$can_change_own_cat  = hesk_checkPermission('can_change_own_cat',0);
 $can_ban_emails = hesk_checkPermission('can_ban_emails', 0);
 $can_unban_emails = hesk_checkPermission('can_unban_emails', 0);
 $can_ban_ips = hesk_checkPermission('can_ban_ips', 0);
 $can_unban_ips = hesk_checkPermission('can_unban_ips', 0);
+$can_resolve		 = hesk_checkPermission('can_resolve', 0);
 
 // Get ticket ID
 $trackingID = hesk_cleanID() or print_form();
+
+// Load custom fields
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
+// Load statuses
+//require_once(HESK_PATH . 'inc/statuses.inc.php');
 
 $_SERVER['PHP_SELF'] = 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999);
 
@@ -127,7 +135,20 @@ $managerRS = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_p
 $managerRow = hesk_dbFetchAssoc($managerRS);
 $isManager = $managerRow['id'] == $category['manager'];
 if ($isManager) {
-    $can_del_notes = $can_reply = $can_delete = $can_edit = $can_archive = $can_assign_self = $can_view_unassigned = $can_change_cat = true;
+    $can_del_notes =
+        $can_reply =
+        $can_delete =
+        $can_edit =
+        $can_archive =
+        $can_assign_self =
+        $can_view_unassigned =
+        $can_change_own_cat =
+        $can_change_cat =
+        $can_ban_emails =
+        $can_unban_emails =
+        $can_ban_ips =
+        $can_unban_ips =
+        $can_resolve = true;
 }
 
 /* Is this user allowed to view tickets inside this category? */
@@ -187,12 +208,12 @@ if (isset($_GET['delete_post']) && $can_delete && hesk_token_check()) {
                 }
 
                 /* Delete attachments info from the database */
-                hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "attachments` WHERE `att_id`='" . intval($att_id) . "' LIMIT 1");
+                hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "attachments` WHERE `att_id`='" . intval($att_id) . "'");
             }
         }
 
         /* Delete this reply */
-        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` WHERE `id`='" . intval($n) . "' AND `replyto`='" . intval($ticket['id']) . "' LIMIT 1");
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` WHERE `id`='" . intval($n) . "' AND `replyto`='" . intval($ticket['id']) . "'");
 
         /* Reply wasn't deleted */
         if (hesk_dbAffectedRows() != 1) {
@@ -239,7 +260,7 @@ if (isset($_GET['delete_post']) && $can_delete && hesk_token_check()) {
                     }
                 }
 
-                hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `lastchange`=NOW(), `lastreplier`='{$last_replier}', `replierid`='" . intval($replier_id) . "', `replies`=`replies`-1 $status_sql $closed_sql $staffreplies_sql WHERE `id`='" . intval($ticket['id']) . "' LIMIT 1");
+                hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `lastchange`=NOW(), `lastreplier`='{$last_replier}', `replierid`='" . intval($replier_id) . "', `replies`=`replies`-1 $status_sql $closed_sql $staffreplies_sql WHERE `id`='" . intval($ticket['id']) . "'");
             } else {
                 // Update status, closedat and closedby columns as required
                 if ($ticket['locked']) {
@@ -250,7 +271,7 @@ if (isset($_GET['delete_post']) && $can_delete && hesk_token_check()) {
                     $closed_sql = " , `closedat`=NULL, `closedby`=NULL ";
                 }
 
-                hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `lastchange`=NOW(), `lastreplier`='0', `status`='$status', `replies`=0 $staffreplies_sql WHERE `id`='" . intval($ticket['id']) . "' LIMIT 1");
+                hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `lastchange`=NOW(), `lastreplier`='0', `status`='$status', `replies`=0 $staffreplies_sql WHERE `id`='" . intval($ticket['id']) . "'");
             }
 
             hesk_process_messages($hesklang['repl'], $_SERVER['PHP_SELF'], 'SUCCESS');
@@ -273,7 +294,7 @@ if (isset($_GET['delnote']) && hesk_token_check()) {
             // Permission to delete note?
             if ($can_del_notes || $note['who'] == $_SESSION['id']) {
                 // Delete note
-                hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "notes` WHERE `id`='" . intval($n) . "' LIMIT 1");
+                hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "notes` WHERE `id`='" . intval($n) . "'");
 
                 // Delete attachments
                 if (strlen($note['attachments'])) {
@@ -435,7 +456,7 @@ if ($hesk_settings['time_worked'] && ($can_reply || $can_edit) && isset($_POST['
 
     /* Update database */
     $revision = sprintf($hesklang['thist14'], hesk_date(), $time_worked, $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `time_worked`='" . hesk_dbEscape($time_worked) . "', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `time_worked`='" . hesk_dbEscape($time_worked) . "', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
     /* Show ticket */
     hesk_process_messages($hesklang['twu'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
@@ -525,15 +546,14 @@ if (isset($_GET['delatt']) && hesk_token_check()) {
     /* Update ticket or reply in the database */
     $revision = sprintf($hesklang['thist12'], hesk_date(), $att['real_name'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
     if ($reply) {
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`='" . intval($reply) . "' LIMIT 1");
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name']) . ",','') WHERE `id`='" . intval($reply) . "' LIMIT 1");
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($ticket['id']) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`='" . intval($reply) . "'");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($ticket['id']) . "'");
     } elseif ($note) {
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "notes` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`={$note} LIMIT 1");
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "notes` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name']) . ",','') WHERE `id`={$note} LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "notes` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name']) . ",','') WHERE `id`={$note}");
     } else {
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`='" . intval($ticket['id']) . "' LIMIT 1");
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name']) . ",',''), `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($ticket['id']) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`='" . intval($ticket['id']) . "'");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name']) . ",',''), `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($ticket['id']) . "'");
     }
 
     hesk_process_messages($hesklang['kb_att_rem'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
@@ -553,7 +573,11 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
 /* List of categories */
 $orderBy = $modsForHesk_settings['category_order_column'];
-$result = hesk_dbQuery("SELECT `id`,`name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `usage` <> 2 ORDER BY `" . $orderBy . "` ASC");
+if ($can_change_cat) {
+    $result = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `usage` <> 2 ORDER BY `cat_order` ASC");
+} else {
+    $result = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `usage` <> 2 AND ".hesk_myCategories('id')." ORDER BY `cat_order` ASC");
+}
 $categories_options = '';
 while ($row = hesk_dbFetchAssoc($result)) {
     $selected = '';
@@ -633,6 +657,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <?php
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
+
+    // Prepare special custom fields
+    foreach ($hesk_settings['custom_fields'] as $k=>$v) {
+        if ($v['use'] && hesk_is_custom_field_in_category($k, $ticket['category']) ) {
+            switch ($v['type']) {
+                case 'date':
+                    $ticket[$k] = hesk_custom_date_display_format($ticket[$k], $v['value']['date_format']);
+                    break;
+            }
+        }
+    }
     ?>
     <h1><?php echo $hesklang['ticket_details']; ?></h1>
     <h2>
@@ -1025,15 +1060,19 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <input type="hidden" name="track" value="' . $trackingID . '">
                             <input type="hidden" name="token" value="' . hesk_token_echo(0) . '">
                             </span>';
+                if ( ! $ticket['owner'])
+                {
+                    echo '<input type="hidden" name="unassigned" value="1">';
+                }
+                echo '</form></div>';
             } else {
                 echo '<p class="ticket-property-text">';
                 echo isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] :
-                    ($can_assign_self ? $hesklang['unas'] . ' [<a href="assign_owner.php?track=' . $trackingID . '&amp;owner=' . $_SESSION['id'] . '&amp;token=' . hesk_token_echo(0) . '">' . $hesklang['asss'] . '</a>]' : $hesklang['unas']);
+                    ($can_assign_self ? $hesklang['unas'] . ' [<a href="assign_owner.php?track=' . $trackingID . '&amp;owner=' . $_SESSION['id'] . '&amp;token=' . hesk_token_echo(0) . '&amp;unassigned=1">' . $hesklang['asss'] . '</a>]' : $hesklang['unas']);
                 echo '</p>';
             }
-            echo '</form></div>';
             echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticket-property-title">' . $hesklang['category'] . '</p>';
-            if ($can_change_cat) {
+            if (strlen($categories_options) && ($can_change_cat || $can_change_own_cat)) {
                 echo '
 
                         <form style="margin-bottom:0;" id="changeCategory" action="move_category.php" method="post">
@@ -1248,7 +1287,7 @@ require_once(HESK_PATH . 'inc/footer.inc.php');
 
 function hesk_getAdminButtons($category_id)
 {
-    global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
+    global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $can_resolve, $isManager;
 
     $options = '';
 
@@ -1330,7 +1369,7 @@ function hesk_getAdminButtons($category_id)
                     </div>
                     <div class="modal-body">
                         <?php if ($hasLocation): ?>
-           '               <div id="map" style="height: 500px"></div><br>
+                            <div id="map" style="height: 500px"></div><br>
                             <address id="friendly-location" style="font-size: 13px"></address>
                             <p id="save-for-address"
                                style="font-size: 13px;display:none"><?php echo $hesklang['save_to_see_updated_address']; ?></p>
@@ -1419,7 +1458,7 @@ function hesk_getAdminButtons($category_id)
     $isClosable = $isTicketClosedRow['Closable'] == 'yes' || $isTicketClosedRow['Closable'] == 'sonly';
 
     $mgr = $isManager ? '&amp;isManager=1' : '';
-    if ($isTicketClosed == 0 && $isClosable) // Ticket is still open
+    if ($isTicketClosed == 0 && $isClosable && $can_resolve) // Ticket is still open
     {
         $dropdown .= '<li><a href="change_status.php?track=' . $trackingID . $mgr . '&amp;s=' . $staffClosedOptionStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
                     <i class="fa fa-check-circle fa-fw"></i> ' . $hesklang['close_action'] . '</a></li>';
@@ -1429,7 +1468,7 @@ function hesk_getAdminButtons($category_id)
     }
 
     /* Lock ticket button */
-    if ($can_edit) {
+    if ($can_resolve) {
         $template = '<li><a href="lock.php?track=' . $trackingID . '&amp;locked=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-%s fa-fw"></i> %s</a></li>';
         $dropdown .= $ticket['locked']
             ? sprintf($template, 0, 'unlock', $hesklang['tul'])
@@ -1560,7 +1599,7 @@ function mfh_print_message() {
         <div class="timeline-item">
             <span class="time"><i class="fa fa-clock-o"></i> <?php echo $ticket['dt']; ?></span>
             <h3 class="timeline-header"><?php echo $ticket['name']; ?></h3>
-            <div class="timeline-body">
+            <div class="timeline-header header-info">
                 <div class="row">
                     <div class="col-md-3 text-right">
                         <strong><?php echo $hesklang['m_sub']; ?></strong>
@@ -1569,46 +1608,13 @@ function mfh_print_message() {
                         <?php echo $ticket['subject']; ?>
                     </div>
                 </div>
-                <?php foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                    if ($v['use'] && $v['place'] == 0) {
-                        if ($modsForHesk_settings['custom_field_setting']) {
-                            $v['name'] = $hesklang[$v['name']];
-                        }
-                        echo '<div class="row">';
-                        echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
-                        if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                            $dt = hesk_date($ticket[$k], false, false);
-                            echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
-                        } else {
-                            echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
-                        }
-                        echo '</div>';
-                    }
-                }
-                ?>
-                <div class="row push-down-10">
-                    <div class="col-md-3 text-right">
-                        <strong><?php echo $hesklang['message_colon']; ?></strong>
-                    </div>
-                    <div class="col-md-9">
-                        <?php if ($ticket['html']) {
-                            echo hesk_html_entity_decode($ticket['message']);
-                        } else {
-                            echo $ticket['message'];
-                        } ?>
-                    </div>
-                </div>
                 <?php
                 foreach ($hesk_settings['custom_fields'] as $k => $v) {
-                    if ($v['use'] && $v['place']) {
-                        if ($modsForHesk_settings['custom_field_setting']) {
-                            $v['name'] = $hesklang[$v['name']];
-                        }
+                    if ($v['use'] && $v['place'] == 0 && hesk_is_custom_field_in_category($k, $ticket['category'])) {
                         echo '<div class="row">';
                         echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
-                        if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                            $dt = hesk_date($ticket[$k], false, false);
-                            echo '<div class="col-md-9">' . hesk_dateToString($dt, 0) . '</div>';
+                        if ($v['type'] == 'email') {
+                            echo '<div class="col-md-9"><a href="mailto:'.$ticket[$k].'">'.$ticket[$k].'</a></div>';
                         } else {
                             echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
                         }
@@ -1617,6 +1623,39 @@ function mfh_print_message() {
                 }
                 ?>
             </div>
+            <div class="timeline-body">
+                <?php
+                if ($ticket['message'] != '') {
+                    if ($ticket['html']) {
+                        echo hesk_html_entity_decode($ticket['message']);
+                    } else {
+                        echo $ticket['message'];
+                    }
+                }
+                ?>
+            </div>
+            <?php
+            $first = true;
+            foreach ($hesk_settings['custom_fields'] as $k => $v) {
+                if ($v['use'] && $v['place'] && hesk_is_custom_field_in_category($k, $ticket['category'])) {
+                    if ($first) {
+                        echo '<div class="timeline-footer">';
+                        $first = false;
+                    }
+                    echo '<div class="row">';
+                    echo '<div class="col-md-3 text-right"><strong>' . $v['name'] . ':</strong></div>';
+                    if ($v['type'] == 'email') {
+                        echo '<div class="col-md-9"><a href="mailto:'.$ticket[$k].'">'.$ticket[$k].'</a></div>';
+                    } else {
+                        echo '<div class="col-md-9">' . $ticket[$k] . '</div>';
+                    }
+                    echo '</div>';
+                }
+            }
+            if (!$first) {
+                echo '</div>';
+            }
+            ?>
             <?php if (($hesk_settings['attachments']['use'] && strlen($ticket['attachments']))
                 || ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && strlen($ticket['articles']))): ?>
                 <div class="timeline-footer">
@@ -1746,6 +1785,13 @@ function hesk_printTicketReplies()
 function hesk_printReplyForm()
 {
     global $hesklang, $hesk_settings, $ticket, $admins, $can_options, $options, $can_assign_self, $isManager, $modsForHesk_settings;
+
+    // Force assigning a ticket before allowing to reply?
+    if ($hesk_settings['require_owner'] && ! $ticket['owner'])
+    {
+        hesk_show_notice($hesklang['atbr'].($can_assign_self ? '<br /><br /><a href="assign_owner.php?track='.$ticket['trackid'].'&amp;owner='.$_SESSION['id'].'&amp;token='.hesk_token_echo(0).'&amp;unassigned=1">'.$hesklang['attm'].'</a>' : ''), $hesklang['owneed']);
+        return '';
+    }
     ?>
     <!-- START REPLY FORM -->
     <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
@@ -1944,6 +1990,10 @@ function hesk_printReplyForm()
                             <?php
                             $statuses = mfh_getAllStatuses();
                             foreach ($statuses as $status) {
+                                if ($status['IsClosed'] == '1' && !$can_resolve) {
+                                    continue;
+                                }
+
                                 echo '<li><a>
                                         <button class="dropdown-submit" type="submit" name="submit_as_status" value="' . $status['ID'] . '"">
                                             ' . $hesklang['submit_reply'] . ' ' . $hesklang['and_change_status_to'] . ' <b>
@@ -2026,26 +2076,12 @@ function hesk_printCanned()
             myMsg = myMsg.replace(/%%HESK_NAME%%/g, '<?php echo hesk_jsString($ticket['name']); ?>');
             myMsg = myMsg.replace(/%%HESK_EMAIL%%/g, '<?php echo hesk_jsString($ticket['email']); ?>');
             myMsg = myMsg.replace(/%%HESK_OWNER%%/g, '<?php echo hesk_jsString( isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] : ''); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom1%%/g, '<?php echo hesk_jsString($ticket['custom1']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom2%%/g, '<?php echo hesk_jsString($ticket['custom2']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom3%%/g, '<?php echo hesk_jsString($ticket['custom3']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom4%%/g, '<?php echo hesk_jsString($ticket['custom4']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom5%%/g, '<?php echo hesk_jsString($ticket['custom5']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom6%%/g, '<?php echo hesk_jsString($ticket['custom6']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom7%%/g, '<?php echo hesk_jsString($ticket['custom7']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom8%%/g, '<?php echo hesk_jsString($ticket['custom8']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom9%%/g, '<?php echo hesk_jsString($ticket['custom9']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom10%%/g, '<?php echo hesk_jsString($ticket['custom10']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom11%%/g, '<?php echo hesk_jsString($ticket['custom11']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom12%%/g, '<?php echo hesk_jsString($ticket['custom12']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom13%%/g, '<?php echo hesk_jsString($ticket['custom13']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom14%%/g, '<?php echo hesk_jsString($ticket['custom14']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom15%%/g, '<?php echo hesk_jsString($ticket['custom15']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom16%%/g, '<?php echo hesk_jsString($ticket['custom16']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom17%%/g, '<?php echo hesk_jsString($ticket['custom17']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom18%%/g, '<?php echo hesk_jsString($ticket['custom18']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom19%%/g, '<?php echo hesk_jsString($ticket['custom19']); ?>');
-            myMsg = myMsg.replace(/%%HESK_custom20%%/g, '<?php echo hesk_jsString($ticket['custom20']); ?>');
+
+            <?php
+            for ($i=1; $i<=50; $i++) {
+                echo 'myMsg = myMsg.replace(/%%HESK_custom'.$i.'%%/g, \''.hesk_jsString($ticket['custom'.$i]).'\');';
+            }
+            ?>
 
             if (document.getElementById) {
                 if (document.getElementById('moderep').checked) {

@@ -38,6 +38,7 @@ require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/reporting_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
 require(HESK_PATH . 'inc/mail_functions.inc.php');
+require(HESK_PATH . 'inc/custom_fields.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -47,6 +48,13 @@ hesk_isLoggedIn();
 // Check permissions for this feature
 hesk_checkPermission('can_export');
 $modsForHesk_settings = mfh_getSettings();
+
+// Just a delete file action?
+$delete = hesk_GET('delete');
+if (strlen($delete) && preg_match('/^hesk_export_[0-9_\-]+$/', $delete)) {
+    hesk_unlink(HESK_PATH.$hesk_settings['cache_dir'].'/'.$delete.'.zip');
+    hesk_process_messages($hesklang['fd'], 'export.php','SUCCESS');
+}
 
 // Set default values
 define('CALENDAR', 1);
@@ -62,23 +70,23 @@ $is_all_time = 0;
 // Default this month to date
 $date_from = date('Y-m-d', mktime(0, 0, 0, date("m"), 1, date("Y")));
 $date_to = date('Y-m-d');
-$input_datefrom = date('m/d/Y', strtotime('last month'));
-$input_dateto = date('m/d/Y');
+$input_datefrom = date('Y-m-d', strtotime('last month'));
+$input_dateto = date('Y-m-d');
 
 /* Date */
 if (!empty($_GET['w'])) {
     $df = preg_replace('/[^0-9]/', '', hesk_GET('datefrom'));
     if (strlen($df) == 8) {
-        $date_from = substr($df, 4, 4) . '-' . substr($df, 0, 2) . '-' . substr($df, 2, 2);
-        $input_datefrom = substr($df, 0, 2) . '/' . substr($df, 2, 2) . '/' . substr($df, 4, 4);
+        $date_from = substr($df, 0, 4) . '-' . substr($df, 4, 2) . '-' . substr($df, 6, 2);
+        $input_datefrom = $date_from;
     } else {
         $date_from = date('Y-m-d', strtotime('last month'));
     }
 
     $dt = preg_replace('/[^0-9]/', '', hesk_GET('dateto'));
     if (strlen($dt) == 8) {
-        $date_to = substr($dt, 4, 4) . '-' . substr($dt, 0, 2) . '-' . substr($dt, 2, 2);
-        $input_dateto = substr($dt, 0, 2) . '/' . substr($dt, 2, 2) . '/' . substr($dt, 4, 4);
+        $date_to = substr($dt, 0, 4) . '-' . substr($dt, 4, 2) . '-' . substr($dt, 6, 2);
+        $input_dateto = $date_to;
     } else {
         $date_to = date('Y-m-d');
     }
@@ -317,7 +325,7 @@ if (isset($_GET['w'])) {
     }
 
     // This will be the export directory
-    $export_dir = HESK_PATH . $hesk_settings['attach_dir'] . '/export/';
+    $export_dir = HESK_PATH.$hesk_settings['cache_dir'].'/';
 
     // This will be the name of the export and the XML file
     $export_name = 'hesk_export_' . date('Y-m-d_H-i-s') . '_' . mt_rand(10000, 99999);
@@ -331,12 +339,7 @@ if (isset($_GET['w'])) {
 		}
 	
         // Cleanup old files
-        $files = preg_grep('/index\.htm$/', glob($export_dir.'*', GLOB_NOSORT), PREG_GREP_INVERT);
-        if (is_array($files) && count($files)) {
-            foreach ($files as $file) {
-                hesk_unlink($file, 86400);
-            }
-        }
+        hesk_purge_cache('export', 86400);
     } else {
         hesk_error($hesklang['ede']);
     }
@@ -348,6 +351,7 @@ if (isset($_GET['w'])) {
     }
 
     // Start generating the report message and generating the export
+    $success_msg = '';
     $flush_me = '<br /><br />';
     $flush_me .= hesk_date() . " | {$hesklang['inite']} ";
 
@@ -388,6 +392,9 @@ if (isset($_GET['w'])) {
   </Style>
   <Style ss:ID="s62">
    <NumberFormat ss:Format="General Date"/>
+  </Style>
+  <Style ss:ID="s63">
+   <NumberFormat ss:Format="Short Date"/>
   </Style>
   <Style ss:ID="s65">
    <NumberFormat ss:Format="[h]:mm:ss"/>
@@ -440,10 +447,6 @@ if (isset($_GET['w'])) {
 
     foreach ($hesk_settings['custom_fields'] as $k => $v) {
         if ($v['use']) {
-            if ($modsForHesk_settings['custom_field_setting']) {
-                $v['name'] = $hesklang[$v['name']];
-            }
-
             $tmp .= '<Cell><Data ss:Type="String">' . $v['name'] . '</Data></Cell>' . "\n";
         }
     }
@@ -506,14 +509,17 @@ if (isset($_GET['w'])) {
 ';
 
         // Add custom fields
-        foreach ($hesk_settings['custom_fields'] as $k => $v) {
+        foreach ($hesk_settings['custom_fields'] as $k=>$v) {
             if ($v['use']) {
-                $output = $ticket[$k];
-                if ($v['type'] == 'date' && !empty($ticket[$k])) {
-                    $dt = date('Y-m-d', $ticket[$k]);
-                    $output = hesk_dateToString($dt, 0);
+                switch ($v['type']) {
+                    case 'date':
+                        $tmp_dt = hesk_custom_date_display_format($ticket[$k], 'Y-m-d\T00:00:00.000');
+                        $tmp .= strlen($tmp_dt) ? '<Cell ss:StyleID="s63"><Data ss:Type="DateTime">'.$tmp_dt : '<Cell><Data ss:Type="String">';
+                        $tmp .= "</Data></Cell> \n";
+                        break;
+                    default:
+                        $tmp .= '<Cell><Data ss:Type="String"><![CDATA['.hesk_msgToPlain($ticket[$k], 1, 0).']]></Data></Cell>  ' . "\n";
                 }
-                $tmp .= '<Cell><Data ss:Type="String"><![CDATA[' . hesk_msgToPlain($output, 1, 0) . ']]></Data></Cell>  ' . "\n";
             }
         }
 
@@ -637,7 +643,10 @@ if (isset($_GET['w'])) {
 
         // We're done!
         $flush_me .= hesk_date() . " | {$hesklang['fZIP']}<br /><br />";
-        $flush_me .= '<a href="' . $save_to_zip . '">' . $hesklang['ch2d'] . "</a>\n";
+
+        // Success message
+        $success_msg .= $hesk_settings['debug_mode'] ? $flush_me : '<br /><br />';
+        $success_msg .= $hesklang['step1'] . ': <a href="' . $save_to_zip . '">' . $hesklang['ch2d'] . '</a><br /><br />' . $hesklang['step2'] . ': <a href="export.php?delete='.urlencode($export_name).'">' . $hesklang['dffs'] . '</a>';
     } // No tickets exported, cleanup
     else {
         hesk_unlink($save_to);
@@ -673,9 +682,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             hesk_handle_messages();
 
             // If an export was generated, show the link to download
-            if (isset($flush_me)) {
+            if (isset($success_msg)) {
                 if ($tickets_exported > 0) {
-                    hesk_show_success($flush_me);
+                    hesk_show_success($success_msg);
                 } else {
                     hesk_show_notice($hesklang['n2ex']);
                 }
@@ -685,10 +694,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <div class="form-group">
                     <label for="time" class="control-label col-sm-2"><?php echo $hesklang['dtrg']; ?>:</label>
 
-                    <div class="col-sm-10">
+                    <div class="col-sm-10 form-inline">
                         <!-- START DATE -->
                         <input type="radio" name="w" value="0" id="w0" <?php echo $selected['w'][0]; ?> />
                         <select name="time" onclick="document.getElementById('w0').checked = true"
+                                class="form-control"
                                 onfocus="document.getElementById('w0').checked = true"
                                 style="margin-top:5px;margin-bottom:5px;">
                             <option value="1" <?php echo $selected['time'][1]; ?>><?php echo $hesklang['r1']; ?>
@@ -719,16 +729,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <option value="12" <?php echo $selected['time'][12]; ?>><?php echo $hesklang['r12']; ?></option>
                         </select>
 
-                        <br/>
+                        <br>
 
                         <input type="radio" name="w" value="1" id="w1" <?php echo $selected['w'][1]; ?> />
                         <?php echo $hesklang['from']; ?> <input type="text" name="datefrom"
                                                                 value="<?php echo $input_datefrom; ?>" id="datefrom"
-                                                                class="tcal" size="10"
+                                                                class="datepicker form-control" size="10"
                                                                 onclick="document.getElementById('w1').checked = true"
                                                                 onfocus="document.getElementById('w1').checked = true;this.focus;"/>
                         <?php echo $hesklang['to']; ?> <input type="text" name="dateto" value="<?php echo $input_dateto; ?>"
-                                                              id="dateto" class="tcal" size="10"
+                                                              id="dateto" class="datepicker form-control" size="10"
                                                               onclick="document.getElementById('w1').checked = true"
                                                               onfocus="document.getElementById('w1').checked = true; this.focus;"/>
                         <!-- END DATE -->

@@ -115,7 +115,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     /* Only update if it's a valid language */
                     if (isset($hesk_settings['languages'][$newlang])) {
                         $newlang = ($newlang == HESK_DEFAULT_LANGUAGE) ? "NULL" : "'" . hesk_dbEscape($newlang) . "'";
-                        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `language`=$newlang WHERE `id`='" . intval($_SESSION['id']) . "' LIMIT 1");
+                        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `language`=$newlang WHERE `id`='" . intval($_SESSION['id']) . "'");
                     }
                 }
 
@@ -232,15 +232,27 @@ function update_profile()
     $_SESSION['new']['notify_customer_new'] = isset($_POST['notify_customer_new']) ? 1 : 0;
     $_SESSION['new']['notify_customer_reply'] = isset($_POST['notify_customer_reply']) ? 1 : 0;
     $_SESSION['new']['show_suggested'] = isset($_POST['show_suggested']) ? 1 : 0;
+    $_SESSION['new']['autoreload'] = isset($_POST['autoreload']) ? 1 : 0;
+
+    if ($_SESSION['new']['autoreload']) {
+        $_SESSION['new']['autoreload'] = intval(hesk_POST('reload_time'));
+
+        if (hesk_POST('secmin') == 'min') {
+            $_SESSION['new']['autoreload'] *= 60;
+        }
+
+        if ($_SESSION['new']['autoreload'] < 0 || $_SESSION['new']['autoreload'] > 65535) {
+            $_SESSION['new']['autoreload'] = 30;
+        }
+    } else {
+        hesk_setcookie('autorefresh', '');
+    }
 
     /* Auto-start ticket timer */
     $_SESSION['new']['autostart'] = isset($_POST['autostart']) ? 1 : 0;
 
     /* Default calendar view */
     $_SESSION['new']['default_calendar_view'] = hesk_POST('default-calendar-view', 0);
-
-    /* Update auto-refresh time */
-    $_SESSION['new']['autorefresh'] = isset($_POST['autorefresh']) ? $_POST['autorefresh'] : 0;
 
     /* Notifications */
     if (!(!$_SESSION[$session_array]['isadmin'] && isset($_SESSION[$session_array]['heskprivileges'])
@@ -274,7 +286,7 @@ function update_profile()
 		$sql_pass ,
 	    `afterreply`='" . intval($_SESSION['new']['afterreply']) . "' ,
         `autostart`='" . intval($_SESSION['new']['autostart']) . "' ,
-        `autorefresh`='" . intval($_SESSION['new']['autorefresh']) . "' ,
+        `autoreload`='".($_SESSION['new']['autoreload'])."' ,
 	    `notify_new_unassigned`='" . intval($_SESSION['new']['notify_new_unassigned']) . "' ,
         `notify_new_my`='" . intval($_SESSION['new']['notify_new_my']) . "' ,
         `notify_reply_unassigned`='" . intval($_SESSION['new']['notify_reply_unassigned']) . "' ,
@@ -288,7 +300,7 @@ function update_profile()
         `notify_overdue_unassigned`='" . $_SESSION['new']['notify_overdue_unassigned'] . "',
         `show_suggested`='" . $_SESSION['new']['show_suggested'] . "',
         `default_calendar_view`=" . intval($_SESSION['new']['default_calendar_view']) . "
-	    WHERE `id`='" . intval($_SESSION['id']) . "' LIMIT 1"
+	    WHERE `id`='" . intval($_SESSION['id']) . "'"
         );
 
         /* Process the session variables */

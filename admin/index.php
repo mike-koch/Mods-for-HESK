@@ -206,15 +206,15 @@ function do_login()
 
     /* Remember username? */
     if ($hesk_settings['autologin'] && hesk_POST('remember_user') == 'AUTOLOGIN') {
-        setcookie('hesk_username', "$user", strtotime('+1 year'));
-        setcookie('hesk_p', "$pass_enc", strtotime('+1 year'));
+        hesk_setcookie('hesk_username', "$user", strtotime('+1 year'));
+        hesk_setcookie('hesk_p', "$pass_enc", strtotime('+1 year'));
     } elseif (hesk_POST('remember_user') == 'JUSTUSER') {
-        setcookie('hesk_username', "$user", strtotime('+1 year'));
-        setcookie('hesk_p', '');
+        hesk_setcookie('hesk_username', "$user", strtotime('+1 year'));
+        hesk_setcookie('hesk_p', '');
     } else {
         // Expire cookie if set otherwise
-        setcookie('hesk_username', '');
-        setcookie('hesk_p', '');
+        hesk_setcookie('hesk_username', '');
+        hesk_setcookie('hesk_p', '');
     }
 
     /* Close any old tickets here so Cron jobs aren't necessary */
@@ -510,7 +510,7 @@ function logout()
 
     /* Show success message and reset the cookie */
     hesk_process_messages($hesklang['logout_success'], 'NOREDIRECT', 'SUCCESS');
-    setcookie('hesk_p', '');
+    hesk_setcookie('hesk_p', '');
 
     /* Print the login form */
     print_login();

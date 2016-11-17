@@ -35,6 +35,8 @@ if (!defined('IN_SCRIPT')) {
     die('Invalid attempt');
 }
 
+define('ADMIN_PAGE', true);
+
 $modsForHesk_settings = mfh_getSettings();
 ?>
 <!DOCTYPE html>
@@ -87,51 +89,6 @@ $modsForHesk_settings = mfh_getSettings();
     }
     ?>
     <style>
-        .navbar-default {
-            background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
-            background-image: none;
-            filter: none;
-        }
-
-        .navbar-default .navbar-brand {
-            color: <?php echo $modsForHesk_settings['navbarBrandColor']; ?>;
-        }
-
-        .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
-            color: <?php echo $modsForHesk_settings['navbarBrandHoverColor']; ?>;
-            background-color: transparent;
-        }
-
-        .navbar-default .navbar-nav > li > a {
-            color: <?php echo $modsForHesk_settings['navbarItemTextColor']; ?>;
-        }
-
-        .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
-            color: <?php echo $modsForHesk_settings['navbarItemTextHoverColor']; ?>;
-            background-color: transparent;
-        }
-
-        .dropdown-menu > li > a {
-            color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>;
-        }
-
-        .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
-            color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
-            text-decoration: none;
-            background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
-        }
-
-        .navbar-default .navbar-nav > .open > a,
-        .navbar-default .navbar-nav > .open > a:focus,
-        .navbar-default .navbar-nav > .open > a:hover,
-        .navbar-default .navbar-nav > .active > a,
-        .navbar-default .navbar-nav > .active > a:focus,
-        .navbar-default .navbar-nav > .active > a:hover {
-            color: <?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>;
-            background-color: <?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>;
-            background-image: none;
-        }
-
         .settingsquestionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
             cursor: pointer;
@@ -210,6 +167,50 @@ $modsForHesk_settings = mfh_getSettings();
         }
     }
 
+    // Auto reload
+    if (defined('AUTO_RELOAD') && hesk_checkPermission('can_view_tickets',0) && ! isset($_SESSION['hide']['ticket_list'])) {
+        ?>
+        <script type="text/javascript">
+            var count = <?php echo empty($_SESSION['autoreload']) ? 30 : intval($_SESSION['autoreload']); ?>;
+            var reloadcounter;
+            var countstart = count;
+
+            function heskReloadTimer() {
+                count = count-1;
+                if (count <= 0) {
+                    clearInterval(reloadcounter);
+                    window.location.reload();
+                    return;
+                }
+
+                document.getElementById("timer").innerHTML = "(" + count + ")";
+            }
+
+            function heskCheckReloading() {
+                if (<?php if ($_SESSION['autoreload']) echo "getCookie('autorefresh') == null || "; ?>getCookie('autorefresh') == '1') {
+                    document.getElementById("reloadCB").checked=true;
+                    document.getElementById("timer").innerHTML = "(" + count + ")";
+                    reloadcounter = setInterval(heskReloadTimer, 1000);
+                }
+            }
+
+            function toggleAutoRefresh(cb) {
+                if (cb.checked) {
+                    setCookie('autorefresh', '1');
+                    document.getElementById("timer").innerHTML = "(" + count + ")";
+                    reloadcounter = setInterval(heskReloadTimer, 1000);
+                } else {
+                    setCookie('autorefresh', '0');
+                    count = countstart;
+                    clearInterval(reloadcounter);
+                    document.getElementById("timer").innerHTML = "";
+                }
+            }
+
+        </script>
+        <?php
+    }
+
     if (defined('MFH_CALENDAR')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
@@ -224,7 +225,7 @@ $modsForHesk_settings = mfh_getSettings();
 
 </head>
 <body onload="<?php echo $onload;
-unset($onload); ?>" class="hold-transition skin-blue sidebar-mini">
+unset($onload); ?>" class="hold-transition <?php echo $modsForHesk_settings['admin_color_scheme']; ?> sidebar-mini">
 
 <?php
 include(HESK_PATH . 'header.txt');

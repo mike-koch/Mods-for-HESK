@@ -87,6 +87,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                                                             title="<?php echo $hesklang['statuses']; ?>"
                                                                             data-content="<?php echo $hesklang['statuses_intro']; ?>"></i></a>
                     </li>
+                    <?php
+                    if (hesk_checkPermission('can_man_settings', 0)) {
+                        echo '
+                    <li role="presentation">
+						<a title="' . $hesklang['tab_4'] . '" href="custom_fields.php">' .
+							$hesklang['tab_4']
+						. '</a>
+					</li>
+                        ';
+                    }
+                    ?>
                 </ul>
                 <div class="tab-content summaryList tabPadding">
                     <div class="row">

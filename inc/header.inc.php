@@ -40,6 +40,7 @@ if (!function_exists('mfh_getSettings')) {
 
 $modsForHesk_settings = array();
 if (is_dir(HESK_PATH . 'install')) {
+    define('MAINTENANCE_MODE', true);
     $modsForHesk_settings['navbar_title_url'] = 'javascript:;';
     $modsForHesk_settings['rtl'] = 0;
     $modsForHesk_settings['use_bootstrap_theme'] = 1;
@@ -55,14 +56,14 @@ if (is_dir(HESK_PATH . 'install')) {
     $modsForHesk_settings['dropdownItemTextHoverColor'] = '#262626';
     $modsForHesk_settings['dropdownItemTextHoverBackgroundColor'] = '#f5f5f5';
     $modsForHesk_settings['questionMarkColor'] = '#000000';
+    $modsForHesk_settings['enable_calendar'] = 1;
 } else {
     $modsForHesk_settings = mfh_getSettings();
 }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
     <title><?php echo(isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
     <meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>"/>
@@ -283,34 +284,37 @@ if ($modsForHesk_settings['show_icons']) {
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <?php
-                $active = '';
-                if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_HOME') {
-                    $active = 'class="active"';
-                }
+                if ($hesk_settings['kb_enable'] !== 2 && !defined('MAINTENANCE_MODE')) {
+                    $active = '';
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_HOME') {
+                        $active = 'class="active"';
+                    }
                 ?>
-                <li <?php echo $active; ?>><a href="<?php echo HESK_PATH; ?>"><i
-                            class="fa fa-home" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?>
-                    </a></li>
+                    <li <?php echo $active; ?>><a href="<?php echo HESK_PATH; ?>"><i
+                                class="fa fa-home" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['main_page']; ?>
+                        </a></li>
+                    <?php
+                    $active = '';
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_TICKET') {
+                        $active = ' active';
+                    }
+                    ?>
+                    <li class="dropdown<?php echo $active; ?>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                                class="fa fa-ticket" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['ticket'] ?>
+                            <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i
+                                        class="fa fa-plus-circle" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['sub_support'] ?>
+                                </a></li>
+                            <li><a href="<?php echo HESK_PATH; ?>ticket.php"><i
+                                        class="fa fa-search" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['view_ticket_nav'] ?>
+                                </a></li>
+                        </ul>
+                    </li>
                 <?php
-                $active = '';
-                if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_TICKET') {
-                    $active = ' active';
                 }
-                ?>
-                <li class="dropdown<?php echo $active; ?>">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                            class="fa fa-ticket" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['ticket'] ?>
-                        <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="<?php echo HESK_PATH; ?>index.php?a=add"><i
-                                    class="fa fa-plus-circle" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['sub_support'] ?>
-                            </a></li>
-                        <li><a href="<?php echo HESK_PATH; ?>ticket.php"><i
-                                    class="fa fa-search" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['view_ticket_nav'] ?>
-                            </a></li>
-                    </ul>
-                </li>
-                <?php if ($hesk_settings['kb_enable']) {
+                if ($hesk_settings['kb_enable'] && !defined('MAINTENANCE_MODE')) {
                     $active = '';
                     if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_KB') {
                         $active = 'class="active"';
@@ -323,7 +327,7 @@ if ($modsForHesk_settings['show_icons']) {
                 if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_CALENDAR') {
                     $active = ' active';
                 }
-                if ($modsForHesk_settings['enable_calendar'] == 1):
+                if ($modsForHesk_settings['enable_calendar'] == 1 && !defined('MAINTENANCE_MODE')):
                 ?>
                 <li class="<?php echo $active; ?>">
                     <a href="<?php echo HESK_PATH; ?>calendar.php"><i class="fa fa-calendar" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['calendar_title_case']; ?></a>
@@ -333,7 +337,15 @@ if ($modsForHesk_settings['show_icons']) {
             </ul>
             <?php if ($hesk_settings['can_sel_lang']) { ?>
                 <div class="navbar-form navbar-right" role="search" style="margin-right: 20px; min-width: 80px;">
-                    <?php echo hesk_getLanguagesAsFormIfNecessary(); ?>
+                    <?php
+                    if (!defined('MAINTENANCE_MODE')) {
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'CUSTOMER_TICKET') {
+                            hesk_getLanguagesAsFormIfNecessary($trackingID);
+                        } else {
+                            hesk_getLanguagesAsFormIfNecessary();
+                        }
+                    }
+                    ?>
                 </div>
             <?php } ?>
 

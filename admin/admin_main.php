@@ -51,6 +51,7 @@ hesk_isLoggedIn();
 define('CALENDAR', 1);
 define('MAIN_PAGE', 1);
 define('PAGE_TITLE', 'ADMIN_HOME');
+define('AUTO_RELOAD', 1);
 
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
@@ -58,7 +59,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 /* Reset default settings? */
 if (isset($_GET['reset']) && hesk_token_check()) {
-    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `default_list`='' WHERE `id` = '" . intval($_SESSION['id']) . "' LIMIT 1");
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `default_list`='' WHERE `id` = '" . intval($_SESSION['id']) . "'");
     $_SESSION['default_list'] = '';
 } /* Get default settings */
 else {
@@ -81,6 +82,14 @@ else {
             </div>
         </div>
         <div class="box-body">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
+                    <?php echo $hesklang['arp']; ?>
+                    <span id="timer"></span>
+                </label>
+            </div>
+            <script type="text/javascript">heskCheckReloading();</script><br>
             <?php
             /* Print tickets? */
             if (hesk_checkPermission('can_view_tickets', 0)) {
@@ -95,10 +104,8 @@ else {
             ?>
         </div>
     </div>
-    <div class="box">
-        <div class="box-body">
-            <?php
-            $hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
+    <?php
+    $hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
         CdoZXNrX2xpY2Vuc2UucGhwJykpDQp7DQokaCA9ICghZW1wdHkoJF9TRVJWRVJbJ0hUVFBfSE9TVCddK
         SkgPyAkX1NFUlZFUlsnSFRUUF9IT1NUJ10gOiAoKCFlbXB0eSgkX1NFUlZFUlsnU0VSVkVSX05BTUUnX
         SkpID8gJF9TRVJWRVJbJ1NFUlZFUl9OQU1FJ10gOiBnZXRlbnYoJ1NFUlZFUl9OQU1FJykpOw0KJGggP
@@ -116,11 +123,9 @@ else {
         29tL2J1eS5waHAiIHRhcmdldD0iX2JsYW5rIj4nLiRoZXNrbGFuZ1snY2xpY2tfaW5mbyddLic8L2E+P
         C9wPic7DQp9DQo=', "\112");
 
-            /* Clean unneeded session variables */
-            hesk_cleanSessionVars('hide');
-            ?>
-        </div>
-    </div>
+    /* Clean unneeded session variables */
+    hesk_cleanSessionVars('hide');
+    ?>
 </section>
 
 <?php

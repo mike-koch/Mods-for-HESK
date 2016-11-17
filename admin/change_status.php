@@ -74,6 +74,10 @@ $locked = 0;
 $statusRow = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID`, `IsClosed` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE ID = " . $status));
 if ($statusRow['IsClosed']) // Closed
 {
+    if ( ! hesk_checkPermission('can_resolve', 0)) {
+        hesk_process_messages($hesklang['noauth_resolve'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'NOTICE');
+    }
+
     $action = $hesklang['ticket_been'] . ' ' . $hesklang['close'];
     $revision = sprintf($hesklang['thist3'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
 
@@ -101,7 +105,7 @@ if ($statusRow['IsClosed']) // Closed
 
     // Log who marked the ticket resolved
     $closedby_sql = ' , `closedat`=NOW(), `closedby`=' . intval($_SESSION['id']) . ' ';
-} elseif ($statusRow['ID'] != 0) //Ticket is still open, but not new
+} elseif ($statusRow['IsNewTicketStatus'] == '0') //Ticket is still open, but not new
 {
     $action = sprintf($hesklang['tsst'], $status_options[$status]);
     $revision = sprintf($hesklang['thist9'], hesk_date(), $status_options[$status], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
@@ -118,11 +122,10 @@ if ($statusRow['IsClosed']) // Closed
 }
 
 
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
 if (hesk_dbAffectedRows() != 1) {
     hesk_error("$hesklang[int_error]: $hesklang[trackID_not_found].");
 }
 
 hesk_process_messages($action, 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . rand(10000, 99999), 'SUCCESS');
-?>

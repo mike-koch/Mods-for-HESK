@@ -55,6 +55,9 @@ $trackingID = hesk_cleanID('p_track') or die("$hesklang[int_error]: $hesklang[no
 /* Connect to database */
 hesk_dbConnect();
 
+// Load custom fields
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
 // Perform additional checks for customers
 if (empty($_SESSION['id'])) {
     // Are we in maintenance mode?
@@ -218,14 +221,16 @@ echo '</tr>';
 $num_cols = 0;
 echo '<tr>';
 foreach ($hesk_settings['custom_fields'] as $k => $v) {
-    if ($v['use']) {
-        if ($modsForHesk_settings['custom_field_setting']) {
-            $v['name'] = $hesklang[$v['name']];
-        }
-
+    if (($v['use'] == 1 || (! empty($_SESSION['id']) && $v['use'] == 2)) && hesk_is_custom_field_in_category($k, $ticket['category'])) {
         if ($num_cols == 3) {
             echo '</tr><tr>';
             $num_cols = 0;
+        }
+
+        switch ($v['type']) {
+            case 'date':
+                $ticket[$k] = hesk_custom_date_display_format($ticket[$k], $v['value']['date_format']);
+                break;
         }
         ?>
         <td bgcolor="#EEE"><b><?php echo $v['name']; ?>:</b></td>
@@ -239,11 +244,14 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 echo '</table><br>';
 
 // Print initial ticket message
-$newMessage = hesk_unhortenUrl($ticket['message']);
-if ($ticket['html']) {
-    $newMessage = hesk_html_entity_decode($newMessage);
+if ($ticket['message'] != '') {
+    $newMessage = hesk_unhortenUrl($ticket['message']);
+    if ($ticket['html']) {
+        $newMessage = hesk_html_entity_decode($newMessage);
+    }
+    echo '<p>' . $newMessage . '</p>';
 }
-echo '<p>' . $newMessage . '</p>';
+
 
 // Print replies
 while ($reply = hesk_dbFetchAssoc($res)) {

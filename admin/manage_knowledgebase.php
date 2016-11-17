@@ -473,18 +473,33 @@ if (!isset($_SESSION['hide']['new_article']))
                                 <?php
                                 display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php');
                             endif; // End attachments
+
+                            // Redirect to the correct page
+                            switch ($from)
+                            {
+                                case 'draft':
+                                    $redirect_action = 'a=list_draft';
+                                    break;
+                                case 'private':
+                                    $redirect_action = 'a=list_private';
+                                    break;
+                                default:
+                                    $redirect_action = 'a=manage_cat&amp;catid='.$catid;
+                                    break;
+                            }
                             ?>
                         </div>
                     </div>
                 </div>
                 <div class="box-footer">
                     <div class="form-group">
-                        <input type="hidden" name="a" value="new_article" />
-                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                        <input type="hidden" name="a" value="new_article">
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                        <input type="hidden" name="from" value="<?php echo $from; ?>">
 
                         <div class="btn-group">
-                            <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary" />
-                            <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
+                            <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary">
+                            <a class="btn btn-default" href="manage_knowledgebase.php?<?php echo $redirect_action; ?>"><?php echo $hesklang['cancel']; ?></a>
                         </div>
                     </div>
                 </div>
@@ -670,8 +685,8 @@ function list_draft() {
                                 <td><?php echo $kb_cat[$article['catid']]; ?></td>
                                 <td style="white-space:nowrap;">
                                     <a href="knowledgebase_private.php?article=<?php echo $article['id']; ?>&amp;back=1<?php if ($article['type'] == 2) {echo '&amp;draft=1';} ?>" target="_blank"><i class="fa fa-file-o" data-toggle="tooltip" title="<?php echo $hesklang['viewart']; ?>"></i></a>
-                                    <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
-                                    <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times icon-link red" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a></td>
+                                    <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>&amp;from=draft"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
+                                    <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>&amp;from=draft" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times icon-link red" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a></td>
                             </tr>
                             <?php
                             $j++;
@@ -820,8 +835,8 @@ function list_private() {
                                     <?php echo $rat; ?>
                                     <td class="text-center">
                                         <a href="knowledgebase_private.php?article=<?php echo $article['id']; ?>&amp;back=1<?php if ($article['type'] == 2) {echo '&amp;draft=1';} ?>" target="_blank"><i class="fa fa-file-o icon-link" data-toggle="tooltip" title="<?php echo $hesklang['viewart']; ?>"></i></a>
-                                        <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
-                                        <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times red icon-link" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a>&nbsp;</td>
+                                        <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>&amp;from=private"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i></a>
+                                        <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>&amp;from=private" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times red icon-link" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i></a>&nbsp;</td>
                                 </tr>
                                 <?php
                                 $j++;
@@ -1001,7 +1016,7 @@ function remove_kb_att()
     // Remove attachment from article
     $art['attachments'] = str_replace($att_id.'#'.$att['real_name'].',','',$art['attachments']);
 
-	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `attachments`='".hesk_dbEscape($art['attachments'])."', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($id)."' LIMIT 1");
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `attachments`='".hesk_dbEscape($art['attachments'])."', `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."') WHERE `id`='".intval($id)."'");
 
     hesk_process_messages($hesklang['kb_att_rem'],'manage_knowledgebase.php?a=edit_article&id='.$id,'SUCCESS');
 } // END remove_kb_att()
@@ -1074,7 +1089,7 @@ function edit_category()
         }
 
         // Now delete the category
-        hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `id`='".intval($catid)."' LIMIT 1");
+        hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `id`='".intval($catid)."'");
 
 		$_SESSION['hide'] = array(
 			//'treemenu' => 1,
@@ -1085,7 +1100,7 @@ function edit_category()
         hesk_process_messages($hesklang['kb_cat_dlt'],'./manage_knowledgebase.php','SUCCESS');
     }
 
-	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `name`='".hesk_dbEscape($title)."',`parent`=".intval($parent).",`type`='".intval($type)."' WHERE `id`='".intval($catid)."' LIMIT 1");
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `name`='".hesk_dbEscape($title)."',`parent`=".intval($parent).",`type`='".intval($type)."' WHERE `id`='".intval($catid)."'");
 
     unset($_SESSION['hide']);
 
@@ -1111,6 +1126,7 @@ function save_article()
     $old_catid = intval( hesk_POST('old_catid') );
     $old_type  = intval( hesk_POST('old_type') );
     $old_type  = ($old_type < 0 || $old_type > 2) ? 0 : $old_type;
+    $from = hesk_POST('from');
 
     $subject = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer[] = $hesklang['kb_e_subj'];
 
@@ -1124,9 +1140,9 @@ function save_article()
 	    $content = hesk_getHTML( hesk_POST('content') );
 		
 		// Clean the HTML code
-		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
-		$purifier = new HTMLPurifier();
-		$content = $purifier->purify($content);
+		require(HESK_PATH . 'inc/htmlpurifier/HeskHTMLPurifier.php');
+		$purifier = new HeskHTMLPurifier($hesk_settings['cache_dir']);
+		$content = $purifier->heskPurify($content);
     }
 	else
     {
@@ -1209,7 +1225,7 @@ function save_article()
 		$hesk_error_buffer = $tmp;
 
     	$hesk_error_buffer = $hesklang['rfm'].'<br /><br /><ul>'.$hesk_error_buffer.'</ul>';
-    	hesk_process_messages($hesk_error_buffer,'./manage_knowledgebase.php?a=edit_article&id='.$id);
+        hesk_process_messages($hesk_error_buffer,'./manage_knowledgebase.php?a=edit_article&id='.$id.'&from='.$from);
     }
 
 	/* Add to database */
@@ -1236,7 +1252,7 @@ function save_article()
     `html`='".intval($html)."',
     `sticky`='".intval($sticky)."',
     `history`=CONCAT(`history`,'".hesk_dbEscape($revision)."')
-    WHERE `id`='".intval($id)."' LIMIT 1");
+    WHERE `id`='".intval($id)."'");
 
     $_SESSION['artord'] = $id;
 
@@ -1247,7 +1263,20 @@ function save_article()
     // Update article order
     update_article_order($catid);
 
-    hesk_process_messages($hesklang['your_kb_mod'],'./manage_knowledgebase.php?a=manage_cat&catid='.$catid,'SUCCESS');
+    // Redirect to the correct page
+    switch ($from) {
+        case 'draft':
+            $redirect_action = 'a=list_draft';
+            break;
+        case 'private':
+            $redirect_action = 'a=list_private';
+            break;
+        default:
+            $redirect_action = 'a=manage_cat&catid='.$catid;
+            break;
+    }
+
+    hesk_process_messages($hesklang['your_kb_mod'],'./manage_knowledgebase.php?'.$redirect_action,'SUCCESS');
 } // END save_article()
 
 
@@ -1277,6 +1306,8 @@ function edit_article()
     }
 
     $catid = $article['catid'];
+
+    $from = hesk_GET('from');
 
     if (isset($_SESSION['edit_article']))
     {
@@ -1372,11 +1403,6 @@ function edit_article()
 	/* Print main manage users page */
 	require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	?>
-
-	</td>
-	</tr>
-	<tr>
-	<td>
 
     <ol class="breadcrumb">
         <li><a href="manage_knowledgebase.php"><?php echo $hesklang['kb']; ?></a></li>
@@ -1517,14 +1543,15 @@ function edit_article()
                         </div>
                         <?php endif; //End attachments ?>
                         <div class="form-group">
-                            <input type="hidden" name="a" value="save_article" />
-                            <input type="hidden" name="id" value="<?php echo $id; ?>" />
-                            <input type="hidden" name="old_type" value="<?php echo $article['type']; ?>" />
-                            <input type="hidden" name="old_catid" value="<?php echo $catid; ?>" />
-                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" /><br>
-                            <div class="btn-group">
+                            <input type="hidden" name="a" value="save_article">
+                            <input type="hidden" name="id" value="<?php echo $id; ?>">
+                            <input type="hidden" name="old_type" value="<?php echo $article['type']; ?>">
+                            <input type="hidden" name="old_catid" value="<?php echo $catid; ?>">
+                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                            <div class="btn-group-vertical full-width">
                                 <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary" />
                                 <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
+                                <a class="btn btn-danger" href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><?php echo $hesklang['del_kbaa']; ?></a>
                             </div>
                         </div>
                     </div>
@@ -1984,9 +2011,9 @@ function new_article()
         $content = hesk_getHTML( hesk_POST('content') );
 		
 		// Clean the HTML code
-		require(HESK_PATH . 'inc/htmlpurifier/HTMLPurifier.standalone.php');
-		$purifier = new HTMLPurifier();
-		$content = $purifier->purify($content);
+		require(HESK_PATH . 'inc/htmlpurifier/HeskHTMLPurifier.php');
+		$purifier = new HeskHTMLPurifier($hesk_settings['cache_dir']);
+		$content = $purifier->heskPurify($content);
     }
 	else
     {
@@ -2136,8 +2163,9 @@ function remove_article()
 
     $article = hesk_dbFetchAssoc($result);
 	$catid = intval($article['catid']);
+    $from = hesk_GET('from');
 
-    $result = hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `id`='".intval($id)."' LIMIT 1");
+    $result = hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `id`='".intval($id)."'");
 
     // Remove any attachments
     delete_kb_attachments($article['attachments']);
@@ -2156,7 +2184,20 @@ function remove_article()
 	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `articles_draft`=`articles_draft`-1 WHERE `id`='{$catid}'");
 	}
 
-	hesk_process_messages($hesklang['your_kb_deleted'],'./manage_knowledgebase.php?a=manage_cat&catid='.$catid,'SUCCESS');
+    // Redirect to the correct page
+    switch ($from) {
+        case 'draft':
+            $redirect_action = 'a=list_draft';
+            break;
+        case 'private':
+            $redirect_action = 'a=list_private';
+            break;
+        default:
+            $redirect_action = 'a=manage_cat&catid='.$catid;
+            break;
+    }
+
+    hesk_process_messages($hesklang['your_kb_deleted'],'./manage_knowledgebase.php?'.$redirect_action,'SUCCESS');
 } // End remove_article()
 
 
@@ -2172,7 +2213,7 @@ function order_category()
 
     $_SESSION['newcat'] = $catid;
 
-	$result = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `cat_order`=`cat_order`+".intval($move)." WHERE `id`='".intval($catid)."' LIMIT 1");
+	$result = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `cat_order`=`cat_order`+".intval($move)." WHERE `id`='".intval($catid)."'");
 	if (hesk_dbAffectedRows() != 1)
     {
     	hesk_error($hesklang['kb_cat_inv']);
@@ -2198,7 +2239,7 @@ function order_article()
 
     $_SESSION['artord'] = $id;
 
-	$result = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `art_order`=`art_order`+".intval($move)." WHERE `id`='".intval($id)."' LIMIT 1");
+	$result = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `art_order`=`art_order`+".intval($move)." WHERE `id`='".intval($id)."'");
 	if (hesk_dbAffectedRows() != 1)
     {
     	hesk_error($hesklang['kb_art_id']);
@@ -2306,7 +2347,7 @@ function toggle_sticky()
     $_SESSION['artord'] = $id;
 
 	/* Update article "sticky" status */
-	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `sticky`='" . intval($sticky) . " ' WHERE `id`='" . intval($id) . "' LIMIT 1");
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `sticky`='" . intval($sticky) . " ' WHERE `id`='" . intval($id) . "'");
 
     /* Update article order */
     update_article_order($catid);
@@ -2336,7 +2377,7 @@ function update_article_order($catid)
 			$previous_sticky = $article['sticky'];
 		}
 
-	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `art_order`=".intval($i)." WHERE `id`='".intval($article['id'])."' LIMIT 1");
+	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `art_order`=".intval($i)." WHERE `id`='".intval($article['id'])."'");
 	    $i += 10;
 	}
 
@@ -2356,7 +2397,7 @@ function update_category_order()
 	while ( $category = hesk_dbFetchAssoc($res) )
 	{
 
-	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `cat_order`=".intval($i)." WHERE `id`='".intval($category['id'])."' LIMIT 1");
+	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `cat_order`=".intval($i)." WHERE `id`='".intval($category['id'])."'");
 	    $i += 10;
 	}
 
@@ -2396,7 +2437,7 @@ function update_count($show_success=0)
     	$value['articles'] = isset($value['articles']) ? $value['articles'] : 0;
     	$value['articles_private'] = isset($value['articles_private']) ? $value['articles_private'] : 0;
     	$value['articles_draft'] = isset($value['articles_draft']) ? $value['articles_draft'] : 0;
-		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `articles`={$value['articles']}, `articles_private`={$value['articles_private']}, `articles_draft`={$value['articles_draft']} WHERE `id`='{$catid}' LIMIT 1");
+		hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `articles`={$value['articles']}, `articles_private`={$value['articles_private']}, `articles_draft`={$value['articles_draft']} WHERE `id`='{$catid}'");
     }
 
 	// Show a success message?
@@ -2469,7 +2510,7 @@ function delete_kb_attachments($attachments)
 			hesk_unlink(HESK_PATH.$hesk_settings['attach_dir'].'/'.$file['saved_name']);
 		}
 
-		$result = hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` WHERE `att_id`='".intval($att_id)."' LIMIT 1");
+		$result = hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_attachments` WHERE `att_id`='".intval($att_id)."'");
 	}
 
     return true;
@@ -2485,7 +2526,7 @@ function hesk_stray_article($id)
     $article['catid'] = 1;
 
     // Update database
-    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `catid`=1 WHERE `id`='".intval($id)."' LIMIT 1");
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `catid`=1 WHERE `id`='".intval($id)."'");
 
     // Update count of articles in categories
     update_count();

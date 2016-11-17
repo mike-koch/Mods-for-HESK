@@ -39,6 +39,12 @@ function hesk_newTicket($ticket, $isVerified = true)
 {
     global $hesk_settings, $hesklang, $hesk_db_link;
 
+    // Generate a subject if necessary
+    if (strlen($ticket['subject']) < 1)
+    {
+        $ticket['subject'] = sprintf($hesklang['default_subject'], $ticket['name']);
+    }
+
     // If language is not set or default, set it to NULL.
     if (!isset($ticket['language']) || empty($ticket['language'])) {
         $language = (!$hesk_settings['can_sel_lang']) ? HESK_DEFAULT_LANGUAGE : hesk_dbEscape($hesklang['LANGUAGE']);
@@ -57,6 +63,16 @@ function hesk_newTicket($ticket, $isVerified = true)
     $due_date = 'NULL';
     if ($ticket['due_date'] != '') {
         $due_date = "'" . hesk_dbEscape($ticket['due_date']) . "'";
+    }
+
+    // Prepare SQL for custom fields
+    $custom_where = '';
+    $custom_what  = '';
+
+    for ($i=1; $i<=50; $i++)
+    {
+        $custom_where .= ", `custom{$i}`";
+        $custom_what  .= ", '" . (isset($ticket['custom'.$i]) ? hesk_dbEscape($ticket['custom'.$i]) : '') . "'";
     }
 
     // Insert ticket into database
@@ -79,27 +95,6 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`owner`,
 		`attachments`,
 		`merged`,
-		`history`,
-		`custom1`,
-		`custom2`,
-		`custom3`,
-		`custom4`,
-		`custom5`,
-		`custom6`,
-		`custom7`,
-		`custom8`,
-		`custom9`,
-		`custom10`,
-		`custom11`,
-		`custom12`,
-		`custom13`,
-		`custom14`,
-		`custom15`,
-		`custom16`,
-		`custom17`,
-		`custom18`,
-		`custom19`,
-		`custom20`,
 		`status`,
 		`latitude`,
 		`longitude`,
@@ -107,7 +102,9 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`user_agent`,
 		`screen_resolution_height`,
 		`screen_resolution_width`,
-		`due_date`
+		`due_date`,
+		`history`
+		{$custom_where}
 	)
 	VALUES
 	(
@@ -127,27 +124,6 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'" . intval($ticket['owner']) . "',
 		'" . hesk_dbEscape($ticket['attachments']) . "',
 		'',
-		'" . hesk_dbEscape($ticket['history']) . "',
-		'" . hesk_dbEscape($ticket['custom1']) . "',
-		'" . hesk_dbEscape($ticket['custom2']) . "',
-		'" . hesk_dbEscape($ticket['custom3']) . "',
-		'" . hesk_dbEscape($ticket['custom4']) . "',
-		'" . hesk_dbEscape($ticket['custom5']) . "',
-		'" . hesk_dbEscape($ticket['custom6']) . "',
-		'" . hesk_dbEscape($ticket['custom7']) . "',
-		'" . hesk_dbEscape($ticket['custom8']) . "',
-		'" . hesk_dbEscape($ticket['custom9']) . "',
-		'" . hesk_dbEscape($ticket['custom10']) . "',
-		'" . hesk_dbEscape($ticket['custom11']) . "',
-		'" . hesk_dbEscape($ticket['custom12']) . "',
-		'" . hesk_dbEscape($ticket['custom13']) . "',
-		'" . hesk_dbEscape($ticket['custom14']) . "',
-		'" . hesk_dbEscape($ticket['custom15']) . "',
-		'" . hesk_dbEscape($ticket['custom16']) . "',
-		'" . hesk_dbEscape($ticket['custom17']) . "',
-		'" . hesk_dbEscape($ticket['custom18']) . "',
-		'" . hesk_dbEscape($ticket['custom19']) . "',
-		'" . hesk_dbEscape($ticket['custom20']) . "',
 		'" . intval($ticket['status']) . "',
 		'" . hesk_dbEscape($ticket['latitude']) . "',
 		'" . hesk_dbEscape($ticket['longitude']) . "',
@@ -155,7 +131,9 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'" . hesk_dbEscape($ticket['user_agent']) . "',
 		" . hesk_dbEscape($ticket['screen_resolution_height']) . ",
 		" . hesk_dbEscape($ticket['screen_resolution_width']) . ",
-		{$due_date}
+		{$due_date},
+		'" . hesk_dbEscape($ticket['history']) . "'
+		{$custom_what}
 	)
 	");
 
