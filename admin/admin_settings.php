@@ -3487,7 +3487,28 @@ $modsForHesk_settings = mfh_getSettings();
                 </div>
             </div>
             <div class="box-body">
-                <h4 class="bold"><?php echo $hesklang['uiColors']; ?></h4>
+                <h4>Common Properties</h4>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="questionMarkColor"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['questionMarkColor']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="left"
+                                   title="<?php echo $hesklang['questionMarkColor']; ?>"
+                                   data-content="<?php echo $hesklang['questionMarkColorHelp']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="questionMarkColor" name="questionMarkColor"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['questionMarkColor']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>Customer View</h4>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
                         <div class="form-group">
@@ -3650,23 +3671,6 @@ $modsForHesk_settings = mfh_getSettings();
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="questionMarkColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['questionMarkColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['questionMarkColor']; ?>"
-                                   data-content="<?php echo $hesklang['questionMarkColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="questionMarkColor" name="questionMarkColor"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['questionMarkColor']; ?>">
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
@@ -3684,6 +3688,54 @@ $modsForHesk_settings = mfh_getSettings();
                                        name="dropdownItemTextHoverBackgroundColor" class="form-control"
                                        value="<?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>">
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <h4>Admin Panel</h4>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-color-scheme"
+                                   class="col-sm-3 col-xs-5 control-label">Color Scheme
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="left"
+                                   title="<?php echo $hesklang['dropdownItemTextHoverBackgroundColor']; ?>"
+                                   data-content="<?php echo $hesklang['dropdownItemTextHoverBackgroundColorHelp']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-9 col-xs-7">
+                                <select name="admin-color-scheme" class="form-control">
+                                    <option value="skin-blue">Blue</option>
+                                    <option value="skin-blue-light">Blue (Light)</option>
+                                    <option value="skin-yellow">Yellow</option>
+                                    <option value="skin-yellow-light">Yellow (Light)</option>
+                                    <option value="skin-green">Green</option>
+                                    <option value="skin-green-light">Green (Light)</option>
+                                    <option value="skin-purple">Purple</option>
+                                    <option value="skin-purple-light">Purple (Light)</option>
+                                    <option value="skin-red">Red</option>
+                                    <option value="skin-red-light">Red (Light)</option>
+                                    <option value="skin-black">Black</option>
+                                    <option value="skin-black-light">Black (Light)</option>
+                                </select>
+                            </div>
+                            <script>
+                                $('select[name="admin-color-scheme"]').change(function() {
+                                    $('body').removeClass('skin-blue')
+                                        .removeClass('skin-blue-light')
+                                        .removeClass('skin-yellow')
+                                        .removeClass('skin-yellow-light')
+                                        .removeClass('skin-green')
+                                        .removeClass('skin-green-light')
+                                        .removeClass('skin-purple')
+                                        .removeClass('skin-purple-light')
+                                        .removeClass('skin-red')
+                                        .removeClass('skin-red-light')
+                                        .removeClass('skin-black')
+                                        .removeClass('skin-black-light')
+                                        .addClass($(this).val());
+                                });
+                            </script>
                         </div>
                     </div>
                 </div>

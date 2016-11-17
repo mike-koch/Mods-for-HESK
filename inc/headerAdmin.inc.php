@@ -89,51 +89,6 @@ $modsForHesk_settings = mfh_getSettings();
     }
     ?>
     <style>
-        .navbar-default {
-            background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
-            background-image: none;
-            filter: none;
-        }
-
-        .navbar-default .navbar-brand {
-            color: <?php echo $modsForHesk_settings['navbarBrandColor']; ?>;
-        }
-
-        .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
-            color: <?php echo $modsForHesk_settings['navbarBrandHoverColor']; ?>;
-            background-color: transparent;
-        }
-
-        .navbar-default .navbar-nav > li > a {
-            color: <?php echo $modsForHesk_settings['navbarItemTextColor']; ?>;
-        }
-
-        .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
-            color: <?php echo $modsForHesk_settings['navbarItemTextHoverColor']; ?>;
-            background-color: transparent;
-        }
-
-        .dropdown-menu > li > a {
-            color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>;
-        }
-
-        .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
-            color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
-            text-decoration: none;
-            background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
-        }
-
-        .navbar-default .navbar-nav > .open > a,
-        .navbar-default .navbar-nav > .open > a:focus,
-        .navbar-default .navbar-nav > .open > a:hover,
-        .navbar-default .navbar-nav > .active > a,
-        .navbar-default .navbar-nav > .active > a:focus,
-        .navbar-default .navbar-nav > .active > a:hover {
-            color: <?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>;
-            background-color: <?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>;
-            background-image: none;
-        }
-
         .settingsquestionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
             cursor: pointer;
@@ -270,7 +225,7 @@ $modsForHesk_settings = mfh_getSettings();
 
 </head>
 <body onload="<?php echo $onload;
-unset($onload); ?>" class="hold-transition skin-blue sidebar-mini">
+unset($onload); ?>" class="hold-transition <?php echo $modsForHesk_settings['admin_color_scheme']; ?> sidebar-mini">
 
 <?php
 include(HESK_PATH . 'header.txt');

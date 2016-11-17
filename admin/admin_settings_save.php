@@ -513,6 +513,7 @@ $set['dropdownItemTextColor'] = hesk_input(hesk_POST('dropdownItemTextColor'));
 $set['dropdownItemTextHoverColor'] = hesk_input(hesk_POST('dropdownItemTextHoverColor'));
 $set['questionMarkColor'] = hesk_input(hesk_POST('questionMarkColor'));
 $set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownItemTextHoverBackgroundColor'));
+$set['admin_color_scheme'] = hesk_input(hesk_POST('admin-color-scheme'));
 mfh_updateSetting('rtl', $set['rtl']);
 mfh_updateSetting('show_icons', $set['show-icons']);
 mfh_updateSetting('custom_field_setting', $set['custom-field-setting']);
@@ -549,6 +550,7 @@ mfh_updateSetting('use_mailgun', $set['use_mailgun'], false);
 mfh_updateSetting('enable_calendar', $set['enable_calendar'], false);
 mfh_updateSetting('first_day_of_week', $set['first_day_of_week'], false);
 mfh_updateSetting('default_calendar_view', $set['default_view'], true);
+mfh_updateSetting('admin_color_scheme', $set['admin_color_scheme'], true);
 
 // Prepare settings file and save it
 $settings_file_content = '<?php
