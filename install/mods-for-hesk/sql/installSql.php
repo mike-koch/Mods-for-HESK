@@ -885,7 +885,7 @@ function execute300Scripts() {
     executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `autoreload` = `autorefresh` / 10");
 
     // Add the admin_color_scheme setting
-    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('admin_color_scheme', 'skin_blue')");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('admin_color_scheme', 'skin-blue')");
 
     updateVersion('3.0.0');
 }
