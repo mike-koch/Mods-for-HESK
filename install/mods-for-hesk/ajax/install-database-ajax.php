@@ -69,7 +69,7 @@ if ($version == 2) {
 } elseif ($version == 31) {
     execute264Scripts();
 } elseif ($version == 32) {
-    execute300Scripts();
+    execute300Beta1Scripts();
 } else {
     $response = 'The version "' . $version . '" was not recognized. Check the value submitted and try again.';
     print $response;

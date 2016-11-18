@@ -822,8 +822,8 @@ function execute264Scripts() {
     updateVersion('2.6.4');
 }
 
-// Verison 3.0.0
-function execute300Scripts() {
+// Verison 3.0.0 Beta 1
+function execute300Beta1Scripts() {
     global $hesk_settings;
     hesk_dbConnect();
 
@@ -887,5 +887,5 @@ function execute300Scripts() {
     // Add the admin_color_scheme setting
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('admin_color_scheme', 'skin-blue')");
 
-    updateVersion('3.0.0');
+    updateVersion('3.0.0 beta 1');
 }

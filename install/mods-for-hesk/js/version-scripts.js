@@ -90,8 +90,8 @@ function processUpdates(startingVersion) {
         startVersionUpgrade('264');
         executeUpdate(31, '264', '2.6.4');
     } else if (startingVersion < 32) {
-        startVersionUpgrade('300');
-        executeUpdate(32, '300', '3.0.0');
+        startVersionUpgrade('300b1');
+        executeUpdate(32, '300b1', '3.0.0 beta 1');
     } else {
         installationFinished();
     }
