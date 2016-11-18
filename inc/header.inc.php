@@ -4,10 +4,10 @@
  * This file is part of HESK - PHP Help Desk Software.
  *
  * (c) Copyright Klemen Stirn. All rights reserved.
- * http://www.hesk.com
+ * https://www.hesk.com
  *
  * For the full copyright and license agreement information visit
- * http://www.hesk.com/eula.php
+ * https://www.hesk.com/eula.php
  *
  */
 
@@ -239,6 +239,9 @@ if (is_dir(HESK_PATH . 'install')) {
         <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-readonly.js"></script>
     <?php
     }
+
+    // Include custom head code
+    include(HESK_PATH . 'head.txt');
     ?>
 
 </head>

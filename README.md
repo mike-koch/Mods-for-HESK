@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mkoch227/Mods-for-HESK/blob/master/LICENSE)
 [![Join the chat at https://gitter.im/mkoch227/Mods-for-HESK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mkoch227/Mods-for-HESK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
 
-Mods for HESK is a set of modifications for [HESK](http://www.hesk.com) v2.6.x, a free and popular helpdesk solution.
+Mods for HESK is a set of modifications for [HESK](https://www.hesk.com) v2.7.x, a free and popular helpdesk solution.
 
 ## Features
 <table>

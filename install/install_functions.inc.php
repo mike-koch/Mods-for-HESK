@@ -3,7 +3,7 @@
 *  Title: Help Desk Software HESK
 *  Version: 2.6.8 from 10th August 2016
 *  Author: Klemen Stirn
-*  Website: http://www.hesk.com
+*  Website: https://www.hesk.com
 ********************************************************************************
 *  COPYRIGHT AND TRADEMARK NOTICE
 *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
@@ -37,7 +37,7 @@ if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
 
 // We will be installing this HESK version:
 define('HESK_NEW_VERSION','2.7.0');
-define('MODS_FOR_HESK_NEW_VERSION','3.0.0 beta 1');
+define('MODS_FOR_HESK_NEW_VERSION','3.0.0');
 define('REQUIRE_PHP_VERSION','5.3.0');
 define('REQUIRE_MYSQL_VERSION','5.0.7');
 
@@ -888,7 +888,7 @@ function hesk_iFooter()
 	global $hesk_settings;
 	?>
 
-	<p style="text-align:center"><span class="smaller">&nbsp;<br />Powered by <a href="http://www.hesk.com" class="smaller" title="Free PHP Help Desk Software">Help Desk Software</a> <b>HESK</b>, brought to you by <a href="https://www.sysaid.com/?utm_source=Hesk&utm_medium=cpc&utm_campaign=HeskProduct_To_HP">SysAid</a></span></p>
+	<p style="text-align:center"><span class="smaller">&nbsp;<br />Powered by <a href="https://www.hesk.com" class="smaller" title="Free PHP Help Desk Software">Help Desk Software</a> <b>HESK</b>, brought to you by <a href="https://www.sysaid.com/?utm_source=Hesk&utm_medium=cpc&utm_campaign=HeskProduct_To_HP">SysAid</a></span></p>
 	
 	</div>
 	</body>

@@ -1,16 +1,40 @@
 <?php
 /*
-* Language file for Help Desk Software HESK (www.hesk.com)
-* Language: ENGLISH
-* Version: 2.6.3
-* Author: Klemen Stirn (http://www.hesk.com)
+* Language file for Help Desk Software HESK (https://www.hesk.com)
+* Language: English
+* Version: 2.7.0
+*
+* ==> CONTRIBUTORS
+*
+* Klemen Stirn (https://www.hesk.com)
+* Mike Koch (https://mods-for-hesk.mkochcs.com)
+*
+*
+* ==> HOW TO TRANSLATE THIS FILE
+*
+* https://www.hesk.com/knowledgebase/?article=34
+*
+* ==> HOW TO CUSTOMIZE TEXT
+*
+* Do NOT customize text inside here, it will be overwritten by updates!
+*
+* Follow this guide instead:
+* https://www.hesk.com/knowledgebase/?article=88
+*
+* ==> IMPORTANT: FILE ENCODING
 *
 * !!! This file must be saved in UTF-8 encoding without byte order mark (BOM) !!!
 * Test chars: àáâãäåæ
+* 
+* https://www.hesk.com/knowledgebase/?article=87
+* 
 */
 
-// Change "English" to the name of your language
+// Native name of language, for example: Deutsch
 $hesklang['LANGUAGE']='English';
+
+// English name of language, for example: German
+$hesklang['LANGUAGE_EN'] ='English';
 
 // Language encoding. It MUST be set to UTF-8 for all languages!
 $hesklang['ENCODING']='UTF-8';

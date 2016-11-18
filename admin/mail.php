@@ -4,10 +4,10 @@
  * This file is part of HESK - PHP Help Desk Software.
  *
  * (c) Copyright Klemen Stirn. All rights reserved.
- * http://www.hesk.com
+ * https://www.hesk.com
  *
  * For the full copyright and license agreement information visit
- * http://www.hesk.com/eula.php
+ * https://www.hesk.com/eula.php
  *
  */
 
@@ -407,7 +407,7 @@ function show_message()
 				hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` SET `read`='1' WHERE `id`='".intval($id)."'");
 	        }
 
-	        $pm['name'] = isset($admins[$pm[$hesk_settings['mailtmp']['other']]]) ? '<a href="mail.php?a=new&amp;id='.$pm[$hesk_settings['mailtmp']['other']].'">'.$admins[$pm[$hesk_settings['mailtmp']['other']]].'</a>' : (($pm['from'] == 9999) ? '<a href="http://www.hesk.com" target="_blank">HESK.com</a>' : $hesklang['e_udel']);
+	        $pm['name'] = isset($admins[$pm[$hesk_settings['mailtmp']['other']]]) ? '<a href="mail.php?a=new&amp;id='.$pm[$hesk_settings['mailtmp']['other']].'">'.$admins[$pm[$hesk_settings['mailtmp']['other']]].'</a>' : (($pm['from'] == 9999) ? '<a href="https://www.hesk.com" target="_blank">HESK.com</a>' : $hesklang['e_udel']);
             
             $pm['dt'] = hesk_dateToString($pm['dt'],0,1,0,true);
 			?>
@@ -564,10 +564,8 @@ function mail_list_messages()
                     $i = 0;
                     while ($pm = hesk_dbFetchAssoc($res)) {
                         if ($i) {
-                            $color = "admin_gray";
                             $i = 0;
                         } else {
-                            $color = "admin_white";
                             $i = 1;
                         }
 
@@ -575,7 +573,7 @@ function mail_list_messages()
                         if ($hesk_settings['mailtmp']['this'] == 'to' && !$pm['read']) {
                             $pm['subject'] = '<b>' . $pm['subject'] . '</b>';
                         }
-                        $pm['name'] = isset($admins[$pm[$hesk_settings['mailtmp']['other']]]) ? '<a href="mail.php?a=new&amp;id=' . $pm[$hesk_settings['mailtmp']['other']] . '">' . $admins[$pm[$hesk_settings['mailtmp']['other']]] . '</a>' : (($pm['from'] == 9999) ? '<a href="http://www.hesk.com" target="_blank">HESK.com</a>' : $hesklang['e_udel']);
+                        $pm['name'] = isset($admins[$pm[$hesk_settings['mailtmp']['other']]]) ? '<a href="mail.php?a=new&amp;id=' . $pm[$hesk_settings['mailtmp']['other']] . '">' . $admins[$pm[$hesk_settings['mailtmp']['other']]] . '</a>' : (($pm['from'] == 9999) ? '<a href="https://www.hesk.com" target="_blank">HESK.com</a>' : $hesklang['e_udel']);
                         $pm['dt'] = hesk_dateToString($pm['dt'], 0, 0, 0, true)
                     ?>
                     <tr>
