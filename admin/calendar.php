@@ -37,6 +37,7 @@ define('PAGE_TITLE', 'ADMIN_CALENDAR');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -75,51 +76,85 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print main manage users page */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-
-<div class="row pad-20">
-    <div class="col-lg-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4><?php echo $hesklang['calendar_categories']; ?></h4>
-            </div>
-            <div class="panel-body">
-                <div class="btn-group btn-group-sm">
-                    <button id="select-all" class="btn btn-default" data-select-all="category-toggle"><?php echo $hesklang['select_all_title_case']; ?></button>
-                    <button id="deselect-all" class="btn btn-default" data-deselect-all="category-toggle"><?php echo $hesklang['deselect_all_title_case']; ?></button>
+<section class="content">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="box">
+                <div class="box-header">
+                    <h1 class="box-title">
+                        <?php echo $hesklang['calendar_categories']; ?>
+                    </h1>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
                 </div>
-                <ul class="list-unstyled">
-                <?php foreach ($categories as $category): ?>
-                    <li class="move-down-20 move-right-20">
-                        <div class="checkbox">
-                            <input type="checkbox" data-select-target="category-toggle" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
+                <div class="box-body">
+                    <div class="btn-group btn-group-sm">
+                        <button id="select-all" class="btn btn-default" data-select-all="category-toggle"><?php echo $hesklang['select_all_title_case']; ?></button>
+                        <button id="deselect-all" class="btn btn-default" data-deselect-all="category-toggle"><?php echo $hesklang['deselect_all_title_case']; ?></button>
+                    </div>
+                    <ul class="list-unstyled">
+                        <?php foreach ($categories as $category): ?>
+                            <li class="move-down-20 move-right-20">
+                                <div class="checkbox">
+                                    <input type="checkbox" data-select-target="category-toggle" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
+                                </div>
+                                <div class="hide-on-overflow no-wrap event-category background-volatile" style="<?php echo $category['css_style']; ?>">
+                                    <?php echo $category['name']; ?>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-header">
+                    <h1 class="box-title">
+                        <?php echo $hesklang['legend']; ?>
+                    </h1>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <i class="fa fa-calendar"></i> <?php echo $hesklang['event']; ?>
                         </div>
-                        <div class="hide-on-overflow no-wrap event-category background-volatile" style="<?php echo $category['css_style']; ?>">
-                            <?php echo $category['name']; ?>
+                        <div class="col-sm-6">
+                            <i class="fa fa-ticket"></i> <?php echo $hesklang['ticket']; ?>
                         </div>
-                    </li>
-                <?php endforeach; ?>
-                </ul>
+                        <div class="col-sm-6">
+                            <i class="fa fa-exclamation-triangle"></i> <?php echo $hesklang['overdue_ticket_legend']; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4><?php echo $hesklang['legend']; ?></h4>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <i class="fa fa-calendar"></i> <?php echo $hesklang['event']; ?>
+        <div class="col-md-8">
+            <div class="box">
+                <div class="box-header">
+                    <h1 class="box-title">
+                        <?php echo $hesklang['calendar_title_case']; ?>
+                    </h1>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
                     </div>
-                    <div class="col-sm-6">
-                        <i class="fa fa-ticket"></i> <?php echo $hesklang['ticket']; ?>
-                    </div>
-                    <div class="col-sm-6">
-                        <i class="fa fa-exclamation-triangle"></i> <?php echo $hesklang['overdue_ticket_legend']; ?>
-                    </div>
+                </div>
+                <div class="box-body no-padding">
+                    <div id="calendar"></div>
                 </div>
             </div>
         </div>
     </div>
+</section>
+<div class="row pad-20">
     <div class="col-lg-9">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -138,7 +173,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </h4>
             </div>
             <div class="panel-body">
-                <div id="calendar"></div>
+
             </div>
         </div>
     </div>

@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
@@ -37,6 +20,7 @@ define('PAGE_TITLE', 'ADMIN_CANNED');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -78,10 +62,6 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 
-<div class="row">
-
-</div>
-
 <script language="javascript" type="text/javascript"><!--
     function confirm_delete() {
         if (confirm('<?php echo hesk_makeJsString($hesklang['delete_tpl']); ?>')) {
@@ -105,141 +85,159 @@ $i = 1;
 $j = 0;
 $num = hesk_dbNumRows($result);
 ?>
-<div class="row move-down-20">
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+<section class="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
                 <?php echo $hesklang['saved_ticket_tpl']; ?>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
             </div>
-            <div class="panel-body">
-                <?php if ($num < 1) {
-                    echo '<p>' . $hesklang['no_ticket_tpl'] . '</p>';
-                } else {
-                    ?>
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th><?php echo $hesklang['ticket_tpl_title']; ?></th>
-                            <th><?php echo $hesklang['opt']; ?></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php
+        </div>
+        <div class="box-body">
+            <?php if ($num < 1) {
+                echo '<p>' . $hesklang['no_ticket_tpl'] . '</p>';
+            } else {
+                ?>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th><?php echo $hesklang['ticket_tpl_title']; ?></th>
+                        <th><?php echo $hesklang['opt']; ?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
 
-                        while ($mysaved = hesk_dbFetchAssoc($result)) {
-                            $j++;
-                            $color = '';
-                            if (isset($_SESSION['canned']['selcat2']) && $mysaved['id'] == $_SESSION['canned']['selcat2']) {
-                                $color = 'success';
-                                unset($_SESSION['canned']['selcat2']);
-                            }
+                    while ($mysaved = hesk_dbFetchAssoc($result)) {
+                        $j++;
+                        $color = '';
+                        if (isset($_SESSION['canned']['selcat2']) && $mysaved['id'] == $_SESSION['canned']['selcat2']) {
+                            $color = 'success';
+                            unset($_SESSION['canned']['selcat2']);
+                        }
 
-                            $options .= '<option class="form-control" value="' . $mysaved['id'] . '"';
-                            $options .= (isset($_SESSION['canned']['id']) && $_SESSION['canned']['id'] == $mysaved['id']) ? ' selected="selected" ' : '';
-                            $options .= '>' . $mysaved['title'] . '</option>';
+                        $options .= '<option class="form-control" value="' . $mysaved['id'] . '"';
+                        $options .= (isset($_SESSION['canned']['id']) && $_SESSION['canned']['id'] == $mysaved['id']) ? ' selected="selected" ' : '';
+                        $options .= '>' . $mysaved['title'] . '</option>';
 
-                            if ($modsForHesk_settings['rich_text_for_tickets']) {
-                                $theMessage = html_entity_decode($mysaved['message']);
-                                $theMessage = addslashes($theMessage);
-                                $javascript_messages .= 'myMsgTxt[' . $mysaved['id'] . ']=\'' . str_replace("\r\n", "\\r\\n' + \r\n'", $theMessage) . "';\n";
-                            } else {
-                                $javascript_messages .= 'myMsgTxt[' . $mysaved['id'] . ']=\'' . str_replace("\r\n", "\\r\\n' + \r\n'", addslashes($mysaved['message'])) . "';\n";
-                            }
-                            $javascript_titles .= 'myTitle[' . $mysaved['id'] . ']=\'' . addslashes($mysaved['title']) . "';\n";
+                        if ($modsForHesk_settings['rich_text_for_tickets']) {
+                            $theMessage = html_entity_decode($mysaved['message']);
+                            $theMessage = addslashes($theMessage);
+                            $javascript_messages .= 'myMsgTxt[' . $mysaved['id'] . ']=\'' . str_replace("\r\n", "\\r\\n' + \r\n'", $theMessage) . "';\n";
+                        } else {
+                            $javascript_messages .= 'myMsgTxt[' . $mysaved['id'] . ']=\'' . str_replace("\r\n", "\\r\\n' + \r\n'", addslashes($mysaved['message'])) . "';\n";
+                        }
+                        $javascript_titles .= 'myTitle[' . $mysaved['id'] . ']=\'' . addslashes($mysaved['title']) . "';\n";
 
-                            echo '
+                        echo '
                                     <tr>
                                     <td>' . $mysaved['title'] . '</td>
                                     <td class="text-left">
                                     ';
 
-                            if ($num > 1) {
-                                if ($j == 1) {
-                                    echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />
+                        if ($num > 1) {
+                            if ($j == 1) {
+                                echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />
                                         <a href="manage_ticket_templates.php?a=order&amp;replyid=' . $mysaved['id'] . '&amp;move=15&amp;token=' . hesk_token_echo(0) . '">
                                             <i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['move_dn'] . '"></i></a>';
-                                } elseif ($j == $num) {
-                                    echo '<a href="manage_ticket_templates.php?a=order&amp;replyid=' . $mysaved['id'] . '&amp;move=-15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['move_up'] . '"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
-                                } else {
-                                    echo '
+                            } elseif ($j == $num) {
+                                echo '<a href="manage_ticket_templates.php?a=order&amp;replyid=' . $mysaved['id'] . '&amp;move=-15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['move_up'] . '"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
+                            } else {
+                                echo '
                                         <a href="manage_ticket_templates.php?a=order&amp;replyid=' . $mysaved['id'] . '&amp;move=-15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['move_up'] . '"></i></a>
                                         <a href="manage_ticket_templates.php?a=order&amp;replyid=' . $mysaved['id'] . '&amp;move=15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['move_dn'] . '"></i></a>
                                         ';
-                                }
-                            } else {
-                                echo '';
                             }
+                        } else {
+                            echo '';
+                        }
 
-                            echo '
+                        echo '
                                     <a href="manage_ticket_templates.php?a=remove&amp;id=' . $mysaved['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['delete'] . '"></i></a></td>
                                     </tr>
                                     ';
-                        } // End while
+                    } // End while
 
-                        ?>
-                        </tbody>
-                    </table>
-                    <?php
-                }
-                ?>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <?php
-        /* This will handle error, success and notice messages */
-        hesk_handle_messages();
-
-        $onsubmit = '';
-        if ($modsForHesk_settings['rich_text_for_tickets']) {
-            $onsubmit = 'onsubmit="return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
-        }
-        ?>
-        <form class="form-horizontal" action="manage_ticket_templates.php" method="post" name="form1" role="form" data-toggle="validator" <?php echo $onsubmit; ?>>
-            <h3><?php echo $hesklang['new_ticket_tpl']; ?> <a href="javascript:void(0)"
-                                                              onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['ticket_tpl_intro']); ?>')"><i
-                        class="fa fa-question-circle settingsquestionmark"></i></a></h3>
-
-            <div class="footerWithBorder blankSpace"></div>
-            <?php
-            if ($num > 0) {
-                ?>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="a"
-                                       value="new" <?php echo (!isset($_SESSION['canned']['what']) || $_SESSION['canned']['what'] != 'EDIT') ? 'checked=' : ''; ?>>
-                                <?php echo $hesklang['ticket_tpl_add']; ?>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="a"
-                                           value="edit" <?php echo (isset($_SESSION['canned']['what']) && $_SESSION['canned']['what'] == 'EDIT') ? 'checked' : ''; ?>>
-                                    <?php echo $hesklang['ticket_tpl_edit']; ?>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <select class="form-control" name="saved_replies" onchange="setMessage(this.value)">
-                                <option value="0"> - <?php echo $hesklang['select_empty']; ?>-
-                                </option><?php echo $options; ?></select>
-                        </div>
-                    </div>
-                </div>
+                    ?>
+                    </tbody>
+                </table>
                 <?php
-            } else {
-                echo '<p><input type="hidden" name="a" value="new" /> ' . $hesklang['ticket_tpl_add'] . '</label></p>';
             }
             ?>
-            <div class="form-group">
-                <label for="name" class="col-sm-2 control-label"><?php echo $hesklang['ticket_tpl_title']; ?></label>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['new_ticket_tpl']; ?>
+                <a href="javascript:void(0)"
+                   onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['ticket_tpl_intro']); ?>')"><i
+                        class="fa fa-question-circle settingsquestionmark"></i></a>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <?php
+            /* This will handle error, success and notice messages */
+            hesk_handle_messages();
 
-                <div class="col-sm-10">
+            $onsubmit = '';
+            if ($modsForHesk_settings['rich_text_for_tickets']) {
+                $onsubmit = 'onsubmit="return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
+            }
+            ?>
+            <form class="form-horizontal" action="manage_ticket_templates.php" method="post" name="form1" role="form" data-toggle="validator" <?php echo $onsubmit; ?>>
+                <?php
+                if ($num > 0) {
+                    ?>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="a"
+                                                   value="new" <?php echo (!isset($_SESSION['canned']['what']) || $_SESSION['canned']['what'] != 'EDIT') ? 'checked=' : ''; ?>>
+                                            <?php echo $hesklang['ticket_tpl_add']; ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="a"
+                                                   value="edit" <?php echo (isset($_SESSION['canned']['what']) && $_SESSION['canned']['what'] == 'EDIT') ? 'checked' : ''; ?>>
+                                            <?php echo $hesklang['ticket_tpl_edit']; ?>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="saved_replies" onchange="setMessage(this.value)">
+                                        <option value="0"> - <?php echo $hesklang['select_empty']; ?>-
+                                        </option><?php echo $options; ?></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                } else {
+                    echo '<p><input type="hidden" name="a" value="new" /> ' . $hesklang['ticket_tpl_add'] . '</label></p>';
+                }
+                ?>
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label"><?php echo $hesklang['ticket_tpl_title']; ?></label>
+
+                    <div class="col-sm-10">
                     <span id="HeskTitle">
                         <input id="subject" class="form-control" type="text" name="name" size="40" maxlength="50"
                                data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
@@ -248,13 +246,13 @@ $num = hesk_dbNumRows($result);
                                 echo ' value="' . stripslashes($_SESSION['canned']['name']) . '" ';
                             } ?> required>
                     </span>
-                    <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" id="message-group">
-                <label for="msg" class="col-sm-2 control-label"><?php echo $hesklang['message']; ?></label>
+                <div class="form-group" id="message-group">
+                    <label for="msg" class="col-sm-2 control-label"><?php echo $hesklang['message']; ?></label>
 
-                <div class="col-sm-10">
+                    <div class="col-sm-10">
                     <span id="HeskMsg">
                         <textarea id="message" class="form-control htmlEditor"
                                   data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
@@ -269,18 +267,19 @@ $num = hesk_dbNumRows($result);
                             }
                             ?></textarea>
                     </span>
-                    <div class="help-block with-errors" id="message-help-block"></div>
+                        <div class="help-block with-errors" id="message-help-block"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-10 col-sm-offset-2">
-                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
-                    <input type="submit" value="<?php echo $hesklang['save_ticket_tpl']; ?>" class="btn btn-default">
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+                        <input type="submit" value="<?php echo $hesklang['save_ticket_tpl']; ?>" class="btn btn-default">
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
+</section>
 <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
     <script type="text/javascript">
         /* <![CDATA[ */
@@ -392,7 +391,7 @@ function edit_saved()
         hesk_process_messages($hesk_error_buffer, 'manage_ticket_templates.php?saved_replies=' . $id);
     }
 
-    $result = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `title`='" . hesk_dbEscape($savename) . "',`message`='" . hesk_dbEscape($msg) . "' WHERE `id`='" . intval($id) . "' LIMIT 1");
+    $result = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `title`='" . hesk_dbEscape($savename) . "',`message`='" . hesk_dbEscape($msg) . "' WHERE `id`='" . intval($id) . "'");
 
     unset($_SESSION['canned']['what']);
     unset($_SESSION['canned']['id']);
@@ -451,7 +450,7 @@ function remove()
 
     $mysaved = intval(hesk_GET('id')) or hesk_error($hesklang['id_not_valid']);
 
-    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` WHERE `id`='" . intval($mysaved) . "' LIMIT 1");
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` WHERE `id`='" . intval($mysaved) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_error("$hesklang[int_error]: $hesklang[ticket_tpl_not_found].");
     }
@@ -472,7 +471,7 @@ function order_saved()
 
     $tpl_move = intval(hesk_GET('move'));
 
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `tpl_order`=`tpl_order`+" . intval($tpl_move) . " WHERE `id`='" . intval($tplid) . "' LIMIT 1");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `tpl_order`=`tpl_order`+" . intval($tpl_move) . " WHERE `id`='" . intval($tplid) . "'");
     if (hesk_dbAffectedRows() != 1) {
         hesk_error("$hesklang[int_error]: $hesklang[ticket_tpl_not_found].");
     }
@@ -482,7 +481,7 @@ function order_saved()
 
     $i = 10;
     while ($mytpl = hesk_dbFetchAssoc($result)) {
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `tpl_order`=" . intval($i) . " WHERE `id`='" . intval($mytpl['id']) . "' LIMIT 1");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` SET `tpl_order`=" . intval($i) . " WHERE `id`='" . intval($mytpl['id']) . "'");
         $i += 10;
     }
 

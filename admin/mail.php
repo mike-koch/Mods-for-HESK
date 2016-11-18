@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
@@ -36,6 +19,7 @@ define('PAGE_TITLE', 'ADMIN_MAIL');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -124,51 +108,72 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     //-->
 </script>
 
-<div class="row move-down-20">
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading"><?php echo $hesklang['navigation']; ?></div>
-            <ul class="list-group">
-                <?php
-                /* Print sub-navigation */
-                echo
-                    '<li class="list-group-item">' . $hesk_settings['mailtmp']['inbox'] . '</li>
-            <li class="list-group-item">' . $hesk_settings['mailtmp']['outbox'] . '</li>
-            <li class="list-group-item">' . $hesk_settings['mailtmp']['new'] . '</li>';
-                ?>
-            </ul>
+<section class="content">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h1 class="box-title">
+                        <?php echo $hesklang['navigation']; ?>
+                    </h1>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <ul class="products-list product-list-in-box">
+                        <li class="item">
+                            <?php echo $hesk_settings['mailtmp']['inbox']; ?>
+                        </li>
+                        <li class="item">
+                            <?php echo $hesk_settings['mailtmp']['outbox']; ?>
+                        </li>
+                        <li class="item">
+                            <?php echo $hesk_settings['mailtmp']['new']; ?>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <?php
+            hesk_handle_messages();
+            /* Show a message? */
+            if ($action == 'read') {
+                show_message();
+            }
+            if (!isset($_SESSION['hide']['list'])):
+            ?>
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h1 class="box-title">
+                            <?php echo $hesklang['m_h']; ?>
+                        </h1>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <?php mail_list_messages(); ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php
+            /* Show new message form */
+            show_new_form();
+
+            /* Clean unneeded session variables */
+            hesk_cleanSessionVars('hide');
+            hesk_cleanSessionVars('mail');
+            ?>
         </div>
     </div>
-    <div class="col-md-7">
-        <h3><?php echo $hesklang['m_h']; ?></h3>
-
-        <div class="footerWithBorder blankSpace"></div>
-
-        <?php
-
-
-        /* This will handle error, success and notice messages */
-        hesk_handle_messages();
-
-        /* Show a message? */
-        if ($action == 'read') {
-            show_message();
-        }
-
-        /* Hide list of messages? */
-        if (!isset($_SESSION['hide']['list'])) {
-            mail_list_messages();
-        } // END hide list of messages
-
-        /* Show new message form */
-        show_new_form();
-
-        /* Clean unneeded session variables */
-        hesk_cleanSessionVars('hide');
-        hesk_cleanSessionVars('mail');
-        ?>
-    </div>
-</div>
+</section>
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
@@ -189,10 +194,10 @@ function mail_delete()
     if ($ids) {
         foreach ($ids as $id) {
             /* If both correspondents deleted the mail remove it from database, otherwise mark as deleted by this user */
-            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `deletedby`='" . intval($_SESSION['id']) . "' WHERE `id`='" . intval($id) . "' AND (`to`='" . intval($_SESSION['id']) . "' OR `from`='" . intval($_SESSION['id']) . "') AND `deletedby`=0 LIMIT 1");
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `deletedby`='" . intval($_SESSION['id']) . "' WHERE `id`='" . intval($id) . "' AND (`to`='" . intval($_SESSION['id']) . "' OR `from`='" . intval($_SESSION['id']) . "') AND `deletedby`=0");
 
             if (hesk_dbAffectedRows() != 1) {
-                hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` WHERE `id`='" . intval($id) . "' AND (`to`='" . intval($_SESSION['id']) . "' OR `from`='" . intval($_SESSION['id']) . "') AND `deletedby`!=0 LIMIT 1");
+                hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` WHERE `id`='" . intval($id) . "' AND (`to`='" . intval($_SESSION['id']) . "' OR `from`='" . intval($_SESSION['id']) . "') AND `deletedby`!=0");
             }
         }
 
@@ -214,7 +219,7 @@ function mail_mark_unread()
 
     if ($ids) {
         foreach ($ids as $id) {
-            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `read`='0' WHERE `id`='" . intval($id) . "' AND `to`='" . intval($_SESSION['id']) . "' LIMIT 1");
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `read`='0' WHERE `id`='" . intval($id) . "' AND `to`='" . intval($_SESSION['id']) . "'");
         }
 
         hesk_process_messages($hesklang['smmu'], 'NOREDIRECT', 'SUCCESS');
@@ -235,7 +240,7 @@ function mail_mark_read()
 
     if ($ids) {
         foreach ($ids as $id) {
-            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `read`='1' WHERE `id`='" . intval($id) . "' AND `to`='" . intval($_SESSION['id']) . "' LIMIT 1");
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mail` SET `read`='1' WHERE `id`='" . intval($id) . "' AND `to`='" . intval($_SESSION['id']) . "'");
         }
 
         hesk_process_messages($hesklang['smmr'], 'NOREDIRECT', 'SUCCESS');
@@ -399,62 +404,66 @@ function show_message()
 	        /* Mark as read */
 	        if ($hesk_settings['mailtmp']['this'] == 'to' && !$pm['read'])
 	        {
-				$res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` SET `read`='1' WHERE `id`='".intval($id)."' LIMIT 1");
+				hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."mail` SET `read`='1' WHERE `id`='".intval($id)."'");
 	        }
 
 	        $pm['name'] = isset($admins[$pm[$hesk_settings['mailtmp']['other']]]) ? '<a href="mail.php?a=new&amp;id='.$pm[$hesk_settings['mailtmp']['other']].'">'.$admins[$pm[$hesk_settings['mailtmp']['other']]].'</a>' : (($pm['from'] == 9999) ? '<a href="http://www.hesk.com" target="_blank">HESK.com</a>' : $hesklang['e_udel']);
-	        
-            echo $pm['dt'];
             
             $pm['dt'] = hesk_dateToString($pm['dt'],0,1,0,true);
 			?>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h1 class="box-title">
+                        <?php echo $hesklang['private_message_header']; ?>
+                    </h1>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="callout callout-info">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-6">
+                                <b><?php echo $hesk_settings['mailtmp']['m_from']; ?></b>
+                                <?php echo $pm['name']; ?>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <b><?php echo $hesklang['date_colon']; ?></b>
+                                <?php echo $pm['dt']; ?>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <b><?php echo $hesklang['m_sub']; ?></b>
+                                <?php echo $pm['subject']; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                        <tr>
+                            <td class="text-right" style="vertical-align:top;">
 
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-            <td>
 
-                <table border="0" cellspacing="0" cellpadding="0" width="100%">
-                <tr>
-                <td valign="top">
-                    <table border="0">
-                    <tr>
-                        <td><b><?php echo $hesk_settings['mailtmp']['m_from']; ?></b></td>
-                        <td><?php echo $pm['name']; ?></td>
-                    </tr>
-                    <tr>
-                        <td><b><?php echo $hesklang['date']; ?></b></td>
-                        <td><?php echo $pm['dt']; ?></td>
-                    </tr>
-                    <tr>
-                        <td><b><?php echo $hesklang['m_sub']; ?></b></td>
-                        <td><?php echo $pm['subject']; ?></td>
-                    </tr>
+
+                            </td>
+                        </tr>
                     </table>
-                </td>
-                <td class="text-right" style="vertical-align:top;">
-
-                    <?php
-                    $folder = '&amp;folder=outbox';
-                    if ($pm['to'] == $_SESSION['id'])
-                    {
-                        echo '<a href="mail.php?a=mark_unread&amp;id='.$id.'&amp;token='.hesk_token_echo(0).'"><i class="fa fa-envelope-o font-size-14p"></i></a> ';
-                        $folder = '';
-                    }
-                    echo '<a href="mail.php?a=delete&amp;id='.$id.'&amp;token='.hesk_token_echo(0).$folder.'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['delm']).'?\');"><i class="fa fa-times font-size-14p red"></i></a>';
-                    ?>
-
-                </td>
-                </tr>
-                </table>
-
-            <p><?php echo $pm['message']; ?></p>
-
-            </td>
-            </tr>
-        </table>
-    </div><hr />
-
-
+                    <p><?php echo $pm['message']; ?></p>
+                </div>
+                <div class="box-footer">
+                    <div class="pull-right">
+                        <?php
+                        $folder = '&amp;folder=outbox';
+                        if ($pm['to'] == $_SESSION['id'])
+                        {
+                            echo '<a class="btn btn-default" href="mail.php?a=mark_unread&amp;id='.$id.'&amp;token='.hesk_token_echo(0).'"><i class="fa fa-envelope-o icon-link"></i> '.$hesklang['mau'].'</a> ';
+                            $folder = '';
+                        }
+                        echo '<a class="btn btn-danger" href="mail.php?a=delete&amp;id='.$id.'&amp;token='.hesk_token_echo(0).$folder.'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['delm']).'?\');"><i class="fa fa-times icon-link"></i> '.$hesklang['delm'].'</a>';
+                        ?>
+                    </div>
+                </div>
+            </div>
 			<?php
 	    } // END if $num
 
@@ -547,7 +556,7 @@ function mail_list_messages()
                         <th><input type="checkbox" name="checkall" value="2" onclick="hesk_changeAll(this)"/></th>
                         <th><?php echo $hesklang['m_sub']; ?></th>
                         <th><?php echo $hesk_settings['mailtmp']['m_from']; ?></th>
-                        <th><?php echo $hesklang['date']; ?></th>
+                        <th><?php echo $hesklang['date_colon']; ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -620,78 +629,89 @@ function show_new_form()
 {
 global $hesk_settings, $hesklang, $admins;
 ?>
-<br/>
+
 <form action="mail.php" method="post" name="form2" class="form-horizontal" role="form" data-toggle="validator">
-    <h3><?php echo $hesklang['new_mail']; ?></h3>
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['new_mail']; ?>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="form-group">
+                <label for="to" class="col-sm-3 control-label"><?php echo $hesklang['m_to']; ?></label>
 
-    <div class="footerWithBorder blankSpace"></div>
-
-    <div class="form-group">
-        <label for="to" class="col-sm-3 control-label"><?php echo $hesklang['m_to']; ?></label>
-
-        <div class="col-sm-9">
-            <select class="form-control" name="to" type="number"
-                    data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>" required>
-                <option value="" selected="selected"><?php echo $hesklang['select']; ?></option>
-                <?php
-                foreach ($admins as $k => $v) {
-                    if ($k != $_SESSION['id']) {
-                        if (isset($_SESSION['mail']) && $k == $_SESSION['mail']['to']) {
-                            echo '<option value="' . $k . '" selected="selected">' . $v . '</option>';
-                        } else {
-                            echo '<option value="' . $k . '">' . $v . '</option>';
+                <div class="col-sm-9">
+                    <select class="form-control" name="to" type="number"
+                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>" required>
+                        <option value="" selected="selected"><?php echo $hesklang['select']; ?></option>
+                        <?php
+                        foreach ($admins as $k => $v) {
+                            if ($k != $_SESSION['id']) {
+                                if (isset($_SESSION['mail']) && $k == $_SESSION['mail']['to']) {
+                                    echo '<option value="' . $k . '" selected="selected">' . $v . '</option>';
+                                } else {
+                                    echo '<option value="' . $k . '">' . $v . '</option>';
+                                }
+                            }
                         }
-                    }
-                }
-                ?>
-            </select>
-            <div class="help-block with-errors"></div>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['m_sub']; ?></label>
+                        ?>
+                    </select>
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['m_sub']; ?></label>
 
-        <div class="col-sm-9">
-            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"
-                   name="subject" size="40" maxlength="50"
-                <?php
-                if (isset($_SESSION['mail']['subject'])) {
-                    echo ' value="' . stripslashes($_SESSION['mail']['subject']) . '" ';
-                }
-                ?> data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>" required>
-            <div class="help-block with-errors"></div>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"
+                           name="subject" size="40" maxlength="50"
+                        <?php
+                        if (isset($_SESSION['mail']['subject'])) {
+                            echo ' value="' . stripslashes($_SESSION['mail']['subject']) . '" ';
+                        }
+                        ?> data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>" required>
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message" class="col-sm-3 control-label"><?php echo $hesklang['message']; ?>:</label>
 
-        <div class="col-sm-9">
+                <div class="col-sm-9">
             <textarea name="message" class="form-control" data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                       placeholder="<?php echo htmlspecialchars($hesklang['message']); ?>" rows="15" cols="70" required><?php
                 if (isset($_SESSION['mail']['message'])) {
                     echo stripslashes($_SESSION['mail']['message']);
                 }
                 ?></textarea>
-            <div class="help-block with-errors"></div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-9 col-sm-offset-3">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="signature" value="1" checked>
-                    <?php echo $hesklang['attach_sign']; ?>
-                </label> (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-9 col-sm-offset-3">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="signature" value="1" checked>
+                            <?php echo $hesklang['attach_sign']; ?>
+                        </label> (<a href="profile.php"><?php echo $hesklang['profile_settings']; ?></a>)
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-9 col-sm-offset-3">
+                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+                    <input type="hidden" name="a" value="send"/>
+                    <input type="submit" value="<?php echo $hesklang['m_send']; ?>" class="btn btn-default"/>
+                </div>
             </div>
         </div>
     </div>
-    <div class="form-group">
-        <div class="col-sm-9 col-sm-offset-3">
-            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
-            <input type="hidden" name="a" value="send"/>
-            <input type="submit" value="<?php echo $hesklang['m_send']; ?>" class="btn btn-default"/>
-        </div>
-    </div>
+</form>
     <?php
     } // END show_new_form()
     ?>

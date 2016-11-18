@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
@@ -37,6 +20,7 @@ define('PAGE_TITLE', 'ADMIN_USERS');
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -96,23 +80,25 @@ while ($row = hesk_dbFetchAssoc($res)) {
     array_push($categories, $row);
 }
 ?>
-<div class="row move-down-20">
-    <div class="col-md-12">
-        <?php
-        hesk_handle_messages();
-        ?>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4><?php echo $hesklang['manage_permission_templates']; ?>
-                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="tooltip" data-placement="right"
-                       title="<?php echo $hesklang['manage_permission_templates_help']; ?>"></i>
-                    <span class="nu-floatRight panel-button">
-                        <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success nu-floatRight">
-                            <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new_template']; ?>
-                        </a>
-                    </span>
-                </h4>
+<section class="content">
+    <?php hesk_handle_messages(); ?>
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['manage_permission_templates']; ?>
+                <i class="fa fa-question-circle settingsquestionmark" data-toggle="tooltip" data-placement="right"
+                   title="<?php echo $hesklang['manage_permission_templates_help']; ?>"></i>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
             </div>
+        </div>
+        <div class="box-body">
+            <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success nu-floatRight">
+                <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new_template']; ?>
+            </a>
             <table class="table table-striped">
                 <thead>
                 <th><?php echo $hesklang['name']; ?></th>
@@ -129,23 +115,23 @@ while ($row = hesk_dbFetchAssoc($res)) {
                                 <i class="fa fa-pencil icon-link" data-toggle="tooltip"
                                    title="<?php echo $hesklang['view_permissions_for_this_template'] ?>"></i></a>
                             <?php if ($row['id'] == 1) { ?>
-                        <i class="fa fa-star icon-link orange" data-toggle="tooltip"
-                           title="<?php echo $hesklang['admin_cannot_be_staff']; ?>"></i></a>
-                    <?php } elseif ($row['heskprivileges'] == 'ALL' && $row['categories'] == 'ALL'){ ?>
-                        <a href="manage_permission_templates.php?a=deladmin&amp;id=<?php echo $row['id']; ?>">
-                            <i class="fa fa-star icon-link orange" data-toggle="tooltip"
-                                title="<?php echo $hesklang['template_has_admin_privileges']; ?>"></i></a>
-                    <?php } elseif ($row['id'] != 2) { ?>
-                        <a href="manage_permission_templates.php?a=addadmin&amp;id=<?php echo $row['id']; ?>">
-                            <i class="fa fa-star-o icon-link gray" data-toggle="tooltip"
-                               title="<?php echo $hesklang['template_has_no_admin_privileges']; ?>"></i></a>
-                    <?php
-                        } else {
-                    ?>
-                        <i class="fa fa-star-o icon-link gray" data-toggle="tooltip"
-                         title="<?php echo $hesklang['staff_cannot_be_admin']; ?>"></i>
-                    <?php
-                        }
+                                <i class="fa fa-star icon-link orange" data-toggle="tooltip"
+                                   title="<?php echo $hesklang['admin_cannot_be_staff']; ?>"></i></a>
+                            <?php } elseif ($row['heskprivileges'] == 'ALL' && $row['categories'] == 'ALL'){ ?>
+                                <a href="manage_permission_templates.php?a=deladmin&amp;id=<?php echo $row['id']; ?>">
+                                    <i class="fa fa-star icon-link orange" data-toggle="tooltip"
+                                       title="<?php echo $hesklang['template_has_admin_privileges']; ?>"></i></a>
+                            <?php } elseif ($row['id'] != 2) { ?>
+                                <a href="manage_permission_templates.php?a=addadmin&amp;id=<?php echo $row['id']; ?>">
+                                    <i class="fa fa-star-o icon-link gray" data-toggle="tooltip"
+                                       title="<?php echo $hesklang['template_has_no_admin_privileges']; ?>"></i></a>
+                                <?php
+                            } else {
+                                ?>
+                                <i class="fa fa-star-o icon-link gray" data-toggle="tooltip"
+                                   title="<?php echo $hesklang['staff_cannot_be_admin']; ?>"></i>
+                                <?php
+                            }
                             if ($row['id'] != 1 && $row['id'] != 2):
                                 ?>
                                 <a href="manage_permission_templates.php?a=delete&amp;id=<?php echo $row['id']; ?>">
@@ -159,7 +145,7 @@ while ($row = hesk_dbFetchAssoc($res)) {
             </table>
         </div>
     </div>
-</div>
+</section>
 <?php
 foreach ($templates as $template) {
     createEditModal($template, $featureArray, $categories);
@@ -207,8 +193,10 @@ function createEditModal($template, $features, $categories)
                     <div class="modal-body">
                         <div class="row">
                             <?php if ($showNotice): ?>
-                                <div class="alert alert-info">
-                                    <i class="fa fa-info-circle"></i> <?php echo $hesklang['template_is_admin_cannot_change']; ?>
+                                <div class="col-sm-12">
+                                    <div class="alert alert-info">
+                                        <i class="fa fa-info-circle"></i> <?php echo $hesklang['template_is_admin_cannot_change']; ?>
+                                    </div>
                                 </div>
                             <?php endif; ?>
                             <div class="form-group">

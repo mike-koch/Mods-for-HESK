@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {
@@ -38,7 +21,7 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
 {
     global $hesk_settings, $hesklang, $can_reply_tickets, $can_view_tickets, $can_view_unassigned;
     ?>
-    <div role="tabpanel">
+    <div role="tabpanel" class="nav-tabs-custom">
 
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
@@ -98,6 +81,7 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
 
                         <div class="col-md-9">
                             <input type="text" class="form-control" name="user" size="40" maxlength="20"
+                                   autocomplete="off"
                                    value="<?php echo $_SESSION[$session_array]['user']; ?>"
                                    placeholder="<?php echo htmlspecialchars($hesklang['username']); ?>"
                                    data-error="<?php echo htmlspecialchars($hesklang['enter_username']); ?>"
@@ -297,7 +281,32 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                 </div>
                                 <?php
                             }
+
+                            if (empty($_SESSION[$session_array]['autoreload'])) {
+                                $reload_time = 30;
+                                $sec = 'selected';
+                                $min = '';
+                            } else {
+                                $reload_time = intval($_SESSION[$session_array]['autoreload']);
+
+                                if ($reload_time >= 60 && $reload_time % 60 == 0) {
+                                    $reload_time = $reload_time / 60;
+                                    $sec = '';
+                                    $min = 'selected';
+                                } else {
+                                    $sec = 'selected';
+                                    $min = '';
+                                }
+                            }
                             ?>
+                            <div class="checkbox form-inline">
+                                <label><input type="checkbox" name="autoreload" value="1" <?php if (!empty($_SESSION[$session_array]['autoreload'])) {echo 'checked="checked"';}?> /> <?php echo $hesklang['arpp']; ?></label>
+                                <input type="text" class="form-control" name="reload_time" value="<?php echo $reload_time; ?>" size="5" maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]+/,'')" />
+                                <select name="secmin" class="form-control">
+                                    <option value="sec" <?php echo $sec; ?>><?php echo $hesklang['seconds']; ?></option>
+                                    <option value="min" <?php echo $min; ?>><?php echo $hesklang['minutes']; ?></option>
+                                </select>
+                            </div>
                             <div class="checkbox">
                                 <label><input type="checkbox" name="notify_customer_new"
                                               value="1" <?php if (!empty($_SESSION[$session_array]['notify_customer_new'])) {
@@ -335,17 +344,6 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                 <?php echo $hesklang['calendar_day']; ?>
                             </option>
                         </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="autoRefresh"
-                           class="col-sm-3 control-label"><?php echo $hesklang['ticket_auto_refresh']; ?></label>
-
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="autorefresh" name="autorefresh"
-                               placeholder="<?php echo htmlspecialchars($hesklang['ticket_auto_refresh']); ?>"
-                               value="<?php echo $_SESSION[$session_array]['autorefresh']; ?>">
-                        <span class="help-block"><?php echo $hesklang['autorefresh_restrictions']; ?></span>
                     </div>
                 </div>
             </div>

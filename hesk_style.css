@@ -756,3 +756,59 @@ td.admin_yellow {
 	font-size:12px; 
 	margin-top:2px;
 }
+
+/* New styles in HESK version 2.7 */
+
+div.select_category
+{
+	min-width: 50%;
+	min-height: 300px;
+	display: inline-block;
+	text-align:left;
+	margin-top: 10px;
+}
+
+#select_category {
+	border: 1px solid #111;
+	background: transparent;
+	width: 100%;
+	padding: 5px 35px 5px 5px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	height: 34px;
+}
+
+#ul_category {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#ul_category li {
+	border: 1px solid #d1d5d7;
+	border-top: none;
+	border-radius: 2px;
+}
+
+#ul_category li:first-child {
+	border-top: 1px solid #d1d5d7;
+}
+
+#ul_category li a {
+	display: block;
+	font-size: 14px;
+	padding: 0.75em 0.75em;
+	text-decoration: none;
+	transition: all 0.12s ease;
+	word-wrap: break-word;
+}
+
+#ul_category li a:hover {
+	color: black;
+	background-color: #e9ffdb;
+}
+
+select.multiple {
+	font-size: 12px;
+	height: auto;
+}

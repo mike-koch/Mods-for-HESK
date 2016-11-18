@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', './');
@@ -48,10 +31,13 @@ header("Pragma: no-cache");
 
 // Get the search query composed of the subject and message
 $address = hesk_REQUEST('e') or die('');
+$email_field = hesk_REQUEST('ef') or die('');
+$display_div = hesk_REQUEST('dd') or die('');
+$pad_div = hesk_REQUEST('pd') ? 1 : 0;
 $div = 1;
 
 // Do we allow multiple emails? If yes, check all
-if ($hesk_settings['multi_eml']) {
+if ($hesk_settings['multi_eml'] || hesk_REQUEST('am')) {
     // Make sure the format is correct
     $address = preg_replace('/\s/', '', $address);
     $address = str_replace(';', ',', $address);
@@ -75,9 +61,9 @@ exit();
 
 function hesk_emailTypoShow($address, $suggest, $div = '')
 {
-    global $hesk_settings, $hesklang;
+    global $hesk_settings, $hesklang, $email_field, $display_div, $pad_div;
     ?>
-    <div id="emailtypo<?php echo $div; ?>" style="display:block">
+    <div id="emailtypo<?php echo $display_div.$div; ?>" style="display:block">
         <table border="0" width="100%">
             <tr>
                 <td width="150">&nbsp;</td>
@@ -85,10 +71,8 @@ function hesk_emailTypoShow($address, $suggest, $div = '')
                     <div class="alert alert-info">
                         <?php echo sprintf($hesklang['didum'], str_replace('@', '@<b>', $suggest . '</b>')); ?>
                         <br/><br/>
-                        <a class="btn btn-default" href="javascript:void();"
-                           onclick="javascript:var eml=document.form1.email.value;document.form1.email.value=eml.replace(/<?php echo preg_quote($address, '/'); ?>/gi, '<?php echo addslashes($suggest); ?>' );hesk_toggleLayerDisplay('emailtypo<?php echo $div; ?>');"><?php echo $hesklang['yfix']; ?></a>
-                        <a class="btn btn-default" href="javascript:void();"
-                           onclick="javascript:hesk_toggleLayerDisplay('emailtypo<?php echo $div; ?>');"><?php echo $hesklang['nole']; ?></a>
+                        <a class="btn btn-default" href="javascript:void(0);" onclick="var eml=document.getElementById('<?php echo $email_field; ?>').value;document.getElementById('<?php echo $email_field; ?>').value=eml.replace(/<?php echo preg_quote($address, '/'); ?>/gi, '<?php echo addslashes($suggest); ?>' );document.getElementById('emailtypo<?php echo $display_div.$div; ?>').style.display='none';"><?php echo $hesklang['yfix']; ?></a>
+                        <a class="btn btn-default" href="javascript:void(0);" onclick="document.getElementById('emailtypo<?php echo $display_div.$div; ?>').style.display='none';"><?php echo $hesklang['nole']; ?></a>
                     </div>
                 </td>
             </tr>

@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
@@ -37,6 +20,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -51,31 +35,18 @@ hesk_checkPermission('can_view_tickets');
 
 $_SERVER['PHP_SELF'] = './admin_main.php';
 
+// Load custom fields
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
-?>
 
-</td>
-</tr>
-<tr>
-    <td>
-        <div class="row pad-down-20">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4><?php echo $hesklang['tickets_found']; ?> <span class="nu-floatRight panel-button"><a
-                                    href="new_ticket.php"
-                                    class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> <?php echo $hesklang['nti']; ?></a></span></h4>
-                    </div>
-
-                    <?php
-
-                    // This SQL code will be used to retrieve results
-                    $sql_final = "SELECT
+// This SQL code will be used to retrieve results
+$sql_final = "SELECT
 `id`,
 `trackid`,
 `name`,
@@ -220,16 +191,11 @@ LEFT(`message`, 400) AS `message`,
                     }
 
                     /* Date */
-                    /* -> Check for compatibility with old date format */
-                    if (preg_match("/(\d{4})-(\d{2})-(\d{2})/", hesk_GET('dt'), $m)) {
-                        $_GET['dt'] = $m[2] . $m[3] . $m[1];
-                    }
-
                     /* -> Now process the date value */
                     $dt = preg_replace('/[^0-9]/', '', hesk_GET('dt'));
                     if (strlen($dt) == 8) {
-                        $date = substr($dt, 4, 4) . '-' . substr($dt, 0, 2) . '-' . substr($dt, 2, 2);
-                        $date_input = substr($dt, 0, 2) . '/' . substr($dt, 2, 2) . '/' . substr($dt, 4, 4);
+                        $date = substr($dt, 0, 4) . '-' . substr($dt, 4, 2) . '-' . substr($dt, 6, 2);
+                        $date_input = $date;
 
                         /* This search is valid even if no query is entered */
                         if ($no_query) {
@@ -247,9 +213,6 @@ LEFT(`message`, 400) AS `message`,
                         hesk_process_messages($hesk_error_buffer, 'NOREDIRECT');
                     }
 
-                    /* This will handle error, success and notice messages */
-                    $handle = hesk_handle_messages();
-
                     # echo "$sql<br/>";
 
                     // That's all the SQL we need for count
@@ -258,24 +221,49 @@ LEFT(`message`, 400) AS `message`,
 
                     /* Prepare variables used in search and forms */
                     require_once(HESK_PATH . 'inc/prepare_ticket_search.inc.php');
-
-                    /* If there has been an error message skip searching for tickets */
-                    if ($handle !== FALSE) {
-                        $href = 'find_tickets.php';
-                        require_once(HESK_PATH . 'inc/ticket_list.inc.php');
-                    }
                     ?>
+                    <section class="content">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h1 class="box-title">
+                                    <?php echo $hesklang['tickets']; ?>
+                                </h1>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <?php $handle = hesk_handle_messages(); ?>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
+                                        <?php echo $hesklang['arp']; ?>
+                                        <span id="timer"></span>
+                                    </label>
+                                </div>
+                                <script type="text/javascript">heskCheckReloading();</script>
+                                <?php
+                                if ($handle !== FALSE) {
+                                    $href = 'find_tickets.php';
+                                    require_once(HESK_PATH . 'inc/ticket_list.inc.php');
+                                    echo '<br>';
+                                }
 
+                                /* Clean unneeded session variables */
+                                hesk_cleanSessionVars('hide');
+
+                                /* Show the search form */
+                                require_once(HESK_PATH . 'inc/show_search_form.inc.php');
+                                ?>
+                            </div>
+                        </div>
+                    </section>
                     <?php
 
-                    /* Clean unneeded session variables */
-                    hesk_cleanSessionVars('hide');
-
-                    /* Show the search form */
-                    require_once(HESK_PATH . 'inc/show_search_form.inc.php');
 
                     /* Print footer */
                     require_once(HESK_PATH . 'inc/footer.inc.php');
                     exit();
-
                     ?>

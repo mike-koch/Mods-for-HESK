@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', './');
@@ -54,6 +37,9 @@ $trackingID = hesk_cleanID('p_track') or die("$hesklang[int_error]: $hesklang[no
 
 /* Connect to database */
 hesk_dbConnect();
+
+// Load custom fields
+require_once(HESK_PATH . 'inc/custom_fields.inc.php');
 
 // Perform additional checks for customers
 if (empty($_SESSION['id'])) {
@@ -218,14 +204,16 @@ echo '</tr>';
 $num_cols = 0;
 echo '<tr>';
 foreach ($hesk_settings['custom_fields'] as $k => $v) {
-    if ($v['use']) {
-        if ($modsForHesk_settings['custom_field_setting']) {
-            $v['name'] = $hesklang[$v['name']];
-        }
-
+    if (($v['use'] == 1 || (! empty($_SESSION['id']) && $v['use'] == 2)) && hesk_is_custom_field_in_category($k, $ticket['category'])) {
         if ($num_cols == 3) {
             echo '</tr><tr>';
             $num_cols = 0;
+        }
+
+        switch ($v['type']) {
+            case 'date':
+                $ticket[$k] = hesk_custom_date_display_format($ticket[$k], $v['value']['date_format']);
+                break;
         }
         ?>
         <td bgcolor="#EEE"><b><?php echo $v['name']; ?>:</b></td>
@@ -239,11 +227,14 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 echo '</table><br>';
 
 // Print initial ticket message
-$newMessage = hesk_unhortenUrl($ticket['message']);
-if ($ticket['html']) {
-    $newMessage = hesk_html_entity_decode($newMessage);
+if ($ticket['message'] != '') {
+    $newMessage = hesk_unhortenUrl($ticket['message']);
+    if ($ticket['html']) {
+        $newMessage = hesk_html_entity_decode($newMessage);
+    }
+    echo '<p>' . $newMessage . '</p>';
 }
-echo '<p>' . $newMessage . '</p>';
+
 
 // Print replies
 while ($reply = hesk_dbFetchAssoc($res)) {

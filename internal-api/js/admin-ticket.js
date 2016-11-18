@@ -1,8 +1,7 @@
 $(document).ready(function() {
     var $readonlyDueDateContainer = $('#readonly-due-date');
     var $editableDueDateContainer = $('#editable-due-date');
-    var $dueDateButton = $('#due-date-button');
-    $dueDateButton.click(function() {
+    $readonlyDueDateContainer.click(function() {
         $readonlyDueDateContainer.hide();
         $editableDueDateContainer.show();
         if ($readonlyDueDateContainer.find('span#due-date').text().trim() == 'None') {
@@ -37,4 +36,9 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#related-tickets-link').click(function() {
+        $(this).hide();
+        $('.related-ticket').show();
+    })
 });

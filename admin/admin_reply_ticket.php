@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
@@ -74,6 +57,11 @@ if (hesk_dbNumRows($result) != 1) {
 $ticket = hesk_dbFetchAssoc($result);
 $trackingID = $ticket['trackid'];
 
+// Do we require owner before allowing to reply?
+if ($hesk_settings['require_owner'] && ! $ticket['owner']) {
+    hesk_process_messages($hesklang['atbr'],'admin_ticket.php?track='.$ticket['trackid'].'&Refresh='.rand(10000,99999));
+}
+
 $hesk_error_buffer = array();
 
 // Get the message
@@ -87,7 +75,7 @@ if (strlen($message)) {
     // Save message for later and ignore the rest?
     if (isset($_POST['save_reply'])) {
         // Delete any existing drafts from this owner for this ticket
-        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` WHERE `owner`=" . intval($_SESSION['id']) . " AND `ticket`=" . intval($ticket['id']) . " LIMIT 1");
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` WHERE `owner`=" . intval($_SESSION['id']) . " AND `ticket`=" . intval($ticket['id']));
 
         // Save the message draft
         hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` (`owner`, `ticket`, `message`) VALUES (" . intval($_SESSION['id']) . ", " . intval($ticket['id']) . ", '" . hesk_dbEscape($message) . "')");
@@ -237,6 +225,7 @@ $lockedTicketStatus = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID` FROM `" . hesk
 
 // Get new ticket status
 $sql_status = '';
+$change_status = true;
 // -> If locked, keep it resolved
 if ($ticket['locked']) {
     $new_status = $lockedTicketStatus['ID'];
@@ -248,7 +237,7 @@ if ($ticket['locked']) {
         $newStatusRs = hesk_dbQuery('SELECT `IsClosed`, `Key` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `ID` = ' . hesk_dbEscape($new_status));
         $newStatus = hesk_dbFetchAssoc($newStatusRs);
 
-        if ($newStatus['IsClosed']) {
+        if ($newStatus['IsClosed'] && hesk_checkPermission('can_resolve', 0)) {
             $revision = sprintf($hesklang['thist3'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
             $sql_status = " , `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
 
@@ -257,7 +246,7 @@ if ($ticket['locked']) {
                 $sql_status .= " , `locked`='1' ";
             }
         } else {
-            // Ticket isn't being closed, just add the history to the sql query
+            // Ticket isn't being closed, just add the history to the sql query (or tried to close but doesn't have permission)
             $revision = sprintf($hesklang['thist9'], hesk_date(), $hesklang[$newStatus['Key']], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
             $sql_status = " , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
         }
@@ -310,12 +299,12 @@ $sql .= " , `replies`=`replies`+1 ";
 $sql .= $submit_as_customer ? '' : " , `staffreplies`=`staffreplies`+1 ";
 
 // End and execute the query
-$sql .= " WHERE `id`='{$replyto}' LIMIT 1";
+$sql .= " WHERE `id`='{$replyto}'";
 hesk_dbQuery($sql);
 unset($sql);
 
 /* Update number of replies in the users table */
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `replies`=`replies`+1 WHERE `id`='" . intval($_SESSION['id']) . "' LIMIT 1");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `replies`=`replies`+1 WHERE `id`='" . intval($_SESSION['id']) . "'");
 
 // --> Prepare reply message
 
@@ -357,7 +346,7 @@ elseif (!isset($_POST['no_notify']) || intval(hesk_POST('no_notify')) != 1) {
 }
 
 // Delete any existing drafts from this owner for this ticket
-hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` WHERE `owner`=" . intval($_SESSION['id']) . " AND `ticket`=" . intval($ticket['id']) . " LIMIT 1");
+hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` WHERE `owner`=" . intval($_SESSION['id']) . " AND `ticket`=" . intval($ticket['id']));
 
 /* Set reply submitted message */
 $_SESSION['HESK_SUCCESS'] = TRUE;

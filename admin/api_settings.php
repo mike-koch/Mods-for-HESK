@@ -41,6 +41,7 @@ if (is_dir(HESK_PATH . 'install')) {
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -60,86 +61,103 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 // Print main manage users page
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-
-<div class="row move-down-20">
-    <div class="col-sm-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                API Information
+<section class="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['api_information']; ?>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
             </div>
+        </div>
+        <div class="box-body">
             <table class="table table-striped table-fixed">
                 <tr>
                     <td class="text-right">
-                        API Version
+                        <?php echo $hesklang['api_version']; ?>
                     </td>
-                    <td class="pad-right-10 warning">
+                    <td class="warning">
                         <?php echo $hesklang['beta_text']; ?>
                     </td>
                 </tr>
                 <tr>
                     <td class="text-right">
-                        External API
+                        <?php echo $hesklang['external_api']; ?>
                     </td>
-                    <td class="pad-right-10 success" id="public-api-sidebar">
+                    <td class="success" id="public-api-sidebar">
                         <?php
                         $enabled = $modsForHesk_settings['public_api'] == '1' ? '' : 'hide';
                         $disabled = $modsForHesk_settings['public_api'] == '1' ? 'hide' : '';
                         ?>
-                        <span id="public-api-sidebar-disabled" class="<?php echo $disabled; ?>">Disabled</span>
-                        <span id="public-api-sidebar-enabled"  class="<?php echo $enabled; ?>">Enabled</span>
+                        <span id="public-api-sidebar-disabled" class="<?php echo $disabled; ?>">
+                            <?php echo $hesklang['disabled_title_case']; ?>
+                        </span>
+                        <span id="public-api-sidebar-enabled"  class="<?php echo $enabled; ?>">
+                            <?php echo $hesklang['enabled_title_case']; ?>
+                        </span>
                     </td>
                 </tr>
             </table>
         </div>
     </div>
-    <div class="col-sm-8">
-        <h3>API Settings</h3>
-        <div class="footerWithBorder blankSpace"></div>
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
-            <li><a href="#user-security" data-toggle="tab">User Security</a></li>
-            <li><a href="#" target="_blank">API Documentation <i class="fa fa-external-link"></i></a></li>
-        </ul>
-        <div class="tab-content summaryList tabPadding">
-            <div class="tab-pane fade in active" id="general">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="public-api" class="col-sm-3 control-label">
-                            Public API
-                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                title="Public API"
-                                data-content="Enable or Disable the Public REST API."></i>
-                        </label>
-                        <div class="col-sm-9">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['api_settings']; ?>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
+                <li><a href="#user-security" data-toggle="tab"><?php echo $hesklang['user_security']; ?></a></li>
+                <li><a href="#" target="_blank"><?php echo $hesklang['api_documentation']; ?> <i class="fa fa-external-link"></i></a></li>
+            </ul>
+            <div class="tab-content summaryList tabPadding">
+                <div class="tab-pane fade in active" id="general">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="public-api" class="col-sm-3 control-label">
+                                <?php echo $hesklang['external_api']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   title="<?php echo $hesklang['external_api']; ?>"
+                                   data-content="<?php echo $hesklang['external_api_help']; ?>"></i>
+                            </label>
+                            <div class="col-sm-9">
                             <span class="btn-group" data-toggle="buttons">
                                 <?php
                                 $on = $modsForHesk_settings['public_api'] == '1' ? 'active' : '';
                                 $off = $modsForHesk_settings['public_api'] == '1' ? '' : 'active';
                                 ?>
                                 <label id="enable-api-button" class="btn btn-success <?php echo $on; ?>">
-                                    <input type="radio" name="public-api" value="1" checked> <i class="fa fa-check-circle"></i> Enable
+                                    <input type="radio" name="public-api" value="1"> <i class="fa fa-check-circle"></i>
+                                    <?php echo $hesklang['enable']; ?>
                                 </label>
                                 <label id="disable-api-button" class="btn btn-danger <?php echo $off; ?>">
-                                    <input type="radio" name="public-api" value="0"> <i class="fa fa-times-circle"></i> Disable
+                                    <input type="radio" name="public-api" value="0"> <i class="fa fa-times-circle"></i>
+                                    <?php echo $hesklang['disable']; ?>
                                 </label>
                             </span>
                             <span>
                                 <i id="public-api-success" class="fa fa-check-circle fa-2x green hide media-middle"
-                                    data-toggle="tooltip" title="Changes saved!"></i>
+                                   data-toggle="tooltip" title="<?php echo $hesklang['changes_saved']; ?>"></i>
                                 <i id="public-api-failure" class="fa fa-times-circle fa-2x red hide media-middle"
-                                    data-toggle="tooltip" title="Saving changes failed. Check the logs for more information."></i>
+                                   data-toggle="tooltip" title="<?php echo $hesklang['save_failed_check_logs']; ?>"></i>
                                 <i id="public-api-saving" class="fa fa-spin fa-spinner fa-2x hide media-middle"
-                                    data-toggle="tooltip" title="Saving..."></i>
+                                   data-toggle="tooltip" title="<?php echo $hesklang['saving']; ?>"></i>
                             </span>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="tab-pane fade in" id="user-security">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        User Security
-                    </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade in" id="user-security">
                     <?php
                     $users = array();
                     $userRs = hesk_dbQuery("SELECT `id`, `user`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `active` = '1'");
@@ -155,51 +173,53 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Name</th>
-                            <th>Number of Tokens</th>
-                            <th>Actions</th>
+                            <th><?php echo $hesklang['username']; ?></th>
+                            <th><?php echo $hesklang['name']; ?></th>
+                            <th><?php echo $hesklang['number_of_tokens']; ?></th>
+                            <th><?php echo $hesklang['actions']; ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php
                         foreach ($users as $row):
-                        ?>
-                        <tr>
-                            <td><?php echo $row['user']; ?></td>
-                            <td><?php echo $row['name']; ?></td>
-                            <td id="token-<?php echo $row['id']; ?>-count"><?php echo $row['number_of_tokens']; ?></td>
-                            <td>
+                            ?>
+                            <tr>
+                                <td><?php echo $row['user']; ?></td>
+                                <td><?php echo $row['name']; ?></td>
+                                <td id="token-<?php echo $row['id']; ?>-count"><?php echo $row['number_of_tokens']; ?></td>
+                                <td>
                                 <span class="btn-group">
                                     <button class="btn btn-default btn-xs" onclick="generateToken(<?php echo $row['id']; ?>)">
-                                        <i class="fa fa-plus-circle"></i> Generate New Token
+                                        <i class="fa fa-plus-circle"></i>
+                                        <?php echo $hesklang['generate_new_token']; ?>
                                     </button>
                                     <button class="btn btn-danger btn-xs" onclick="clearTokens(<?php echo $row['id']; ?>)">
-                                        <i class="fa fa-undo"></i> Reset Tokens
+                                        <i class="fa fa-times"></i>
+                                        <?php echo $hesklang['revoke_all_tokens']; ?>
                                     </button>
                                 </span>
                                 <span>
                                     <i id="token-<?php echo $row['id']; ?>-success" class="fa fa-check-circle fa-2x green hide media-middle"
-                                       data-toggle="tooltip" title="Changes saved!"></i>
+                                       data-toggle="tooltip" title="<?php echo $hesklang['changes_saved']; ?>"></i>
                                     <i id="token-<?php echo $row['id']; ?>-failure" class="fa fa-times-circle fa-2x red hide media-middle"
-                                       data-toggle="tooltip" title="Saving changes failed. Check the logs for more information."></i>
+                                       data-toggle="tooltip" title="<?php echo $hesklang['save_failed_check_logs']; ?>"></i>
                                     <i id="token-<?php echo $row['id']; ?>-saving" class="fa fa-spin fa-spinner fa-2x hide media-middle"
-                                       data-toggle="tooltip" title="Saving..."></i>
+                                       data-toggle="tooltip" title="<?php echo $hesklang['saving']; ?>"></i>
                                 </span>
-                            </td>
-                        </tr>
-                        <tr id="token-<?php echo $row['id']; ?>-created" class="success hide">
-                            <td colspan="4">
-                                Generated Token: <code class="token"></code>
-                                <p><b>NOTE:</b> Please record this token, as this is the only time you will be able to view it!</p>
-                            </td>
-                        </tr>
-                        <tr id="token-<?php echo $row['id']; ?>-reset" class="success hide">
-                            <td colspan="4">
-                                <p>All tokens for this user have been removed!</p>
-                            </td>
-                        </tr>
-                        <?php
+                                </td>
+                            </tr>
+                            <tr id="token-<?php echo $row['id']; ?>-created" class="success hide">
+                                <td colspan="4">
+                                    <?php echo $hesklang['generated_token_colon']; ?> <code class="token"></code>
+                                    <p><b><?php echo $hesklang['record_this_token_warning']; ?></b></p>
+                                </td>
+                            </tr>
+                            <tr id="token-<?php echo $row['id']; ?>-reset" class="success hide">
+                                <td colspan="4">
+                                    <p><?php echo $hesklang['all_tokens_revoked']; ?></p>
+                                </td>
+                            </tr>
+                            <?php
                         endforeach;
                         ?>
                         </tbody>
@@ -208,7 +228,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
         </div>
     </div>
+</section>
 
-    <?php
-    require_once(HESK_PATH . 'inc/footer.inc.php');
-    exit();
+<?php
+require_once(HESK_PATH . 'inc/footer.inc.php');
+exit();

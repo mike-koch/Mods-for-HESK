@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
@@ -37,6 +20,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/reporting_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -64,23 +48,23 @@ $is_all_time = 0;
 /* Default this month to date */
 $date_from = date('Y-m-d', mktime(0, 0, 0, date("m"), 1, date("Y")));
 $date_to = date('Y-m-d');
-$input_datefrom = date('m/d/Y', strtotime('last month'));
-$input_dateto = date('m/d/Y');
+$input_datefrom = date('Y-m-d', strtotime('last month'));
+$input_dateto = date('Y-m-d');
 
 /* Date */
 if (!empty($_GET['w'])) {
     $df = preg_replace('/[^0-9]/', '', hesk_GET('datefrom'));
     if (strlen($df) == 8) {
-        $date_from = substr($df, 4, 4) . '-' . substr($df, 0, 2) . '-' . substr($df, 2, 2);
-        $input_datefrom = substr($df, 0, 2) . '/' . substr($df, 2, 2) . '/' . substr($df, 4, 4);
+        $date_from = substr($df, 0, 4) . '-' . substr($df, 4, 2) . '-' . substr($df, 6, 2);
+        $input_datefrom = $date_from;
     } else {
         $date_from = date('Y-m-d', strtotime('last month'));
     }
 
     $dt = preg_replace('/[^0-9]/', '', hesk_GET('dateto'));
     if (strlen($dt) == 8) {
-        $date_to = substr($dt, 4, 4) . '-' . substr($dt, 0, 2) . '-' . substr($dt, 2, 2);
-        $input_dateto = substr($dt, 0, 2) . '/' . substr($dt, 2, 2) . '/' . substr($dt, 4, 4);
+        $date_to = substr($dt, 0, 4) . '-' . substr($dt, 4, 2) . '-' . substr($dt, 6, 2);
+        $input_dateto = $date_to;
     } else {
         $date_to = date('Y-m-d');
     }
@@ -214,127 +198,138 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print main manage users page */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-
-    <div class="row move-down-20">
-        <div align="left" class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <?php echo $hesklang['reports_tab']; ?> <a href="#"
-                                                               onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['reports_intro']); ?>')"><i
-                            class="fa fa-question-circle settingsquestionmark"></i></a>
-                </div>
-                <?php if (hesk_checkPermission('can_export', 0)) {
-                    $canExport = true;
-                    $panelMargin = '-15px';
-                } else {
-                    $canExport = false;
-                }
-                ?>
-                <div class="panel-body" <?php if ($canExport) echo 'style="margin-top: -15px";'; ?>>
-                    <?php
-                    // Show a link to export.php if user has permission to do so
-                    if ($canExport) {
-                        echo '<small><a title="' . $hesklang['export'] . '" href="export.php">' . $hesklang['export'] . '</a></small><div class="blankSpace"></div>';
-                    }
-                    ?>
-                    <form action="reports.php" method="get" name="form1" role="form">
-                        <div class="form-group">
-                            <label for="dtrg" class="control-label"><?php echo $hesklang['dtrg']; ?></b>:</label>
-
-                            <div class="radio move-right-20">
-                                <input type="radio" name="w" value="0" id="w0" <?php echo $selected['w'][0]; ?> />
-                                <select name="time" onclick="document.getElementById('w0').checked = true"
-                                        onfocus="document.getElementById('w0').checked = true"
-                                        style="margin-top:5px;margin-bottom:5px;">
-                                    <option value="1" <?php echo $selected['time'][1]; ?>><?php echo $hesklang['r1']; ?>
-                                        (<?php echo $hesklang['d' . date('w')]; ?>)
-                                    </option>
-                                    <option value="2" <?php echo $selected['time'][2]; ?>><?php echo $hesklang['r2']; ?>
-                                        (<?php echo $hesklang['d' . date('w', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')))]; ?>
-                                        )
-                                    </option>
-                                    <option value="3" <?php echo $selected['time'][3]; ?>><?php echo $hesklang['r3']; ?>
-                                        (<?php echo $hesklang['m' . date('n')]; ?>)
-                                    </option>
-                                    <option value="4" <?php echo $selected['time'][4]; ?>><?php echo $hesklang['r4']; ?>
-                                        (<?php echo $hesklang['m' . date('n', mktime(0, 0, 0, date('m') - 1, date('d'), date('Y')))]; ?>
-                                        )
-                                    </option>
-                                    <option
-                                        value="5" <?php echo $selected['time'][5]; ?>><?php echo $hesklang['r5']; ?></option>
-                                    <option
-                                        value="6" <?php echo $selected['time'][6]; ?>><?php echo $hesklang['r6']; ?></option>
-                                    <option
-                                        value="7" <?php echo $selected['time'][7]; ?>><?php echo $hesklang['r7']; ?></option>
-                                    <option
-                                        value="8" <?php echo $selected['time'][8]; ?>><?php echo $hesklang['r8']; ?></option>
-                                    <option
-                                        value="9" <?php echo $selected['time'][9]; ?>><?php echo $hesklang['r9']; ?></option>
-                                    <option
-                                        value="10" <?php echo $selected['time'][10]; ?>><?php echo $hesklang['r10']; ?>
-                                        (<?php echo date('Y'); ?>)
-                                    </option>
-                                    <option
-                                        value="11" <?php echo $selected['time'][11]; ?>><?php echo $hesklang['r11']; ?>
-                                        (<?php echo date('Y', mktime(0, 0, 0, date('m'), date('d'), date('Y') - 1)); ?>)
-                                    </option>
-                                    <option
-                                        value="12" <?php echo $selected['time'][12]; ?>><?php echo $hesklang['r12']; ?></option>
-                                </select>
-                            </div>
-                            <div class="radio move-right-20">
-                                <input type="radio" name="w" value="1" id="w1" <?php echo $selected['w'][1]; ?> />
-                                <?php echo $hesklang['from']; ?> <input type="text" name="datefrom"
-                                                                        value="<?php echo $input_datefrom; ?>"
-                                                                        id="datefrom" class="tcal" size="10"
-                                                                        onclick="document.getElementById('w1').checked = true"
-                                                                        onfocus="document.getElementById('w1').checked = true;this.focus;"/>
-                                <?php echo $hesklang['to']; ?> <input type="text" name="dateto"
-                                                                      value="<?php echo $input_dateto; ?>" id="dateto"
-                                                                      class="tcal" size="10"
-                                                                      onclick="document.getElementById('w1').checked = true"
-                                                                      onfocus="document.getElementById('w1').checked = true; this.focus;"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="type" class="control-label"><?php echo $hesklang['crt']; ?></b>:</label>
-                            <select name="type" class="form-control">
-                                <option
-                                    value="1" <?php echo $selected['type'][1]; ?>><?php echo $hesklang['t1']; ?></option>
-                                <option
-                                    value="2" <?php echo $selected['type'][2]; ?>><?php echo $hesklang['t2']; ?></option>
-                                <option
-                                    value="3" <?php echo $selected['type'][3]; ?>><?php echo $hesklang['t3']; ?></option>
-                                <option
-                                    value="4" <?php echo $selected['type'][4]; ?>><?php echo $hesklang['t4']; ?></option>
-                            </select>
-                        </div>
-                        <div class="form-group text-center">
-                            <input type="submit" value="<?php echo $hesklang['dire']; ?>" class="btn btn-default"/>
-                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
-                        </div>
-                    </form>
-                </div>
+<section class="content">
+    <div class="box">
+        <?php if (hesk_checkPermission('can_export', 0)) {
+            $canExport = true;
+            $panelMargin = '-15px';
+        } else {
+            $canExport = false;
+        }
+        ?>
+        <div class="box-header">
+            <h1 class="box-title">
+                <?php echo $hesklang['reports_tab']; ?> <a href="#"
+                                                           onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['reports_intro']); ?>')"><i
+                        class="fa fa-question-circle settingsquestionmark"></i></a>
+            </h1>
+            <?php
+            // Show a link to export.php if user has permission to do so
+            if ($canExport) {
+                echo '<br><small><a title="' . $hesklang['export'] . '" href="export.php">' . $hesklang['export'] . '</a></small><div class="blankSpace"></div>';
+            }
+            ?>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
             </div>
         </div>
-        <div class="col-sm-8">
+        <div class="box-body">
+            <form action="reports.php" method="get" name="form1" role="form">
+                <div class="form-group">
+                    <label for="dtrg" class="control-label"><?php echo $hesklang['dtrg']; ?>:</label>
+
+                    <div class="radio form-inline move-right-20">
+                        <input type="radio" name="w" value="0" id="w0" <?php echo $selected['w'][0]; ?> style="position: relative">
+                        <select name="time" onclick="document.getElementById('w0').checked = true"
+                                class="form-control"
+                                onfocus="document.getElementById('w0').checked = true"
+                                style="margin-top:5px;margin-bottom:5px;">
+                            <option value="1" <?php echo $selected['time'][1]; ?>><?php echo $hesklang['r1']; ?>
+                                (<?php echo $hesklang['d' . date('w')]; ?>)
+                            </option>
+                            <option value="2" <?php echo $selected['time'][2]; ?>><?php echo $hesklang['r2']; ?>
+                                (<?php echo $hesklang['d' . date('w', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')))]; ?>
+                                )
+                            </option>
+                            <option value="3" <?php echo $selected['time'][3]; ?>><?php echo $hesklang['r3']; ?>
+                                (<?php echo $hesklang['m' . date('n')]; ?>)
+                            </option>
+                            <option value="4" <?php echo $selected['time'][4]; ?>><?php echo $hesklang['r4']; ?>
+                                (<?php echo $hesklang['m' . date('n', mktime(0, 0, 0, date('m') - 1, date('d'), date('Y')))]; ?>
+                                )
+                            </option>
+                            <option
+                                value="5" <?php echo $selected['time'][5]; ?>><?php echo $hesklang['r5']; ?></option>
+                            <option
+                                value="6" <?php echo $selected['time'][6]; ?>><?php echo $hesklang['r6']; ?></option>
+                            <option
+                                value="7" <?php echo $selected['time'][7]; ?>><?php echo $hesklang['r7']; ?></option>
+                            <option
+                                value="8" <?php echo $selected['time'][8]; ?>><?php echo $hesklang['r8']; ?></option>
+                            <option
+                                value="9" <?php echo $selected['time'][9]; ?>><?php echo $hesklang['r9']; ?></option>
+                            <option
+                                value="10" <?php echo $selected['time'][10]; ?>><?php echo $hesklang['r10']; ?>
+                                (<?php echo date('Y'); ?>)
+                            </option>
+                            <option
+                                value="11" <?php echo $selected['time'][11]; ?>><?php echo $hesklang['r11']; ?>
+                                (<?php echo date('Y', mktime(0, 0, 0, date('m'), date('d'), date('Y') - 1)); ?>)
+                            </option>
+                            <option
+                                value="12" <?php echo $selected['time'][12]; ?>><?php echo $hesklang['r12']; ?></option>
+                        </select>
+                    </div>
+                    <div class="radio form-inline move-right-20">
+                        <input type="radio" name="w" value="1" id="w1" <?php echo $selected['w'][1]; ?> style="position: relative">
+                        <?php echo $hesklang['from']; ?> <input type="text" name="datefrom"
+                                                                value="<?php echo $input_datefrom; ?>"
+                                                                id="datefrom" class="datepicker form-control" size="10"
+                                                                onclick="document.getElementById('w1').checked = true"
+                                                                onfocus="document.getElementById('w1').checked = true;this.focus;"/>
+                        <?php echo $hesklang['to']; ?> <input type="text" name="dateto"
+                                                              value="<?php echo $input_dateto; ?>" id="dateto"
+                                                              class="datepicker form-control" size="10"
+                                                              onclick="document.getElementById('w1').checked = true"
+                                                              onfocus="document.getElementById('w1').checked = true; this.focus;"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type" class="control-label"><?php echo $hesklang['crt']; ?></b>:</label>
+                    <select name="type" class="form-control">
+                        <option
+                            value="1" <?php echo $selected['type'][1]; ?>><?php echo $hesklang['t1']; ?></option>
+                        <option
+                            value="2" <?php echo $selected['type'][2]; ?>><?php echo $hesklang['t2']; ?></option>
+                        <option
+                            value="3" <?php echo $selected['type'][3]; ?>><?php echo $hesklang['t3']; ?></option>
+                        <option
+                            value="4" <?php echo $selected['type'][4]; ?>><?php echo $hesklang['t4']; ?></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="<?php echo $hesklang['dire']; ?>" class="btn btn-default"/>
+                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-header">
+            <h1 class="box-title">
+                <?php
+                if ($date_from == $date_to) {
+                    echo hesk_dateToString($date_from, 0);
+                } else {
+                    echo hesk_dateToString($date_from, 0) . ' - ' . hesk_dateToString($date_to, 0);
+                }
+                ?>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
             <?php
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
             ?>
 
             <?php
-            if ($date_from == $date_to) {
-                ?>
-                <h3><?php echo hesk_dateToString($date_from, 0); ?></h3>
-                <div class="footerWithBorder blankSpace"></div>
-                <?php
-            } else {
-                ?>
-                <h3><?php echo hesk_dateToString($date_from, 0); ?> - <?php echo hesk_dateToString($date_to, 0); ?></h3>
-                <div class="footerWithBorder blankSpace"></div>
-                <?php
-            }
 
             // Show a note if reports are limited
             if (!$can_run_reports_full) {
@@ -519,7 +514,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                 // Some variables we will need
                 $tickets = array();
-                $totals = array('asstickets' => 0, 'resolved' => 0, 'tickets' => 0, 'replies' => 0, 'worked' => 0);
+                $totals = array('asstickets' => 0, 'resolved' => 0, 'tickets' => 0, 'replies' => 0, 'worked' => 0, 'openedby' => 0);
 
                 // Get list of users
                 $admins = array();
@@ -539,6 +534,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             'tickets' => 0,
                             'replies' => 0,
                             'worked' => '',
+                            'openedby' => 0,
                         );
                     }
 
@@ -614,10 +610,21 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 // Convert total seconds worked to HH:MM:SS
                 $totals['worked'] = $hesk_settings['time_worked'] ? hesk_SecondsToHHMMSS($totals['worked']) : 0;
 
+                // Get total opened by tickets
+                $res = hesk_dbQuery("SELECT `openedby`, COUNT(*) AS `cnt` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `openedby` IN ('" . implode("','", array_keys($admins) ) . "') AND DATE(`dt`) BETWEEN '" . hesk_dbEscape($date_from) . "' AND '" . hesk_dbEscape($date_to) . "' GROUP BY `openedby`");
+
+                // -> update ticket list values
+                while ($row = hesk_dbFetchAssoc($res))
+                {
+                    $tickets[$row['openedby']]['openedby'] += $row['cnt'];
+                    $totals['openedby'] += $row['cnt'];
+                }
+
                 ?>
                 <table class="table table-striped table-condensed">
                     <tr>
                         <th><?php echo $hesklang['user']; ?></th>
+                        <th><?php echo $hesklang['numsub']; ?></th>
                         <th><?php echo $hesklang['ticass']; ?></th>
                         <th><?php echo $hesklang['topen']; ?></th>
                         <th><?php echo $hesklang['closed_title']; ?></th>
@@ -636,6 +643,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         ?>
                         <tr>
                             <td><b><?php echo $hesklang['totals']; ?></b></td>
+                            <td><b><?php echo $totals['openedby']; ?></b></td>
                             <td><b><?php echo $totals['asstickets']; ?></b></td>
                             <td><b><?php echo $totals['asstickets'] - $totals['resolved']; ?></b></td>
                             <td><b><?php echo $totals['resolved']; ?></b></td>
@@ -655,6 +663,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         ?>
                         <tr>
                             <td><?php echo $admins[$k]; ?></td>
+                            <td><?php echo $d['openedby']; ?></td>
                             <td><?php echo $d['asstickets']; ?></td>
                             <td><?php echo $d['asstickets'] - $d['resolved']; ?></td>
                             <td><?php echo $d['resolved']; ?></td>
@@ -671,6 +680,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     ?>
                     <tr>
                         <td><b><?php echo $hesklang['totals']; ?></b></td>
+                        <td><b><?php echo $totals['openedby']; ?></b></td>
                         <td><b><?php echo $totals['asstickets']; ?></b></td>
                         <td><b><?php echo $totals['asstickets'] - $totals['resolved']; ?></b></td>
                         <td><b><?php echo $totals['resolved']; ?></b></td>
@@ -909,6 +919,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             ?>
         </div>
     </div>
+</section>
 <?php
 
 require_once(HESK_PATH . 'inc/footer.inc.php');

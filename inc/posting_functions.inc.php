@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 /* Check if this is a valid include */
 if (!defined('IN_SCRIPT')) {
@@ -38,6 +21,12 @@ if (!defined('IN_SCRIPT')) {
 function hesk_newTicket($ticket, $isVerified = true)
 {
     global $hesk_settings, $hesklang, $hesk_db_link;
+
+    // Generate a subject if necessary
+    if (strlen($ticket['subject']) < 1)
+    {
+        $ticket['subject'] = sprintf($hesklang['default_subject'], $ticket['name']);
+    }
 
     // If language is not set or default, set it to NULL.
     if (!isset($ticket['language']) || empty($ticket['language'])) {
@@ -57,6 +46,16 @@ function hesk_newTicket($ticket, $isVerified = true)
     $due_date = 'NULL';
     if ($ticket['due_date'] != '') {
         $due_date = "'" . hesk_dbEscape($ticket['due_date']) . "'";
+    }
+
+    // Prepare SQL for custom fields
+    $custom_where = '';
+    $custom_what  = '';
+
+    for ($i=1; $i<=50; $i++)
+    {
+        $custom_where .= ", `custom{$i}`";
+        $custom_what  .= ", '" . (isset($ticket['custom'.$i]) ? hesk_dbEscape($ticket['custom'.$i]) : '') . "'";
     }
 
     // Insert ticket into database
@@ -79,27 +78,6 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`owner`,
 		`attachments`,
 		`merged`,
-		`history`,
-		`custom1`,
-		`custom2`,
-		`custom3`,
-		`custom4`,
-		`custom5`,
-		`custom6`,
-		`custom7`,
-		`custom8`,
-		`custom9`,
-		`custom10`,
-		`custom11`,
-		`custom12`,
-		`custom13`,
-		`custom14`,
-		`custom15`,
-		`custom16`,
-		`custom17`,
-		`custom18`,
-		`custom19`,
-		`custom20`,
 		`status`,
 		`latitude`,
 		`longitude`,
@@ -107,7 +85,9 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`user_agent`,
 		`screen_resolution_height`,
 		`screen_resolution_width`,
-		`due_date`
+		`due_date`,
+		`history`
+		{$custom_where}
 	)
 	VALUES
 	(
@@ -127,27 +107,6 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'" . intval($ticket['owner']) . "',
 		'" . hesk_dbEscape($ticket['attachments']) . "',
 		'',
-		'" . hesk_dbEscape($ticket['history']) . "',
-		'" . hesk_dbEscape($ticket['custom1']) . "',
-		'" . hesk_dbEscape($ticket['custom2']) . "',
-		'" . hesk_dbEscape($ticket['custom3']) . "',
-		'" . hesk_dbEscape($ticket['custom4']) . "',
-		'" . hesk_dbEscape($ticket['custom5']) . "',
-		'" . hesk_dbEscape($ticket['custom6']) . "',
-		'" . hesk_dbEscape($ticket['custom7']) . "',
-		'" . hesk_dbEscape($ticket['custom8']) . "',
-		'" . hesk_dbEscape($ticket['custom9']) . "',
-		'" . hesk_dbEscape($ticket['custom10']) . "',
-		'" . hesk_dbEscape($ticket['custom11']) . "',
-		'" . hesk_dbEscape($ticket['custom12']) . "',
-		'" . hesk_dbEscape($ticket['custom13']) . "',
-		'" . hesk_dbEscape($ticket['custom14']) . "',
-		'" . hesk_dbEscape($ticket['custom15']) . "',
-		'" . hesk_dbEscape($ticket['custom16']) . "',
-		'" . hesk_dbEscape($ticket['custom17']) . "',
-		'" . hesk_dbEscape($ticket['custom18']) . "',
-		'" . hesk_dbEscape($ticket['custom19']) . "',
-		'" . hesk_dbEscape($ticket['custom20']) . "',
 		'" . intval($ticket['status']) . "',
 		'" . hesk_dbEscape($ticket['latitude']) . "',
 		'" . hesk_dbEscape($ticket['longitude']) . "',
@@ -155,7 +114,9 @@ function hesk_newTicket($ticket, $isVerified = true)
 		'" . hesk_dbEscape($ticket['user_agent']) . "',
 		" . hesk_dbEscape($ticket['screen_resolution_height']) . ",
 		" . hesk_dbEscape($ticket['screen_resolution_width']) . ",
-		{$due_date}
+		{$due_date},
+		'" . hesk_dbEscape($ticket['history']) . "'
+		{$custom_what}
 	)
 	");
 

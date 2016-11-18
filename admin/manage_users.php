@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
@@ -38,6 +21,7 @@ require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/profile_functions.inc.php');
+require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
 hesk_session_start();
@@ -78,13 +62,13 @@ $default_userdata = array(
 
     // Preferences
     'afterreply' => 0,
-    'autorefresh' => 0,
 
     // Defaults
     'autostart' => 1,
     'notify_customer_new' => 1,
     'notify_customer_reply' => 1,
     'show_suggested' => 1,
+    'autoreload' => 0,
     'default_calendar_view' => $default_view,
 
     // Notifications
@@ -169,38 +153,60 @@ if ($action = hesk_REQUEST('a')) {
         unset($_SESSION['edit_userdata']);
     }
 
+
     /* Print header */
     require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
-
-    /* Print main manage users page */
     require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     ?>
-
-    <div class="row move-down-20">
-        <div class="col-md-10 col-md-offset-1">
-            <script language="Javascript" type="text/javascript"><!--
-                function confirm_delete() {
-                    if (confirm('<?php echo addslashes($hesklang['sure_remove_user']); ?>')) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
-                }
-                //-->
-            </script>
-
-            <?php
-            /* This will handle error, success and notice messages */
-            hesk_handle_messages();
-            ?>
-
-            <h3 style="padding-bottom:5px"><?php echo $hesklang['manage_users']; ?> <a href="javascript:void(0)"
-                                                                                       onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')"><i
-                        class="fa fa-question-circle settingsquestionmark"></i></a></h3>
-
-            <div class="footerWithBorder blankSpace"></div>
-
+<section class="content">
+    <?php hesk_handle_messages(); ?>
+    <script language="Javascript" type="text/javascript"><!--
+        function confirm_delete() {
+            if (confirm('<?php echo addslashes($hesklang['sure_remove_user']); ?>')) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        //-->
+    </script>
+    <div class="box collapsed-box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['add_user']; ?>
+                <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')">
+                    <i class="fa fa-question-circle settingsquestionmark"></i>
+                </a>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <?php echo $hesklang['req_marked_with']; ?> <span class="red">*</span>
+            <form data-toggle="validator" name="form1" method="post" action="manage_users.php" class="form-horizontal" role="form">
+                <?php hesk_profile_tab('userdata', false, 'create_user'); ?>
+            </form>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">
+                <?php echo $hesklang['manage_users']; ?>
+                <a href="javascript:void(0)" onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['users_intro']); ?>')">
+                    <i class="fa fa-question-circle settingsquestionmark"></i>
+                </a>
+            </h1>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
             <table class="table table-hover">
                 <tr>
                     <th><b><i><?php echo $hesklang['name']; ?></i></b></th>
@@ -253,11 +259,11 @@ if ($action = hesk_REQUEST('a')) {
 
                     /* To edit yourself go to "Profile" page, not here. */
                     if ($myuser['id'] == $_SESSION['id']) {
-                        $edit_code = '<a href="profile.php"><i class="fa fa-pencil icon-link" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
+                        $edit_code = '<a href="profile.php"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
                     } elseif ($myuser['id'] == 1) {
                         $edit_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                     } else {
-                        $edit_code = '<a href="manage_users.php?a=edit&amp;id=' . $myuser['id'] . '"><i class="fa fa-pencil icon-link" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
+                        $edit_code = '<a href="manage_users.php?a=edit&amp;id=' . $myuser['id'] . '"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
                     }
 
                     if ($myuser['isadmin']) {
@@ -329,29 +335,15 @@ EOC;
             } ?>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <h3><?php echo $hesklang['add_user']; ?></h3>
-            <h6><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></h6>
-
-            <div class="footerWithBorder blankSpace"></div>
-
-            <form data-toggle="validator" name="form1" method="post" action="manage_users.php" class="form-horizontal" role="form">
-                <?php hesk_profile_tab('userdata', false, 'create_user'); ?>
-            </form>
-        </div>
-    </div>
-
     <script language="Javascript" type="text/javascript"><!--
         hesk_checkPassword(document.form1.newpass.value);
         //-->
     </script>
+</section>
 
-    <p>&nbsp;</p>
-
-    <?php
-    require_once(HESK_PATH . 'inc/footer.inc.php');
-    exit();
+<?php
+require_once(HESK_PATH . 'inc/footer.inc.php');
+exit();
 
 } // End else
 
@@ -447,27 +439,29 @@ function edit_user()
         <li class="active"><?php echo $hesklang['editing_user'] . ' ' . $_SESSION['original_user']; ?></li>
     </ol>
 
-    <div class="row pad-down-20">
-        <div class="col-md-8 col-md-offset-2">
-            <?php
-            /* This will handle error, success and notice messages */
-            hesk_handle_messages();
-            ?>
-
-            <h3><?php echo $hesklang['editing_user'] . ' ' . $_SESSION['original_user']; ?></h3>
-            <h6><?php echo $hesklang['req_marked_with']; ?> <font class="important">*</font></h6>
-
-            <div class="footerWithBorder blankSpace"></div>
-
-            <form role="form" class="form-horizontal" name="form1" method="post" action="manage_users.php">
-                <?php hesk_profile_tab('userdata', false, 'edit_user'); ?>
-            </form>
-            <script language="Javascript" type="text/javascript"><!--
-                hesk_checkPassword(document.form1.newpass.value);
-                //-->
-            </script>
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+                <h1 class="box-title">
+                    <?php echo $hesklang['editing_user'] . ' <b>' . $_SESSION['original_user'] . '</b>'; ?>
+                </h1>
+            </div>
+            <div class="box-body">
+                <?php
+                /* This will handle error, success and notice messages */
+                hesk_handle_messages();
+                ?>
+                <h6><?php echo $hesklang['req_marked_with']; ?> <span class="important">*</span></h6>
+                <form role="form" class="form-horizontal" name="form1" method="post" action="manage_users.php">
+                    <?php hesk_profile_tab('userdata', false, 'edit_user'); ?>
+                </form>
+                <script language="Javascript" type="text/javascript"><!--
+                    hesk_checkPassword(document.form1.newpass.value);
+                    //-->
+                </script>
+            </div>
         </div>
-    </div>
+    </section>
 
     <?php
     require_once(HESK_PATH . 'inc/footer.inc.php');
@@ -512,6 +506,7 @@ function new_user()
 	    `heskprivileges`,
 	    `afterreply`,
         `autostart`,
+        `autoreload`,
         `notify_customer_new`,
         `notify_customer_reply`,
         `show_suggested`,
@@ -524,7 +519,6 @@ function new_user()
         `notify_note`,
         `notify_note_unassigned`,
         `notify_overdue_unassigned`,
-        `autorefresh`,
         `permission_template`,
         `default_calendar_view`) VALUES (
 	'" . hesk_dbEscape($myuser['user']) . "',
@@ -538,6 +532,7 @@ function new_user()
 	'" . hesk_dbEscape($myuser['features']) . "',
 	'" . ($myuser['afterreply']) . "' ,
 	'" . ($myuser['autostart']) . "' ,
+	'" . ($myuser['autoreload']) . "' ,
 	'" . ($myuser['notify_customer_new']) . "' ,
 	'" . ($myuser['notify_customer_reply']) . "' ,
 	'" . ($myuser['show_suggested']) . "' ,
@@ -550,7 +545,6 @@ function new_user()
 	'" . ($myuser['notify_note']) . "',
 	'" . ($myuser['notify_note_unassigned']) . "',
 	'" . ($myuser['notify_overdue_unassigned']) . "',
-	" . intval($myuser['autorefresh']) . ",
 	" . intval($myuser['template']) . ",
 	" . intval($myuser['default_calendar_view']) . ")");
 
@@ -664,6 +658,7 @@ function update_user()
     `heskprivileges`='" . hesk_dbEscape($myuser['features']) . "',
     `afterreply`='" . ($myuser['afterreply']) . "' ,
 	`autostart`='" . ($myuser['autostart']) . "' ,
+	`autoreload`='" . ($myuser['autoreload']) . "' ,
 	`notify_customer_new`='" . ($myuser['notify_customer_new']) . "' ,
 	`notify_customer_reply`='" . ($myuser['notify_customer_reply']) . "' ,
 	`show_suggested`='" . ($myuser['show_suggested']) . "' ,
@@ -676,10 +671,9 @@ function update_user()
 	`notify_note`='" . ($myuser['notify_note']) . "',
 	`notify_note_unassigned`='" . ($myuser['notify_note_unassigned']) . "',
 	`notify_overdue_unassigned`='" . ($myuser['notify_overdue_unassigned']) . "',
-	`autorefresh`=" . intval($myuser['autorefresh']) . ",
 	`permission_template`=" . intval($myuser['template']) . ",
 	`default_calendar_view`=" . intval($myuser['default_calendar_view']) . "
-    WHERE `id`='" . intval($myuser['id']) . "' LIMIT 1");
+    WHERE `id`='" . intval($myuser['id']) . "'");
 
     // If they are now inactive, remove any manager rights
     if (!$myuser['active']) {
@@ -772,13 +766,25 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     if ($myuser['afterreply'] != 1 && $myuser['afterreply'] != 2) {
         $myuser['afterreply'] = 0;
     }
-    $myuser['autorefresh'] = intval(hesk_POST('autorefresh'));
 
     // Defaults
     $myuser['autostart'] = isset($_POST['autostart']) ? 1 : 0;
     $myuser['notify_customer_new'] = isset($_POST['notify_customer_new']) ? 1 : 0;
     $myuser['notify_customer_reply'] = isset($_POST['notify_customer_reply']) ? 1 : 0;
     $myuser['show_suggested'] = isset($_POST['show_suggested']) ? 1 : 0;
+    $myuser['autoreload'] = isset($_POST['autoreload']) ? 1 : 0;
+
+    if ($myuser['autoreload']) {
+        $myuser['autoreload'] = intval(hesk_POST('reload_time'));
+
+        if (hesk_POST('secmin') == 'min') {
+            $myuser['autoreload'] *= 60;
+        }
+
+        if ($myuser['autoreload'] < 0 || $myuser['autoreload'] > 65535) {
+            $myuser['autoreload'] = 30;
+        }
+    }
     $myuser['default_calendar_view'] = hesk_POST('default-calendar-view', 0);
 
     /* Notifications */

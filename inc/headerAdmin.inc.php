@@ -35,44 +35,21 @@ if (!defined('IN_SCRIPT')) {
     die('Invalid attempt');
 }
 
+define('ADMIN_PAGE', true);
+
 $modsForHesk_settings = mfh_getSettings();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
     <title><?php echo(isset($hesk_settings['tmp_title']) ? $hesk_settings['tmp_title'] : $hesk_settings['hesk_title']); ?></title>
     <meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>"/>
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="theme-color" content="<?php echo '#414a5c'; ?>">
-    <?php if ($modsForHesk_settings['rtl']) { ?>
-        <link href="<?php echo HESK_PATH; ?>hesk_style_RTL.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } else { ?>
-        <link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=21" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=21" type="text/css"
-          rel="stylesheet" <?php if ($modsForHesk_settings['use_bootstrap_theme'] == 0) {
-        echo 'disabled';
-    } ?>>
-    <?php if ($modsForHesk_settings['rtl']) { ?>
-        <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>"
-              type="text/css" rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>"
-              type="text/css" rel="stylesheet"/>
-    <?php } else { ?>
-        <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone.min.css">
@@ -81,7 +58,14 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/displays.css">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/adminlte.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/dropzone.min.js"></script>
@@ -105,51 +89,6 @@ $modsForHesk_settings = mfh_getSettings();
     }
     ?>
     <style>
-        .navbar-default {
-            background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
-            background-image: none;
-            filter: none;
-        }
-
-        .navbar-default .navbar-brand {
-            color: <?php echo $modsForHesk_settings['navbarBrandColor']; ?>;
-        }
-
-        .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
-            color: <?php echo $modsForHesk_settings['navbarBrandHoverColor']; ?>;
-            background-color: transparent;
-        }
-
-        .navbar-default .navbar-nav > li > a {
-            color: <?php echo $modsForHesk_settings['navbarItemTextColor']; ?>;
-        }
-
-        .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
-            color: <?php echo $modsForHesk_settings['navbarItemTextHoverColor']; ?>;
-            background-color: transparent;
-        }
-
-        .dropdown-menu > li > a {
-            color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>;
-        }
-
-        .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
-            color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
-            text-decoration: none;
-            background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
-        }
-
-        .navbar-default .navbar-nav > .open > a,
-        .navbar-default .navbar-nav > .open > a:focus,
-        .navbar-default .navbar-nav > .open > a:hover,
-        .navbar-default .navbar-nav > .active > a,
-        .navbar-default .navbar-nav > .active > a:focus,
-        .navbar-default .navbar-nav > .active > a:hover {
-            color: <?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>;
-            background-color: <?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>;
-            background-image: none;
-        }
-
         .settingsquestionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
             cursor: pointer;
@@ -158,6 +97,12 @@ $modsForHesk_settings = mfh_getSettings();
         .h3questionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
         }
+
+        <?php if (defined('PAGE_TITLE') && PAGE_TITLE == 'LOGIN'): ?>
+        body {
+            background: #d2d6de;
+        }
+        <?php endif; ?>
     </style>
 
     <?php
@@ -222,6 +167,50 @@ $modsForHesk_settings = mfh_getSettings();
         }
     }
 
+    // Auto reload
+    if (defined('AUTO_RELOAD') && hesk_checkPermission('can_view_tickets',0) && ! isset($_SESSION['hide']['ticket_list'])) {
+        ?>
+        <script type="text/javascript">
+            var count = <?php echo empty($_SESSION['autoreload']) ? 30 : intval($_SESSION['autoreload']); ?>;
+            var reloadcounter;
+            var countstart = count;
+
+            function heskReloadTimer() {
+                count = count-1;
+                if (count <= 0) {
+                    clearInterval(reloadcounter);
+                    window.location.reload();
+                    return;
+                }
+
+                document.getElementById("timer").innerHTML = "(" + count + ")";
+            }
+
+            function heskCheckReloading() {
+                if (<?php if ($_SESSION['autoreload']) echo "getCookie('autorefresh') == null || "; ?>getCookie('autorefresh') == '1') {
+                    document.getElementById("reloadCB").checked=true;
+                    document.getElementById("timer").innerHTML = "(" + count + ")";
+                    reloadcounter = setInterval(heskReloadTimer, 1000);
+                }
+            }
+
+            function toggleAutoRefresh(cb) {
+                if (cb.checked) {
+                    setCookie('autorefresh', '1');
+                    document.getElementById("timer").innerHTML = "(" + count + ")";
+                    reloadcounter = setInterval(heskReloadTimer, 1000);
+                } else {
+                    setCookie('autorefresh', '0');
+                    count = countstart;
+                    clearInterval(reloadcounter);
+                    document.getElementById("timer").innerHTML = "";
+                }
+            }
+
+        </script>
+        <?php
+    }
+
     if (defined('MFH_CALENDAR')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
@@ -236,7 +225,7 @@ $modsForHesk_settings = mfh_getSettings();
 
 </head>
 <body onload="<?php echo $onload;
-unset($onload); ?>">
+unset($onload); ?>" class="hold-transition <?php echo $modsForHesk_settings['admin_color_scheme']; ?> sidebar-mini">
 
 <?php
 include(HESK_PATH . 'header.txt');

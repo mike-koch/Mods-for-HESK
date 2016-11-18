@@ -241,9 +241,10 @@ function hesk_suggestKBsearch(isAdmin) {
     setTimeout('hesk_suggestKBsearch(' + isAdmin + ');', 2000);
 }
 
-function hesk_suggestEmail(isAdmin) {
-    var email = document.form1.email.value;
-    var element = document.getElementById('email_suggestions');
+function hesk_suggestEmail(emailField, displayDiv, padDiv, isAdmin, allowMultiple) {
+    allowMultiple = allowMultiple || 0;
+    var email = document.getElementById(emailField).value;
+    var element = document.getElementById(displayDiv);
 
     if (isAdmin) {
         var path = '../suggest_email.php';
@@ -253,7 +254,11 @@ function hesk_suggestEmail(isAdmin) {
     }
 
     if (email != '') {
-        var params = "e=" + encodeURIComponent(email);
+        var params = "e=" + encodeURIComponent(email) + "&ef=" + encodeURIComponent(emailField) + "&dd=" + encodeURIComponent(displayDiv) + "&pd=" + encodeURIComponent(padDiv);
+
+        if (allowMultiple) {
+            params += "&am=1";
+        }
 
         xmlHttp = GetXmlHttpObject();
         if (xmlHttp == null) {
@@ -369,7 +374,7 @@ function hesk_contains(password, validChars) {
 }
 
 function setCookie(name, value, expires, path, domain, secure) {
-    document.cookie = name + "=" + escape(value) +
+    document.cookie= name + "=" + escape(value) +
         ((expires) ? "; expires=" + expires.toGMTString() : "") +
         ((path) ? "; path=" + path : "") +
         ((domain) ? "; domain=" + domain : "") +

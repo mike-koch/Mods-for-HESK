@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * http://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * http://www.hesk.com/eula.php
+ *
+ */
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', './');
@@ -150,24 +133,46 @@ if ($hesk_settings['secimg_use'] && !isset($_SESSION['img_verified'])) {
 }
 
 $tmpvar['name'] = hesk_input(hesk_POST('name')) or $hesk_error_buffer['name'] = $hesklang['enter_your_name'];
-$tmpvar['email'] = hesk_validateEmail(hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer['email'] = $hesklang['enter_valid_email'];
+
+$email_available = true;
+
+if ($hesk_settings['require_email']) {
+    $tmpvar['email'] = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer['email']=$hesklang['enter_valid_email'];
+} else {
+    $tmpvar['email'] = hesk_validateEmail( hesk_POST('email'), 'ERR', 0);
+
+    // Not required, but must be valid if it is entered
+    if ($tmpvar['email'] == '') {
+        $email_available = false;
+
+        if (strlen(hesk_POST('email'))) {
+            $hesk_error_buffer['email'] = $hesklang['not_valid_email'];
+        }
+
+        // No need to confirm the email
+        $hesk_settings['confirm_email'] = 0;
+        $_POST['email2'] = '';
+        $_SESSION['c_email'] = '';
+        $_SESSION['c_email2'] = '';
+    }
+}
 
 if ($hesk_settings['confirm_email']) {
     $tmpvar['email2'] = hesk_validateEmail(hesk_POST('email2'), 'ERR', 0) or $hesk_error_buffer['email2'] = $hesklang['confemail2'];
 
     // Anything entered as email confirmation?
-    if (strlen($tmpvar['email2'])) {
+    if ($tmpvar['email2'] != '') {
         // Do we have multiple emails?
         if ($hesk_settings['multi_eml']) {
             $tmpvar['email'] = str_replace(';', ',', $tmpvar['email']);
             $tmpvar['email2'] = str_replace(';', ',', $tmpvar['email2']);
 
             if (count(array_diff(explode(',', strtolower($tmpvar['email'])), explode(',', strtolower($tmpvar['email2'])))) == 0) {
-                $_SESSION['c_email2'] = $_POST['email2'];
+                $_SESSION['c_email2'] =  hesk_POST('email2');
             }
         } // Single email address match
         elseif (!$hesk_settings['multi_eml'] && strtolower($tmpvar['email']) == strtolower($tmpvar['email2'])) {
-            $_SESSION['c_email2'] = $_POST['email2'];
+            $_SESSION['c_email2'] =  hesk_POST('email2');
         } else {
             // Invalid match
             $tmpvar['email2'] = '';
@@ -177,7 +182,7 @@ if ($hesk_settings['confirm_email']) {
             $hesk_error_buffer['email2'] = $hesklang['confemaile'];
         }
     } else {
-        $_SESSION['c_email2'] = $_POST['email2'];
+        $_SESSION['c_email2'] =  hesk_POST('email2');
     }
 }
 
@@ -207,8 +212,25 @@ else {
     }
 }
 
-$tmpvar['subject'] = hesk_input(hesk_POST('subject')) or $hesk_error_buffer['subject'] = $hesklang['enter_ticket_subject'];
-$tmpvar['message'] = hesk_input(hesk_POST('message')) or $hesk_error_buffer['message'] = $hesklang['enter_message'];;
+if ($hesk_settings['require_subject'] == -1) {
+    $tmpvar['subject'] = '';
+} else {
+    $tmpvar['subject'] = hesk_input( hesk_POST('subject') );
+
+    if ($hesk_settings['require_subject'] == 1 && $tmpvar['subject'] == '') {
+        $hesk_error_buffer['subject'] = $hesklang['enter_ticket_subject'];
+    }
+}
+
+if ($hesk_settings['require_message'] == -1) {
+    $tmpvar['message'] = '';
+} else {
+    $tmpvar['message'] = hesk_input( hesk_POST('message') );
+
+    if ($hesk_settings['require_message'] == 1 && $tmpvar['message'] == '') {
+        $hesk_error_buffer['message'] = $hesklang['enter_message'];
+    }
+}
 
 // Is category a valid choice?
 if ($tmpvar['category']) {
@@ -222,46 +244,72 @@ if ($tmpvar['category']) {
 
 // Custom fields
 $modsForHesk_settings = mfh_getSettings();
-foreach ($hesk_settings['custom_fields'] as $k => $v) {
-    if ($v['use']) {
-        if ($modsForHesk_settings['custom_field_setting']) {
-            $v['name'] = $hesklang[$v['name']];
-        }
+foreach ($hesk_settings['custom_fields'] as $k=>$v) {
+    if ($v['use']==1 && hesk_is_custom_field_in_category($k, $tmpvar['category'])) {
+        if ($v['type'] == 'checkbox') {
+            $tmpvar[$k]='';
 
-        if ($v['type'] == 'checkbox' || $v['type'] == 'multiselect') {
-            $tmpvar[$k] = '';
-
-            if (isset($_POST[$k])) {
-                if (is_array($_POST[$k])) {
-                    foreach ($_POST[$k] as $myCB) {
-                        $tmpvar[$k] .= (is_array($myCB) ? '' : hesk_input($myCB)) . '<br />';;
-                    }
-                    $tmpvar[$k] = substr($tmpvar[$k], 0, -6);
+            if (isset($_POST[$k]) && is_array($_POST[$k])) {
+                foreach ($_POST[$k] as $myCB) {
+                    $tmpvar[$k] .= ( is_array($myCB) ? '' : hesk_input($myCB) ) . '<br />';;
                 }
+
+                $tmpvar[$k]=substr($tmpvar[$k],0,-6);
             } else {
                 if ($v['req']) {
-                    $hesk_error_buffer[$k] = $hesklang['fill_all'] . ': ' . $v['name'];
+                    $hesk_error_buffer[$k]=$hesklang['fill_all'].': '.$v['name'];
                 }
                 $_POST[$k] = '';
             }
 
-            $_SESSION["c_$k"] = hesk_POST_array($k);
-        } elseif ($v['req']) {
-            $tmpvar[$k] = hesk_makeURL(nl2br(hesk_input(hesk_POST($k))));
-            $_SESSION["c_$k"] = hesk_POST($k);
-            if (!strlen($tmpvar[$k])) {
-                $hesk_error_buffer[$k] = $hesklang['fill_all'] . ': ' . $v['name'];
-            }
+            $_SESSION["c_$k"]=hesk_POST_array($k);
+        } elseif ($v['type'] == 'date') {
+            $tmpvar[$k] = hesk_POST($k);
+            $_SESSION["c_$k"] = '';
 
-            if ($v['type'] == 'date') {
-                $tmpvar[$k] = strtotime($_POST[$k]);
-            }
-        } else {
-            if ($v['type'] == 'date' && $_POST[$k] != '') {
-                $tmpvar[$k] = strtotime($_POST[$k]);
+            if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $tmpvar[$k])) {
+                $date = strtotime($tmpvar[$k] . ' t00:00:00');
+                $dmin = strlen($v['value']['dmin']) ? strtotime($v['value']['dmin'] . ' t00:00:00') : false;
+                $dmax = strlen($v['value']['dmax']) ? strtotime($v['value']['dmax'] . ' t00:00:00') : false;
+
+                $_SESSION["c_$k"] = $tmpvar[$k];
+
+                if ($dmin && $dmin > $date) {
+                    $hesk_error_buffer[$k] = sprintf($hesklang['d_emin'], $v['name'], hesk_custom_date_display_format($dmin, $v['value']['date_format']));
+                } elseif ($dmax && $dmax < $date) {
+                    $hesk_error_buffer[$k] = sprintf($hesklang['d_emax'], $v['name'], hesk_custom_date_display_format($dmax, $v['value']['date_format']));
+                } else {
+                    $tmpvar[$k] = $date;
+                }
             } else {
-                $tmpvar[$k] = hesk_makeURL(nl2br(hesk_input(hesk_POST($k))));
+                if ($v['req']) {
+                    $hesk_error_buffer[$k]=$hesklang['fill_all'].': '.$v['name'];
+                }
             }
+        } elseif ($v['type'] == 'email') {
+            $tmp = $hesk_settings['multi_eml'];
+            $hesk_settings['multi_eml'] = $v['value']['multiple'];
+            $tmpvar[$k] = hesk_validateEmail( hesk_POST($k), 'ERR', 0);
+            $hesk_settings['multi_eml'] = $tmp;
+
+            if ($tmpvar[$k] != '') {
+                $_SESSION["c_$k"] = hesk_input($tmpvar[$k]);
+            } else {
+                $_SESSION["c_$k"] = '';
+
+                if ($v['req']) {
+                    $hesk_error_buffer[$k] = $v['value']['multiple'] ? sprintf($hesklang['cf_noem'], $v['name']) : sprintf($hesklang['cf_noe'], $v['name']);
+                }
+            }
+        } elseif ($v['req']) {
+            $tmpvar[$k]=hesk_makeURL(nl2br(hesk_input( hesk_POST($k) )));
+            if ($tmpvar[$k] == '') {
+                $hesk_error_buffer[$k]=$hesklang['fill_all'].': '.$v['name'];
+            }
+            $_SESSION["c_$k"]=hesk_POST($k);
+        } else {
+            $tmpvar[$k]=hesk_makeURL(nl2br(hesk_input( hesk_POST($k) )));
+            $_SESSION["c_$k"]=hesk_POST($k);
         }
     } else {
         $tmpvar[$k] = '';
@@ -269,13 +317,13 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
 }
 
 // Check bans
-if (!isset($hesk_error_buffer['email']) && hesk_isBannedEmail($tmpvar['email']) || hesk_isBannedIP($_SERVER['REMOTE_ADDR'])) {
+if ($email_available && ! isset($hesk_error_buffer['email']) && hesk_isBannedEmail($tmpvar['email']) || hesk_isBannedIP($_SERVER['REMOTE_ADDR'])) {
     hesk_error($hesklang['baned_e']);
 }
 
 // Check maximum open tickets limit
 $below_limit = true;
-if ($hesk_settings['max_open'] && !isset($hesk_error_buffer['email'])) {
+if ($email_available && $hesk_settings['max_open'] && ! isset($hesk_error_buffer['email'])) {
     $res = hesk_dbQuery("SELECT COUNT(*) FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `status` IN (SELECT `ID` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) AND " . hesk_dbFormatEmail($tmpvar['email']));
     $num = hesk_dbResult($res);
 
@@ -327,7 +375,6 @@ if (count($hesk_error_buffer)) {
 
     $_SESSION['c_name'] = hesk_POST('name');
     $_SESSION['c_email'] = hesk_POST('email');
-    $_SESSION['c_category'] = hesk_POST('category');
     $_SESSION['c_priority'] = hesk_POST('priority');
     $_SESSION['c_subject'] = hesk_POST('subject');
     $_SESSION['c_message'] = hesk_POST('message');
@@ -343,7 +390,7 @@ if (count($hesk_error_buffer)) {
     }
 
     $hesk_error_buffer = $hesklang['pcer'] . '<br /><br /><ul>' . $tmp . '</ul>';
-    hesk_process_messages($hesk_error_buffer, 'index.php?a=add');
+    hesk_process_messages($hesk_error_buffer, 'index.php?a=add&category='.$tmpvar['category']);
 }
 
 if (!$modsForHesk_settings['rich_text_for_tickets_for_customers']) {
@@ -389,7 +436,7 @@ $tmpvar['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
 // Should the helpdesk validate emails?
 $createTicket = true;
-if ($modsForHesk_settings['customer_email_verification_required']) {
+if ($modsForHesk_settings['customer_email_verification_required'] && $email_available) {
     $verifiedEmailSql = "SELECT `Email` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "verified_emails` WHERE `Email` = '" . hesk_dbEscape($tmpvar['email']) . "'";
     $verifiedEmailRS = hesk_dbQuery($verifiedEmailSql);
     if ($verifiedEmailRS->num_rows == 0) {
@@ -414,7 +461,7 @@ if ($createTicket) {
     $ticket = hesk_newTicket($tmpvar);
 
     // Notify the customer
-    if ($hesk_settings['notify_new']) {
+    if ($hesk_settings['notify_new'] && $email_available) {
         hesk_notifyCustomer($modsForHesk_settings);
     }
 
@@ -434,7 +481,7 @@ $_SESSION['already_submitted'] = 1;
 
 // Need email to view ticket? If yes, remember it by default
 if ($hesk_settings['email_view_ticket']) {
-    setcookie('hesk_myemail', $tmpvar['email'], strtotime('+1 year'));
+    hesk_setcookie('hesk_myemail', $tmpvar['email'], strtotime('+1 year'));
 }
 
 // Unset temporary variables
@@ -466,7 +513,8 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 
             $hesklang['ticket_submitted'] . '<br /><br />' .
             $hesklang['ticket_submitted_success'] . ': <b>' . $ticket['trackid'] . '</b><br /><br /> ' .
-            ($hesk_settings['notify_new'] && $hesk_settings['spam_notice'] ? $hesklang['spam_inbox'] . '<br /><br />' : '') .
+            ( ! $email_available ? $hesklang['write_down'] . '<br /><br />' : '') .
+            ($email_available && $hesk_settings['notify_new'] && $hesk_settings['spam_notice'] ? $hesklang['spam_inbox'] . '<br /><br />' : '') .
             '<a href="' . $hesk_settings['hesk_url'] . '/ticket.php?track=' . $ticket['trackid'] . '">' . $hesklang['view_your_ticket'] . '</a>'
         );
     } else {
