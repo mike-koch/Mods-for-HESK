@@ -102,7 +102,6 @@ function removeOtherColumns()
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` DROP COLUMN `overdue_email_sent`");
 
 
-
     // These queries are ran in case someone used an unfortunate installation they may have not properly cleaned up tables
     executeQuery('DROP TABLE IF EXISTS `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'denied_ips`');
     executeQuery('DROP TABLE IF EXISTS `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'denied_emails`');

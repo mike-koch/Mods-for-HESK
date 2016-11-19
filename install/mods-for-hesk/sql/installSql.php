@@ -889,3 +889,10 @@ function execute300Beta1Scripts() {
 
     updateVersion('3.0.0 beta 1');
 }
+
+function execute300Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    updateVersion('3.0.0');
+}
