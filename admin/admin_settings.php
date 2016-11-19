@@ -4,10 +4,10 @@
  * This file is part of HESK - PHP Help Desk Software.
  *
  * (c) Copyright Klemen Stirn. All rights reserved.
- * http://www.hesk.com
+ * https://www.hesk.com
  *
  * For the full copyright and license agreement information visit
- * http://www.hesk.com/eula.php
+ * https://www.hesk.com/eula.php
  *
  */
 
@@ -333,21 +333,21 @@ $modsForHesk_settings = mfh_getSettings();
                                 // Is this a beta/dev version?
                                 if (strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev') || strpos($hesk_settings['hesk_version'], 'RC')) {
                                     echo ' <span class="dark-orange">' . $hesklang['beta'] . '</span> '; ?> <a
-                                    href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
+                                    href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
                                     target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                                 } else {
                                     echo ' - <span class="dark-orange bold">' . $hesklang['hnw'] . '</span> '; ?> <a
-                                    href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
+                                    href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
                                     target="_blank"><?php echo $hesklang['getup']; ?></a><?php
                                 }
                             } else {
                                 ?> - <a
-                                href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
+                                href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
                                 target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                             }
                         } else {
                             ?> - <a
-                            href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
+                            href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
                             target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                         }
                         ?>
@@ -374,7 +374,7 @@ $modsForHesk_settings = mfh_getSettings();
                         if ($hesk_settings['check_updates']) {
                             if (strpos($modsForHeskVersion, 'beta') || strpos($modsForHeskVersion, 'dev') || strpos($modsForHeskVersion, 'RC')) {
                                 echo ' <span class="dark-orange">' . $hesklang['beta'] . '</span> '; ?> <a
-                                href="http://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
+                                href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
                                 target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                             } elseif ($latest === true) {
                                 echo ' - <span class="green">' . $hesklang['mfh_up_to_date'] . '</span>';
@@ -3926,7 +3926,7 @@ $modsForHesk_settings = mfh_getSettings();
                     }
 
                     /* Check if language file is for current version */
-                    if (strpos($tmp, '$hesklang[\'refresh_page\']') === false) {
+                    if (strpos($tmp, '$hesklang[\'LANGUAGE_EN\']') === false) {
                         $err .= "              |---->  WRONG VERSION (not " . $hesk_settings['hesk_version'] . ")\n";
                     }
 

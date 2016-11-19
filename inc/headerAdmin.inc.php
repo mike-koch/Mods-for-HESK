@@ -3,7 +3,7 @@
  *  Title: Help Desk Software HESK
  *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
+ *  Website: https://www.hesk.com
  ********************************************************************************
  *  COPYRIGHT AND TRADEMARK NOTICE
  *  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
@@ -221,7 +221,12 @@ $modsForHesk_settings = mfh_getSettings();
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/lang/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-admin-readonly.js"></script>
-    <?php } ?>
+    <?php
+    }
+
+    // Include custom head code
+    include(HESK_PATH . 'head.txt');
+    ?>
 
 </head>
 <body onload="<?php echo $onload;

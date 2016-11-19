@@ -4,10 +4,10 @@
  * This file is part of HESK - PHP Help Desk Software.
  *
  * (c) Copyright Klemen Stirn. All rights reserved.
- * http://www.hesk.com
+ * https://www.hesk.com
  *
  * For the full copyright and license agreement information visit
- * http://www.hesk.com/eula.php
+ * https://www.hesk.com/eula.php
  *
  */
 
@@ -75,13 +75,13 @@ yg4LlpjXSordVI1MTInKSkgIT09IGZhbHNlKQ0Kew0KJHMgPSAwOw0KfQ0KZWxzZQ0Kew0KZWNobyAnP
 HAgc3R5bGU9InRleHQtYWxpZ246Y2VudGVyO2NvbG9yOnJlZDsiPklOVkFMSUQgTElDRU5TRSAoTk9UI
 FJFR0lTVEVSRUQgRk9SICcuJGguJykhPC9wPic7DQp9DQp9DQppZiAoJHMpDQp7DQplY2hvICc8cCBzd
 HlsZT0idGV4dC1hbGlnbjpjZW50ZXIiPjxzcGFuIGNsYXNzPSJzbWFsbGVyIj4mbmJzcDs8YnIgLz5Qb
-3dlcmVkIGJ5IDxhIGhyZWY9Imh0dHA6Ly93d3cuaGVzay5jb20iIGNsYXNzPSJzbWFsbGVyIiB0aXRsZ
-T0iRnJlZSBQSFAgSGVscCBEZXNrIFNvZnR3YXJlIj5IZWxwIERlc2sgU29mdHdhcmU8L2E+IDxiPkhFU
-0s8L2I+LCBicm91Z2h0IHRvIHlvdSBieSA8YSBocmVmPSJodHRwczovL3d3dy5zeXNhaWQuY29tLz91d
-G1fc291cmNlPUhlc2smYW1wO3V0bV9tZWRpdW09Y3BjJmFtcDt1dG1fY2FtcGFpZ249SGVza1Byb2R1Y
-3RfVG9fSFAiPlN5c0FpZDwvYT48L3NwYW4+PC9wPic7DQp9DQplY2hvICc8L3RkPjwvdHI+PC90YWJsZ
-T48L2Rpdj4nOw0KaW5jbHVkZShIRVNLX1BBVEggLiAnZm9vdGVyLnR4dCcpOw0KZWNobyAnPC9ib2R5P
-jwvaHRtbD4nOw==',"\112");
+3dlcmVkIGJ5IDxhIGhyZWY9Imh0dHBzOi8vd3d3Lmhlc2suY29tIiBjbGFzcz0ic21hbGxlciIgdGl0b
+GU9IkZyZWUgUEhQIEhlbHAgRGVzayBTb2Z0d2FyZSI+SGVscCBEZXNrIFNvZnR3YXJlPC9hPiA8Yj5IR
+VNLPC9iPiwgYnJvdWdodCB0byB5b3UgYnkgPGEgaHJlZj0iaHR0cHM6Ly93d3cuc3lzYWlkLmNvbS8/d
+XRtX3NvdXJjZT1IZXNrJmFtcDt1dG1fbWVkaXVtPWNwYyZhbXA7dXRtX2NhbXBhaWduPUhlc2tQcm9kd
+WN0X1RvX0hQIj5TeXNBaWQ8L2E+PC9zcGFuPjwvcD4nOw0KfQ0KZWNobyAnPC90ZD48L3RyPjwvdGFib
+GU+PC9kaXY+JzsNCmluY2x1ZGUoSEVTS19QQVRIIC4gJ2Zvb3Rlci50eHQnKTsNCmVjaG8gJzwvYm9ke
+T48L2h0bWw+Jzs=',"\112");
 
 if (defined('ADMIN_PAGE')) {
 	echo '</footer>';

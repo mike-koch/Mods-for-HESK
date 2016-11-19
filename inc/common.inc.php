@@ -4,10 +4,10 @@
  * This file is part of HESK - PHP Help Desk Software.
  *
  * (c) Copyright Klemen Stirn. All rights reserved.
- * http://www.hesk.com
+ * https://www.hesk.com
  *
  * For the full copyright and license agreement information visit
- * http://www.hesk.com/eula.php
+ * https://www.hesk.com/eula.php
  *
  */
 
@@ -1137,7 +1137,7 @@ function hesk_getLanguage()
     define('HESK_DEFAULT_LANGUAGE', $hesk_settings['language']);
 
     /* Can users select language? */
-    if (empty($hesk_settings['can_sel_lang'])) {
+    if (defined('NO_HTTP_HEADER') ||  empty($hesk_settings['can_sel_lang'])) {
         return hesk_returnLanguage();
     }
 

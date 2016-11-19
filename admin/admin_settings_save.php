@@ -4,10 +4,10 @@
  * This file is part of HESK - PHP Help Desk Software.
  *
  * (c) Copyright Klemen Stirn. All rights reserved.
- * http://www.hesk.com
+ * https://www.hesk.com
  *
  * For the full copyright and license agreement information visit
- * http://www.hesk.com/eula.php
+ * https://www.hesk.com/eula.php
  *
  */
 
@@ -822,7 +822,7 @@ function hesk_getLanguagesArray($returnArray = 0)
                     $add = 0;
                 } elseif (!preg_match('/\$hesklang\[\'EMAIL_HR\'\]\=\'(.*)\'\;/', $tmp, $hr)) {
                     $add = 0;
-                } elseif (!preg_match('/\$hesklang\[\'refresh_page\'\]/', $tmp)) {
+                } elseif (!preg_match('/\$hesklang\[\'LANGUAGE_EN\'\]/', $tmp)) {
                     $add = 0;
                 }
             } else {

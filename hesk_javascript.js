@@ -2,7 +2,7 @@
  *  Title: Help Desk Software HESK
  *  Version: 2.6.8 from 10th August 2016
  *  Author: Klemen Stirn
- *  Website: http://www.hesk.com
+ *  Website: https://www.hesk.com
  ********************************************************************************
  *  COPYRIGHT AND TRADEMARK NOTICE
  *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
