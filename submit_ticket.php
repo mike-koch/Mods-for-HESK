@@ -439,7 +439,7 @@ $createTicket = true;
 if ($modsForHesk_settings['customer_email_verification_required'] && $email_available) {
     $verifiedEmailSql = "SELECT `Email` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "verified_emails` WHERE `Email` = '" . hesk_dbEscape($tmpvar['email']) . "'";
     $verifiedEmailRS = hesk_dbQuery($verifiedEmailSql);
-    if ($verifiedEmailRS->num_rows == 0) {
+    if (hesk_dbNumRows($verifiedEmailRS) == 0) {
         //-- email has not yet been verified.
         $ticket = hesk_newTicket($tmpvar, false);
 

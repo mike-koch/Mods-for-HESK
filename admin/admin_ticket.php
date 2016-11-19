@@ -450,16 +450,16 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
     //-- Make sure this isn't the same ticket or one of its merged tickets.
     $mergedTickets = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `trackid` =
         \'' . hesk_dbEscape($trackingID) . '\' AND `merged` LIKE \'%#' . hesk_dbEscape($_POST['childTrackingId']) . '#%\'');
-    if ($_POST['childTrackingId'] == $trackingID || $mergedTickets->num_rows > 0) {
+    if ($_POST['childTrackingId'] == $trackingID || hesk_dbNumRows($mergedTickets) > 0) {
         hesk_process_messages($hesklang['cannot_link_ticket_to_itself'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999));
     }
 
     //-- Does the child exist?
     $existRs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `trackid` = \'' . hesk_dbEscape($_POST['childTrackingId']) . '\'');
-    if ($existRs->num_rows == 0) {
+    if (hesk_dbNumRows($existRs) == 0) {
         //-- Maybe it was merged?
         $existRs = hesk_dbQuery('SELECT `trackid` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `merged` LIKE \'#' . hesk_dbEscape($_POST['childTrackingId']) . '#\'');
-        if ($existRs->num_rows > 0) {
+        if (hesk_dbNumRows($existRs) > 0) {
             //-- Yes, it was merged. Set the child to the "new" ticket; not the merged one.
             $exist = hesk_dbFetchAssoc($existRs);
             $_POST['childTrackingId'] = $exist['trackid'];
@@ -470,7 +470,7 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
 
     //-- Check if the ticket is already a child.
     $childRs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `parent` = ' . $ticket['id'] . ' AND `trackid` = \'' . $_POST['childTrackingId'] . '\'');
-    if ($childRs->num_rows > 0) {
+    if (hesk_dbNumRows($childRs) > 0) {
         hesk_process_messages(sprintf($hesklang['is_already_linked'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'NOTICE');
     }
 
