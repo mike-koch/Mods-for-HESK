@@ -32,6 +32,7 @@ define('IN_SCRIPT', 1);
 define('VALIDATOR', 1);
 define('HESK_PATH', '../');
 define('PAGE_TITLE', 'ADMIN_CALENDAR');
+define('USE_JQUERY_2', 1);
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');

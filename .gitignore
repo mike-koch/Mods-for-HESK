@@ -10,6 +10,7 @@ cache/
 docs/
 file_limits.php
 footer.txt
+head.txt
 header.txt
 hesk_settings.inc.php
 img/add_article.png

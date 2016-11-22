@@ -89,7 +89,11 @@ if (is_dir(HESK_PATH . 'install')) {
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css">
-    <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
+    <?php if (defined('USE_JQUERY_2')): ?>
+        <script src="<?php echo HESK_PATH; ?>js/jquery-2.2.4.min.js"></script>
+    <?php else: ?>
+        <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
+    <?php endif; ?>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/dropzone.min.js"></script>
@@ -235,7 +239,7 @@ if (is_dir(HESK_PATH . 'install')) {
         ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
-        <script src="<?php echo HESK_PATH; ?>js/calendar/lang/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/locale/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
         <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-readonly.js"></script>
     <?php
     }
@@ -338,4 +342,3 @@ if ($modsForHesk_settings['show_icons']) {
         </div>
         <!-- /.navbar-collapse -->
     </nav>
-

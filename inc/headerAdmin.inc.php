@@ -64,7 +64,11 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/displays.css">
-    <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
+    <?php if (defined('USE_JQUERY_2')): ?>
+        <script src="<?php echo HESK_PATH; ?>js/jquery-2.2.4.min.js"></script>
+    <?php else: ?>
+        <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
+    <?php endif; ?>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/adminlte.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
@@ -214,12 +218,12 @@ $modsForHesk_settings = mfh_getSettings();
     if (defined('MFH_CALENDAR')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
-        <script src="<?php echo HESK_PATH; ?>js/calendar/lang/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/locale/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar.js"></script>
     <?php } else if (defined('MFH_CALENDAR_READONLY')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
-        <script src="<?php echo HESK_PATH; ?>js/calendar/lang/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/locale/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-admin-readonly.js"></script>
     <?php
     }
