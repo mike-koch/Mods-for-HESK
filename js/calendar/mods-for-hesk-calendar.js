@@ -50,6 +50,11 @@ $(document).ready(function() {
             var format = 'dddd, MMMM Do YYYY';
             var endDate = event.end == null ? event.start : event.end;
 
+            if (event.allDay) {
+                endDate = event.end.clone();
+                endDate.add(-1, 'days');
+            }
+
             if (!event.allDay && event.type !== 'TICKET') {
                 format += ', HH:mm';
             }
@@ -282,12 +287,18 @@ function buildEvent(id, dbObject) {
         };
     }
 
+    var endTime = moment(dbObject.endTime);
+    if (dbObject.allDay) {
+        endTime.add(1, 'days');
+    }
+
     return {
         id: id,
         title: dbObject.title,
         allDay: dbObject.allDay,
         start: moment(dbObject.startTime),
-        end: moment(dbObject.endTime),
+        end: endTime,
+        realEnd: moment(dbObject.endTime),
         comments: dbObject.comments,
         location: dbObject.location,
         type: dbObject.type,
@@ -342,7 +353,7 @@ function displayCreateModal(date, viewName) {
     $form.find('input[name="name"]').val('').end()
         .find('input[name="location"]').val('').end()
         .find('textarea[name="comments"]').val('').end()
-        .find('select[name="category"]').val('').end()
+        .find('select[name="category"]').val($form.find('select[name="category"] option:first-child').val()).end()
         .find('select[name="reminder-unit"]').val(0).end()
         .find('input[name="reminder-value"]').val('').end();
 
@@ -385,11 +396,16 @@ function displayEditModal(date) {
             .find('input[name="end-time"]').val(date.end.format('HH:mm:ss')).end();
     }
 
+    var endDate = date.end.clone();
+    if (date.allDay) {
+        endDate.add(-1, 'days');
+    }
+
     $form.find('input[name="name"]').val(date.title).end()
         .find('input[name="location"]').val(date.location).end()
         .find('textarea[name="comments"]').val(date.comments).end()
         .find('input[name="start-date"]').val(date.start.format('YYYY-MM-DD')).end()
-        .find('input[name="end-date"]').val(date.end.format('YYYY-MM-DD')).end()
+        .find('input[name="end-date"]').val(endDate.format('YYYY-MM-DD')).end()
         .find('input[name="id"]').val(date.id).end()
         .find('input[name="reminder-value"]').val(date.reminderValue).end();
 
@@ -405,7 +421,7 @@ function displayEditModal(date) {
     }
     createTicketLink += encodeURI('&message=' + date.comments);
     createTicketLink += encodeURI('&category=' + date.categoryId);
-    createTicketLink += encodeURI('&due_date=' + date.end.format('YYYY-MM-DD'));
+    createTicketLink += encodeURI('&due_date=' + endDate.format('YYYY-MM-DD'));
 
     $form.find('#create-ticket-button').prop('href', createTicketLink);
 
@@ -453,7 +469,12 @@ function respondToDragAndDrop(event, delta, revertFunc) {
         if (event.end === null) {
             event.end = event.start.clone();
         }
-        var end = event.end.format('YYYY-MM-DD');
+        var end = event.end.clone();
+        if (event.allDay) {
+            end.add(-1, 'days');
+        }
+
+        end = end.format('YYYY-MM-DD');
         if (!event.allDay) {
             start += ' ' + event.start.format('HH:mm:ss');
             end += ' ' + event.end.format('HH:mm:ss');
