@@ -36,6 +36,11 @@ $(document).ready(function() {
             var format = 'dddd, MMMM Do YYYY';
             var endDate = event.end == null ? event.start : event.end;
 
+            if (event.allDay) {
+                endDate = event.end.clone();
+                endDate.add(-1, 'days');
+            }
+
             if (!event.allDay && event.type !== 'TICKET') {
                 format += ', HH:mm';
             }
@@ -118,13 +123,19 @@ function buildEvent(id, dbObject) {
             fontIconMarkup: getIcon(dbObject)
         };
     }
+    
+    var endTime = moment(dbObject.endTime);
+    if (dbObject.allDay) {
+        endTime.add(1, 'days');
+    }
 
     return {
         id: id,
         title: dbObject.title,
         allDay: dbObject.allDay,
         start: moment(dbObject.startTime),
-        end: moment(dbObject.endTime),
+        end: endTime,
+        realEnd: moment(dbObject.endTime),
         comments: dbObject.comments,
         location: dbObject.location,
         type: dbObject.type,

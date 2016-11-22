@@ -31,7 +31,6 @@ $(document).ready(function() {
         },
         eventMouseover: function(event) {
             if (event.type === 'TICKET') {
-                // Don't build a popover for tickets
                 return;
             }
 
@@ -40,6 +39,11 @@ $(document).ready(function() {
 
             var format = 'dddd, MMMM Do YYYY';
             var endDate = event.end == null ? event.start : event.end;
+
+            if (event.allDay) {
+                endDate = event.end.clone();
+                endDate.add(-1, 'days');
+            }
 
             if (!event.allDay) {
                 format += ', HH:mm';
@@ -54,9 +58,16 @@ $(document).ready(function() {
                 .find('.popover-from span').text(event.start.format(format)).end()
                 .find('.popover-to span').text(endDate.format(format)).end()
                 .find('.popover-comments span').text(event.comments);
+
             var $eventMarkup = $(this);
+
+            var eventTitle = event.title;
+            if (event.fontIconMarkup != undefined) {
+                eventTitle = event.fontIconMarkup + '&nbsp;' + eventTitle;
+            }
+            
             $eventMarkup.popover({
-                title: event.title,
+                title: eventTitle,
                 html: true,
                 content: $contents,
                 animation: true,
@@ -78,19 +89,9 @@ $(document).ready(function() {
 });
 
 function buildEvent(id, dbObject) {
-    if (dbObject.type == 'TICKET') {
-        return {
-            title: dbObject.title,
-            trackingId: dbObject.trackingId,
-            start: moment(dbObject.startTime),
-            url: dbObject.url,
-            color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
-            allDay: true,
-            type: dbObject.type,
-            categoryId: dbObject.categoryId,
-            className: 'category-' + dbObject.categoryId,
-            textColor: calculateTextColor(dbObject.categoryColor),
-        };
+    var endTime = moment(dbObject.endTime);
+    if (dbObject.allDay) {
+        endTime.add(1, 'days');
     }
 
     return {
@@ -98,7 +99,8 @@ function buildEvent(id, dbObject) {
         title: dbObject.title,
         allDay: dbObject.allDay,
         start: moment(dbObject.startTime),
-        end: moment(dbObject.endTime),
+        end: endTime,
+        realEnd: moment(dbObject.endTime),
         comments: dbObject.comments,
         location: dbObject.location,
         type: dbObject.type,
