@@ -170,8 +170,24 @@ button.dropdown-submit {
     background-color: #EEE;
 }
 
+.timeline-header {
+    background: #ddd;
+    border-left: solid 1px #ddd;
+    border-right: solid 1px #ddd;
+}
+
 .timeline-header.header-info {
+    background: #fff;
     font-size: 14px !important;
+}
+
+.timeline-footer, .timeline-body {
+    border-left: solid 1px #ddd;
+    border-right: solid 1px #ddd;
+}
+
+.ticket-message-bottom {
+    border-bottom: solid 1px #ddd;
 }
 
 .full-width {

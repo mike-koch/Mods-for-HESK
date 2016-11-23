@@ -1674,7 +1674,7 @@ function mfh_print_message() {
                     ?>
                 </div>
             <?php endif; ?>
-            <div class="timeline-footer">
+            <div class="timeline-footer ticket-message-bottom">
                 <div class="row">
                     <div class="col-md-12 text-right">
                         <?php echo hesk_getAdminButtonsInTicket(0); ?>
