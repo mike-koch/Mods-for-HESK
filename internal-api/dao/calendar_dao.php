@@ -20,7 +20,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         $sql .= "LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` AS `reminders` ON
         `reminders`.`user_id` = " . intval($_SESSION['id']) . " AND `reminders`.`event_id` = `events`.`id`";
     }
-    $sql .= "WHERE NOT (`end` < {$start_time_sql} AND `start` > {$end_time_sql}) AND `categories`.`usage` <> 1";
+    $sql .= "WHERE NOT (`end` < {$start_time_sql} OR `start` > {$end_time_sql}) AND `categories`.`usage` <> 1";
 
     if (!$staff) {
         $sql .= " AND `categories`.`type` = '0'";
