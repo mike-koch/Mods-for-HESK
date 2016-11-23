@@ -86,10 +86,12 @@ if ($total > 0) {
 
     $prev_page = ($page - 1 <= 0) ? 0 : $page - 1;
     $next_page = ($page + 1 > $pages) ? 0 : $page + 1;
-    $autorefreshInSeconds = $_SESSION['autorefresh'] / 1000;
-    $autorefresh = '';
-
-    echo sprintf($hesklang['tickets_on_pages'], $total, $pages) . $autorefresh . ' <br />';
+    echo sprintf($hesklang['tickets_on_pages'], $total, $pages);
+    echo '<div style="float:right">
+                    <a href="new_ticket.php" class="btn btn-success pull-left">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
+                        '.$hesklang['nti'].'
+                    </a></div><br><br>';
 
     if ($pages > 1) {
 
@@ -230,18 +232,18 @@ if ($total > 0) {
             // Prepare ticket priority
             switch ($ticket['priority']) {
                 case 0:
-                    $ticket['priority'] = '<span style="color: red; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="' . $hesklang['critical'] . '"></span>';
+                    $ticket['priority'] = '<span style="color: red; font-size:1.3em" class="fa fa-fw fa-long-arrow-up" data-toggle="tooltip" data-placement="top" title="' . $hesklang['critical'] . '"></span>';
                     $color = 'danger';
                     break;
                 case 1:
-                    $ticket['priority'] = '<span style="color: orange; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="' . $hesklang['high'] . '"></span>';
+                    $ticket['priority'] = '<span style="color: orange; font-size:1.3em" class="fa fa-fw fa-angle-double-up" data-toggle="tooltip" data-placement="top" title="' . $hesklang['high'] . '"></span>';
                     $color = 'warning';
                     break;
                 case 2:
-                    $ticket['priority'] = '<span style="color: green; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="' . $hesklang['medium'] . '"></span>';
+                    $ticket['priority'] = '<span style="color: green; font-size:1.3em" class="fa fa-fw fa-angle-double-down" data-toggle="tooltip" data-placement="top" title="' . $hesklang['medium'] . '"></span>';
                     break;
                 default:
-                    $ticket['priority'] = '<span style="color: blue; font-size:1.3em" class="glyphicon glyphicon-flag" data-toggle="tooltip" data-placement="top" title="' . $hesklang['low'] . '"></span>';
+                    $ticket['priority'] = '<span style="color: blue; font-size:1.3em" class="fa fa-fw fa-long-arrow-down" data-toggle="tooltip" data-placement="top" title="' . $hesklang['low'] . '"></span>';
             }
 
             // Set message (needed for row title)
@@ -387,7 +389,7 @@ if ($total > 0) {
 
             // End ticket row
             echo '
-		<td class="' . $color . '" style="text-align:center; white-space:nowrap;">' . $ticket['priority'] . '&nbsp;</td>
+		<td class="' . $color . '" style="text-align:left; white-space:nowrap;">' . $ticket['priority'] . '&nbsp;</td>
 		</tr>';
         } // End while
         ?>
@@ -396,10 +398,6 @@ if ($total > 0) {
         <table border="0" width="100%">
             <tr>
                 <td>
-                    <a href="new_ticket.php" class="btn btn-success pull-left">
-                        <span class="glyphicon glyphicon-plus-sign"></span>
-                        <?php echo $hesklang['nti']; ?>
-                    </a>
                 </td>
                 <td width="50%" class="text-right" style="vertical-align:top">
                     <select class="form-control" name="a">
