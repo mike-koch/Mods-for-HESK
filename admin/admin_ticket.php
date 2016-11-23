@@ -1078,7 +1078,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             ?>
         </div>
     </div>
-    <div class="box box-warning">
+    <div class="box box-warning box-solid">
         <div class="box-header with-border">
             <h1 class="box-title">
                 <?php echo $hesklang['notes']; ?>

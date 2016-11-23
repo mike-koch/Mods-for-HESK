@@ -190,6 +190,18 @@ button.dropdown-submit {
     border-bottom: solid 1px #ddd;
 }
 
+.box-warning.box-solid .box-body {
+    background: #fdebcf;
+}
+
+.box-warning.box-solid .box-body hr {
+    border-top: 1px solid #f39c12;
+}
+
+.box-warning.box-solid .box-footer {
+    background: #f39c12;
+}
+
 .full-width {
     width: 100%;
 }
