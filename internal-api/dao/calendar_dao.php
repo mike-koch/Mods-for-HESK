@@ -125,7 +125,7 @@ function create_event($event, $hesk_settings) {
     $sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` (`start`, `end`, `all_day`,
     `name`, `location`, `comments`, `category`) VALUES (
     '" . hesk_dbEscape($event['start']) . "', '" . hesk_dbEscape($event['end']) . "', '" . hesk_dbEscape($event['all_day']) . "',
-    '" . hesk_dbEscape($event['title']) . "', '" . hesk_dbEscape($event['location']) . "', '" . hesk_dbEscape($event['comments']) . "',
+    '" . hesk_dbEscape(addslashes($event['title'])) . "', '" . hesk_dbEscape(addslashes($event['location'])) . "', '" . hesk_dbEscape(addslashes($event['comments'])) . "',
     " . intval($event['category']) . ")";
 
     hesk_dbQuery($sql);
@@ -158,8 +158,8 @@ function update_event($event, $hesk_settings) {
 
     $sql = "UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` SET `start` = '" . hesk_dbEscape($event['start'])
         . "', `end` = '" . hesk_dbEscape($event['end']) . "', `all_day` = '" . hesk_dbEscape($event['all_day']) . "', `name` = '"
-        . hesk_dbEscape($event['title']) . "', `location` = '" . hesk_dbEscape($event['location']) . "', `comments` = '"
-        . hesk_dbEscape($event['comments']) . "', `category` = " . intval($event['category']) . " WHERE `id` = " . intval($event['id']);
+        . hesk_dbEscape(addslashes($event['title'])) . "', `location` = '" . hesk_dbEscape(addslashes($event['location'])) . "', `comments` = '"
+        . hesk_dbEscape(addslashes($event['comments'])) . "', `category` = " . intval($event['category']) . " WHERE `id` = " . intval($event['id']);
 
     if ($event['reminder_amount'] != null) {
         $delete_sql = "DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` WHERE `event_id` = " . intval($event['id'])
