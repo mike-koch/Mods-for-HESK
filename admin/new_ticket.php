@@ -371,13 +371,9 @@ $show_quick_help = $show['show'];
                                         $checked = '';
                                     }
 
-                                    //Clean up multiple dashes or whitespaces
-                                    $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                    $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                     echo '<div class="radio">
                                             <label>
-                                                <input type="radio" id="' . $formattedId . '" name="' . $k . '" value="' . $option . '" ' . $checked . $required_attribute . '>
+                                                <input type="radio" name="' . $k . '" value="' . $option . '" ' . $checked . $required_attribute . '>
                                                 ' . $option . '
                                             </label>
                                         </div>';
@@ -392,14 +388,10 @@ $show_quick_help = $show['show'];
                             /* Select drop-down box */
                             case 'select':
 
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
                                 echo '<div class="form-group' . $cls . '"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
-                        <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '" ' . $required_attribute . '>';
+                        <div class="col-sm-9"><select class="form-control" name="' . $k . '" ' . $required_attribute . '>';
 
                                 // Show "Click to select"?
                                 if (!empty($v['value']['show_select'])) {
@@ -423,9 +415,6 @@ $show_quick_help = $show['show'];
 
                             /* Checkbox */
                             case 'checkbox':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
 
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
                                 echo '<div class="form-group' . $cls . '"><label class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label><div align="left" class="col-sm-9">';
@@ -437,7 +426,7 @@ $show_quick_help = $show['show'];
                                         $checked = '';
                                     }
 
-                                    echo '<div class="checkbox"><label><input id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . $required_attribute . '> ' . $option . '</label></div>';
+                                    echo '<div class="checkbox"><label><input type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . $required_attribute . '> ' . $option . '</label></div>';
                                 }
                                 echo '
                                     <div class="help-block with-errors"></div></div></div>';
@@ -445,15 +434,11 @@ $show_quick_help = $show['show'];
 
                             /* Large text box */
                             case 'textarea':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
                                 echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
-                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>
+                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>
                                     <div class="help-block with-errors"></div></div></div>';
                                 break;
 
@@ -462,27 +447,19 @@ $show_quick_help = $show['show'];
                                     $required_attribute .= ' pattern="[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])"';
                                 }
 
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
                                 echo '
                         <div class="form-group' . $cls . '">
                             <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                             <div class="col-sm-9">
-                                <input type="text" class="datepicker form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
+                                <input type="text" class="datepicker form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40"
                                     value="' . $k_value . '" ' . $required_attribute . '>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>';
                                 break;
                             case 'email':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $v['name']);
-
                                 $suggest = $hesk_settings['detect_typos'] ? 'onblur="Javascript:hesk_suggestEmail(\''.$k.'\', \''.$k.'_suggestions\', 0, 1'.($v['value']['multiple'] ? ',1' : '').')"' : '';
 
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
@@ -490,7 +467,7 @@ $show_quick_help = $show['show'];
                                 echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" value="' . $k_value . '" '.$suggest.$required_attribute.'>
+                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" value="' . $k_value . '" '.$suggest.$required_attribute.'>
                             <div class="help-block with-errors"></div>
                         </div>
                         </div><div id="'.$k.'_suggestions"></div>';
@@ -501,10 +478,6 @@ $show_quick_help = $show['show'];
                             case 'hidden':
                             case 'readonly':
                             default:
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 if (strlen($k_value) != 0 || isset($_SESSION["as_$k"])) {
                                     $v['value']['default_value'] = $k_value;
                                 }
@@ -514,7 +487,7 @@ $show_quick_help = $show['show'];
                                 echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $cls . $required_attribute . '>
+                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $cls . $required_attribute . '>
                             <div class="help-block with-errors"></div>
                         </div>
                         </div>';
@@ -774,11 +747,7 @@ $show_quick_help = $show['show'];
                                         $checked = '';
                                     }
 
-                                    //Clean up multiple dashes or whitespaces
-                                    $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                    $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
-                                    echo '<div class="radio"><label><input type="radio" id="' . $formattedId . '" name="' . $k . '" value="' . $option . '" ' . $checked . ' ' . $required_attribute . '> ' . $option . '</label></div>';
+                                    echo '<div class="radio"><label><input type="radio" name="' . $k . '" value="' . $option . '" ' . $checked . ' ' . $required_attribute . '> ' . $option . '</label></div>';
                                 }
 
                                 echo '<div class="help-block with-errors"></div></div></div>';
@@ -786,15 +755,10 @@ $show_quick_help = $show['show'];
 
                             /* Select drop-down box */
                             case 'select':
-
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
                                 echo '<div class="form-group' . $cls . '"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
-                        <div class="col-sm-9"><select class="form-control" id="' . $formattedId . '" name="' . $k . '" ' . $required_attribute . '>';
+                        <div class="col-sm-9"><select class="form-control" name="' . $k . '" ' . $required_attribute . '>';
 
                                 // Show "Click to select"?
                                 if (!empty($v['value']['show_select'])) {
@@ -817,10 +781,6 @@ $show_quick_help = $show['show'];
 
                             /* Checkbox */
                             case 'checkbox':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
                                 echo '<div class="form-group' . $cls . '"><label class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label><div align="left" class="col-sm-9">';
 
@@ -831,22 +791,18 @@ $show_quick_help = $show['show'];
                                         $checked = '';
                                     }
 
-                                    echo '<div class="checkbox"><label><input id="' . $formattedId . '" type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $required_attribute . '> ' . $option . '</label></div>';
+                                    echo '<div class="checkbox"><label><input type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $required_attribute . '> ' . $option . '</label></div>';
                                 }
                                 echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
 
                             /* Large text box */
                             case 'textarea':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
                                 echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
-                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>
+                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>
                         <div class="help-block with-errors"></div></div>
                         </div>';
                                 break;
@@ -856,27 +812,19 @@ $show_quick_help = $show['show'];
                                     $required_attribute .= ' pattern="[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])"';
                                 }
 
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
                                 echo '
                         <div class="form-group' . $cls . '">
                             <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                             <div class="col-sm-9">
-                                <input type="text" class="datepicker form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40"
+                                <input type="text" class="datepicker form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40"
                                     value="' . $k_value . '" ' . $required_attribute . '>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>';
                                 break;
                             case 'email':
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 $suggest = $hesk_settings['detect_typos'] ? 'onblur="Javascript:hesk_suggestEmail(\''.$k.'\', \''.$k.'_suggestions\', 0, 1'.($v['value']['multiple'] ? ',1' : '').')"' : '';
 
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
@@ -884,7 +832,7 @@ $show_quick_help = $show['show'];
                                 echo '<div class="form-group">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" value="' . $k_value . '" '.$suggest.' ' . $required_attribute . '>
+                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" value="' . $k_value . '" '.$suggest.' ' . $required_attribute . '>
                             <div class="help-block with-errors"></div>
                         </div>
                         </div><div id="'.$k.'_suggestions"></div>';
@@ -894,10 +842,6 @@ $show_quick_help = $show['show'];
                             case 'hidden':
                             case 'readonly':
                             default:
-                                //Clean up multiple dashes or whitespaces
-                                $formattedId = preg_replace("/[\s-]+/", " ", $v['name']);
-                                $formattedId = preg_replace("/[\s_]/", "-", $formattedId);
-
                                 if (strlen($k_value) != 0 || isset($_SESSION["as_$k"])) {
                                     $v['value']['default_value'] = $k_value;
                                 }
@@ -907,7 +851,7 @@ $show_quick_help = $show['show'];
                                 echo '<div class="form-group">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="' . htmlspecialchars($v['name']) . '" id="' . $formattedId . '" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $required_attribute . '>
+                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $required_attribute . '>
                             <div class="help-block with-errors"></div>
                         </div>
                         </div>';
