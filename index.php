@@ -218,8 +218,6 @@ function print_add_ticket()
         define('RECAPTCHA', 1);
     }
 
-    define('PAGE_TITLE', 'CUSTOMER_TICKET');
-
     // Get categories
     $hesk_settings['categories'] = array();
     $res = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `type`='0' ORDER BY `cat_order` ASC");
