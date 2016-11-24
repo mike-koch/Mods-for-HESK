@@ -52,8 +52,8 @@ if (defined('SHOW_ONLINE'))
 // The closing div here is to close the content area on each page. Annoying, but necessary.
 if (defined('ADMIN_PAGE')) {
 	echo '
-	</div>
-	<footer class="main-footer">';
+		</div>
+	</div>';
 }
 
 
@@ -82,9 +82,5 @@ XRtX3NvdXJjZT1IZXNrJmFtcDt1dG1fbWVkaXVtPWNwYyZhbXA7dXRtX2NhbXBhaWduPUhlc2tQcm9kd
 WN0X1RvX0hQIj5TeXNBaWQ8L2E+PC9zcGFuPjwvcD4nOw0KfQ0KZWNobyAnPC90ZD48L3RyPjwvdGFib
 GU+PC9kaXY+JzsNCmluY2x1ZGUoSEVTS19QQVRIIC4gJ2Zvb3Rlci50eHQnKTsNCmVjaG8gJzwvYm9ke
 T48L2h0bWw+Jzs=',"\112");
-
-if (defined('ADMIN_PAGE')) {
-	echo '</footer>';
-}
 
 exit();
