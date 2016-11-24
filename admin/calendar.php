@@ -155,30 +155,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </section>
-<div class="row pad-20">
-    <div class="col-lg-9">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>
-                    <?php
-                    echo $hesklang['calendar_title_case'];
-                    if (hesk_checkPermission('can_man_calendar', 0)):
-                    ?>
-                    <span class="nu-floatRight panel-button">
-                        <button class="btn btn-success" id="create-event-button">
-                            <i class="fa fa-plus-circle"></i>
-                            <?php echo $hesklang['new_event']; ?>
-                        </button>
-                    </span>
-                    <?php endif; ?>
-                </h4>
-            </div>
-            <div class="panel-body">
-
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal fade" id="create-event-modal" tabindex="-1" role="dialog" style="overflow: hidden">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
