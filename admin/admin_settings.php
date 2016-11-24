@@ -374,7 +374,7 @@ $modsForHesk_settings = mfh_getSettings();
                         if ($hesk_settings['check_updates']) {
                             if (strpos($modsForHeskVersion, 'beta') || strpos($modsForHeskVersion, 'dev') || strpos($modsForHeskVersion, 'RC')) {
                                 echo ' <span class="dark-orange">' . $hesklang['beta'] . '</span> '; ?> <a
-                                href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
+                                href="https://mods-for-hesk.mkochcs.com/versioncheck.php?v=<?php echo $modsForHeskVersion; ?>"
                                 target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
                             } elseif ($latest === true) {
                                 echo ' - <span class="green">' . $hesklang['mfh_up_to_date'] . '</span>';
