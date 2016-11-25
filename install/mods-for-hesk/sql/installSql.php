@@ -16,8 +16,8 @@ function executeQuery($sql)
         if ($res = @mysqli_query($hesk_db_link, $sql)) {
             return $res;
         } else {
-            print "Could not execute query: $sql. MySQL said: " . mysqli_error($hesk_db_link);
             http_response_code(500);
+            print "Could not execute query: $sql. MySQL said: " . mysqli_error($hesk_db_link);
             die();
         }
     } else {
@@ -30,8 +30,8 @@ function executeQuery($sql)
         if ($res = @mysql_query($sql, $hesk_db_link)) {
             return $res;
         } else {
-            print "Could not execute query: $sql. MySQL said: " . mysql_error();
             http_response_code(500);
+            print "Could not execute query: $sql. MySQL said: " . mysql_error();
             die();
         }
     }
@@ -43,6 +43,7 @@ function executePre140Scripts()
     global $hesk_settings;
 
     hesk_dbConnect();
+
     //-- Need to do this since we are no longer restricted on IDs and we want an INT for proper INNER JOINs
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD COLUMN `status_int` INT NOT NULL DEFAULT 0 AFTER `status`;");
 
@@ -172,7 +173,7 @@ function execute170Scripts()
       `priority` enum('0','1','2','3') COLLATE utf8_unicode_ci NOT NULL DEFAULT '3',
       `subject` varchar(70) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
       `message` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-      `dt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+      `dt` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
       `lastchange` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       `ip` varchar(46) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
       `language` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -320,7 +321,7 @@ function execute211Scripts()
     global $hesk_settings;
 
     hesk_dbConnect();
-    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` CHANGE `dt` `dt` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` CHANGE `dt` `dt` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00'");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets`
 					CHANGE `email` `email` VARCHAR( 1000 ) NOT NULL DEFAULT '',
 					CHANGE `ip` `ip` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
