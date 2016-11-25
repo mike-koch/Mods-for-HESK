@@ -48,7 +48,7 @@ $can_ban_emails = hesk_checkPermission('can_ban_emails', 0);
 $can_unban_emails = hesk_checkPermission('can_unban_emails', 0);
 $can_ban_ips = hesk_checkPermission('can_ban_ips', 0);
 $can_unban_ips = hesk_checkPermission('can_unban_ips', 0);
-$can_resolve		 = hesk_checkPermission('can_resolve', 0);
+$can_resolve = hesk_checkPermission('can_resolve', 0);
 
 // Get ticket ID
 $trackingID = hesk_cleanID() or print_form();
@@ -1767,7 +1767,7 @@ function hesk_printTicketReplies()
 
 function hesk_printReplyForm()
 {
-    global $hesklang, $hesk_settings, $ticket, $admins, $can_options, $options, $can_assign_self, $isManager, $modsForHesk_settings;
+    global $hesklang, $hesk_settings, $ticket, $admins, $can_options, $can_resolve, $options, $can_assign_self, $isManager, $modsForHesk_settings;
 
     // Force assigning a ticket before allowing to reply?
     if ($hesk_settings['require_owner'] && ! $ticket['owner'])
@@ -1956,7 +1956,7 @@ function hesk_printReplyForm()
                     <input type="hidden" name="orig_id" value="<?php echo $ticket['id']; ?>"/>
                     <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
 
-                    <div class="btn-group">
+                    <div class="btn-group dropup">
                         <input class="btn btn-primary" type="submit" value="<?php echo $hesklang['submit_reply']; ?>">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                                 aria-expanded="false">
