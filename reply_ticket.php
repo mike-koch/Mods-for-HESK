@@ -61,6 +61,7 @@ $_SESSION['t_email'] = $my_email;
 $message = hesk_input(hesk_POST('message'));
 
 // If the message was entered, further parse it
+$modsForHesk_settings = mfh_getSettings();
 if (strlen($message) && !$modsForHesk_settings['rich_text_for_tickets_for_customers']) {
     // Make links clickable
     $message = hesk_makeURL($message);
@@ -168,7 +169,9 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
 }
 
 // If staff hasn't replied yet, don't change the status; otherwise set it to the status for customer replies.
-if (hesk_can_customer_change_status($ticket['status'])) {
+$rs = hesk_dbQuery("SELECT `Closable` from `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `ID` = " . intval($ticket['status']));
+$is_status_changable = hesk_dbFetchAssoc($rs);
+if ($is_status_changable['Closable'] == 'yes' || $is_status_changable['Closable'] == 'conly') {
     $customerReplyStatusQuery = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsCustomerReplyStatus` = 1';
     $defaultNewTicketStatusQuery = 'SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsNewTicketStatus` = 1';
     $newStatusRs = hesk_dbQuery($customerReplyStatusQuery);
