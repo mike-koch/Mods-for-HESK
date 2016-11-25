@@ -1244,7 +1244,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
             </div>
             <div class="box-body">
-                <?php echo $ticket['history']; ?>
+                <ul>
+                    <?php echo $ticket['history']; ?>
+                </ul>
             </div>
         </div>
     <?php }
