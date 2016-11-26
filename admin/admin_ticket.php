@@ -1287,18 +1287,53 @@ function hesk_getAdminButtons($category_id)
     /* Print ticket button */
     $options .= '<a class="btn btn-default" href="../print.php?track=' . $trackingID . '"><i class="fa fa-print"></i> ' . $hesklang['printer_friendly'] . '</a> ';
 
-    /* Delete ticket */
-    if ($can_delete) {
-        if ($reply) {
-            $url = 'admin_ticket.php';
-            $tmp = 'delete_post=' . $reply['id'];
-            $txt = $hesklang['delt'];
-        } else {
-            $url = 'delete_tickets.php';
-            $tmp = 'delete_ticket=1';
-            $txt = $hesklang['dele'];
+    /* Copy ticket button */
+    $strippedName = strip_tags($ticket['name']);
+    $strippedEmail = strip_tags($ticket['email']);
+    $linkText = 'new_ticket.php?name=' . $strippedName . '&email=' . $strippedEmail . '&catid=' . $category_id . '&priority=' . $ticket['priority'];
+    foreach ($hesk_settings['custom_fields'] as $k => $v) {
+        if ($v['use'] == 1) {
+
+            if ($v['type'] == 'checkbox') {
+                $value = str_replace('<br />', '-CHECKBOX-', $ticket[$k]);
+            } else {
+                $value = $ticket[$k];
+            }
+            $strippedCustomField = strip_tags($value);
+            $linkText .= '&c_' . $k . '=' . $strippedCustomField;
         }
-        $options .= '<a class="btn btn-default" href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . hesk_makeJsString($txt) . '?\');"><i class="fa fa-times red"></i> ' . $txt . '</a> ';
+    }
+    $options .= '<a class="btn btn-default" href=""><i class="fa fa-copy fa-fw"></i> ' . $hesklang['copy_ticket'] . '</a> ';
+
+    /* Close/Reopen ticket link */
+    $random = rand(10000, 99999);
+
+    $statusSql = 'SELECT `ID`, `IsStaffClosedOption`, `IsStaffReopenedStatus` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsStaffClosedOption` = 1 OR `IsStaffReopenedStatus` = 1';
+    $statusRs = hesk_dbQuery($statusSql);
+    $staffClosedOptionStatus = array();
+    $staffReopenedStatus = array();
+    while ($statusRow = hesk_dbFetchAssoc($statusRs)) {
+        if ($statusRow['IsStaffReopenedStatus'] == 1) {
+            $staffReopenedStatus['ID'] = $statusRow['ID'];
+        } else {
+            $staffClosedOptionStatus['ID'] = $statusRow['ID'];
+        }
+    }
+
+    $isTicketClosedSql = 'SELECT `IsClosed`, `Closable` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `ID` = ' . $ticket['status'];
+    $isTicketClosedRs = hesk_dbQuery($isTicketClosedSql);
+    $isTicketClosedRow = hesk_dbFetchAssoc($isTicketClosedRs);
+    $isTicketClosed = $isTicketClosedRow['IsClosed'];
+    $isClosable = $isTicketClosedRow['Closable'] == 'yes' || $isTicketClosedRow['Closable'] == 'sonly';
+
+    $mgr = $isManager ? '&amp;isManager=1' : '';
+    if ($isTicketClosed == 0 && $isClosable && $can_resolve) // Ticket is still open
+    {
+        $options .= '<a class="btn btn-default" href="change_status.php?track=' . $trackingID . $mgr . '&amp;s=' . $staffClosedOptionStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
+                    <i class="fa fa-check-circle green"></i> ' . $hesklang['close_action'] . '</a> ';
+    } elseif ($isTicketClosed == 1) {
+        $options .= '<a class="btn btn-default" href="change_status.php?track=' . $trackingID . $mgr . '&amp;s=' . $staffReopenedStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
+                    <i class="fa fa-folder-open-o green"></i> ' . $hesklang['open_action'] . '</a> ';
     }
 
     $dropdown = '
@@ -1421,37 +1456,6 @@ function hesk_getAdminButtons($category_id)
         $dropdown .= '<li role="separator" class="divider"></li>';
     }
 
-    /* Close/Reopen ticket link */
-    $random = rand(10000, 99999);
-
-    $statusSql = 'SELECT `ID`, `IsStaffClosedOption`, `IsStaffReopenedStatus` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsStaffClosedOption` = 1 OR `IsStaffReopenedStatus` = 1';
-    $statusRs = hesk_dbQuery($statusSql);
-    $staffClosedOptionStatus = array();
-    $staffReopenedStatus = array();
-    while ($statusRow = hesk_dbFetchAssoc($statusRs)) {
-        if ($statusRow['IsStaffReopenedStatus'] == 1) {
-            $staffReopenedStatus['ID'] = $statusRow['ID'];
-        } else {
-            $staffClosedOptionStatus['ID'] = $statusRow['ID'];
-        }
-    }
-
-    $isTicketClosedSql = 'SELECT `IsClosed`, `Closable` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `ID` = ' . $ticket['status'];
-    $isTicketClosedRs = hesk_dbQuery($isTicketClosedSql);
-    $isTicketClosedRow = hesk_dbFetchAssoc($isTicketClosedRs);
-    $isTicketClosed = $isTicketClosedRow['IsClosed'];
-    $isClosable = $isTicketClosedRow['Closable'] == 'yes' || $isTicketClosedRow['Closable'] == 'sonly';
-
-    $mgr = $isManager ? '&amp;isManager=1' : '';
-    if ($isTicketClosed == 0 && $isClosable && $can_resolve) // Ticket is still open
-    {
-        $dropdown .= '<li><a href="change_status.php?track=' . $trackingID . $mgr . '&amp;s=' . $staffClosedOptionStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
-                    <i class="fa fa-check-circle fa-fw"></i> ' . $hesklang['close_action'] . '</a></li>';
-    } elseif ($isTicketClosed == 1) {
-        $dropdown .= '<li><a href="change_status.php?track=' . $trackingID . $mgr . '&amp;s=' . $staffReopenedStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
-                    <i class="fa fa-check-circle fa-fw"></i> ' . $hesklang['open_action'] . '</a></li>';
-    }
-
     /* Lock ticket button */
     if ($can_resolve) {
         $template = '<li><a href="lock.php?track=' . $trackingID . '&amp;locked=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-%s fa-fw"></i> %s</a></li>';
@@ -1474,24 +1478,19 @@ function hesk_getAdminButtons($category_id)
         $dropdown .= '<li><a href="manage_knowledgebase.php?a=import_article&amp;track=' . $trackingID . '"><i class="fa fa-lightbulb-o fa-fw"></i> ' . $hesklang['import_kb'] . '</a></li>';
     }
 
-    /* Create ticket for same contact button */
-    $strippedName = strip_tags($ticket['name']);
-    $strippedEmail = strip_tags($ticket['email']);
-    $linkText = 'new_ticket.php?name=' . $strippedName . '&email=' . $strippedEmail . '&catid=' . $category_id . '&priority=' . $ticket['priority'];
-    foreach ($hesk_settings['custom_fields'] as $k => $v) {
-        if ($v['use'] == 1) {
-
-            if ($v['type'] == 'checkbox') {
-                $value = str_replace('<br />', '-CHECKBOX-', $ticket[$k]);
-            } else {
-                $value = $ticket[$k];
-            }
-            $strippedCustomField = strip_tags($value);
-            $linkText .= '&c_' . $k . '=' . $strippedCustomField;
+    /* Delete ticket */
+    if ($can_delete) {
+        if ($reply) {
+            $url = 'admin_ticket.php';
+            $tmp = 'delete_post=' . $reply['id'];
+            $txt = $hesklang['delt'];
+        } else {
+            $url = 'delete_tickets.php';
+            $tmp = 'delete_ticket=1';
+            $txt = $hesklang['dele'];
         }
+        $dropdown .= '<li><a href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . hesk_makeJsString($txt) . '?\');"><i class="fa fa-fw fa-times"></i> ' . $txt . '</a></li>';
     }
-
-    $dropdown .= '<li><a href="' . $linkText . '"><i class="fa fa-plus fa-fw"></i> ' . $hesklang['create_based_on_contact'] . '</a></li>';
     $dropdown .= '</ul></div> ';
     $options .= $dropdown;
 

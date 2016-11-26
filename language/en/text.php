@@ -93,6 +93,7 @@ $hesklang['staff_login_title'] = 'Staff Login';
 $hesklang['manage_custom_fields'] = 'Manage Custom Fields';
 $hesklang['value'] = 'Value';
 $hesklang['readonly'] = 'Readonly';
+$hesklang['copy_ticket'] = 'Copy Ticket';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';
@@ -466,7 +467,6 @@ $hesklang['verify_your_email'] = 'Your ticket has been created; however your ema
 $hesklang['installation_information'] = 'Installation Information';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.6.0
-$hesklang['create_based_on_contact'] = 'Create Ticket For Same Contact';
 $hesklang['notify_note_unassigned'] = 'Someone adds a note to a ticket not assigned to me';
 $hesklang['can_change_notification_settings'] = 'Can change notification settings';
 $hesklang['add_row'] = 'Add row';
