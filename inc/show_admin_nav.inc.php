@@ -35,6 +35,16 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
+            <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">Ticket</a></li>
+                    <li><a href="#">Knowledgebase</a></li>
+                    <li><a href="#">Calendar</a></li>
+                    <li><a href="#">Reports</a></li>
+                    <li><a href="#">Tools</a></li>
+                </ul>
+            </div>
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
@@ -132,7 +142,6 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             <li class="footer"><a href="mail.php">See All Messages</a></li>
                         </ul>
                     </li>
-                    <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="profile.php">
                             <!--<img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">-->
@@ -140,7 +149,9 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             <span class="hidden-xs"><?php echo hesk_SESSION('name'); ?></span>
                         </a>
                     </li>
-                    <!-- Control Sidebar Toggle Button -->
+                    <li>
+                        <a href="#"><i class="fa fa-cog"></i></a>
+                    </li>
                     <li>
                         <a href="index.php?a=logout&amp;token=<?php echo hesk_token_echo(); ?>">
                             <i class="octicon octicon-sign-out"></i>
