@@ -205,3 +205,7 @@ button.dropdown-submit {
 .full-width {
     width: 100%;
 }
+
+.dropdown-title {
+    padding: 3px 20px;
+}

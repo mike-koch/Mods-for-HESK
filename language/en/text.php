@@ -50,7 +50,6 @@ $hesklang['you_have_x_messages'] = 'You have %s new %s'; // %s: Number of new me
 $hesklang['message_lower_case'] = 'message';
 $hesklang['messages_lower_case'] = 'messages';
 $hesklang['deleted_user_title_case'] = 'Deleted User';
-$hesklang['main_navigation_uppercase'] = 'MAIN NAVIGATION';
 $hesklang['x_system_warnings'] = '%s System %s'; // %s: Number of warnings, $s: "Warning" or "Warnings", depending on #
 $hesklang['warnings_title_case'] = 'Warnings';
 $hesklang['articles_in_category_x'] = 'Articles in Category %s'; // %s: category name
@@ -94,6 +93,8 @@ $hesklang['manage_custom_fields'] = 'Manage Custom Fields';
 $hesklang['value'] = 'Value';
 $hesklang['readonly'] = 'Readonly';
 $hesklang['copy_ticket'] = 'Copy Ticket';
+$hesklang['canned_responses_dropdown_title'] = 'Canned Responses';
+$hesklang['helpdesk_settings'] = 'Helpdesk Settings';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';

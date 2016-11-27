@@ -13,7 +13,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
-define('PAGE_TITLE', 'ADMIN_HOME');
+define('PAGE_TITLE', 'ADMIN_TICKET');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');

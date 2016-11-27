@@ -24,7 +24,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
         <!-- Logo -->
         <a href="<?php echo $modsForHesk_settings['navbar_title_url']; ?>" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><!-- TODO Add setting for "Mini Title" --></span>
+            <span class="logo-mini">&nbsp;</span>
             <!-- logo for regular state and mobile devices -->
             <span class="logo-lg"><?php echo $hesk_settings['hesk_title'] ?></span>
         </a>
@@ -37,12 +37,85 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
             </a>
             <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Ticket</a></li>
-                    <li><a href="#">Knowledgebase</a></li>
-                    <li><a href="#">Calendar</a></li>
-                    <li><a href="#">Reports</a></li>
-                    <li><a href="#">Tools</a></li>
+                    <?php
+                    $active = '';
+                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_HOME') {
+                        $active = 'class="active"';
+                    }
+                    ?>
+                    <li <?php echo $active; ?>>
+                        <a href="admin_main.php">
+                            <i class="fa fa-home" <?php echo $iconDisplay; ?>></i> <span><?php echo $hesklang['main_page']; ?></span>
+                        </a>
+                    </li>
+                    <?php
+                    if ($hesk_settings['kb_enable']):
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_KB') {
+                            $active = 'class="active"';
+                        }
+                        if (hesk_checkPermission('can_man_kb', 0)):
+                            ?>
+                            <li <?php echo $active; ?>>
+                                <a href="manage_knowledgebase.php">
+                                    <i class="fa fa-book" <?php echo $iconDisplay; ?>></i>
+                                    <span><?php echo $hesklang['menu_kb']; ?></span>
+                                </a>
+                            </li>
+                        <?php else: ?>
+                            <li <?php echo $active; ?>>
+                                <a href="knowledgebase_private.php">
+                                    <i class="fa fa-book" <?php echo $iconDisplay; ?>></i>
+                                    <span><?php echo $hesklang['menu_kb']; ?></span>
+                                </a>
+                            </li>
+                        <?php
+                        endif;
+                    endif;
+
+                    if ($modsForHesk_settings['enable_calendar'] != 0):
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CALENDAR') {
+                            $active = 'class="active"';
+                        }
+                        ?>
+                        <li <?php echo $active; ?>>
+                            <a href="calendar.php">
+                                <i class="fa fa-calendar" <?php echo $iconDisplay; ?>></i>
+                                <span><?php echo $hesklang['calendar_title_case']; ?></span>
+                            </a>
+                        </li>
+                        <?php
+                    endif;
+
+                    if (hesk_checkPermission('can_run_reports', 0)):
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_REPORTS') {
+                            $active = 'class="active"';
+                        }
+                        ?>
+                        <li <?php echo $active; ?>>
+                            <a href="reports.php">
+                                <i class="fa fa-line-chart" <?php echo $iconDisplay; ?>></i>
+                                <span><?php echo $hesklang['reports']; ?></span>
+                            </a>
+                        </li>
+                        <?php
+                    elseif (hesk_checkPermission('can_export', 0)):
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_REPORTS') {
+                            $active = 'class="active"';
+                        }
+                        ?>
+                        <li <?php echo $active; ?>>
+                            <a href="export.php">
+                                <i class="fa fa-line-chart" <?php echo $iconDisplay; ?>></i>
+                                <span><?php echo $hesklang['reports']; ?></span>
+                            </a>
+                        </li>
+                        <?php
+                    endif;
+                    ?>
                 </ul>
             </div>
             <!-- Navbar Right Menu -->
@@ -149,8 +222,197 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             <span class="hidden-xs"><?php echo hesk_SESSION('name'); ?></span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cog"></i></a>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- TODO -->
+                            <?php
+                            if (hesk_checkPermission('can_man_users', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_USERS') {
+                                    $active = 'active ';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="manage_users.php">
+                                        <i class="fa fa-fw fa-users" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['manage_users']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_man_permission_tpl', 0)) :
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_USERS') {
+                                    $active = 'active';
+                                }
+                            ?>
+                            <li class="<?php echo $active; ?>">
+                                <a href="manage_permission_templates.php">
+                                    <i class="fa fa-fw fa-users" <?php echo $iconDisplay; ?>></i>
+                                    <span><?php echo $hesklang['permission_templates']; ?></span>
+                                </a>
+                            </li>
+                            <?php
+                            endif;
+                            if (hesk_checkPermission('can_man_cat', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CATEGORIES') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="manage_categories.php">
+                                        <i class="fa fa-fw fa-pie-chart" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['menu_cat']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_man_canned', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CANNED') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="manage_canned.php">
+                                        <i class="fa fa-fw fa-file-text-o" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['canned_responses_dropdown_title']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_man_ticket_tpl', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CANNED') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="manage_ticket_templates.php">
+                                        <i class="fa fa-fw fa-ticket" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['ticket_tpl']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_ban_emails', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_BANNED_EMAILS') {
+                                    $active = 'active';
+                                }
+                            ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="banned_emails.php">
+                                        <i class="fa fa-fw fa-ban" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['manage_banned_emails']; ?></span>
+                                    </a>
+                                </li>
+                            <?php
+                            endif;
+                            if (hesk_checkPermission('can_ban_ips', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_BANNED_IPS') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="banned_ips.php">
+                                        <i class="fa fa-fw fa-ban" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['manage_banned_ips']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_service_msg', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_SERVICE_MESSAGES') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="service_messages.php">
+                                        <i class="fa fa-fw fa-sticky-note-o" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['sm_title']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_man_email_tpl', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_EMAIL_TEMPLATES') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="email_templates.php">
+                                        <i class="fa fa-fw fa-envelope-o" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['manage_email_templates']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_man_ticket_statuses', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_STATUSES') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="manage_statuses.php">
+                                        <i class="fa fa-fw fa-exchange" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['manage_statuses']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_man_settings', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CUSTOM_FIELDS') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="custom_fields.php">
+                                        <i class="fa fa-fw fa-plus-square-o" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['manage_custom_fields']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_view_logs', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_LOGS') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?>">
+                                    <a href="view_message_log.php">
+                                        <i class="fa fa-fw fa-heartbeat" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['view_message_log']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            if (hesk_checkPermission('can_man_settings', 0)):
+                                $active = '';
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_SETTINGS') {
+                                    $active = 'active';
+                                }
+                                ?>
+                                <li class="<?php echo $active; ?> treeview">
+                                    <a href="admin_settings.php">
+                                        <i class="fa fa-fw fa-cog" <?php echo $iconDisplay; ?>></i>
+                                        <span><?php echo $hesklang['helpdesk_settings']; ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            endif;
+                            ?>
+                        </ul>
                     </li>
                     <li>
                         <a href="index.php?a=logout&amp;token=<?php echo hesk_token_echo(); ?>">
@@ -162,301 +424,4 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
 
         </nav>
     </header>
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-            <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu">
-                <li class="header"><?php echo $hesklang['main_navigation_uppercase']; ?></li>
-                <?php
-                $active = '';
-                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_HOME') {
-                    $active = 'active';
-                }
-                ?>
-                <li class="<?php echo $active; ?> treeview">
-                    <a href="admin_main.php">
-                        <i class="fa fa-home" <?php echo $iconDisplay; ?>></i> <span><?php echo $hesklang['main_page']; ?></span>
-                    </a>
-                </li>
-                <?php if (hesk_checkPermission('can_man_users', 0) && hesk_checkPermission('can_man_permission_tpl', 0)) :
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_USERS') {
-                        $active = 'active';
-                    }
-                ?>
-                <li class="<?php echo $active; ?> treeview">
-                    <a href="#">
-                        <i class="fa fa-users" <?php echo $iconDisplay; ?>></i>
-                        <span><?php echo $hesklang['menu_users']; ?></span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li>
-                            <a href="manage_users.php"><i class="fa fa-circle-o"></i> <?php echo $hesklang['manage_users']; ?></a>
-                        </li>
-                        <li>
-                            <a href="manage_permission_templates.php"><i class="fa fa-circle-o"></i> <?php echo $hesklang['permission_tpl_man']; ?></a>
-                        </li>
-                    </ul>
-                </li>
-                <?php
-                elseif (hesk_checkPermission('can_man_users', 0)) :
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_USERS') {
-                        $active = 'active';
-                    }
-                ?>
-                <li class="<?php echo $active; ?> treeview">
-                    <a href="manage_users.php">
-                        <i class="fa fa-users" <?php echo $iconDisplay; ?>></i>
-                        <span><?php echo $hesklang['menu_users']; ?></span>
-                    </a>
-                </li>
-                <?php
-                elseif (hesk_checkPermission('can_man_permission_tpl', 0)) :
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_USERS') {
-                        $active = 'active';
-                    }
-                ?>
-                <li class="<?php echo $active; ?> treeview">
-                    <a href="manage_permission_templates.php">
-                        <i class="fa fa-users" <?php echo $iconDisplay; ?>></i>
-                        <span><?php echo $hesklang['permission_templates']; ?></span>
-                    </a>
-                </li>
-                <?php
-                endif;
-                if (hesk_checkPermission('can_man_cat', 0)):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CATEGORIES') {
-                        $active = 'active';
-                    }
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="manage_categories.php">
-                            <i class="fa fa-pie-chart" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['menu_cat']; ?></span>
-                        </a>
-                    </li>
-                <?php
-                endif;
-                if (hesk_checkPermission('can_man_canned', 0) && hesk_checkPermission('can_man_ticket_tpl', 0)):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CANNED') {
-                        $active = 'active';
-                    }
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="#">
-                            <i class="fa fa-file-text-o" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['menu_can']; ?></span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li>
-                                <a href="manage_canned.php"><i class="fa fa-circle-o"></i> <?php echo $hesklang['can_man_canned']; ?></a>
-                            </li>
-                            <li>
-                                <a href="manage_ticket_templates.php"><i class="fa fa-circle-o"></i> <?php echo $hesklang['ticket_tpl_man']; ?></a>
-                            </li>
-                        </ul>
-                    </li>
-                <?php
-                elseif (hesk_checkPermission('can_man_canned', 0)):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CANNED') {
-                        $active = 'active';
-                    }
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="manage_canned.php">
-                            <i class="fa fa-file-text-o" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['menu_can']; ?></span>
-                        </a>
-                    </li>
-                <?php
-                elseif (hesk_checkPermission('can_man_ticket_tpl', 0)):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CANNED') {
-                        $active = 'active';
-                    }
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="manage_ticket_templates.php">
-                            <i class="fa fa-file-text-o" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['menu_can']; ?></span>
-                        </a>
-                    </li>
-                <?php
-                endif;
-                if ($hesk_settings['kb_enable']):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_KB') {
-                        $active = 'active';
-                    }
-                    if (hesk_checkPermission('can_man_kb', 0)):
-                ?>
-                        <li class="<?php echo $active; ?> treeview">
-                            <a href="manage_knowledgebase.php">
-                                <i class="fa fa-book" <?php echo $iconDisplay; ?>></i>
-                                <span><?php echo $hesklang['menu_kb']; ?></span>
-                            </a>
-                        </li>
-                    <?php else: ?>
-                        <li class="<?php echo $active; ?> treeview">
-                            <a href="knowledgebase_private.php">
-                                <i class="fa fa-book" <?php echo $iconDisplay; ?>></i>
-                                <span><?php echo $hesklang['menu_kb']; ?></span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                <?php
-                endif;
-                if ($modsForHesk_settings['enable_calendar'] != 0):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CALENDAR') {
-                        $active = 'active';
-                    }
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="calendar.php">
-                            <i class="fa fa-calendar" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['calendar_title_case']; ?></span>
-                        </a>
-                    </li>
-                <?php
-                endif;
-                if (hesk_checkPermission('can_run_reports', 0)):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_REPORTS') {
-                        $active = 'active';
-                    }
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="reports.php">
-                            <i class="fa fa-line-chart" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['reports']; ?></span>
-                        </a>
-                    </li>
-                <?php
-                elseif (hesk_checkPermission('can_export', 0)):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_REPORTS') {
-                        $active = 'active';
-                    }
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="export.php">
-                            <i class="fa fa-line-chart" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['reports']; ?></span>
-                        </a>
-                    </li>
-                <?php
-                endif;
-
-                $tools_count = 0;
-                $dropdown_items = array();
-                if (hesk_checkPermission('can_ban_emails', 0)) {
-                    $tools_count++;
-                    $dropdown_items['banned_emails'] = $hesklang['manage_banned_emails'];
-                }
-                if (hesk_checkPermission('can_ban_ips', 0)) {
-                    $tools_count++;
-                    $dropdown_items['banned_ips'] = $hesklang['manage_banned_ips'];
-                }
-                if (hesk_checkPermission('can_service_msg', 0)) {
-                    $tools_count++;
-                    $dropdown_items['service_messages'] = $hesklang['manage_service_messages'];
-                }
-                if (hesk_checkPermission('can_man_email_tpl', 0)) {
-                    $tools_count++;
-                    $dropdown_items['manage_email_templates'] = $hesklang['manage_email_templates'];
-                }
-                if (hesk_checkPermission('can_man_ticket_statuses', 0)) {
-                    $tools_count++;
-                    $dropdown_items['manage_statuses'] = $hesklang['manage_statuses'];
-                }
-                if (hesk_checkPermission('can_man_settings', 0)) {
-                    $tools_count++;
-                    $dropdown_items['custom_fields'] = $hesklang['manage_custom_fields'];
-                }
-                if (hesk_checkPermission('can_view_logs', 0)) {
-                    $tools_count++;
-                    $dropdown_items['view_message_log'] = $hesklang['view_message_log'];
-                }
-
-                if (count($dropdown_items) > 1):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_TOOLS') {
-                        $active = 'active';
-                    }
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="#">
-                            <i class="fa fa-wrench" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['tools']; ?></span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <?php foreach($dropdown_items as $path => $text): ?>
-                                <li>
-                                    <a href="<?php echo $path; ?>.php"><i class="fa fa-circle-o"></i> <?php echo $text; ?></a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </li>
-                <?php
-                elseif (count($dropdown_items) == 1):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_TOOLS') {
-                        $active = 'active';
-                    }
-                    reset($dropdown_items);
-                    $page = key($dropdown_items);
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="<?php echo $page; ?>.php">
-                            <i class="fa fa-wrench" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $dropdown_items[$page]; ?></span>
-                        </a>
-                    </li>
-                <?php
-                endif;
-                if (hesk_checkPermission('can_man_settings', 0)):
-                    $active = '';
-                    if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_SETTINGS') {
-                        $active = 'active';
-                    }
-                ?>
-                    <li class="<?php echo $active; ?> treeview">
-                        <a href="admin_settings.php">
-                            <i class="fa fa-cog" <?php echo $iconDisplay; ?>></i>
-                            <span><?php echo $hesklang['settings']; ?></span>
-                        </a>
-                    </li>
-                <?php
-                endif;
-                $active = '';
-                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_PROFILE') {
-                    $active = 'active';
-                }
-                ?>
-                <li class="<?php echo $active; ?> treeview">
-                    <a href="profile.php">
-                        <i class="fa fa-user" <?php echo $iconDisplay; ?>></i>
-                        <span><?php echo $hesklang['menu_profile']; ?></span>
-                    </a>
-                </li>
-            </ul>
-        </section>
-        <!-- /.sidebar -->
-    </aside>
     <div class="content-wrapper">
