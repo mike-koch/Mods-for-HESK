@@ -233,8 +233,14 @@ $modsForHesk_settings = mfh_getSettings();
     ?>
 
 </head>
+<?php
+$layout_tag = '';
+if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY') {
+    $layout_tag = 'layout-top-nav';
+}
+?>
 <body onload="<?php echo $onload;
-unset($onload); ?>" class="hold-transition <?php echo $modsForHesk_settings['admin_color_scheme']; ?> sidebar-mini">
+unset($onload); ?>" class="<?php echo $layout_tag ?> hold-transition <?php echo $modsForHesk_settings['admin_color_scheme']; ?> sidebar-mini">
 
 <?php
 include(HESK_PATH . 'header.txt');

@@ -14,6 +14,7 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('PAGE_TITLE', 'ADMIN_SETTINGS');
+define('MFH_PAGE_LAYOUT', 'TOP_AND_SIDE');
 define('LOAD_TABS', 1);
 
 // Make sure the install folder is deleted

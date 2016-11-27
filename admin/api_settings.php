@@ -31,6 +31,7 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('PAGE_TITLE', 'ADMIN_SETTINGS');
+define('MFH_PAGE_LAYOUT', 'TOP_AND_SIDE');
 
 // Make sure the install folder is deleted
 if (is_dir(HESK_PATH . 'install')) {

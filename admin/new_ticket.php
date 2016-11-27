@@ -13,6 +13,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
+define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 define('WYSIWYG', 1);
 define('VALIDATOR', 1);
 

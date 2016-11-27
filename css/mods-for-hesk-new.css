@@ -49,6 +49,33 @@
     }
 }
 
+@media (min-width: 768px) and (max-width: 991px) {
+    .navbar-collapse.pull-left + .navbar-custom-menu {
+        position: relative;
+    }
+}
+
+@media (max-width: 767px) {
+    body.layout-top-nav .navbar-collapse.pull-left + .navbar-custom-menu {
+        margin-top: 50px;
+    }
+}
+
+@media (max-width: 767px) {
+    #header-right-side .navbar-nav .dropdown-menu li a {
+        color: #777;
+    }
+}
+
+@media (max-width: 767px) {
+    #header-right-side .navbar-nav .dropdown-menu li a:hover,
+    #header-right-side .navbar-nav .dropdown-menu li a:focus {
+        color: #262626;
+        text-decoration: none;
+        background-color: #f5f5f5;
+    }
+}
+
 .ticket-property-title {
     color: rgba(255, 255, 255, .75);
     font-size: 11px;

@@ -34,6 +34,7 @@ hesk_isLoggedIn();
 define('CALENDAR', 1);
 define('MAIN_PAGE', 1);
 define('PAGE_TITLE', 'ADMIN_HOME');
+define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 define('AUTO_RELOAD', 1);
 
 /* Print header */

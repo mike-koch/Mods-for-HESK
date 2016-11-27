@@ -15,6 +15,7 @@ define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('WYSIWYG', 1);
 define('VALIDATOR', 1);
+define('MFH_PAGE_LAYOUT', 'TOP_AND_SIDE');
 
 define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/admin-ticket.js"></script>');
 

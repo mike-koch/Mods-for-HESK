@@ -20,21 +20,29 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
 ?>
 <div class="wrapper">
     <header class="main-header">
-
-        <!-- Logo -->
+        <?php if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_AND_SIDE'): ?>
         <a href="<?php echo $modsForHesk_settings['navbar_title_url']; ?>" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">&nbsp;</span>
-            <!-- logo for regular state and mobile devices -->
             <span class="logo-lg"><?php echo $hesk_settings['hesk_title'] ?></span>
         </a>
+        <?php endif; ?>
 
-        <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
-            <!-- Sidebar toggle button-->
+            <?php if(defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_AND_SIDE'): ?>
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
+            <?php endif; ?>
+            <div class="navbar-header">
+                <?php if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY'): ?>
+                <a href="<?php echo $modsForHesk_settings['navbar_title_url']; ?>" class="navbar-brand logo">
+                    <?php echo $hesk_settings['hesk_title'] ?>
+                </a>
+                <?php endif; ?>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
             <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                 <ul class="nav navbar-nav">
                     <?php
@@ -119,7 +127,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                 </ul>
             </div>
             <!-- Navbar Right Menu -->
-            <div class="navbar-custom-menu">
+            <div class="navbar-custom-menu" id="header-right-side">
                 <ul class="nav navbar-nav">
                     <!-- Messages: style can be found in dropdown.less-->
                     <?php
@@ -212,7 +220,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                     <?php endforeach; ?>
                                 </ul>
                             </li>
-                            <li class="footer"><a href="mail.php">See All Messages</a></li>
+                            <li class="footer"><a href="mail.php">See All Messages [!!!]</a></li>
                         </ul>
                     </li>
                     <li class="dropdown user user-menu">
@@ -227,7 +235,6 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             <i class="fa fa-cog"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <!-- TODO -->
                             <?php
                             if (hesk_checkPermission('can_man_users', 0)):
                                 $active = '';
@@ -245,7 +252,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             endif;
                             if (hesk_checkPermission('can_man_permission_tpl', 0)) :
                                 $active = '';
-                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_USERS') {
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_PERMISSION_TPL') {
                                     $active = 'active';
                                 }
                             ?>
@@ -383,6 +390,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                 </li>
                                 <?php
                             endif;
+                            echo '<li class="divider"></li>';
                             if (hesk_checkPermission('can_view_logs', 0)):
                                 $active = '';
                                 if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_LOGS') {
@@ -421,7 +429,6 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                     </li>
                 </ul>
             </div>
-
         </nav>
     </header>
     <div class="content-wrapper">

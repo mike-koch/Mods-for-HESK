@@ -14,7 +14,8 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('VALIDATOR', 1);
-define('PAGE_TITLE', 'ADMIN_USERS');
+define('PAGE_TITLE', 'ADMIN_PERMISSION_TPL');
+define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');

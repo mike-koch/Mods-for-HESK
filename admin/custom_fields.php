@@ -13,6 +13,8 @@
 
 define('IN_SCRIPT',1);
 define('HESK_PATH','../');
+define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
+define('PAGE_TITLE', 'ADMIN_CUSTOM_FIELDS');
 
 define('LOAD_TABS',1);
 define('CALENDAR',1);

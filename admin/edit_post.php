@@ -15,6 +15,7 @@ define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('WYSIWYG', 1);
 define('VALIDATOR', 1);
+define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');

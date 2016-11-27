@@ -32,6 +32,7 @@ define('IN_SCRIPT', 1);
 define('VALIDATOR', 1);
 define('HESK_PATH', '../');
 define('PAGE_TITLE', 'ADMIN_CALENDAR');
+define('MFH_PAGE_LAYOUT', 'TOP_AND_SIDE');
 define('USE_JQUERY_2', 1);
 
 /* Get all the required files and functions */
