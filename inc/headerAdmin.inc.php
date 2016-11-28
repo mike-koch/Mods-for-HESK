@@ -87,6 +87,7 @@ $modsForHesk_settings = mfh_getSettings();
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core-admin.php"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.jgrowl.min.js"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.slimscroll.min.js"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;
@@ -240,7 +241,7 @@ if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY') {
 }
 ?>
 <body onload="<?php echo $onload;
-unset($onload); ?>" class="<?php echo $layout_tag ?> js <?php echo $modsForHesk_settings['admin_color_scheme']; ?>">
+unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js <?php echo $modsForHesk_settings['admin_color_scheme']; ?>">
 
 <?php
 include(HESK_PATH . 'header.txt');
