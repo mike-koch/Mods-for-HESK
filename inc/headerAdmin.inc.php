@@ -240,7 +240,7 @@ if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY') {
 }
 ?>
 <body onload="<?php echo $onload;
-unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js <?php echo $modsForHesk_settings['admin_color_scheme']; ?>">
+unset($onload); ?>" class="<?php echo $layout_tag ?> js <?php echo $modsForHesk_settings['admin_color_scheme']; ?>">
 
 <?php
 include(HESK_PATH . 'header.txt');

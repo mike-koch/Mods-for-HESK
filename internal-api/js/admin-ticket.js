@@ -1,7 +1,8 @@
 $(document).ready(function() {
     var $readonlyDueDateContainer = $('#readonly-due-date');
+    var $changeButton = $readonlyDueDateContainer.find('#change-button');
     var $editableDueDateContainer = $('#editable-due-date');
-    $readonlyDueDateContainer.click(function() {
+    $changeButton.click(function() {
         $readonlyDueDateContainer.hide();
         $editableDueDateContainer.show();
         if ($readonlyDueDateContainer.find('span#due-date').text().trim() == 'None') {

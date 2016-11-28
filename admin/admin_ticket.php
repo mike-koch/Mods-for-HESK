@@ -642,14 +642,239 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <ul class="sidebar-menu">
                 <li class="header text-uppercase"><?php echo $hesklang['information']; ?></li>
                 <li>
-                    <span class="ticket-info">
+                    <div class="ticket-info">
                         <span><?php echo $hesklang['trackID']; ?></span>
                         <br><b><?php echo $trackingID; ?></b>
-                    </span>
+                    </div>
+                </li>
+                <?php if ($ticket['language'] !== NULL): ?>
+                <li>
+                    <div class="ticket-info">
+                        <span><?php echo $hesklang['lgs']; ?></span>
+                        <br><b><?php echo $ticket['language']; ?></b>
+                    </div>
+                </li>
+                <?php endif; ?>
+                <li>
+                    <div class="ticket-info">
+                        <span><?php echo $hesklang['replies']; ?></span>
+                        <br><b><?php echo $ticket['replies']; ?></b>
+                    </div>
+                </li>
+                <li>
+                    <div class="ticket-info">
+                        <span><?php echo $hesklang['created_on']; ?></span>
+                        <br><b><?php echo hesk_date($ticket['dt'], true); ?></b>
+                    </div>
+                </li>
+                <li>
+                    <div class="ticket-info">
+                        <span><?php echo $hesklang['last_update']; ?></span>
+                        <br><b><?php echo hesk_date($ticket['lastchange'], true); ?></b>
+                    </div>
+                </li>
+                <li>
+                    <div class="ticket-info">
+                        <span><?php echo $hesklang['due_date']; ?></span>
+                        <br>
+                        <div id="readonly-due-date">
+                            <b>
+                                <span id="due-date">
+                                    <?php
+                                    $due_date = $hesklang['none'];
+                                    if ($ticket['due_date'] != null) {
+                                        $due_date = hesk_date($ticket['due_date'], false, true, false);
+                                        $due_date = date('Y-m-d', $due_date);
+                                    }
+                                    echo $due_date;
+                                    ?>
+                                </span>
+                            </b><br>
+                            <button class="btn btn-default btn-sm" id="change-button">
+                                <?php echo $hesklang['chg']; ?>
+                            </button>
+                        </div>
+                        <div id="editable-due-date" style="display: none">
+                            <span class="form-group">
+                                <input title="due-date" type="text" class="form-control datepicker" name="due-date" value="<?php echo $due_date == $hesklang['none'] ? '' : $due_date; ?>">
+                                <?php echo $hesklang['clear_for_no_due_date']; ?>
+                            </span>
+                            <span class="btn-group">
+                                <button id="submit" class="btn btn-primary"><?php echo $hesklang['save']; ?></button>
+                                <button id="cancel" class="btn btn-default"><?php echo $hesklang['cancel']; ?></button>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="ticket-info">
+                        <span><?php echo $hesklang['last_replier']; ?></span>
+                        <br><b><?php echo $ticket['repliername']; ?></b>
+                    </div>
+                </li>
+                <li>
+                    <div class="ticket-info">
+                        <span><?php echo $hesklang['ts']; ?></span>
+                        <br>
+                        <b>
+                            <span>
+                                <?php echo $ticket['time_worked']; ?>
+                            </span>
+                        </b><br>
+                        <?php if ($can_reply || $can_edit): ?>
+                            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#timeworkedform">
+                                <?php echo $hesklang['chg']; ?>
+                            </button>
+                        <?php endif; ?>
+                    </div>
+                </li>
+                <li>
+                    <div class="ticket-info">
+                        <span><?php echo $hesklang['linked_tickets']; ?></span>
+                        <br>
+                        <b>
+                            <?php
+                            if ($ticket['parent'] != null) {
+                                //-- Get the tracking ID of the parent
+                                $parentRs = hesk_dbQuery('SELECT `trackid` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets`
+                                WHERE `ID` = ' . hesk_dbEscape($ticket['parent']));
+                                $parent = hesk_dbFetchAssoc($parentRs);
+                                echo '<a href="admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) . '&deleteParent=true">
+                                <i class="fa fa-times-circle" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete_relationship'] . '"></i></a>';
+                                echo '&nbsp;<a href="admin_ticket.php?track=' . $parent['trackid'] . '&Refresh=' . mt_rand(10000, 99999) . '">' . $parent['trackid'] . '</a>';
+                            }
+                            //-- Check if any tickets have a parent set to this tracking ID
+                            $hasRows = false;
+                            $childrenRS = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets`
+                        WHERE `parent` = ' . hesk_dbEscape($ticket['id']));
+                            while ($row = hesk_dbFetchAssoc($childrenRS)) {
+                                $hasRows = true;
+                                echo '<a href="admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) . '&deleteChild=' . $row['id'] . '">
+                            <i class="fa fa-times-circle font-icon red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['unlink'] . '"></i></a>';
+                                echo '&nbsp;<a href="admin_ticket.php?track=' . $row['trackid'] . '&Refresh=' . mt_rand(10000, 99999) . '">' . $row['trackid'] . '</a>';
+                                echo '<br>';
+                            }
+                            if (!$hasRows && $ticket['parent'] == null) {
+                                echo $hesklang['none'];
+                            }
+                            ?>
+                        </b>
+                        <?php
+                        if ($can_reply || $can_edit) {
+                            ?>
+                            <div id="addChildText">
+                                <?php echo '<button class="btn btn-default btn-sm" onclick="toggleChildrenForm(true)"><i class="fa fa-plus-circle"></i> ' . $hesklang['add_ticket'] . '</a>'; ?>
+                            </div>
+                            <div id="childrenForm" style="display: none">
+                                <form action="admin_ticket.php" method="post" data-toggle="validator">
+                                    <div class="form-group">
+                                        <label for="childTrackingId" class="control-label">
+                                            <?php echo $hesklang['trackID']; ?>
+                                        </label>
+                                        <input type="text" name="childTrackingId" class="form-control input-sm"
+                                               placeholder="<?php echo htmlspecialchars($hesklang['trackID']); ?>"
+                                               data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                               required>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="btn-group">
+                                        <input type="submit" class="btn btn-primary btn-sm"
+                                               value="<?php echo $hesklang['save']; ?>">
+                                        <button class="btn btn-default btn-sm" onclick="toggleChildrenForm(false); return false;">
+                                            <?php echo $hesklang['cancel']; ?>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="track" value="<?php echo $trackingID; ?>"/>
+                                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+                                </form>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </li>
+                <li>
+                    <div class="ticket-info">
+                        <span><?php echo $hesklang['recent_tickets']; ?></span>
+                        <br>
+                        <?php if ($recentTickets === NULL): ?>
+                            <p style="margin: 0"><b><?php echo $hesklang['none']; ?></b></p>
+                            <?php
+                        else:
+                            foreach ($recentTickets as $recentTicket):
+                                ?>
+                                <p style="margin: 0"><b>
+                                    <i class="fa fa-circle" data-toggle="tooltip" data-placement="top"
+                                       style="color: <?php echo $recentTicket['statusColor']; ?>"
+                                       title="<?php echo sprintf($hesklang['current_status_colon'], $recentTicket['statusText']); ?>"></i>
+                                    <?php echo '<a href="admin_ticket.php?track=' . $recentTicket['trackid'] . '&amp;Refresh=' . mt_rand(10000, 99999) . '">' . $recentTicket['trackid'] . '</a>'; ?>
+                                </b></p>
+                                <?php
+                            endforeach;
+                        endif;
+                        ?>
+                    </div>
                 </li>
             </ul>
         </section>
     </aside>
+    <div class="modal fade" tabindex="-1" role="dialog" id="timeworkedform">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><?php echo $hesklang['ts']; ?></h4>
+                </div>
+                <div class="modal-body">
+                    <?php $t = hesk_getHHMMSS($ticket['time_worked']); ?>
+                    <form data-toggle="validator" class="form-horizontal" method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
+                        <div class="form-group">
+                            <label for="h" class="col-sm-4 control-label"><?php echo $hesklang['hh']; ?></label>
+                            <div class="col-sm-8">
+                                <input type="text" name="h" value="<?php echo $t[0]; ?>" size="3"
+                                       data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                       placeholder="<?php echo htmlspecialchars($hesklang['hh']); ?>"
+                                       class="form-control input-sm" required>
+                            </div>
+                            <div class="col-sm-12 text-right">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group input-group-sm">
+                            <label for="m" class="col-sm-4 control-label"><?php echo $hesklang['mm']; ?></label>
+                            <div class="col-sm-8">
+                                <input type="text" name="m" value="<?php echo $t[1]; ?>" size="3"
+                                       data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                       placeholder="<?php echo htmlspecialchars($hesklang['mm']); ?>"
+                                       class="form-control input-sm" required>
+                            </div>
+                            <div class="col-sm-12 text-right">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group input-group-sm">
+                            <label for="s" class="col-sm-4 control-label"><?php echo $hesklang['ss']; ?></label>
+                            <div class="col-sm-8">
+                                <input type="text" name="s" value="<?php echo $t[2]; ?>" size="3"
+                                       data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                       placeholder="<?php echo htmlspecialchars($hesklang['ss']); ?>"
+                                       class="form-control input-sm" required>
+                            </div>
+                            <div class="col-sm-12 text-right">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="btn-group btn-group-sm text-right">
+                                <input class="btn btn-primary" type="submit" value="<?php echo $hesklang['save']; ?>" />
+                                <a class="btn btn-default" data-dismiss="modal"><?php echo $hesklang['cancel']; ?></a>
+                            </div>
+                        </div>
+                        <input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <section class="content">
     <?php
     /* This will handle error, success and notice messages */
@@ -696,28 +921,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
         </div>
         <div class="box-body">
-            <div class="callout callout-info">
-                <div class="row">
-                    <div class="col-md-3">
-                        <strong><?php echo $hesklang['created_colon']; ?></strong>
-                        <?php echo hesk_date($ticket['dt'], true); ?>
-                    </div>
-                    <div class="col-md-3">
-                        <strong><?php echo $hesklang['updated_colon']; ?></strong>
-                        <?php echo hesk_date($ticket['lastchange'], true); ?>
-                    </div>
-                    <?php if ($ticket['language'] !== NULL): ?>
-                    <div class="col-md-3">
-                        <strong><?php echo $hesklang['language_colon']; ?></strong>
-                        <?php echo $ticket['language']; ?>
-                    </div>
-                    <div class="col-md-3">
-                        <strong><?php echo $hesklang['last_replier_colon']; ?></strong>
-                        <?php echo $ticket['repliername']; ?>
-                    </div>
-                    <?php endif; ?>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-md-6">
                     <table class="table table-striped">
@@ -777,132 +980,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 ?>
                             </td>
                         </tr>
-                        <tr>
-                            <td><b><?php echo $hesklang['ts']; ?></b></td>
-                            <td>
-                                <span class="click-to-edit" onclick="Javascript:hesk_toggleLayerDisplay('modifytime')"
-                                    data-toggle="tooltip" title="<?php echo $hesklang['click_to_edit']; ?>">
-                                    <?php echo $ticket['time_worked']; ?>
-                                </span>
-                            <?php
-                            if ($can_reply || $can_edit)
-                            {
-                                ?><?php $t = hesk_getHHMMSS($ticket['time_worked']); ?>
-
-                                <div id="modifytime" style="display:none">
-                                    <form data-toggle="validator" class="form-horizontal" method="post" action="admin_ticket.php" style="margin:0px; padding:0px;">
-                                        <div class="form-group">
-                                            <label for="h" class="col-sm-4 control-label"><?php echo $hesklang['hh']; ?></label>
-                                            <div class="col-sm-8">
-                                                <input type="text" name="h" value="<?php echo $t[0]; ?>" size="3"
-                                                       data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                                       placeholder="<?php echo htmlspecialchars($hesklang['hh']); ?>"
-                                                       class="form-control input-sm" required>
-                                            </div>
-                                            <div class="col-sm-12 text-right">
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group input-group-sm">
-                                            <label for="m" class="col-sm-4 control-label"><?php echo $hesklang['mm']; ?></label>
-                                            <div class="col-sm-8">
-                                                <input type="text" name="m" value="<?php echo $t[1]; ?>" size="3"
-                                                       data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                                       placeholder="<?php echo htmlspecialchars($hesklang['mm']); ?>"
-                                                       class="form-control input-sm" required>
-                                            </div>
-                                            <div class="col-sm-12 text-right">
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group input-group-sm">
-                                            <label for="s" class="col-sm-4 control-label"><?php echo $hesklang['ss']; ?></label>
-                                            <div class="col-sm-8">
-                                                <input type="text" name="s" value="<?php echo $t[2]; ?>" size="3"
-                                                       data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                                       placeholder="<?php echo htmlspecialchars($hesklang['ss']); ?>"
-                                                       class="form-control input-sm" required>
-                                            </div>
-                                            <div class="col-sm-12 text-right">
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <div class="btn-group btn-group-sm text-right">
-                                                <input class="btn btn-primary" type="submit" value="<?php echo $hesklang['save']; ?>" />
-                                                <a class="btn btn-default" href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay('modifytime')"><?php echo $hesklang['cancel']; ?></a>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="track" value="<?php echo $trackingID; ?>" />
-                                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>" />
-                                    </form>
-                                </div>
-                                <?php
-                            }
-                            ?>
-                            </td>
-                        </tr>
                         <?php endif; ?>
-                        <tr>
-                            <td><strong><?php echo $hesklang['linked_tickets']; ?></strong></td>
-                            <td>
-                                <?php
-                                if ($ticket['parent'] != null) {
-                                    //-- Get the tracking ID of the parent
-                                    $parentRs = hesk_dbQuery('SELECT `trackid` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets`
-                                WHERE `ID` = ' . hesk_dbEscape($ticket['parent']));
-                                    $parent = hesk_dbFetchAssoc($parentRs);
-                                    echo '<a href="admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) . '&deleteParent=true">
-                                <i class="fa fa-times-circle" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete_relationship'] . '"></i></a>';
-                                    echo '&nbsp;<a href="admin_ticket.php?track=' . $parent['trackid'] . '&Refresh=' . mt_rand(10000, 99999) . '">' . $parent['trackid'] . '</a>';
-                                }
-                                //-- Check if any tickets have a parent set to this tracking ID
-                                $hasRows = false;
-                                $childrenRS = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets`
-                        WHERE `parent` = ' . hesk_dbEscape($ticket['id']));
-                                while ($row = hesk_dbFetchAssoc($childrenRS)) {
-                                    $hasRows = true;
-                                    echo '<a href="admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) . '&deleteChild=' . $row['id'] . '">
-                            <i class="fa fa-times-circle font-icon red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['unlink'] . '"></i></a>';
-                                    echo '&nbsp;<a href="admin_ticket.php?track=' . $row['trackid'] . '&Refresh=' . mt_rand(10000, 99999) . '">' . $row['trackid'] . '</a>';
-                                    echo '<br>';
-                                }
-                                if (!$hasRows && $ticket['parent'] == null) {
-                                    echo $hesklang['none'];
-                                }
-
-                                if ($can_reply || $can_edit) {
-                                    ?>
-                                    <div id="addChildText">
-                                        <?php echo '<a href="javascript:void(0)" onclick="toggleChildrenForm(true)"><i class="fa fa-plus-circle"></i> ' . $hesklang['add_ticket'] . '</a>'; ?>
-                                    </div>
-                                    <div id="childrenForm" style="display: none">
-                                        <form action="admin_ticket.php" method="post" data-toggle="validator">
-                                            <div class="form-group">
-                                                <label for="childTrackingId" class="control-label">
-                                                    <?php echo $hesklang['trackID']; ?>
-                                                </label>
-                                                <input type="text" name="childTrackingId" class="form-control input-sm"
-                                                       placeholder="<?php echo htmlspecialchars($hesklang['trackID']); ?>"
-                                                       data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                                       required>
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                            <div class="btn-group">
-                                                <input type="submit" class="btn btn-primary btn-sm"
-                                                       value="<?php echo $hesklang['save']; ?>">
-                                                <a class="btn btn-default btn-sm" href="javascript:void(0)"
-                                                   onclick="toggleChildrenForm(false)">
-                                                    <?php echo $hesklang['cancel']; ?>
-                                                </a>
-                                            </div>
-                                            <input type="hidden" name="track" value="<?php echo $trackingID; ?>"/>
-                                            <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
-                                        </form>
-                                    </div>
-                                <?php } ?>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -910,55 +988,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <table class="table table-striped">
                         <tbody>
                         <tr>
-                            <td><strong><?php echo $hesklang['due_date']; ?></strong></td>
-                            <td>
-                                <div id="readonly-due-date">
-                                    <span id="due-date" data-toggle="tooltip" title="<?php echo $hesklang['click_to_edit']; ?>">
-                                    <?php
-                                    $due_date = $hesklang['none'];
-                                    if ($ticket['due_date'] != null) {
-                                        $due_date = hesk_date($ticket['due_date'], false, true, false);
-                                        $due_date = date('Y-m-d', $due_date);
-                                    }
-                                    echo $due_date;
-                                    ?></span>
-                                </div>
-                                <div id="editable-due-date" style="display: none">
-                                    <div class="form-group">
-                                        <input title="due-date" type="text" class="form-control datepicker" name="due-date" value="<?php echo $due_date == $hesklang['none'] ? '' : $due_date; ?>">
-                                        <p class="help-block"><?php echo $hesklang['clear_for_no_due_date']; ?></p>
-                                    </div>
-                                    <div class="btn-group">
-                                        <button id="submit" class="btn btn-primary"><?php echo $hesklang['save']; ?></button>
-                                        <button id="cancel" class="btn btn-default"><?php echo $hesklang['cancel']; ?></button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong><?php echo $hesklang['replies']; ?></strong></td>
-                            <td><?php echo $ticket['replies']; ?></td>
-                        </tr>
-                        <tr>
-                            <td><strong><?php echo $hesklang['recent_tickets']; ?></strong></td>
-                            <td>
-                                <?php if ($recentTickets === NULL): ?>
-                                    <p style="margin: 0"><?php echo $hesklang['none']; ?></p>
-                                <?php
-                                else:
-                                    foreach ($recentTickets as $recentTicket):
-                                ?>
-                                    <p style="margin: 0">
-                                        <i class="fa fa-circle" data-toggle="tooltip" data-placement="top"
-                                           style="color: <?php echo $recentTicket['statusColor']; ?>"
-                                           title="<?php echo sprintf($hesklang['current_status_colon'], $recentTicket['statusText']); ?>"></i>
-                                        <?php echo '<a href="admin_ticket.php?track=' . $recentTicket['trackid'] . '&amp;Refresh=' . mt_rand(10000, 99999) . '">' . $recentTicket['trackid'] . '</a>'; ?>
-                                    </p>
-                                <?php
-                                    endforeach;
-                                endif;
-                                ?>
-                            </td>
+
                         </tr>
                         </tbody>
                     </table>

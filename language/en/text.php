@@ -45,7 +45,7 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
-// ADDED OR MODIFIED IN Mods for HESK 2.7.0
+// ADDED OR MODIFIED IN Mods for HESK 3.0.0
 $hesklang['you_have_x_messages'] = 'You have %s new %s'; // %s: Number of new messages, "message" or "messages", depending on # 
 $hesklang['message_lower_case'] = 'message';
 $hesklang['messages_lower_case'] = 'messages';
@@ -57,10 +57,6 @@ $hesklang['private_category_star'] = 'Private categories indicated by *';
 $hesklang['private_article_star'] = 'Private articles indicated by *';
 $hesklang['ticket_details'] = 'Ticket Details';
 $hesklang['more'] = 'More';
-$hesklang['language_colon'] = 'Language:';
-$hesklang['created_colon'] = 'Created:';
-$hesklang['updated_colon'] = 'Updated:';
-$hesklang['last_replier_colon'] = 'Last replier:';
 $hesklang['click_to_edit'] = 'Click to edit';
 $hesklang['no_device_information'] = 'No device information';
 $hesklang['message_colon'] = 'Message:';

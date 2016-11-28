@@ -7,12 +7,6 @@
     font-size: 16px; !important;
 }
 
-#due-date:hover,
-.click-to-edit:hover {
-    font-weight: bolder;
-    cursor: pointer;
-}
-
 .linkless-dropdown {
     display: block;
     padding: 3px 20px;
@@ -237,7 +231,7 @@ button.dropdown-submit {
     padding: 3px 20px;
 }
 
-span.ticket-info {
+div.ticket-info {
     border-left: 3px solid transparent;
     color: #b8c7ce;
     padding: 12px 5px 12px 15px;
