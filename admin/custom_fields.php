@@ -62,7 +62,8 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 // Print main manage users page
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-<section class="content">
+<div class="content-wrapper">
+	<section class="content">
 	<?php
 	/* This will handle error, success and notice messages */
 	hesk_handle_messages();
@@ -836,6 +837,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 		</div>
 	</div>
 </section>
+</div>
 <?php
 
 hesk_cleanSessionVars( array('new_cf', 'edit_cf') );

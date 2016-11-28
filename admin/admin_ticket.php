@@ -633,11 +633,11 @@ if ($ticket['email'] != '') {
     }
 }
 
-// TODO Here we go!
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <?php
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
@@ -1253,6 +1253,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <?php }
     ?>
 </section>
+</div>
 <div style="display: none">
     <p id="lang_ticket_due_date_updated"><?php echo $hesklang['ticket_due_date_updated']; ?></p>
     <p id="lang_none"><?php echo $hesklang['none']; ?></p>

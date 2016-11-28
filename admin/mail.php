@@ -108,8 +108,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     }
     //-->
 </script>
-
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <div class="row">
         <div class="col-md-3">
             <div class="box">
@@ -175,6 +175,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </section>
+</div>
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();

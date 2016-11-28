@@ -40,7 +40,8 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <?php hesk_handle_messages(); ?>
     <div class="box">
         <div class="box-header with-border">
@@ -100,6 +101,7 @@ C9wPic7DQp9DQo=', "\112");
     hesk_cleanSessionVars('hide');
     ?>
 </section>
+</div>
 <?php
 
 

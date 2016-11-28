@@ -78,7 +78,8 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print main manage users page */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <div class="row">
         <div class="col-md-4">
             <div class="box">
@@ -156,6 +157,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </section>
+</div>
 <div class="modal fade" id="create-event-modal" tabindex="-1" role="dialog" style="overflow: hidden">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

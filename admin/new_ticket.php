@@ -142,17 +142,17 @@ $showRs = hesk_dbQuery("SELECT `show` FROM `" . hesk_dbEscape($hesk_settings['db
 $show = hesk_dbFetchAssoc($showRs);
 $show_quick_help = $show['show'];
 ?>
-
-<ol class="breadcrumb">
-    <li><a href="admin_main.php"><?php echo $hesk_settings['hesk_title']; ?></a></li>
-    <?php if ($number_of_categories > 1): ?>
-        <li><a href="new_ticket.php"><?php echo $hesklang['nti2']; ?></a></li>
-        <li class="active"><?php echo $hesk_settings['categories'][$category]; ?></li>
-    <?php else: ?>
-        <li class="active"><?php echo $hesklang['nti2']; ?></li>
-    <?php endif; ?>
-</ol>
-<section class="content">
+<div class="content-wrapper">
+    <ol class="breadcrumb">
+        <li><a href="admin_main.php"><?php echo $hesk_settings['hesk_title']; ?></a></li>
+        <?php if ($number_of_categories > 1): ?>
+            <li><a href="new_ticket.php"><?php echo $hesklang['nti2']; ?></a></li>
+            <li class="active"><?php echo $hesk_settings['categories'][$category]; ?></li>
+        <?php else: ?>
+            <li class="active"><?php echo $hesklang['nti2']; ?></li>
+        <?php endif; ?>
+    </ol>
+    <section class="content">
     <?php
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
@@ -970,13 +970,11 @@ $show_quick_help = $show['show'];
         </div>
     </div>
 </section>
-
+</div>
 <script>
     buildValidatorForTicketSubmission("form1",
         "<?php echo addslashes($hesklang['select_at_least_one_value']); ?>");
 </script>
-</div>
-</div>
 <?php
 
 // Request for the users location if enabled
@@ -1019,6 +1017,7 @@ function print_select_category($number_of_categories) {
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
     ?>
+<div class="content-wrapper">
     <section class="content">
         <div class="box">
             <div class="box-header with-border">
@@ -1092,6 +1091,7 @@ function print_select_category($number_of_categories) {
             </div>
         </div>
     </section>
+</div>
 
     <?php
 

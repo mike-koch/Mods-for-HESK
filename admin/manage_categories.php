@@ -91,7 +91,8 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
     $options .= '>' . $mycat['name'] . '</option>';
 }
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <div class="box collapsed-box">
         <div class="box-header with-border">
             <h1 class="box-title">
@@ -362,6 +363,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
         </div>
     </div>
 </section>
+</div>
 <!-- Edit category modal -->
 <div class="modal fade" id="edit-category-modal" tabindex="-1" role="dialog" style="overflow: hidden">
     <div class="modal-dialog modal-lg" role="document">

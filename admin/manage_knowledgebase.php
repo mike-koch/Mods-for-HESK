@@ -276,6 +276,7 @@ echo '';
 if (!isset($_SESSION['hide']['treemenu']))
 {
 	?>
+<div class="content-wrapper">
     <section class="content">
         <h2>
             <?php echo $hesklang['kb']; ?>
@@ -320,6 +321,7 @@ if (!isset($_SESSION['hide']['treemenu']))
             </div>
         </div>
     </section>
+</div>
 	<?php
 } // END hide treemenu
 
@@ -370,6 +372,7 @@ if (!isset($_SESSION['hide']['new_article']))
         <?php
     }
     ?>
+<div class="content-wrapper">
     <section class="content">
         <?php
         $catid = show_subnav('newa');
@@ -507,6 +510,7 @@ if (!isset($_SESSION['hide']['new_article']))
             </div>
         </form>
     </section>
+</div>
 
 	<?php
 } // END hide article
@@ -520,7 +524,7 @@ if (!isset($_SESSION['hide']['new_category']))
 		$_SESSION['new_category'] = hesk_stripArray($_SESSION['new_category']);
     }
 	?>
-
+<div class="content-wrapper">
     <ol class="breadcrumb">
         <li><a href="manage_knowledgebase.php"><?php echo $hesklang['kb']; ?></a></li>
         <li class="active"><?php echo $hesklang['kb_cat_new']; ?></li>
@@ -593,6 +597,7 @@ if (!isset($_SESSION['hide']['new_category']))
             </div>
         </div>
     </section>
+</div>
 
 	<?php
 } // END hide new category form
@@ -622,6 +627,7 @@ function list_draft() {
 	/* Print main manage users page */
 	require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	?>
+<div class="content-wrapper">
     <ol class="breadcrumb">
         <li><a href="manage_knowledgebase.php"><?php echo $hesklang['kb']; ?></a></li>
         <li class="active"><?php echo $hesklang['kb_cat_man']; ?></li>
@@ -706,10 +712,8 @@ function list_draft() {
             </div>
         </div>
     </section>
-
+</div>
     <?php
-
-    echo '&nbsp;<br />&nbsp;';
 
 	/* Clean unneeded session variables */
 	hesk_cleanSessionVars(array('hide','manage_cat','edit_article'));
@@ -749,7 +753,7 @@ function list_private() {
     $res = hesk_dbQuery("SELECT * FROM `". hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `type`='1' " . (count($private_categories) ? " OR `catid` IN('" . implode("','", $private_categories) . "') " : '') . " ORDER BY `catid` ASC, `id` ASC");
     $num = hesk_dbNumRows($res);
 	?>
-
+<div class="content-wrapper">
     <ol class="breadcrumb">
         <li><a href="manage_knowledgebase.php"><?php echo $hesklang['kb']; ?></a></li>
         <li class="active"><?php echo $hesklang['kb_cat_man']; ?></li>
@@ -856,11 +860,8 @@ function list_private() {
             </div>
         </div>
     </section>
-
-    <?php
-
-    echo '&nbsp;<br />&nbsp;';
-
+</div>
+<?php
 	/* Clean unneeded session variables */
 	hesk_cleanSessionVars(array('hide','manage_cat','edit_article'));
 
@@ -1672,7 +1673,7 @@ function manage_category() {
 	/* Print main manage users page */
 	require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	?>
-
+<div class="content-wrapper">
     <ol class="breadcrumb">
         <li><a href="manage_knowledgebase.php"><?php echo $hesklang['kb']; ?></a></li>
         <li class="active"><?php echo $hesklang['kb_cat_man']; ?></li>
@@ -1911,8 +1912,8 @@ function manage_category() {
         </div>
         <?php endif; ?>
     </section>
-
-	<?php
+</div>
+<?php
 	/* Clean unneeded session variables */
 	hesk_cleanSessionVars(array('hide','manage_cat','edit_article'));
 

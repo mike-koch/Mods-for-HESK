@@ -82,14 +82,14 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-<ol class="breadcrumb">
-    <li>
-        <a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000, 99999); ?>"><?php echo $hesklang['ticket'] . ' ' . $trackingID; ?></a>
-    </li>
-    <li class="active"><?php echo $hesklang['ednote']; ?></li>
-</ol>
-
-<section class="content">
+<div class="content-wrapper">
+    <ol class="breadcrumb">
+        <li>
+            <a href="admin_ticket.php?track=<?php echo $trackingID; ?>&amp;Refresh=<?php echo mt_rand(10000, 99999); ?>"><?php echo $hesklang['ticket'] . ' ' . $trackingID; ?></a>
+        </li>
+        <li class="active"><?php echo $hesklang['ednote']; ?></li>
+    </ol>
+    <section class="content">
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">
@@ -127,8 +127,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </section>
-
+</div>
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
-?>

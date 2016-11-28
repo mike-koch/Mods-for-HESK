@@ -52,7 +52,6 @@ if (defined('SHOW_ONLINE'))
 // The closing div here is to close the content area on each page. Annoying, but necessary.
 if (defined('ADMIN_PAGE')) {
 	echo '
-		</div>
 	</div>';
 }
 

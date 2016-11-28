@@ -151,67 +151,69 @@ function hesk_kb_search($query)
     $num = hesk_dbNumRows($res);
 	$show_default_category = false;
     ?>
-	<section style="padding: 15px">
-		<div class="box">
-			<div class="box-header with-border">
-				<h1 class="box-title">
-					<?php echo $hesklang['sr']; ?> (<?php echo $num; ?>)
-				</h1>
-				<div class="box-tools pull-right">
-					<button type="button" class="btn btn-box-tool" data-widget="collapse">
-						<i class="fa fa-minus"></i>
-					</button>
+	<div class="content-wrapper">
+		<section style="padding: 15px">
+			<div class="box">
+				<div class="box-header with-border">
+					<h1 class="box-title">
+						<?php echo $hesklang['sr']; ?> (<?php echo $num; ?>)
+					</h1>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<?php
+					if ($num == 0) {
+						echo '<i>'.$hesklang['nosr'].'</i>';
+						$show_default_category = true;
+					} else {
+						?>
+						<table class="table table-striped">
+							<?php
+							while ($article = hesk_dbFetchAssoc($res))
+							{
+								$txt = hesk_kbArticleContentPreview($article['content']);
+
+								if ($hesk_settings['kb_rating'])
+								{
+									$rat = '<td width="1" valign="top">' . mfh_get_stars($article['rating']) . '</td>';
+								}
+								else
+								{
+									$rat = '';
+								}
+
+								echo '
+					<tr>
+					<td>
+						<table border="0" width="100%" cellspacing="0" cellpadding="1">
+						<tr>
+						<td width="1" valign="top"><span class="glyphicon glyphicon-file"></span></td>
+						<td valign="top"><a href="knowledgebase_private.php?article='.$article['id'].'">'.$article['subject'].'</a></td>
+						'.$rat.'
+						</tr>
+						</table>
+						<table border="0" width="100%" cellspacing="0" cellpadding="1">
+						<tr>
+						<td width="1" valign="top"><img src="../img/blank.gif" width="16" height="10" style="vertical-align:middle" alt="" /></td>
+						<td><span class="article_list">'.$txt.'</span></td>
+						</tr>
+						</table>
+
+					</td>
+					</tr>';
+							}
+							?>
+						</table>
+						<a href="javascript:history.go(-1)"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;<?php echo $hesklang['back']; ?></a>
+					<?php } ?>
 				</div>
 			</div>
-			<div class="box-body">
-				<?php
-				if ($num == 0) {
-					echo '<i>'.$hesklang['nosr'].'</i>';
-					$show_default_category = true;
-				} else {
-					?>
-					<table class="table table-striped">
-						<?php
-						while ($article = hesk_dbFetchAssoc($res))
-						{
-							$txt = hesk_kbArticleContentPreview($article['content']);
-
-							if ($hesk_settings['kb_rating'])
-							{
-								$rat = '<td width="1" valign="top">' . mfh_get_stars($article['rating']) . '</td>';
-							}
-							else
-							{
-								$rat = '';
-							}
-
-							echo '
-				<tr>
-				<td>
-	                <table border="0" width="100%" cellspacing="0" cellpadding="1">
-	                <tr>
-	                <td width="1" valign="top"><span class="glyphicon glyphicon-file"></span></td>
-	                <td valign="top"><a href="knowledgebase_private.php?article='.$article['id'].'">'.$article['subject'].'</a></td>
-	                '.$rat.'
-                    </tr>
-	                </table>
-	                <table border="0" width="100%" cellspacing="0" cellpadding="1">
-	                <tr>
-	                <td width="1" valign="top"><img src="../img/blank.gif" width="16" height="10" style="vertical-align:middle" alt="" /></td>
-	                <td><span class="article_list">'.$txt.'</span></td>
-                    </tr>
-	                </table>
-
-	            </td>
-				</tr>';
-						}
-						?>
-					</table>
-					<a href="javascript:history.go(-1)"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;<?php echo $hesklang['back']; ?></a>
-				<?php } ?>
-			</div>
-		</div>
-	</section>
+		</section>
+	</div>
     <?php
 	return $show_default_category;
 } // END hesk_kb_search()
@@ -229,6 +231,7 @@ function hesk_show_kb_article($artid)
     hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `views`=`views`+1 WHERE `id`={$artid}");
 
 ?>
+<div class="content-wrapper">
 	<section class="content">
 		<div class="box">
 			<div class="box-header with-border">
@@ -392,6 +395,7 @@ function hesk_show_kb_article($artid)
 		}
 		?>
 	</section>
+</div>
 <?php
 
 } // END hesk_show_kb_article()
@@ -410,6 +414,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
     $thiscat = hesk_dbFetchAssoc($res) or hesk_error($hesklang['kb_cat_inv']);
 
 ?>
+<div class="content-wrapper">
 	<section class="content">
 		<?php if ($thiscat['parent']): ?>
 			<h3><?php echo $hesklang['kb_cat'].': '.$thiscat['name']; ?></h3>
@@ -575,6 +580,7 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 			</div>
 		</div>
 	</section>
+</div>
 <?php
 } // END hesk_show_kb_category()
 

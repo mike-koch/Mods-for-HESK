@@ -81,7 +81,8 @@ while ($row = hesk_dbFetchAssoc($res)) {
     array_push($categories, $row);
 }
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <?php hesk_handle_messages(); ?>
     <div class="box">
         <div class="box-header with-border">
@@ -147,6 +148,7 @@ while ($row = hesk_dbFetchAssoc($res)) {
         </div>
     </div>
 </section>
+</div>
 <?php
 foreach ($templates as $template) {
     createEditModal($template, $featureArray, $categories);

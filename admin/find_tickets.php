@@ -223,48 +223,47 @@ LEFT(`message`, 400) AS `message`,
                     /* Prepare variables used in search and forms */
                     require_once(HESK_PATH . 'inc/prepare_ticket_search.inc.php');
                     ?>
-                    <section class="content">
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h1 class="box-title">
-                                    <?php echo $hesklang['tickets']; ?>
-                                </h1>
-                                <div class="box-tools pull-right">
-                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                        <i class="fa fa-minus"></i>
-                                    </button>
+                    <div class="content-wrapper">
+                        <section class="content">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h1 class="box-title">
+                                        <?php echo $hesklang['tickets']; ?>
+                                    </h1>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <?php $handle = hesk_handle_messages(); ?>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
+                                            <?php echo $hesklang['arp']; ?>
+                                            <span id="timer"></span>
+                                        </label>
+                                    </div>
+                                    <script type="text/javascript">heskCheckReloading();</script>
+                                    <?php
+                                    if ($handle !== FALSE) {
+                                        $href = 'find_tickets.php';
+                                        require_once(HESK_PATH . 'inc/ticket_list.inc.php');
+                                        echo '<br>';
+                                    }
+
+                                    /* Clean unneeded session variables */
+                                    hesk_cleanSessionVars('hide');
+
+                                    /* Show the search form */
+                                    require_once(HESK_PATH . 'inc/show_search_form.inc.php');
+                                    ?>
                                 </div>
                             </div>
-                            <div class="box-body">
-                                <?php $handle = hesk_handle_messages(); ?>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
-                                        <?php echo $hesklang['arp']; ?>
-                                        <span id="timer"></span>
-                                    </label>
-                                </div>
-                                <script type="text/javascript">heskCheckReloading();</script>
-                                <?php
-                                if ($handle !== FALSE) {
-                                    $href = 'find_tickets.php';
-                                    require_once(HESK_PATH . 'inc/ticket_list.inc.php');
-                                    echo '<br>';
-                                }
-
-                                /* Clean unneeded session variables */
-                                hesk_cleanSessionVars('hide');
-
-                                /* Show the search form */
-                                require_once(HESK_PATH . 'inc/show_search_form.inc.php');
-                                ?>
-                            </div>
-                        </div>
-                    </section>
+                        </section>
+                    </div>
                     <?php
-
-
                     /* Print footer */
                     require_once(HESK_PATH . 'inc/footer.inc.php');
                     exit();
-                    ?>

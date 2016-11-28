@@ -13,7 +13,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
-define('PAGE_TITLE', 'ADMIN_TOOLS');
+define('PAGE_TITLE', 'ADMIN_BANNED_EMAILS');
 define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 
 /* Get all the required files and functions */
@@ -51,7 +51,8 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print main manage users page */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <div class="box">
         <div class="box-body">
             <div class="nav-tabs-custom">
@@ -211,14 +212,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 ?>
                                 </tbody>
                             </table>
-                            <div align="center">
-                                <table border="0" cellspacing="1" cellpadding="3" class="white" width="100%">
-                                    <?php
-
-
-                                    ?>
-                                </table>
-                            </div>
                             <?php
                         }
 
@@ -230,9 +223,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </section>
-
-
-
+</div>
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();

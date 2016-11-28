@@ -199,7 +199,8 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print main manage users page */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <div class="box">
         <?php if (hesk_checkPermission('can_export', 0)) {
             $canExport = true;
@@ -921,6 +922,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </section>
+</div>
 <?php
 
 require_once(HESK_PATH . 'inc/footer.inc.php');

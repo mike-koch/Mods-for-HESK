@@ -294,7 +294,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             endif;
                             if (hesk_checkPermission('can_man_ticket_tpl', 0)):
                                 $active = '';
-                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CANNED') {
+                                if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_TICKET_TPL') {
                                     $active = 'active';
                                 }
                                 ?>
@@ -431,4 +431,3 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
             </div>
         </nav>
     </header>
-    <div class="content-wrapper">

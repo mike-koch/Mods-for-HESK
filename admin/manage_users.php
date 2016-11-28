@@ -159,7 +159,8 @@ if ($action = hesk_REQUEST('a')) {
     require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
     require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <?php hesk_handle_messages(); ?>
     <script language="Javascript" type="text/javascript"><!--
         function confirm_delete() {
@@ -341,7 +342,7 @@ EOC;
         //-->
     </script>
 </section>
-
+</div>
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
@@ -434,12 +435,11 @@ function edit_user()
     /* Print main manage users page */
     require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     ?>
-
+<div class="content-wrapper">
     <ol class="breadcrumb">
         <li><a href="manage_users.php"><?php echo $hesklang['manage_users']; ?></a></li>
         <li class="active"><?php echo $hesklang['editing_user'] . ' ' . $_SESSION['original_user']; ?></li>
     </ol>
-
     <section class="content">
         <div class="box">
             <div class="box-header with-border">
@@ -463,8 +463,8 @@ function edit_user()
             </div>
         </div>
     </section>
-
-    <?php
+</div>
+<?php
     require_once(HESK_PATH . 'inc/footer.inc.php');
     exit();
 } // End edit_user()

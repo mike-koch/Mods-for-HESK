@@ -113,7 +113,8 @@ $i = 1;
 $j = 0;
 $num = hesk_dbNumRows($result);
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">
@@ -175,7 +176,7 @@ $num = hesk_dbNumRows($result);
 
                     if ($num > 1) {
                         if ($j == 1) {
-                            echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_canned.php?a=order&amp;replyid=' . $mysaved['id'] . '&amp;move=15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['move_dn'] . '"></i></a>';
+                            echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_canned.php?a=order&amp;replyid=' . $mysaved['id'] . '&amp;move=15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-fw fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['move_dn'] . '"></i></a>';
                         } elseif ($j == $num) {
                             echo '<a href="manage_canned.php?a=order&amp;replyid=' . $mysaved['id'] . '&amp;move=-15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['move_up'] . '"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                         } else {
@@ -394,7 +395,7 @@ $num = hesk_dbNumRows($result);
         </div>
     </div>
 </section>
-
+</div>
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();

@@ -52,7 +52,8 @@ else {
 }
 
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <?php hesk_handle_messages(); ?>
     <div class="box">
         <div class="box-header with-border">
@@ -111,6 +112,7 @@ else {
     hesk_cleanSessionVars('hide');
     ?>
 </section>
+</div>
 
 <?php
 

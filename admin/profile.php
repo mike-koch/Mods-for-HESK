@@ -69,7 +69,8 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">
@@ -143,6 +144,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </section>
+</div>
 
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');

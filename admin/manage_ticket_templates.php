@@ -14,7 +14,7 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('VALIDATOR', 1);
-define('PAGE_TITLE', 'ADMIN_CANNED');
+define('PAGE_TITLE', 'ADMIN_TICKET_TPL');
 define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 
 /* Get all the required files and functions */
@@ -86,7 +86,8 @@ $i = 1;
 $j = 0;
 $num = hesk_dbNumRows($result);
 ?>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">
@@ -281,6 +282,7 @@ $num = hesk_dbNumRows($result);
         </div>
     </div>
 </section>
+</div>
 <?php if ($modsForHesk_settings['rich_text_for_tickets']): ?>
     <script type="text/javascript">
         /* <![CDATA[ */

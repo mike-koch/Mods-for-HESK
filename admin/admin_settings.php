@@ -289,7 +289,8 @@ $modsForHesk_settings = mfh_getSettings();
     }
     //-->
 </script>
-<section class="content">
+<div class="content-wrapper">
+    <section class="content">
     <?php
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
@@ -3741,6 +3742,7 @@ $modsForHesk_settings = mfh_getSettings();
         </div>
     </form>
 </section>
+</div>
 
     <?php
     require_once(HESK_PATH . 'inc/footer.inc.php');
