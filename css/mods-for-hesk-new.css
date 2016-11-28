@@ -236,3 +236,10 @@ button.dropdown-submit {
 .dropdown-title {
     padding: 3px 20px;
 }
+
+span.ticket-info {
+    border-left: 3px solid transparent;
+    color: #b8c7ce;
+    padding: 12px 5px 12px 15px;
+    display: block;
+}

@@ -637,6 +637,19 @@ if ($ticket['email'] != '') {
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
 <div class="content-wrapper">
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="header text-uppercase"><?php echo $hesklang['information']; ?></li>
+                <li>
+                    <span class="ticket-info">
+                        <span><?php echo $hesklang['trackID']; ?></span>
+                        <br><b><?php echo $trackingID; ?></b>
+                    </span>
+                </li>
+            </ul>
+        </section>
+    </aside>
     <section class="content">
     <?php
     /* This will handle error, success and notice messages */
