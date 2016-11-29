@@ -636,9 +636,8 @@ if ($ticket['email'] != '') {
 /* Print admin navigation */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
-<div class="content-wrapper">
     <aside class="main-sidebar">
-        <section class="sidebar">
+        <section class="sidebar" style="height: auto">
             <ul class="sidebar-menu">
                 <li class="header text-uppercase"><?php echo $hesklang['information']; ?></li>
                 <li>
@@ -885,6 +884,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
         </div>
     </div>
+<div class="content-wrapper">
     <section class="content">
     <?php
     /* This will handle error, success and notice messages */
