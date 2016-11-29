@@ -38,9 +38,9 @@ while ($row = hesk_dbFetchAssoc($res)) {
 }
 
 /* What folder are we in? */
-$hesk_settings['mailtmp']['inbox'] = '<a href="mail.php"><i class="fa fa-download font-size-16p"></i></a> <a href="mail.php">' . $hesklang['inbox'] . '</a>';
-$hesk_settings['mailtmp']['outbox'] = '<a href="mail.php?folder=outbox"><i class="font-size-16p fa fa-upload"></i></a> <a href="mail.php?folder=outbox">' . $hesklang['outbox'] . '</a>';
-$hesk_settings['mailtmp']['new'] = '<a href="mail.php?a=new"><i class="font-size-16p fa fa-pencil-square-o"></i></a> <a href="mail.php?a=new">' . $hesklang['m_new'] . '</a>';
+$hesk_settings['mailtmp']['inbox'] = '<a href="mail.php"><i class="fa fa-fw fa-download"></i>' . $hesklang['inbox'] . '</a>';
+$hesk_settings['mailtmp']['outbox'] = '<a href="mail.php?folder=outbox"><i class="fa fa-fw fa-upload"></i>' . $hesklang['outbox'] . '</a>';
+$hesk_settings['mailtmp']['new'] = '<a href="mail.php?a=new"><i class="fa fa-fw fa-pencil-square-o"></i>' . $hesklang['m_new'] . '</a>';
 
 /* Get action */
 if ($action = hesk_REQUEST('a')) {
@@ -50,14 +50,17 @@ if ($action = hesk_REQUEST('a')) {
 }
 
 /* Sub-page specific settings */
+$inbox_active = '';
+$outbox_active = '';
+$new_active = '';
 if (isset($_GET['folder']) && hesk_GET('folder') == 'outbox') {
+    $outbox_active = ' class="active"';
     $hesk_settings['mailtmp']['this'] = 'from';
     $hesk_settings['mailtmp']['other'] = 'to';
     $hesk_settings['mailtmp']['m_from'] = $hesklang['m_to'];
-    $hesk_settings['mailtmp']['outbox'] = '<b><i class="font-size-16p fa fa-upload"></i> ' . $hesklang['outbox'] . '</b>';
     $hesk_settings['mailtmp']['folder'] = 'outbox';
 } elseif ($action == 'new') {
-    $hesk_settings['mailtmp']['new'] = '<b><i class="font-size-16p fa fa-pencil-square-o"></i> ' . $hesklang['m_new'] . '</b>';
+    $new_active = ' class="active"';
     $_SESSION['hide']['list'] = 1;
 
     /* Do we have a recipient selected? */
@@ -65,11 +68,11 @@ if (isset($_GET['folder']) && hesk_GET('folder') == 'outbox') {
         $_SESSION['mail']['to'] = intval(hesk_GET('id'));
     }
 } else {
+    $inbox_active = ' class="active"';
     $hesk_settings['mailtmp']['this'] = 'to';
     $hesk_settings['mailtmp']['other'] = 'from';
     $hesk_settings['mailtmp']['m_from'] = $hesklang['m_from'];
     if ($action != 'read') {
-        $hesk_settings['mailtmp']['inbox'] = '<b><i class="font-size-16p fa fa-download"></i> ' . $hesklang['inbox'] . '</b>';
         $hesk_settings['mailtmp']['folder'] = '';
     }
 }
@@ -108,37 +111,26 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     }
     //-->
 </script>
+<aside class="main-sidebar">
+    <section class="sidebar" style="height: auto">
+        <ul class="sidebar-menu">
+            <li class="header text-uppercase"><?php echo $hesklang['navigation']; ?></li>
+            <li<?php echo $inbox_active; ?>>
+                <?php echo $hesk_settings['mailtmp']['inbox']; ?>
+            </li>
+            <li<?php echo $outbox_active; ?>>
+                <?php echo $hesk_settings['mailtmp']['outbox']; ?>
+            </li>
+            <li<?php echo $new_active; ?>>
+                <?php echo $hesk_settings['mailtmp']['new']; ?>
+            </li>
+        </ul>
+    </section>
+</aside>
 <div class="content-wrapper">
     <section class="content">
     <div class="row">
-        <div class="col-md-3">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h1 class="box-title">
-                        <?php echo $hesklang['navigation']; ?>
-                    </h1>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <ul class="products-list product-list-in-box">
-                        <li class="item">
-                            <?php echo $hesk_settings['mailtmp']['inbox']; ?>
-                        </li>
-                        <li class="item">
-                            <?php echo $hesk_settings['mailtmp']['outbox']; ?>
-                        </li>
-                        <li class="item">
-                            <?php echo $hesk_settings['mailtmp']['new']; ?>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-9">
+        <div class="col-md-12">
             <?php
             hesk_handle_messages();
             /* Show a message? */
