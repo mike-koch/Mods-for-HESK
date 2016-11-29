@@ -86,12 +86,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <!-- TODO Clean this up -->
                 <li>
                     <div class="ticket-info">
-                        <!--<div class="checkbox">
-                            <input type="checkbox" data-select-target="category-toggle" name="category-toggle" value="<?php /*echo $category['id']; */?>" checked>
-                        </div>-->
                         <div class="hide-on-overflow no-wrap event-category background-volatile"
                              data-select-toggle="category-toggle" data-name="category-toggle" data-category-value="<?php echo $category['id']; ?>"
                              data-checked="1"
+                             data-toggle="tooltip"
+                             title="<?php echo $hesklang['click_to_toggle']; ?>"
                              style="<?php echo $category['css_style']; ?>">
                             <?php echo $category['name']; ?>
                         </div>

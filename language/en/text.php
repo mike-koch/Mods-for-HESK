@@ -91,6 +91,7 @@ $hesklang['readonly'] = 'Readonly';
 $hesklang['copy_ticket'] = 'Copy Ticket';
 $hesklang['canned_responses_dropdown_title'] = 'Canned Responses';
 $hesklang['helpdesk_settings'] = 'Helpdesk Settings';
+$hesklang['click_to_toggle'] = 'Click to toggle';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.6.0
 $hesklang['search_logs'] = 'Search Logs';
