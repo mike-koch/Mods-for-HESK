@@ -237,3 +237,13 @@ div.ticket-info {
     padding: 12px 5px 12px 15px;
     display: block;
 }
+
+.event-category:hover {
+    border: solid 1px #fff !important;
+    cursor: pointer;
+}
+
+.event-category[data-checked="0"] {
+    background: #777 !important;
+    color: #aaa !important;
+}

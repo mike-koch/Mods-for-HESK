@@ -100,7 +100,7 @@ $(document).ready(function() {
         }
     });
 
-    $('input[name="category-toggle"]').change(updateCategoryVisibility);
+    $('div[data-name="category-toggle"]').click(updateCategoryVisibility);
 });
 
 function buildEvent(id, dbObject) {
@@ -186,13 +186,19 @@ function calculateTextColor(color) {
 }
 
 function updateCategoryVisibility() {
-    $('input[name="category-toggle"]').each(function() {
-        $this = $(this);
+    if ($(this).attr('data-checked') == '1') {
+        $(this).attr('data-checked', 0);
+    } else {
+        $(this).attr('data-checked', 1);
+    }
 
-        if ($this.is(':checked')) {
-            $('.category-' + $this.val()).show();
+    $('div[data-name="category-toggle"]').each(function() {
+        var $this = $(this);
+
+        if ($this.attr('data-checked') == '1') {
+            $('.category-' + $this.attr('data-category-value')).show();
         } else {
-            $('.category-' + $this.val()).hide();
+            $('.category-' + $this.attr('data-category-value')).hide();
         }
     });
 }

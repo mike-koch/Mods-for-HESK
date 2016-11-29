@@ -68,7 +68,7 @@ while ($row = hesk_dbFetchAssoc($rs)) {
         continue;
     }
 
-    $row['css_style'] = $row['color'] == null ? 'color: black; border: solid 1px #000;' : 'background: ' . $row['color'];
+    $row['css_style'] = $row['color'] == null ? 'color: black; border: solid 1px #000;' : 'border: solid 1px ' . $row['color'] . '; background: ' . $row['color'];
     $categories[] = $row;
 }
 
@@ -78,67 +78,69 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* Print main manage users page */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 ?>
+<aside class="main-sidebar">
+    <section class="sidebar" style="height: auto">
+        <ul class="sidebar-menu">
+            <li class="header text-uppercase"><?php echo $hesklang['calendar_categories']; ?></li>
+            <?php foreach ($categories as $category): ?>
+                <!-- TODO Clean this up -->
+                <li>
+                    <div class="ticket-info">
+                        <!--<div class="checkbox">
+                            <input type="checkbox" data-select-target="category-toggle" name="category-toggle" value="<?php /*echo $category['id']; */?>" checked>
+                        </div>-->
+                        <div class="hide-on-overflow no-wrap event-category background-volatile"
+                             data-select-toggle="category-toggle" data-name="category-toggle" data-category-value="<?php echo $category['id']; ?>"
+                             data-checked="1"
+                             style="<?php echo $category['css_style']; ?>">
+                            <?php echo $category['name']; ?>
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+            <li>
+                <div class="ticket-info">
+                    <button id="select-all" class="btn btn-default btn-sm" data-select-all="category-toggle">
+                        <?php echo $hesklang['select_all_title_case']; ?>
+                    </button>
+                    <button id="deselect-all" class="btn btn-default btn-sm" data-deselect-all="category-toggle">
+                        <?php echo $hesklang['deselect_all_title_case']; ?>
+                    </button>
+                </div>
+                <script>
+                    $('#select-all').click(function() {
+                        $('div[data-name="category-toggle"]').attr('data-checked', 1);
+                        updateCategoryVisibility();
+                    });
+                    $('#deselect-all').click(function() {
+                        $('div[data-name="category-toggle"]').attr('data-checked', 0);
+                        updateCategoryVisibility();
+                    });
+                </script>
+            </li>
+            <li class="header text-uppercase"><?php echo $hesklang['legend']; ?></li>
+            <li>
+                <div class="ticket-info">
+                    <i class="fa fa-calendar"></i> <?php echo $hesklang['event']; ?>
+                </div>
+            </li>
+            <li>
+                <div class="ticket-info">
+                    <i class="fa fa-ticket"></i> <?php echo $hesklang['ticket']; ?>
+                </div>
+            </li>
+            <li>
+                <div class="ticket-info">
+                    <i class="fa fa-exclamation-triangle"></i> <?php echo $hesklang['overdue_ticket_legend']; ?>
+                </div>
+            </li>
+        </ul>
+    </section>
+</aside>
 <div class="content-wrapper">
     <section class="content">
     <div class="row">
-        <div class="col-md-4">
-            <div class="box">
-                <div class="box-header">
-                    <h1 class="box-title">
-                        <?php echo $hesklang['calendar_categories']; ?>
-                    </h1>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <div class="btn-group btn-group-sm">
-                        <button id="select-all" class="btn btn-default" data-select-all="category-toggle"><?php echo $hesklang['select_all_title_case']; ?></button>
-                        <button id="deselect-all" class="btn btn-default" data-deselect-all="category-toggle"><?php echo $hesklang['deselect_all_title_case']; ?></button>
-                    </div>
-                    <ul class="list-unstyled">
-                        <?php foreach ($categories as $category): ?>
-                            <li class="move-down-20 move-right-20">
-                                <div class="checkbox">
-                                    <input type="checkbox" data-select-target="category-toggle" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
-                                </div>
-                                <div class="hide-on-overflow no-wrap event-category background-volatile" style="<?php echo $category['css_style']; ?>">
-                                    <?php echo $category['name']; ?>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            </div>
-            <div class="box">
-                <div class="box-header">
-                    <h1 class="box-title">
-                        <?php echo $hesklang['legend']; ?>
-                    </h1>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <i class="fa fa-calendar"></i> <?php echo $hesklang['event']; ?>
-                        </div>
-                        <div class="col-sm-6">
-                            <i class="fa fa-ticket"></i> <?php echo $hesklang['ticket']; ?>
-                        </div>
-                        <div class="col-sm-6">
-                            <i class="fa fa-exclamation-triangle"></i> <?php echo $hesklang['overdue_ticket_legend']; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="box">
                 <div class="box-header">
                     <h1 class="box-title">
