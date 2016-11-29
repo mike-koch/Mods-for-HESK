@@ -220,7 +220,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                     <?php endforeach; ?>
                                 </ul>
                             </li>
-                            <li class="footer"><a href="mail.php"><?php $hesklang['see_all_messages'] ?></a></li>
+                            <li class="footer"><a href="mail.php"><?php echo $hesklang['see_all_messages'] ?></a></li>
                         </ul>
                     </li>
                     <li class="dropdown user user-menu">
