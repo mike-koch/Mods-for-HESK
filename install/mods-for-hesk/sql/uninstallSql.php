@@ -17,8 +17,6 @@ function executeQuery($sql)
             return $res;
         } else {
             print "Could not execute query: $sql. MySQL said: " . mysqli_error($hesk_db_link);
-            http_response_code(500);
-            die();
         }
     } else {
         if (!$hesk_db_link && !hesk_dbConnect()) {
@@ -31,8 +29,6 @@ function executeQuery($sql)
             return $res;
         } else {
             print "Could not execute query: $sql. MySQL said: " . mysql_error();
-            http_response_code(500);
-            die();
         }
     }
 }
@@ -103,6 +99,6 @@ function removeOtherColumns()
 
 
     // These queries are ran in case someone used an unfortunate installation they may have not properly cleaned up tables
-    executeQuery('DROP TABLE IF EXISTS `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'denied_ips`');
-    executeQuery('DROP TABLE IF EXISTS `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'denied_emails`');
+    executeQuery('DROP TABLE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'denied_ips`');
+    executeQuery('DROP TABLE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'denied_emails`');
 }
