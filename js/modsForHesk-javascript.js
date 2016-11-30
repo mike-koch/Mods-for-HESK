@@ -85,6 +85,10 @@ var loadJquery = function()
             .prop('selected', false)
             .trigger('change');
     });
+
+    $('.box-header h1.box-title').click(function() {
+        $(this).parent().find('[data-widget="collapse"]').click();
+    });
 };
 
 function calculateGrayCount(background) {

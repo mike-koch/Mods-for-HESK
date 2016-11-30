@@ -254,3 +254,8 @@ div.ticket-info {
     width: 0;
     overflow:hidden;
 }
+
+.box-header h1.box-title {
+    width: 100%;
+    cursor: pointer;
+}
