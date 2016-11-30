@@ -55,14 +55,24 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
         </div>
         <div class="box-body">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
-                    <?php echo $hesklang['arp']; ?>
-                    <span id="timer"></span>
-                </label>
+            <div class="row">
+                <div class="col-xs-6 text-left">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">
+                            <?php echo $hesklang['arp']; ?>
+                            <span id="timer"></span>
+                        </label>
+                    </div>
+                    <script type="text/javascript">heskCheckReloading();</script>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <a href="new_ticket.php" class="btn btn-success">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
+                        <?php echo $hesklang['nti']; ?>
+                    </a>
+                </div>
             </div>
-            <script type="text/javascript">heskCheckReloading();</script>
             <?php
             /* Print the list of tickets */
             $is_search = 1;

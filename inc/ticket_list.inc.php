@@ -87,11 +87,6 @@ if ($total > 0) {
     $prev_page = ($page - 1 <= 0) ? 0 : $page - 1;
     $next_page = ($page + 1 > $pages) ? 0 : $page + 1;
     echo sprintf($hesklang['tickets_on_pages'], $total, $pages);
-    echo '<div style="float:right">
-                    <a href="new_ticket.php" class="btn btn-success pull-left">
-                        <span class="glyphicon glyphicon-plus-sign"></span>
-                        '.$hesklang['nti'].'
-                    </a></div><br><br>';
 
     if ($pages > 1) {
 
@@ -460,7 +455,6 @@ else {
 
     echo '</div></div>';
 }
-echo '</div>';
 
 
 function hesk_print_list_head()
