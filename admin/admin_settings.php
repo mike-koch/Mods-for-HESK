@@ -289,6 +289,49 @@ $modsForHesk_settings = mfh_getSettings();
     }
     //-->
 </script>
+<aside class="main-sidebar">
+    <section class="sidebar" style="height: auto">
+        <ul class="sidebar-menu">
+            <li class="header text-uppercase"><?php echo $hesklang['settings']; ?></li>
+            <li>
+                <a href="#general"><?php echo $hesklang['tab_1']; ?></a>
+            </li>
+            <li>
+                <a href="#helpdesk"><?php echo $hesklang['tab_2']; ?></a>
+            </li>
+            <li>
+                <a href="#knowledgebase"><?php echo $hesklang['tab_3']; ?></a>
+            </li>
+            <li>
+                <a href="#calendar">
+                    <?php echo $hesklang['calendar_title_case']; ?>
+                    <span class="label label-primary" data-toggle="tooltip"
+                          title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>">
+                            <?php echo $hesklang['mods_for_hesk_acronym']; ?>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#email"><?php echo $hesklang['tab_6']; ?></a>
+            </li>
+            <li>
+                <a href="#ticket-list"><?php echo $hesklang['tab_7']; ?></a>
+            </li>
+            <li>
+                <a href="#miscellaneous"><?php echo $hesklang['tab_5']; ?></a>
+            </li>
+            <li>
+                <a href="#ui-colors">
+                    <?php echo $hesklang['uiColors']; ?>
+                    <span class="label label-primary" data-toggle="tooltip"
+                          title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>">
+                            <?php echo $hesklang['mods_for_hesk_acronym']; ?>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </section>
+</aside>
 <div class="content-wrapper">
     <section class="content">
     <?php
@@ -492,14 +535,15 @@ $modsForHesk_settings = mfh_getSettings();
           class="form-horizontal" role="form">
 
         <!-- General Settings -->
-        <div class="box collapsed-box">
+        <a class="anchor" id="general">&nbsp;</a>
+        <div class="box">
             <div class="box-header with-border">
                 <h1 class="box-title">
                     <?php echo $hesklang['tab_1']; ?>
                 </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
@@ -747,14 +791,15 @@ $modsForHesk_settings = mfh_getSettings();
         </div>
 
         <!-- Helpdesk Settings -->
-        <div class="box collapsed-box">
+        <a class="anchor" id="helpdesk">&nbsp;</a>
+        <div class="box">
             <div class="box-header with-border">
                 <h1 class="box-title">
                     <?php echo $hesklang['tab_2']; ?>
                 </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
@@ -1730,14 +1775,15 @@ $modsForHesk_settings = mfh_getSettings();
         </div>
 
         <!-- Knowledgebase Settings -->
-        <div class="box collapsed-box">
+        <a class="anchor" id="knowledgebase">&nbsp;</a>
+        <div class="box">
             <div class="box-header with-border">
                 <h1 class="box-title">
                     <?php echo $hesklang['tab_3']; ?>
                 </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
@@ -2048,7 +2094,8 @@ $modsForHesk_settings = mfh_getSettings();
         </div>
 
         <!-- Calendar Settings -->
-        <div class="box collapsed-box">
+        <a class="anchor" id="calendar">&nbsp;</a>
+        <div class="box">
             <div class="box-header with-border">
                 <h1 class="box-title">
                     <?php echo $hesklang['calendar_title_case']; ?>
@@ -2059,7 +2106,7 @@ $modsForHesk_settings = mfh_getSettings();
                 </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
@@ -2142,14 +2189,15 @@ $modsForHesk_settings = mfh_getSettings();
         </div>
 
         <!-- Email Settings -->
-        <div class="box collapsed-box">
+        <a class="anchor" id="email">&nbsp;</a>
+        <div class="box">
             <div class="box-header with-border">
                 <h1 class="box-title">
                     <?php echo $hesklang['tab_6']; ?>
                 </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
@@ -3135,14 +3183,15 @@ $modsForHesk_settings = mfh_getSettings();
         </div>
 
         <!-- Ticket List Settings -->
-        <div class="box collapsed-box">
+        <a class="anchor" id="ticket-list">&nbsp;</a>
+        <div class="box">
             <div class="box-header with-border">
                 <h1 class="box-title">
                     <?php echo $hesklang['tab_7']; ?>
                 </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
@@ -3224,14 +3273,15 @@ $modsForHesk_settings = mfh_getSettings();
         </div>
 
         <!-- Misc Settings -->
-        <div class="box collapsed-box">
+        <a class="anchor" id="miscellaneous">&nbsp;</a>
+        <div class="box">
             <div class="box-header with-border">
                 <h1 class="box-title">
                     <?php echo $hesklang['tab_5']; ?>
                 </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
@@ -3460,7 +3510,8 @@ $modsForHesk_settings = mfh_getSettings();
         </div>
 
         <!-- UI Colors -->
-        <div class="box collapsed-box">
+        <a class="anchor" id="ui-colors">&nbsp;</a>
+        <div class="box">
             <div class="box-header with-border">
                 <h1 class="box-title">
                     <?php echo $hesklang['uiColors']; ?>
@@ -3471,7 +3522,7 @@ $modsForHesk_settings = mfh_getSettings();
                 </h1>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
