@@ -478,19 +478,6 @@ if (!isset($_SESSION['hide']['new_article']))
                                 display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php');
                             endif; // End attachments
 
-                            // Redirect to the correct page
-                            switch ($from)
-                            {
-                                case 'draft':
-                                    $redirect_action = 'a=list_draft';
-                                    break;
-                                case 'private':
-                                    $redirect_action = 'a=list_private';
-                                    break;
-                                default:
-                                    $redirect_action = 'a=manage_cat&amp;catid='.$catid;
-                                    break;
-                            }
                             ?>
                         </div>
                     </div>
@@ -499,11 +486,10 @@ if (!isset($_SESSION['hide']['new_article']))
                     <div class="form-group">
                         <input type="hidden" name="a" value="new_article">
                         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
-                        <input type="hidden" name="from" value="<?php echo $from; ?>">
 
                         <div class="btn-group">
                             <input type="submit" value="<?php echo $hesklang['kb_save']; ?>" class="btn btn-primary">
-                            <a class="btn btn-default" href="manage_knowledgebase.php?<?php echo $redirect_action; ?>"><?php echo $hesklang['cancel']; ?></a>
+                            <a class="btn btn-default" href="manage_knowledgebase.php?a=manage_cat&amp;catid=<?php echo $catid; ?>"><?php echo $hesklang['cancel']; ?></a>
                         </div>
                     </div>
                 </div>
