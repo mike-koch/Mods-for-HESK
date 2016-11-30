@@ -434,6 +434,9 @@ $tmpvar['screen_resolution_height'] = hesk_POST('screen_resolution_height', "NUL
 $tmpvar['screen_resolution_width'] = hesk_POST('screen_resolution_width', "NULL");
 $tmpvar['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
+// Tickets from customers never have a due date
+$tmpvar['due_date'] = '';
+
 // Should the helpdesk validate emails?
 $createTicket = true;
 if ($modsForHesk_settings['customer_email_verification_required'] && $email_available) {
