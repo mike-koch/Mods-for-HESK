@@ -355,7 +355,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                 }
                                 ?>
                                 <li class="<?php echo $active; ?>">
-                                    <a href="email_templates.php">
+                                    <a href="manage_email_templates.php">
                                         <i class="fa fa-fw fa-envelope-o" <?php echo $iconDisplay; ?>></i>
                                         <span><?php echo $hesklang['manage_email_templates']; ?></span>
                                     </a>
