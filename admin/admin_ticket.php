@@ -1129,47 +1129,31 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 ?>
                 <?php echo $hesklang['no_notes_for_this_ticket']; ?>
             <?php endif; ?>
-        </div>
-        <?php if ($can_reply): ?>
-        <div class="box-footer">
-            <button class="btn btn-default pull-right" data-toggle="modal" data-target="#noteform">
-                <i class="fa fa-plus-circle"></i> <?php echo $hesklang['addnote']; ?>
-            </button>
-        </div>
-        <?php endif; ?>
-    </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="noteform">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"><?php echo $hesklang['addnote']; ?></h4>
-                </div>
+            <div id="noteform" style="display: none">
+                <h3><?php echo $hesklang['addnote']; ?></h3>
                 <form class="form-horizontal" data-toggle="validator" method="post" action="admin_ticket.php" style="margin:0px; padding:0px;"
                       enctype="multipart/form-data">
-                    <div class="modal-body">
-                            <div class="form-group">
-                                <label for="note-message" class="control-label col-sm-2"><?php echo $hesklang['message']; ?></label>
-                                <div class="col-sm-10">
-                                    <textarea id="note-message" style="min-height: 150px" data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']) ?>" class="form-control" name="notemsg" rows="6"
+                    <div class="form-group">
+                        <label for="note-message" class="control-label col-sm-2"><?php echo $hesklang['message']; ?></label>
+                        <div class="col-sm-10">
+                                <textarea id="note-message" style="min-height: 150px" data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']) ?>" class="form-control" name="notemsg" rows="6"
                                           cols="60" required><?php echo isset($_SESSION['note_message']) ? stripslashes(hesk_input($_SESSION['note_message'])) : ''; ?></textarea>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="note-attachments" class="control-label col-sm-2">
-                                    <?php echo $hesklang['attachments']; ?>
-                                </label>
-                                <div class="col-sm-10">
-                                    <?php build_dropzone_markup(true, 'notesFiledrop'); ?>
-                                </div>
-                            </div>
-                            <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php', 'notesFiledrop'); ?>
+                            <div class="help-block with-errors"></div>
+                        </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="form-group">
+                        <label for="note-attachments" class="control-label col-sm-2">
+                            <?php echo $hesklang['attachments']; ?>
+                        </label>
+                        <div class="col-sm-10">
+                            <?php build_dropzone_markup(true, 'notesFiledrop'); ?>
+                        </div>
+                    </div>
+                    <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php', 'notesFiledrop'); ?>
+                    <div class="text-right">
                         <i><?php echo $hesklang['nhid']; ?></i>&nbsp;
                         <div class="btn-group">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" onclick="hesk_toggleLayerDisplay('noteform')"><?php echo $hesklang['cancel']; ?></button>
                             <input type="submit" class="btn btn-success" value="<?php echo $hesklang['s']; ?>">
                         </div>
                         <input type="hidden" name="track" value="<?php echo $trackingID; ?>">
@@ -1178,6 +1162,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </form>
             </div>
         </div>
+        <?php if ($can_reply): ?>
+        <div class="box-footer">
+            <button class="btn btn-default pull-right" onclick="hesk_toggleLayerDisplay('noteform')">
+                <i class="fa fa-plus-circle"></i> <?php echo $hesklang['addnote']; ?>
+            </button>
+        </div>
+        <?php endif; ?>
     </div>
     <?php
     /* Reply form on top? */
