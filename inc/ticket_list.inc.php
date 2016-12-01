@@ -438,10 +438,10 @@ if ($total > 0) {
                 </td>
             </tr>
         </table>
-
     </form>
     <?php
 
+    echo '</div>';
 } // END ticket list if total > 0
 else {
     echo '<div class="row"><div class="col-sm-12">';

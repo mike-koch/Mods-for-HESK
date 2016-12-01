@@ -1263,7 +1263,7 @@ function hesk_getAdminButtons($category_id)
             $linkText .= '&c_' . $k . '=' . $strippedCustomField;
         }
     }
-    $options .= '<a class="btn btn-default" href=""><i class="fa fa-copy fa-fw"></i> ' . $hesklang['copy_ticket'] . '</a> ';
+    $options .= '<a class="btn btn-default" href="' . $linkText . '"><i class="fa fa-copy fa-fw"></i> ' . $hesklang['copy_ticket'] . '</a> ';
 
     /* Close/Reopen ticket link */
     $random = rand(10000, 99999);
