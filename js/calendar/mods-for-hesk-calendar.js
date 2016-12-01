@@ -3,7 +3,7 @@ $(document).ready(function() {
         header: {
             left: 'prevYear,prev,next,nextYear today',
             center: 'title',
-            right: 'month,agendaWeek,agendaDay'
+            right: 'month,agendaWeek,agendaDay,listWeek'
         },
         editable: true,
         eventLimit: true,
