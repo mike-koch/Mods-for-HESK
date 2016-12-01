@@ -93,8 +93,8 @@ function processUpdates(startingVersion) {
         startVersionUpgrade('300b1');
         executeUpdate(32, '300b1', '3.0.0 beta 1');
     } else if (startingVersion < 33) {
-        startVersionUpgrade('300');
-        executeUpdate(33, '300', '3.0.0');
+        startVersionUpgrade('300rc1');
+        executeUpdate(33, '300rc1', '3.0.0 RC 1');
     } else {
         installationFinished();
     }

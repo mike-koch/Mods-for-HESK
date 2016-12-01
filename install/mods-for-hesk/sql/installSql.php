@@ -891,9 +891,11 @@ function execute300Beta1Scripts() {
     updateVersion('3.0.0 beta 1');
 }
 
-function execute300Scripts() {
+function execute300RC1Scripts() {
     global $hesk_settings;
     hesk_dbConnect();
 
-    updateVersion('3.0.0');
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` DROP COLUMN `autorefresh`");
+
+    updateVersion('3.0.0 RC 1');
 }

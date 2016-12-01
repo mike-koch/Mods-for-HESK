@@ -111,12 +111,13 @@ hesk_dbConnect();
                         <hr>
                         <div class="row">
                             <form class="form-horizontal">
-                                <input type="hidden" name="current-version" value="<?php echo $version != NULL && $version != MODS_FOR_HESK_NEW_VERSION ? $version : 0; ?>">
+                                <input type="hidden" name="current-version-hidden" value="<?php echo $version != NULL && $version != MODS_FOR_HESK_NEW_VERSION ? $version : 0; ?>">
                                 <label for="current-version" class="col-sm-3 control-label">Current Version</label>
                                 <div class="col-md-9">
                                     <div class="col-md-8">
                                         <select name="current-version" class="form-control">
-                                            <optgroup label="Mods for HESK 3">
+                                            <optgroup label="Mods for HESK 3 (Pre-release Builds)">
+                                                <option value="33">3.0.0 RC 1</option>
                                                 <option value="32">3.0.0 beta 1</option>
                                             </optgroup>
                                             <optgroup label="Mods for HESK 2">
@@ -217,7 +218,7 @@ if ($disableAllExcept !== NULL) {
     var dropdown = $('select[name="current-version"]');
     dropdown.change(updateLink);
 
-    var currentVersion = $('input[name="current-version"]').val();
+    var currentVersion = $('input[name="current-version-hidden"]').val();
     dropdown.find('option').each(function() {
         var $that = $(this);
 
