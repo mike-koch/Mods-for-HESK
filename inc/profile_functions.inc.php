@@ -425,6 +425,10 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                     }
                                     echo ' ' . $disabledText ?> /> <?php echo $hesklang['ncrt']; ?> <?php echo $hesklang['s_my']; ?>
                                 </label></div>
+                            <?php if ($disabledText == 'disabled') { ?>
+                            <input type="hidden" name="notify_reply_my"
+                                   value="<?php echo !empty($_SESSION[$session_array]['notify_reply_my']) ? '1' : '0'; ?>">
+                            <?php } ?>
                         </div>
                         <div class="col-md-9 col-md-offset-3">
                             <div class="checkbox"><label><input type="checkbox" name="notify_assigned"
@@ -432,6 +436,10 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                         echo 'checked="checked"';
                                     }
                                     echo ' ' . $disabledText ?> /> <?php echo $hesklang['ntam']; ?></label></div>
+                            <?php if ($disabledText == 'disabled') { ?>
+                                <input type="hidden" name="notify_assigned"
+                                       value="<?php echo !empty($_SESSION[$session_array]['notify_assigned']) ? '1' : '0'; ?>">
+                            <?php } ?>
                         </div>
                         <div class="col-md-9 col-md-offset-3">
                             <div class="checkbox"><label><input type="checkbox" name="notify_note"
@@ -439,6 +447,10 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                         echo 'checked="checked"';
                                     }
                                     echo ' ' . $disabledText ?> /> <?php echo $hesklang['ntnote']; ?></label></div>
+                            <?php if ($disabledText == 'disabled') { ?>
+                                <input type="hidden" name="notify_note"
+                                       value="<?php echo !empty($_SESSION[$session_array]['notify_note']) ? '1' : '0'; ?>">
+                            <?php } ?>
                         </div>
                         <div class="col-md-9 col-md-offset-3">
                             <div class="checkbox"><label><input type="checkbox" name="notify_pm"
@@ -446,6 +458,10 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                         echo 'checked="checked"';
                                     }
                                     echo ' ' . $disabledText ?> /> <?php echo $hesklang['npms']; ?></label></div>
+                            <?php if ($disabledText == 'disabled') { ?>
+                                <input type="hidden" name="notify_pm"
+                                       value="<?php echo !empty($_SESSION[$session_array]['notify_pm']) ? '1' : '0'; ?>">
+                            <?php } ?>
                         </div>
                         <?php
                         if ($_SESSION['isadmin']) { ?>
@@ -455,7 +471,10 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                             echo 'checked="checked"';
                                         } ?>> <?php echo $hesklang['notify_note_unassigned']; ?></label></div>
                             </div>
-                            <?php
+                            <?php if ($disabledText == 'disabled') { ?>
+                                <input type="hidden" name="notify_note_unassigned"
+                                       value="<?php echo !empty($_SESSION[$session_array]['notify_note_unassigned']) ? '1' : '0'; ?>">
+                            <?php }
                         } ?>
                         <div class="col-md-9 col-md-offset-3">
                             <div class="checkbox"><label><input type="checkbox" name="notify_overdue_unassigned"
@@ -464,8 +483,11 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                                     }
                                     echo ' ' . $disabledText ?> /> <?php echo $hesklang['notify_overdue_unassigned']; ?></label></div>
                         </div>
-                    <?php }
-
+                        <?php if ($disabledText == 'disabled') { ?>
+                            <input type="hidden" name="notify_overdue_unassigned"
+                                   value="<?php echo !empty($_SESSION[$session_array]['notify_overdue_unassigned']) ? '1' : '0'; ?>">
+                        <?php }
+                    }
                     ?>
                 </div>
             </div>
