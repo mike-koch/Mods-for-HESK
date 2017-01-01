@@ -1541,7 +1541,7 @@ function mfh_print_message() {
     ?>
     <li><i class="fa fa-comment bg-red" data-toggle="tooltip" title="<?php echo $hesklang['original_message']; ?>"></i>
         <div class="timeline-item">
-            <span class="time"><i class="fa fa-clock-o"></i> <?php echo $ticket['dt']; ?></span>
+            <span class="time"><i class="fa fa-clock-o"></i> <?php echo hesk_date($ticket['dt'], true); ?></span>
             <h3 class="timeline-header">
                 <i class="fa fa-fw fa-user" data-toggle="tooltip" title="<?php echo $hesklang['customer']; ?>"></i>
                 <?php echo $ticket['name']; ?>
