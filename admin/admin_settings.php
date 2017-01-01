@@ -3736,11 +3736,11 @@ $modsForHesk_settings = mfh_getSettings();
                     <div class="col-xs-12">
                         <div class="form-group">
                             <label for="admin-color-scheme"
-                                   class="col-sm-3 col-xs-5 control-label">Color Scheme
+                                   class="col-sm-3 col-xs-5 control-label"><?php echo $hesklang['color_scheme']; ?>
                                 <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                    data-placement="left"
-                                   title="<?php echo $hesklang['dropdownItemTextHoverBackgroundColor']; ?>"
-                                   data-content="<?php echo $hesklang['dropdownItemTextHoverBackgroundColorHelp']; ?>"></i>
+                                   title="<?php echo $hesklang['color_scheme']; ?>"
+                                   data-content="<?php echo $hesklang['color_scheme_help']; ?>"></i>
                             </label>
 
                             <div class="col-sm-9 col-xs-7">
