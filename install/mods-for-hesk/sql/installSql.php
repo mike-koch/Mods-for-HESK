@@ -899,3 +899,10 @@ function execute300RC1Scripts() {
 
     updateVersion('3.0.0 RC 1');
 }
+
+function execute300Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    updateVersion('3.0.0');
+}

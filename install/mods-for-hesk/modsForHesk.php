@@ -116,9 +116,9 @@ hesk_dbConnect();
                                 <div class="col-md-9">
                                     <div class="col-md-8">
                                         <select name="current-version" class="form-control">
-                                            <optgroup label="Mods for HESK 3 (Pre-release Builds)">
-                                                <option value="33">3.0.0 RC 1</option>
-                                                <option value="32">3.0.0 beta 1</option>
+                                            <optgroup label="Mods for HESK 3">
+                                                <option value="33">3.0.0 RC 1 [Prerelease Build]</option>
+                                                <option value="32">3.0.0 beta 1 [Prerelease Build]</option>
                                             </optgroup>
                                             <optgroup label="Mods for HESK 2">
                                                 <option value="31">2.6.4</option>
