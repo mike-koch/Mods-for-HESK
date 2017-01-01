@@ -89,6 +89,16 @@ var loadJquery = function()
     $('.box-header h1.box-title').click(function() {
         $(this).parent().find('[data-widget="collapse"]').click();
     });
+    
+    $('[data-show]').click(function() {
+        var show = $(this).attr('data-show');
+        $('#' + show).show();
+    });
+    
+    $('[data-hide]').click(function() {
+        var hide = $(this).attr('data-hide');
+        $('#' + hide).hide();
+    })
 };
 
 function calculateGrayCount(background) {
@@ -102,7 +112,7 @@ function calculateGrayCount(background) {
 
 var setIcon = function(icon) {
     $('[data-toggle="iconpicker"]').iconpicker('setIcon', icon);
-}
+};
 
 // Deprecated. Use data-select-all="id" instead
 function selectAll(id) {

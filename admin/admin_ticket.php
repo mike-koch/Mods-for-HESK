@@ -1046,7 +1046,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
         </div>
     </div>
-    <div class="box box-warning box-solid">
+    <div class="box box-warning">
         <div class="box-header with-border">
             <h1 class="box-title">
                 <?php echo $hesklang['notes']; ?>
@@ -1153,7 +1153,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div class="text-right">
                         <i><?php echo $hesklang['nhid']; ?></i>&nbsp;
                         <div class="btn-group">
-                            <button type="button" class="btn btn-danger" onclick="hesk_toggleLayerDisplay('noteform')"><?php echo $hesklang['cancel']; ?></button>
+                            <button type="button" class="btn btn-danger" data-show="note-footer" data-hide="noteform"><?php echo $hesklang['cancel']; ?></button>
                             <input type="submit" class="btn btn-success" value="<?php echo $hesklang['s']; ?>">
                         </div>
                         <input type="hidden" name="track" value="<?php echo $trackingID; ?>">
@@ -1163,8 +1163,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
         </div>
         <?php if ($can_reply): ?>
-        <div class="box-footer">
-            <button class="btn btn-default pull-right" onclick="hesk_toggleLayerDisplay('noteform')">
+        <div class="box-footer" id="note-footer">
+            <button class="btn btn-default pull-right" data-show="noteform" data-hide="note-footer">
                 <i class="fa fa-plus-circle"></i> <?php echo $hesklang['addnote']; ?>
             </button>
         </div>
