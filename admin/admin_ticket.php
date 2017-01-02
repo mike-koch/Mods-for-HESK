@@ -1171,13 +1171,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <?php endif; ?>
     </div>
     <?php
+    /* Do we need or have any canned responses? */
+    $can_options = hesk_printCanned();
+
     /* Reply form on top? */
     if ($can_reply && $hesk_settings['reply_top'] == 1) {
         hesk_printReplyForm();
     }
-
-    /* Do we need or have any canned responses? */
-    $can_options = hesk_printCanned();
 
     hesk_printTicketReplies();
 
