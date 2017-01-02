@@ -43,12 +43,6 @@ if (defined('AUTOFOCUS'))
 <?php
 }
 
-// Users online
-if (defined('SHOW_ONLINE'))
-{
-	hesk_printOnline();
-}
-
 // The closing div here is to close the content area on each page. Annoying, but necessary.
 if (defined('ADMIN_PAGE')) {
 	echo '

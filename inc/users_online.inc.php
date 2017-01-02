@@ -33,34 +33,44 @@ function hesk_initOnline($user_id)
 } // END hesk_initOnline()
 
 
-function hesk_printOnline()
-{
+function hesk_printOnline() {
 	global $hesk_settings, $hesklang;
-
-	echo '
-    &nbsp;<br />&nbsp;
-	<div class="online">
-
-	<table border="0">
-	<tr>
-	<td valign="top"><img src="../img/online_on.png" width="16" height="16" alt="'.$hesklang['onlinep'].'" title="'.$hesklang['onlinep'].'" style="vertical-align:text-bottom" /></td>
-	<td>
-	';
-	$i = '';
-	foreach ($hesk_settings['users_online'] as $tmp)
-	{
-		$i .= '<span class="online" ' . ($tmp['isadmin'] ? 'style="font-style:italic;"' : '') . '>';
-		$i .= ($tmp['id'] == $_SESSION['id']) ? $tmp['name'] : '<a href="mail.php?a=new&id='.$tmp['id'].'">' . $tmp['name'] . '</a>';
-		$i .= '</span>, ';
-	}
-	echo substr($i,0,-2);
-	echo '
-	</td>
-	</tr>
-	</table>
-
-	</div>';
-
+    ?>
+    <li class="dropdown messages-menu">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-users"></i>
+            <span class="label label-danger"><?php echo count($hesk_settings['users_online']); ?></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li class="header"><?php echo $hesklang['onlinep']; ?></li>
+            <li>
+                <ul class="menu">
+                    <?php foreach ($hesk_settings['users_online'] as $tmp): ?>
+                        <li>
+                            <?php $link = ($tmp['id'] == $_SESSION['id']) ? '' : ' href="mail.php?a=new&id='.$tmp['id'].'"'; ?>
+                            <a<?php echo $link; ?>>
+                                <div class="pull-left">
+                                    <i class="fa fa-user fa-2x black"></i>
+                                </div>
+                                <h4><?php echo $tmp['name']; ?></h4>
+                                <?php
+                                if ($tmp['isadmin']): ?>
+                                    <p>
+                                        <span class="label label-default">
+                                            <?php echo $hesklang['administrator']; ?>
+                                        </span>
+                                    </p>
+                                <?php elseif ($tmp['id'] == $_SESSION['id']): ?>
+                                    <!--<span class="badge badge-default">You</span>-->
+                                <?php endif; ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </li>
+        </ul>
+    </li>
+<?php
 } // END hesk_printOnline()
 
 
