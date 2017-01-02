@@ -188,7 +188,14 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                 </li>
                             </ul>
                         </li>
-                    <?php endif; ?>
+                    <?php
+                    endif;
+
+                    // Users online
+                    if (defined('SHOW_ONLINE')) {
+                        hesk_printOnline();
+                    }
+                    ?>
                     <li class="dropdown messages-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-envelope-o"></i>
