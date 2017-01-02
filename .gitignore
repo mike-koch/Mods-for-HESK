@@ -241,7 +241,6 @@ inc/tiny_mce/3.5.11/utils/mctabs.js
 inc/tiny_mce/3.5.11/utils/validate.js
 inc/treemenu/TreeMenu.php
 inc/treemenu/index.htm
-inc/users_online.inc.php
 inc/zip/Zip.php
 inc/zip/index.htm
 inc/zip/pclzip.lib.php
