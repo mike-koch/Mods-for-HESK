@@ -196,8 +196,7 @@ function hesk_suggestKB() {
         xmlHttp.send(params);
     }
 
-    setTimeout('hesk_suggestKB();', 2000);
-
+    setTimeout(function() { hesk_suggestKB(); }, 2000);
 }
 
 function hesk_suggestKBsearch(isAdmin) {
@@ -238,7 +237,7 @@ function hesk_suggestKBsearch(isAdmin) {
         xmlHttp.send(params);
     }
 
-    setTimeout('hesk_suggestKBsearch(' + isAdmin + ');', 2000);
+    setTimeout(function() { hesk_suggestKBsearch(isAdmin); }, 2000);
 }
 
 function hesk_suggestEmail(emailField, displayDiv, padDiv, isAdmin, allowMultiple) {

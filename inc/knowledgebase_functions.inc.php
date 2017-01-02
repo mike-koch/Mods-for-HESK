@@ -89,12 +89,6 @@ function hesk_kbTopArticles($how_many, $index = 1)
             </thead>
             <tbody>
             <?php
-            /* Get list of articles from the database */
-            $res = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`subject`,`t1`.`dt`, `t1`.`views`,`t1`.`sticky` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_articles` AS `t1`
-            LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
-            WHERE `t1`.`type`='0' AND `t2`.`type`='0'
-            ORDER BY `t1`.`sticky` DESC, `t1`.`views` DESC, `t1`.`art_order` ASC LIMIT " . intval($how_many));
-
             /* If no results found end here */
             if (hesk_dbNumRows($res) == 0) {
                 $colspan = '';
@@ -109,7 +103,13 @@ function hesk_kbTopArticles($how_many, $index = 1)
             if (!$hesk_settings['kb_views']) {
                 $colspan = 'colspan="2"';
             }
+
+            // Remember what articles are printed for "Top" so we don't print them again in "Latest"
+            $hesk_settings['kb_top_articles_printed'] = array();
+
             while ($article = hesk_dbFetchAssoc($res)) {
+                $hesk_settings['kb_top_articles_printed'][] = $article['id'];
+
                 $icon = 'fa fa-file';
                 $style = '';
 
@@ -176,6 +176,12 @@ function hesk_kbLatestArticles($how_many, $index = 1)
             <thead>
             <tr>
                 <?php
+                // Don't include articles that have already been printed under "Top" articles
+                $sql_top = '';
+                if (isset($hesk_settings['kb_top_articles_printed']) && count($hesk_settings['kb_top_articles_printed'])) {
+                    $sql_top = ' AND `t1`.`id` NOT IN ('.implode(',', $hesk_settings['kb_top_articles_printed']).')';
+                }
+
                 $colspan = '';
                 if (!$hesk_settings['kb_date']) {
                     $colspan = 'colspan="2"';
@@ -183,7 +189,7 @@ function hesk_kbLatestArticles($how_many, $index = 1)
                 /* Get list of articles from the database */
                 $res = hesk_dbQuery("SELECT `t1`.* FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_articles` AS `t1`
                 LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
-                WHERE `t1`.`type`='0' AND `t2`.`type`='0'
+                WHERE `t1`.`type`='0' AND `t2`.`type`='0' {$sql_top}
                 ORDER BY `t1`.`dt` DESC LIMIT " . intval($how_many));
 
                 /* Show number of views? */
@@ -198,11 +204,6 @@ function hesk_kbLatestArticles($how_many, $index = 1)
             </thead>
             <tbody>
             <?php
-            /* Get list of articles from the database */
-            $res = hesk_dbQuery("SELECT `t1`.* FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_articles` AS `t1`
-			LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
-			WHERE `t1`.`type`='0' AND `t2`.`type`='0'
-			ORDER BY `t1`.`dt` DESC LIMIT " . intval($how_many));
 
             /* If no results found end here */
             if (hesk_dbNumRows($res) == 0) {

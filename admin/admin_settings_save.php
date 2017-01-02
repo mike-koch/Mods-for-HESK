@@ -52,6 +52,9 @@ $set = array();
 $set['site_title'] = hesk_input(hesk_POST('s_site_title'), $hesklang['err_sname']);
 $set['site_title'] = str_replace('\\&quot;', '&quot;', $set['site_title']);
 $set['site_url'] = hesk_input(hesk_POST('s_site_url'), $hesklang['err_surl']);
+$set['hesk_title'] = hesk_input(hesk_POST('s_hesk_title'), $hesklang['err_htitle']);
+$set['hesk_title'] = str_replace('\\&quot;', '&quot;', $set['hesk_title']);
+$set['hesk_url'] = rtrim(hesk_input(hesk_POST('s_hesk_url'), $hesklang['err_hurl']), '/');
 $set['webmaster_mail'] = hesk_validateEmail(hesk_POST('s_webmaster_mail'), $hesklang['err_wmmail']);
 $set['noreply_mail'] = hesk_validateEmail(hesk_POST('s_noreply_mail'), $hesklang['err_nomail']);
 $set['noreply_name'] = hesk_input(hesk_POST('s_noreply_name'));
@@ -77,11 +80,6 @@ if (hesk_testMySQL()) {
 }
 
 /*** HELP DESK ***/
-
-/* --> Helpdesk settings */
-$set['hesk_title'] = hesk_input(hesk_POST('s_hesk_title'), $hesklang['err_htitle']);
-$set['hesk_title'] = str_replace('\\&quot;', '&quot;', $set['hesk_title']);
-$set['hesk_url'] = rtrim(hesk_input(hesk_POST('s_hesk_url'), $hesklang['err_hurl']), '/');
 
 // ---> check admin folder
 $set['admin_dir'] = isset($_POST['s_admin_dir']) && !is_array($_POST['s_admin_dir']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $_POST['s_admin_dir']) : 'admin';
@@ -544,6 +542,8 @@ $settings_file_content = '<?php
 // --> General settings
 $hesk_settings[\'site_title\']=\'' . $set['site_title'] . '\';
 $hesk_settings[\'site_url\']=\'' . $set['site_url'] . '\';
+$hesk_settings[\'hesk_title\']=\'' . $set['hesk_title'] . '\';
+$hesk_settings[\'hesk_url\']=\'' . $set['hesk_url'] . '\';
 $hesk_settings[\'webmaster_mail\']=\'' . $set['webmaster_mail'] . '\';
 $hesk_settings[\'noreply_mail\']=\'' . $set['noreply_mail'] . '\';
 $hesk_settings[\'noreply_name\']=\'' . $set['noreply_name'] . '\';
@@ -566,8 +566,6 @@ $hesk_settings[\'db_vrsn\']=' . $set['db_vrsn'] . ';
 // ==> HELP DESK
 
 // --> Help desk settings
-$hesk_settings[\'hesk_title\']=\'' . $set['hesk_title'] . '\';
-$hesk_settings[\'hesk_url\']=\'' . $set['hesk_url'] . '\';
 $hesk_settings[\'admin_dir\']=\'' . $set['admin_dir'] . '\';
 $hesk_settings[\'attach_dir\']=\'' . $set['attach_dir'] . '\';
 $hesk_settings[\'cache_dir\']=\'' . $set['cache_dir'] . '\';
@@ -708,8 +706,8 @@ $hesk_settings[\'open_only\']=' . $set['open_only'] . ';
 $hesk_settings[\'ticket_list\']=array(' . $set['ticket_list'] . ');
 
 // --> Other
-$hesk_settings[\'submittedformat\']=\'' . $set['submittedformat'] . '\';
-$hesk_settings[\'updatedformat\']=\'' . $set['updatedformat'] . '\';
+$hesk_settings[\'submittedformat\']=' . $set['submittedformat'] . ';
+$hesk_settings[\'updatedformat\']=' . $set['updatedformat'] . ';
 
 
 // ==> MISC
