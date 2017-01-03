@@ -245,6 +245,10 @@ div.ticket-info {
     display: block;
 }
 
+[class*="-light"] div.ticket-info {
+    color: #444;
+}
+
 .event-category:hover {
     border: solid 1px #fff !important;
     cursor: pointer;
