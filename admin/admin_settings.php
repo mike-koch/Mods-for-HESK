@@ -264,7 +264,7 @@ $modsForHesk_settings = mfh_getSettings();
         document.getElementById('servertime').innerHTML = h + ":" + m;
         s = s + 1;
         today.setSeconds(s);
-        t = setTimeout('startTime()', 1000);
+        t = setTimeout(function() { startTime(); },1000);
     }
 
     function checkTime(i) {
@@ -592,6 +592,32 @@ $modsForHesk_settings = mfh_getSettings();
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="s_hesk_title" class="col-sm-3 control-label"><?php echo $hesklang['hesk_title']; ?>
+                        <a href="Javascript:void(0)"
+                           onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#6','400','500')"><i
+                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control"
+                               placeholder="<?php echo htmlspecialchars($hesklang['hesk_title']); ?>"
+                               name="s_hesk_title" size="40" maxlength="255"
+                               value="<?php echo $hesk_settings['hesk_title']; ?>"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="s_hesk_url" class="col-sm-3 control-label"><?php echo $hesklang['hesk_url']; ?> <a
+                            href="Javascript:void(0)"
+                            onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#7','400','500')"><i
+                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
+
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control"
+                               placeholder="<?php echo htmlspecialchars($hesklang['hesk_url']); ?>"
+                               name="s_hesk_url" size="40" maxlength="255"
+                               value="<?php echo $hesk_settings['hesk_url']; ?>"/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="s_webmaster_email"
                            class="col-sm-3 control-label"><?php echo $hesklang['email_wm']; ?> <a
                             href="Javascript:void(0)"
@@ -805,32 +831,6 @@ $modsForHesk_settings = mfh_getSettings();
             </div>
             <div class="box-body">
                 <h4 class="bold"><?php echo $hesklang['hd']; ?></h4>
-                <div class="form-group">
-                    <label for="s_hesk_title" class="col-sm-3 control-label"><?php echo $hesklang['hesk_title']; ?>
-                        <a href="Javascript:void(0)"
-                           onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#6','400','500')"><i
-                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
-
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control"
-                               placeholder="<?php echo htmlspecialchars($hesklang['hesk_title']); ?>"
-                               name="s_hesk_title" size="40" maxlength="255"
-                               value="<?php echo $hesk_settings['hesk_title']; ?>"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="s_hesk_url" class="col-sm-3 control-label"><?php echo $hesklang['hesk_url']; ?> <a
-                            href="Javascript:void(0)"
-                            onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#7','400','500')"><i
-                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
-
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control"
-                               placeholder="<?php echo htmlspecialchars($hesklang['hesk_url']); ?>"
-                               name="s_hesk_url" size="40" maxlength="255"
-                               value="<?php echo $hesk_settings['hesk_url']; ?>"/>
-                    </div>
-                </div>
                 <div class="form-group">
                     <label for="s_admin_dir" class="col-sm-3 control-label"><?php echo $hesklang['adf']; ?> <a
                             href="Javascript:void(0)"
@@ -3843,7 +3843,7 @@ $modsForHesk_settings = mfh_getSettings();
         }
 
         // No cached file or older than 3600 seconds, try to get an update
-        $hesk_version_url = 'http://heskcom.s3.amazonaws.com/hesk_version.txt';
+        $hesk_version_url = 'https://hesk.com/version';
 
         // Try using cURL
         if (function_exists('curl_init')) {
@@ -3857,7 +3857,7 @@ $modsForHesk_settings = mfh_getSettings();
         }
 
         // Try using a simple PHP function instead
-        if ($latest = file_get_contents($hesk_version_url)) {
+        if ($latest = @file_get_contents($hesk_version_url)) {
             return hesk_cacheLatestVersion($latest);
         }
 

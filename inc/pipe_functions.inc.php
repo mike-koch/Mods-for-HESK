@@ -378,12 +378,12 @@ function hesk_stripQuotedText($message)
 function hesk_isReturnedEmail($tmpvar)
 {
     // Check noreply email addresses
-    if (preg_match('/not?[\-_]reply@/i', $tmpvar['email'])) {
+    if (preg_match('/not?[\-_\.]?reply@/i', $tmpvar['email'])) {
         return true;
     }
 
     // Check mailer daemon email addresses
-    if (preg_match('/mail(er)?[\-_]daemon@/i', $tmpvar['email'])) {
+    if (preg_match('/mail(er)?[\-_\.]?daemon@/i', $tmpvar['email'])) {
         return true;
     }
 
