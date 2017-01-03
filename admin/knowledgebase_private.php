@@ -41,9 +41,12 @@ require(HESK_PATH . 'inc/knowledgebase_functions.inc.php');
 require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
+
 hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
+hesk_kb_preheader();
+
 
 /* Is Knowledgebase enabled? */
 if ( ! $hesk_settings['kb_enable'])
@@ -109,14 +112,17 @@ exit();
 
 
 /*** START FUNCTIONS ***/
+function hesk_kb_preheader() {
+	global $hesk_settings, $hesklang, $can_man_kb;
+
+	/* Print admin navigation */
+	require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
+	require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
+}
 
 function hesk_kb_header($kb_link, $catid=1)
 {
 	global $hesk_settings, $hesklang, $can_man_kb;
-
-	/* Print admin navigation */
-    require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
-	require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 	?>
 
 	<ol class="breadcrumb">
@@ -130,12 +136,9 @@ function hesk_kb_header($kb_link, $catid=1)
     ?>
 	<li class="active"><?php echo $kb_link; ?></li>
     </ol>
-	<?php show_subnav('view', $catid); ?>
-	<section style="padding: 15px;">
-		<?php hesk_kbSearchLarge(1); ?>
-	</section>
-
-    <?php
+	<?php
+		show_subnav('view', $catid);
+		hesk_kbSearchLarge(1);
 } // END hesk_kb_header()
 
 
@@ -145,13 +148,12 @@ function hesk_kb_search($query)
 
     define('HESK_NO_ROBOTS',1);
 
-	hesk_kb_header($hesk_settings['kb_link']);
-
     $res = hesk_dbQuery('SELECT t1.`id`, t1.`subject`, LEFT(`t1`.`content`, '.max(200, $hesk_settings['kb_substrart'] * 2).') AS `content`, t1.`rating` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'kb_articles` AS t1 LEFT JOIN `'.hesk_dbEscape($hesk_settings['db_pfix']).'kb_categories` AS t2 ON t1.`catid` = t2.`id` '." WHERE t1.`type` IN ('0','1') AND MATCH(`subject`,`content`,`keywords`) AGAINST ('".hesk_dbEscape($query)."') LIMIT ".intval($hesk_settings['kb_search_limit']));
     $num = hesk_dbNumRows($res);
 	$show_default_category = false;
     ?>
 	<div class="content-wrapper">
+		<?php hesk_kb_header($hesk_settings['kb_link']); ?>
 		<section style="padding: 15px">
 			<div class="box">
 				<div class="box-header with-border">
@@ -225,13 +227,13 @@ function hesk_show_kb_article($artid)
 
 	// Print header
     $hesk_settings['tmp_title'] = $article['subject'];
-	hesk_kb_header($hesk_settings['kb_link'], $article['catid']);
 
     // Update views by 1
     hesk_dbQuery('UPDATE `'.hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` SET `views`=`views`+1 WHERE `id`={$artid}");
 
 ?>
 <div class="content-wrapper">
+	<?php hesk_kb_header($hesk_settings['kb_link'], $article['catid']); ?>
 	<section class="content">
 		<div class="box">
 			<div class="box-header with-border">
@@ -404,17 +406,17 @@ function hesk_show_kb_article($artid)
 function hesk_show_kb_category($catid, $is_search = 0) {
 	global $hesk_settings, $hesklang;
 
-    if ($is_search == 0)
-    {
-		/* Print header */
-		hesk_kb_header($hesk_settings['kb_link'], $catid);
-    }
-
     $res = hesk_dbQuery("SELECT `name`,`parent` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `id`='".intval($catid)."' LIMIT 1");
     $thiscat = hesk_dbFetchAssoc($res) or hesk_error($hesklang['kb_cat_inv']);
 
 ?>
 <div class="content-wrapper">
+	<?php
+	if ($is_search == 0)
+	{
+		/* Print header */
+		hesk_kb_header($hesk_settings['kb_link'], $catid);
+	} ?>
 	<section class="content">
 		<?php if ($thiscat['parent']): ?>
 			<h3><?php echo $hesklang['kb_cat'].': '.$thiscat['name']; ?></h3>
