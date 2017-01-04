@@ -104,8 +104,15 @@
     margin-top: 10px;
 }
 
+.dropdown-empty {
+    padding: 10%;
+    color: #ddd;
+    font-weight: bolder;
+}
 
-.attachment-table > tbody > tr > td > i {
+
+.attachment-table > tbody > tr > td > i,
+.dropdown-empty > i {
     color: #ddd;
     text-shadow: 2px 2px #ccc;
 }
