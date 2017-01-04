@@ -98,6 +98,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 34) {
         startVersionUpgrade('300');
         executeUpdate(34, '300', '3.0.0');
+    } else if (startingVersion < 35) {
+        startVersionUpgrade('301');
+        executeUpdate(35, '301', '3.0.1');
     } else {
         installationFinished();
     }

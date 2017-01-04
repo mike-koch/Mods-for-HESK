@@ -173,7 +173,8 @@ button.dropdown-submit {
 }
 
 .login-box {
-    width: 500px;
+    width: 35%;
+    min-width: 350px;
 }
 
 .login-box-body {
