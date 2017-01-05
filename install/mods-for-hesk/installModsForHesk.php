@@ -43,6 +43,7 @@ $buildToVersionMap = array(
     32 => '3.0.0 beta 1',
     33 => '3.0.0 RC 1',
     34 => '3.0.0',
+    35 => '3.0.1',
 );
 
 function echoInitialVersionRows($version, $build_to_version_map)
@@ -58,6 +59,8 @@ function printRow($version)
 {
     $versionId = str_replace('.', '', $version);
     $versionId = str_replace('Pre-', 'p', $versionId);
+    $versionId = str_replace(' beta ', 'b', $versionId);
+    $versionId = str_replace(' RC ', 'rc', $versionId);
     echo '<tr id="row-' . $versionId . '">';
     echo '<td>' . $version . '</td>';
     echo '<td><i id="spinner-' . $versionId . '" class="fa fa-spinner"></i> <span id="span-' . $versionId . '">Waiting...</span></td>';

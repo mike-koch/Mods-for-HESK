@@ -104,8 +104,15 @@
     margin-top: 10px;
 }
 
+.dropdown-empty {
+    padding: 10%;
+    color: #ddd;
+    font-weight: bolder;
+}
 
-.attachment-table > tbody > tr > td > i {
+
+.attachment-table > tbody > tr > td > i,
+.dropdown-empty > i {
     color: #ddd;
     text-shadow: 2px 2px #ccc;
 }
@@ -166,7 +173,8 @@ button.dropdown-submit {
 }
 
 .login-box {
-    width: 500px;
+    width: 35%;
+    min-width: 350px;
 }
 
 .login-box-body {
@@ -245,6 +253,10 @@ div.ticket-info {
     display: block;
 }
 
+[class*="-light"] div.ticket-info {
+    color: #444;
+}
+
 .event-category:hover {
     border: solid 1px #fff !important;
     cursor: pointer;
@@ -265,4 +277,8 @@ div.ticket-info {
 .box-header h1.box-title {
     width: 100%;
     cursor: pointer;
+}
+
+.black {
+    color: black;
 }

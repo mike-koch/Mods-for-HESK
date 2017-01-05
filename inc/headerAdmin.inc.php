@@ -46,48 +46,48 @@ $modsForHesk_settings = mfh_getSettings();
     <meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>"/>
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="theme-color" content="<?php echo '#414a5c'; ?>">
-    <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=21" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css" type="text/css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone.min.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone-basic.min.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/fullcalendar.min.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/skins/_all-skins.min.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/displays.css">
+    <link href="<?php echo HESK_PATH; ?>css/datepicker.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone-basic.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/fullcalendar.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/skins/_all-skins.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/displays.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <?php if (defined('USE_JQUERY_2')): ?>
-        <script src="<?php echo HESK_PATH; ?>js/jquery-2.2.4.min.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/jquery-2.2.4.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php else: ?>
-        <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php endif; ?>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/adminlte.min.js"></script>
-    <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js"></script>
-    <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/dropzone.min.js"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/adminlte.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/dropzone.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script language="Javascript" type="text/javascript"
-            src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
+            src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script language="JavaScript" type="text/javascript"
-            src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-clockpicker.min.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-fontawesome-4.3.0.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-iconpicker.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core-admin.php"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.jgrowl.min.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.slimscroll.min.js"></script>
+            src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-clockpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-fontawesome-4.3.0.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-iconpicker.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core-admin.php?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.jgrowl.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.slimscroll.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;
@@ -142,6 +142,11 @@ $modsForHesk_settings = mfh_getSettings();
         ?>
         <link href="<?php echo HESK_PATH; ?>inc/tabs/tabber.css" type="text/css" rel="stylesheet"/>
         <?php
+    }
+
+    // Use ReCaptcha API v2?
+    if (defined('RECAPTCHA')) {
+        echo '<script src="https://www.google.com/recaptcha/api.js?hl=' . $hesklang['RECAPTCHA'] . '" async defer></script>';
     }
 
     if (defined('VALIDATOR')) {

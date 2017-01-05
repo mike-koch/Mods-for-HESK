@@ -906,3 +906,10 @@ function execute300Scripts() {
 
     updateVersion('3.0.0');
 }
+
+function execute301Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    updateVersion('3.0.1');
+}

@@ -188,7 +188,14 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                                 </li>
                             </ul>
                         </li>
-                    <?php endif; ?>
+                    <?php
+                    endif;
+
+                    // Users online
+                    if (defined('SHOW_ONLINE')) {
+                        hesk_printOnline();
+                    }
+                    ?>
                     <li class="dropdown messages-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-envelope-o"></i>
@@ -197,16 +204,30 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             <?php endif; ?>
                         </a>
                         <ul class="dropdown-menu">
+                            <?php if (count($mails) > 0): ?>
                             <li class="header"><?php echo sprintf($hesklang['you_have_x_messages'],
                                     count($mails),
                                     count($mails) == 1
                                         ? $hesklang['message_lower_case']
                                         : $hesklang['messages_lower_case']); ?></li>
+                            <?php endif; ?>
                             <!-- Begin New Messages -->
                             <li>
                                 <!-- inner menu: contains the actual data -->
                                 <ul class="menu">
-                                    <?php foreach ($mails as $mail): ?>
+                                    <?php if (count($mails) == 0): ?>
+                                        <div class="text-center dropdown-empty">
+                                            <i class="fa fa-envelope-o fa-3x"></i><br>
+                                            <span class="fa-2x">
+                                                <?php echo sprintf($hesklang['you_have_x_messages'],
+                                                    count($mails),
+                                                    $hesklang['messages_lower_case']); ?>
+                                            </span>
+                                        </div>
+                                    <?php
+                                        endif;
+                                        foreach ($mails as $mail):
+                                    ?>
                                     <li><!-- start message -->
                                         <a href="mail.php?a=read&id=<?php echo $mail['id']; ?>">
                                             <h4>

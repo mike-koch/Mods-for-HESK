@@ -27,7 +27,26 @@ hesk_dbConnect();
     <div class="page-header">
         <h1>Mods for HESK Database Validation</h1>
         <p>The database validation tool will check your database setup to ensure that everything is set up correctly.
-        As of this time, the database validator assumes you are running the latest version of Mods for HESK (2.6.4)</p>
+        As of this time, the database validator assumes you are running the latest version of Mods for HESK (<?php echo MODS_FOR_HESK_NEW_VERSION; ?>)</p>
+    </div>
+    <div class="panel panel-success" id="all-good" style="display: none">
+        <div class="panel-heading">
+            <h4>Success</h4>
+        </div>
+        <div class="panel-body text-center">
+            <i class="fa fa-check-circle fa-4x" style="color: green"></i><br>
+            <h4>Your database is valid</h4>
+        </div>
+    </div>
+    <div class="panel panel-danger" id="not-good" style="display: none">
+        <div class="panel-heading">
+            <h4>Failure</h4>
+        </div>
+        <div class="panel-body text-center">
+            <i class="fa fa-times-circle fa-4x" style="color: red"></i><br>
+            <h4>One or more columns / tables are not properly configured in your database. Please open a topic at the
+            <a href="http://developers.phpjunkyard.com/viewforum.php?f=19" target="_blank">PHP Junkyard Forums</a> with this information for assistance.</h4>
+        </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -42,110 +61,118 @@ hesk_dbConnect();
             </thead>
             <tbody>
             <?php
+            $all_good = true;
+
             output_header_row('1.0.0 - 1.3.x');
-            run_table_check('statuses');
-            run_column_check('statuses', '`ID`');
-            run_column_check('statuses', '`TextColor`');
-            run_column_check('statuses', '`IsNewTicketStatus`');
-            run_column_check('statuses', '`IsClosed`');
-            run_column_check('statuses', '`IsClosedByClient`');
-            run_column_check('statuses', '`IsCustomerReplyStatus`');
-            run_column_check('statuses', '`IsStaffClosedOption`');
-            run_column_check('statuses', '`IsStaffReopenedStatus`');
-            run_column_check('statuses', '`IsDefaultStaffReplyStatus`');
-            run_column_check('statuses', '`LockedTicketStatus`');
-            run_column_check('statuses', '`IsAutocloseOption`');
-            run_column_check('statuses', '`Closable`');
+            $all_good = run_table_check('statuses');
+            $all_good = $all_good & run_column_check('statuses', '`ID`');
+            $all_good = $all_good & run_column_check('statuses', '`TextColor`');
+            $all_good = $all_good & run_column_check('statuses', '`IsNewTicketStatus`');
+            $all_good = $all_good & run_column_check('statuses', '`IsClosed`');
+            $all_good = $all_good & run_column_check('statuses', '`IsClosedByClient`');
+            $all_good = $all_good & run_column_check('statuses', '`IsCustomerReplyStatus`');
+            $all_good = $all_good & run_column_check('statuses', '`IsStaffClosedOption`');
+            $all_good = $all_good & run_column_check('statuses', '`IsStaffReopenedStatus`');
+            $all_good = $all_good & run_column_check('statuses', '`IsDefaultStaffReplyStatus`');
+            $all_good = $all_good & run_column_check('statuses', '`LockedTicketStatus`');
+            $all_good = $all_good & run_column_check('statuses', '`IsAutocloseOption`');
+            $all_good = $all_good & run_column_check('statuses', '`Closable`');
             output_header_row('1.5.0');
-            run_column_check('users', '`active`');
-            run_column_check('users', '`notify_note_unassigned`');
+            $all_good = $all_good & run_column_check('users', '`active`');
+            $all_good = $all_good & run_column_check('users', '`notify_note_unassigned`');
             output_header_row('1.6.0');
-            run_table_check('settings');
+            $all_good = $all_good & run_table_check('settings');
             output_header_row('1.7.0');
-            run_table_check('verified_emails');
-            run_table_check('pending_verification_emails');
-            run_table_check('stage_tickets');
+            $all_good = $all_good & run_table_check('verified_emails');
+            $all_good = $all_good & run_table_check('pending_verification_emails');
+            $all_good = $all_good & run_table_check('stage_tickets');
             output_header_row('2.3.0');
-            run_column_check('service_messages', '`icon`');
-            run_column_check('statuses', '`Key`');
-            run_column_check('tickets', '`latitude`');
-            run_column_check('tickets', '`longitude`');
-            run_column_check('stage_tickets', '`latitude`');
-            run_column_check('stage_tickets', '`longitude`');
-            run_column_check('categories', '`manager`');
-            run_column_check('users', '`permission_template`');
-            run_table_check('permission_templates');
-            run_column_check('permission_templates', '`id`');
-            run_column_check('permission_templates', '`name`');
-            run_column_check('permission_templates', '`heskprivileges`');
-            run_column_check('permission_templates', '`categories`');
+            $all_good = $all_good & run_column_check('service_messages', '`icon`');
+            $all_good = $all_good & run_column_check('statuses', '`Key`');
+            $all_good = $all_good & run_column_check('tickets', '`latitude`');
+            $all_good = $all_good & run_column_check('tickets', '`longitude`');
+            $all_good = $all_good & run_column_check('stage_tickets', '`latitude`');
+            $all_good = $all_good & run_column_check('stage_tickets', '`longitude`');
+            $all_good = $all_good & run_column_check('categories', '`manager`');
+            $all_good = $all_good & run_column_check('users', '`permission_template`');
+            $all_good = $all_good & run_table_check('permission_templates');
+            $all_good = $all_good & run_column_check('permission_templates', '`id`');
+            $all_good = $all_good & run_column_check('permission_templates', '`name`');
+            $all_good = $all_good & run_column_check('permission_templates', '`heskprivileges`');
+            $all_good = $all_good & run_column_check('permission_templates', '`categories`');
             output_header_row('2.4.0');
-            run_table_check('quick_help_sections');
-            run_column_check('quick_help_sections', '`id`');
-            run_column_check('quick_help_sections', '`location`');
-            run_column_check('quick_help_sections', '`show`');
-            run_table_check('text_to_status_xref');
-            run_column_check('text_to_status_xref', '`id`');
-            run_column_check('text_to_status_xref', '`language`');
-            run_column_check('text_to_status_xref', '`text`');
-            run_column_check('text_to_status_xref', '`status_id`');
-            run_column_check('statuses', '`sort`');
-            run_column_check('attachments', '`download_count`');
-            run_column_check('kb_attachments', '`download_count`');
-            run_column_check('tickets', '`html`');
-            run_column_check('stage_tickets', '`html`');
-            run_column_check('replies', '`html`');
+            $all_good = $all_good & run_table_check('quick_help_sections');
+            $all_good = $all_good & run_column_check('quick_help_sections', '`id`');
+            $all_good = $all_good & run_column_check('quick_help_sections', '`location`');
+            $all_good = $all_good & run_column_check('quick_help_sections', '`show`');
+            $all_good = $all_good & run_table_check('text_to_status_xref');
+            $all_good = $all_good & run_column_check('text_to_status_xref', '`id`');
+            $all_good = $all_good & run_column_check('text_to_status_xref', '`language`');
+            $all_good = $all_good & run_column_check('text_to_status_xref', '`text`');
+            $all_good = $all_good & run_column_check('text_to_status_xref', '`status_id`');
+            $all_good = $all_good & run_column_check('statuses', '`sort`');
+            $all_good = $all_good & run_column_check('attachments', '`download_count`');
+            $all_good = $all_good & run_column_check('kb_attachments', '`download_count`');
+            $all_good = $all_good & run_column_check('tickets', '`html`');
+            $all_good = $all_good & run_column_check('stage_tickets', '`html`');
+            $all_good = $all_good & run_column_check('replies', '`html`');
             output_header_row('2.5.0');
-            run_column_check('tickets', '`user_agent`');
-            run_column_check('tickets', '`screen_resolution_width`');
-            run_column_check('tickets', '`screen_resolution_height`');
-            run_column_check('stage_tickets', '`user_agent`');
-            run_column_check('stage_tickets', '`screen_resolution_width`');
-            run_column_check('stage_tickets', '`screen_resolution_height`');
+            $all_good = $all_good & run_column_check('tickets', '`user_agent`');
+            $all_good = $all_good & run_column_check('tickets', '`screen_resolution_width`');
+            $all_good = $all_good & run_column_check('tickets', '`screen_resolution_height`');
+            $all_good = $all_good & run_column_check('stage_tickets', '`user_agent`');
+            $all_good = $all_good & run_column_check('stage_tickets', '`screen_resolution_width`');
+            $all_good = $all_good & run_column_check('stage_tickets', '`screen_resolution_height`');
             output_header_row('2.6.0');
-            run_table_check('logging');
-            run_column_check('logging', '`id`');
-            run_column_check('logging', '`username`');
-            run_column_check('logging', '`message`');
-            run_column_check('logging', '`severity`');
-            run_column_check('logging', '`location`');
-            run_column_check('logging', '`timestamp`');
-            run_table_check('user_api_tokens');
-            run_column_check('user_api_tokens', '`id`');
-            run_column_check('user_api_tokens', '`user_id`');
-            run_column_check('user_api_tokens', '`token`');
-            run_table_check('temp_attachment');
-            run_column_check('temp_attachment', '`id`');
-            run_column_check('temp_attachment', '`file_name`');
-            run_column_check('temp_attachment', '`saved_name`');
-            run_column_check('temp_attachment', '`size`');
-            run_column_check('temp_attachment', '`type`');
-            run_column_check('temp_attachment', '`date_uploaded`');
-            run_table_check('calendar_event');
-            run_column_check('calendar_event', '`id`');
-            run_column_check('calendar_event', '`start`');
-            run_column_check('calendar_event', '`end`');
-            run_column_check('calendar_event', '`all_day`');
-            run_column_check('calendar_event', '`name`');
-            run_column_check('calendar_event', '`location`');
-            run_column_check('calendar_event', '`comments`');
-            run_column_check('calendar_event', '`category`');
-            run_table_check('calendar_event_reminder');
-            run_column_check('calendar_event_reminder', '`id`');
-            run_column_check('calendar_event_reminder', '`user_id`');
-            run_column_check('calendar_event_reminder', '`event_id`');
-            run_column_check('calendar_event_reminder', '`amount`');
-            run_column_check('calendar_event_reminder', '`unit`');
-            run_column_check('calendar_event_reminder', '`email_sent`');
-            run_column_check('tickets', '`due_date`');
-            run_column_check('tickets', '`overdue_email_sent`');
-            run_column_check('categories', '`color`');
-            run_column_check('categories', '`usage`');
-            run_column_check('users', '`notify_overdue_unassigned`');
-            run_column_check('users', '`default_calendar_view`');
+            $all_good = $all_good & run_table_check('logging');
+            $all_good = $all_good & run_column_check('logging', '`id`');
+            $all_good = $all_good & run_column_check('logging', '`username`');
+            $all_good = $all_good & run_column_check('logging', '`message`');
+            $all_good = $all_good & run_column_check('logging', '`severity`');
+            $all_good = $all_good & run_column_check('logging', '`location`');
+            $all_good = $all_good & run_column_check('logging', '`timestamp`');
+            $all_good = $all_good & run_table_check('user_api_tokens');
+            $all_good = $all_good & run_column_check('user_api_tokens', '`id`');
+            $all_good = $all_good & run_column_check('user_api_tokens', '`user_id`');
+            $all_good = $all_good & run_column_check('user_api_tokens', '`token`');
+            $all_good = $all_good & run_table_check('temp_attachment');
+            $all_good = $all_good & run_column_check('temp_attachment', '`id`');
+            $all_good = $all_good & run_column_check('temp_attachment', '`file_name`');
+            $all_good = $all_good & run_column_check('temp_attachment', '`saved_name`');
+            $all_good = $all_good & run_column_check('temp_attachment', '`size`');
+            $all_good = $all_good & run_column_check('temp_attachment', '`type`');
+            $all_good = $all_good & run_column_check('temp_attachment', '`date_uploaded`');
+            $all_good = $all_good & run_table_check('calendar_event');
+            $all_good = $all_good & run_column_check('calendar_event', '`id`');
+            $all_good = $all_good & run_column_check('calendar_event', '`start`');
+            $all_good = $all_good & run_column_check('calendar_event', '`end`');
+            $all_good = $all_good & run_column_check('calendar_event', '`all_day`');
+            $all_good = $all_good & run_column_check('calendar_event', '`name`');
+            $all_good = $all_good & run_column_check('calendar_event', '`location`');
+            $all_good = $all_good & run_column_check('calendar_event', '`comments`');
+            $all_good = $all_good & run_column_check('calendar_event', '`category`');
+            $all_good = $all_good & run_table_check('calendar_event_reminder');
+            $all_good = $all_good & run_column_check('calendar_event_reminder', '`id`');
+            $all_good = $all_good & run_column_check('calendar_event_reminder', '`user_id`');
+            $all_good = $all_good & run_column_check('calendar_event_reminder', '`event_id`');
+            $all_good = $all_good & run_column_check('calendar_event_reminder', '`amount`');
+            $all_good = $all_good & run_column_check('calendar_event_reminder', '`unit`');
+            $all_good = $all_good & run_column_check('calendar_event_reminder', '`email_sent`');
+            $all_good = $all_good & run_column_check('tickets', '`due_date`');
+            $all_good = $all_good & run_column_check('tickets', '`overdue_email_sent`');
+            $all_good = $all_good & run_column_check('categories', '`color`');
+            $all_good = $all_good & run_column_check('categories', '`usage`');
+            $all_good = $all_good & run_column_check('users', '`notify_overdue_unassigned`');
+            $all_good = $all_good & run_column_check('users', '`default_calendar_view`');
             output_header_row('2.6.2');
-            run_column_check('stage_tickets', '`due_date`');
-            run_column_check('stage_tickets', '`overdue_email_sent`');
+            $all_good = $all_good & run_column_check('stage_tickets', '`due_date`');
+            $all_good = $all_good & run_column_check('stage_tickets', '`overdue_email_sent`');
+
+            if ($all_good) {
+                echo "<script>$('#all-good').show()</script>";
+            } else {
+                echo "<script>$('#not-good').show()</script>";
+            }
             ?>
             </tbody>
         </table>
@@ -155,21 +182,24 @@ hesk_dbConnect();
 </html>
 <?php
 function run_table_check($table_name) {
-    run_column_check($table_name, '1');
+    return run_column_check($table_name, '1');
 }
 
 function run_column_check($table_name, $column_name) {
     global $hesk_settings;
 
     if ($column_name == '1') {
+        $all_good = run_check('SELECT ' . $column_name . ' FROM `' . $hesk_settings['db_pfix'] . $table_name . '` LIMIT 1');
+
         output_result('<b>Table Exists</b>: ' . $table_name,
-            run_check('SELECT ' . $column_name . ' FROM `' . $hesk_settings['db_pfix'] . $table_name . '` LIMIT 1'));
+            $all_good);
     } else {
+        $all_good = run_check('SELECT ' . $column_name . ' FROM `' . $hesk_settings['db_pfix'] . $table_name . '` LIMIT 1');
         output_result('<b>Column Exists</b>: ' . $table_name . '.' . $column_name,
-            run_check('SELECT ' . $column_name . ' FROM `' . $hesk_settings['db_pfix'] . $table_name . '` LIMIT 1'));
+            $all_good);
     }
 
-
+    return $all_good !== false;
 }
 
 function run_check($sql) {

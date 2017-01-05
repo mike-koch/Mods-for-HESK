@@ -116,7 +116,9 @@ hesk_dbConnect();
                                 <div class="col-md-9">
                                     <div class="col-md-8">
                                         <select name="current-version" class="form-control">
+                                            <option disabled>Select One, or "No Previous Installation" Below</option>
                                             <optgroup label="Mods for HESK 3">
+                                                <option value="34">3.0.0</option>
                                                 <option value="33">3.0.0 RC 1 [Prerelease Build]</option>
                                                 <option value="32">3.0.0 beta 1 [Prerelease Build]</option>
                                             </optgroup>
@@ -172,6 +174,9 @@ hesk_dbConnect();
                                             data-target="#uninstallModal"><i class="fa fa-trash"></i> Uninstall Mods for
                                         HESK
                                     </button>
+                                    <a class="btn btn-default btn-block" href="database-validation.php">
+                                        <i class="fa fa-check-circle"></i> Validate Database
+                                    </a>
                                 </div>
                             </div>
                         </div>
