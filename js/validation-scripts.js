@@ -16,24 +16,21 @@ function buildValidatorForTicketSubmission(formName, validationText) {
     $('form[name="' + formName + '"]').validator({
         custom: {
             checkbox: function($el) {
-                var checkboxes = $('input[name="' + $el.attr('data-checkbox') + '[]"]');
+                var name = $el.data('checkbox');
+                var $checkboxes = $el.closest('form').find('input[name="' + name + '[]"]');
 
-                for (var checkbox in checkboxes) {
-                    if (checkboxes[checkbox].checked) {
-                        return true;
-                    }
-                }
-                return false;
-            },
-            multiselect: function($el) {
-                var count = $('select[name="' + $el.attr('data-multiselect') + '[]"] :selected').length;
-                return count > 0;
+                return $checkboxes.is(':checked');
             }
         },
         errors: {
-            checkbox: validationText,
-            multiselect: validationText
+            checkbox: validationText
         }
+    }).on('change.bs.validator', '[data-checkbox]', function (e) {
+        var $el  = $(e.target);
+        var name = $el.data('checkbox');
+        var $checkboxes = $el.closest('form').find('input[name="' + name + '[]"]');
+
+        $checkboxes.not(':checked').trigger('input');
     });
 }
 
@@ -41,18 +38,20 @@ function buildValidatorForPermissionTemplates(formId, validationText) {
     $('#' + formId).validator({
         custom: {
             checkbox: function($el) {
-                var checkboxes = $('input[data-modal="new-' + $el.attr('data-checkbox') + '"]');
+                var name = $el.data('checkbox');
+                var $checkboxes = $el.closest('form').find('input[data-modal="new-' + name + '"]');
 
-                for (var checkbox in checkboxes) {
-                    if (checkboxes[checkbox].checked) {
-                        return true;
-                    }
-                }
-                return false;
+                return $checkboxes.is(':checked');
             }
         },
         errors: {
             checkbox: validationText
         }
+    }).on('change.bs.validator', '[data-modal]', function (e) {
+        var $el  = $(e.target);
+        var name = $el.data('checkbox');
+        var $checkboxes = $el.closest('form').find('input[data-modal="new-' + name + '"]');
+
+        $checkboxes.not(':checked').trigger('input');
     });
 }

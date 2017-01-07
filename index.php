@@ -514,6 +514,8 @@ function print_add_ticket()
                             /* Checkbox */
                             case 'checkbox':
                                 $cls = in_array($k,$_SESSION['iserror']) ? 'isError' : '';
+                                $validator = $v['req'] == '<span class="important">*</span>' ? 'data-checkbox="' . $k . '"' : '';
+                                $required_attribute = $validator == '' ? '' : ' data-error="' . $hesklang['this_field_is_required'] . '"';
                                 echo '
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
@@ -530,7 +532,7 @@ function print_add_ticket()
                                     $checked = '';
                                 }
 
-                                echo '<div class="checkbox"><label><input type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$required_attribute.'> '.$option.'</label></div>';
+                                echo '<div class="checkbox"><label><input ' . $validator . ' type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' ' . $required_attribute . '> '.$option.'</label></div>';
                             }
                         echo '
                         <div class="help-block with-errors"></div>
@@ -840,6 +842,8 @@ function print_add_ticket()
                             /* Checkbox */
                             case 'checkbox':
                                 $cls = in_array($k,$_SESSION['iserror']) ? 'isError' : '';
+                                $validator = $v['req'] == '<span class="important">*</span>' ? 'data-checkbox="' . $k . '"' : '';
+                                $required_attribute = $validator == '' ? '' : ' data-error="' . $hesklang['this_field_is_required'] . '"';
                                 echo '
                     <div class="form-group '.$cls.'">
                         <label for="'.$k.'" class="col-sm-3 control-label">'.$v['name'].' '.$v['req'].'</label>
@@ -856,7 +860,7 @@ function print_add_ticket()
                                         $checked = '';
                                     }
 
-                                    echo '<div class="checkbox"><label><input type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$required_attribute.'> '.$option.'</label></div>';
+                                    echo '<div class="checkbox"><label><input ' . $validator . ' type="checkbox" name="'.$k.'[]" value="'.$option.'" '.$checked.' '.$required_attribute.'> '.$option.'</label></div>';
                                 }
                                 echo '
                             <div class="help-block with-errors"></div>
