@@ -388,7 +388,6 @@ $show_quick_help = $show['show'];
 
                             /* Select drop-down box */
                             case 'select':
-
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
                                 echo '<div class="form-group' . $cls . '"><label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
@@ -416,8 +415,11 @@ $show_quick_help = $show['show'];
 
                             /* Checkbox */
                             case 'checkbox':
-
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
+
+                                $validator = $v['req'] == '<span class="important">*</span>' ? 'data-checkbox="' . $k . '"' : '';
+                                $required_attribute = $validator == '' ? '' : ' data-error="' . $hesklang['this_field_is_required'] . '"';
+
                                 echo '<div class="form-group' . $cls . '"><label class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label><div align="left" class="col-sm-9">';
 
                                 foreach ($v['value']['checkbox_options'] as $option) {
@@ -427,7 +429,7 @@ $show_quick_help = $show['show'];
                                         $checked = '';
                                     }
 
-                                    echo '<div class="checkbox"><label><input type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . $required_attribute . '> ' . $option . '</label></div>';
+                                    echo '<div class="checkbox"><label><input ' . $validator . ' type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . $required_attribute . '> ' . $option . '</label></div>';
                                 }
                                 echo '
                                     <div class="help-block with-errors"></div></div></div>';
@@ -783,6 +785,10 @@ $show_quick_help = $show['show'];
                             /* Checkbox */
                             case 'checkbox':
                                 $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
+
+                                $validator = $v['req'] == '<span class="important">*</span>' ? 'data-checkbox="' . $k . '"' : '';
+                                $required_attribute = $validator == '' ? '' : ' data-error="' . $hesklang['this_field_is_required'] . '"';
+
                                 echo '<div class="form-group' . $cls . '"><label class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label><div align="left" class="col-sm-9">';
 
                                 foreach ($v['value']['checkbox_options'] as $option) {
@@ -792,7 +798,7 @@ $show_quick_help = $show['show'];
                                         $checked = '';
                                     }
 
-                                    echo '<div class="checkbox"><label><input type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $required_attribute . '> ' . $option . '</label></div>';
+                                    echo '<div class="checkbox"><label><input ' . $validator . ' type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . $required_attribute .'> ' . $option . '</label></div>';
                                 }
                                 echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
