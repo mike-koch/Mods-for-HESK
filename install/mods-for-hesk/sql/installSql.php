@@ -913,3 +913,42 @@ function execute301Scripts() {
 
     updateVersion('3.0.1');
 }
+
+function execute302Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets`
+        ADD COLUMN `custom21` MEDIUMTEXT,
+        ADD COLUMN `custom22` MEDIUMTEXT,
+        ADD COLUMN `custom23` MEDIUMTEXT,
+        ADD COLUMN `custom24` MEDIUMTEXT,
+        ADD COLUMN `custom25` MEDIUMTEXT,
+        ADD COLUMN `custom26` MEDIUMTEXT,
+        ADD COLUMN `custom27` MEDIUMTEXT,
+        ADD COLUMN `custom28` MEDIUMTEXT,
+        ADD COLUMN `custom29` MEDIUMTEXT,
+        ADD COLUMN `custom30` MEDIUMTEXT,
+        ADD COLUMN `custom31` MEDIUMTEXT,
+        ADD COLUMN `custom32` MEDIUMTEXT,
+        ADD COLUMN `custom33` MEDIUMTEXT,
+        ADD COLUMN `custom34` MEDIUMTEXT,
+        ADD COLUMN `custom35` MEDIUMTEXT,
+        ADD COLUMN `custom36` MEDIUMTEXT,
+        ADD COLUMN `custom37` MEDIUMTEXT,
+        ADD COLUMN `custom38` MEDIUMTEXT,
+        ADD COLUMN `custom39` MEDIUMTEXT,
+        ADD COLUMN `custom40` MEDIUMTEXT,
+        ADD COLUMN `custom41` MEDIUMTEXT,
+        ADD COLUMN `custom42` MEDIUMTEXT,
+        ADD COLUMN `custom43` MEDIUMTEXT,
+        ADD COLUMN `custom44` MEDIUMTEXT,
+        ADD COLUMN `custom45` MEDIUMTEXT,
+        ADD COLUMN `custom46` MEDIUMTEXT,
+        ADD COLUMN `custom47` MEDIUMTEXT,
+        ADD COLUMN `custom48` MEDIUMTEXT,
+        ADD COLUMN `custom49` MEDIUMTEXT,
+        ADD COLUMN `custom50` MEDIUMTEXT");
+
+    updateVersion('3.0.2');
+}
