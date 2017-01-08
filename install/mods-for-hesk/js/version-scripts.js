@@ -1,60 +1,110 @@
-var availableUpdates = [
-    createUpdate(2, 'p140', 'Pre 1.4.0'),
-    createUpdate(3, '140', '1.4.0'),
-    createUpdate(4, '141', '1.4.1'),
-    createUpdate(5, '150', '1.5.0'),
-    createUpdate(6, '160', '1.6.0'),
-    createUpdate(7, '161', '1.6.1'),
-    createUpdate(8, '170', '1.7.0'),
-    createUpdate(9, '200', '2.0.0'),
-    createUpdate(10, '201', '2.0.1'),
-    createUpdate(11, '210', '2.1.0'),
-    createUpdate(12, '211', '2.1.1'),
-    createUpdate(13, '220', '2.2.0'),
-    createUpdate(14, '221', '2.2.1'),
-    createUpdate(15, '230', '2.3.0'),
-    createUpdate(16, '231', '2.3.1'),
-    createUpdate(17, '232', '2.3.2'),
-    createUpdate(18, '240', '2.4.0'),
-    createUpdate(19, '241', '2.4.1'),
-    createUpdate(20, '242', '2.4.2'),
-    createUpdate(21, '250', '2.5.0'),
-    createUpdate(22, '251', '2.5.1'),
-    createUpdate(23, '252', '2.5.2'),
-    createUpdate(24, '253', '2.5.3'),
-    createUpdate(25, '254', '2.5.4'),
-    createUpdate(26, '255', '2.5.5'),
-    createUpdate(27, '260', '2.6.0'),
-    createUpdate(28, '261', '2.6.1'),
-    createUpdate(29, '262', '2.6.2'),
-    createUpdate(30, '263', '2.6.3'),
-    createUpdate(31, '264', '2.6.4'),
-    createUpdate(32, '300b1', '3.0.0 beta 1'),
-    createUpdate(33, '300rc1', '3.0.0 RC 1'),
-    createUpdate(34, '300', '3.0.0'),
-    createUpdate(35, '301', '3.0.1'),
-    createUpdate(36, '302', '3.0.2')
-];
-
-function createUpdate(buildNumber, cssClass, display) {
-    return {
-        buildNumber: buildNumber,
-        cssClass: cssClass,
-        display: display
-    };
-}
-
 function processUpdates(startingVersion) {
-    var ranInstall = false;
-    $.each(availableUpdates, function() {
-        if (startingVersion < this.buildNumber) {
-            ranInstall = true;
-            startVersionUpgrade(this.buildNumber, this.cssClass, this.display);
-            executeUpdate(this.buildNumber, this.cssClass, this.display);
-        }
-    });
-
-    if (!ranInstall) {
+    if (startingVersion < 2) {
+        startVersionUpgrade('p140');
+        executeUpdate(2, 'p140', 'Pre 1.4.0');
+    } else if (startingVersion < 3) {
+        startVersionUpgrade('140');
+        executeUpdate(3, '140', '1.4.0');
+    } else if (startingVersion < 4) {
+        startVersionUpgrade('141');
+        executeUpdate(4, '141', '1.4.1');
+    } else if (startingVersion < 5) {
+        startVersionUpgrade('150');
+        executeUpdate(5, '150', '1.5.0');
+    } else if (startingVersion < 6) {
+        startVersionUpgrade('160');
+        executeUpdate(6, '160', '1.6.0');
+    } else if (startingVersion < 7) {
+        startVersionUpgrade('161');
+        executeUpdate(7, '161', '1.6.1');
+    } else if (startingVersion < 8) {
+        startVersionUpgrade('170');
+        executeUpdate(8, '170', '1.7.0');
+    } else if (startingVersion < 9) {
+        startVersionUpgrade('200');
+        executeUpdate(9, '200', '2.0.0');
+    } else if (startingVersion < 10) {
+        startVersionUpgrade('201');
+        executeUpdate(10, '201', '2.0.1');
+    } else if (startingVersion < 11) {
+        startVersionUpgrade('210');
+        executeUpdate(11, '210', '2.1.0');
+    } else if (startingVersion < 12) {
+        startVersionUpgrade('211');
+        executeUpdate(12, '211', '2.1.1');
+    } else if (startingVersion < 13) {
+        startVersionUpgrade('220');
+        executeUpdate(13, '220', '2.2.0');
+    } else if (startingVersion < 14) {
+        startVersionUpgrade('221');
+        executeUpdate(14, '221', '2.2.1');
+    } else if (startingVersion < 15) {
+        startVersionUpgrade('230');
+        executeUpdate(15, '230', '2.3.0');
+    } else if (startingVersion < 16) {
+        startVersionUpgrade('231');
+        executeUpdate(16, '231', '2.3.1');
+    } else if (startingVersion < 17) {
+        startVersionUpgrade('232');
+        executeUpdate(17, '232', '2.3.2');
+    } else if (startingVersion < 18) {
+        startVersionUpgrade('240');
+        executeUpdate(18, '240', '2.4.0');
+    } else if (startingVersion < 19) {
+        startVersionUpgrade('241');
+        executeUpdate(19, '241', '2.4.1');
+    } else if (startingVersion < 20) {
+        startVersionUpgrade('242');
+        executeUpdate(20, '242', '2.4.2');
+    } else if (startingVersion < 21) {
+        startVersionUpgrade('250');
+        executeUpdate(21, '250', '2.5.0');
+    } else if (startingVersion < 22) {
+        startVersionUpgrade('251');
+        executeUpdate(22, '251', '2.5.1');
+    } else if (startingVersion < 23) {
+        startVersionUpgrade('252');
+        executeUpdate(23, '252', '2.5.2');
+    } else if (startingVersion < 24) {
+        startVersionUpgrade('253');
+        executeUpdate(24, '253', '2.5.3');
+    } else if (startingVersion < 25) {
+        startVersionUpgrade('254');
+        executeUpdate(25, '254', '2.5.4');
+    } else if (startingVersion < 26) {
+        startVersionUpgrade('255');
+        executeUpdate(26, '255', '2.5.5');
+    } else if (startingVersion < 27) {
+        startVersionUpgrade('260');
+        executeUpdate(27, '260', '2.6.0');
+    } else if (startingVersion < 28) {
+        startVersionUpgrade('261');
+        executeUpdate(28, '261', '2.6.1');
+    } else if (startingVersion < 29) {
+        startVersionUpgrade('262');
+        executeUpdate(29, '262', '2.6.2');
+    } else if (startingVersion < 30) {
+        startVersionUpgrade('263');
+        executeUpdate(30, '263', '2.6.3');
+    } else if (startingVersion < 31) {
+        startVersionUpgrade('264');
+        executeUpdate(31, '264', '2.6.4');
+    } else if (startingVersion < 32) {
+        startVersionUpgrade('300b1');
+        executeUpdate(32, '300b1', '3.0.0 beta 1');
+    } else if (startingVersion < 33) {
+        startVersionUpgrade('300rc1');
+        executeUpdate(33, '300rc1', '3.0.0 RC 1');
+    } else if (startingVersion < 34) {
+        startVersionUpgrade('300');
+        executeUpdate(34, '300', '3.0.0');
+    } else if (startingVersion < 35) {
+        startVersionUpgrade('301');
+        executeUpdate(35, '301', '3.0.1');
+    } else if (startingVersion < 36) {
+        startVersionUpgrade('302');
+        executeUpdate(36, '302', '3.0.2');
+    } else {
         installationFinished();
     }
 }
