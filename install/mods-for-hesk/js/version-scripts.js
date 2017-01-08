@@ -104,6 +104,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 36) {
         startVersionUpgrade('302');
         executeUpdate(36, '302', '3.0.2');
+    } else if (startingVersion < 37) {
+        startVersionUpgrade('303');
+        executeUpdate(37, '303', '3.0.3');
     } else {
         installationFinished();
     }

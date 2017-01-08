@@ -952,3 +952,10 @@ function execute302Scripts() {
 
     updateVersion('3.0.2');
 }
+
+function execute303Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    updateVersion('3.0.3');
+}
