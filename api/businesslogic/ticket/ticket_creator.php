@@ -1,19 +1,31 @@
 <?php
 
 /**
- * @param $ticket_request CreateTicketForCustomerModel
+ * @param $ticket_request CreateTicketByCustomerModel
+ * @param $hesk_settings array HESK settings
+ * @param $modsForHesk_settings array Mods for HESK settings
+ * @throws ValidationException When a required field in $ticket_request is missing
  */
-function create_ticket_for_customer($ticket_request, $hesk_settings, $modsForHesk_settings) {
-    validate($ticket_request, false, $hesk_settings, $modsForHesk_settings);
+function createTicketByCustomer($ticket_request, $hesk_settings, $modsForHesk_settings) {
+    $validationModel = validate($ticket_request, false, $hesk_settings, $modsForHesk_settings);
+
+    if (count($validationModel->errorKeys) > 0) {
+        require_once(__DIR__ . '/../ValidationException.php');
+
+        // Validation failed
+        throw new ValidationException($validationModel);
+    }
+
+    // Create the ticket
 }
 
 /**
- * @param $ticket_request CreateTicketForCustomerModel
+ * @param $ticket_request CreateTicketByCustomerModel
  * @param $staff bool
  * @return ValidationModel If errorKeys is empty, validation successful. Otherwise invalid ticket
  */
 function validate($ticket_request, $staff, $hesk_settings, $modsForHesk_settings) {
-    require_once('../email_validators.php');
+    require_once(__DIR__ . '/../email_validators.php');
     //require_once('../category/retriever.php');
     //require_once('../bans/retriever.php');
 

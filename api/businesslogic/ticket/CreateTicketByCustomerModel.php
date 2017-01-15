@@ -1,6 +1,6 @@
 <?php
 
-class CreateTicketForCustomerModel {
+class CreateTicketByCustomerModel {
     // Metadata
     /**
      * @var string
