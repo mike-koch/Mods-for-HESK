@@ -26,6 +26,7 @@ function createTicketByCustomer($ticket_request, $hesk_settings, $modsForHesk_se
  */
 function validate($ticket_request, $staff, $hesk_settings, $modsForHesk_settings) {
     require_once(__DIR__ . '/../email_validators.php');
+    require_once(__DIR__ . '/../../dao/category_dao.php');
     //require_once('../category/retriever.php');
     //require_once('../bans/retriever.php');
 
@@ -42,7 +43,7 @@ function validate($ticket_request, $staff, $hesk_settings, $modsForHesk_settings
     }
 
     if (intval($ticket_request->category) === 0) {
-        // TODO add support for invalid category ID
+        $allCategories = null;
         $validationModel->errorKeys[] = 'NO_CATEGORY';
     }
 

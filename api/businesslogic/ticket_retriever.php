@@ -2,6 +2,7 @@
 require_once(API_PATH . 'dao/ticket_dao.php');
 
 function get_ticket_for_staff($hesk_settings, $user, $id = NULL) {
+
     $tickets = get_ticket_for_id($hesk_settings, $user, $id);
 
     if ($tickets == NULL) {
