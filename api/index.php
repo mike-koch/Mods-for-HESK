@@ -1,8 +1,11 @@
 <?php
 define('IN_SCRIPT', 1);
+define('HESK_PATH', '../');
 
-// Just call the controller
+require_once(__DIR__ . '/core/common.php');
 require_once(__DIR__ . '/controllers/CategoryController.php');
-require_once(__DIR__ . '/../hesk_settings.inc.php');
+hesk_load_api_database_functions();
 
-\Controllers\Category\CategoryController::getAllCategories($hesk_settings);
+$categories = \Controllers\Category\CategoryController::getAllCategories($hesk_settings);
+
+output($categories);

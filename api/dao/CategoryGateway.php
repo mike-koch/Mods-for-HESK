@@ -9,12 +9,18 @@
 namespace DataAccess;
 
 use BusinessObjects\Category;
+use Exception;
 
 class CategoryGateway {
     static function getAllCategories($hesk_settings) {
         require_once(__DIR__ . '/../businesslogic/category/Category.php');
 
-        $sql = 'SELECT * FROM `' . \hesk_dbEscape($hesk_settings['db_pfix']) . 'categories`';
+        if (!function_exists('hesk_dbConnect')) {
+            throw new Exception('Database not loaded!');
+        }
+        hesk_dbConnect();
+
+        $sql = 'SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories`';
 
         $response = hesk_dbQuery($sql);
 
