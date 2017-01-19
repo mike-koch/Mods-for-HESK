@@ -1,9 +1,14 @@
 <?php
-//define('IN_SCRIPT', 1);
-//define('HESK_PATH', '../');
 // Router: handles all REST requests to go to their proper place. Common dependency loading also happens here
-//require_once(__DIR__ . '/core/common.php');
+define('IN_SCRIPT', 1);
+define('HESK_PATH', '../');
+require_once(__DIR__ . '/core/common.php');
 require(__DIR__ . '/../Link/src/Link.php');
+require(__DIR__ . '/../hesk_settings.inc.php');
+
+// Controllers
+require(__DIR__ . '/controllers/CategoryController.php');
+
 
 class HomeController
 {
@@ -25,6 +30,13 @@ class HomeController
     }
 }
 
+function handle404() {
+    http_response_code(404);
+    print json_encode('404 found');
+}
+
+// Must use fully-qualified namespace to controllers
 Link::all(array(
-    '/test/{i}' => 'HomeController',
+    '/test/{i}' => '\Controllers\Category\CategoryController',
+    '404' => 'handle404'
 ));
