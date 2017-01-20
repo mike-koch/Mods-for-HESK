@@ -39,6 +39,8 @@ class CategoryGateway {
             $results[$category->id] = $category;
         }
 
+        hesk_dbClose();
+
         return $results;
     }
 }

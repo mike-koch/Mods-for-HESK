@@ -35,8 +35,15 @@ function handle404() {
     print json_encode('404 found');
 }
 
+function assertApiIsEnabled() {
+    //-- TODO
+}
+
 // Must use fully-qualified namespace to controllers
+Link::before('assertApiIsEnabled');
+
 Link::all(array(
+    '/' => 'assertApiIsEnabled',
     '/test/{i}' => '\Controllers\Category\CategoryController',
     '404' => 'handle404'
 ));
