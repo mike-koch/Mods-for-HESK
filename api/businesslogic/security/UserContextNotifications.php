@@ -14,6 +14,7 @@ class UserContextNotifications {
     public $newAssignedToMe;
     public $replyUnassigned;
     public $replyToMe;
+    public $ticketAssignedToMe;
     public $privateMessage;
     public $noteOnTicketAssignedToMe;
     public $noteOnTicketNotAssignedToMe;
