@@ -3,10 +3,12 @@
 namespace BusinessLogic\Security;
 
 
+use DataAccess\Security\UserDao;
+
 class UserContextBuilder {
     static function buildUserContext($authToken, $hesk_settings) {
-        //$userForToken = gateway.getUserForToken($authToken);
-
+        $hashedToken = hash('sha512', $authToken);
+        return UserDao::getUserForAuthToken($hashedToken, $hesk_settings);
     }
 
     /**
@@ -14,7 +16,7 @@ class UserContextBuilder {
      * @param $dataRow array the $_SESSION superglobal or the hesk_users result set
      * @return UserContext the built user context
      */
-    static function fromSession($dataRow) {
+    static function fromDataRow($dataRow) {
         require_once(__DIR__ . '/UserContext.php');
         require_once(__DIR__ . '/UserContextPreferences.php');
         require_once(__DIR__ . '/UserContextNotifications.php');
