@@ -11,11 +11,17 @@ namespace Controllers\Category;
 use BusinessLogic\Category\CategoryRetriever;
 
 class CategoryController {
-    function get($i) {
-        print json_encode(intval($i));
+    function get($id) {
+        $categories = self::getAllCategories();
+        output($categories[$id]);
     }
 
-    static function getAllCategories($hesk_settings) {
+    static function printAllCategories() {
+        output(self::getAllCategories());
+    }
+
+    private static function getAllCategories() {
+        global $hesk_settings;
         require_once(__DIR__ . '/../businesslogic/category/CategoryRetriever.php');
 
         return CategoryRetriever::get_all_categories($hesk_settings);

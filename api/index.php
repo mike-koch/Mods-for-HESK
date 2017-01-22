@@ -8,27 +8,7 @@ require(__DIR__ . '/../hesk_settings.inc.php');
 
 // Controllers
 require(__DIR__ . '/controllers/CategoryController.php');
-
-
-class HomeController
-{
-
-    function get($i){
-        echo 'You have got to home :) Val:' . intval($i);
-    }
-
-    function post(){
-        echo 'You have posted to home';
-    }
-
-    function put(){
-        echo 'You have put to home';
-    }
-
-    function delete(){
-        echo 'You have deleted the home :(';
-    }
-}
+hesk_load_api_database_functions();
 
 function handle404() {
     http_response_code(404);
@@ -43,7 +23,8 @@ function assertApiIsEnabled() {
 Link::before('assertApiIsEnabled');
 
 Link::all(array(
-    '/' => 'assertApiIsEnabled',
-    '/test/{i}' => '\Controllers\Category\CategoryController',
+    // Categories
+    '/v1/categories' => '\Controllers\Category\CategoryController::printAllCategories',
+    '/v1/categories/{i}' => '\Controllers\Category\CategoryController',
     '404' => 'handle404'
 ));
