@@ -2,13 +2,13 @@
 So you want to contribute to Mods for HESK? Awesome! However, there are a few guidelines that need to be followed so the project can be as easy to maintain as possible.
 
 ## Submitting an issue
-If all you are doing is submitting an issue, please check if your "issue" qualifies as a GitHub issue:
- - **Feature Requests:** Feature requests are now being recorded at the Mods for HESK [UserVoice page](https://mods-for-hesk.uservoice.com/forums/254758-general). Please do not open these types of issues on GitHub. Issues opened that are "feature requests" will be closed.
- - **Translations:** Translations are now being recorded at the official Mods for HESK [website](https://mods-for-hesk.mkochcs.com/download.php). Please do not open these types of issues on GitHub. Issues opened that pertain to submitting new translations will be closed.
+If all you are doing is submitting an issue, please check if your "issue" qualifies as a GitLab issue:
+ - **Feature Requests:** Feature requests are now being recorded at the Mods for HESK [UserVoice page](https://mods-for-hesk.uservoice.com/forums/254758-general). Please do not open these types of issues on GitLab. Issues opened that are "feature requests" will be closed.
+ - **Translations:** Translations are now being recorded at the official Mods for HESK [website](https://mods-for-hesk.mkochcs.com/download.php). Please do not open these types of issues on GitLab. Issues opened that pertain to submitting new translations will be closed.
  - **Bugs:** Yes, please open these types of issues here. :grinning:
 
 ## Getting Started
-If you have already completed any of these steps in the past (such as creating a GitHub account), you can skip the respective step.
+If you have already completed any of these steps in the past (such as creating a GitLab account), you can skip the respective step.
  - Make sure you have a [GitLab account](https://gitlab.com/users/sign_in)
  - Fork the repository on GitLab
 
@@ -23,5 +23,5 @@ If you have already completed any of these steps in the past (such as creating a
 ## Submitting Changes
  - Push your changes to a topic branch in your fork of the repository
  - Submit a pull request to the official Mods for HESK repository (mike-koch/Mods-for-HESK)
- - The owner of Mods for HESK will then inspect and test the code in the pull request.  Feedback will be given via GitHub comments.
+ - The owner of Mods for HESK will then inspect and test the code in the pull request.  Feedback will be given via GitLab comments.
  - The owner of Mods for HESK expects responses within two weeks of the original comment. If there is no feedback within that time range, the pull request will be considered abandoned and subsequently will be closed.
