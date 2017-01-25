@@ -9,8 +9,8 @@ If all you are doing is submitting an issue, please check if your "issue" qualif
 
 ## Getting Started
 If you have already completed any of these steps in the past (such as creating a GitHub account), you can skip the respective step.
- - Make sure you have a [GitHub account](http://github.com/signup/free)
- - Fork the repository on GitHub (for more help consult the [GitHub documentation](https://help.github.com/articles/fork-a-repo/))
+ - Make sure you have a [GitLab account](https://gitlab.com/users/sign_in)
+ - Fork the repository on GitLab
 
 ## Making Changes
  - Create a feature branch from where to base your work off of
@@ -22,7 +22,6 @@ If you have already completed any of these steps in the past (such as creating a
 
 ## Submitting Changes
  - Push your changes to a topic branch in your fork of the repository
- - Submit a pull request to the official Mods for HESK repository (mkoch227/Mods-for-HESK)
- - If necessary, sign the Contributor License Agreement by checking the "status checks" area of your pull request.
+ - Submit a pull request to the official Mods for HESK repository (mike-koch/Mods-for-HESK)
  - The owner of Mods for HESK will then inspect and test the code in the pull request.  Feedback will be given via GitHub comments.
  - The owner of Mods for HESK expects responses within two weeks of the original comment. If there is no feedback within that time range, the pull request will be considered abandoned and subsequently will be closed.
