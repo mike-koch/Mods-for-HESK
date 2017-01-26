@@ -3,7 +3,7 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 require_once(__DIR__ . '/core/common.php');
-require(__DIR__ . '/../Link/src/Link.php');
+require(__DIR__ . '/Link.php');
 require(__DIR__ . '/../hesk_settings.inc.php');
 
 // Controllers
