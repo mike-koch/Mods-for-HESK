@@ -3,15 +3,16 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 require_once(__DIR__ . '/core/common.php');
-require(__DIR__ . '/Link.php');
-require(__DIR__ . '/../hesk_settings.inc.php');
+require_once(__DIR__ . '/Link.php');
+require_once(__DIR__ . '/../hesk_settings.inc.php');
 
 // Controllers
-require(__DIR__ . '/controllers/CategoryController.php');
+require_once(__DIR__ . '/controllers/CategoryController.php');
 hesk_load_api_database_functions();
+require_once(__DIR__ . '/../inc/custom_fields.inc.php');
 
 // Properly handle error logging, as well as a fatal error workaround
-error_reporting(0); // Override hesk_settings. We're smarter than it
+error_reporting(0);
 set_error_handler('errorHandler');
 register_shutdown_function('fatalErrorShutdownHandler');
 
@@ -21,7 +22,7 @@ function handle404() {
 }
 
 function assertApiIsEnabled() {
-    throw new Exception("Some exception here!", 33);
+
 }
 
 function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {

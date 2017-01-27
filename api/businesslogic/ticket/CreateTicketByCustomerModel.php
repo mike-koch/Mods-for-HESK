@@ -1,5 +1,7 @@
 <?php
 
+namespace BusinessObjects;
+
 class CreateTicketByCustomerModel {
     // Metadata
     /**

@@ -1,5 +1,7 @@
 <?php
 
+namespace BusinessLogic\Validation;
+
 class ValidationModel {
     /**
      * @var array

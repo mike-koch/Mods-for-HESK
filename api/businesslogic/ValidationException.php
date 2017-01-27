@@ -1,5 +1,9 @@
 <?php
 
+namespace BusinessLogic\Validation;
+
+use Exception;
+
 class ValidationException extends Exception {
     public $validationModel;
 
