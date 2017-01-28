@@ -7,14 +7,22 @@ use DataAccess\Security\BanGateway;
 
 class BanRetriever {
     /**
+     * @var BanGateway
+     */
+    private $banGateway;
+
+    function __construct($banGateway) {
+        $this->banGateway = $banGateway;
+    }
+
+    /**
      * @param $email
      * @param $heskSettings
      * @return bool
      */
-    static function isEmailBanned($email, $heskSettings) {
-        require_once(__DIR__ . '/../../dao/security/BanGateway.php');
+    function isEmailBanned($email, $heskSettings) {
 
-        $bannedEmails = BanGateway::getEmailBans($heskSettings);
+        $bannedEmails = $this->banGateway->getEmailBans($heskSettings);
 
         foreach ($bannedEmails as $bannedEmail) {
             if ($bannedEmail->email === $email) {
@@ -30,10 +38,8 @@ class BanRetriever {
      * @param $heskSettings
      * @return bool
      */
-    static function isIpAddressBanned($ip, $heskSettings) {
-        require_once(__DIR__ . '/../../dao/security/BanGateway.php');
-
-        $bannedIps = BanGateway::getIpBans($heskSettings);
+    function isIpAddressBanned($ip, $heskSettings) {
+        $bannedIps = $this->banGateway->getIpBans($heskSettings);
 
         foreach ($bannedIps as $bannedIp) {
             if ($bannedIp->ipFrom <= $ip && $bannedIp->ipTo >= $ip) {

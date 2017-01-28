@@ -1,22 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: user
- * Date: 1/16/17
- * Time: 10:06 PM
- */
 
 namespace DataAccess;
 
 use BusinessObjects\Category;
 use Exception;
 
-class CategoryGateway {
+class CategoryGateway extends CommonDao {
     function getAllCategories($hesk_settings) {
-        if (!function_exists('hesk_dbConnect')) {
-            throw new Exception('Database not loaded!');
-        }
-        hesk_dbConnect();
+        $this->init();
 
         $sql = 'SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories`';
 
@@ -37,7 +28,7 @@ class CategoryGateway {
             $results[$category->id] = $category;
         }
 
-        hesk_dbClose();
+        $this->close();
 
         return $results;
     }

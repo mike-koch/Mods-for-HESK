@@ -1,25 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mkoch
- * Date: 1/27/2017
- * Time: 9:05 PM
- */
 
 namespace DataAccess\Security;
 
 
 use BusinessLogic\Security\BannedEmail;
 use BusinessLogic\Security\BannedIp;
+use DataAccess\CommonDao;
+use Exception;
 
-class BanGateway {
+class BanGateway extends CommonDao {
 
     /**
      * @param $heskSettings
      * @return BannedEmail[]
      */
-    static function getEmailBans($heskSettings) {
-        require_once(__DIR__ . '/../../businesslogic/security/BannedEmail.php');
+    function getEmailBans($heskSettings) {
+        $this->init();
 
         $rs = hesk_dbQuery("SELECT `bans`.`id` AS `id`, `bans`.`email` AS `email`,
               `users`.`id` AS `banned_by`, `bans`.`dt` AS `dt`
@@ -40,6 +36,8 @@ class BanGateway {
             $bannedEmails[$bannedEmail->id] = $bannedEmail;
         }
 
+        $this->close();
+
         return $bannedEmails;
     }
 
@@ -47,8 +45,8 @@ class BanGateway {
      * @param $heskSettings
      * @return BannedIp[]
      */
-    static function getIpBans($heskSettings) {
-        require_once(__DIR__ . '/../../businesslogic/security/BannedIp.php');
+    function getIpBans($heskSettings) {
+        $this->init();
 
         $rs = hesk_dbQuery("SELECT `bans`.`id` AS `id`, `bans`.`ip_from` AS `ip_from`,
               `bans`.`ip_to` AS `ip_to`, `bans`.`ip_display` AS `ip_display`,
@@ -71,6 +69,8 @@ class BanGateway {
 
             $bannedIps[$bannedIp->id] = $bannedIp;
         }
+
+        $this->close();
 
         return $bannedIps;
     }
