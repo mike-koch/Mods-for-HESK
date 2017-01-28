@@ -3,12 +3,14 @@
 namespace BusinessLogic\Security;
 
 
-use DataAccess\Security\UserDao;
+use DataAccess\Security\UserGateway;
 
 class UserContextBuilder {
     static function buildUserContext($authToken, $hesk_settings) {
+        require_once(__DIR__ . '/../../dao/security/UserGateway.php');
+
         $hashedToken = hash('sha512', $authToken);
-        return UserDao::getUserForAuthToken($hashedToken, $hesk_settings);
+        return UserGateway::getUserForAuthToken($hashedToken, $hesk_settings);
     }
 
     /**

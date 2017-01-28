@@ -12,7 +12,7 @@ use DataAccess\CategoryGateway;
 
 class CategoryRetriever {
     static function get_all_categories($hesk_settings) {
-        require_once(__DIR__ . '/../../dao/CategoryGateway.php');
+        require_once(__DIR__ . '/../../dao/category/CategoryGateway.php');
 
         return CategoryGateway::getAllCategories($hesk_settings);
     }

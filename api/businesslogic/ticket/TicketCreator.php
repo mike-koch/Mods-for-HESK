@@ -36,7 +36,7 @@ class TicketCreator {
      */
     function validate($ticketRequest, $staff, $heskSettings, $modsForHeskSettings) {
         require_once(__DIR__ . '/../email_validators.php');
-        require_once(__DIR__ . '/../../dao/category_dao.php');
+        require_once(__DIR__ . '/../category/CategoryRetriever.php');
         //require_once('../category/retriever.php');
         //require_once('../bans/retriever.php');
 
@@ -73,7 +73,6 @@ class TicketCreator {
         }
 
         foreach ($heskSettings['custom_fields'] as $key => $value) {
-            // TODO Only check categories that apply to this custom field
             if ($value['use'] == 1 && hesk_is_custom_field_in_category($key, intval($ticketRequest->category))) {
                 $custom_field_value = $ticketRequest->customFields[$key];
                 if (empty($custom_field_value)) {

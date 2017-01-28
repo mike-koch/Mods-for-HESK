@@ -13,7 +13,7 @@ use Exception;
 
 class CategoryGateway {
     static function getAllCategories($hesk_settings) {
-        require_once(__DIR__ . '/../businesslogic/category/Category.php');
+        require_once(__DIR__ . '/../../businesslogic/category/Category.php');
 
         if (!function_exists('hesk_dbConnect')) {
             throw new Exception('Database not loaded!');

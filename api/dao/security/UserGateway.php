@@ -12,9 +12,9 @@ namespace DataAccess\Security;
 use BusinessLogic\Security\UserContextBuilder;
 use Exception;
 
-class UserDao {
+class UserGateway {
     static function getUserForAuthToken($hashedToken, $hesk_settings) {
-        require_once(__DIR__ . '/../businesslogic/security/UserContextBuilder.php');
+        require_once(__DIR__ . '/../../businesslogic/security/UserContextBuilder.php');
 
         if (!function_exists('hesk_dbConnect')) {
             throw new Exception('Database not loaded!');
