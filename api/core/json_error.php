@@ -1,6 +1,6 @@
 <?php
 
-function print_error($title, $message) {
+function print_error($title, $message, $response_code = 500) {
     require_once(__DIR__ . '/output.php');
 
     $error = array();
@@ -8,6 +8,6 @@ function print_error($title, $message) {
     $error['title'] = $title;
     $error['message'] = $message;
 
-    print output($error);
+    print output($error, $response_code);
     return;
 }

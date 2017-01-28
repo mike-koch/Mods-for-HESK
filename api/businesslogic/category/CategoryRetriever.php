@@ -11,9 +11,16 @@ namespace BusinessLogic\Category;
 use DataAccess\CategoryGateway;
 
 class CategoryRetriever {
-    static function get_all_categories($hesk_settings) {
-        require_once(__DIR__ . '/../../dao/category/CategoryGateway.php');
+    /**
+     * @var CategoryGateway
+     */
+    private $categoryGateway;
 
-        return CategoryGateway::getAllCategories($hesk_settings);
+    function __construct($categoryGateway) {
+        $this->categoryGateway = $categoryGateway;
+    }
+
+    function getAllCategories($hesk_settings) {
+        return $this->categoryGateway->getAllCategories($hesk_settings);
     }
 }

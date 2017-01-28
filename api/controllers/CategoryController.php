@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: user
- * Date: 1/16/17
- * Time: 10:12 PM
- */
 
 namespace Controllers\Category;
 
@@ -21,9 +15,11 @@ class CategoryController {
     }
 
     private static function getAllCategories() {
-        global $hesk_settings;
-        require_once(__DIR__ . '/../businesslogic/category/CategoryRetriever.php');
+        global $hesk_settings, $applicationContext;
 
-        return CategoryRetriever::get_all_categories($hesk_settings);
+        /* @var $categoryRetriever CategoryRetriever */
+        $categoryRetriever = $applicationContext->get['CategoryRetriever'];
+
+        return $categoryRetriever->getAllCategories($hesk_settings);
     }
 }

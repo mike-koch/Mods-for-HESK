@@ -9,7 +9,7 @@ class ValidationException extends Exception {
 
     /**
      * ValidationException constructor.
-     * @param ValidationModel $validationModel The validatio model
+     * @param ValidationModel $validationModel The validation model
      * @throws Exception If the validationModel's errorKeys is empty
      */
     function __construct($validationModel) {
