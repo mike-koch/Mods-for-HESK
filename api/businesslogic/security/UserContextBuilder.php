@@ -3,14 +3,37 @@
 namespace BusinessLogic\Security;
 
 
+use BusinessLogic\Exceptions\InvalidAuthenticationTokenException;
+use BusinessLogic\Exceptions\MissingAuthenticationTokenException;
+use BusinessLogic\Helpers\Helpers;
 use DataAccess\Security\UserGateway;
 
 class UserContextBuilder {
-    static function buildUserContext($authToken, $hesk_settings) {
-        require_once(__DIR__ . '/../../dao/security/UserGateway.php');
+    /**
+     * @var UserGateway
+     */
+    private $userGateway;
 
-        $hashedToken = hash('sha512', $authToken);
-        return UserGateway::getUserForAuthToken($hashedToken, $hesk_settings);
+    function __construct($userGateway) {
+        $this->userGateway = $userGateway;
+    }
+
+    function buildUserContext($authToken, $heskSettings) {
+        $NULL_OR_EMPTY_STRING = 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e';
+
+        $hashedToken = Helpers::hashToken($authToken);
+
+        if ($hashedToken === $NULL_OR_EMPTY_STRING) {
+            throw new MissingAuthenticationTokenException();
+        }
+
+        $userRow = $this->userGateway->getUserForAuthToken($hashedToken, $heskSettings);
+
+        if ($userRow === null) {
+            throw new InvalidAuthenticationTokenException();
+        }
+
+        return $this->fromDataRow($userRow);
     }
 
     /**
@@ -18,11 +41,7 @@ class UserContextBuilder {
      * @param $dataRow array the $_SESSION superglobal or the hesk_users result set
      * @return UserContext the built user context
      */
-    static function fromDataRow($dataRow) {
-        require_once(__DIR__ . '/UserContext.php');
-        require_once(__DIR__ . '/UserContextPreferences.php');
-        require_once(__DIR__ . '/UserContextNotifications.php');
-
+    function fromDataRow($dataRow) {
         $userContext = new UserContext();
         $userContext->id = $dataRow['id'];
         $userContext->username = $dataRow['user'];

@@ -2,6 +2,7 @@
 
 namespace BusinessLogic\Category;
 
+use BusinessLogic\Security\UserContext;
 use DataAccess\CategoryGateway;
 
 class CategoryRetriever {
@@ -14,7 +15,19 @@ class CategoryRetriever {
         $this->categoryGateway = $categoryGateway;
     }
 
-    function getAllCategories($hesk_settings) {
-        return $this->categoryGateway->getAllCategories($hesk_settings);
+    /**
+     * @param $heskSettings array
+     * @param $userContext UserContext
+     * @return array
+     */
+    function getAllCategories($heskSettings, $userContext) {
+        $categories = $this->categoryGateway->getAllCategories($heskSettings);
+
+        foreach ($categories as $category) {
+            $category->accessible = $userContext->admin ||
+                in_array($category->id, $userContext->categories);
+        }
+
+        return $categories;
     }
 }

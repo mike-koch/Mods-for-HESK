@@ -12,6 +12,15 @@ require_once(__DIR__ . '/../hesk_settings.inc.php');
 
 // Mods for HESK API Files
 require_once(__DIR__ . '/http_response_code.php');
+require_once(__DIR__ . '/dao/CommonDao.php');
+require_once(__DIR__ . '/businesslogic/Helpers.php');
+
+// User Context
+require_once(__DIR__ . '/dao/security/UserGateway.php');
+require_once(__DIR__ . '/businesslogic/security/UserContextBuilder.php');
+require_once(__DIR__ . '/businesslogic/security/UserContextNotifications.php');
+require_once(__DIR__ . '/businesslogic/security/UserContextPreferences.php');
+require_once(__DIR__ . '/businesslogic/security/UserContext.php');
 
 // Categories
 require_once(__DIR__ . '/dao/category/CategoryGateway.php');
@@ -24,6 +33,11 @@ require_once(__DIR__ . '/dao/security/BanGateway.php');
 require_once(__DIR__ . '/businesslogic/security/BanRetriever.php');
 require_once(__DIR__ . '/businesslogic/security/BannedEmail.php');
 require_once(__DIR__ . '/businesslogic/security/BannedIp.php');
+
+// Exceptions
+require_once(__DIR__ . '/businesslogic/exception/InvalidAuthenticationTokenException.php');
+require_once(__DIR__ . '/businesslogic/exception/MissingAuthenticationTokenException.php');
+require_once(__DIR__ . '/businesslogic/exception/ValidationException.php');
 
 hesk_load_api_database_functions();
 

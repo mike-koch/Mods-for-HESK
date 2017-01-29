@@ -15,11 +15,11 @@ class CategoryController {
     }
 
     private static function getAllCategories() {
-        global $hesk_settings, $applicationContext;
+        global $hesk_settings, $applicationContext, $userContext;
 
         /* @var $categoryRetriever CategoryRetriever */
         $categoryRetriever = $applicationContext->get['CategoryRetriever'];
 
-        return $categoryRetriever->getAllCategories($hesk_settings);
+        return $categoryRetriever->getAllCategories($hesk_settings, $userContext);
     }
 }

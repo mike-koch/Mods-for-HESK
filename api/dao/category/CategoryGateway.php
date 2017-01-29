@@ -6,6 +6,10 @@ use BusinessObjects\Category;
 use Exception;
 
 class CategoryGateway extends CommonDao {
+    /**
+     * @param $hesk_settings
+     * @return Category[]
+     */
     function getAllCategories($hesk_settings) {
         $this->init();
 

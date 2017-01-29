@@ -10,25 +10,32 @@ namespace DataAccess\Security;
 
 
 use BusinessLogic\Security\UserContextBuilder;
+use DataAccess\CommonDao;
 use Exception;
 
-class UserGateway {
-    static function getUserForAuthToken($hashedToken, $hesk_settings) {
-        require_once(__DIR__ . '/../../businesslogic/security/UserContextBuilder.php');
+class UserGateway extends CommonDao {
+    /**
+     * @param $hashedToken string The pre-hashed token from Helpers::hashToken
+     * @param $heskSettings
+     * @return array|null User ResultSet if an active user for the token is found, null otherwise
+     */
+    function getUserForAuthToken($hashedToken, $heskSettings) {
+        $this->init();
 
-        if (!function_exists('hesk_dbConnect')) {
-            throw new Exception('Database not loaded!');
-        }
-        hesk_dbConnect();
-
-        $rs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'users` WHERE `id` = (
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `id` = (
                 SELECT ``
-                FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'user_api_tokens`
-                WHERE `token` = ' . hesk_dbEscape($hashedToken) . '
-            )');
+                FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "user_api_tokens`
+                WHERE `tokens`.`token` = " . hesk_dbEscape($hashedToken) . "
+            ) AND `active` = '1'");
+
+        if (hesk_dbNumRows($rs) === 0) {
+            return null;
+        }
 
         $row = hesk_dbFetchAssoc($rs);
 
-        return UserContextBuilder::fromDataRow($row);
+        $this->close();
+
+        return $row;
     }
 }

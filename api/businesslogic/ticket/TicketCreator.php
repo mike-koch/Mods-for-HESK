@@ -3,9 +3,9 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Validation\ValidationModel;
 use BusinessObjects\CreateTicketByCustomerModel;
-use BusinessLogic\Validation\ValidationException;
 
 class TicketCreator {
     /**
@@ -18,8 +18,6 @@ class TicketCreator {
         $validationModel = validate($ticketRequest, false, $heskSettings, $modsForHeskSettings);
 
         if (count($validationModel->errorKeys) > 0) {
-            require_once(__DIR__ . '/../ValidationException.php');
-
             // Validation failed
             throw new ValidationException($validationModel);
         }
@@ -35,11 +33,6 @@ class TicketCreator {
      * @return ValidationModel If errorKeys is empty, validation successful. Otherwise invalid ticket
      */
     function validate($ticketRequest, $staff, $heskSettings, $modsForHeskSettings) {
-        require_once(__DIR__ . '/../email_validators.php');
-        require_once(__DIR__ . '/../category/CategoryRetriever.php');
-        //require_once('../category/retriever.php');
-        //require_once('../bans/retriever.php');
-
         $TICKET_PRIORITY_CRITICAL = 0;
 
         $validationModel = new ValidationModel();

@@ -39,7 +39,12 @@ class Category {
     public $priority;
 
     /**
-     * @var int? The manager for the category, if applicable
+     * @var int|null The manager for the category, if applicable
      */
     public $manager;
+
+    /**
+     * @var bool Indication if the user has access to the category
+     */
+    public $accessible;
 }
