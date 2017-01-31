@@ -112,30 +112,15 @@ function hesk_dbConnect()
 	// Errors?
     if ( ! $hesk_db_link)
     {
-    	if ($hesk_settings['debug_mode'])
-        {
-            $message = $hesklang['mysql_said'] . ': ' . mysql_error();
-        }
-        else
-        {
-            $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
-        }
-        //TODO Throw exception
-        //print_error($hesklang['cant_connect_db'], $message);
+    	$message = $hesklang['mysql_said'] . ': ' . mysql_error();
+
+        throw new \Core\Exceptions\SQLException($message);
     }
 
-    if ( ! @mysql_select_db($hesk_settings['db_name'], $hesk_db_link))
-    {
-    	if ($hesk_settings['debug_mode'])
-        {
-            $message = $hesklang['mysql_said'] . ': ' . mysql_error();
-        }
-        else
-        {
-            $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
-        }
-        //TODO Throw exception
-        //print_error($hesklang['cant_connect_db'], $message);
+    if ( ! @mysql_select_db($hesk_settings['db_name'], $hesk_db_link)) {
+        $message = $hesklang['mysql_said'] . ': ' . mysql_error();
+
+        throw new \Core\Exceptions\SQLException($message);
     }
 
     // Check MySQL/PHP version and set encoding to utf8
@@ -168,21 +153,12 @@ function hesk_dbQuery($query)
 
     $hesk_last_query = $query;
 
-    if ($res = @mysql_query($query, $hesk_db_link))
-    {
+    if ($res = @mysql_query($query, $hesk_db_link)) {
     	return $res;
     }
-    elseif ($hesk_settings['debug_mode'])
-    {
-        $message = $hesklang['mysql_said'] . mysql_error();
-    }
-    else
-    {
-        $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
-    }
-    //TODO Throw exception
-    //print_error($hesklang['cant_sql'], $message);
-    return null;
+
+    $message = $hesklang['mysql_said'] . mysql_error();
+    throw new \Core\Exceptions\SQLException($message);
 } // END hesk_dbQuery()
 
 
@@ -219,6 +195,7 @@ function hesk_dbInsertID()
         return $lastid;
     }
 
+    return null;
 } // END hesk_dbInsertID()
 
 

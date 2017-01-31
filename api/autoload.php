@@ -35,9 +35,11 @@ require_once(__DIR__ . '/businesslogic/security/BannedEmail.php');
 require_once(__DIR__ . '/businesslogic/security/BannedIp.php');
 
 // Exceptions
+require_once(__DIR__ . '/businesslogic/exception/ApiFriendlyException.php');
 require_once(__DIR__ . '/businesslogic/exception/InvalidAuthenticationTokenException.php');
 require_once(__DIR__ . '/businesslogic/exception/MissingAuthenticationTokenException.php');
 require_once(__DIR__ . '/businesslogic/exception/ValidationException.php');
+require_once(__DIR__ . '/core/SQLException.php');
 
 hesk_load_api_database_functions();
 

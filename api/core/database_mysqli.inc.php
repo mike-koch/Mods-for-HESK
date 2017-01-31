@@ -120,17 +120,9 @@ function hesk_dbConnect()
 	// Errors?
     if ( ! $hesk_db_link)
     {
-    	if ($hesk_settings['debug_mode'])
-        {
-            $message = $hesklang['mysql_said'] . ': (' . mysqli_connect_errno() . ') ' . mysqli_connect_error();
-        }
-        else
-        {
-            $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
-        }
+        $message = $hesklang['mysql_said'] . ': (' . mysqli_connect_errno() . ') ' . mysqli_connect_error();
 
-        //TODO Throw exception instead
-        //print_error($hesklang['cant_connect_db'], $message);
+        throw new \Core\Exceptions\SQLException($message);
     }
 
     // Check MySQL/PHP version and set encoding to utf8
@@ -169,18 +161,9 @@ function hesk_dbQuery($query)
     {
     	return $res;
     }
-    elseif ($hesk_settings['debug_mode'])
-    {
-        $message = $hesklang['mysql_said'] . ': ' . mysqli_error($hesk_db_link);
-    }
-    else
-    {
-        $message = $hesklang['contact_webmaster'] . $hesk_settings['webmaster_email'];
-    }
 
-    //TODO Throw exception instead
-    //print_error($hesklang['cant_sql'], $message);
-    return null;
+    $message = $hesklang['mysql_said'] . ': ' . mysqli_error($hesk_db_link);
+    throw new \Core\Exceptions\SQLException($message);
 } // END hesk_dbQuery()
 
 

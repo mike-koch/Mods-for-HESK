@@ -41,12 +41,20 @@ function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {
  * @param $exception Exception
  */
 function exceptionHandler($exception) {
-    if (exceptionIsOfType($exception, 'MissingAuthenticationTokenException')) {
-        print_error("Security Exception", $exception->getMessage(), 400);
-    } elseif (exceptionIsOfType($exception, 'InvalidAuthenticationTokenException')) {
-        print_error("Security Exception", $exception->getMessage(), 401);
+    if (exceptionIsOfType($exception, 'ApiFriendlyException')) {
+        /* @var $castedException \BusinessLogic\Exceptions\ApiFriendlyException */
+        $castedException = $exception;
+
+        print_error($castedException->title, $castedException->getMessage(), $castedException->httpResponseCode);
     } else {
-        print_error("Fought an uncaught exception", sprintf("%s\n\n%s", $exception->getMessage(), $exception->getTraceAsString()));
+        if (exceptionIsOfType($exception, 'SQLException')) {
+            /* @var $castedException \Core\Exceptions\SQLException */
+            $castedException = $exception;
+            print_error("Fought an uncaught exception", sprintf("%s\n\n%s", $castedException->failingQuery, $exception->getTraceAsString()));
+        } else {
+            print_error("Fought an uncaught exception", sprintf("%s\n\n%s", $exception->getMessage(), $exception->getTraceAsString()));
+        }
+
     }
     // Log more stuff to logging table if possible; we'll catch any exceptions from this
     die();

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: user
- * Date: 1/21/17
- * Time: 4:23 PM
- */
-
 namespace DataAccess\Security;
 
 
@@ -23,9 +16,9 @@ class UserGateway extends CommonDao {
         $this->init();
 
         $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `id` = (
-                SELECT ``
+                SELECT `user_id`
                 FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "user_api_tokens`
-                WHERE `tokens`.`token` = " . hesk_dbEscape($hashedToken) . "
+                WHERE `token` = '" . hesk_dbEscape($hashedToken) . "'
             ) AND `active` = '1'");
 
         if (hesk_dbNumRows($rs) === 0) {
