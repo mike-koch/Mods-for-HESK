@@ -83,6 +83,8 @@ Link::all(array(
     // Categories
     '/v1/categories' => '\Controllers\Category\CategoryController::printAllCategories',
     '/v1/categories/{i}' => '\Controllers\Category\CategoryController',
+    // Tickets
+    '/v1/tickets/{i}' => '\Controllers\Tickets\TicketController',
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'

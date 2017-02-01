@@ -6,9 +6,11 @@ namespace Core;
 use BusinessLogic\Category\CategoryRetriever;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContextBuilder;
+use BusinessLogic\Tickets\TicketRetriever;
 use DataAccess\CategoryGateway;
 use DataAccess\Security\BanGateway;
 use DataAccess\Security\UserGateway;
+use DataAccess\Tickets\TicketGateway;
 
 class ApplicationContext {
     public $get;
@@ -19,6 +21,10 @@ class ApplicationContext {
         // Categories
         $this->get['CategoryGateway'] = new CategoryGateway();
         $this->get['CategoryRetriever'] = new CategoryRetriever($this->get['CategoryGateway']);
+
+        // Tickets
+        $this->get['TicketGateway'] = new TicketGateway();
+        $this->get['TicketRetriever'] = new TicketRetriever($this->get['TicketGateway']);
 
         // Bans
         $this->get['BanGateway'] = new BanGateway();

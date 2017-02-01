@@ -4,6 +4,86 @@ namespace BusinessLogic\Tickets;
 
 
 class Ticket {
+    static function fromDatabaseRow($row, $linkedTicketsRs, $heskSettings) {
+        $ticket = new Ticket();
+        $ticket->id = $row['id'];
+        $ticket->trackingId = $row['trackid'];
+        $ticket->name = $row['name'];
+        $ticket->email = $row['email'];
+        $ticket->categoryId = $row['category'];
+        $ticket->priorityId = $row['priority'];
+        $ticket->subject = $row['subject'];
+        $ticket->message = $row['message'];
+        $ticket->dateCreated = $row['dt'];
+        $ticket->lastChanged = $row['lastchange'];
+        $ticket->firstReplyDate = $row['firstreply'];
+        $ticket->closedDate = $row['closedat'];
+        $ticket->suggestedArticles = explode(',', $row['articles']);
+        $ticket->ipAddress = $row['ip'];
+        $ticket->language = $row['language'];
+        $ticket->statusId = $row['status'];
+        $ticket->openedBy = $row['openedby'];
+        $ticket->firstReplyByUserId = $row['firstreplyby'];
+        $ticket->closedByUserId = $row['closedby'];
+        $ticket->numberOfReplies = $row['replies'];
+        $ticket->numberOfStaffReplies = $row['staffreplies'];
+        $ticket->ownerId = $row['owner'];
+        $ticket->timeWorked = $row['time_worked'];
+        $ticket->lastReplyBy = $row['lastreplier'];
+        $ticket->lastReplier = $row['replierid'];
+        $ticket->archived = intval($row['archive']) === 1;
+        $ticket->locked = intval($row['locked']) === 1;
+
+        if (trim($row['attachments']) !== '') {
+            $attachments = explode(',', $row['attachments']);
+            $attachmentArray = array();
+            foreach ($attachments as $attachment) {
+                $attachmentRow = explode('#', $attachment);
+                $attachmentModel = new Attachment();
+
+                $attachmentModel->id = $attachmentRow[0];
+                $attachmentModel->fileName = $attachmentRow[1];
+                $attachmentModel->savedName = $attachmentRow[2];
+
+                $attachmentArray[] = $attachmentModel;
+            }
+            $ticket->attachments = $attachmentArray;
+        }
+
+        if (trim($row['merged']) !== '') {
+            $ticket->mergedTicketIds = explode(',', $row['merged']);
+        }
+
+        $ticket->auditTrailHtml = $row['history'];
+
+        $ticket->customFields = array();
+        foreach ($heskSettings['custom_fields'] as $key => $value) {
+            if ($value['use'] == 1 && hesk_is_custom_field_in_category($key, intval($ticket->categoryId))) {
+                $ticket->customFields[str_replace('custom', '', $key)] = $row[$key];
+            }
+        }
+
+        $ticket->linkedTicketIds = array();
+        while ($linkedTicketsRow = hesk_dbFetchAssoc($linkedTicketsRs)) {
+            $ticket->linkedTicketIds[] = $linkedTicketsRow['id'];
+        }
+
+        $ticket->location = array();
+        $ticket->location[0] = $row['latitude'];
+        $ticket->location[1] = $row['longitude'];
+
+        $ticket->usesHtml = intval($row['html']) === 1;
+        $ticket->userAgent = $row['user_agent'];
+        $ticket->screenResolution = array();
+        $ticket->screenResolution[0] = $row['screen_resolution_width'];
+        $ticket->screenResolution[1] = $row['screen_resolution_height'];
+
+        $ticket->dueDate = $row['due_date'];
+        $ticket->dueDateOverdueEmailSent = $row['overdue_email_sent'] !== null && intval($row['overdue_email_sent']) === 1;
+
+        return $ticket;
+    }
+
     /**
      * @var int
      */
@@ -27,12 +107,12 @@ class Ticket {
     /**
      * @var int
      */
-    public $category;
+    public $categoryId;
 
     /**
      * @var int
      */
-    public $priority;
+    public $priorityId;
 
     /**
      * @var string
@@ -65,7 +145,7 @@ class Ticket {
     public $closedDate;
 
     /**
-     * @var string|null
+     * @var string[]|null
      */
     public $suggestedArticles;
 
@@ -85,9 +165,9 @@ class Ticket {
     public $statusId;
 
     /**
-     * @var int (convert to enum)
+     * @var int
      */
-    public $openedByUserId;
+    public $openedBy;
 
     /**
      * @var int|null
@@ -120,7 +200,12 @@ class Ticket {
     public $timeWorked;
 
     /**
-     * @var int (convert to enum)
+     * @var int
+     */
+    public $lastReplyBy;
+
+    /**
+     * @var int|null
      */
     public $lastReplier;
 
@@ -135,7 +220,7 @@ class Ticket {
     public $locked;
 
     /**
-     * @var array|null (TODO clarify this later)
+     * @var Attachment[]|null
      */
     public $attachments;
 
@@ -150,7 +235,7 @@ class Ticket {
     public $auditTrailHtml;
 
     /**
-     * @var array (TODO clarify this later)
+     * @var string[]
      */
     public $customFields;
 
@@ -160,7 +245,7 @@ class Ticket {
     public $linkedTicketIds;
 
     /**
-     * @var float[2]|null
+     * @var float[]|null
      */
     public $location;
 
@@ -175,7 +260,7 @@ class Ticket {
     public $userAgent;
 
     /**
-     * @var int[2]|null
+     * @var int[]|null
      */
     public $screenResolution;
 

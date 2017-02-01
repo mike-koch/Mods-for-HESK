@@ -34,6 +34,16 @@ require_once(__DIR__ . '/businesslogic/security/BanRetriever.php');
 require_once(__DIR__ . '/businesslogic/security/BannedEmail.php');
 require_once(__DIR__ . '/businesslogic/security/BannedIp.php');
 
+// Tickets
+require_once(__DIR__ . '/dao/ticket/TicketGateway.php');
+require_once(__DIR__ . '/businesslogic/ticket/Attachment.php');
+require_once(__DIR__ . '/businesslogic/ticket/Ticket.php');
+require_once(__DIR__ . '/businesslogic/ticket/CreateTicketByCustomerModel.php');
+require_once(__DIR__ . '/businesslogic/ticket/TicketValidators.php');
+require_once(__DIR__ . '/businesslogic/ticket/TicketCreator.php');
+require_once(__DIR__ . '/businesslogic/ticket/TicketRetriever.php');
+require_once(__DIR__ . '/controllers/TicketController.php');
+
 // Exceptions
 require_once(__DIR__ . '/businesslogic/exception/ApiFriendlyException.php');
 require_once(__DIR__ . '/businesslogic/exception/InvalidAuthenticationTokenException.php');
