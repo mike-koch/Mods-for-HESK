@@ -58,7 +58,7 @@ class Ticket {
 
         $ticket->customFields = array();
         foreach ($heskSettings['custom_fields'] as $key => $value) {
-            if ($value['use'] == 1 && hesk_is_custom_field_in_category($key, intval($ticket->categoryId))) {
+            if ($value['use'] && hesk_is_custom_field_in_category($key, intval($ticket->categoryId))) {
                 $ticket->customFields[str_replace('custom', '', $key)] = $row[$key];
             }
         }
