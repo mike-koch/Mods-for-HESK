@@ -1,5 +1,7 @@
 <?php
 // Properly handle error logging, as well as a fatal error workaround
+//require_once(__DIR__ . '/autoload.php');
+require_once(__DIR__ . '/bootstrap.php');
 require_once(__DIR__ . '/autoload.php');
 error_reporting(0);
 set_error_handler('errorHandler');
@@ -16,7 +18,7 @@ function handle404() {
 function before() {
     assertApiIsEnabled();
 
-    $token = \BusinessLogic\Helpers\Helpers::getHeader('X-AUTH-TOKEN');
+    $token = \BusinessLogic\Helpers::getHeader('X-AUTH-TOKEN');
     buildUserContext($token);
 }
 
@@ -50,9 +52,9 @@ function exceptionHandler($exception) {
         if (exceptionIsOfType($exception, 'SQLException')) {
             /* @var $castedException \Core\Exceptions\SQLException */
             $castedException = $exception;
-            print_error("Fought an uncaught exception", sprintf("%s\n\n%s", $castedException->failingQuery, $exception->getTraceAsString()));
+            print_error("Fought an uncaught Exceptions", sprintf("%s\n\n%s", $castedException->failingQuery, $exception->getTraceAsString()));
         } else {
-            print_error("Fought an uncaught exception", sprintf("%s\n\n%s", $exception->getMessage(), $exception->getTraceAsString()));
+            print_error("Fought an uncaught Exceptions", sprintf("%s\n\n%s", $exception->getMessage(), $exception->getTraceAsString()));
         }
 
     }
@@ -61,8 +63,8 @@ function exceptionHandler($exception) {
 }
 
 /**
- * @param $exception Exception thrown exception
- * @param $class string The name of the expected exception type
+ * @param $exception Exception thrown Exceptions
+ * @param $class string The name of the expected Exceptions type
  * @return bool
  */
 function exceptionIsOfType($exception, $class) {

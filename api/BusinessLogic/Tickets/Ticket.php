@@ -6,31 +6,35 @@ namespace BusinessLogic\Tickets;
 class Ticket {
     static function fromDatabaseRow($row, $linkedTicketsRs, $heskSettings) {
         $ticket = new Ticket();
-        $ticket->id = $row['id'];
+        $ticket->id = intval($row['id']);
         $ticket->trackingId = $row['trackid'];
         $ticket->name = $row['name'];
         $ticket->email = $row['email'];
-        $ticket->categoryId = $row['category'];
-        $ticket->priorityId = $row['priority'];
+        $ticket->categoryId = intval($row['category']);
+        $ticket->priorityId = intval($row['priority']);
         $ticket->subject = $row['subject'];
         $ticket->message = $row['message'];
         $ticket->dateCreated = $row['dt'];
         $ticket->lastChanged = $row['lastchange'];
         $ticket->firstReplyDate = $row['firstreply'];
         $ticket->closedDate = $row['closedat'];
-        $ticket->suggestedArticles = explode(',', $row['articles']);
+
+        if (trim($row['articles']) !== '') {
+            $ticket->suggestedArticles = explode(',', $row['articles']);
+        }
+
         $ticket->ipAddress = $row['ip'];
         $ticket->language = $row['language'];
-        $ticket->statusId = $row['status'];
-        $ticket->openedBy = $row['openedby'];
-        $ticket->firstReplyByUserId = $row['firstreplyby'];
-        $ticket->closedByUserId = $row['closedby'];
-        $ticket->numberOfReplies = $row['replies'];
-        $ticket->numberOfStaffReplies = $row['staffreplies'];
-        $ticket->ownerId = $row['owner'];
+        $ticket->statusId = intval($row['status']);
+        $ticket->openedBy = intval($row['openedby']);
+        $ticket->firstReplyByUserId = $row['firstreplyby'] === null ? null : intval($row['firstreplyby']);
+        $ticket->closedByUserId = $row['closedby'] === null ? null : intval($row['closedby']);
+        $ticket->numberOfReplies = intval($row['replies']);
+        $ticket->numberOfStaffReplies = intval($row['staffreplies']);
+        $ticket->ownerId = intval($row['owner']);
         $ticket->timeWorked = $row['time_worked'];
-        $ticket->lastReplyBy = $row['lastreplier'];
-        $ticket->lastReplier = $row['replierid'];
+        $ticket->lastReplyBy = intval($row['lastreplier']);
+        $ticket->lastReplier = $row['replierid'] === null ? null : intval($row['replierid']);
         $ticket->archived = intval($row['archive']) === 1;
         $ticket->locked = intval($row['locked']) === 1;
 
@@ -68,15 +72,23 @@ class Ticket {
             $ticket->linkedTicketIds[] = $linkedTicketsRow['id'];
         }
 
-        $ticket->location = array();
-        $ticket->location[0] = $row['latitude'];
-        $ticket->location[1] = $row['longitude'];
+        if ($row['latitude'] !== '' && $row['longitude'] !== '') {
+            $ticket->location = array();
+            $ticket->location[0] = $row['latitude'];
+            $ticket->location[1] = $row['longitude'];
+        }
 
         $ticket->usesHtml = intval($row['html']) === 1;
-        $ticket->userAgent = $row['user_agent'];
-        $ticket->screenResolution = array();
-        $ticket->screenResolution[0] = $row['screen_resolution_width'];
-        $ticket->screenResolution[1] = $row['screen_resolution_height'];
+
+        if ($row['user_agent'] !== null && trim($row['user_agent']) !== '') {
+            $ticket->userAgent = $row['user_agent'];
+        }
+
+        if ($row['screen_resolution_height'] !== null && $row['screen_resolution_width'] !== null){
+            $ticket->screenResolution = array();
+            $ticket->screenResolution[0] = $row['screen_resolution_width'];
+            $ticket->screenResolution[1] = $row['screen_resolution_height'];
+        }
 
         $ticket->dueDate = $row['due_date'];
         $ticket->dueDateOverdueEmailSent = $row['overdue_email_sent'] !== null && intval($row['overdue_email_sent']) === 1;

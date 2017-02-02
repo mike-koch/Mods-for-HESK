@@ -2,7 +2,7 @@
 
 namespace BusinessLogic\Exceptions;
 
-use BusinessLogic\Validation\ValidationModel;
+use BusinessLogic\ValidationModel;
 use Exception;
 
 class ValidationException extends Exception {

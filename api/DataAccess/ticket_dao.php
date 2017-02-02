@@ -13,7 +13,7 @@ function get_ticket_for_id($hesk_settings, $user, $id = NULL) {
         $clause = $used_where_clause ? ' AND ' : ' WHERE ';
         $used_where_clause = true;
 
-        $sql .= $clause . ' `category` IN (' . $user['categories'] . ')';
+        $sql .= $clause . ' `Categories` IN (' . $user['categories'] . ')';
         $sql .= " AND ((`heskprivileges` LIKE '%can_view_tickets%' AND `owner` = " . intval($user['id']) . ")";
         $sql .= " OR (`heskprivileges` LIKE '%can_view_unassigned%' AND `owner` = 0)";
         $sql .= " OR (`heskprivileges` LIKE '%can_view_ass_others%' AND `owner` <> " . intval($user['id']) . "))";
@@ -34,7 +34,7 @@ function build_results($response) {
     $results = array();
     while ($row = hesk_dbFetchAssoc($response)) {
         $row['id'] = intval($row['id']);
-        $row['category'] = intval($row['category']);
+        $row['Categories'] = intval($row['Categories']);
         $row['priority'] = intval($row['priority']);
         $row['status'] = intval($row['status']);
         $row['replierid'] = intval($row['replierid']);

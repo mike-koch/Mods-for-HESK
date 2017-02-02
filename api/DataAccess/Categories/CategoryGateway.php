@@ -1,8 +1,9 @@
 <?php
 
-namespace DataAccess;
+namespace DataAccess\Categories;
 
 use BusinessObjects\Category;
+use DataAccess\CommonDao;
 use Exception;
 
 class CategoryGateway extends CommonDao {

@@ -1,6 +1,6 @@
 <?php
 
-namespace BusinessLogic\Validation;
+namespace BusinessLogic;
 
 class ValidationModel {
     /**

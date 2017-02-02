@@ -1,9 +1,9 @@
 <?php
 
-namespace BusinessLogic\Category;
+namespace BusinessLogic\Categories;
 
 use BusinessLogic\Security\UserContext;
-use DataAccess\CategoryGateway;
+use DataAccess\Categories\CategoryGateway;
 
 class CategoryRetriever {
     /**

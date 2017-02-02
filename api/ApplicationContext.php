@@ -1,16 +1,15 @@
 <?php
 
-namespace Core;
-
 // Responsible for loading in all necessary classes. AKA a poor man's DI solution.
-use BusinessLogic\Category\CategoryRetriever;
+use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContextBuilder;
 use BusinessLogic\Tickets\TicketRetriever;
-use DataAccess\CategoryGateway;
+use DataAccess\Categories\CategoryGateway;
 use DataAccess\Security\BanGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Tickets\TicketGateway;
+
 
 class ApplicationContext {
     public $get;

@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mkoch
- * Date: 1/28/2017
- * Time: 8:54 PM
- */
 
-namespace BusinessLogic\Helpers;
+namespace BusinessLogic;
 
 
 class Helpers {

@@ -5,7 +5,7 @@ namespace BusinessLogic\Security;
 
 use BusinessLogic\Exceptions\InvalidAuthenticationTokenException;
 use BusinessLogic\Exceptions\MissingAuthenticationTokenException;
-use BusinessLogic\Helpers\Helpers;
+use BusinessLogic\Helpers;
 use DataAccess\Security\UserGateway;
 
 class UserContextBuilder {
