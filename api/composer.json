@@ -1,0 +1,15 @@
+{
+  "name": "mike-koch/Mods-for-HESK",
+  "description": "New UI and features for HESK, a free helpdesk solution",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mike Koch",
+      "email": "mkoch227@gmail.com"
+    }
+  ],
+  "require": {
+    "phpunit/phpunit": "5.7.9"
+  }
+}

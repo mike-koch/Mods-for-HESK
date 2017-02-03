@@ -1,3 +1,7 @@
+# Mods for HESK-specific files
+api/vendor
+
+# HESK Files
 admin/admin_suggest_articles.php
 admin/archive.php
 admin/custom_statuses.php
