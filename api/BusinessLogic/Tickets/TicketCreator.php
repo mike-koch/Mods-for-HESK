@@ -22,7 +22,7 @@ class TicketCreator {
             throw new ValidationException($validationModel);
         }
 
-        // Create the Tickets
+        // Create the ticket
     }
 
     /**
@@ -30,7 +30,7 @@ class TicketCreator {
      * @param $staff bool
      * @param $heskSettings array HESK settings
      * @param $modsForHeskSettings array Mods for HESK settings
-     * @return ValidationModel If errorKeys is empty, validation successful. Otherwise invalid Tickets
+     * @return ValidationModel If errorKeys is empty, validation successful. Otherwise invalid ticket
      */
     function validate($ticketRequest, $staff, $heskSettings, $modsForHeskSettings) {
         $TICKET_PRIORITY_CRITICAL = 0;

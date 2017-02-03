@@ -13,6 +13,6 @@ class SQLException extends Exception {
     function __construct($failingQuery) {
         $this->failingQuery = $failingQuery;
 
-        parent::__construct('A SQL Exceptions occurred. Check the logs for more information.');
+        parent::__construct('A SQL exception occurred. Check the logs for more information.');
     }
 }
