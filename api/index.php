@@ -34,7 +34,7 @@ function buildUserContext($xAuthToken) {
 }
 
 function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {
-    throw new Exception(sprintf("%s:%d\n\n%s", $errorFile, $errorLine, $errorMessage));
+    exceptionHandler(new Exception(sprintf("%s:%d\n\n%s", $errorFile, $errorLine, $errorMessage)));
 }
 
 /**
