@@ -6,21 +6,26 @@ namespace BusinessLogic\Tickets;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\ValidationModel;
-use BusinessObjects\CreateTicketByCustomerModel;
 
 class TicketCreator {
+    private $banRetriever;
+
+    function __construct($banRetriever) {
+        $this->banRetriever = $banRetriever;
+    }
+
     /**
      * @param $ticketRequest CreateTicketByCustomerModel
-     * @param $banRetriever BanRetriever
      * @param $heskSettings array HESK settings
      * @param $modsForHeskSettings array Mods for HESK settings
      * @throws ValidationException When a required field in $ticket_request is missing
      */
-    static function createTicketByCustomer($ticketRequest, $banRetriever, $heskSettings, $modsForHeskSettings) {
-        $validationModel = validate($ticketRequest, false, $banRetriever, $heskSettings, $modsForHeskSettings);
+    function createTicketByCustomer($ticketRequest, $heskSettings, $modsForHeskSettings) {
+        $validationModel = $this->validate($ticketRequest, false, $heskSettings, $modsForHeskSettings);
 
         if (count($validationModel->errorKeys) > 0) {
             // Validation failed
+            $validationModel->valid = false;
             throw new ValidationException($validationModel);
         }
 
@@ -30,12 +35,11 @@ class TicketCreator {
     /**
      * @param $ticketRequest CreateTicketByCustomerModel
      * @param $staff bool
-     * @param $banRetriever BanRetriever
      * @param $heskSettings array HESK settings
      * @param $modsForHeskSettings array Mods for HESK settings
      * @return ValidationModel If errorKeys is empty, validation successful. Otherwise invalid ticket
      */
-    function validate($ticketRequest, $staff, $banRetriever, $heskSettings, $modsForHeskSettings) {
+    function validate($ticketRequest, $staff, $heskSettings, $modsForHeskSettings) {
         $TICKET_PRIORITY_CRITICAL = 0;
 
         $validationModel = new ValidationModel();
@@ -44,7 +48,7 @@ class TicketCreator {
             $validationModel->errorKeys[] = 'NO_NAME';
         }
 
-        if (hesk_validateEmail($ticketRequest->email, $heskSettings['multi_eml'], false)) {
+        /*if (hesk_validateEmail($ticketRequest->email, $heskSettings['multi_eml'], false)) {
             $validationModel->errorKeys[] = 'INVALID_OR_MISSING_EMAIL';
         }
 
@@ -103,7 +107,7 @@ class TicketCreator {
 
         if ($banRetriever->isEmailBanned($ticketRequest->email, $heskSettings)) {
             $validationModel->errorKeys[] = 'EMAIL_BANNED';
-        }
+        }*/
 
         // TODO Check if we're at the max number of tickets
         // TODO     submit_ticket.php:325-334
