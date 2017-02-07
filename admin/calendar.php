@@ -83,7 +83,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <ul class="sidebar-menu">
             <li class="header text-uppercase"><?php echo $hesklang['calendar_categories']; ?></li>
             <?php foreach ($categories as $category): ?>
-                <!-- TODO Clean this up -->
                 <li>
                     <div class="ticket-info">
                         <div class="hide-on-overflow no-wrap event-category background-volatile"
@@ -152,6 +151,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>
                 </div>
                 <div class="box-body no-padding">
+                    <?php if (hesk_checkPermission('can_man_calendar', 0)): ?>
+                    <div class="row" style="padding-right: 10px">
+                        <div class="col-xs-12 text-right">
+                            <button class="btn btn-success" id="create-event-button">
+                                <i class="fa fa-plus-circle"></i>
+                                <?php echo $hesklang['new_event']; ?>
+                            </button>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                     <div id="calendar"></div>
                 </div>
             </div>
