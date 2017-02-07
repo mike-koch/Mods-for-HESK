@@ -2,7 +2,7 @@
 
 namespace DataAccess\Categories;
 
-use BusinessObjects\Category;
+use BusinessLogic\Categories\Category;
 use DataAccess\CommonDao;
 use Exception;
 

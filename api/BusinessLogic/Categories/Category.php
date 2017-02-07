@@ -1,6 +1,6 @@
 <?php
 
-namespace BusinessObjects;
+namespace BusinessLogic\Categories;
 
 class Category {
     /**

@@ -3,14 +3,24 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\ValidationModel;
+use BusinessLogic\Validators;
 
 class TicketCreator {
+    /**
+     * @var $categoryRetriever CategoryRetriever
+     */
+    private $categoryRetriever;
+    /**
+     * @var $banRetriever BanRetriever
+     */
     private $banRetriever;
 
-    function __construct($banRetriever) {
+    function __construct($categoryRetriever, $banRetriever) {
+        $this->categoryRetriever = $categoryRetriever;
         $this->banRetriever = $banRetriever;
     }
 
@@ -20,8 +30,8 @@ class TicketCreator {
      * @param $modsForHeskSettings array Mods for HESK settings
      * @throws ValidationException When a required field in $ticket_request is missing
      */
-    function createTicketByCustomer($ticketRequest, $heskSettings, $modsForHeskSettings) {
-        $validationModel = $this->validate($ticketRequest, false, $heskSettings, $modsForHeskSettings);
+    function createTicketByCustomer($ticketRequest, $heskSettings, $modsForHeskSettings, $userContext) {
+        $validationModel = $this->validate($ticketRequest, false, $heskSettings, $modsForHeskSettings, $userContext);
 
         if (count($validationModel->errorKeys) > 0) {
             // Validation failed
@@ -39,7 +49,7 @@ class TicketCreator {
      * @param $modsForHeskSettings array Mods for HESK settings
      * @return ValidationModel If errorKeys is empty, validation successful. Otherwise invalid ticket
      */
-    function validate($ticketRequest, $staff, $heskSettings, $modsForHeskSettings) {
+    function validate($ticketRequest, $staff, $heskSettings, $modsForHeskSettings, $userContext) {
         $TICKET_PRIORITY_CRITICAL = 0;
 
         $validationModel = new ValidationModel();
@@ -48,17 +58,22 @@ class TicketCreator {
             $validationModel->errorKeys[] = 'NO_NAME';
         }
 
-        /*if (hesk_validateEmail($ticketRequest->email, $heskSettings['multi_eml'], false)) {
+        if (!Validators::validateEmail($ticketRequest->email, $heskSettings['multi_eml'], false)) {
             $validationModel->errorKeys[] = 'INVALID_OR_MISSING_EMAIL';
         }
 
-        if (intval($ticketRequest->category) === 0) {
-            $allCategories = null;
+        $categoryId = intval($ticketRequest->category);
+        if ($categoryId < 1) {
             $validationModel->errorKeys[] = 'NO_CATEGORY';
+        } else {
+            $categoryExists = array_key_exists($categoryId, $this->categoryRetriever->getAllCategories($heskSettings, $userContext));
+            if (!$categoryExists) {
+                $validationModel->errorKeys[] = 'CATEGORY_DOES_NOT_EXIST';
+            }
         }
 
         // Don't allow critical priority tickets
-        if ($heskSettings['cust_urgency'] && intval($ticketRequest->priority) === $TICKET_PRIORITY_CRITICAL) {
+        /*if ($heskSettings['cust_urgency'] && intval($ticketRequest->priority) === $TICKET_PRIORITY_CRITICAL) {
             $validationModel->errorKeys[] = 'CRITICAL_PRIORITY_FORBIDDEN';
         }
 
