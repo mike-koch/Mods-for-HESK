@@ -73,7 +73,7 @@ class TicketCreator {
         }
 
         // Don't allow critical priority tickets
-        /*if ($heskSettings['cust_urgency'] && intval($ticketRequest->priority) === $TICKET_PRIORITY_CRITICAL) {
+        if ($heskSettings['cust_urgency'] && intval($ticketRequest->priority) === $TICKET_PRIORITY_CRITICAL) {
             $validationModel->errorKeys[] = 'CRITICAL_PRIORITY_FORBIDDEN';
         }
 
@@ -88,13 +88,14 @@ class TicketCreator {
         }
 
         foreach ($heskSettings['custom_fields'] as $key => $value) {
-            if ($value['use'] == 1 && hesk_is_custom_field_in_category($key, intval($ticketRequest->category))) {
-                $custom_field_value = $ticketRequest->customFields[$key];
+            $customFieldNumber = intval(str_replace('custom', '', $key));
+            if ($value['use'] == 1 && hesk_is_custom_field_in_category($customFieldNumber, intval($ticketRequest->category))) {
+                $custom_field_value = $ticketRequest->customFields[$customFieldNumber];
                 if (empty($custom_field_value)) {
-                    $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $key . '_INVALID::NO_VALUE';
+                    $validationModel->errorKeys[] = "CUSTOM_FIELD_{$customFieldNumber}_INVALID::NO_VALUE";
                     continue;
                 }
-                switch($value['type']) {
+                /*switch($value['type']) {
                     case 'date':
                         if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $custom_field_value)) {
                             $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $key . '_INVALID::INVALID_DATE';
@@ -116,11 +117,11 @@ class TicketCreator {
                             $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $key . '_INVALID::INVALID_OR_MISSING_EMAIL';
                         }
                         break;
-                }
+                }*/
             }
         }
 
-        if ($banRetriever->isEmailBanned($ticketRequest->email, $heskSettings)) {
+        /*if ($banRetriever->isEmailBanned($ticketRequest->email, $heskSettings)) {
             $validationModel->errorKeys[] = 'EMAIL_BANNED';
         }*/
 

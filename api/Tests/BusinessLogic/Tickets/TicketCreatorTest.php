@@ -14,6 +14,7 @@ use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContext;
+use Core\Constants\Priority;
 use PHPUnit\Framework\TestCase;
 
 class TicketCreatorTest extends TestCase {
@@ -55,8 +56,16 @@ class TicketCreatorTest extends TestCase {
         $this->ticketRequest->name = 'Name';
         $this->ticketRequest->email = 'some@e.mail';
         $this->ticketRequest->category = 1;
+        $this->ticketRequest->priority = Priority::HIGH;
+        $this->ticketRequest->subject = 'Subject';
+        $this->ticketRequest->message = 'Message';
+        $this->ticketRequest->customFields = array();
         $this->heskSettings = array(
-            'multi_eml' => false
+            'multi_eml' => false,
+            'cust_urgency' => false,
+            'require_subject' => 1,
+            'require_message' => 1,
+            'custom_fields' => array(),
         );
 
         $category = new Category();
@@ -251,6 +260,147 @@ class TicketCreatorTest extends TestCase {
             //-- Assert (1/2)
             $exceptionThrown = true;
             $this->assertArraySubset(['CATEGORY_DOES_NOT_EXIST'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithPriorityCritical() {
+        //-- Arrange
+        $this->ticketRequest->priority = Priority::CRITICAL;
+        $this->heskSettings['cust_urgency'] = true;
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['CRITICAL_PRIORITY_FORBIDDEN'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithNullSubjectAndItIsRequired() {
+        //-- Arrange
+        $this->ticketRequest->subject = null;
+        $this->heskSettings['require_subject'] = 1;
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['SUBJECT_REQUIRED'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithBlankSubjectAndItIsRequired() {
+        //-- Arrange
+        $this->ticketRequest->subject = '';
+        $this->heskSettings['require_subject'] = 1;
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['SUBJECT_REQUIRED'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithNullMessageAndItIsRequired() {
+        //-- Arrange
+        $this->ticketRequest->message = null;
+        $this->heskSettings['require_message'] = 1;
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['MESSAGE_REQUIRED'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithBlankMessageAndItIsRequired() {
+        //-- Arrange
+        $this->ticketRequest->message = '';
+        $this->heskSettings['require_message'] = 1;
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['MESSAGE_REQUIRED'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithNullRequiredCustomField() {
+        $this->markTestIncomplete(
+            'Not complete; need to refactor custom field in category'
+        );
+
+        //-- Arrange
+        $customField = array();
+        $customField['req'] = 1;
+        $customField['type'] = 'text';
+        $customField['use'] = 1;
+        $customField['category'] = array();
+        $this->heskSettings['custom_fields']['custom1'] = $customField;
+        $this->ticketRequest->customFields[1] = null;
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['CUSTOM_FIELD_1_INVALID::NO_VALUE'], $e->validationModel->errorKeys);
         }
 
         //-- Assert (2/2)
