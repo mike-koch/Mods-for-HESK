@@ -6,6 +6,7 @@ namespace BusinessLogic\Tickets;
 use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Security\BanRetriever;
+use BusinessLogic\Tickets\CustomFields\CustomFieldValidator;
 use BusinessLogic\ValidationModel;
 use BusinessLogic\Validators;
 
@@ -72,7 +73,6 @@ class TicketCreator {
             }
         }
 
-        // Don't allow critical priority tickets
         if ($heskSettings['cust_urgency'] && intval($ticketRequest->priority) === $TICKET_PRIORITY_CRITICAL) {
             $validationModel->errorKeys[] = 'CRITICAL_PRIORITY_FORBIDDEN';
         }
@@ -89,7 +89,7 @@ class TicketCreator {
 
         foreach ($heskSettings['custom_fields'] as $key => $value) {
             $customFieldNumber = intval(str_replace('custom', '', $key));
-            if ($value['use'] == 1 && hesk_is_custom_field_in_category($customFieldNumber, intval($ticketRequest->category))) {
+            if ($value['use'] == 1 && CustomFieldValidator::isCustomFieldInCategory($customFieldNumber, intval($ticketRequest->category), false, $heskSettings)) {
                 $custom_field_value = $ticketRequest->customFields[$customFieldNumber];
                 if (empty($custom_field_value)) {
                     $validationModel->errorKeys[] = "CUSTOM_FIELD_{$customFieldNumber}_INVALID::NO_VALUE";

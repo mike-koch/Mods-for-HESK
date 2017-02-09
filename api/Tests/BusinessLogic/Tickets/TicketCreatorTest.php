@@ -377,10 +377,6 @@ class TicketCreatorTest extends TestCase {
     }
 
     function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithNullRequiredCustomField() {
-        $this->markTestIncomplete(
-            'Not complete; need to refactor custom field in category'
-        );
-
         //-- Arrange
         $customField = array();
         $customField['req'] = 1;
