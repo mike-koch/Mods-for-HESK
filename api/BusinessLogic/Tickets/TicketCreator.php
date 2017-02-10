@@ -9,6 +9,7 @@ use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Tickets\CustomFields\CustomFieldValidator;
 use BusinessLogic\ValidationModel;
 use BusinessLogic\Validators;
+use Core\Constants\CustomField;
 
 class TicketCreator {
     /**
@@ -95,10 +96,10 @@ class TicketCreator {
                     $validationModel->errorKeys[] = "CUSTOM_FIELD_{$customFieldNumber}_INVALID::NO_VALUE";
                     continue;
                 }
-                /*switch($value['type']) {
-                    case 'date':
+                switch($value['type']) {
+                    case CustomField::DATE:
                         if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $custom_field_value)) {
-                            $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $key . '_INVALID::INVALID_DATE';
+                            $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $customFieldNumber . '_INVALID::INVALID_DATE';
                         } else {
                             // Actually validate based on range
                             $date = strtotime($custom_field_value . ' t00:00:00');
@@ -106,18 +107,18 @@ class TicketCreator {
                             $dmax = strlen($value['value']['dmax']) ? strtotime($value['value']['dmax'] . ' t00:00:00') : false;
 
                             if ($dmin && $dmin > $date) {
-                                $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $key . '_INVALID::DATE_BEFORE_MIN::MIN-' . $dmin . '::ENTERED-' . $date;
+                                $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $customFieldNumber . '_INVALID::DATE_BEFORE_MIN::MIN:' . date('Y-m-d', $dmin) . '::ENTERED:' . date('Y-m-d', $date);
                             } elseif ($dmax && $dmax < $date) {
-                                $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $key . '_INVALID::DATE_AFTER_MAX::MAX-' . $dmax . '::ENTERED-' . $date;
+                                $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $customFieldNumber . '_INVALID::DATE_AFTER_MAX::MAX:' . date('Y-m-d', $dmax) . '::ENTERED:' . date('Y-m-d', $date);
                             }
                         }
                         break;
-                    case 'email':
+                    /*case 'email':
                         if (!hesk_validateEmail($custom_field_value, $value['value']['multiple'], false)) {
                             $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $key . '_INVALID::INVALID_OR_MISSING_EMAIL';
                         }
-                        break;
-                }*/
+                        break;*/
+                }
             }
         }
 

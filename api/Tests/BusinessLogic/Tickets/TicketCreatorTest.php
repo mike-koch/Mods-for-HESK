@@ -14,6 +14,7 @@ use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContext;
+use Core\Constants\CustomField;
 use Core\Constants\Priority;
 use PHPUnit\Framework\TestCase;
 
@@ -380,7 +381,7 @@ class TicketCreatorTest extends TestCase {
         //-- Arrange
         $customField = array();
         $customField['req'] = 1;
-        $customField['type'] = 'text';
+        $customField['type'] = CustomField::TEXT;
         $customField['use'] = 1;
         $customField['category'] = array();
         $this->heskSettings['custom_fields']['custom1'] = $customField;
@@ -397,6 +398,122 @@ class TicketCreatorTest extends TestCase {
             //-- Assert (1/2)
             $exceptionThrown = true;
             $this->assertArraySubset(['CUSTOM_FIELD_1_INVALID::NO_VALUE'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithBlankRequiredCustomField() {
+        //-- Arrange
+        $customField = array();
+        $customField['req'] = 1;
+        $customField['type'] = CustomField::TEXT;
+        $customField['use'] = 1;
+        $customField['category'] = array();
+        $this->heskSettings['custom_fields']['custom1'] = $customField;
+        $this->ticketRequest->customFields[1] = '';
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['CUSTOM_FIELD_1_INVALID::NO_VALUE'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithDateCustomFieldThatIsInvalid() {
+        //-- Arrange
+        $customField = array();
+        $customField['req'] = 1;
+        $customField['type'] = CustomField::DATE;
+        $customField['use'] = 1;
+        $customField['category'] = array();
+        $this->heskSettings['custom_fields']['custom1'] = $customField;
+        $this->ticketRequest->customFields[1] = '2017-30-00';
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['CUSTOM_FIELD_1_INVALID::INVALID_DATE'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithDateThatIsBeforeMinDate() {
+        //-- Arrange
+        $customField = array();
+        $customField['req'] = 1;
+        $customField['type'] = CustomField::DATE;
+        $customField['use'] = 1;
+        $customField['category'] = array();
+        $customField['value'] = array(
+            'dmin' => '2017-01-01',
+            'dmax' => ''
+        );
+        $this->heskSettings['custom_fields']['custom1'] = $customField;
+        $this->ticketRequest->customFields[1] = '2016-12-31';
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['CUSTOM_FIELD_1_INVALID::DATE_BEFORE_MIN::MIN:2017-01-01::ENTERED:2016-12-31'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithDateThatIsAfterMaxDate() {
+        //-- Arrange
+        $customField = array();
+        $customField['req'] = 1;
+        $customField['type'] = CustomField::DATE;
+        $customField['use'] = 1;
+        $customField['category'] = array();
+        $customField['value'] = array(
+            'dmin' => '',
+            'dmax' => '2017-01-01'
+        );
+        $this->heskSettings['custom_fields']['custom1'] = $customField;
+        $this->ticketRequest->customFields[1] = '2017-01-02';
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['CUSTOM_FIELD_1_INVALID::DATE_AFTER_MAX::MAX:2017-01-01::ENTERED:2017-01-02'], $e->validationModel->errorKeys);
         }
 
         //-- Assert (2/2)
