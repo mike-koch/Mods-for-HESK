@@ -35,6 +35,11 @@ class TicketCreatorTest extends TestCase {
     private $categoryRetriever;
 
     /**
+     * @var $ticketValidators \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $ticketValidators;
+
+    /**
      * @var $ticketRequest CreateTicketByCustomerModel
      */
     private $ticketRequest;
@@ -50,7 +55,8 @@ class TicketCreatorTest extends TestCase {
     function setUp() {
         $this->banRetriever = $this->createMock(BanRetriever::class);
         $this->categoryRetriever = $this->createMock(CategoryRetriever::class);
-        $this->ticketCreator = new TicketCreator($this->categoryRetriever, $this->banRetriever);
+        $this->ticketValidators = $this->createMock(TicketValidators::class);
+        $this->ticketCreator = new TicketCreator($this->categoryRetriever, $this->banRetriever, $this->ticketValidators);
         $this->userContext = new UserContext();
 
         $this->ticketRequest = new CreateTicketByCustomerModel();
@@ -514,6 +520,84 @@ class TicketCreatorTest extends TestCase {
             //-- Assert (1/2)
             $exceptionThrown = true;
             $this->assertArraySubset(['CUSTOM_FIELD_1_INVALID::DATE_AFTER_MAX::MAX:2017-01-01::ENTERED:2017-01-02'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithEmailThatIsInvalid() {
+        //-- Arrange
+        $customField = array();
+        $customField['req'] = 1;
+        $customField['type'] = CustomField::EMAIL;
+        $customField['use'] = 1;
+        $customField['category'] = array();
+        $customField['value'] = array(
+            'multiple' => 0
+        );
+        $this->heskSettings['custom_fields']['custom1'] = $customField;
+        $this->ticketRequest->customFields[1] = 'invalid@';
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['CUSTOM_FIELD_1_INVALID::INVALID_EMAIL'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithABannedEmail() {
+        //-- Arrange
+        $this->ticketRequest->email = 'some@banned.email';
+        $this->banRetriever->method('isEmailBanned')
+                        ->with($this->ticketRequest->email, $this->heskSettings)
+                        ->willReturn(true);
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['EMAIL_BANNED'], $e->validationModel->errorKeys);
+        }
+
+        //-- Assert (2/2)
+        $this->assertThat($exceptionThrown, $this->equalTo(true));
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWhenTheyAreMaxedOut() {
+        //-- Arrange
+        $this->ticketRequest->email = 'some@maxedout.email';
+        $this->ticketValidators->method('isCustomerAtMaxTickets')
+            ->with($this->ticketRequest->email, $this->heskSettings)
+            ->willReturn(true);
+
+        //-- Act
+        $exceptionThrown = false;
+        try {
+            $this->ticketCreator->createTicketByCustomer($this->ticketRequest,
+                $this->heskSettings,
+                $this->modsForHeskSettings,
+                $this->userContext);
+        } catch (ValidationException $e) {
+            //-- Assert (1/2)
+            $exceptionThrown = true;
+            $this->assertArraySubset(['EMAIL_AT_MAX_OPEN_TICKETS'], $e->validationModel->errorKeys);
         }
 
         //-- Assert (2/2)

@@ -20,10 +20,15 @@ class TicketCreator {
      * @var $banRetriever BanRetriever
      */
     private $banRetriever;
+    /**
+     * @var $ticketValidators TicketValidators
+     */
+    private $ticketValidators;
 
-    function __construct($categoryRetriever, $banRetriever) {
+    function __construct($categoryRetriever, $banRetriever, $ticketValidators) {
         $this->categoryRetriever = $categoryRetriever;
         $this->banRetriever = $banRetriever;
+        $this->ticketValidators = $ticketValidators;
     }
 
     /**
@@ -113,18 +118,22 @@ class TicketCreator {
                             }
                         }
                         break;
-                    /*case 'email':
-                        if (!hesk_validateEmail($custom_field_value, $value['value']['multiple'], false)) {
-                            $validationModel->errorKeys[] = 'CUSTOM_FIELD_' . $key . '_INVALID::INVALID_OR_MISSING_EMAIL';
+                    case CustomField::EMAIL:
+                        if (!Validators::validateEmail($custom_field_value, $value['value']['multiple'], false)) {
+                            $validationModel->errorKeys[] = "CUSTOM_FIELD_{$customFieldNumber}_INVALID::INVALID_EMAIL";
                         }
-                        break;*/
+                        break;
                 }
             }
         }
 
-        /*if ($banRetriever->isEmailBanned($ticketRequest->email, $heskSettings)) {
+        if ($this->banRetriever->isEmailBanned($ticketRequest->email, $heskSettings)) {
             $validationModel->errorKeys[] = 'EMAIL_BANNED';
-        }*/
+        }
+
+        if ($this->ticketValidators->isCustomerAtMaxTickets($ticketRequest->email, $heskSettings)) {
+            $validationModel->errorKeys[] = 'EMAIL_AT_MAX_OPEN_TICKETS';
+        }
 
         // TODO Check if we're at the max number of tickets
         // TODO     submit_ticket.php:325-334
