@@ -135,9 +135,6 @@ class TicketCreator {
             $validationModel->errorKeys[] = 'EMAIL_AT_MAX_OPEN_TICKETS';
         }
 
-        // TODO Check if we're at the max number of tickets
-        // TODO     submit_ticket.php:325-334
-
         return $validationModel;
     }
 }
