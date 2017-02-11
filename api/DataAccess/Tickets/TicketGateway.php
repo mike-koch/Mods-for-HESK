@@ -30,6 +30,7 @@ class TicketGateway extends CommonDao {
         while ($row = hesk_dbFetchAssoc($rs)) {
             $ticket = new Ticket();
 
+            //-- TODO Finish this!
         }
     }
 }
