@@ -32,10 +32,13 @@ class TicketCreator {
     }
 
     /**
+     * Ticket attachments are <b>NOT</b> handled here!
+     *
      * @param $ticketRequest CreateTicketByCustomerModel
      * @param $heskSettings array HESK settings
      * @param $modsForHeskSettings array Mods for HESK settings
      * @throws ValidationException When a required field in $ticket_request is missing
+     *
      */
     function createTicketByCustomer($ticketRequest, $heskSettings, $modsForHeskSettings, $userContext) {
         $validationModel = $this->validate($ticketRequest, false, $heskSettings, $modsForHeskSettings, $userContext);
@@ -47,6 +50,25 @@ class TicketCreator {
         }
 
         // Create the ticket
+        //-- TODO Get tracking ID
+
+        //-- TODO handle message
+
+        //-- TODO suggested kb articles
+
+        //-- TODO autoassign logic
+
+        //-- TODO latitude/longitude
+
+        //-- TODO HTML flag
+
+        //-- TODO Screen res / user agent
+
+        //-- TODO Should ticket validation exist?
+
+        //-- TODO Create the ticket
+
+        //-- TODO return the freshly created ticket. Any extra stuff the web side does will be handled in submit_ticket.php
     }
 
     /**

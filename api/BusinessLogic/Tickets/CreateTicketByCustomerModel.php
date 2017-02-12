@@ -40,5 +40,23 @@ class CreateTicketByCustomerModel {
      */
     public $customFields;
 
+    /**
+     * @var double[]|null
+     */
     public $location;
+
+    /**
+     * @var int[]|null
+     */
+    public $suggestedKnowledgebaseArticleIds;
+
+    /**
+     * @var string|null
+     */
+    public $userAgent;
+
+    /**
+     * @var int[]|null
+     */
+    public $screenResolution;
 }
