@@ -236,6 +236,15 @@ class Ticket {
      */
     public $attachments;
 
+    function getAttachmentsForDatabase() {
+        $attachmentArray = array();
+        foreach ($this->attachments as $attachment) {
+            $attachmentArray[] = $attachment->id . '#' . $attachment->fileName . '#' . $attachment->savedName;
+        }
+
+        return implode(',', $attachmentArray);
+    }
+
     /**
      * @var int[]|null
      */
@@ -272,6 +281,9 @@ class Ticket {
     public $userAgent;
 
     /**
+     * 0 => width
+     * 1 => height
+     *
      * @var int[]|null
      */
     public $screenResolution;
