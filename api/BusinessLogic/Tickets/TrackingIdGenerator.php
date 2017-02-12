@@ -19,6 +19,7 @@ class TrackingIdGenerator {
     /**
      * @param $heskSettings array
      * @return string
+     * @throws UnableToGenerateTrackingIdException
      */
     function generateTrackingId($heskSettings) {
         $acceptableCharacters = 'AEUYBDGHJLMNPQRSTVWXZ123456789';
