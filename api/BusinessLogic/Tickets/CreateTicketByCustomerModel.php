@@ -3,7 +3,6 @@
 namespace BusinessLogic\Tickets;
 
 class CreateTicketByCustomerModel {
-    // Metadata
     /**
      * @var string
      */
@@ -24,7 +23,6 @@ class CreateTicketByCustomerModel {
      */
     public $category;
 
-    // Message
     /**
      * @var string
      */
@@ -36,12 +34,17 @@ class CreateTicketByCustomerModel {
     public $message;
 
     /**
+     * @var bool
+     */
+    public $html;
+
+    /**
      * @var array
      */
     public $customFields;
 
     /**
-     * @var double[]|null
+     * @var string[]|null The latitude/longitude pair, or relevant error code (E-#)
      */
     public $location;
 

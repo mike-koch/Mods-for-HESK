@@ -86,6 +86,7 @@ class TicketGateway extends CommonDao {
     /**
      * @param $ticket Ticket
      * @param $heskSettings
+     * @return Ticket
      */
     function createTicket($ticket, $heskSettings) {
         global $hesklang;
@@ -186,5 +187,7 @@ class TicketGateway extends CommonDao {
             {$customWhat}
         )
         ";
+
+        return $ticket;
     }
 }

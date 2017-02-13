@@ -112,7 +112,7 @@ class Ticket {
     public $name;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $email;
 
@@ -127,12 +127,12 @@ class Ticket {
     public $priorityId;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $subject;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $message;
 
@@ -202,7 +202,7 @@ class Ticket {
     public $numberOfStaffReplies;
 
     /**
-     * @var int
+     * @var int|null
      */
     public $ownerId;
 

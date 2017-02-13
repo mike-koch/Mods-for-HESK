@@ -17,13 +17,19 @@ class TicketCreator {
     private $trackingIdGenerator;
 
     /**
+     * @var $autoassigner Autoassigner
+     */
+    private $autoassigner;
+
+    /**
      * @var $ticketGateway TicketGateway
      */
     private $ticketGateway;
 
-    function __construct($newTicketValidator, $trackingIdGenerator, $ticketGateway) {
+    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner, $ticketGateway) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
+        $this->autoassigner = $autoassigner;
         $this->ticketGateway = $ticketGateway;
     }
 
@@ -50,15 +56,27 @@ class TicketCreator {
         $ticket = new Ticket();
         $ticket->trackingId = $this->trackingIdGenerator->generateTrackingId($heskSettings);
 
-        //-- TODO suggested kb articles
+        if ($heskSettings['autoassign']) {
+            $ticket->ownerId = $this->autoassigner->getNextUserForTicket($ticketRequest->category, $heskSettings);
+        }
 
-        //-- TODO owner/autoassign logic
+        // Transform one-to-one properties
+        $ticket->name = $ticketRequest->name;
+        $ticket->email = $ticketRequest->email;
+        $ticket->priorityId = $ticketRequest->priority;
+        $ticket->categoryId = $ticketRequest->category;
+        $ticket->subject = $ticketRequest->subject;
+        $ticket->message = $ticketRequest->message;
+        $ticket->usesHtml = $ticketRequest->html;
+        $ticket->customFields = $ticketRequest->customFields;
+        $ticket->location = $ticketRequest->location;
+        $ticket->suggestedArticles = $ticketRequest->suggestedKnowledgebaseArticleIds;
+        $ticket->userAgent = $ticketRequest->userAgent;
+        $ticket->screenResolution = $ticketRequest->screenResolution;
 
-        //-- TODO latitude/longitude
+        $ticket = $this->ticketGateway->createTicket($ticket, $heskSettings);
 
-        //-- TODO HTML flag
-
-        $this->ticketGateway->createTicket($ticket, $heskSettings);
+        //-- TODO get SQL-generated fields
 
         return $ticket;
     }
