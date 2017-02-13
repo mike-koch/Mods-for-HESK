@@ -74,9 +74,10 @@ class TicketCreator {
         $ticket->userAgent = $ticketRequest->userAgent;
         $ticket->screenResolution = $ticketRequest->screenResolution;
 
-        $ticket = $this->ticketGateway->createTicket($ticket, $heskSettings);
+        $ticketGatewayGeneratedFields = $this->ticketGateway->createTicket($ticket, $heskSettings);
 
-        //-- TODO get SQL-generated fields
+        $ticket->dateCreated = $ticketGatewayGeneratedFields->dateCreated;
+        $ticket->lastChanged = $ticketGatewayGeneratedFields->dateModified;
 
         return $ticket;
     }

@@ -4,6 +4,7 @@ namespace DataAccess\Tickets;
 
 
 use BusinessLogic\Tickets\Ticket;
+use BusinessLogic\Tickets\TicketGatewayGeneratedFields;
 use DataAccess\CommonDao;
 
 class TicketGateway extends CommonDao {
@@ -86,7 +87,7 @@ class TicketGateway extends CommonDao {
     /**
      * @param $ticket Ticket
      * @param $heskSettings
-     * @return Ticket
+     * @return TicketGatewayGeneratedFields
      */
     function createTicket($ticket, $heskSettings) {
         global $hesklang;
@@ -188,6 +189,15 @@ class TicketGateway extends CommonDao {
         )
         ";
 
-        return $ticket;
+        hesk_dbQuery($sql);
+
+        $rs = hesk_dbQuery('SELECT `dt`, `lastchange` FROM `' . hesk_dbEscape($heskSettings['db_pfix']) . 'tickets` WHERE `id` = ' . intval(hesk_dbInsertID()));
+        $row = hesk_dbFetchRow($rs);
+
+        $generatedFields = new TicketGatewayGeneratedFields();
+        $generatedFields->dateCreated = $row['dt'];
+        $generatedFields->dateModified = $row['lastchange'];
+
+        return $generatedFields;
     }
 }

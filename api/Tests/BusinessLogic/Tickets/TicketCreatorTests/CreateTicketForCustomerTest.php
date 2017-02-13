@@ -14,6 +14,7 @@ use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\CreateTicketByCustomerModel;
 use BusinessLogic\Tickets\NewTicketValidator;
 use BusinessLogic\Tickets\TicketCreator;
+use BusinessLogic\Tickets\TicketGatewayGeneratedFields;
 use BusinessLogic\Tickets\TrackingIdGenerator;
 use BusinessLogic\ValidationModel;
 use Core\Constants\Priority;
@@ -67,6 +68,11 @@ class CreateTicketTest extends TestCase {
      */
     private $userContext;
 
+    /**
+     * @var $ticketGatewayGeneratedFields TicketGatewayGeneratedFields
+     */
+    private $ticketGatewayGeneratedFields;
+
     protected function setUp() {
         $this->ticketGateway = $this->createMock(TicketGateway::class);
         $this->newTicketValidator = $this->createMock(NewTicketValidator::class);
@@ -97,7 +103,8 @@ class CreateTicketTest extends TestCase {
         $this->newTicketValidator->method('validateNewTicketForCustomer')->willReturn(new ValidationModel());
         $this->trackingIdGenerator->method('generateTrackingId')->willReturn('123-456-7890');
         $this->autoassigner->method('getNextUserForTicket')->willReturn(1);
-        $this->ticketGateway->method('createTicket')->will($this->returnArgument(0));
+        $this->ticketGatewayGeneratedFields = new TicketGatewayGeneratedFields();
+        $this->ticketGateway->method('createTicket')->willReturn($this->ticketGatewayGeneratedFields);
     }
 
     function testItSavesTheTicketToTheDatabase() {
@@ -168,5 +175,19 @@ class CreateTicketTest extends TestCase {
         self::assertThat($ticket->suggestedArticles, self::equalTo($this->ticketRequest->suggestedKnowledgebaseArticleIds));
         self::assertThat($ticket->userAgent, self::equalTo($this->ticketRequest->userAgent));
         self::assertThat($ticket->screenResolution, self::equalTo($this->ticketRequest->screenResolution));
+    }
+
+    function testItReturnsTheGeneratedPropertiesOnTheTicket() {
+        //-- Arrange
+        $this->ticketGatewayGeneratedFields->dateCreated = 'date created';
+        $this->ticketGatewayGeneratedFields->dateModified = 'date modified';
+
+
+        //-- Act
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+
+        //-- Assert
+        self::assertThat($ticket->dateCreated, self::equalTo($this->ticketGatewayGeneratedFields->dateCreated));
+        self::assertThat($ticket->lastChanged, self::equalTo($this->ticketGatewayGeneratedFields->dateModified));
     }
 }
