@@ -28,7 +28,7 @@ function buildUserContext($xAuthToken) {
     global $applicationContext, $userContext, $hesk_settings;
 
     /* @var $userContextBuilder \BusinessLogic\Security\UserContextBuilder */
-    $userContextBuilder = $applicationContext->get['UserContextBuilder'];
+    $userContextBuilder = $applicationContext->get[\BusinessLogic\Security\UserContextBuilder::class];
 
     $userContext = $userContextBuilder->buildUserContext($xAuthToken, $hesk_settings);
 }
@@ -52,7 +52,7 @@ function exceptionHandler($exception) {
             $castedException = $exception;
             print_error("Fought an uncaught exception", sprintf("%s\n\n%s", $castedException->failingQuery, $exception->getTraceAsString()));
         } else {
-            print_error("Fought an uncaught exception", sprintf("%s\n\n%s", $exception->getMessage(), $exception->getTraceAsString()));
+            print_error("Fought an uncaught exception of type " . get_class($exception), sprintf("%s\n\n%s", $exception->getMessage(), $exception->getTraceAsString()));
         }
 
     }
@@ -85,6 +85,7 @@ Link::all(array(
     '/v1/categories/{i}' => '\Controllers\Category\CategoryController',
     // Tickets
     '/v1/tickets/{i}' => '\Controllers\Tickets\TicketController',
+    '/v1/tickets' => '\Controllers\Tickets\TicketController',
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'

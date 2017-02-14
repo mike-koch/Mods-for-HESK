@@ -177,14 +177,7 @@ class Link
 
 		if( isset( $instanceOfHandler ) ) {
 			if( method_exists( $instanceOfHandler, $method ) ) {
-				try {
-					$newParams = call_user_func_array( array( $instanceOfHandler, $method ), $matched );
-				} catch ( Exception $exception ){
-					$string = str_replace("\n", ' ', var_export($exception, TRUE));
-					error_log($string); //Log to error file only if display errors has been declared
-					header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
-					die();
-				} 	
+                $newParams = call_user_func_array( array( $instanceOfHandler, $method ), $matched );
 			}
 		}
 		if( isset( $newParams ) && $newParams ) {

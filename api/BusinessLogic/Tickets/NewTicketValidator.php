@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Mike
- * Date: 2/12/2017
- * Time: 1:01 AM
- */
 
 namespace BusinessLogic\Tickets;
 
@@ -82,6 +76,12 @@ class NewTicketValidator {
 
         foreach ($heskSettings['custom_fields'] as $key => $value) {
             $customFieldNumber = intval(str_replace('custom', '', $key));
+
+            //TODO test this
+            if (!array_key_exists($customFieldNumber, $ticketRequest->customFields)) {
+                continue;
+            }
+
             if ($value['use'] == 1 && CustomFieldValidator::isCustomFieldInCategory($customFieldNumber, intval($ticketRequest->category), false, $heskSettings)) {
                 $custom_field_value = $ticketRequest->customFields[$customFieldNumber];
                 if (empty($custom_field_value)) {

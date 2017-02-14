@@ -2,7 +2,7 @@
 
 namespace Controllers\Category;
 
-use BusinessLogic\Category\CategoryRetriever;
+use BusinessLogic\Categories\CategoryRetriever;
 
 class CategoryController {
     function get($id) {
@@ -18,7 +18,7 @@ class CategoryController {
         global $hesk_settings, $applicationContext, $userContext;
 
         /* @var $categoryRetriever CategoryRetriever */
-        $categoryRetriever = $applicationContext->get['CategoryRetriever'];
+        $categoryRetriever = $applicationContext->get[CategoryRetriever::class];
 
         return $categoryRetriever->getAllCategories($hesk_settings, $userContext);
     }

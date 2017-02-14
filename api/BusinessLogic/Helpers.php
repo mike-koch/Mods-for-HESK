@@ -20,4 +20,10 @@ class Helpers {
     static function hashToken($token) {
         return hash('sha512', $token);
     }
+
+    static function safeArrayGet($array, $key) {
+        return $array !== null && array_key_exists($key, $array)
+            ? $array[$key]
+            : null;
+    }
 }

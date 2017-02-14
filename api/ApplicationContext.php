@@ -4,7 +4,12 @@
 use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContextBuilder;
+use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\TicketRetriever;
+use BusinessLogic\Tickets\TicketCreator;
+use BusinessLogic\Tickets\NewTicketValidator;
+use BusinessLogic\Tickets\TicketValidators;
+use BusinessLogic\Tickets\TrackingIdGenerator;
 use DataAccess\Categories\CategoryGateway;
 use DataAccess\Security\BanGateway;
 use DataAccess\Security\UserGateway;
@@ -17,20 +22,30 @@ class ApplicationContext {
     function __construct() {
         $this->get = array();
 
-        // Categories
-        $this->get['CategoryGateway'] = new CategoryGateway();
-        $this->get['CategoryRetriever'] = new CategoryRetriever($this->get['CategoryGateway']);
+        // User Context
+        $this->get[UserGateway::class] = new UserGateway();
+        $this->get[UserContextBuilder::class] = new UserContextBuilder($this->get[UserGateway::class]);
 
-        // Tickets
-        $this->get['TicketGateway'] = new TicketGateway();
-        $this->get['TicketRetriever'] = new TicketRetriever($this->get['TicketGateway']);
+        // Categories
+        $this->get[CategoryGateway::class] = new CategoryGateway();
+        $this->get[CategoryRetriever::class] = new CategoryRetriever($this->get[CategoryGateway::class]);
 
         // Bans
-        $this->get['BanGateway'] = new BanGateway();
-        $this->get['BanRetriever'] = new BanRetriever($this->get['BanGateway']);
+        $this->get[BanGateway::class] = new BanGateway();
+        $this->get[BanRetriever::class] = new BanRetriever($this->get[BanGateway::class]);
 
-        // User Context
-        $this->get['UserGateway'] = new UserGateway();
-        $this->get['UserContextBuilder'] = new UserContextBuilder($this->get['UserGateway']);
+        // Tickets
+        $this->get[TicketGateway::class] = new TicketGateway();
+        $this->get[TicketRetriever::class] = new TicketRetriever($this->get[TicketGateway::class]);
+        $this->get[TicketValidators::class] = new TicketValidators($this->get[TicketGateway::class]);
+        $this->get[TrackingIdGenerator::class] = new TrackingIdGenerator($this->get[TicketGateway::class]);
+        $this->get[Autoassigner::class] = new Autoassigner();
+        $this->get[NewTicketValidator::class] = new NewTicketValidator($this->get[CategoryRetriever::class],
+            $this->get[BanRetriever::class],
+            $this->get[TicketValidators::class]);
+        $this->get[TicketCreator::class] = new TicketCreator($this->get[NewTicketValidator::class],
+            $this->get[TrackingIdGenerator::class],
+            $this->get[Autoassigner::class],
+            $this->get[TicketGateway::class]);
     }
 }
