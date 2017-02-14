@@ -238,8 +238,11 @@ class Ticket {
 
     function getAttachmentsForDatabase() {
         $attachmentArray = array();
-        foreach ($this->attachments as $attachment) {
-            $attachmentArray[] = $attachment->id . '#' . $attachment->fileName . '#' . $attachment->savedName;
+
+        if ($this->attachments !== null) {
+            foreach ($this->attachments as $attachment) {
+                $attachmentArray[] = $attachment->id . '#' . $attachment->fileName . '#' . $attachment->savedName;
+            }
         }
 
         return implode(',', $attachmentArray);

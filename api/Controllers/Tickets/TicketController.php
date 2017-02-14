@@ -27,7 +27,9 @@ class TicketController {
 
         $jsonRequest = JsonRetriever::getJsonData();
 
-        $ticketCreator->createTicketByCustomer($this->buildTicketRequestFromJson($jsonRequest), $hesk_settings, $modsForHeskSettings, $userContext);
+        $ticket = $ticketCreator->createTicketByCustomer($this->buildTicketRequestFromJson($jsonRequest), $hesk_settings, $modsForHeskSettings, $userContext);
+
+        return output($ticket);
     }
 
     /**

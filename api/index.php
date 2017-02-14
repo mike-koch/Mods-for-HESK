@@ -41,13 +41,13 @@ function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {
  * @param $exception Exception
  */
 function exceptionHandler($exception) {
-    if (exceptionIsOfType($exception, 'ApiFriendlyException')) {
+    if (exceptionIsOfType($exception, \BusinessLogic\Exceptions\ApiFriendlyException::class)) {
         /* @var $castedException \BusinessLogic\Exceptions\ApiFriendlyException */
         $castedException = $exception;
 
         print_error($castedException->title, $castedException->getMessage(), $castedException->httpResponseCode);
     } else {
-        if (exceptionIsOfType($exception, 'SQLException')) {
+        if (exceptionIsOfType($exception, \Core\Exceptions\SQLException::class)) {
             /* @var $castedException \Core\Exceptions\SQLException */
             $castedException = $exception;
             print_error("Fought an uncaught exception", sprintf("%s\n\n%s", $castedException->failingQuery, $exception->getTraceAsString()));
@@ -66,7 +66,7 @@ function exceptionHandler($exception) {
  * @return bool
  */
 function exceptionIsOfType($exception, $class) {
-    return strpos(get_class($exception), $class) !== false;
+    return is_a($exception, $class);
 }
 
 function fatalErrorShutdownHandler() {

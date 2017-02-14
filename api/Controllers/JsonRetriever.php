@@ -17,6 +17,6 @@ class JsonRetriever {
      */
     static function getJsonData() {
         $json = file_get_contents('php://input');
-        return json_decode($json);
+        return json_decode($json, true);
     }
 }

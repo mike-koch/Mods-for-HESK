@@ -124,10 +124,10 @@ class TicketGateway extends CommonDao {
         $userAgent = $ticket->userAgent !== null ? $ticket->userAgent : '';
         $screenResolutionWidth = $ticket->screenResolution !== null
                     && isset($ticket->screenResolution[0])
-                    && $ticket->screenResolution[0] !== null ? intval($ticket->screenResolution[0]) : '';
+                    && $ticket->screenResolution[0] !== null ? intval($ticket->screenResolution[0]) : 'NULL';
         $screenResolutionHeight = $ticket->screenResolution !== null
                     && isset($ticket->screenResolution[1])
-                    && $ticket->screenResolution[1] !== null ? intval($ticket->screenResolution[1]) : '';
+                    && $ticket->screenResolution[1] !== null ? intval($ticket->screenResolution[1]) : 'NULL';
 
         $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets`
         (
@@ -169,14 +169,14 @@ class TicketGateway extends CommonDao {
             '" . hesk_dbEscape($ticket->message) . "',
             NOW(),
             NOW(),
-            " . $suggestedArticles . ",
+            '" . $suggestedArticles . "',
             '" . hesk_dbEscape($ticket->ipAddress) . "',
             '" . hesk_dbEscape($language) . "',
             '" . intval($ticket->openedBy) . "',
             '" . intval($ticket->ownerId) . "',
             '" . hesk_dbEscape($ticket->getAttachmentsForDatabase()) . "',
             '',
-            '" . intval($ticket->statusId) . "',
+            " . intval($ticket->statusId) . ",
             '" . hesk_dbEscape($latitude) . "',
             '" . hesk_dbEscape($longitude) . "',
             '" . hesk_dbEscape($ticket->usesHtml) . "',
@@ -192,7 +192,7 @@ class TicketGateway extends CommonDao {
         hesk_dbQuery($sql);
 
         $rs = hesk_dbQuery('SELECT `dt`, `lastchange` FROM `' . hesk_dbEscape($heskSettings['db_pfix']) . 'tickets` WHERE `id` = ' . intval(hesk_dbInsertID()));
-        $row = hesk_dbFetchRow($rs);
+        $row = hesk_dbFetchAssoc($rs);
 
         $generatedFields = new TicketGatewayGeneratedFields();
         $generatedFields->dateCreated = $row['dt'];
