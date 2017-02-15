@@ -73,6 +73,8 @@ class TicketCreator {
         $ticket->suggestedArticles = $ticketRequest->suggestedKnowledgebaseArticleIds;
         $ticket->userAgent = $ticketRequest->userAgent;
         $ticket->screenResolution = $ticketRequest->screenResolution;
+        $ticket->ipAddress = $ticketRequest->ipAddress;
+        $ticket->language = $ticketRequest->language;
 
         $ticketGatewayGeneratedFields = $this->ticketGateway->createTicket($ticket, $heskSettings);
 

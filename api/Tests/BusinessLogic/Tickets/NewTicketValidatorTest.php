@@ -429,4 +429,36 @@ class NewTicketValidatorTest extends TestCase {
         //-- Assert
         $this->assertArraySubset(['EMAIL_AT_MAX_OPEN_TICKETS'], $validationModel->errorKeys);
     }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithLanguageNull() {
+        //-- Arrange
+        $this->ticketRequest->language = null;
+        $this->ticketValidators->method('isCustomerAtMaxTickets')
+            ->with($this->ticketRequest->email, $this->heskSettings)
+            ->willReturn(false);
+
+        //-- Act
+        $validationModel = $this->newTicketValidator->validateNewTicketForCustomer($this->ticketRequest,
+            $this->heskSettings,
+            $this->userContext);
+
+        //-- Assert
+        $this->assertArraySubset(['MISSING_LANGUAGE'], $validationModel->errorKeys);
+    }
+
+    function testItAddsTheProperValidationErrorWhenTheCustomerSubmitsTicketWithLanguageBlank() {
+        //-- Arrange
+        $this->ticketRequest->language = '';
+        $this->ticketValidators->method('isCustomerAtMaxTickets')
+            ->with($this->ticketRequest->email, $this->heskSettings)
+            ->willReturn(false);
+
+        //-- Act
+        $validationModel = $this->newTicketValidator->validateNewTicketForCustomer($this->ticketRequest,
+            $this->heskSettings,
+            $this->userContext);
+
+        //-- Assert
+        $this->assertArraySubset(['MISSING_LANGUAGE'], $validationModel->errorKeys);
+    }
 }

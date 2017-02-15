@@ -92,13 +92,6 @@ class TicketGateway extends CommonDao {
     function createTicket($ticket, $heskSettings) {
         global $hesklang;
 
-        // If language is not set or default, set it to NULL.
-        if ($ticket->language === null || empty($ticket->language)) {
-            $language = (!$heskSettings['can_sel_lang']) ? HESK_DEFAULT_LANGUAGE : hesk_dbEscape($hesklang['LANGUAGE']);
-        } else {
-            $language = $ticket->language;
-        }
-
         $dueDate = $ticket->dueDate ? "'{$ticket->dueDate}'" : "NULL";
         // Prepare SQL for custom fields
         $customWhere = '';
@@ -128,6 +121,9 @@ class TicketGateway extends CommonDao {
         $screenResolutionHeight = $ticket->screenResolution !== null
                     && isset($ticket->screenResolution[1])
                     && $ticket->screenResolution[1] !== null ? intval($ticket->screenResolution[1]) : 'NULL';
+
+        $ipAddress = $ticket->ipAddress !== null
+                    && $ticket->ipAddress !== '' ? $ticket->ipAddress : '';
 
         $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets`
         (
@@ -171,7 +167,7 @@ class TicketGateway extends CommonDao {
             NOW(),
             '" . $suggestedArticles . "',
             '" . hesk_dbEscape($ticket->ipAddress) . "',
-            '" . hesk_dbEscape($language) . "',
+            '" . hesk_dbEscape($ticket->language) . "',
             '" . intval($ticket->openedBy) . "',
             '" . intval($ticket->ownerId) . "',
             '" . hesk_dbEscape($ticket->getAttachmentsForDatabase()) . "',

@@ -49,6 +49,8 @@ class TicketController {
         $ticketRequest->suggestedKnowledgebaseArticleIds = Helpers::safeArrayGet($json, 'suggestedArticles');
         $ticketRequest->userAgent = Helpers::safeArrayGet($json, 'userAgent');
         $ticketRequest->screenResolution = Helpers::safeArrayGet($json, 'screenResolution');
+        $ticketRequest->ipAddress = Helpers::safeArrayGet($json, 'ip');
+        $ticketRequest->language = Helpers::safeArrayGet($json, 'language');
         $ticketRequest->customFields = array();
 
         $jsonCustomFields = Helpers::safeArrayGet($json, 'customFields');

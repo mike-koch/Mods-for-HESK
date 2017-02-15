@@ -122,6 +122,11 @@ class NewTicketValidator {
             $validationModel->errorKeys[] = 'EMAIL_AT_MAX_OPEN_TICKETS';
         }
 
+        if ($ticketRequest->language === null ||
+            $ticketRequest->language === '') {
+            $validationModel->errorKeys[] = 'MISSING_LANGUAGE';
+        }
+
         return $validationModel;
     }
 }

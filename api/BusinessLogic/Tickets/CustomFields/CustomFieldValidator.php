@@ -18,7 +18,7 @@ class CustomFieldValidator {
             return false;
         }
 
-        return count($customField['Categories']) === 0 ||
-            in_array($categoryId, $customField['Categories']);
+        return count($customField['category']) === 0 ||
+            in_array($categoryId, $customField['category']);
     }
 }

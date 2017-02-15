@@ -62,4 +62,14 @@ class CreateTicketByCustomerModel {
      * @var int[]|null
      */
     public $screenResolution;
+
+    /**
+     * @var int|null
+     */
+    public $ipAddress;
+
+    /**
+     * @var string
+     */
+    public $language;
 }

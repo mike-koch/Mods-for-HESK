@@ -158,6 +158,8 @@ class CreateTicketTest extends TestCase {
         $this->ticketRequest->suggestedKnowledgebaseArticleIds = [1, 2, 3];
         $this->ticketRequest->userAgent = 'UserAgent';
         $this->ticketRequest->screenResolution = [1400, 900];
+        $this->ticketRequest->ipAddress = ip2long('127.0.0.1');
+        $this->ticketRequest->language = 'English';
 
         //-- Act
         $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
@@ -175,6 +177,8 @@ class CreateTicketTest extends TestCase {
         self::assertThat($ticket->suggestedArticles, self::equalTo($this->ticketRequest->suggestedKnowledgebaseArticleIds));
         self::assertThat($ticket->userAgent, self::equalTo($this->ticketRequest->userAgent));
         self::assertThat($ticket->screenResolution, self::equalTo($this->ticketRequest->screenResolution));
+        self::assertThat($ticket->ipAddress, self::equalTo($this->ticketRequest->ipAddress));
+        self::assertThat($ticket->language, self::equalTo($this->ticketRequest->language));
     }
 
     function testItReturnsTheGeneratedPropertiesOnTheTicket() {
