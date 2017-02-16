@@ -158,7 +158,7 @@ class CreateTicketTest extends TestCase {
         $this->ticketRequest->suggestedKnowledgebaseArticleIds = [1, 2, 3];
         $this->ticketRequest->userAgent = 'UserAgent';
         $this->ticketRequest->screenResolution = [1400, 900];
-        $this->ticketRequest->ipAddress = ip2long('127.0.0.1');
+        $this->ticketRequest->ipAddress = '127.0.0.1';
         $this->ticketRequest->language = 'English';
 
         //-- Act
