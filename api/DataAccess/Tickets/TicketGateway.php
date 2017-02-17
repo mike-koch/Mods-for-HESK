@@ -92,6 +92,8 @@ class TicketGateway extends CommonDao {
     function createTicket($ticket, $heskSettings) {
         global $hesklang;
 
+        $this->init();
+
         $dueDate = $ticket->dueDate ? "'{$ticket->dueDate}'" : "NULL";
         // Prepare SQL for custom fields
         $customWhere = '';
@@ -103,17 +105,17 @@ class TicketGateway extends CommonDao {
             $customWhat  .= ", '" . (isset($ticket->customFields[$i]) ? hesk_dbEscape($ticket->customFields[$i]) : '') . "'";
         }
 
-        $suggestedArticles = '';
+        $suggestedArticles = 'NULL';
         if ($ticket->suggestedArticles !== null && !empty($ticket->suggestedArticles)) {
-            $suggestedArticles = implode(',', $ticket->suggestedArticles);
+            $suggestedArticles = "'" .implode(',', $ticket->suggestedArticles) . "'";
         }
 
         $latitude = $ticket->location !== null
                     && isset($ticket->location[0])
-                    && $ticket->location[0] !== null ? $ticket->location[0] : '';
+                    && $ticket->location[0] !== null ? $ticket->location[0] : 'E-0';
         $longitude = $ticket->location !== null
                     && isset($ticket->location[1])
-                    && $ticket->location[1] !== null ? $ticket->location[1] : '';
+                    && $ticket->location[1] !== null ? $ticket->location[1] : 'E-0';
         $userAgent = $ticket->userAgent !== null ? $ticket->userAgent : '';
         $screenResolutionWidth = $ticket->screenResolution !== null
                     && isset($ticket->screenResolution[0])
@@ -165,8 +167,8 @@ class TicketGateway extends CommonDao {
             '" . hesk_dbEscape($ticket->message) . "',
             NOW(),
             NOW(),
-            '" . $suggestedArticles . "',
-            '" . hesk_dbEscape($ticket->ipAddress) . "',
+            " . $suggestedArticles . ",
+            '" . hesk_dbEscape($ipAddress) . "',
             '" . hesk_dbEscape($ticket->language) . "',
             '" . intval($ticket->openedBy) . "',
             '" . intval($ticket->ownerId) . "',
@@ -186,13 +188,17 @@ class TicketGateway extends CommonDao {
         ";
 
         hesk_dbQuery($sql);
+        $id = hesk_dbInsertID();
 
-        $rs = hesk_dbQuery('SELECT `dt`, `lastchange` FROM `' . hesk_dbEscape($heskSettings['db_pfix']) . 'tickets` WHERE `id` = ' . intval(hesk_dbInsertID()));
+        $rs = hesk_dbQuery('SELECT `dt`, `lastchange` FROM `' . hesk_dbEscape($heskSettings['db_pfix']) . 'tickets` WHERE `id` = ' . intval($id));
         $row = hesk_dbFetchAssoc($rs);
 
         $generatedFields = new TicketGatewayGeneratedFields();
+        $generatedFields->id = $id;
         $generatedFields->dateCreated = $row['dt'];
         $generatedFields->dateModified = $row['lastchange'];
+
+        $this->close();
 
         return $generatedFields;
     }

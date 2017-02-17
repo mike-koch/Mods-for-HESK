@@ -13,6 +13,7 @@ use BusinessLogic\Tickets\TrackingIdGenerator;
 use DataAccess\Categories\CategoryGateway;
 use DataAccess\Security\BanGateway;
 use DataAccess\Security\UserGateway;
+use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\TicketGateway;
 
 
@@ -35,6 +36,7 @@ class ApplicationContext {
         $this->get[BanRetriever::class] = new BanRetriever($this->get[BanGateway::class]);
 
         // Tickets
+        $this->get[StatusGateway::class] = new StatusGateway();
         $this->get[TicketGateway::class] = new TicketGateway();
         $this->get[TicketRetriever::class] = new TicketRetriever($this->get[TicketGateway::class]);
         $this->get[TicketValidators::class] = new TicketValidators($this->get[TicketGateway::class]);
@@ -46,6 +48,7 @@ class ApplicationContext {
         $this->get[TicketCreator::class] = new TicketCreator($this->get[NewTicketValidator::class],
             $this->get[TrackingIdGenerator::class],
             $this->get[Autoassigner::class],
+            $this->get[StatusGateway::class],
             $this->get[TicketGateway::class]);
     }
 }

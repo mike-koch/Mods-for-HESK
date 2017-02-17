@@ -3,6 +3,8 @@
 namespace BusinessLogic\Tickets;
 
 use BusinessLogic\Exceptions\ValidationException;
+use BusinessLogic\Statuses\DefaultStatusForAction;
+use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\TicketGateway;
 
 class TicketCreator {
@@ -22,14 +24,20 @@ class TicketCreator {
     private $autoassigner;
 
     /**
+     * @var $statusGateway StatusGateway
+     */
+    private $statusGateway;
+
+    /**
      * @var $ticketGateway TicketGateway
      */
     private $ticketGateway;
 
-    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner, $ticketGateway) {
+    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner, $statusGateway, $ticketGateway) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
         $this->autoassigner = $autoassigner;
+        $this->statusGateway = $statusGateway;
         $this->ticketGateway = $ticketGateway;
     }
 
@@ -76,10 +84,25 @@ class TicketCreator {
         $ticket->ipAddress = $ticketRequest->ipAddress;
         $ticket->language = $ticketRequest->language;
 
+        $status = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
+
+        if ($status === null) {
+            throw new \Exception("Could not find the default status for a new ticket!");
+        }
+        $ticket->statusId = $status->id;
+
         $ticketGatewayGeneratedFields = $this->ticketGateway->createTicket($ticket, $heskSettings);
 
         $ticket->dateCreated = $ticketGatewayGeneratedFields->dateCreated;
         $ticket->lastChanged = $ticketGatewayGeneratedFields->dateModified;
+        $ticket->archived = false;
+        $ticket->locked = false;
+        $ticket->id = $ticketGatewayGeneratedFields->id;
+        $ticket->openedBy = 0;
+        $ticket->numberOfReplies = 0;
+        $ticket->numberOfStaffReplies = 0;
+        $ticket->timeWorked = '00:00:00';
+        $ticket->lastReplier = 0;
 
         return $ticket;
     }

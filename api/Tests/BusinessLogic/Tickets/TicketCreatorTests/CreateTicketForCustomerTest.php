@@ -10,6 +10,8 @@ namespace BusinessLogic\Tickets\TicketCreatorTests;
 
 
 use BusinessLogic\Security\UserContext;
+use BusinessLogic\Statuses\DefaultStatusForAction;
+use BusinessLogic\Statuses\Status;
 use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\CreateTicketByCustomerModel;
 use BusinessLogic\Tickets\NewTicketValidator;
@@ -18,6 +20,7 @@ use BusinessLogic\Tickets\TicketGatewayGeneratedFields;
 use BusinessLogic\Tickets\TrackingIdGenerator;
 use BusinessLogic\ValidationModel;
 use Core\Constants\Priority;
+use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\TicketGateway;
 use PHPUnit\Framework\TestCase;
 
@@ -42,6 +45,11 @@ class CreateTicketTest extends TestCase {
      * @var $autoassigner \PHPUnit_Framework_MockObject_MockObject
      */
     private $autoassigner;
+
+    /**
+     * @var $statusGateway \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $statusGateway;
 
     /**
      * @var $ticketRequest CreateTicketByCustomerModel
@@ -78,8 +86,10 @@ class CreateTicketTest extends TestCase {
         $this->newTicketValidator = $this->createMock(NewTicketValidator::class);
         $this->trackingIdGenerator = $this->createMock(TrackingIdGenerator::class);
         $this->autoassigner = $this->createMock(Autoassigner::class);
+        $this->statusGateway = $this->createMock(StatusGateway::class);
 
-        $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator, $this->autoassigner, $this->ticketGateway);
+        $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator,
+            $this->autoassigner, $this->statusGateway, $this->ticketGateway);
 
         $this->ticketRequest = new CreateTicketByCustomerModel();
         $this->ticketRequest->name = 'Name';
@@ -105,6 +115,11 @@ class CreateTicketTest extends TestCase {
         $this->autoassigner->method('getNextUserForTicket')->willReturn(1);
         $this->ticketGatewayGeneratedFields = new TicketGatewayGeneratedFields();
         $this->ticketGateway->method('createTicket')->willReturn($this->ticketGatewayGeneratedFields);
+
+        $status = new Status();
+        $status->id = 1;
+        $this->statusGateway->method('getStatusForDefaultAction')
+            ->willReturn($status);
     }
 
     function testItSavesTheTicketToTheDatabase() {
@@ -185,7 +200,7 @@ class CreateTicketTest extends TestCase {
         //-- Arrange
         $this->ticketGatewayGeneratedFields->dateCreated = 'date created';
         $this->ticketGatewayGeneratedFields->dateModified = 'date modified';
-
+        $this->ticketGatewayGeneratedFields->id = 50;
 
         //-- Act
         $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
@@ -193,5 +208,28 @@ class CreateTicketTest extends TestCase {
         //-- Assert
         self::assertThat($ticket->dateCreated, self::equalTo($this->ticketGatewayGeneratedFields->dateCreated));
         self::assertThat($ticket->lastChanged, self::equalTo($this->ticketGatewayGeneratedFields->dateModified));
+        self::assertThat($ticket->id, self::equalTo($this->ticketGatewayGeneratedFields->id));
+    }
+
+    function testItSetsTheDefaultStatus() {
+        //-- Act
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+
+        //-- Assert
+        self::assertThat($ticket->statusId, self::equalTo(1));
+    }
+
+    function testItSetsTheDefaultProperties() {
+        //-- Act
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+
+        //-- Assert
+        self::assertThat($ticket->archived, self::isFalse());
+        self::assertThat($ticket->locked, self::isFalse());
+        self::assertThat($ticket->openedBy, self::equalTo(0));
+        self::assertThat($ticket->numberOfReplies, self::equalTo(0));
+        self::assertThat($ticket->numberOfStaffReplies, self::equalTo(0));
+        self::assertThat($ticket->timeWorked, self::equalTo('00:00:00'));
+        self::assertThat($ticket->lastReplier, self::equalTo(0));
     }
 }
