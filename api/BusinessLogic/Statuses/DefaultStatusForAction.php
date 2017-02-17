@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mkoch
- * Date: 2/15/2017
- * Time: 9:46 PM
- */
 
 namespace BusinessLogic\Statuses;
 

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cokoch
- * Date: 2/9/2017
- * Time: 12:29 PM
- */
 
 namespace BusinessLogic\Tickets\CustomFields;
 

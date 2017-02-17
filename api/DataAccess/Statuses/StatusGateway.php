@@ -3,7 +3,6 @@
 namespace DataAccess\Statuses;
 
 
-use BusinessLogic\Statuses\DefaultStatusForAction;
 use BusinessLogic\Statuses\Status;
 use DataAccess\CommonDao;
 

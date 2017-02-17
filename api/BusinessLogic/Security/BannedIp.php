@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mkoch
- * Date: 1/27/2017
- * Time: 9:51 PM
- */
 
 namespace BusinessLogic\Security;
 

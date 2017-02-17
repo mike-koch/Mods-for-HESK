@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mkoch
- * Date: 2/11/2017
- * Time: 4:32 PM
- */
 
 namespace BusinessLogic\Tickets;
 

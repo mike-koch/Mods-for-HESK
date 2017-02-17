@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cokoch
- * Date: 2/10/2017
- * Time: 12:53 PM
- */
 
 namespace Core\Constants;
 
