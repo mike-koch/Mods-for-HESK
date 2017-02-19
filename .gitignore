@@ -1,5 +1,6 @@
 # Mods for HESK-specific files
 api/vendor
+api/Tests/integration_test_mfh_settings.php
 
 # HESK Files
 admin/admin_suggest_articles.php
