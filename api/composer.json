@@ -11,6 +11,11 @@
   ],
   "require": {
     "phpunit/phpunit": "5.7.9",
-    "phpmailer/phpmailer": "^5.2"
+    "phpmailer/phpmailer": "^5.2",
+    "mailgun/mailgun-php": "^2.1",
+    "php-http/guzzle6-adapter": "^1.1",
+    "php-http/message": "^1.5",
+    "php-http/curl-client": "^1.7",
+    "guzzlehttp/psr7": "^1.3"
   }
 }

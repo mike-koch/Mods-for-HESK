@@ -5,9 +5,9 @@ namespace BusinessLogic\Emails;
 use BusinessLogic\IntegrationTestCaseBase;
 use BusinessLogic\Tickets\Attachment;
 
-class BasicEmailSenderIntegrationTest extends IntegrationTestCaseBase {
+class MailgunEmailSenderIntegrationTest extends IntegrationTestCaseBase {
     /**
-     * @var $emailSender BasicEmailSender;
+     * @var $emailSender MailgunEmailSender;
      */
     private $emailSender;
 
@@ -37,7 +37,7 @@ class BasicEmailSenderIntegrationTest extends IntegrationTestCaseBase {
         require(__DIR__ . '/../../../../hesk_settings.inc.php');
         require(__DIR__ . '/../../integration_test_mfh_settings.php');
 
-        $this->emailSender = new BasicEmailSender();
+        $this->emailSender = new MailgunEmailSender();
         $this->heskSettings = $hesk_settings;
         $this->modsForHeskSettings = $modsForHesk_settings;
         $this->attachmentsToPurge = array();
@@ -49,16 +49,15 @@ class BasicEmailSenderIntegrationTest extends IntegrationTestCaseBase {
         }
     }
 
-    function testItCanSendHtmlMail() {
+    function testItCanSendMail() {
         //-- Arrange
-        //$hesk_settings['smtp'] = 0 //Uncomment this to use PHPMail
         $emailBuilder = new EmailBuilder();
         $emailBuilder->to = array('mfh1@mailinator.com');
         $emailBuilder->cc = array('mfh2@mailinator.com');
         $emailBuilder->bcc = array('mfh3@mailinator.com');
         $emailBuilder->message = "Test PLAIN TEXT message";
         $emailBuilder->htmlMessage = "Test <b>HTML</b> <i>message</i>";
-        $emailBuilder->subject = "BasicEmailSenderIntegrationTest";
+        $emailBuilder->subject = "MailgunEmailSenderIntegrationTest";
 
         // Uncomment to test attachments.
         $attachment = new Attachment();
@@ -96,7 +95,7 @@ class BasicEmailSenderIntegrationTest extends IntegrationTestCaseBase {
         $emailBuilder->cc = array('mfh2@mailinator.com');
         $emailBuilder->bcc = array('mfh3@mailinator.com');
         $emailBuilder->message = "Test PLAIN TEXT message";
-        $emailBuilder->subject = "BasicEmailSenderIntegrationTest";
+        $emailBuilder->subject = "MailgunEmailSenderIntegrationTest";
 
 
         //-- Act

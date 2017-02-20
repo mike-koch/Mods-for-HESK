@@ -26,7 +26,8 @@ class BasicEmailSender implements EmailSender {
             $mailer->Password = $heskSettings['smtp_password'];
         }
 
-        $mailer->FromName = $heskSettings['noreply_name'] ? $heskSettings['noreply_name'] : '';
+        $mailer->FromName = $heskSettings['noreply_name'] !== null &&
+                            $heskSettings['noreply_name'] !== '' ? $heskSettings['noreply_name'] : '';
         $mailer->From = $heskSettings['noreply_mail'];
 
         if ($emailBuilder->to !== null) {
@@ -57,6 +58,13 @@ class BasicEmailSender implements EmailSender {
             $mailer->isHTML(false);
         }
         $mailer->Timeout = $heskSettings['smtp_timeout'];
+
+        if ($emailBuilder->attachments !== null) {
+            foreach ($emailBuilder->attachments as $attachment) {
+                $mailer->addAttachment(__DIR__ . '/../../../' . $heskSettings['attach_dir'] . '/' . $attachment->savedName,
+                    $attachment->fileName);
+            }
+        }
 
         if ($mailer->send()) {
             return true;

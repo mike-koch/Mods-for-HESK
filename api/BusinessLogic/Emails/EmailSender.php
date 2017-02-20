@@ -15,7 +15,7 @@ interface EmailSender {
      * @param $heskSettings array
      * @param $modsForHeskSettings array
      * @param $sendAsHtml bool
-     * @return bool|string true if message sent successfully, error string otherwise
+     * @return bool|string|\stdClass true if message sent successfully, string for PHPMail/Smtp error, stdClass for Mailgun error
      */
     function sendEmail($emailBuilder, $heskSettings, $modsForHeskSettings, $sendAsHtml);
 }
