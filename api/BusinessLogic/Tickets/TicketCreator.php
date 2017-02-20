@@ -47,9 +47,10 @@ class TicketCreator {
      * @param $ticketRequest CreateTicketByCustomerModel
      * @param $heskSettings array HESK settings
      * @param $modsForHeskSettings array Mods for HESK settings
+     * @param $userContext
      * @return Ticket The newly created ticket
      * @throws ValidationException When a required field in $ticket_request is missing
-     *
+     * @throws \Exception When the default status for new tickets is not found
      */
     function createTicketByCustomer($ticketRequest, $heskSettings, $modsForHeskSettings, $userContext) {
         $validationModel = $this->newTicketValidator->validateNewTicketForCustomer($ticketRequest, $heskSettings, $userContext);
