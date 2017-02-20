@@ -59,7 +59,6 @@ class MailgunEmailSenderIntegrationTest extends IntegrationTestCaseBase {
         $emailBuilder->htmlMessage = "Test <b>HTML</b> <i>message</i>";
         $emailBuilder->subject = "MailgunEmailSenderIntegrationTest";
 
-        // Uncomment to test attachments.
         $attachment = new Attachment();
         $attachment->id = 1;
         $attachment->fileName = "file.txt";

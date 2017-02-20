@@ -43,8 +43,6 @@ class MailgunEmailSender implements EmailSender {
             }
         }
 
-        var_dump($mailgunArray);
-
         $result = $this->sendMessage($mailgunArray, $mailgunAttachments, $modsForHeskSettings);
 
 

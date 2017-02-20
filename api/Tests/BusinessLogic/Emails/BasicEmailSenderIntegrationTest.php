@@ -60,7 +60,6 @@ class BasicEmailSenderIntegrationTest extends IntegrationTestCaseBase {
         $emailBuilder->htmlMessage = "Test <b>HTML</b> <i>message</i>";
         $emailBuilder->subject = "BasicEmailSenderIntegrationTest";
 
-        // Uncomment to test attachments.
         $attachment = new Attachment();
         $attachment->id = 1;
         $attachment->fileName = "file.txt";
