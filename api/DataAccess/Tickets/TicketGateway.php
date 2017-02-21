@@ -86,12 +86,11 @@ class TicketGateway extends CommonDao {
 
     /**
      * @param $ticket Ticket
+     * @param $isEmailVerified
      * @param $heskSettings
      * @return TicketGatewayGeneratedFields
      */
-    function createTicket($ticket, $heskSettings) {
-        global $hesklang;
-
+    function createTicket($ticket, $isEmailVerified, $heskSettings) {
         $this->init();
 
         $dueDate = $ticket->dueDate ? "'{$ticket->dueDate}'" : "NULL";
@@ -127,7 +126,9 @@ class TicketGateway extends CommonDao {
         $ipAddress = $ticket->ipAddress !== null
                     && $ticket->ipAddress !== '' ? $ticket->ipAddress : '';
 
-        $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets`
+        $tableName = $isEmailVerified ? 'tickets' : 'stage_tickets';
+
+        $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . $tableName ."`
         (
             `trackid`,
             `name`,
@@ -190,7 +191,7 @@ class TicketGateway extends CommonDao {
         hesk_dbQuery($sql);
         $id = hesk_dbInsertID();
 
-        $rs = hesk_dbQuery('SELECT `dt`, `lastchange` FROM `' . hesk_dbEscape($heskSettings['db_pfix']) . 'tickets` WHERE `id` = ' . intval($id));
+        $rs = hesk_dbQuery('SELECT `dt`, `lastchange` FROM `' . hesk_dbEscape($heskSettings['db_pfix']) . $tableName .'` WHERE `id` = ' . intval($id));
         $row = hesk_dbFetchAssoc($rs);
 
         $generatedFields = new TicketGatewayGeneratedFields();

@@ -33,12 +33,18 @@ class TicketCreator {
      */
     private $ticketGateway;
 
-    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner, $statusGateway, $ticketGateway) {
+    /**
+     * @var $verifiedEmailChecker VerifiedEmailChecker
+     */
+    private $verifiedEmailChecker;
+
+    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner, $statusGateway, $ticketGateway, $verifiedEmailChecker) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
         $this->autoassigner = $autoassigner;
         $this->statusGateway = $statusGateway;
         $this->ticketGateway = $ticketGateway;
+        $this->verifiedEmailChecker = $verifiedEmailChecker;
     }
 
     /**
@@ -61,8 +67,15 @@ class TicketCreator {
             throw new ValidationException($validationModel);
         }
 
+        $emailVerified = true;
+        if ($modsForHeskSettings['customer_email_verification_required']) {
+            $emailVerified = $this->verifiedEmailChecker->isEmailVerified($ticketRequest->email, $heskSettings);
+        }
+
         // Create the ticket
-        $ticket = new Ticket();
+        $ticket = $emailVerified
+            ? new Ticket()
+            : new StageTicket();
         $ticket->trackingId = $this->trackingIdGenerator->generateTrackingId($heskSettings);
 
         if ($heskSettings['autoassign']) {
@@ -92,7 +105,7 @@ class TicketCreator {
         }
         $ticket->statusId = $status->id;
 
-        $ticketGatewayGeneratedFields = $this->ticketGateway->createTicket($ticket, $heskSettings);
+        $ticketGatewayGeneratedFields = $this->ticketGateway->createTicket($ticket, $emailVerified, $heskSettings);
 
         $ticket->dateCreated = $ticketGatewayGeneratedFields->dateCreated;
         $ticket->lastChanged = $ticketGatewayGeneratedFields->dateModified;

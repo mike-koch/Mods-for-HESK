@@ -29,6 +29,10 @@ class TicketController {
 
         $ticket = $ticketCreator->createTicketByCustomer($this->buildTicketRequestFromJson($jsonRequest), $hesk_settings, $modsForHeskSettings, $userContext);
 
+        //if ticket is a stageTicket, email user
+        //else if assigned to owner, email new owner
+        //else email all staff
+
         return output($ticket);
     }
 

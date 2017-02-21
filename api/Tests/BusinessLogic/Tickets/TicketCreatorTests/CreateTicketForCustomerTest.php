@@ -12,6 +12,7 @@ use BusinessLogic\Tickets\NewTicketValidator;
 use BusinessLogic\Tickets\TicketCreator;
 use BusinessLogic\Tickets\TicketGatewayGeneratedFields;
 use BusinessLogic\Tickets\TrackingIdGenerator;
+use BusinessLogic\Tickets\VerifiedEmailChecker;
 use BusinessLogic\ValidationModel;
 use Core\Constants\Priority;
 use DataAccess\Statuses\StatusGateway;
@@ -75,15 +76,21 @@ class CreateTicketTest extends TestCase {
      */
     private $ticketGatewayGeneratedFields;
 
+    /**
+     * @var $verifiedEmailChecker \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $verifiedEmailChecker;
+
     protected function setUp() {
         $this->ticketGateway = $this->createMock(TicketGateway::class);
         $this->newTicketValidator = $this->createMock(NewTicketValidator::class);
         $this->trackingIdGenerator = $this->createMock(TrackingIdGenerator::class);
         $this->autoassigner = $this->createMock(Autoassigner::class);
         $this->statusGateway = $this->createMock(StatusGateway::class);
+        $this->verifiedEmailChecker = $this->createMock(VerifiedEmailChecker::class);
 
         $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator,
-            $this->autoassigner, $this->statusGateway, $this->ticketGateway);
+            $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker);
 
         $this->ticketRequest = new CreateTicketByCustomerModel();
         $this->ticketRequest->name = 'Name';
@@ -101,7 +108,9 @@ class CreateTicketTest extends TestCase {
             'custom_fields' => array(),
             'autoassign' => 0,
         );
-        $this->modsForHeskSettings = array();
+        $this->modsForHeskSettings = array(
+            'customer_email_verification_required' => false
+        );
         $this->userContext = new UserContext();
 
         $this->newTicketValidator->method('validateNewTicketForCustomer')->willReturn(new ValidationModel());
@@ -225,5 +234,16 @@ class CreateTicketTest extends TestCase {
         self::assertThat($ticket->numberOfStaffReplies, self::equalTo(0));
         self::assertThat($ticket->timeWorked, self::equalTo('00:00:00'));
         self::assertThat($ticket->lastReplier, self::equalTo(0));
+    }
+
+    function testItChecksIfTheEmailIsVerified() {
+        //-- Arrange
+        $this->modsForHeskSettings['customer_email_verification_required'] = true;
+
+        //-- Assert
+        $this->verifiedEmailChecker->expects($this->once())->method('isEmailVerified');
+
+        //-- Act
+        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
     }
 }
