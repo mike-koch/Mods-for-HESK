@@ -1014,13 +1014,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         {
                             echo '<input type="hidden" name="unassigned" value="1">';
                         }
-                        echo '</form></div>';
+                        echo '</form>';
                     } else {
                         echo '<p class="ticket-property-text">';
                         echo isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] :
                             ($can_assign_self ? $hesklang['unas'] . ' [<a href="assign_owner.php?track=' . $trackingID . '&amp;owner=' . $_SESSION['id'] . '&amp;token=' . hesk_token_echo(0) . '&amp;unassigned=1">' . $hesklang['asss'] . '</a>]' : $hesklang['unas']);
                         echo '</p>';
                     }
+                    echo '</div>';
                     echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticket-property-title">' . $hesklang['category'] . '</p>';
                     if (strlen($categories_options) && ($can_change_cat || $can_change_own_cat)) {
                         echo '
