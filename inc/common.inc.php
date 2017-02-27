@@ -989,7 +989,6 @@ function hesk_ticketToPlain($ticket, $specialchars = 0, $strip = 1)
     }
 } // END hesk_ticketToPlain()
 
-
 function hesk_msgToPlain($msg, $specialchars = 0, $strip = 1)
 {
     $msg = preg_replace('/\<a href="(mailto:)?([^"]*)"[^\<]*\<\/a\>/i', "$2", $msg);

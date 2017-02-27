@@ -31,4 +31,19 @@ class UserGateway extends CommonDao {
 
         return $row;
     }
+    
+    // TODO Replace this with a basic User retrieval
+    function getNameForId($id, $heskSettings) {
+        $this->init();
+        
+        $rs = hesk_dbQuery("SELECT `name` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `id` = " . intval($id));
+        
+        if (hesk_dbNumRows($rs) === 0) {
+            return null;
+        }
+        
+        $row = hesk_dbFetchAssoc($rs);
+        
+        return $row['name'];
+    }
 }
