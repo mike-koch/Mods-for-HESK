@@ -46,7 +46,7 @@ class EmailTemplateParser {
      * @param $language string
      * @param $ticket Ticket
      */
-    function getFormattedEmailForLanguage($templateName, $language, $ticket, $heskSettings) {
+    function getFormattedEmailForLanguage($templateName, $language, $ticket, $forStaff, $heskSettings) {
         global $hesklang;
 
         $template = self::getFromFileSystem($templateName, $language, false);
@@ -54,7 +54,8 @@ class EmailTemplateParser {
         $subject = ValidEmailTemplates::getValidEmailTemplates()[$templateName];
 
         $subject = $this->parseSubject($subject, $ticket, $language, $heskSettings);
-        $message = $this->parseMessage($subject, $ticket, $language, $heskSettings);
+        $message = $this->parseMessage($template, $ticket, $language, $forStaff, $heskSettings);
+        $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $language, $forStaff, $heskSettings);
     }
 
     /**
@@ -162,7 +163,7 @@ class EmailTemplateParser {
         /* Generate the ticket URLs */
         $trackingURL = $heskSettings['hesk_url'];
         $trackingURL .= $admin ? '/' . $heskSettings['admin_dir'] . '/admin_ticket.php' : '/ticket.php';
-        $trackingURL .= '?track=' . $ticket['trackid'] . ($admin ? '' : $heskSettings['e_param']) . '&Refresh=' . rand(10000, 99999);
+        $trackingURL .= '?track=' . $ticket->trackingId . ($admin ? '' : $heskSettings['e_param']) . '&Refresh=' . rand(10000, 99999);
 
         // Status name and category name
         $defaultStatus = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
@@ -190,20 +191,20 @@ class EmailTemplateParser {
 
         // Special tags
         $msg = str_replace('%%NAME%%', $ticket->name, $messageTemplate);
-        $msg = str_replace('%%SUBJECT%%', $ticket['subject'], $msg);
-        $msg = str_replace('%%TRACK_ID%%', $ticket['trackid'], $msg);
+        $msg = str_replace('%%SUBJECT%%', $ticket->subject, $msg);
+        $msg = str_replace('%%TRACK_ID%%', $ticket->trackingId, $msg);
         $msg = str_replace('%%TRACK_URL%%', $trackingURL, $msg);
-        $msg = str_replace('%%SITE_TITLE%%', $hesk_settings['site_title'], $msg);
-        $msg = str_replace('%%SITE_URL%%', $hesk_settings['site_url'], $msg);
-        $msg = str_replace('%%CATEGORY%%', $ticket['category'], $msg);
-        $msg = str_replace('%%PRIORITY%%', $ticket['priority'], $msg);
-        $msg = str_replace('%%OWNER%%', $ticket['owner'], $msg);
-        $msg = str_replace('%%STATUS%%', $ticket['status'], $msg);
-        $msg = str_replace('%%EMAIL%%', $ticket['email'], $msg);
-        $msg = str_replace('%%CREATED%%', $ticket['dt'], $msg);
-        $msg = str_replace('%%UPDATED%%', $ticket['lastchange'], $msg);
-        $msg = str_replace('%%ID%%', $ticket['id'], $msg);
+        $msg = str_replace('%%SITE_TITLE%%', $heskSettings['site_title'], $msg);
+        $msg = str_replace('%%SITE_URL%%', $heskSettings['site_url'], $msg);
+        $msg = str_replace('%%CATEGORY%%', $category, $msg);
+        $msg = str_replace('%%PRIORITY%%', $priority, $msg);
+        $msg = str_replace('%%OWNER%%', $owner, $msg);
+        $msg = str_replace('%%STATUS%%', $statusName, $msg);
+        $msg = str_replace('%%EMAIL%%', $ticket->email, $msg);
+        $msg = str_replace('%%CREATED%%', $ticket->dateCreated, $msg);
+        $msg = str_replace('%%UPDATED%%', $ticket->lastChanged, $msg);
+        $msg = str_replace('%%ID%%', $ticket->id, $msg);
 
-        return $subject;
+        return $msg;
     }
 }
