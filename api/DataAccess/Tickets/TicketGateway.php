@@ -25,7 +25,9 @@ class TicketGateway extends CommonDao {
         $row = hesk_dbFetchAssoc($rs);
         $linkedTicketsRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `parent` = " . intval($id));
 
-        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $heskSettings);
+        $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($id) . " ORDER BY `id` ASC");
+
+        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings);
 
         $this->close();
 

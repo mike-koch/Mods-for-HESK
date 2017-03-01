@@ -4,7 +4,7 @@ namespace BusinessLogic\Tickets;
 
 
 class Ticket {
-    static function fromDatabaseRow($row, $linkedTicketsRs, $heskSettings) {
+    static function fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings) {
         $ticket = new Ticket();
         $ticket->id = intval($row['id']);
         $ticket->trackingId = $row['trackid'];
@@ -92,6 +92,40 @@ class Ticket {
 
         $ticket->dueDate = $row['due_date'];
         $ticket->dueDateOverdueEmailSent = $row['overdue_email_sent'] !== null && intval($row['overdue_email_sent']) === 1;
+
+        $replies = array();
+        while ($replyRow = hesk_dbFetchAssoc($repliesRs)) {
+            $reply = new Reply();
+            $reply->id = $replyRow['id'];
+            $reply->ticketId = $replyRow['replyto'];
+            $reply->replierName = $replyRow['name'];
+            $reply->message = $replyRow['message'];
+            $reply->dateCreated = $replyRow['dt'];
+
+            if (trim($replyRow['attachments']) !== '') {
+                $attachments = explode(',', $replyRow['attachments']);
+                $attachmentArray = array();
+                foreach ($attachments as $attachment) {
+                    $attachmentRow = explode('#', $attachment);
+                    $attachmentModel = new Attachment();
+
+                    $attachmentModel->id = $attachmentRow[0];
+                    $attachmentModel->fileName = $attachmentRow[1];
+                    $attachmentModel->savedName = $attachmentRow[2];
+
+                    $attachmentArray[] = $attachmentModel;
+                }
+                $reply->attachments = $attachmentArray;
+            }
+
+            $reply->staffId = $replyRow['staffid'] > 0 ? $replyRow['staffid'] : null;
+            $reply->rating = $replyRow['rating'];
+            $reply->isRead = $replyRow['read'];
+            $reply->usesHtml = $replyRow['html'];
+
+            $replies[] = $reply;
+        }
+        $ticket->replies = $replies;
 
         return $ticket;
     }
@@ -300,4 +334,9 @@ class Ticket {
      * @var bool|null
      */
     public $dueDateOverdueEmailSent;
+
+    /**
+     * @var Reply[]
+     */
+    public $replies;
 }

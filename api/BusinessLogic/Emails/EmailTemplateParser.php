@@ -46,7 +46,7 @@ class EmailTemplateParser {
      * @param $language string
      * @param $ticket Ticket
      */
-    function getFormattedEmailForLanguage($templateName, $language, $ticket, $forStaff, $heskSettings) {
+    function getFormattedEmailForLanguage($templateName, $language, $ticket, $forStaff, $heskSettings, $modsForHeskSettings) {
         global $hesklang;
 
         $template = self::getFromFileSystem($templateName, $language, false);
@@ -54,8 +54,10 @@ class EmailTemplateParser {
         $subject = ValidEmailTemplates::getValidEmailTemplates()[$templateName];
 
         $subject = $this->parseSubject($subject, $ticket, $language, $heskSettings);
-        $message = $this->parseMessage($template, $ticket, $language, $forStaff, $heskSettings);
-        $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $language, $forStaff, $heskSettings);
+        $message = $this->parseMessage($template, $ticket, $language, $forStaff, $heskSettings, $modsForHeskSettings, false);
+        $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $language, $forStaff, $heskSettings, $modsForHeskSettings, true);
+
+        return new ParsedEmailProperties($subject, $message, $htmlMessage);
     }
 
     /**
@@ -144,7 +146,7 @@ class EmailTemplateParser {
      * @return string
      * @throws \Exception if common.inc.php isn't loaded
      */
-    private function parseMessage($messageTemplate, $ticket, $language, $admin, $heskSettings) {
+    private function parseMessage($messageTemplate, $ticket, $language, $admin, $heskSettings, $modsForHeskSettings, $html) {
         global $hesklang;
 
         if (!function_exists('hesk_msgToPlain')) {
@@ -204,6 +206,105 @@ class EmailTemplateParser {
         $msg = str_replace('%%CREATED%%', $ticket->dateCreated, $msg);
         $msg = str_replace('%%UPDATED%%', $ticket->lastChanged, $msg);
         $msg = str_replace('%%ID%%', $ticket->id, $msg);
+
+        /* All custom fields */
+        for ($i=1; $i<=50; $i++) {
+            $k = 'custom'.$i;
+
+            if (isset($heskSettings['custom_fields'][$k])) {
+                $v = $heskSettings['custom_fields'][$k];
+
+                switch ($v['type']) {
+                    case 'checkbox':
+                        $ticket->customFields[$i] = str_replace("<br>","\n",$ticket->customFields[$i]);
+                        break;
+                    case 'date':
+                        $ticket->customFields[$i] = hesk_custom_date_display_format($ticket->customFields[$i], $v['value']['date_format']);
+                        break;
+                }
+
+                $msg = str_replace('%%'.strtoupper($k).'%%',stripslashes($ticket->customFields[$i]),$msg);
+            } else {
+                $msg = str_replace('%%'.strtoupper($k).'%%','',$msg);
+            }
+        }
+
+        // Is message tag in email template?
+        if (strpos($msg, '%%MESSAGE%%') !== false) {
+            // Replace message
+            if ($html) {
+                $htmlMessage = nl2br($ticket->message);
+                $msg = str_replace('%%MESSAGE%%', $htmlMessage, $msg);
+            } else {
+                $plainTextMessage = $ticket->message;
+
+                $messageHtml = $ticket->usesHtml;
+
+                if (count($ticket->replies) > 0) {
+                    $lastReply = end($ticket->replies);
+                    $messageHtml = $lastReply->usesHtml;
+                }
+
+                if ($messageHtml) {
+                    if (!function_exists('convert_html_to_text')) {
+                        require(__DIR__ . '/../../../inc/html2text/html2text.php');
+                    }
+                    $plainTextMessage = convert_html_to_text($plainTextMessage);
+                    $plainTextMessage = fix_newlines($plainTextMessage);
+                }
+                $msg = str_replace('%%MESSAGE%%', $plainTextMessage, $msg);
+            }
+
+            // Add direct links to any attachments at the bottom of the email message
+            if ($heskSettings['attachments']['use'] && isset($ticket->attachments) && count($ticket->attachments) > 0) {
+                if (!$modsForHeskSettings['attachments']) {
+                    if ($html) {
+                        $msg .= "<br><br><br>" . $hesklang['fatt'];
+                    } else {
+                        $msg .= "\n\n\n" . $hesklang['fatt'];
+                    }
+
+                    foreach ($ticket->attachments as $attachment) {
+                        if ($html) {
+                            $msg .= "<br><br>{$attachment->fileName}<br>";
+                        } else {
+                            $msg .= "\n\n{$attachment->fileName}\n";
+                        }
+
+                        $msg .= "{$heskSettings['hesk_url']}/download_attachment.php?att_id={$attachment->id}&track={$ticket->trackingId}{$heskSettings['e_param']}";
+                    }
+                }
+            }
+
+            // For customer notifications: if we allow email piping/pop 3 fetching and
+            // stripping quoted replies add an "reply above this line" tag
+            if (!$admin && ($heskSettings['email_piping'] || $heskSettings['pop3']) && $heskSettings['strip_quoted']) {
+                $msg = $hesklang['EMAIL_HR'] . "\n\n" . $msg;
+            }
+        } elseif (strpos($msg, '%%MESSAGE_NO_ATTACHMENTS%%') !== false) {
+            if ($html) {
+                $htmlMessage = nl2br($ticket->message);
+                $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $htmlMessage, $msg);
+            } else {
+                $plainTextMessage = $ticket->message;
+
+                $messageHtml = $ticket->usesHtml;
+
+                if (count($ticket->replies) > 0) {
+                    $lastReply = end($ticket->replies);
+                    $messageHtml = $lastReply->usesHtml;
+                }
+
+                if ($messageHtml) {
+                    if (!function_exists('convert_html_to_text')) {
+                        require(__DIR__ . '/../../../inc/html2text/html2text.php');
+                    }
+                    $plainTextMessage = convert_html_to_text($plainTextMessage);
+                    $plainTextMessage = fix_newlines($plainTextMessage);
+                }
+                $msg = str_replace('%%MESSAGE_NO_ATTACHMENTS%%', $plainTextMessage, $msg);
+            }
+        }
 
         return $msg;
     }
