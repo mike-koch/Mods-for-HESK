@@ -9,7 +9,7 @@ use PHPMailer;
 
 interface EmailSender {
     /**
-     * Use to send emails that do NOT include ticket information
+     * Use to send emails
      *
      * @param $emailBuilder EmailBuilder
      * @param $heskSettings array

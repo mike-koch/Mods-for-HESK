@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mkoch
- * Date: 2/22/2017
- * Time: 9:11 PM
- */
 
 namespace BusinessLogic\Emails;
 
@@ -35,27 +29,41 @@ class EmailTemplateParser {
      */
     private $userGateway;
 
-    function __construct($statusGateway, $categoryGateway, $userGateway) {
+    /**
+     * @var $emailTemplateRetriever EmailTemplateRetriever
+     */
+    private $emailTemplateRetriever;
+
+    function __construct($statusGateway, $categoryGateway, $userGateway, $emailTemplateRetriever) {
         $this->statusGateway = $statusGateway;
         $this->categoryGateway = $categoryGateway;
         $this->userGateway = $userGateway;
+        $this->emailTemplateRetriever = $emailTemplateRetriever;
     }
 
     /**
-     * @param $templateName string
+     * @param $templateId int
      * @param $language string
      * @param $ticket Ticket
+     * @param $heskSettings array
+     * @param $modsForHeskSettings array
+     * @return ParsedEmailProperties
+     * @throws InvalidEmailTemplateException
      */
-    function getFormattedEmailForLanguage($templateName, $language, $ticket, $forStaff, $heskSettings, $modsForHeskSettings) {
-        global $hesklang;
+    function getFormattedEmailForLanguage($templateId, $language, $ticket, $heskSettings, $modsForHeskSettings) {
+        $emailTemplate = $this->emailTemplateRetriever->getTemplate($templateId);
 
-        $template = self::getFromFileSystem($templateName, $language, false);
-        $htmlTemplate = self::getFromFileSystem($templateName, $language, true);
-        $subject = ValidEmailTemplates::getValidEmailTemplates()[$templateName];
+        if ($emailTemplate === null) {
+            throw new InvalidEmailTemplateException($templateId);
+        }
+
+        $template = self::getFromFileSystem($emailTemplate->fileName, $language, false);
+        $htmlTemplate = self::getFromFileSystem($emailTemplate->fileName, $language, true);
+        $subject = $emailTemplate->languageKey;
 
         $subject = $this->parseSubject($subject, $ticket, $language, $heskSettings);
-        $message = $this->parseMessage($template, $ticket, $language, $forStaff, $heskSettings, $modsForHeskSettings, false);
-        $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $language, $forStaff, $heskSettings, $modsForHeskSettings, true);
+        $message = $this->parseMessage($template, $ticket, $language, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, false);
+        $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $language, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, true);
 
         return new ParsedEmailProperties($subject, $message, $htmlMessage);
     }
@@ -66,13 +74,9 @@ class EmailTemplateParser {
      * @param $html bool
      * @return string The template
      * @throws EmailTemplateNotFoundException If the template was not found in the filesystem for the provided language
-     * @throws InvalidEmailTemplateException If the $template is not a valid template name
      */
     private function getFromFileSystem($template, $language, $html)
     {
-        if (!isset(ValidEmailTemplates::getValidEmailTemplates()[$template])) {
-            throw new InvalidEmailTemplateException($template);
-        }
         $htmlFolder = $html ? 'html/' : '';
 
         /* Get email template */
