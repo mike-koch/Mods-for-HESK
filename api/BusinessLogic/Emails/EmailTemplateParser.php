@@ -43,27 +43,27 @@ class EmailTemplateParser {
 
     /**
      * @param $templateId int
-     * @param $language string
+     * @param $languageCode string
      * @param $ticket Ticket
      * @param $heskSettings array
      * @param $modsForHeskSettings array
      * @return ParsedEmailProperties
      * @throws InvalidEmailTemplateException
      */
-    function getFormattedEmailForLanguage($templateId, $language, $ticket, $heskSettings, $modsForHeskSettings) {
+    function getFormattedEmailForLanguage($templateId, $languageCode, $ticket, $heskSettings, $modsForHeskSettings) {
         $emailTemplate = $this->emailTemplateRetriever->getTemplate($templateId);
 
         if ($emailTemplate === null) {
             throw new InvalidEmailTemplateException($templateId);
         }
 
-        $template = self::getFromFileSystem($emailTemplate->fileName, $language, false);
-        $htmlTemplate = self::getFromFileSystem($emailTemplate->fileName, $language, true);
+        $template = self::getFromFileSystem($emailTemplate->fileName, $languageCode, false);
+        $htmlTemplate = self::getFromFileSystem($emailTemplate->fileName, $languageCode, true);
         $subject = $emailTemplate->languageKey;
 
-        $subject = $this->parseSubject($subject, $ticket, $language, $heskSettings);
-        $message = $this->parseMessage($template, $ticket, $language, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, false);
-        $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $language, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, true);
+        $subject = $this->parseSubject($subject, $ticket, $languageCode, $heskSettings);
+        $message = $this->parseMessage($template, $ticket, $languageCode, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, false);
+        $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $languageCode, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, true);
 
         return new ParsedEmailProperties($subject, $message, $htmlMessage);
     }

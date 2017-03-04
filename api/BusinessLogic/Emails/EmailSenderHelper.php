@@ -25,8 +25,9 @@ class EmailSenderHelper {
         $this->mailgunEmailSender = $mailgunEmailSender;
     }
 
-    function sendEmailForTicket($emailTemplateName, $ticket, $heskSettings, $modsForHeskSettings) {
-        //-- parse template
+    function sendEmailForTicket($templateId, $languageCode, $ticket, $heskSettings, $modsForHeskSettings) {
+        $parsedTemplate = $this->emailTemplateParser->getFormattedEmailForLanguage($templateId, $languageCode,
+            $ticket, $heskSettings, $modsForHeskSettings);
 
         //-- if no mailgun, use basic sender
 
