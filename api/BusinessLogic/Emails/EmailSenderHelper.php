@@ -47,6 +47,17 @@ class EmailSenderHelper {
         $emailBuilder->cc = $addressees->cc;
         $emailBuilder->bcc = $addressees->bcc;
 
+        foreach ($heskSettings['custom_fields'] as $k => $v) {
+            $number = intval(str_replace('custom', '', $k));
+            if ($v['use'] && $v['type'] == 'email' && !empty($ticket->customFields[$number])) {
+                if ($v['value']['email_type'] == 'cc') {
+                    $emailBuilder->cc[] = $ticket->customFields[$number];
+                } elseif ($v['value']['email_type'] == 'bcc') {
+                    $emailBuilder->bcc[] = $ticket->customFields[$number];
+                }
+            }
+        }
+
         if ($modsForHeskSettings['attachments']) {
             $emailBuilder->attachments = $ticket->attachments;
         }

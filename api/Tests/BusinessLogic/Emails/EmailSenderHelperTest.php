@@ -41,7 +41,9 @@ class EmailSenderHelperTest extends TestCase {
         $this->emailTemplateParser = $this->createMock(EmailTemplateParser::class);
         $this->basicEmailSender = $this->createMock(BasicEmailSender::class);
         $this->mailgunEmailSender = $this->createMock(MailgunEmailSender::class);
-        $this->heskSettings = array();
+        $this->heskSettings = array(
+            'custom_fields' => array()
+        );
         $this->modsForHeskSettings = array(
             'attachments' => 0,
             'use_mailgun' => 0,

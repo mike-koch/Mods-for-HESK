@@ -246,4 +246,8 @@ class CreateTicketTest extends TestCase {
         //-- Act
         $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
     }
+
+    function testItSendsAnEmailToTheCustomerWhenTheTicketIsCreated() {
+        //--
+    }
 }

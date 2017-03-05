@@ -2,6 +2,7 @@
 
 namespace BusinessLogic\Tickets;
 
+use BusinessLogic\Emails\EmailSenderHelper;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Statuses\DefaultStatusForAction;
 use DataAccess\Statuses\StatusGateway;
@@ -38,13 +39,20 @@ class TicketCreator {
      */
     private $verifiedEmailChecker;
 
-    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner, $statusGateway, $ticketGateway, $verifiedEmailChecker) {
+    /**
+     * @var $emailSenderHelper EmailSenderHelper
+     */
+    private $emailSenderHelper;
+
+    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner,
+                         $statusGateway, $ticketGateway, $verifiedEmailChecker, $emailSenderHelper) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
         $this->autoassigner = $autoassigner;
         $this->statusGateway = $statusGateway;
         $this->ticketGateway = $ticketGateway;
         $this->verifiedEmailChecker = $verifiedEmailChecker;
+        $this->emailSenderHelper = $emailSenderHelper;
     }
 
     /**
