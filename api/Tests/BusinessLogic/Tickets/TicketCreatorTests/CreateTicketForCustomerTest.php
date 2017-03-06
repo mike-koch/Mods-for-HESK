@@ -3,6 +3,10 @@
 namespace BusinessLogic\Tickets\TicketCreatorTests;
 
 
+use BusinessLogic\Emails\Addressees;
+use BusinessLogic\Emails\EmailSenderHelper;
+use BusinessLogic\Emails\EmailTemplate;
+use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Security\UserContext;
 use BusinessLogic\Statuses\DefaultStatusForAction;
 use BusinessLogic\Statuses\Status;
@@ -81,6 +85,11 @@ class CreateTicketTest extends TestCase {
      */
     private $verifiedEmailChecker;
 
+    /**
+     * @var $emailSenderHelper \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $emailSenderHelper;
+
     protected function setUp() {
         $this->ticketGateway = $this->createMock(TicketGateway::class);
         $this->newTicketValidator = $this->createMock(NewTicketValidator::class);
@@ -88,9 +97,10 @@ class CreateTicketTest extends TestCase {
         $this->autoassigner = $this->createMock(Autoassigner::class);
         $this->statusGateway = $this->createMock(StatusGateway::class);
         $this->verifiedEmailChecker = $this->createMock(VerifiedEmailChecker::class);
+        $this->emailSenderHelper = $this->createMock(EmailSenderHelper::class);
 
         $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator,
-            $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker);
+            $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker, $this->emailSenderHelper);
 
         $this->ticketRequest = new CreateTicketByCustomerModel();
         $this->ticketRequest->name = 'Name';
@@ -248,6 +258,16 @@ class CreateTicketTest extends TestCase {
     }
 
     function testItSendsAnEmailToTheCustomerWhenTheTicketIsCreated() {
-        //--
+        //-- Arrange
+        $this->ticketRequest->sendEmailToCustomer = true;
+        $expectedAddressees = new Addressees();
+        $expectedAddressees->to = $this->ticketRequest->email;
+
+        //-- Assert
+        $this->emailSenderHelper->expects($this->once())->method('sendEmailForTicket')
+            ->with(EmailTemplateRetriever::NEW_TICKET, 'en', $this->anything(), $this->heskSettings, $this->modsForHeskSettings);
+
+        //-- Act
+        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
     }
 }

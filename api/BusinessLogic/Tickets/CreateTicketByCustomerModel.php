@@ -72,4 +72,9 @@ class CreateTicketByCustomerModel {
      * @var string
      */
     public $language;
+
+    /**
+     * @var $sendEmailToCustomer bool
+     */
+    public $sendEmailToCustomer;
 }
