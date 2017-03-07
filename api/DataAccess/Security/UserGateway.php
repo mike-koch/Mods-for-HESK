@@ -46,4 +46,19 @@ class UserGateway extends CommonDao {
         
         return $row['name'];
     }
+
+    // TODO Replace this with a basic User retriever
+    function getEmailForId($id, $heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT `email` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `id` = " . intval($id));
+
+        if (hesk_dbNumRows($rs) === 0) {
+            return null;
+        }
+
+        $row = hesk_dbFetchAssoc($rs);
+
+        return $row['email'];
+    }
 }

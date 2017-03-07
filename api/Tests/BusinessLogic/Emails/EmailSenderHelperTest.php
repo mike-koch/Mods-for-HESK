@@ -42,6 +42,9 @@ class EmailSenderHelperTest extends TestCase {
         $this->basicEmailSender = $this->createMock(BasicEmailSender::class);
         $this->mailgunEmailSender = $this->createMock(MailgunEmailSender::class);
         $this->heskSettings = array(
+            'languages' => array(
+                'English' => array('folder' => 'en')
+            ),
             'custom_fields' => array()
         );
         $this->modsForHeskSettings = array(
@@ -67,7 +70,7 @@ class EmailSenderHelperTest extends TestCase {
             ->with($templateId, $languageCode, $ticket, $this->heskSettings, $this->modsForHeskSettings);
 
         //-- Act
-        $this->emailSenderHelper->sendEmailForTicket($templateId, $languageCode, new Addressees(), $ticket, $this->heskSettings, $this->modsForHeskSettings);
+        $this->emailSenderHelper->sendEmailForTicket($templateId, 'English', new Addressees(), $ticket, $this->heskSettings, $this->modsForHeskSettings);
     }
 
     function testItSendsTheEmailThroughTheMailgunEmailSender() {
@@ -95,7 +98,7 @@ class EmailSenderHelperTest extends TestCase {
             ->with($expectedEmailBuilder, $this->heskSettings, $this->modsForHeskSettings, true);
 
         //-- Act
-        $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_NOTE, 'en', $addressees, new Ticket(), $this->heskSettings, $this->modsForHeskSettings);
+        $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_NOTE, 'English', $addressees, new Ticket(), $this->heskSettings, $this->modsForHeskSettings);
     }
 
     function testItSendsTheEmailThroughTheBasicEmailSender() {
@@ -123,6 +126,6 @@ class EmailSenderHelperTest extends TestCase {
             ->with($expectedEmailBuilder, $this->heskSettings, $this->modsForHeskSettings, true);
 
         //-- Act
-        $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_NOTE, 'en', $addressees, new Ticket(), $this->heskSettings, $this->modsForHeskSettings);
+        $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_NOTE, 'English', $addressees, new Ticket(), $this->heskSettings, $this->modsForHeskSettings);
     }
 }

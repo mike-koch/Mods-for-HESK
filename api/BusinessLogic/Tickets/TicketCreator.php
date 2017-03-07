@@ -2,9 +2,12 @@
 
 namespace BusinessLogic\Tickets;
 
+use BusinessLogic\Emails\Addressees;
 use BusinessLogic\Emails\EmailSenderHelper;
+use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Statuses\DefaultStatusForAction;
+use DataAccess\Security\UserGateway;
 use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\TicketGateway;
 
@@ -44,8 +47,13 @@ class TicketCreator {
      */
     private $emailSenderHelper;
 
+    /**
+     * @var $userGateway UserGateway
+     */
+    private $userGateway;
+
     function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner,
-                         $statusGateway, $ticketGateway, $verifiedEmailChecker, $emailSenderHelper) {
+                         $statusGateway, $ticketGateway, $verifiedEmailChecker, $emailSenderHelper, $userGateway) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
         $this->autoassigner = $autoassigner;
@@ -53,6 +61,7 @@ class TicketCreator {
         $this->ticketGateway = $ticketGateway;
         $this->verifiedEmailChecker = $verifiedEmailChecker;
         $this->emailSenderHelper = $emailSenderHelper;
+        $this->userGateway = $userGateway;
     }
 
     /**
@@ -126,6 +135,31 @@ class TicketCreator {
         $ticket->timeWorked = '00:00:00';
         $ticket->lastReplier = 0;
 
+        $addressees = new Addressees();
+        $addressees->to = $this->getAddressees($ticket->email);
+
+        if ($ticketRequest->sendEmailToCustomer) {
+            $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_TICKET, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
+        }
+
+        if ($ticket->ownerId !== null) {
+            $ownerEmail = $this->userGateway->getEmailForId($ticket->ownerId, $heskSettings);
+
+            $addressees = new Addressees();
+            $addressees->to = array($ownerEmail);
+            $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::TICKET_ASSIGNED_TO_YOU, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
+        }
+
         return $ticket;
+    }
+
+    private function getAddressees($emailAddress) {
+        if ($emailAddress === null) {
+            return null;
+        }
+
+        $emails = str_replace(';', ',', $emailAddress);
+
+        return explode(',', $emails);
     }
 }

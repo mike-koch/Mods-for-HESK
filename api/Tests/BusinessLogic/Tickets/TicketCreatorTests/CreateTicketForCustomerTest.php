@@ -116,7 +116,7 @@ class CreateTicketTest extends TestCase {
             'require_subject' => 1,
             'require_message' => 1,
             'custom_fields' => array(),
-            'autoassign' => 0,
+            'autoassign' => 0
         );
         $this->modsForHeskSettings = array(
             'customer_email_verification_required' => false
@@ -260,12 +260,42 @@ class CreateTicketTest extends TestCase {
     function testItSendsAnEmailToTheCustomerWhenTheTicketIsCreated() {
         //-- Arrange
         $this->ticketRequest->sendEmailToCustomer = true;
+        $this->ticketRequest->language = 'English';
         $expectedAddressees = new Addressees();
-        $expectedAddressees->to = $this->ticketRequest->email;
+        $expectedAddressees->to = array($this->ticketRequest->email);
 
         //-- Assert
         $this->emailSenderHelper->expects($this->once())->method('sendEmailForTicket')
-            ->with(EmailTemplateRetriever::NEW_TICKET, 'en', $this->anything(), $this->heskSettings, $this->modsForHeskSettings);
+            ->with(EmailTemplateRetriever::NEW_TICKET, 'English', $expectedAddressees, $this->anything(), $this->heskSettings, $this->modsForHeskSettings);
+
+        //-- Act
+        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+    }
+
+    function testItDoesNotSendsAnEmailToTheCustomerWhenTheTicketIsCreatedAndSendToCustomerIsFalse() {
+        //-- Arrange
+        $this->ticketRequest->sendEmailToCustomer = false;
+        $this->ticketRequest->language = 'English';
+        $expectedAddressees = new Addressees();
+        $expectedAddressees->to = array($this->ticketRequest->email);
+
+        //-- Assert
+        $this->emailSenderHelper->expects($this->never())->method('sendEmailForTicket');
+
+        //-- Act
+        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+    }
+
+    function testItSendsAnEmailToTheAssignedToOwnerWhenTheTicketIsCreated() {
+        //-- Arrange
+        $this->ticketRequest->sendEmailToCustomer = true;
+        $this->ticketRequest->language = 'English';
+        $expectedAddressees = new Addressees();
+        $expectedAddressees->to = array($this->ticketRequest->email);
+
+        //-- Assert
+        $this->emailSenderHelper->expects($this->once())->method('sendEmailForTicket')
+            ->with(EmailTemplateRetriever::NEW_TICKET, 'English', $expectedAddressees, $this->anything(), $this->heskSettings, $this->modsForHeskSettings);
 
         //-- Act
         $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);

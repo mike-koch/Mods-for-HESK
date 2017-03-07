@@ -29,13 +29,15 @@ class EmailSenderHelper {
 
     /**
      * @param $templateId int the EmailTemplateRetriever::TEMPLATE_NAME
-     * @param $languageCode string the language code that matches the language folder
+     * @param $language string the language name
      * @param $addressees Addressees the addressees. **cc and bcc addresses from custom fields will be added here!**
      * @param $ticket Ticket
      * @param $heskSettings array
      * @param $modsForHeskSettings array
      */
-    function sendEmailForTicket($templateId, $languageCode, $addressees, $ticket, $heskSettings, $modsForHeskSettings) {
+    function sendEmailForTicket($templateId, $language, $addressees, $ticket, $heskSettings, $modsForHeskSettings) {
+        $languageCode = $heskSettings['languages'][$language]['folder'];
+
         $parsedTemplate = $this->emailTemplateParser->getFormattedEmailForLanguage($templateId, $languageCode,
             $ticket, $heskSettings, $modsForHeskSettings);
 

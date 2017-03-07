@@ -14,8 +14,15 @@ require_once(__DIR__ . '/http_response_code.php');
 
 hesk_load_api_database_functions();
 
+global $hesk_settings;
+
 // HESK files that require database access
 require_once(__DIR__ . '/../inc/custom_fields.inc.php');
+
+// Load Spot ORM
+$config = new \Spot\Config();
+$config->addConnection('mysql', "mysql://{$hesk_settings['db_user']}:{$hesk_settings['db_pass']}@{$hesk_settings['db_host']}/{$hesk_settings['db_name']}");
+$spot = new \Spot\Locator($config);
 
 // Load the ApplicationContext
 $applicationContext = new \ApplicationContext();
