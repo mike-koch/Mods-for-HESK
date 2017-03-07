@@ -319,7 +319,13 @@ if (!$show['show']) {
         <div class="blankSpace"></div>
         <!-- REPLIES -->
 
+
         <?php
+        // Print "Submit a reply" form?
+        if ($ticket['locked'] != 1 && $ticket['status'] != 3 && $hesk_settings['reply_top'] == 1) {
+            hesk_printCustomerReplyForm();
+        }
+
         if ($hesk_settings['new_top']) {
             $i = hesk_printCustomerTicketReplies() ? 0 : 1;
         } else {
@@ -405,12 +411,6 @@ if (!$show['show']) {
         }
         ?>
         <!-- END REPLIES -->
-        <?php
-        // Print "Submit a reply" form?
-        if ($ticket['locked'] != 1 && $ticket['status'] != 3 && $hesk_settings['reply_top'] == 1) {
-            hesk_printCustomerReplyForm();
-        }
-        ?>
 
         <?php
         /* Print "Submit a reply" form? */
