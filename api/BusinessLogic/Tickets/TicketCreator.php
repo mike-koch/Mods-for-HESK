@@ -148,6 +148,8 @@ class TicketCreator {
             $addressees = new Addressees();
             $addressees->to = array($ownerEmail);
             $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::TICKET_ASSIGNED_TO_YOU, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
+        } else {
+            // TODO email all users who should be notified
         }
 
         return $ticket;

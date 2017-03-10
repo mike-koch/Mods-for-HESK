@@ -34,13 +34,20 @@ function buildUserContext($xAuthToken) {
 }
 
 function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {
-    exceptionHandler(new Exception(sprintf("%s:%d\n\n%s", $errorFile, $errorLine, $errorMessage)));
+    if ($errorNumber === E_WARNING) {
+        //-- TODO log a warning
+    } elseif ($errorNumber === E_NOTICE || $errorNumber === E_USER_NOTICE) {
+        //-- TODO log an info
+    } else {
+        exceptionHandler(new Exception(sprintf("%s:%d\n\n%s", $errorFile, $errorLine, $errorMessage)));
+    }
 }
 
 /**
  * @param $exception Exception
  */
 function exceptionHandler($exception) {
+    //-- TODO Log an error
     if (exceptionIsOfType($exception, \BusinessLogic\Exceptions\ApiFriendlyException::class)) {
         /* @var $castedException \BusinessLogic\Exceptions\ApiFriendlyException */
         $castedException = $exception;
