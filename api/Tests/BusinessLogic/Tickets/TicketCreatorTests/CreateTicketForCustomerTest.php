@@ -19,6 +19,7 @@ use BusinessLogic\Tickets\TrackingIdGenerator;
 use BusinessLogic\Tickets\VerifiedEmailChecker;
 use BusinessLogic\ValidationModel;
 use Core\Constants\Priority;
+use DataAccess\Security\UserGateway;
 use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\TicketGateway;
 use PHPUnit\Framework\TestCase;
@@ -90,6 +91,11 @@ class CreateTicketTest extends TestCase {
      */
     private $emailSenderHelper;
 
+    /**
+     * @var $userGateway \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $userGateway;
+
     protected function setUp() {
         $this->ticketGateway = $this->createMock(TicketGateway::class);
         $this->newTicketValidator = $this->createMock(NewTicketValidator::class);
@@ -98,9 +104,11 @@ class CreateTicketTest extends TestCase {
         $this->statusGateway = $this->createMock(StatusGateway::class);
         $this->verifiedEmailChecker = $this->createMock(VerifiedEmailChecker::class);
         $this->emailSenderHelper = $this->createMock(EmailSenderHelper::class);
+        $this->userGateway = $this->createMock(UserGateway::class);
 
         $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator,
-            $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker, $this->emailSenderHelper);
+            $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker,
+            $this->emailSenderHelper, $this->userGateway);
 
         $this->ticketRequest = new CreateTicketByCustomerModel();
         $this->ticketRequest->name = 'Name';

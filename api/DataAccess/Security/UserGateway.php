@@ -2,6 +2,7 @@
 namespace DataAccess\Security;
 
 
+use BusinessLogic\Security\UserContext;
 use BusinessLogic\Security\UserContextBuilder;
 use DataAccess\CommonDao;
 use Exception;
@@ -60,5 +61,30 @@ class UserGateway extends CommonDao {
         $row = hesk_dbFetchAssoc($rs);
 
         return $row['email'];
+    }
+
+    function getUsersByNumberOfOpenTickets($heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`user`,`t1`.`name`, `t1`.`email`, `t1`.`language`, `t1`.`isadmin`, 
+                            `t1`.`categories`, `t1`.`notify_assigned`, `t1`.`heskprivileges`,
+					        (SELECT COUNT(*) FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets`
+					            WHERE `owner`=`t1`.`id` 
+					            AND `status` IN (
+					                SELECT `ID` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "statuses` 
+					                WHERE `IsClosed` = 0
+					            ) 
+					        ) AS `open_tickets`
+						FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` AS `t1`
+						WHERE `t1`.`autoassign` = '1' ORDER BY `open_tickets` ASC, RAND()");
+
+        $users = array();
+
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            $user = UserContext::fromDataRow($row);
+            $users[] = $user;
+        }
+
+        return $users;
     }
 }
