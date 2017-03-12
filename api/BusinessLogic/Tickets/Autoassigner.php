@@ -29,7 +29,7 @@ class Autoassigner {
             return null;
         }
 
-        $potentialUsers = $this->userGateway->getUsersByNumberOfOpenTickets($heskSettings);
+        $potentialUsers = $this->userGateway->getUsersByNumberOfOpenTicketsForAutoassign($heskSettings);
 
         foreach ($potentialUsers as $potentialUser) {
             if ($potentialUser->admin ||

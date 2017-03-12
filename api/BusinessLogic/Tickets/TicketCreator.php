@@ -149,13 +149,22 @@ class TicketCreator {
         }
 
         if ($ticket->ownerId !== null) {
-            $ownerEmail = $this->userGateway->getEmailForId($ticket->ownerId, $heskSettings);
+            $owner = $this->userGateway->getUserById($ticket->ownerId, $heskSettings);
 
-            $addressees = new Addressees();
-            $addressees->to = array($ownerEmail);
-            $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::TICKET_ASSIGNED_TO_YOU, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
+            if ($owner->notificationSettings->newAssignedToMe) {
+                $addressees = new Addressees();
+                $addressees->to = array($owner->email);
+                $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::TICKET_ASSIGNED_TO_YOU, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
+            }
         } else {
-            // TODO email all users who should be notified
+            // TODO Test
+            $usersToBeNotified = $this->userGateway->getUsersForNewTicketNotification($heskSettings);
+
+            foreach ($usersToBeNotified as $user) {
+                if ($user->admin || in_array($ticket->categoryId, $user->categories)) {
+                    $this->sendEmailToStaff($user, $ticket, $heskSettings, $modsForHeskSettings);
+                }
+            }
         }
 
         return $ticket;
@@ -169,5 +178,16 @@ class TicketCreator {
         $emails = str_replace(';', ',', $emailAddress);
 
         return explode(',', $emails);
+    }
+
+    private function sendEmailToStaff($user, $ticket, $heskSettings, $modsForHeskSettings) {
+        $addressees = new Addressees();
+        $addressees->to = array($user->email);
+        $language = $user->language !== null && trim($user->language) !== ''
+            ? $user->language
+            : $heskSettings['language'];
+
+        $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_TICKET_STAFF, $language,
+            $addressees, $ticket, $heskSettings, $modsForHeskSettings);
     }
 }

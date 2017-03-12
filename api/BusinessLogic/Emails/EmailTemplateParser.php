@@ -51,6 +51,8 @@ class EmailTemplateParser {
      * @throws InvalidEmailTemplateException
      */
     function getFormattedEmailForLanguage($templateId, $languageCode, $ticket, $heskSettings, $modsForHeskSettings) {
+        global $hesklang;
+
         $emailTemplate = $this->emailTemplateRetriever->getTemplate($templateId);
 
         if ($emailTemplate === null) {
@@ -59,7 +61,7 @@ class EmailTemplateParser {
 
         $template = self::getFromFileSystem($emailTemplate->fileName, $languageCode, false);
         $htmlTemplate = self::getFromFileSystem($emailTemplate->fileName, $languageCode, true);
-        $subject = $emailTemplate->languageKey;
+        $subject = $hesklang[$emailTemplate->languageKey];
 
         $subject = $this->parseSubject($subject, $ticket, $languageCode, $heskSettings);
         $message = $this->parseMessage($template, $ticket, $languageCode, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, false);
@@ -175,7 +177,7 @@ class EmailTemplateParser {
         $defaultStatus = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
         $statusName = hesk_msgToPlain($defaultStatus->localizedNames[$language]->text);
         $category = hesk_msgToPlain($this->categoryGateway->getAllCategories($heskSettings)[$ticket->categoryId]->name);
-        $owner = hesk_msgToPlain($this->userGateway->getNameForId($ticket->ownerId, $heskSettings));
+        $owner = hesk_msgToPlain($this->userGateway->getUserById($ticket->ownerId, $heskSettings)->name);
 
         switch ($ticket->priorityId) {
             case Priority::CRITICAL:

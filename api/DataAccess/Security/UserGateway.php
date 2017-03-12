@@ -32,46 +32,27 @@ class UserGateway extends CommonDao {
 
         return $row;
     }
-    
-    // TODO Replace this with a basic User retrieval
-    function getNameForId($id, $heskSettings) {
-        $this->init();
-        
-        $rs = hesk_dbQuery("SELECT `name` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `id` = " . intval($id));
-        
-        if (hesk_dbNumRows($rs) === 0) {
-            return null;
-        }
-        
-        $row = hesk_dbFetchAssoc($rs);
-        
-        return $row['name'];
-    }
 
-    // TODO Replace this with a basic User retriever
-    function getEmailForId($id, $heskSettings) {
+    function getUserById($id, $heskSettings) {
         $this->init();
 
-        $rs = hesk_dbQuery("SELECT `email` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `id` = " . intval($id));
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `id` = " . intval($id));
 
         if (hesk_dbNumRows($rs) === 0) {
             return null;
         }
 
-        $row = hesk_dbFetchAssoc($rs);
-
-        return $row['email'];
+        return UserContext::fromDataRow(hesk_dbFetchAssoc($rs));
     }
 
     /**
      * @param $heskSettings array
      * @return UserContext[]
      */
-    function getUsersByNumberOfOpenTickets($heskSettings) {
+    function getUsersByNumberOfOpenTicketsForAutoassign($heskSettings) {
         $this->init();
 
-        $rs = hesk_dbQuery("SELECT `t1`.`id`,`t1`.`user`,`t1`.`name`, `t1`.`email`, `t1`.`language`, `t1`.`isadmin`, 
-                            `t1`.`categories`, `t1`.`notify_assigned`, `t1`.`heskprivileges`,
+        $rs = hesk_dbQuery("SELECT `t1`.*,
 					        (SELECT COUNT(*) FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets`
 					            WHERE `owner`=`t1`.`id` 
 					            AND `status` IN (
@@ -90,6 +71,23 @@ class UserGateway extends CommonDao {
         }
 
         $this->close();
+
+        return $users;
+    }
+
+    /**
+     * @param $heskSettings array
+     * @return UserContext[]
+     */
+    function getUsersForNewTicketNotification($heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `notify_new_unassigned` = '1' AND `active` = '1'");
+
+        $users = array();
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            $users[] = UserContext::fromDataRow($row);
+        }
 
         return $users;
     }
