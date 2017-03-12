@@ -19,6 +19,7 @@ use BusinessLogic\Tickets\VerifiedEmailChecker;
 use DataAccess\Categories\CategoryGateway;
 use DataAccess\Security\BanGateway;
 use DataAccess\Security\UserGateway;
+use DataAccess\Settings\ModsForHeskSettingsGateway;
 use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\TicketGateway;
 use DataAccess\Tickets\VerifiedEmailGateway;
@@ -29,6 +30,9 @@ class ApplicationContext {
 
     function __construct() {
         $this->get = array();
+
+        // Settings
+        $this->get[ModsForHeskSettingsGateway::class] = new ModsForHeskSettingsGateway();
 
         // Verified Email Checker
         $this->get[VerifiedEmailGateway::class] = new VerifiedEmailGateway();
@@ -66,7 +70,7 @@ class ApplicationContext {
         $this->get[TicketRetriever::class] = new TicketRetriever($this->get[TicketGateway::class]);
         $this->get[TicketValidators::class] = new TicketValidators($this->get[TicketGateway::class]);
         $this->get[TrackingIdGenerator::class] = new TrackingIdGenerator($this->get[TicketGateway::class]);
-        $this->get[Autoassigner::class] = new Autoassigner();
+        $this->get[Autoassigner::class] = new Autoassigner($this->get[CategoryGateway::class], $this->get[UserGateway::class]);
         $this->get[NewTicketValidator::class] = new NewTicketValidator($this->get[CategoryRetriever::class],
             $this->get[BanRetriever::class],
             $this->get[TicketValidators::class]);
@@ -77,6 +81,7 @@ class ApplicationContext {
             $this->get[TicketGateway::class],
             $this->get[VerifiedEmailChecker::class],
             $this->get[EmailSenderHelper::class],
-            $this->get[UserGateway::class]);
+            $this->get[UserGateway::class],
+            $this->get[ModsForHeskSettingsGateway::class]);
     }
 }

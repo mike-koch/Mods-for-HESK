@@ -21,4 +21,3 @@ require_once(__DIR__ . '/../inc/custom_fields.inc.php');
 
 // Load the ApplicationContext
 $applicationContext = new \ApplicationContext();
-//$modsForHeskSettings = mfh_getSettings();

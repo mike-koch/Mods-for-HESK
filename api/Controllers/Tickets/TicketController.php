@@ -20,14 +20,14 @@ class TicketController {
     }
 
     function post() {
-        global $applicationContext, $hesk_settings, $modsForHeskSettings, $userContext;
+        global $applicationContext, $hesk_settings, $userContext;
 
         /* @var $ticketCreator TicketCreator */
         $ticketCreator = $applicationContext->get[TicketCreator::class];
 
         $jsonRequest = JsonRetriever::getJsonData();
 
-        $ticket = $ticketCreator->createTicketByCustomer($this->buildTicketRequestFromJson($jsonRequest), $hesk_settings, $modsForHeskSettings, $userContext);
+        $ticket = $ticketCreator->createTicketByCustomer($this->buildTicketRequestFromJson($jsonRequest), $hesk_settings, $userContext);
 
         //if ticket is a stageTicket, email user
         //else if assigned to owner, email new owner
@@ -55,6 +55,7 @@ class TicketController {
         $ticketRequest->screenResolution = Helpers::safeArrayGet($json, 'screenResolution');
         $ticketRequest->ipAddress = Helpers::safeArrayGet($json, 'ip');
         $ticketRequest->language = Helpers::safeArrayGet($json, 'language');
+        $ticketRequest->sendEmailToCustomer = Helpers::safeArrayGet($json, 'sendEmailToCustomer');
         $ticketRequest->customFields = array();
 
         $jsonCustomFields = Helpers::safeArrayGet($json, 'customFields');

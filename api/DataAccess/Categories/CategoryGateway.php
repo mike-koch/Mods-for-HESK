@@ -23,6 +23,7 @@ class CategoryGateway extends CommonDao {
             $category = new Category();
 
             $category->id = intval($row['id']);
+            $category->name = $row['name'];
             $category->catOrder = intval($row['cat_order']);
             $category->autoAssign = $row['autoassign'] == 1;
             $category->type = intval($row['type']);

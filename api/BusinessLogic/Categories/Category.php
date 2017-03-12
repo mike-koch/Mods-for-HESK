@@ -8,6 +8,9 @@ class Category {
      */
     public $id;
 
+    /* @var $name string */
+    public $name;
+
     /**
      * @var int Categories order number
      */

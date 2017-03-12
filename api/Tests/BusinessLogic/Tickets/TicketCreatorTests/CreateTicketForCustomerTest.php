@@ -5,10 +5,8 @@ namespace BusinessLogic\Tickets\TicketCreatorTests;
 
 use BusinessLogic\Emails\Addressees;
 use BusinessLogic\Emails\EmailSenderHelper;
-use BusinessLogic\Emails\EmailTemplate;
 use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Security\UserContext;
-use BusinessLogic\Statuses\DefaultStatusForAction;
 use BusinessLogic\Statuses\Status;
 use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\CreateTicketByCustomerModel;
@@ -20,6 +18,7 @@ use BusinessLogic\Tickets\VerifiedEmailChecker;
 use BusinessLogic\ValidationModel;
 use Core\Constants\Priority;
 use DataAccess\Security\UserGateway;
+use DataAccess\Settings\ModsForHeskSettingsGateway;
 use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\TicketGateway;
 use PHPUnit\Framework\TestCase;
@@ -67,11 +66,6 @@ class CreateTicketTest extends TestCase {
     private $heskSettings;
 
     /**
-     * @var $modsForHeskSettings array
-     */
-    private $modsForHeskSettings;
-
-    /**
      * @var $userContext UserContext
      */
     private $userContext;
@@ -96,6 +90,12 @@ class CreateTicketTest extends TestCase {
      */
     private $userGateway;
 
+    /* @var $modsForHeskSettingsGateway \PHPUnit_Framework_MockObject_MockObject */
+    private $modsForHeskSettingsGateway;
+
+    /* @var $modsForHeskSettings array */
+    private $modsForHeskSettings;
+
     protected function setUp() {
         $this->ticketGateway = $this->createMock(TicketGateway::class);
         $this->newTicketValidator = $this->createMock(NewTicketValidator::class);
@@ -105,10 +105,11 @@ class CreateTicketTest extends TestCase {
         $this->verifiedEmailChecker = $this->createMock(VerifiedEmailChecker::class);
         $this->emailSenderHelper = $this->createMock(EmailSenderHelper::class);
         $this->userGateway = $this->createMock(UserGateway::class);
+        $this->modsForHeskSettingsGateway = $this->createMock(ModsForHeskSettingsGateway::class);
 
         $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator,
             $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker,
-            $this->emailSenderHelper, $this->userGateway);
+            $this->emailSenderHelper, $this->userGateway, $this->modsForHeskSettingsGateway);
 
         $this->ticketRequest = new CreateTicketByCustomerModel();
         $this->ticketRequest->name = 'Name';
@@ -133,7 +134,6 @@ class CreateTicketTest extends TestCase {
 
         $this->newTicketValidator->method('validateNewTicketForCustomer')->willReturn(new ValidationModel());
         $this->trackingIdGenerator->method('generateTrackingId')->willReturn('123-456-7890');
-        $this->autoassigner->method('getNextUserForTicket')->willReturn(1);
         $this->ticketGatewayGeneratedFields = new TicketGatewayGeneratedFields();
         $this->ticketGateway->method('createTicket')->willReturn($this->ticketGatewayGeneratedFields);
 
@@ -144,16 +144,22 @@ class CreateTicketTest extends TestCase {
     }
 
     function testItSavesTheTicketToTheDatabase() {
+        //-- Arrange
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
+
         //-- Assert
         $this->ticketGateway->expects($this->once())->method('createTicket');
 
         //-- Act
-        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
     }
 
     function testItSetsTheTrackingIdOnTheTicket() {
+        //-- Arrange
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
+
         //-- Act
-        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
         self::assertThat($ticket->trackingId, self::equalTo('123-456-7890'));
@@ -162,17 +168,24 @@ class CreateTicketTest extends TestCase {
     function testItSetsTheNextUserForAutoassign() {
         //-- Arrange
         $this->heskSettings['autoassign'] = 1;
+        $autoassignUser = new UserContext();
+        $autoassignUser->id = 1;
+        $this->autoassigner->method('getNextUserForTicket')->willReturn($autoassignUser);
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
 
         //-- Act
-        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
         self::assertThat($ticket->ownerId, self::equalTo(1));
     }
 
     function testItDoesntCallTheAutoassignerWhenDisabledInHesk() {
+        //-- Arrange
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
+
         //-- Act
-        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
         self::assertThat($ticket->ownerId, self::equalTo(null));
@@ -196,9 +209,10 @@ class CreateTicketTest extends TestCase {
         $this->ticketRequest->screenResolution = [1400, 900];
         $this->ticketRequest->ipAddress = '127.0.0.1';
         $this->ticketRequest->language = 'English';
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
 
         //-- Act
-        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
         self::assertThat($ticket->name, self::equalTo($this->ticketRequest->name));
@@ -222,9 +236,10 @@ class CreateTicketTest extends TestCase {
         $this->ticketGatewayGeneratedFields->dateCreated = 'date created';
         $this->ticketGatewayGeneratedFields->dateModified = 'date modified';
         $this->ticketGatewayGeneratedFields->id = 50;
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
 
         //-- Act
-        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
         self::assertThat($ticket->dateCreated, self::equalTo($this->ticketGatewayGeneratedFields->dateCreated));
@@ -233,16 +248,22 @@ class CreateTicketTest extends TestCase {
     }
 
     function testItSetsTheDefaultStatus() {
+        //-- Arrange
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
+
         //-- Act
-        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
         self::assertThat($ticket->statusId, self::equalTo(1));
     }
 
     function testItSetsTheDefaultProperties() {
+        //-- Arrange
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
+
         //-- Act
-        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
         self::assertThat($ticket->archived, self::isFalse());
@@ -257,12 +278,13 @@ class CreateTicketTest extends TestCase {
     function testItChecksIfTheEmailIsVerified() {
         //-- Arrange
         $this->modsForHeskSettings['customer_email_verification_required'] = true;
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
 
         //-- Assert
         $this->verifiedEmailChecker->expects($this->once())->method('isEmailVerified');
 
         //-- Act
-        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
     }
 
     function testItSendsAnEmailToTheCustomerWhenTheTicketIsCreated() {
@@ -271,13 +293,14 @@ class CreateTicketTest extends TestCase {
         $this->ticketRequest->language = 'English';
         $expectedAddressees = new Addressees();
         $expectedAddressees->to = array($this->ticketRequest->email);
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
 
         //-- Assert
         $this->emailSenderHelper->expects($this->once())->method('sendEmailForTicket')
-            ->with(EmailTemplateRetriever::NEW_TICKET, 'English', $expectedAddressees, $this->anything(), $this->heskSettings, $this->modsForHeskSettings);
+            ->with(EmailTemplateRetriever::NEW_TICKET, 'English', $expectedAddressees, $this->anything(), $this->heskSettings, $this->anything());
 
         //-- Act
-        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
     }
 
     function testItDoesNotSendsAnEmailToTheCustomerWhenTheTicketIsCreatedAndSendToCustomerIsFalse() {
@@ -286,12 +309,13 @@ class CreateTicketTest extends TestCase {
         $this->ticketRequest->language = 'English';
         $expectedAddressees = new Addressees();
         $expectedAddressees->to = array($this->ticketRequest->email);
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
 
         //-- Assert
         $this->emailSenderHelper->expects($this->never())->method('sendEmailForTicket');
 
         //-- Act
-        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
     }
 
     function testItSendsAnEmailToTheAssignedToOwnerWhenTheTicketIsCreated() {
@@ -300,12 +324,13 @@ class CreateTicketTest extends TestCase {
         $this->ticketRequest->language = 'English';
         $expectedAddressees = new Addressees();
         $expectedAddressees->to = array($this->ticketRequest->email);
+        $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
 
         //-- Assert
         $this->emailSenderHelper->expects($this->once())->method('sendEmailForTicket')
-            ->with(EmailTemplateRetriever::NEW_TICKET, 'English', $expectedAddressees, $this->anything(), $this->heskSettings, $this->modsForHeskSettings);
+            ->with(EmailTemplateRetriever::NEW_TICKET, 'English', $expectedAddressees, $this->anything(), $this->heskSettings, $this->anything());
 
         //-- Act
-        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->modsForHeskSettings, $this->userContext);
+        $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
     }
 }

@@ -174,7 +174,7 @@ class EmailTemplateParser {
         // Status name and category name
         $defaultStatus = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
         $statusName = hesk_msgToPlain($defaultStatus->localizedNames[$language]->text);
-        $category = hesk_msgToPlain($this->categoryGateway->getAllCategories($heskSettings)[$ticket->categoryId]);
+        $category = hesk_msgToPlain($this->categoryGateway->getAllCategories($heskSettings)[$ticket->categoryId]->name);
         $owner = hesk_msgToPlain($this->userGateway->getNameForId($ticket->ownerId, $heskSettings));
 
         switch ($ticket->priorityId) {

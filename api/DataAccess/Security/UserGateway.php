@@ -89,6 +89,8 @@ class UserGateway extends CommonDao {
             $users[] = $user;
         }
 
+        $this->close();
+
         return $users;
     }
 }

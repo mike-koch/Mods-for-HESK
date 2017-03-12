@@ -8,6 +8,7 @@ use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Statuses\DefaultStatusForAction;
 use DataAccess\Security\UserGateway;
+use DataAccess\Settings\ModsForHeskSettingsGateway;
 use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\TicketGateway;
 
@@ -52,8 +53,11 @@ class TicketCreator {
      */
     private $userGateway;
 
-    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner,
-                         $statusGateway, $ticketGateway, $verifiedEmailChecker, $emailSenderHelper, $userGateway) {
+    /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
+    private $modsForHeskSettingsGateway;
+
+    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner, $statusGateway, $ticketGateway,
+                         $verifiedEmailChecker, $emailSenderHelper, $userGateway, $modsForHeskSettingsGateway) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
         $this->autoassigner = $autoassigner;
@@ -62,6 +66,7 @@ class TicketCreator {
         $this->verifiedEmailChecker = $verifiedEmailChecker;
         $this->emailSenderHelper = $emailSenderHelper;
         $this->userGateway = $userGateway;
+        $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
     }
 
     /**
@@ -69,13 +74,14 @@ class TicketCreator {
      *
      * @param $ticketRequest CreateTicketByCustomerModel
      * @param $heskSettings array HESK settings
-     * @param $modsForHeskSettings array Mods for HESK settings
      * @param $userContext
      * @return Ticket The newly created ticket
      * @throws ValidationException When a required field in $ticket_request is missing
      * @throws \Exception When the default status for new tickets is not found
      */
-    function createTicketByCustomer($ticketRequest, $heskSettings, $modsForHeskSettings, $userContext) {
+    function createTicketByCustomer($ticketRequest, $heskSettings, $userContext) {
+        $modsForHeskSettings = $this->modsForHeskSettingsGateway->getAllSettings($heskSettings);
+
         $validationModel = $this->newTicketValidator->validateNewTicketForCustomer($ticketRequest, $heskSettings, $userContext);
 
         if (count($validationModel->errorKeys) > 0) {
@@ -96,7 +102,7 @@ class TicketCreator {
         $ticket->trackingId = $this->trackingIdGenerator->generateTrackingId($heskSettings);
 
         if ($heskSettings['autoassign']) {
-            $ticket->ownerId = $this->autoassigner->getNextUserForTicket($ticketRequest->category, $heskSettings);
+            $ticket->ownerId = $this->autoassigner->getNextUserForTicket($ticketRequest->category, $heskSettings)->id;
         }
 
         // Transform one-to-one properties
