@@ -9,8 +9,10 @@ register_shutdown_function('fatalErrorShutdownHandler');
 $userContext = null;
 
 function handle404() {
-    http_response_code(404);
-    print json_encode('404 found');
+    print output(array(
+        'message' => "The endpoint '{$_SERVER['REQUEST_URI']}' was not found. Double-check your request and submit again.",
+        'uri' => $_SERVER['REQUEST_URI']
+    ), 404);
 }
 
 function before() {
@@ -21,6 +23,8 @@ function before() {
 }
 
 function assertApiIsEnabled() {
+    global $applicationContext;
+
     return true;
 }
 
@@ -34,13 +38,7 @@ function buildUserContext($xAuthToken) {
 }
 
 function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {
-    if ($errorNumber === E_WARNING) {
-        //-- TODO log a warning
-    } elseif ($errorNumber === E_NOTICE || $errorNumber === E_USER_NOTICE) {
-        //-- TODO log an info
-    } else {
-        exceptionHandler(new Exception(sprintf("%s:%d\n\n%s", $errorFile, $errorLine, $errorMessage)));
-    }
+    exceptionHandler(new Exception(sprintf("%s:%d\n\n%s", $errorFile, $errorLine, $errorMessage)));
 }
 
 /**
@@ -53,15 +51,12 @@ function exceptionHandler($exception) {
         $castedException = $exception;
 
         print_error($castedException->title, $castedException->getMessage(), $castedException->httpResponseCode);
+    } elseif (exceptionIsOfType($exception, \Core\Exceptions\SQLException::class)) {
+        /* @var $castedException \Core\Exceptions\SQLException */
+        $castedException = $exception;
+        print_error("Fought an uncaught SQL exception", sprintf("%s\n\n%s", $castedException->failingQuery, $exception->getTraceAsString()));
     } else {
-        if (exceptionIsOfType($exception, \Core\Exceptions\SQLException::class)) {
-            /* @var $castedException \Core\Exceptions\SQLException */
-            $castedException = $exception;
-            print_error("Fought an uncaught exception", sprintf("%s\n\n%s", $castedException->failingQuery, $exception->getTraceAsString()));
-        } else {
-            print_error("Fought an uncaught exception of type " . get_class($exception), sprintf("%s\n\n%s", $exception->getMessage(), $exception->getTraceAsString()));
-        }
-
+        print_error("Fought an uncaught exception of type " . get_class($exception), sprintf("%s\n\n%s", $exception->getMessage(), $exception->getTraceAsString()));
     }
     // Log more stuff to logging table if possible; we'll catch any exceptions from this
     die();

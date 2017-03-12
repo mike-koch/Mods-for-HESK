@@ -4,6 +4,7 @@ namespace BusinessLogic\Tickets;
 
 
 use BusinessLogic\Security\UserContext;
+use BusinessLogic\Security\UserPrivilege;
 use DataAccess\Categories\CategoryGateway;
 use DataAccess\Security\UserGateway;
 
@@ -34,8 +35,8 @@ class Autoassigner {
         foreach ($potentialUsers as $potentialUser) {
             if ($potentialUser->admin ||
                 (in_array($categoryId, $potentialUser->categories) &&
-                    in_array('can_view_tickets', $potentialUser->permissions) &&
-                    in_array('can_reply_tickets', $potentialUser->permissions))) {
+                    in_array(UserPrivilege::CAN_VIEW_TICKETS, $potentialUser->permissions) &&
+                    in_array(UserPrivilege::CAN_REPLY_TO_TICKETS, $potentialUser->permissions))) {
                 return $potentialUser;
             }
         }
