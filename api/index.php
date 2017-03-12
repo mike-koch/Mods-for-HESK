@@ -23,9 +23,17 @@ function before() {
 }
 
 function assertApiIsEnabled() {
-    global $applicationContext;
+    global $applicationContext, $hesk_settings;
 
-    return true;
+    /* @var $apiChecker \BusinessLogic\Settings\ApiChecker */
+    $apiChecker = $applicationContext->get[\BusinessLogic\Settings\ApiChecker::class];
+
+    if (!$apiChecker->isApiEnabled($hesk_settings)) {
+        http_response_code(404);
+        die();
+    }
+
+    return;
 }
 
 function buildUserContext($xAuthToken) {
@@ -83,8 +91,8 @@ Link::before('before');
 
 Link::all(array(
     // Categories
-    '/v1/categories' => '\Controllers\Category\CategoryController::printAllCategories',
-    '/v1/categories/{i}' => '\Controllers\Category\CategoryController',
+    '/v1/categories' => '\Controllers\Categories\CategoryController::printAllCategories',
+    '/v1/categories/{i}' => '\Controllers\Categories\CategoryController',
     // Tickets
     '/v1/tickets/{i}' => '\Controllers\Tickets\TicketController',
     '/v1/tickets' => '\Controllers\Tickets\TicketController',

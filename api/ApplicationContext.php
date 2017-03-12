@@ -9,6 +9,7 @@ use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Emails\MailgunEmailSender;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContextBuilder;
+use BusinessLogic\Settings\ApiChecker;
 use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\TicketRetriever;
 use BusinessLogic\Tickets\TicketCreator;
@@ -33,6 +34,9 @@ class ApplicationContext {
 
         // Settings
         $this->get[ModsForHeskSettingsGateway::class] = new ModsForHeskSettingsGateway();
+
+        // API Checker
+        $this->get[ApiChecker::class] = new ApiChecker($this->get[ModsForHeskSettingsGateway::class]);
 
         // Verified Email Checker
         $this->get[VerifiedEmailGateway::class] = new VerifiedEmailGateway();

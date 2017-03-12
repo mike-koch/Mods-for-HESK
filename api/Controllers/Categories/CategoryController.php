@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers\Category;
+namespace Controllers\Categories;
 
 use BusinessLogic\Categories\CategoryRetriever;
 
