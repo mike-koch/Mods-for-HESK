@@ -31,7 +31,16 @@ class Autoassigner {
 
         $potentialUsers = $this->userGateway->getUsersByNumberOfOpenTickets($heskSettings);
 
+        foreach ($potentialUsers as $potentialUser) {
+            if ($potentialUser->admin ||
+                (in_array($categoryId, $potentialUser->categories) &&
+                    in_array('can_view_tickets', $potentialUser->permissions) &&
+                    in_array('can_reply_tickets', $potentialUser->permissions))) {
+                return $potentialUser;
+            }
+        }
 
-        return $potentialUsers[0];
+
+        return null;
     }
 }

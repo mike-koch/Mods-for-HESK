@@ -47,14 +47,20 @@ class AutoassignerTest extends TestCase {
         self::assertThat($owner, self::isNull());
     }
 
+    function getPermissionsForUser() {
+        return array('can_view_tickets', 'can_reply_tickets');
+    }
+
     function testItReturnsTheUsersWithLeastOpenTickets() {
         //-- Arrange
         $userWithNoOpenTickets = new UserContext();
         $userWithNoOpenTickets->id = 1;
         $userWithNoOpenTickets->categories = array(1);
+        $userWithNoOpenTickets->permissions = $this->getPermissionsForUser();
         $userWithOneOpenTicket = new UserContext();
         $userWithOneOpenTicket->id = 2;
         $userWithOneOpenTicket->categories = array(1);
+        $userWithOneOpenTicket->permissions = $this->getPermissionsForUser();
         $usersToReturn = array(
             $userWithNoOpenTickets,
             $userWithOneOpenTicket
@@ -69,5 +75,110 @@ class AutoassignerTest extends TestCase {
 
         //-- Assert
         self::assertThat($actual, self::equalTo($userWithNoOpenTickets));
+    }
+
+    function testItOnlyReturnsUsersWhoCanAccessTheCategory() {
+        //-- Arrange
+        $userWithNoOpenTickets = new UserContext();
+        $userWithNoOpenTickets->id = 1;
+        $userWithNoOpenTickets->categories = array(1);
+        $userWithNoOpenTickets->permissions = $this->getPermissionsForUser();
+        $userWithOneOpenTicket = new UserContext();
+        $userWithOneOpenTicket->id = 2;
+        $userWithOneOpenTicket->categories = array(2);
+        $userWithOneOpenTicket->permissions = $this->getPermissionsForUser();
+        $usersToReturn = array(
+            $userWithNoOpenTickets,
+            $userWithOneOpenTicket
+        );
+
+        $this->userGateway->method('getUsersByNumberOfOpenTickets')
+            ->with($this->heskSettings)
+            ->willReturn($usersToReturn);
+
+        //-- Act
+        $actual = $this->autoassigner->getNextUserForTicket(2, $this->heskSettings);
+
+        //-- Assert
+        self::assertThat($actual, self::equalTo($userWithOneOpenTicket));
+    }
+
+    function testItReturnsAdminUsers() {
+        //-- Arrange
+        $userWithNoOpenTickets = new UserContext();
+        $userWithNoOpenTickets->id = 1;
+        $userWithNoOpenTickets->categories = array(1);
+        $userWithNoOpenTickets->permissions = $this->getPermissionsForUser();
+        $userWithNoOpenTickets->admin = true;
+        $userWithOneOpenTicket = new UserContext();
+        $userWithOneOpenTicket->id = 2;
+        $userWithOneOpenTicket->categories = array(2);
+        $userWithOneOpenTicket->permissions = $this->getPermissionsForUser();
+        $usersToReturn = array(
+            $userWithNoOpenTickets,
+            $userWithOneOpenTicket
+        );
+
+        $this->userGateway->method('getUsersByNumberOfOpenTickets')
+            ->with($this->heskSettings)
+            ->willReturn($usersToReturn);
+
+        //-- Act
+        $actual = $this->autoassigner->getNextUserForTicket(2, $this->heskSettings);
+
+        //-- Assert
+        self::assertThat($actual, self::equalTo($userWithNoOpenTickets));
+    }
+
+    function testItOnlyReturnsUsersWhoCanViewAndRespondToTickets() {
+        //-- Arrange
+        $userWithNoOpenTickets = new UserContext();
+        $userWithNoOpenTickets->id = 1;
+        $userWithNoOpenTickets->categories = array(1);
+        $userWithNoOpenTickets->permissions = array();
+        $userWithOneOpenTicket = new UserContext();
+        $userWithOneOpenTicket->id = 2;
+        $userWithOneOpenTicket->categories = array(1);
+        $userWithOneOpenTicket->permissions = $this->getPermissionsForUser();
+        $usersToReturn = array(
+            $userWithNoOpenTickets,
+            $userWithOneOpenTicket
+        );
+
+        $this->userGateway->method('getUsersByNumberOfOpenTickets')
+            ->with($this->heskSettings)
+            ->willReturn($usersToReturn);
+
+        //-- Act
+        $actual = $this->autoassigner->getNextUserForTicket(1, $this->heskSettings);
+
+        //-- Assert
+        self::assertThat($actual, self::equalTo($userWithOneOpenTicket));
+    }
+
+    function testItReturnsNullWhenNoOneCanHandleTheTicket() {
+        //-- Arrange
+        $userWithNoOpenTickets = new UserContext();
+        $userWithNoOpenTickets->id = 1;
+        $userWithNoOpenTickets->categories = array(1);
+        $userWithNoOpenTickets->permissions = $this->getPermissionsForUser();
+        $userWithOneOpenTicket = new UserContext();
+        $userWithOneOpenTicket->id = 2;
+        $userWithOneOpenTicket->categories = array(1);
+        $userWithOneOpenTicket->permissions = $this->getPermissionsForUser();
+        $usersToReturn = array(
+            $userWithNoOpenTickets,
+            $userWithOneOpenTicket
+        );
+
+        $this->userGateway->method('getUsersByNumberOfOpenTickets')
+            ->with($this->heskSettings)
+            ->willReturn($usersToReturn);
+
+        //-- Act
+        $actual = $this->autoassigner->getNextUserForTicket(2, $this->heskSettings);
+
+        //-- Assert
+        self::assertThat($actual, self::isNull());
     }
 }

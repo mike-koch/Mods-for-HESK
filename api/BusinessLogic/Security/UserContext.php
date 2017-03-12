@@ -4,30 +4,55 @@ namespace BusinessLogic\Security;
 
 
 class UserContext {
+    /* @var $id int */
     public $id;
+
+    /* @var $username string */
     public $username;
+
+    /* @var $admin bool */
     public $admin;
+
+    /* @var $name string */
     public $name;
+
+    /* @var $email string */
     public $email;
+
+    /* @var $signature string */
     public $signature;
+
+    /* @var $language string|null */
     public $language;
+
+    /* @var $categories int[] */
     public $categories;
+
+    /* @var $permissions string[] */
     public $permissions;
 
-    /**
-     * @var UserContextPreferences
-     */
+    /* @var UserContextPreferences */
     public $preferences;
 
-    /**
-     * @var UserContextNotifications
-     */
+    /* @var UserContextNotifications */
     public $notificationSettings;
+
+    /* @var $autoAssign bool */
     public $autoAssign;
+
+    /* @var $ratingNegative int */
     public $ratingNegative;
+
+    /* @var $ratingPositive int */
     public $ratingPositive;
+
+    /* @var $rating float */
     public $rating;
+
+    /* @var $totalNumberOfReplies int */
     public $totalNumberOfReplies;
+
+    /* @var $active bool */
     public $active;
 
     /**

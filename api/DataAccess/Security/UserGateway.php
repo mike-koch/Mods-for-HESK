@@ -63,6 +63,10 @@ class UserGateway extends CommonDao {
         return $row['email'];
     }
 
+    /**
+     * @param $heskSettings array
+     * @return UserContext[]
+     */
     function getUsersByNumberOfOpenTickets($heskSettings) {
         $this->init();
 
