@@ -122,7 +122,8 @@ function getLoggingLocation($exception) {
     // http://stackoverflow.com/a/9133897/1509431
     $trace = $exception->getTrace();
     $lastCall = $trace[0];
-    return basename($lastCall['file'], '.php');
+    $location = basename($lastCall['file'], '.php');
+    return "REST API: {$location}";
 }
 
 /**

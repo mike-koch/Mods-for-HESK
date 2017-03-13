@@ -23,12 +23,15 @@ function search_log($hesk_settings, $location, $from_date, $to_date, $severity_i
     if ($severity_id != NULL) {
         $sql .= "AND `severity` = " . intval($severity_id);
     }
+    $sql .= " ORDER BY `id` DESC";
 
     $rs = hesk_dbQuery($sql);
 
     $results = array();
     while ($row = hesk_dbFetchAssoc($rs)) {
         $row['timestamp'] = hesk_date($row['timestamp'], true);
+        $row['stackTrace'] = nl2br($row['stack_trace']);
+        unset($row['stack_trace']);
         $results[] = $row;
     }
 

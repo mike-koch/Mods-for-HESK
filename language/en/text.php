@@ -45,6 +45,9 @@ $hesklang['_COLLATE']='utf8_unicode_ci';
 // This is the email break line that will be used in email piping
 $hesklang['EMAIL_HR']='------ Reply above this line ------';
 
+// ADDED OR MODIFIED IN Mods for HESK 3.1.0
+$hesklang['stack_trace_header'] = 'Stack Trace';
+
 // ADDED OR MODIFIED IN Mods for HESK 3.0.0
 $hesklang['you_have_x_messages'] = 'You have %s new %s'; // %s: Number of new messages, "message" or "messages", depending on # 
 $hesklang['message_lower_case'] = 'message';
