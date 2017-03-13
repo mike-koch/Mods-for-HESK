@@ -29,7 +29,7 @@ function assertApiIsEnabled() {
     $apiChecker = $applicationContext->get[\BusinessLogic\Settings\ApiChecker::class];
 
     if (!$apiChecker->isApiEnabled($hesk_settings)) {
-        http_response_code(404);
+        print output(array('message' => 'API Disabled'), 404);
         die();
     }
 
@@ -53,7 +53,18 @@ function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {
  * @param $exception Exception
  */
 function exceptionHandler($exception) {
-    //-- TODO Log an error
+    global $applicationContext, $userContext, $hesk_settings;
+
+    if (strpos($exception->getTraceAsString(), 'LoggingGateway') !== false) {
+        //-- Suppress these for now, as it would cause issues to output two JSONs at one time.
+        return;
+    }
+
+
+    /* @var $loggingGateway \DataAccess\Logging\LoggingGateway */
+    $loggingGateway = $applicationContext->get[\DataAccess\Logging\LoggingGateway::class];
+
+    // We don't cast API Friendly Exceptions as they're user-generated errors
     if (exceptionIsOfType($exception, \BusinessLogic\Exceptions\ApiFriendlyException::class)) {
         /* @var $castedException \BusinessLogic\Exceptions\ApiFriendlyException */
         $castedException = $exception;
@@ -62,12 +73,56 @@ function exceptionHandler($exception) {
     } elseif (exceptionIsOfType($exception, \Core\Exceptions\SQLException::class)) {
         /* @var $castedException \Core\Exceptions\SQLException */
         $castedException = $exception;
-        print_error("Fought an uncaught SQL exception", sprintf("%s\n\n%s", $castedException->failingQuery, $exception->getTraceAsString()));
+
+        $logId = tryToLog(getLoggingLocation($exception),
+                "Fought an uncaught SQL exception: " . $castedException->failingQuery, $castedException->getTraceAsString(),
+                $userContext, $hesk_settings);
+
+        $logIdText = $logId === null ? "Additionally, the error could not be logged! :'(" : "Log ID: {$logId}";
+        print_error("SQL Exception", "Fought an uncaught SQL exception. Check the logs for more information. {$logIdText}");
     } else {
-        print_error("Fought an uncaught exception of type " . get_class($exception), sprintf("%s\n\n%s", $exception->getMessage(), $exception->getTraceAsString()));
+        $logId = tryToLog(getLoggingLocation($exception),
+            $exception->getMessage(), $exception->getTraceAsString(),
+            $userContext, $hesk_settings);
+
+        $logIdText = $logId === null ? "Additionally, the error could not be logged! :'(" : "Log ID: {$logId}";
+        print_error("Exception Occurred", "Fought an uncaught exception. Check the logs for more information. {$logIdText}");
     }
-    // Log more stuff to logging table if possible; we'll catch any exceptions from this
+
     die();
+}
+
+/**
+ * @param $location string
+ * @param $message string
+ * @param $stackTrace string
+ * @param $userContext \BusinessLogic\Security\UserContext
+ * @param $heskSettings array
+ * @return int|null The inserted ID, or null if failed to log
+ * @internal param Exception $exception
+ */
+function tryToLog($location, $message, $stackTrace, $userContext, $heskSettings) {
+    global $applicationContext;
+
+    /* @var $loggingGateway \DataAccess\Logging\LoggingGateway */
+    $loggingGateway = $applicationContext->get[\DataAccess\Logging\LoggingGateway::class];
+
+    try {
+        return $loggingGateway->logError($location, $message, $stackTrace, $userContext, $heskSettings);
+    } catch (Exception $squished) {
+        return null;
+    }
+}
+
+/**
+ * @param $exception Exception
+ * @return string The location of the exception
+ */
+function getLoggingLocation($exception) {
+    // http://stackoverflow.com/a/9133897/1509431
+    $trace = $exception->getTrace();
+    $lastCall = $trace[0];
+    return basename($lastCall['file'], '.php');
 }
 
 /**

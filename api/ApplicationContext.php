@@ -18,6 +18,7 @@ use BusinessLogic\Tickets\TicketValidators;
 use BusinessLogic\Tickets\TrackingIdGenerator;
 use BusinessLogic\Tickets\VerifiedEmailChecker;
 use DataAccess\Categories\CategoryGateway;
+use DataAccess\Logging\LoggingGateway;
 use DataAccess\Security\BanGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
@@ -37,6 +38,9 @@ class ApplicationContext {
 
         // API Checker
         $this->get[ApiChecker::class] = new ApiChecker($this->get[ModsForHeskSettingsGateway::class]);
+
+        // Logging
+        $this->get[LoggingGateway::class] = new LoggingGateway();
 
         // Verified Email Checker
         $this->get[VerifiedEmailGateway::class] = new VerifiedEmailGateway();
