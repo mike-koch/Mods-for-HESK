@@ -66,7 +66,7 @@ class AutoassignerTest extends TestCase {
             $userWithOneOpenTicket
         );
 
-        $this->userGateway->method('getUsersByNumberOfOpenTickets')
+        $this->userGateway->method('getUsersByNumberOfOpenTicketsForAutoassign')
             ->with($this->heskSettings)
             ->willReturn($usersToReturn);
 
@@ -92,7 +92,7 @@ class AutoassignerTest extends TestCase {
             $userWithOneOpenTicket
         );
 
-        $this->userGateway->method('getUsersByNumberOfOpenTickets')
+        $this->userGateway->method('getUsersByNumberOfOpenTicketsForAutoassign')
             ->with($this->heskSettings)
             ->willReturn($usersToReturn);
 
@@ -119,7 +119,7 @@ class AutoassignerTest extends TestCase {
             $userWithOneOpenTicket
         );
 
-        $this->userGateway->method('getUsersByNumberOfOpenTickets')
+        $this->userGateway->method('getUsersByNumberOfOpenTicketsForAutoassign')
             ->with($this->heskSettings)
             ->willReturn($usersToReturn);
 
@@ -145,7 +145,7 @@ class AutoassignerTest extends TestCase {
             $userWithOneOpenTicket
         );
 
-        $this->userGateway->method('getUsersByNumberOfOpenTickets')
+        $this->userGateway->method('getUsersByNumberOfOpenTicketsForAutoassign')
             ->with($this->heskSettings)
             ->willReturn($usersToReturn);
 
@@ -171,7 +171,7 @@ class AutoassignerTest extends TestCase {
             $userWithOneOpenTicket
         );
 
-        $this->userGateway->method('getUsersByNumberOfOpenTickets')
+        $this->userGateway->method('getUsersByNumberOfOpenTicketsForAutoassign')
             ->with($this->heskSettings)
             ->willReturn($usersToReturn);
 

@@ -7,6 +7,7 @@ use BusinessLogic\Emails\Addressees;
 use BusinessLogic\Emails\EmailSenderHelper;
 use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Security\UserContext;
+use BusinessLogic\Security\UserContextNotifications;
 use BusinessLogic\Statuses\Status;
 use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\CreateTicketByCustomerModel;
@@ -136,6 +137,7 @@ class CreateTicketTest extends TestCase {
         $this->trackingIdGenerator->method('generateTrackingId')->willReturn('123-456-7890');
         $this->ticketGatewayGeneratedFields = new TicketGatewayGeneratedFields();
         $this->ticketGateway->method('createTicket')->willReturn($this->ticketGatewayGeneratedFields);
+        $this->userGateway->method('getUsersForNewTicketNotification')->willReturn(array());
 
         $status = new Status();
         $status->id = 1;
@@ -169,8 +171,12 @@ class CreateTicketTest extends TestCase {
         //-- Arrange
         $this->heskSettings['autoassign'] = 1;
         $autoassignUser = new UserContext();
+        $notificationSettings = new UserContextNotifications();
+        $notificationSettings->newAssignedToMe = true;
+        $autoassignUser->notificationSettings = $notificationSettings;
         $autoassignUser->id = 1;
         $this->autoassigner->method('getNextUserForTicket')->willReturn($autoassignUser);
+        $this->userGateway->method('getUserById')->willReturn($autoassignUser);
         $this->modsForHeskSettingsGateway->method('getAllSettings')->willReturn($this->modsForHeskSettings);
 
         //-- Act
