@@ -270,7 +270,7 @@ readme.html
 robots.txt
 .idea/
 attachments/__latest.txt
-attachments
+/attachments
 img/ban.png
 img/banned.png
 img/ico_tools.png
