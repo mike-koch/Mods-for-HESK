@@ -13,6 +13,6 @@ class CreateAttachmentModel {
     /* @var $id int */
     public $fileSize;
 
-    /* @var $attachmentContents string [base64-encoded] */
+    /* @var $attachmentContents string */
     public $attachmentContents;
 }
