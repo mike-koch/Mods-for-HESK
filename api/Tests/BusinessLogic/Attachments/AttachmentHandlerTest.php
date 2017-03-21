@@ -36,13 +36,17 @@ class AttachmentHandlerTest extends TestCase {
         $this->attachmentGateway = $this->createMock(AttachmentGateway::class);
         $this->fileWriter = $this->createMock(FileWriter::class);
         $this->heskSettings = array(
-            'attach_dir' => 'attachments'
+            'attach_dir' => 'attachments',
+            'attachments' => array(
+                'allowed_types' => array('.txt'),
+                'max_size' => 999
+            )
         );
 
         $this->attachmentHandler = new AttachmentHandler($this->ticketGateway, $this->attachmentGateway, $this->fileWriter);
         $this->createAttachmentForTicketModel = new CreateAttachmentForTicketModel();
         $this->createAttachmentForTicketModel->attachmentContents = base64_encode('string');
-        $this->createAttachmentForTicketModel->displayName = 'DisplayName';
+        $this->createAttachmentForTicketModel->displayName = 'DisplayName.txt';
         $this->createAttachmentForTicketModel->ticketId = 1;
         $this->createAttachmentForTicketModel->type = AttachmentType::MESSAGE;
     }
@@ -138,6 +142,32 @@ class AttachmentHandlerTest extends TestCase {
         //-- Assert
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessageRegExp('/INVALID_ATTACHMENT_TYPE/');
+
+        //-- Act
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+    }
+
+    function testThatValidateThrowsAnExceptionWhenTheFileExtensionIsNotPermitted() {
+        //-- Arrange
+        $this->heskSettings['attachments']['allowed_types'] = array('.gif');
+        $this->createAttachmentForTicketModel->ticketId = 0;
+
+        //-- Assert
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessageRegExp('/EXTENSION_NOT_PERMITTED/');
+
+        //-- Act
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+    }
+
+    function testThatValidateThrowsAnExceptionWhenTheFileSizeIsLargerThanMaxPermitted() {
+        //-- Arrange
+        $this->createAttachmentForTicketModel->attachmentContents = base64_encode("msg");
+        $this->heskSettings['attachments']['max_size'] = 1;
+
+        //-- Assert
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessageRegExp('/FILE_SIZE_TOO_LARGE/');
 
         //-- Act
         $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);

@@ -10,9 +10,6 @@ class CreateAttachmentModel {
     /* @var $displayName string */
     public $displayName;
 
-    /* @var $fileExtension string */
-    public $fileExtension;
-
     /* @var $id int */
     public $fileSize;
 

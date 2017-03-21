@@ -32,16 +32,17 @@ class AttachmentHandler {
      * @return TicketAttachment the newly created attachment
      */
     function createAttachmentForTicket($createAttachmentModel, $heskSettings) {
-        $this->validate($createAttachmentModel);
+        $this->validate($createAttachmentModel, $heskSettings);
 
         $decodedAttachment = base64_decode($createAttachmentModel->attachmentContents);
 
         $ticket = $this->ticketGateway->getTicketById($createAttachmentModel->ticketId, $heskSettings);
         $cleanedFileName = $this->cleanFileName($createAttachmentModel->displayName);
+        $fileParts = pathinfo($cleanedFileName);
 
         $ticketAttachment = new TicketAttachment();
         $ticketAttachment->savedName = $this->generateSavedName($ticket->trackingId,
-            $cleanedFileName, $createAttachmentModel->fileExtension);
+            $cleanedFileName, $fileParts['extension']);
         $ticketAttachment->displayName = $cleanedFileName;
         $ticketAttachment->ticketTrackingId = $ticket->trackingId;
         $ticketAttachment->type = $createAttachmentModel->type;
@@ -58,9 +59,10 @@ class AttachmentHandler {
 
     /**
      * @param $createAttachmentModel CreateAttachmentForTicketModel
+     * @param $heskSettings array
      * @throws ValidationException
      */
-    private function validate($createAttachmentModel) {
+    private function validate($createAttachmentModel, $heskSettings) {
         $errorKeys = array();
         if ($createAttachmentModel->attachmentContents === null ||
             trim($createAttachmentModel->attachmentContents) === '') {
@@ -85,7 +87,21 @@ class AttachmentHandler {
             $errorKeys[] = 'INVALID_ATTACHMENT_TYPE';
         }
 
-        //-- TODO Extension, size
+        $fileParts = pathinfo($createAttachmentModel->displayName);
+        if (!isset($fileParts['extension']) || !in_array(".{$fileParts['extension']}", $heskSettings['attachments']['allowed_types'])) {
+            $errorKeys[] = 'EXTENSION_NOT_PERMITTED';
+        }
+
+        $fileContents = base64_decode($createAttachmentModel->attachmentContents);
+        if (function_exists('mb_strlen')) {
+            $fileSize = mb_strlen($fileContents, '8bit');
+        } else {
+            $fileSize = strlen($fileContents);
+        }
+
+        if ($fileSize > $heskSettings['attachments']['max_size']) {
+            $errorKeys[] = 'FILE_SIZE_TOO_LARGE';
+        }
 
         if (count($errorKeys) > 0) {
             $validationModel = new ValidationModel();
@@ -96,6 +112,7 @@ class AttachmentHandler {
     }
 
     private function generateSavedName($trackingId, $displayName, $fileExtension) {
+        $fileExtension = ".{$fileExtension}";
         $useChars = 'AEUYBDGHJLMNPQRSTVWXZ123456789';
         $tmp = uniqid();
         for ($j = 1; $j < 10; $j++) {

@@ -33,7 +33,7 @@ class TicketController {
         //else if assigned to owner, email new owner
         //else email all staff
 
-        return output($ticket);
+        return output($ticket, 201);
     }
 
     /**
