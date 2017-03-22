@@ -47,7 +47,7 @@ class AttachmentHandler {
             $cleanedFileName, $fileParts['extension']);
         $ticketAttachment->displayName = $cleanedFileName;
         $ticketAttachment->ticketTrackingId = $ticket->trackingId;
-        $ticketAttachment->type = $createAttachmentModel->type;
+        $ticketAttachment->type = 0;
         $ticketAttachment->downloadCount = 0;
 
         $ticketAttachment->fileSize =
@@ -86,10 +86,6 @@ class AttachmentHandler {
         if ($createAttachmentModel->ticketId === null ||
             $createAttachmentModel->ticketId < 1) {
             $errorKeys[] = 'TICKET_ID_MISSING';
-        }
-
-        if (!in_array($createAttachmentModel->type, array(AttachmentType::MESSAGE, AttachmentType::REPLY))) {
-            $errorKeys[] = 'INVALID_ATTACHMENT_TYPE';
         }
 
         $fileParts = pathinfo($createAttachmentModel->displayName);

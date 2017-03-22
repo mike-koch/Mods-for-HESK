@@ -135,18 +135,6 @@ class AttachmentHandlerTest extends TestCase {
         $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
     }
 
-    function testThatValidateThrowsAnExceptionWhenTheAttachmentTypeIsNeitherMessageNorReply() {
-        //-- Arrange
-        $this->createAttachmentForTicketModel->type = 5;
-
-        //-- Assert
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessageRegExp('/INVALID_ATTACHMENT_TYPE/');
-
-        //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
-    }
-
     function testThatValidateThrowsAnExceptionWhenTheFileExtensionIsNotPermitted() {
         //-- Arrange
         $this->heskSettings['attachments']['allowed_types'] = array('.gif');
@@ -183,7 +171,7 @@ class AttachmentHandlerTest extends TestCase {
         $ticketAttachment = new TicketAttachment();
         $ticketAttachment->displayName = $this->createAttachmentForTicketModel->displayName;
         $ticketAttachment->ticketTrackingId = $ticket->trackingId;
-        $ticketAttachment->type = $this->createAttachmentForTicketModel->type;
+        $ticketAttachment->type = 0;
         $ticketAttachment->downloadCount = 0;
         $ticketAttachment->id = 50;
 
@@ -196,7 +184,7 @@ class AttachmentHandlerTest extends TestCase {
         //-- Assert
         self::assertThat($actual->id, self::equalTo(50));
         self::assertThat($actual->downloadCount, self::equalTo(0));
-        self::assertThat($actual->type, self::equalTo($this->createAttachmentForTicketModel->type));
+        self::assertThat($actual->type, self::equalTo(AttachmentType::MESSAGE));
         self::assertThat($actual->ticketTrackingId, self::equalTo($ticket->trackingId));
         self::assertThat($actual->displayName, self::equalTo($this->createAttachmentForTicketModel->displayName));
     }
@@ -211,7 +199,7 @@ class AttachmentHandlerTest extends TestCase {
         $ticketAttachment = new TicketAttachment();
         $ticketAttachment->displayName = $this->createAttachmentForTicketModel->displayName;
         $ticketAttachment->ticketTrackingId = $ticket->trackingId;
-        $ticketAttachment->type = $this->createAttachmentForTicketModel->type;
+        $ticketAttachment->type = AttachmentType::MESSAGE;
         $ticketAttachment->downloadCount = 0;
         $ticketAttachment->id = 50;
 

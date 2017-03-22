@@ -10,7 +10,7 @@ use BusinessLogic\Helpers;
 use Controllers\JsonRetriever;
 
 class StaffTicketAttachmentsController {
-    function post() {
+    function post($ticketId) {
         global $hesk_settings, $applicationContext;
 
         if (!$hesk_settings['attachments']['use']) {
@@ -20,19 +20,18 @@ class StaffTicketAttachmentsController {
         /* @var $attachmentHandler AttachmentHandler */
         $attachmentHandler = $applicationContext->get[AttachmentHandler::class];
 
-        $createAttachmentForTicketModel = $this->createModel(JsonRetriever::getJsonData());
+        $createAttachmentForTicketModel = $this->createModel(JsonRetriever::getJsonData(), $ticketId);
 
         $createdAttachment = $attachmentHandler->createAttachmentForTicket($createAttachmentForTicketModel, $hesk_settings);
 
         return output($createdAttachment, 201);
     }
 
-    private function createModel($json) {
+    private function createModel($json, $ticketId) {
         $model = new CreateAttachmentForTicketModel();
         $model->attachmentContents = Helpers::safeArrayGet($json, 'data');
         $model->displayName = Helpers::safeArrayGet($json, 'displayName');
-        $model->ticketId = Helpers::safeArrayGet($json, 'ticketId');
-        $model->type = Helpers::safeArrayGet($json, 'type');
+        $model->ticketId = $ticketId;
 
         return $model;
     }
