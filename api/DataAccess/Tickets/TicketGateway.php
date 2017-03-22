@@ -3,6 +3,7 @@
 namespace DataAccess\Tickets;
 
 
+use BusinessLogic\Tickets\Attachment;
 use BusinessLogic\Tickets\Ticket;
 use BusinessLogic\Tickets\TicketGatewayGeneratedFields;
 use DataAccess\CommonDao;
@@ -204,5 +205,26 @@ class TicketGateway extends CommonDao {
         $this->close();
 
         return $generatedFields;
+    }
+
+    /**
+     * @param $ticketId int
+     * @param $attachments Attachment[]
+     * @param $heskSettings array
+     *
+     * Crappy logic that should just be pulled from the attachments table, but using for backwards compatibility
+     */
+    function updateAttachmentsForTicket($ticketId, $attachments, $heskSettings) {
+        $this->init();
+
+        $attachmentStrings = array();
+        foreach ($attachments as $attachment) {
+            $attachmentStrings[] = "{$attachment->id}#{$attachment->fileName}#{$attachment->savedName}";
+        }
+        $attachmentStringToSave = implode(',', $attachmentStrings);
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` 
+            SET `attachments` = '" . hesk_dbEscape($attachmentStringToSave) . "' 
+            WHERE `id` = " . intval($ticketId));
     }
 }

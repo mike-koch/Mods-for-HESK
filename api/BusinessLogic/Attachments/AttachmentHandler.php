@@ -4,6 +4,8 @@ namespace BusinessLogic\Attachments;
 
 
 use BusinessLogic\Exceptions\ValidationException;
+use BusinessLogic\Tickets\Attachment;
+use BusinessLogic\Tickets\Ticket;
 use BusinessLogic\ValidationModel;
 use DataAccess\Attachments\AttachmentGateway;
 use DataAccess\Files\FileWriter;
@@ -52,6 +54,9 @@ class AttachmentHandler {
             $this->fileWriter->writeToFile($ticketAttachment->savedName, $heskSettings['attach_dir'], $decodedAttachment);
 
         $attachmentId = $this->attachmentGateway->createAttachmentForTicket($ticketAttachment, $heskSettings);
+
+        $this->updateAttachmentsOnTicket($ticket, $ticketAttachment, $attachmentId, $heskSettings);
+
         $ticketAttachment->id = $attachmentId;
 
         return $ticketAttachment;
@@ -365,5 +370,21 @@ class AttachmentHandler {
             }
         }
         return true;
+    }
+
+    /**
+     * @param $ticket Ticket
+     * @param $ticketAttachment TicketAttachment
+     * @param $attachmentId int
+     * @param $heskSettings array
+     */
+    private function updateAttachmentsOnTicket($ticket, $ticketAttachment, $attachmentId, $heskSettings) {
+        $attachments = $ticket->attachments === null ? array() : $ticket->attachments;
+        $newAttachment = new Attachment();
+        $newAttachment->savedName = $ticketAttachment->savedName;
+        $newAttachment->fileName = $ticketAttachment->displayName;
+        $newAttachment->id = $attachmentId;
+        $attachments[] = $newAttachment;
+        $this->ticketGateway->updateAttachmentsForTicket($ticket->id, $attachments, $heskSettings);
     }
 }

@@ -147,11 +147,14 @@ Link::before('before');
 
 Link::all(array(
     // Categories
-    '/v1/categories' => '\Controllers\Categories\CategoryController::printAllCategories',
-    '/v1/categories/{i}' => '\Controllers\Categories\CategoryController',
+    '/v1/categories' => \Controllers\Categories\CategoryController::class . '::printAllCategories',
+    '/v1/categories/{i}' => \Controllers\Categories\CategoryController::class,
     // Tickets
-    '/v1/tickets/{i}' => '\Controllers\Tickets\TicketController',
-    '/v1/tickets' => '\Controllers\Tickets\TicketController',
+    '/v1/tickets/{i}' => \Controllers\Tickets\TicketController::class,
+    '/v1/tickets' => \Controllers\Tickets\TicketController::class,
+
+    // Attachments
+    '/v1/staff/attachments' => \Controllers\Attachments\StaffTicketAttachmentsController::class,
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'
