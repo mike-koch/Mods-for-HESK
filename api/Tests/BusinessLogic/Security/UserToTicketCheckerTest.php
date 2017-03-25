@@ -5,6 +5,7 @@ namespace BusinessLogic\Security;
 
 
 use BusinessLogic\Tickets\Ticket;
+use DataAccess\Security\UserGateway;
 use PHPUnit\Framework\TestCase;
 
 class UserToTicketCheckerTest extends TestCase {
@@ -12,17 +13,22 @@ class UserToTicketCheckerTest extends TestCase {
     /* @var $userToTicketChecker UserToTicketChecker */
     private $userToTicketChecker;
 
+    /* @var $userGateway \PHPUnit_Framework_MockObject_MockObject */
+    private $userGateway;
+
     /* @var $heskSettings array */
     private $heskSettings;
 
     protected function setUp() {
-        $this->userToTicketChecker = new UserToTicketChecker();
+        $this->userGateway = $this->createMock(UserGateway::class);
+        $this->userToTicketChecker = new UserToTicketChecker($this->userGateway);
     }
 
     function testItReturnsTrueWhenTheUserIsAnAdmin() {
         //-- Arrange
         $user = new UserContext();
         $user->admin = true;
+        $user->id = 99;
 
         $ticket = new Ticket();
 
@@ -39,6 +45,7 @@ class UserToTicketCheckerTest extends TestCase {
         $user->admin = false;
         $user->categories = array(1);
         $user->permissions = array(UserPrivilege::CAN_VIEW_TICKETS);
+        $user->id = 99;
 
         $ticket = new Ticket();
         $ticket->categoryId = 1;
@@ -56,6 +63,7 @@ class UserToTicketCheckerTest extends TestCase {
         $user->admin = false;
         $user->categories = array(1);
         $user->permissions = array();
+        $user->id = 99;
 
         $ticket = new Ticket();
         $ticket->categoryId = 1;
@@ -73,6 +81,7 @@ class UserToTicketCheckerTest extends TestCase {
         $user->admin = false;
         $user->categories = array(1);
         $user->permissions = array(UserPrivilege::CAN_VIEW_TICKETS, 'something else');
+        $user->id = 99;
 
         $ticket = new Ticket();
         $ticket->categoryId = 1;
@@ -84,5 +93,22 @@ class UserToTicketCheckerTest extends TestCase {
         self::assertThat($result, self::isFalse());
     }
 
-    //-- TODO Category Manager
+    function testItReturnsTrueWhenTheUserDoesNotHaveEditPermissionsButIsTheCategoryManager() {
+        //-- Arrange
+        $user = new UserContext();
+        $user->admin = false;
+        $user->categories = array(1);
+        $user->permissions = array(UserPrivilege::CAN_VIEW_TICKETS, 'something else');
+        $user->id = 1;
+        $this->userGateway->method('getManagerForCategory')->willReturn(1);
+
+        $ticket = new Ticket();
+        $ticket->categoryId = 1;
+
+        //-- Act
+        $result = $this->userToTicketChecker->isTicketWritableToUser($user, $ticket, true, $this->heskSettings);
+
+        //-- Assert
+        self::assertThat($result, self::isTrue());
+    }
 }

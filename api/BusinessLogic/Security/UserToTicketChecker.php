@@ -4,8 +4,15 @@ namespace BusinessLogic\Security;
 
 
 use BusinessLogic\Tickets\Ticket;
+use DataAccess\Security\UserGateway;
 
 class UserToTicketChecker {
+    /* @var $userGateway UserGateway */
+    private $userGateway;
+
+    function __construct($userGateway) {
+        $this->userGateway = $userGateway;
+    }
 
     /**
      * @param $user UserContext
@@ -19,8 +26,13 @@ class UserToTicketChecker {
             (in_array($ticket->categoryId, $user->categories) &&
                 in_array(UserPrivilege::CAN_VIEW_TICKETS, $user->permissions));
 
-        return $isEditing
-            ? $hasAccess && in_array(UserPrivilege::CAN_EDIT_TICKETS, $user->permissions)
-            : $hasAccess;
+        if ($isEditing) {
+            $categoryManagerId = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
+
+            $hasAccess = $hasAccess &&
+                (in_array(UserPrivilege::CAN_EDIT_TICKETS, $user->permissions) || $categoryManagerId == $user->id);
+        }
+
+        return $hasAccess;
     }
 }

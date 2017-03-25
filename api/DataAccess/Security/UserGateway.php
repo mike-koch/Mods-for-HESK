@@ -23,6 +23,7 @@ class UserGateway extends CommonDao {
             ) AND `active` = '1'");
 
         if (hesk_dbNumRows($rs) === 0) {
+            $this->close();
             return null;
         }
 
@@ -39,10 +40,15 @@ class UserGateway extends CommonDao {
         $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `id` = " . intval($id));
 
         if (hesk_dbNumRows($rs) === 0) {
+            $this->close();
             return null;
         }
 
-        return UserContext::fromDataRow(hesk_dbFetchAssoc($rs));
+        $user = UserContext::fromDataRow(hesk_dbFetchAssoc($rs));
+
+        $this->close();
+
+        return $user;
     }
 
     /**
@@ -89,6 +95,29 @@ class UserGateway extends CommonDao {
             $users[] = UserContext::fromDataRow($row);
         }
 
+        $this->close();
+
         return $users;
+    }
+
+    function getManagerForCategory($categoryId, $heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` 
+            WHERE `id` = (
+                SELECT `manager` 
+                FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories`
+                WHERE `id` = " . intval($categoryId) . ")");
+
+        if (hesk_dbNumRows($rs) === 0) {
+            $this->close();
+            return null;
+        }
+
+        $user = UserContext::fromDataRow(hesk_dbFetchAssoc($rs));
+
+        $this->close();
+
+        return $user;
     }
 }
