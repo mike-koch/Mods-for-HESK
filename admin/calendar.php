@@ -68,7 +68,7 @@ while ($row = hesk_dbFetchAssoc($rs)) {
         continue;
     }
 
-    $row['css_style'] = $row['color'] == null ? 'color: black; border: solid 1px #000;' : 'border: solid 1px ' . $row['color'] . '; background: ' . $row['color'];
+    $row['css_style'] = $row['color'] == null ? 'background: white; color: black; border: solid 1px #000;' : 'border: solid 1px ' . $row['color'] . '; background: ' . $row['color'];
     $categories[] = $row;
 }
 
