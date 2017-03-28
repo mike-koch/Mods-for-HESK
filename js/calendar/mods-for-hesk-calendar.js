@@ -22,9 +22,9 @@ $(document).ready(function() {
                         events.push(buildEvent(this.id, this));
                     });
                     callback(events);
+                    updateCategoryVisibility();
                 },
                 error: function(data) {
-                    console.error(data);
                     $.jGrowl($('#lang_error_loading_events').text(), { theme: 'alert-danger', closeTemplate: '' });
                 }
             });

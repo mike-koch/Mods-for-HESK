@@ -68,7 +68,7 @@ while ($row = hesk_dbFetchAssoc($rs)) {
         continue;
     }
 
-    $row['css_style'] = $row['color'] == null ? 'color: black; border: solid 1px #000;' : 'border: solid 1px ' . $row['color'] . '; background: ' . $row['color'];
+    $row['css_style'] = $row['color'] == null ? 'background: white; color: black; border: solid 1px #000;' : 'border: solid 1px ' . $row['color'] . '; background: ' . $row['color'];
     $categories[] = $row;
 }
 
@@ -83,7 +83,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <ul class="sidebar-menu">
             <li class="header text-uppercase"><?php echo $hesklang['calendar_categories']; ?></li>
             <?php foreach ($categories as $category): ?>
-                <!-- TODO Clean this up -->
                 <li>
                     <div class="ticket-info">
                         <div class="hide-on-overflow no-wrap event-category background-volatile"
