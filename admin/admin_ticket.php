@@ -1609,15 +1609,22 @@ function mfh_print_message() {
                 ?>
             </div>
             <div class="timeline-body">
-                <?php
-                if ($ticket['message'] != '') {
-                    if ($ticket['html']) {
-                        echo hesk_html_entity_decode($ticket['message']);
-                    } else {
-                        echo $ticket['message'];
-                    }
-                }
-                ?>
+                <div class="row">
+                    <div class="col-md-3 text-right">
+                        <strong><?php echo $hesklang['message_colon']; ?></strong>
+                    </div>
+                    <div class="col-md-9">
+                        <?php
+                        if ($ticket['message'] != '') {
+                            if ($ticket['html']) {
+                                echo hesk_html_entity_decode($ticket['message']);
+                            } else {
+                                echo $ticket['message'];
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
             <?php
             $first = true;
@@ -1713,12 +1720,19 @@ function hesk_printTicketReplies()
                 <span class="time"><i class="fa fa-clock-o"></i> <?php echo $reply['dt']; ?></span>
                 <h3 class="timeline-header"><?php echo $reply['name']; ?></h3>
                 <div class="timeline-body">
-                    <?php
-                    if ($reply['html']) {
-                        echo hesk_html_entity_decode($reply['message']);
-                    } else {
-                        echo $reply['message'];
-                    } ?>
+                    <div class="row">
+                        <div class="col-md-3 text-right">
+                            <strong><?php echo $hesklang['message_colon']; ?></strong>
+                        </div>
+                        <div class="col-md-9">
+                            <?php
+                            if ($reply['html']) {
+                                echo hesk_html_entity_decode($reply['message']);
+                            } else {
+                                echo $reply['message'];
+                            } ?>
+                        </div>
+                    </div>
                 </div>
                 <?php
                 if ($hesk_settings['attachments']['use'] && strlen($reply['attachments'])):
