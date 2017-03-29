@@ -23,7 +23,7 @@ hesk_load_database_functions();
 header('Content-Type: text/html; charset=' . $hesklang['ENCODING']);
 
 /* Get the search query composed of the subject and message */
-$query = hesk_REQUEST('q') or die('');
+$query = strip_tags(html_entity_decode(hesk_REQUEST('q'))) or die('');
 
 hesk_dbConnect();
 
