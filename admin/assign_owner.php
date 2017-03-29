@@ -92,8 +92,9 @@ if (!$row['isadmin']) {
 // Make sure two people don't assign a ticket to a different user at the same time
 if ($ticket['owner'] && $ticket['owner'] != $owner && hesk_REQUEST('unassigned') && hesk_GET('confirm') != 'Y') {
     $new_owner = ($owner == $_SESSION['id']) ? $hesklang['scoy'] : sprintf($hesklang['scot'], $row['name']);
+    $originalOwner = intval($ticket['owner']);
 
-    $res = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='{$ticket['owner']}' LIMIT 1");
+    $res = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='{$originalOwner}' LIMIT 1");
 
     if (hesk_dbNumRows($res) == 1) {
         $row = hesk_dbFetchAssoc($res);
