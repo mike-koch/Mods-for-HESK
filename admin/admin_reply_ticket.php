@@ -234,7 +234,7 @@ if ($ticket['locked']) {
 
     if ($ticket['status'] != $new_status) {
         // Does this status close the ticket?
-        $newStatusRs = hesk_dbQuery('SELECT `IsClosed`, `Key` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `ID` = ' . hesk_dbEscape($new_status));
+        $newStatusRs = hesk_dbQuery('SELECT `IsClosed`, `Key` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `ID` = ' . intval($new_status));
         $newStatus = hesk_dbFetchAssoc($newStatusRs);
 
         if ($newStatus['IsClosed'] && hesk_checkPermission('can_resolve', 0)) {

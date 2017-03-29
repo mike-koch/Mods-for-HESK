@@ -470,12 +470,12 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
     }
 
     //-- Check if the ticket is already a child.
-    $childRs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `parent` = ' . $ticket['id'] . ' AND `trackid` = \'' . $_POST['childTrackingId'] . '\'');
+    $childRs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `parent` = ' . intval($ticket['id']) . ' AND `trackid` = \'' . hesk_dbEscape(hesk_POST(['childTrackingId'])) . '\'');
     if (hesk_dbNumRows($childRs) > 0) {
         hesk_process_messages(sprintf($hesklang['is_already_linked'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'NOTICE');
     }
 
-    hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = ' . $ticket['id'] . ' WHERE `trackid` = \'' . $_POST['childTrackingId'] . '\'');
+    hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = ' . intval($ticket['id']) . ' WHERE `trackid` = \'' . hesk_dbEscape(hesk_POST['childTrackingId']) . '\'');
     hesk_process_messages(sprintf($hesklang['link_added'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 }
 
@@ -746,7 +746,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             if ($ticket['parent'] != null) {
                                 //-- Get the tracking ID of the parent
                                 $parentRs = hesk_dbQuery('SELECT `trackid` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets`
-                                WHERE `ID` = ' . hesk_dbEscape($ticket['parent']));
+                                WHERE `ID` = ' . intval($ticket['parent']));
                                 $parent = hesk_dbFetchAssoc($parentRs);
                                 echo '<a href="admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) . '&deleteParent=true">
                                 <i class="fa fa-times-circle" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete_relationship'] . '"></i></a>';
@@ -755,7 +755,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             //-- Check if any tickets have a parent set to this tracking ID
                             $hasRows = false;
                             $childrenRS = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets`
-                        WHERE `parent` = ' . hesk_dbEscape($ticket['id']));
+                        WHERE `parent` = ' . intval($ticket['id']));
                             while ($row = hesk_dbFetchAssoc($childrenRS)) {
                                 $hasRows = true;
                                 echo '<a href="admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999) . '&deleteChild=' . $row['id'] . '">
@@ -1281,7 +1281,7 @@ function hesk_getAdminButtons($category_id)
         }
     }
 
-    $isTicketClosedSql = 'SELECT `IsClosed`, `Closable` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `ID` = ' . $ticket['status'];
+    $isTicketClosedSql = 'SELECT `IsClosed`, `Closable` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `ID` = ' . intval($ticket['status']);
     $isTicketClosedRs = hesk_dbQuery($isTicketClosedSql);
     $isTicketClosedRow = hesk_dbFetchAssoc($isTicketClosedRs);
     $isTicketClosed = $isTicketClosedRow['IsClosed'];
