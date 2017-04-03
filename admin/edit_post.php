@@ -147,7 +147,7 @@ if (isset($_POST['save'])) {
 
                     if (isset($_POST[$k]) && is_array($_POST[$k])) {
                         foreach ($_POST[$k] as $myCB) {
-                            $tmpvar[$k] .= ( is_array($myCB) ? '' : hesk_input($myCB) ) . '<br>';
+                            $tmpvar[$k] .= ( is_array($myCB) ? '' : hesk_input($myCB) ) . '<br />';
                         }
                         $tmpvar[$k]=substr($tmpvar[$k],0,-6);
                     } else {
@@ -354,7 +354,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 $k_value = $ticket[$k];
 
                                 if ($v['type'] == 'checkbox') {
-                                    $k_value = explode('<br>', $k_value);
+                                    $k_value = explode('<br />', $k_value);
                                 }
 
                                 if ($v['req'] == 2) {
