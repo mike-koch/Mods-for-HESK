@@ -1299,10 +1299,20 @@ function hesk_getAdminButtons($category_id)
 
     $dropdown = '
 <div class="btn-group">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fa fa-ellipsis-h"></i> ' . hesk_htmlspecialchars($hesklang['more']) . ' <span class="caret"></span>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#more-modal">
+        <i class="fa fa-ellipsis-h"></i> ' . hesk_htmlspecialchars($hesklang['more']) . ' 
     </button>
-    <ul class="dropdown-menu pull-right">';
+    <div class="modal fade" id="more-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4>' . hesk_htmlspecialchars($hesklang['more']) . '</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+            ';
 
     // Location and UA
     $has_location_or_user_agent = false;
@@ -1316,12 +1326,33 @@ function hesk_getAdminButtons($category_id)
     ) {
         $has_location_or_user_agent = true;
         $dropdown .=
-            '<li><a href="javascript:;" data-toggle="modal" data-target="#user-agent-modal"><i class="fa fa-desktop fa-fw"></i> ' . $hesklang['device_information'] . '</a></li>';
-        buildUserAgentModal($ticket['user_agent'], $ticket['screen_resolution_width'], $ticket['screen_resolution_height']);
+            '<div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 style="text-transform: capitalize"><i class="fa fa-desktop fa-fw fa-2x"></i> '.$hesklang['device_information'].'</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            '.buildUserAgentBody($ticket['user_agent'], $ticket['screen_resolution_width'], $ticket['screen_resolution_height']).'
+                        </div>
+                    </div>
+                </div>
+            </div>';
     } else if ($modsForHesk_settings['display_user_agent_information']) {
         $has_location_or_user_agent = true;
         $dropdown .=
-            '<li><span href="javascript:;" class="linkless-dropdown gray"><i class="fa fa-desktop fa-fw"></i> ' . $hesklang['no_device_information'] . '</span></li>';
+            '<div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 style="text-transform: capitalize"><i class="fa fa-desktop fa-fw"></i> '.$hesklang['device_information'].'</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            '.$hesklang['no_device_information'].'
+                        </div>
+                    </div>
+                </div>
+            </div>';
     }
         ?>
         <?php
@@ -1330,74 +1361,60 @@ function hesk_getAdminButtons($category_id)
         $has_location_or_user_agent = true;
         if (strpos($ticket['latitude'], 'E') === false) {
             $locationText = $hesklang['click_for_map'];
-            $iconColor = '';
         } else {
             $hasLocation = false;
-            $locationText = $hesklang['location_unavailable'];
-            $iconColor = 'class="grey"';
+            $locationText = $hesklang['users_location'];
         }
-        $dropdown .= '<li><a href="javascript:;" data-toggle="modal" data-target=".map-modal" ' . $iconColor . '><i class="fa fa-map-marker fa-fw"></i> ' . $locationText . ' </a></li>';
-        ?>
-        <div id="map-modal" class="modal fade map-modal" tabindex="-1" role="dialog"
-             aria-labelledby="myLargeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4><?php echo $hesklang['users_location']; ?></h4>
-                    </div>
-                    <div class="modal-body">
-                        <?php if ($hasLocation): ?>
-                            <div id="map" style="height: 500px"></div><br>
-                            <address id="friendly-location" style="font-size: 13px"></address>
-                            <p id="save-for-address"
-                               style="font-size: 13px;display:none"><?php echo $hesklang['save_to_see_updated_address']; ?></p>
-                            <script>
-                                getFriendlyLocation(<?php echo $ticket['latitude']; ?>,
-                                    <?php echo $ticket['longitude']; ?>);
-                            </script>
-                            <div class="row">
-                                <form action="admin_ticket.php" method="post" role="form">
-                                    <input type="hidden" name="track"
-                                           value="<?php echo $trackingID; ?>">
-                                    <input type="hidden" name="token"
-                                           value="<?php hesk_token_echo(); ?>">
-                                    <input type="hidden" name="latitude" id="latitude"
-                                           value="<?php echo $ticket['latitude']; ?>">
-                                    <input type="hidden" name="longitude" id="longitude"
-                                           value="<?php echo $ticket['longitude']; ?>">
-
-                                    <div class="col-sm-12">
-                                        <div class="btn-group" style="display:none" id="save-group">
-                                            <input type="submit" class="btn btn-success"
-                                                   value="<?php echo $hesklang['save_location']; ?>">
-                                            <button class="btn btn-default" data-dismiss="modal"
-                                                    onclick="closeAndReset(<?php echo $ticket['latitude']; ?>, <?php echo $ticket['longitude']; ?>)">
-                                                <?php echo $hesklang['close_modal_without_saving']; ?>
-                                            </button>
-                                        </div>
-                                        <div class="btn-group">
-                                            <button id="close-button" class="btn btn-default"
-                                                    data-dismiss="modal"><?php echo $hesklang['close_modal']; ?></button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <?php
-                        else:
-                            $errorCode = explode('-', $ticket['latitude']);
-                            $key = 'location_unavailable_' . $errorCode[1];
-                            echo '<h5>' . $hesklang[$key] . '</h5>';
-                        endif;
-                        ?>
-                    </div>
+        $dropdown .= '<div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4><i class="fa fa-map-marker fa-fw"></i> ' . $locationText . '</h4>
                 </div>
-            </div>
-        </div>
+                <div class="panel-body">';
+        if ($hasLocation):
+            $dropdown .= '<div id="map" style="height: 500px"></div><br>
+            <address id="friendly-location" style="font-size: 13px"></address>
+            <p id="save-for-address"
+               style="font-size: 13px;display:none">' . $hesklang['save_to_see_updated_address'] . '</p>
+            <script>
+                getFriendlyLocation(' . $ticket['latitude'] . ',
+                    ' . $ticket['longitude'] . ');
+            </script>
+            <div class="row">
+                <form action="admin_ticket.php" method="post" role="form">
+                    <input type="hidden" name="track"
+                           value="'. $trackingID . '">
+                    <input type="hidden" name="token"
+                           value="'. hesk_token_echo(0) . '">
+                    <input type="hidden" name="latitude" id="latitude"
+                           value="'. $ticket['latitude'] . '">
+                    <input type="hidden" name="longitude" id="longitude"
+                           value="'. $ticket['longitude'] . '">
 
-        <?php
+                    <div class="col-sm-12">
+                        <div class="btn-group" style="display:none" id="save-group">
+                            <input type="submit" class="btn btn-success"
+                                   value="'.  $hesklang['save_location'] . '">
+                            <button class="btn btn-default" data-dismiss="modal"
+                                    onclick="closeAndReset('.  $ticket['latitude'] . ', '.  $ticket['longitude'] . ')">
+                                '.  $hesklang['close_modal_without_saving'] . '
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button id="close-button" class="btn btn-default"
+                                    data-dismiss="modal">'.  $hesklang['close_modal'] . '</button>
+                        </div>
+                    </div>
+                </form>
+            </div>';
+        else:
+            $errorCode = explode('-', $ticket['latitude']);
+            $key = 'location_unavailable_' . $errorCode[1];
+            $dropdown .= '<h5>' . $hesklang[$key] . '</h5>';
+        endif;
+
+        $dropdown .= '</div>
+            </div>';
+
         // Only output JavaScript if we have coordinates
         if (strpos($ticket['latitude'], 'E') === false):
             ?>
@@ -1410,11 +1427,6 @@ function hesk_getAdminButtons($category_id)
             </script>
             <?php
         endif;
-    }
-
-    // If there is device info enabled or location, separate them from the rest of the items in the dropdown.
-    if ($has_location_or_user_agent) {
-        $dropdown .= '<li role="separator" class="divider"></li>';
     }
 
     /* Lock ticket button */
@@ -1452,7 +1464,7 @@ function hesk_getAdminButtons($category_id)
         }
         $dropdown .= '<li><a href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . hesk_makeJsString($txt) . '?\');"><i class="fa fa-fw fa-times"></i> ' . $txt . '</a></li>';
     }
-    $dropdown .= '</ul></div> ';
+    $dropdown .= '</div></div></div></div></div> ';
     $options .= $dropdown;
 
     /* Return generated HTML */
@@ -2126,51 +2138,36 @@ function hesk_printCanned()
 
 } // End hesk_printCanned()
 
-function buildUserAgentModal($user_agent, $width, $height) {
+function buildUserAgentBody($user_agent, $width, $height) {
     global $hesklang;
 
     echo '
-    <div id="user-agent-modal" class="modal fade" tabindex="-1" role="dialog"
-             aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4>' . $hesklang['device_information'] . '</h4>
-                    </div>
-                    <div class="modal-body">
-                        <script>
-                            var userAgent = platform.parse(\'' . addslashes($user_agent) . '\');
-                            console.log(userAgent);
-                            var screenResWidth = ' . intval($width) . ';
-                            var screenResHeight = ' . intval($height) . ';
-                        </script>
-                        <table class="table table-striped">
-                            <tbody>
-                            <tr>
-                                <td><strong>' . $hesklang['operating_system'] . '</strong>
-                                </td>
-                                <td id="operating-system">&nbsp;</td>
-                                <script>$(\'#operating-system\').html(userAgent.os.toString());</script>
-                            </tr>
-                            <tr>
-                                <td><strong>' . $hesklang['browser'] . '</strong></td>
-                                <td id="browser">&nbsp;</td>
-                                <script>$(\'#browser\').html(userAgent.name + \' \' + userAgent.version);</script>
-                            </tr>
-                            <tr>
-                                <td><strong>' . $hesklang['screen_resolution'] . '</strong>
-                                </td>
-                                <td id="screen-resolution">&nbsp;</td>
-                                <script>$(\'#screen-resolution\').html(screenResWidth + \' x \' + screenResHeight);</script>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>';
+    <script>
+        var userAgent = platform.parse(\'' . addslashes($user_agent) . '\');
+        console.log(userAgent);
+        var screenResWidth = ' . intval($width) . ';
+        var screenResHeight = ' . intval($height) . ';
+    </script>
+    <table class="table table-striped">
+        <tbody>
+        <tr>
+            <td><strong>' . $hesklang['operating_system'] . '</strong>
+            </td>
+            <td id="operating-system">&nbsp;</td>
+            <script>$(\'#operating-system\').html(userAgent.os.toString());</script>
+        </tr>
+        <tr>
+            <td><strong>' . $hesklang['browser'] . '</strong></td>
+            <td id="browser">&nbsp;</td>
+            <script>$(\'#browser\').html(userAgent.name + \' \' + userAgent.version);</script>
+        </tr>
+        <tr>
+            <td><strong>' . $hesklang['screen_resolution'] . '</strong>
+            </td>
+            <td id="screen-resolution">&nbsp;</td>
+            <script>$(\'#screen-resolution\').html(screenResWidth + \' x \' + screenResHeight);</script>
+        </tr>
+        </tbody>
+    </table>';
 }
 ?>
