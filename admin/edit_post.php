@@ -580,6 +580,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 elements: "content",
                 theme: "advanced",
                 convert_urls: false,
+                plugins: "autolink",
 
                 theme_advanced_buttons1: "cut,copy,paste,|,undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
                 theme_advanced_buttons2: "sub,sup,|,charmap,|,bullist,numlist,|,outdent,indent,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,link,unlink,anchor,image,cleanup,code",
