@@ -475,7 +475,7 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
         hesk_process_messages(sprintf($hesklang['is_already_linked'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'NOTICE');
     }
 
-    hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = ' . intval($ticket['id']) . ' WHERE `trackid` = \'' . hesk_dbEscape(hesk_POST['childTrackingId']) . '\'');
+    hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = ' . intval($ticket['id']) . ' WHERE `trackid` = \'' . hesk_dbEscape(hesk_POST('childTrackingId')) . '\'');
     hesk_process_messages(sprintf($hesklang['link_added'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 }
 
