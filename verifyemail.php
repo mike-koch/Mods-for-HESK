@@ -48,7 +48,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 
                         // Need to notify staff?
                         // --> From autoassign?
-                        $getOwnerRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE ID = " . hesk_dbEscape($ticket['owner']));
+                        $getOwnerRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE ID = " . intval($ticket['owner']));
                         $autoassign_owner = hesk_dbFetchAssoc($getOwnerRs);
                         if ($ticket['owner'] && $autoassign_owner['notify_assigned']) {
                             hesk_notifyAssignedStaff($autoassign_owner, 'ticket_assigned_to_you', $modsForHesk_settings);

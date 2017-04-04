@@ -652,9 +652,10 @@ function hesk_getEmailSubject($eml_file, $ticket = '', $is_ticket = 1, $strip = 
     }
 
     /* Set status */
-    $statusRs = hesk_dbQuery("SELECT `Key` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `ID` = " . $ticket['status']);
+    $statusRs = hesk_dbQuery("SELECT `text` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "text_to_status_xref` 
+        WHERE `status_id` = " . $ticket['status'] . " AND `language` = '". hesk_dbEscape($hesklang['LANGUAGE']) ."'");
     $row = hesk_dbFetchAssoc($statusRs);
-    $ticket['status'] = $hesklang[$row['Key']];
+    $ticket['status'] = $row['text'];
 
     /* Replace all special tags */
     $msg = str_replace('%%SUBJECT%%', $ticket['subject'], $msg);
@@ -815,9 +816,10 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     $ticket['owner'] = hesk_msgToPlain(hesk_getOwnerName($ticket['owner']), 1);
 
     /* Set status */
-    $statusRs = hesk_dbQuery("SELECT `Key` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `ID` = " . $ticket['status']);
+    $statusRs = hesk_dbQuery("SELECT `text` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "text_to_status_xref` 
+        WHERE `status_id` = " . $ticket['status'] . " AND `language` = '". hesk_dbEscape($hesklang['LANGUAGE']) ."'");
     $row = hesk_dbFetchAssoc($statusRs);
-    $ticket['status'] = $hesklang[$row['Key']];
+    $ticket['status'] = $row['text'];
 
     /* Replace all special tags */
     $msg = str_replace('%%NAME%%', $ticket['name'], $msg);

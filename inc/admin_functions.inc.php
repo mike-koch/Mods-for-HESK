@@ -160,7 +160,7 @@ function hesk_mergeTickets($merge_these, $merge_into)
         $this_id = intval($this_id) or hesk_error($hesklang['id_not_valid']);
 
         /* Get required ticket information */
-        $res = hesk_dbQuery("SELECT `id`,`trackid`,`category`,`name`,`message`,`dt`,`time_worked`,`attachments` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `id`='" . intval($this_id) . "' LIMIT 1");
+        $res = hesk_dbQuery("SELECT `id`,`trackid`,`category`,`name`,`message`,`dt`,`time_worked`,`attachments`, `html` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `id`='" . intval($this_id) . "' LIMIT 1");
         if (hesk_dbNumRows($res) != 1) {
             continue;
         }
@@ -172,7 +172,7 @@ function hesk_mergeTickets($merge_these, $merge_into)
         }
 
         /* Insert ticket message as a new reply to target ticket */
-        hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`) VALUES ('" . intval($ticket['id']) . "','" . hesk_dbEscape($row['name']) . "','" . hesk_dbEscape($row['message']) . "','" . hesk_dbEscape($row['dt']) . "','" . hesk_dbEscape($row['attachments']) . "')");
+        hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`, `html`) VALUES ('" . intval($ticket['id']) . "','" . hesk_dbEscape($row['name']) . "','" . hesk_dbEscape($row['message']) . "','" . hesk_dbEscape($row['dt']) . "','" . hesk_dbEscape($row['attachments']) . "', '" . intval($row['html']) . "')");
 
         /* Update attachments  */
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "attachments` SET `ticket_id`='" . hesk_dbEscape($ticket['trackid']) . "' WHERE `ticket_id`='" . hesk_dbEscape($row['trackid']) . "'");
@@ -180,7 +180,7 @@ function hesk_mergeTickets($merge_these, $merge_into)
         /* Get old ticket replies and insert them as new replies */
         $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` WHERE `replyto`='" . intval($row['id']) . "' ORDER BY `id` ASC");
         while ($reply = hesk_dbFetchAssoc($res)) {
-            hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`,`rating`,`read`) VALUES ('" . intval($ticket['id']) . "','" . hesk_dbEscape($reply['name']) . "','" . hesk_dbEscape($reply['message']) . "','" . hesk_dbEscape($reply['dt']) . "','" . hesk_dbEscape($reply['attachments']) . "','" . intval($reply['staffid']) . "','" . intval($reply['rating']) . "','" . intval($reply['read']) . "')");
+            hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`,`rating`,`read`, `html`) VALUES ('" . intval($ticket['id']) . "','" . hesk_dbEscape($reply['name']) . "','" . hesk_dbEscape($reply['message']) . "','" . hesk_dbEscape($reply['dt']) . "','" . hesk_dbEscape($reply['attachments']) . "','" . intval($reply['staffid']) . "','" . intval($reply['rating']) . "','" . intval($reply['read']) . "', '" . intval($reply['html']) . "')");
         }
 
         /* Delete replies to the old ticket */

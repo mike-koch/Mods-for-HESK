@@ -255,7 +255,7 @@ function initializeMapForStaff(latitude, longitude, usersLocationText) {
         $('#save-for-address').show();
     });
 
-    $('#map-modal').on('shown.bs.modal', function(){
+    $('#more-modal').on('shown.bs.modal', function(){
         setTimeout(function() {
             map.invalidateSize();
         }, 10);

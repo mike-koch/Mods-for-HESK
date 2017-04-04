@@ -319,7 +319,13 @@ if (!$show['show']) {
         <div class="blankSpace"></div>
         <!-- REPLIES -->
 
+
         <?php
+        // Print "Submit a reply" form?
+        if ($ticket['locked'] != 1 && $ticket['status'] != 3 && $hesk_settings['reply_top'] == 1) {
+            hesk_printCustomerReplyForm();
+        }
+
         if ($hesk_settings['new_top']) {
             $i = hesk_printCustomerTicketReplies() ? 0 : 1;
         } else {
@@ -405,12 +411,6 @@ if (!$show['show']) {
         }
         ?>
         <!-- END REPLIES -->
-        <?php
-        // Print "Submit a reply" form?
-        if ($ticket['locked'] != 1 && $ticket['status'] != 3 && $hesk_settings['reply_top'] == 1) {
-            hesk_printCustomerReplyForm();
-        }
-        ?>
 
         <?php
         /* Print "Submit a reply" form? */
@@ -627,6 +627,7 @@ function hesk_printCustomerReplyForm($reopen = 0)
                             elements: "content",
                             theme: "advanced",
                             convert_urls: false,
+                            plugins: "autolink",
 
                             theme_advanced_buttons1: "cut,copy,paste,|,undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
                             theme_advanced_buttons2: "sub,sup,|,charmap,|,bullist,numlist,|,outdent,indent,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,link,unlink,anchor,image,cleanup",
