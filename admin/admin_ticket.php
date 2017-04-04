@@ -916,7 +916,24 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 ?>
             </h1>
             <div class="pull-right">
-                <?php echo hesk_getAdminButtons($category['id']); ?>
+                <?php echo hesk_getAdminButtons($category['id']);
+
+
+                // Only output JavaScript if we have coordinates
+                if (strpos($ticket['latitude'], 'E') === false):
+                    ?>
+                    <script>
+                        var latitude = '';
+                        latitude = <?php echo $ticket['latitude'] != '' ? $ticket['latitude'] : -1; ?>;
+                        var longitude = '';
+                        longitude = <?php echo $ticket['longitude'] != '' ? $ticket['longitude'] : -1; ?>;
+                        $('#more-modal').on('shown.bs.modal', function() {
+                            initializeMapForStaff(latitude, longitude, "<?php echo $hesklang['users_location']; ?>");
+                        });
+                    </script>
+                    <?php
+                endif;
+                ?>
             </div>
         </div>
         <div class="table-bordered status-row">
@@ -1298,7 +1315,6 @@ function hesk_getAdminButtons($category_id)
     }
 
     $dropdown = '
-<div class="btn-group">
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#more-modal">
         <i class="fa fa-ellipsis-h"></i> ' . hesk_htmlspecialchars($hesklang['more']) . ' 
     </button>
@@ -1315,8 +1331,6 @@ function hesk_getAdminButtons($category_id)
             ';
 
     // Location and UA
-    $has_location_or_user_agent = false;
-
     if ($modsForHesk_settings['display_user_agent_information']
         && $ticket['user_agent'] !== NULL
         && $ticket['screen_resolution_height'] !== NULL
@@ -1324,22 +1338,14 @@ function hesk_getAdminButtons($category_id)
         && $ticket['screen_resolution_width'] !== NULL
         && $ticket['screen_resolution_width'] != 0
     ) {
-        $has_location_or_user_agent = true;
         $dropdown .=
             '<div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 style="text-transform: capitalize"><i class="fa fa-desktop fa-fw fa-2x"></i> '.$hesklang['device_information'].'</h4>
+                    <h4 style="text-transform: capitalize"><i class="fa fa-desktop fa-fw"></i> '.$hesklang['device_information'].'</h4>
                 </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            '.buildUserAgentBody($ticket['user_agent'], $ticket['screen_resolution_width'], $ticket['screen_resolution_height']).'
-                        </div>
-                    </div>
-                </div>
+                '.buildUserAgentBody($ticket['user_agent'], $ticket['screen_resolution_width'], $ticket['screen_resolution_height']).'
             </div>';
     } else if ($modsForHesk_settings['display_user_agent_information']) {
-        $has_location_or_user_agent = true;
         $dropdown .=
             '<div class="panel panel-default">
                 <div class="panel-heading">
@@ -1358,7 +1364,6 @@ function hesk_getAdminButtons($category_id)
         <?php
     if ($modsForHesk_settings['request_location']) {
         $hasLocation = true;
-        $has_location_or_user_agent = true;
         if (strpos($ticket['latitude'], 'E') === false) {
             $locationText = $hesklang['click_for_map'];
         } else {
@@ -1368,10 +1373,9 @@ function hesk_getAdminButtons($category_id)
         $dropdown .= '<div class="panel panel-default">
                 <div class="panel-heading">
                     <h4><i class="fa fa-map-marker fa-fw"></i> ' . $locationText . '</h4>
-                </div>
-                <div class="panel-body">';
+                </div>';
         if ($hasLocation):
-            $dropdown .= '<div id="map" style="height: 500px"></div><br>
+            $dropdown .= '<div id="map" style="height: 500px"></div><br><div class="panel-body">
             <address id="friendly-location" style="font-size: 13px"></address>
             <p id="save-for-address"
                style="font-size: 13px;display:none">' . $hesklang['save_to_see_updated_address'] . '</p>
@@ -1391,47 +1395,38 @@ function hesk_getAdminButtons($category_id)
                            value="'. $ticket['longitude'] . '">
 
                     <div class="col-sm-12">
-                        <div class="btn-group" style="display:none" id="save-group">
+                        <div class="btn-group" style="display: none" id="save-group">
                             <input type="submit" class="btn btn-success"
                                    value="'.  $hesklang['save_location'] . '">
-                            <button class="btn btn-default" data-dismiss="modal"
-                                    onclick="closeAndReset('.  $ticket['latitude'] . ', '.  $ticket['longitude'] . ')">
-                                '.  $hesklang['close_modal_without_saving'] . '
-                            </button>
-                        </div>
-                        <div class="btn-group">
-                            <button id="close-button" class="btn btn-default"
-                                    data-dismiss="modal">'.  $hesklang['close_modal'] . '</button>
+                            <button type="button" class="btn btn-default" onclick="closeAndReset('. $ticket['latitude'] . ', '. $ticket['longitude'] . ')">' . $hesklang['reset'] . '</button>
                         </div>
                     </div>
                 </form>
             </div>';
         else:
+            $dropdown .= '<div class="panel-body">';
             $errorCode = explode('-', $ticket['latitude']);
             $key = 'location_unavailable_' . $errorCode[1];
             $dropdown .= '<h5>' . $hesklang[$key] . '</h5>';
         endif;
 
-        $dropdown .= '</div>
-            </div>';
-
-        // Only output JavaScript if we have coordinates
-        if (strpos($ticket['latitude'], 'E') === false):
-            ?>
-            <script>
-                var latitude = '';
-                latitude = <?php echo $ticket['latitude'] != '' ? $ticket['latitude'] : -1; ?>;
-                var longitude = '';
-                longitude = <?php echo $ticket['longitude'] != '' ? $ticket['longitude'] : -1; ?>;
-                initializeMapForStaff(latitude, longitude, "<?php echo $hesklang['users_location']; ?>");
-            </script>
-            <?php
-        endif;
+        $dropdown .= '</div></div>';
     }
+
+    $dropdown .= '<div class="row">';
 
     /* Lock ticket button */
     if ($can_resolve) {
-        $template = '<li><a href="lock.php?track=' . $trackingID . '&amp;locked=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-%s fa-fw"></i> %s</a></li>';
+        $template =
+            '<div class="col-md-6 col-sm-12"><a class="button-link" href="lock.php?track=' . $trackingID . '&amp;locked=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>
+                            <i class="fa fa-%s fa-fw"></i> %s
+                        </h4>
+                    </div>
+                </div>
+            </a></div>';
         $dropdown .= $ticket['locked']
             ? sprintf($template, 0, 'unlock', $hesklang['tul'])
             : sprintf($template, 1, 'lock', $hesklang['tlo']);
@@ -1439,7 +1434,16 @@ function hesk_getAdminButtons($category_id)
 
     /* Tag ticket button */
     if ($can_archive) {
-        $template = '<li><a href="archive.php?track=' . $trackingID . '&amp;archived=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-tag fa-fw"></i> %s</a></li>';
+        $template =
+            '<div class="col-md-6 col-sm-12"><a class="button-link" href="archive.php?track=' . $trackingID . '&amp;archived=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>
+                            <i class="fa fa-tag fa-fw"></i> %s
+                        </h4>
+                    </div>
+                </div>
+            </a></div>';
 
         $dropdown .= $ticket['archive']
             ? sprintf($template, 0, $hesklang['remove_archive'])
@@ -1448,7 +1452,16 @@ function hesk_getAdminButtons($category_id)
 
     /* Import to knowledgebase button */
     if ($hesk_settings['kb_enable'] && hesk_checkPermission('can_man_kb', 0)) {
-        $dropdown .= '<li><a href="manage_knowledgebase.php?a=import_article&amp;track=' . $trackingID . '"><i class="fa fa-lightbulb-o fa-fw"></i> ' . $hesklang['import_kb'] . '</a></li>';
+        $dropdown .=
+            '<div class="col-md-6 col-sm-12"><a href="manage_knowledgebase.php?a=import_article&amp;track=' . $trackingID . '" class="button-link">
+                <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>
+                                <i class="fa fa-lightbulb-o fa-fw"></i> ' . $hesklang['import_kb'] . '
+                            </h4>
+                        </div>
+                    </div>
+                </a></div>';
     }
 
     /* Delete ticket */
@@ -1462,7 +1475,16 @@ function hesk_getAdminButtons($category_id)
             $tmp = 'delete_ticket=1';
             $txt = $hesklang['dele'];
         }
-        $dropdown .= '<li><a href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . hesk_makeJsString($txt) . '?\');"><i class="fa fa-fw fa-times"></i> ' . $txt . '</a></li>';
+        $dropdown .=
+            '<div class="col-md-6 col-sm-12"><a class="button-link" href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . hesk_makeJsString($txt) . '?\');">
+                <div class="panel panel-default">
+                        <div class="panel-body danger">
+                            <h4>
+                                <i class="fa fa-fw fa-times"></i> ' . $txt . '
+                            </h4>
+                        </div>
+                    </div>
+                </a></div>';
     }
     $dropdown .= '</div></div></div></div></div> ';
     $options .= $dropdown;
@@ -2141,7 +2163,7 @@ function hesk_printCanned()
 function buildUserAgentBody($user_agent, $width, $height) {
     global $hesklang;
 
-    echo '
+    return '
     <script>
         var userAgent = platform.parse(\'' . addslashes($user_agent) . '\');
         console.log(userAgent);

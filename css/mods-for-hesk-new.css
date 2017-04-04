@@ -199,6 +199,15 @@ button.dropdown-submit {
     background-color: #EEE;
 }
 
+.button-link .danger {
+    background-color: #ffe6e6;
+    color: #f00;
+}
+
+.button-link .danger:hover {
+    background-color: #ffcccc;
+}
+
 .timeline-header {
     background: #ddd;
     border-left: solid 1px #ddd;
