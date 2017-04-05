@@ -579,7 +579,7 @@ $hesklang['add_ticket_your_message']='Your Message';
 
 // EMAIL SUBJECTS
 $hesklang['new_ticket_staff']       = '[#%%TRACK_ID%%] New ticket: %%SUBJECT%%';
-$hesklang['ticket_received']        = '[#%%TRACK_ID%%] Ticket received: %%SUBJECT%%';
+$hesklang['ticket_received']        = '[#%%TRACK_ID%%] Ticket received: %%SUBJECT%%; Status: %%STATUS%%';
 $hesklang['ticket_assigned_to_you'] = '[#%%TRACK_ID%%] Ticket assigned: %%SUBJECT%%';
 $hesklang['new_reply_by_customer']  = '[#%%TRACK_ID%%] New reply to: %%SUBJECT%%';
 $hesklang['new_reply_by_staff']     = '[#%%TRACK_ID%%] New reply to: %%SUBJECT%%';

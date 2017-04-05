@@ -168,6 +168,11 @@ function hesk_suggestKB() {
     var d = document.form1;
     var s = d.subject.value;
     var m = d.message.value;
+
+    if ($('textarea[name="message"]').data('rich-text-enabled') && tinyMCE.get('message') !== undefined) {
+        m = tinyMCE.get('message').getContent();
+    }
+
     var element = document.getElementById('kb_suggestions');
 
     if (s != '' && m != '' && (heskKBquery != s + " " + m || heskKBfailed == true)) {

@@ -22,6 +22,7 @@ $(document).ready(function() {
                         events.push(buildEvent(this.id, this));
                     });
                     callback(events);
+                    updateCategoryVisibility();
                 },
                 error: function(data) {
                     console.error(data);

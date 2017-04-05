@@ -147,7 +147,7 @@ if (isset($_POST['save'])) {
 
                     if (isset($_POST[$k]) && is_array($_POST[$k])) {
                         foreach ($_POST[$k] as $myCB) {
-                            $tmpvar[$k] .= ( is_array($myCB) ? '' : hesk_input($myCB) ) . '<br>';
+                            $tmpvar[$k] .= ( is_array($myCB) ? '' : hesk_input($myCB) ) . '<br />';
                         }
                         $tmpvar[$k]=substr($tmpvar[$k],0,-6);
                     } else {
@@ -354,7 +354,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 $k_value = $ticket[$k];
 
                                 if ($v['type'] == 'checkbox') {
-                                    $k_value = explode('<br>', $k_value);
+                                    $k_value = explode('<br />', $k_value);
                                 }
 
                                 if ($v['req'] == 2) {
@@ -580,6 +580,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 elements: "content",
                 theme: "advanced",
                 convert_urls: false,
+                plugins: "autolink",
 
                 theme_advanced_buttons1: "cut,copy,paste,|,undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
                 theme_advanced_buttons2: "sub,sup,|,charmap,|,bullist,numlist,|,outdent,indent,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,link,unlink,anchor,image,cleanup,code",

@@ -88,7 +88,7 @@ if ($statusRow['IsClosed']) // Closed
 
     // Log who marked the ticket resolved
     $closedby_sql = ' , `closedat`=NOW(), `closedby`=' . intval($_SESSION['id']) . ' ';
-} elseif ($statusRow['IsNewTicketStatus'] == '0') //Ticket is still open, but not new
+} elseif ($statusRow['IsNewTicketStatus'] == 0) //Ticket is still open, but not new
 {
     $action = sprintf($hesklang['tsst'], $status_options[$status]);
     $revision = sprintf($hesklang['thist9'], hesk_date(), $status_options[$status], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
