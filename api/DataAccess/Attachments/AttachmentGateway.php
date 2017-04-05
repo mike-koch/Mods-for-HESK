@@ -3,6 +3,7 @@
 namespace DataAccess\Attachments;
 
 
+use BusinessLogic\Attachments\Attachment;
 use BusinessLogic\Attachments\TicketAttachment;
 use DataAccess\CommonDao;
 
@@ -26,5 +27,30 @@ class AttachmentGateway extends CommonDao {
         $this->close();
 
         return $attachmentId;
+    }
+
+    function getAttachmentById($id, $heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT * 
+          FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "attachments` 
+          WHERE `att_id` = " . intval($id));
+
+        if (hesk_dbNumRows($rs) === 0) {
+            return null;
+        }
+
+        $row = hesk_dbFetchAssoc($rs);
+
+        $attachment = new Attachment();
+        $attachment->id = $row['att_id'];
+        $attachment->savedName = $row['saved_name'];
+        $attachment->displayName = $row['real_name'];
+        $attachment->downloadCount = $row['download_count'];
+        $attachment->fileSize = $row['size'];
+
+        $this->close();
+
+        return $attachment;
     }
 }

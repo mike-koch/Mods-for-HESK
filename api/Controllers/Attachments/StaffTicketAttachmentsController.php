@@ -10,12 +10,22 @@ use BusinessLogic\Helpers;
 use Controllers\JsonRetriever;
 
 class StaffTicketAttachmentsController {
+    function get($attachmentId) {
+        global $hesk_settings, $applicationContext;
+
+        $this->verifyAttachmentsAreEnabled($hesk_settings);
+    }
+
+    private function verifyAttachmentsAreEnabled($heskSettings) {
+        if (!$heskSettings['attachments']['use']) {
+            throw new ApiFriendlyException('Attachments are disabled on this server', 'Attachments Disabled', 404);
+        }
+    }
+
     function post($ticketId) {
         global $hesk_settings, $applicationContext;
 
-        if (!$hesk_settings['attachments']['use']) {
-            throw new ApiFriendlyException('Attachments are disabled on this server', 'Attachments Disabled', 404);
-        }
+        $this->verifyAttachmentsAreEnabled($hesk_settings);
 
         /* @var $attachmentHandler AttachmentHandler */
         $attachmentHandler = $applicationContext->get[AttachmentHandler::class];
