@@ -19,6 +19,10 @@ class AttachmentRetriever {
     }
 
     function getAttachmentContentsForTicket($id, $heskSettings) {
+        $attachment = $this->attachmentGateway->getAttachmentById($id, $heskSettings);
+        $contents = base64_encode($this->fileReader->readFromFile(
+            $attachment->savedName, $heskSettings['attach_dir']));
 
+        return $contents;
     }
 }
