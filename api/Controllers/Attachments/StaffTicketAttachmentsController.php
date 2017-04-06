@@ -7,6 +7,7 @@ use BusinessLogic\Attachments\AttachmentHandler;
 use BusinessLogic\Attachments\CreateAttachmentForTicketModel;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Helpers;
+use BusinessLogic\Security\UserToTicketChecker;
 use Controllers\JsonRetriever;
 
 class StaffTicketAttachmentsController {
@@ -23,7 +24,7 @@ class StaffTicketAttachmentsController {
     }
 
     function post($ticketId) {
-        global $hesk_settings, $applicationContext;
+        global $hesk_settings, $applicationContext, $userContext;
 
         $this->verifyAttachmentsAreEnabled($hesk_settings);
 

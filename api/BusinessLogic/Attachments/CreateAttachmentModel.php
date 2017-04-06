@@ -15,4 +15,7 @@ class CreateAttachmentModel {
 
     /* @var $attachmentContents string */
     public $attachmentContents;
+
+    /* @var $isEditing bool */
+    public $isEditing;
 }

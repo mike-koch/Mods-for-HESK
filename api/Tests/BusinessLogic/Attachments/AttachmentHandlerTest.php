@@ -5,6 +5,8 @@ namespace BusinessLogic\Attachments;
 
 
 use BusinessLogic\Exceptions\ValidationException;
+use BusinessLogic\Security\UserContext;
+use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Tickets\Ticket;
 use DataAccess\Attachments\AttachmentGateway;
 use DataAccess\Files\FileWriter;
@@ -25,8 +27,14 @@ class AttachmentHandlerTest extends TestCase {
     /* @var $attachmentGateway \PHPUnit_Framework_MockObject_MockObject */
     private $attachmentGateway;
 
+    /* @var $userToTicketChecker \PHPUnit_Framework_MockObject_MockObject */
+    private $userToTicketChecker;
+
     /* @var $fileWriter \PHPUnit_Framework_MockObject_MockObject */
     private $fileWriter;
+
+    /* @var $userContext UserContext */
+    private $userContext;
 
     /* @var $heskSettings array */
     private $heskSettings;
@@ -35,6 +43,8 @@ class AttachmentHandlerTest extends TestCase {
         $this->ticketGateway = $this->createMock(TicketGateway::class);
         $this->attachmentGateway = $this->createMock(AttachmentGateway::class);
         $this->fileWriter = $this->createMock(FileWriter::class);
+        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::class);
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->heskSettings = array(
             'attach_dir' => 'attachments',
             'attachments' => array(
@@ -43,12 +53,16 @@ class AttachmentHandlerTest extends TestCase {
             )
         );
 
-        $this->attachmentHandler = new AttachmentHandler($this->ticketGateway, $this->attachmentGateway, $this->fileWriter);
+        $this->attachmentHandler = new AttachmentHandler($this->ticketGateway,
+            $this->attachmentGateway,
+            $this->fileWriter,
+            $this->userToTicketChecker);
         $this->createAttachmentForTicketModel = new CreateAttachmentForTicketModel();
         $this->createAttachmentForTicketModel->attachmentContents = base64_encode('string');
         $this->createAttachmentForTicketModel->displayName = 'DisplayName.txt';
         $this->createAttachmentForTicketModel->ticketId = 1;
         $this->createAttachmentForTicketModel->type = AttachmentType::MESSAGE;
+        $this->userContext = new UserContext();
     }
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsNull() {
@@ -60,7 +74,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->expectExceptionMessageRegExp('/CONTENTS_EMPTY/');
 
         //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
     }
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsEmpty() {
@@ -72,7 +86,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->expectExceptionMessageRegExp('/CONTENTS_EMPTY/');
 
         //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
     }
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsInvalidBase64() {
@@ -84,7 +98,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->expectExceptionMessageRegExp('/CONTENTS_NOT_BASE_64/');
 
         //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
     }
 
     function testThatValidateThrowsAnExceptionWhenTheDisplayNameIsNull() {
@@ -96,7 +110,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->expectExceptionMessageRegExp('/DISPLAY_NAME_EMPTY/');
 
         //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
     }
 
     function testThatValidateThrowsAnExceptionWhenTheDisplayNameIsEmpty() {
@@ -108,7 +122,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->expectExceptionMessageRegExp('/DISPLAY_NAME_EMPTY/');
 
         //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
     }
 
     function testThatValidateThrowsAnExceptionWhenTheTicketIdIsNull() {
@@ -120,7 +134,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->expectExceptionMessageRegExp('/TICKET_ID_MISSING/');
 
         //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
     }
 
     function testThatValidateThrowsAnExceptionWhenTheTicketIdIsANonPositiveInteger() {
@@ -132,7 +146,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->expectExceptionMessageRegExp('/TICKET_ID_MISSING/');
 
         //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
     }
 
     function testThatValidateThrowsAnExceptionWhenTheFileExtensionIsNotPermitted() {
@@ -145,7 +159,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->expectExceptionMessageRegExp('/EXTENSION_NOT_PERMITTED/');
 
         //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
     }
 
     function testThatValidateThrowsAnExceptionWhenTheFileSizeIsLargerThanMaxPermitted() {
@@ -158,7 +172,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->expectExceptionMessageRegExp('/FILE_SIZE_TOO_LARGE/');
 
         //-- Act
-        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
     }
 
     function testItSavesATicketWithTheProperProperties() {
@@ -179,7 +193,7 @@ class AttachmentHandlerTest extends TestCase {
 
 
         //-- Act
-        $actual = $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $actual = $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
 
         //-- Assert
         self::assertThat($actual->id, self::equalTo(50));
@@ -208,9 +222,11 @@ class AttachmentHandlerTest extends TestCase {
 
 
         //-- Act
-        $actual = $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->heskSettings);
+        $actual = $this->attachmentHandler->createAttachmentForTicket($this->createAttachmentForTicketModel, $this->userContext, $this->heskSettings);
 
         //-- Assert
         self::assertThat($actual->fileSize, self::equalTo(1024));
     }
+
+    //-- TODO Test UserToTicketChecker
 }

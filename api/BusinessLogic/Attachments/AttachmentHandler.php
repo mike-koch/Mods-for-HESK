@@ -4,6 +4,8 @@ namespace BusinessLogic\Attachments;
 
 
 use BusinessLogic\Exceptions\ValidationException;
+use BusinessLogic\Security\UserContext;
+use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Tickets\Attachment;
 use BusinessLogic\Tickets\Ticket;
 use BusinessLogic\ValidationModel;
@@ -21,24 +23,35 @@ class AttachmentHandler {
     /* @var $fileWriter FileWriter */
     private $fileWriter;
 
-    function __construct($ticketGateway, $attachmentGateway, $fileWriter) {
+    /* @var  $userToTicketChecker UserToTicketChecker */
+    private $userToTicketChecker;
+
+    function __construct($ticketGateway, $attachmentGateway, $fileWriter, $userToTicketChecker) {
         $this->ticketGateway = $ticketGateway;
         $this->attachmentGateway = $attachmentGateway;
         $this->fileWriter = $fileWriter;
+        $this->userToTicketChecker = $userToTicketChecker;
     }
 
 
     /**
      * @param $createAttachmentModel CreateAttachmentForTicketModel
+     * @param $userContext UserContext
      * @param $heskSettings array
      * @return TicketAttachment the newly created attachment
+     * @throws \Exception
      */
-    function createAttachmentForTicket($createAttachmentModel, $heskSettings) {
+    function createAttachmentForTicket($createAttachmentModel, $userContext, $heskSettings) {
         $this->validate($createAttachmentModel, $heskSettings);
 
         $decodedAttachment = base64_decode($createAttachmentModel->attachmentContents);
 
         $ticket = $this->ticketGateway->getTicketById($createAttachmentModel->ticketId, $heskSettings);
+
+        if (!$this->userToTicketChecker->isTicketWritableToUser($userContext, $ticket, $createAttachmentModel->isEditing, $heskSettings)) {
+            throw new \Exception("User does not have access to ticket {$ticket->id} being created / edited!");
+        }
+
         $cleanedFileName = $this->cleanFileName($createAttachmentModel->displayName);
         $fileParts = pathinfo($cleanedFileName);
 

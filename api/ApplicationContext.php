@@ -10,6 +10,7 @@ use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Emails\MailgunEmailSender;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContextBuilder;
+use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Settings\ApiChecker;
 use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\TicketRetriever;
@@ -96,6 +97,7 @@ class ApplicationContext {
             $this->get[ModsForHeskSettingsGateway::class]);
 
         // Attachments
+        $this->get[UserToTicketChecker::class] = new UserToTicketChecker($this->get[UserGateway::class]);
         $this->get[FileWriter::class] = new FileWriter();
         $this->get[AttachmentGateway::class] = new AttachmentGateway();
         $this->get[AttachmentHandler::class] = new AttachmentHandler($this->get[TicketGateway::class],
