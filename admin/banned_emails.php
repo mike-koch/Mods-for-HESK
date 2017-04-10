@@ -239,7 +239,7 @@ function ban_email()
     hesk_token_check();
 
     // Get the email
-    $email = strtolower(hesk_input(hesk_REQUEST('email')));
+    $email = hesk_emailCleanup(strtolower(hesk_input(hesk_REQUEST('email'))));
 
     // Nothing entered?
     if (!strlen($email)) {

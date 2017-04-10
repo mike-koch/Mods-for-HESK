@@ -24,6 +24,8 @@ require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/mail_functions.inc.php');
 require(HESK_PATH . 'inc/custom_fields.inc.php');
 hesk_load_database_functions();
+require(HESK_PATH . 'inc/posting_functions.inc.php');
+require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
 
 hesk_session_start();
 hesk_dbConnect();
@@ -76,16 +78,51 @@ if (hesk_isREQUEST('reply')) {
     $is_reply = 1;
 }
 
+// Count number of existing attachments for this post
+$number_of_attachments = $is_reply ? hesk_countAttachments($reply['attachments']) : hesk_countAttachments($ticket['attachments']);
+
 if (isset($_POST['save'])) {
     /* A security check */
     hesk_token_check('POST');
 
     $hesk_error_buffer = array();
 
+    // Add attachments?
+    if ($hesk_settings['attachments']['use'] && $number_of_attachments < $hesk_settings['attachments']['max_number']) {
+        require_once(HESK_PATH . 'inc/attachments.inc.php');
+
+        $attachments = array();
+
+        $use_legacy_attachments = hesk_POST('use-legacy-attachments', 0);
+
+        if ($use_legacy_attachments) {
+            for ($i = $number_of_attachments + 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+                $att = hesk_uploadFile($i);
+                if ($att !== false && !empty($att)) {
+                    $attachments[$i] = $att;
+                }
+            }
+        } else {
+            // The user used the new drag-and-drop system.
+            $temp_attachment_ids = hesk_POST_array('attachment-ids');
+            foreach ($temp_attachment_ids as $temp_attachment_id) {
+                // Simply get the temp info and move it to the attachments table
+                $temp_attachment = mfh_getTemporaryAttachment($temp_attachment_id);
+                $attachments[] = $temp_attachment;
+                mfh_deleteTemporaryAttachment($temp_attachment_id);
+            }
+        }
+    }
+
     if ($is_reply) {
         $tmpvar['message'] = hesk_input(hesk_POST('message')) or $hesk_error_buffer[] = $hesklang['enter_message'];
 
         if (count($hesk_error_buffer)) {
+            // Remove any successfully uploaded attachments
+            if ($hesk_settings['attachments']['use'] && isset($attachments)) {
+                hesk_removeAttachments($attachments);
+            }
+
             $myerror = '<ul>';
             foreach ($hesk_error_buffer as $error) {
                 $myerror .= "<li>$error</li>\n";
@@ -101,7 +138,14 @@ if (isset($_POST['save'])) {
 
         $tmpvar['html'] = hesk_POST('html');
 
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `html`='" . $tmpvar['html'] . "', `message`='" . hesk_dbEscape($tmpvar['message']) . "' WHERE `id`='" . intval($tmpvar['id']) . "' AND `replyto`='" . intval($ticket['id']) . "'");
+        if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
+            foreach ($attachments as $myatt) {
+                hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` (`ticket_id`,`saved_name`,`real_name`,`size`) VALUES ('".hesk_dbEscape($trackingID)."','".hesk_dbEscape($myatt['saved_name'])."','".hesk_dbEscape($myatt['real_name'])."','".intval($myatt['size'])."')");
+                $myattachments .= hesk_dbInsertID() . '#' . $myatt['real_name'] . '#' . $myatt['saved_name'] . ',';
+            }
+        }
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `html`='" . $tmpvar['html'] . "', `message`='" . hesk_dbEscape($tmpvar['message']) . "', `attachments`=CONCAT(`attachments`, '".hesk_dbEscape($myattachments)."') WHERE `id`='" . intval($tmpvar['id']) . "' AND `replyto`='" . intval($ticket['id']) . "'");
     } else {
         $tmpvar['language'] = hesk_POST('customerLanguage');
         $tmpvar['name'] = hesk_input(hesk_POST('name')) or $hesk_error_buffer[] = $hesklang['enter_your_name'];
@@ -161,9 +205,9 @@ if (isset($_POST['save'])) {
                     $_SESSION["as_$k"] = '';
 
                     if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $tmpvar[$k])) {
-                        $date = strtotime($tmpvar[$k] . ' t00:00:00');
-                        $dmin = strlen($v['value']['dmin']) ? strtotime($v['value']['dmin'] . ' t00:00:00') : false;
-                        $dmax = strlen($v['value']['dmax']) ? strtotime($v['value']['dmax'] . ' t00:00:00') : false;
+                        $date = strtotime($tmpvar[$k] . ' t00:00:00 UTC');
+                        $dmin = strlen($v['value']['dmin']) ? strtotime($v['value']['dmin'] . ' t00:00:00 UTC') : false;
+                        $dmax = strlen($v['value']['dmax']) ? strtotime($v['value']['dmax'] . ' t00:00:00 UTC') : false;
 
                         $_SESSION["as_$k"] = $tmpvar[$k];
 
@@ -208,6 +252,11 @@ if (isset($_POST['save'])) {
         }
 
         if (count($hesk_error_buffer)) {
+            // Remove any successfully uploaded attachments
+            if ($hesk_settings['attachments']['use'] && isset($attachments)) {
+                hesk_removeAttachments($attachments);
+            }
+
             $myerror = '<ul>';
             foreach ($hesk_error_buffer as $error) {
                 $myerror .= "<li>$error</li>\n";
@@ -221,6 +270,13 @@ if (isset($_POST['save'])) {
             $tmpvar['message'] = nl2br($tmpvar['message']);
         }
 
+        if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
+            foreach ($attachments as $myatt) {
+                hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."attachments` (`ticket_id`,`saved_name`,`real_name`,`size`) VALUES ('".hesk_dbEscape($trackingID)."','".hesk_dbEscape($myatt['saved_name'])."','".hesk_dbEscape($myatt['real_name'])."','".intval($myatt['size'])."')");
+                $myattachments .= hesk_dbInsertID() . '#' . $myatt['real_name'] . '#' . $myatt['saved_name'] . ',';
+            }
+        }
+
         $custom_SQL = '';
         for ($i = 1; $i <= 50; $i++) {
             $custom_SQL .= '`custom'.$i.'`=' . (isset($tmpvar['custom'.$i]) ? "'".hesk_dbEscape($tmpvar['custom'.$i])."'" : "''") . ',';
@@ -232,6 +288,7 @@ if (isset($_POST['save'])) {
 		`email`='" . hesk_dbEscape($tmpvar['email']) . "',
 		`subject`='" . hesk_dbEscape($tmpvar['subject']) . "',
 		`message`='" . hesk_dbEscape($tmpvar['message']) . "',
+		`attachments`=CONCAT(`attachments`, '".hesk_dbEscape($myattachments)."'),
 		`language`='" . hesk_dbEscape($tmpvar['language']) . "',
 		`html`='" . hesk_dbEscape($tmpvar['html']) . "',
 		$custom_SQL
@@ -278,7 +335,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     $onsubmit = 'onsubmit="return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
                 }
                 ?>
-                <form role="form" class="form-horizontal" method="post" action="edit_post.php" name="form1" <?php echo $onsubmit; ?>>
+                <form role="form" class="form-horizontal" method="post" action="edit_post.php" name="form1" enctype="multipart/form-data" <?php echo $onsubmit; ?>>
                     <?php
                     /* If it's not a reply edit all the fields */
                     if (!$is_reply) {
@@ -542,6 +599,19 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <div class="help-block with-errors" id="message-help-block"></div>
                             </div>
                         </div>
+                    <?php if ($hesk_settings['attachments']['use'] && $number_of_attachments < $hesk_settings['attachments']['max_number']) : ?>
+                        <div class="form-group">
+                            <label for="attachments" class="control-label col-sm-3"><?php echo $hesklang['attachments']; ?>:</label>
+
+                            <div class="col-sm-9">
+                                <?php build_dropzone_markup(true, 'filedrop', $number_of_attachments + 1); ?>
+                            </div>
+                        </div>
+                        <?php
+                        display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php',
+                            'filedrop',
+                            $hesk_settings['attachments']['max_number'] - $number_of_attachments);
+                    endif; ?>
                 <div class="form-group">
                     <input type="hidden" name="save" value="1">
                     <input type="hidden" name="track" value="<?php echo $trackingID; ?>">
@@ -599,3 +669,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
+
+function hesk_countAttachments($attachments_string) {
+    if ( ! strlen($attachments_string) || strpos($attachments_string, ',') === false) {
+        return 0;
+    }
+
+    $att = explode(',', substr($attachments_string, 0, -1));
+
+    return count($att);
+
+} // END hesk_countAttachments()

@@ -103,7 +103,7 @@ function hesk_fileError($error)
 } // End hesk_fileError()
 
 
-function hesk_removeAttachments($attachments, $isTicket)
+function hesk_removeAttachments($attachments, $isTicket = true)
 {
     global $hesk_settings, $hesklang, $modsForHesk_settings;
 
