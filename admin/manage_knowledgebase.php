@@ -1080,6 +1080,9 @@ function edit_category()
         // Now delete the category
         hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` WHERE `id`='".intval($catid)."'");
 
+    	// Clear KB cache
+        hesk_purge_cache('kb');
+
 		$_SESSION['hide'] = array(
 			//'treemenu' => 1,
 			'new_article' => 1,
@@ -1251,6 +1254,9 @@ function save_article()
 
     // Update article order
     update_article_order($catid);
+
+    // Clear KB cache
+    hesk_purge_cache('kb');
 
     // Redirect to the correct page
     switch ($from) {
@@ -2173,6 +2179,9 @@ function remove_article()
     {
 	    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` SET `articles_draft`=`articles_draft`-1 WHERE `id`='{$catid}'");
 	}
+
+	// Clear KB cache
+    hesk_purge_cache('kb');
 
     // Redirect to the correct page
     switch ($from) {

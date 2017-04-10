@@ -732,7 +732,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 									$num_before = 0;
 									$num_after = 0;
 
-									foreach ($hesk_settings['custom_fields'] as $id => $cf) {
+									foreach ($hesk_settings['custom_fields'] as $tmp_id => $cf) {
 										if ($cf['place']) {
 											$num_after++;
 										} else {
@@ -741,8 +741,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 									}
 
 									$k = 1;
-									foreach ($hesk_settings['custom_fields'] as $id => $cf) {
-										$id = intval(str_replace('custom', '', $id));
+									foreach ($hesk_settings['custom_fields'] as $tmp_id => $cf) {
+                                        $tmp_id = intval(str_replace('custom', '', $tmp_id));
 
 										if ($hide_up) {
 											$hide_up = false;
@@ -771,7 +771,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 										$cf['category'] = count($cf['category']) ? $hesklang['cf_cat'] : $hesklang['cf_all'];
 										?>
 										<tr>
-											<td><?php echo $id; ?></td>
+											<td><?php echo $tmp_id; ?></td>
 											<td><?php echo $cf['name']; ?></td>
 											<td><?php echo $cf['type']; ?></td>
 											<td><?php echo $cf['use']; ?></td>
@@ -791,33 +791,33 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 													} elseif ($k == 1 || $hide_up) {
 														?>
 														<i class="fa fa-fw icon-link">&nbsp;</i>
-														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $id; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>">
+														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $tmp_id; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>">
 															<i class="fa fa-arrow-down fa-fw icon-link green" data-toggle="tooltip" title="<?php echo $hesklang['move_dn']; ?>"></i>
 														</a>
 														<?php
 													} elseif ($k == $hesk_settings['num_custom_fields'] || $k == $num_before) {
 														?>
-														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $id; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>">
+														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $tmp_id; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>">
 															<i class="fa fa-arrow-up fa-fw icon-link green" data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
 														</a>
 														<i class="fa fa-fw icon-link">&nbsp;</i>
 														<?php
 													} else {
 														?>
-														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $id; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>">
+														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $tmp_id; ?>&amp;move=-15&amp;token=<?php hesk_token_echo(); ?>">
 															<i class="fa fa-arrow-up fa-fw icon-link green" data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
 														</a>
-														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $id; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>">
+														<a href="custom_fields.php?a=order_cf&amp;id=<?php echo $tmp_id; ?>&amp;move=15&amp;token=<?php hesk_token_echo(); ?>">
 															<i class="fa fa-arrow-down fa-fw icon-link green" data-toggle="tooltip" title="<?php echo $hesklang['move_dn']; ?>"></i>
 														</a>
 														<?php
 													}
 												}
 												?>
-												<a href="custom_fields.php?a=edit_cf&amp;id=<?php echo $id; ?>">
+												<a href="custom_fields.php?a=edit_cf&amp;id=<?php echo $tmp_id; ?>">
 													<i class="fa fa-pencil fa-fw icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
 												</a>
-												<a href="custom_fields.php?a=remove_cf&amp;id=<?php echo $id; ?>&amp;token=<?php hesk_token_echo(); ?>"
+												<a href="custom_fields.php?a=remove_cf&amp;id=<?php echo $tmp_id; ?>&amp;token=<?php hesk_token_echo(); ?>"
 												   onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_cf']); ?>');">
 													<i class="fa fa-times fa-fw icon-link red" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
 												</a>

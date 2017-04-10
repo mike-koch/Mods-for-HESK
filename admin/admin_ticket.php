@@ -1604,7 +1604,7 @@ function mfh_print_message() {
                 <br> <i class="fa fa-fw fa-globe" data-toggle="tooltip" title="<?php echo $hesklang['ip']; ?>"></i>
                 <?php
                 // Format IP for lookup
-                if ($ticket['ip'] == 'Unknown' || $ticket['ip'] == $hesklang['unknown']) {
+                if ($ticket['ip'] == '' || $ticket['ip'] == 'Unknown' || $ticket['ip'] == $hesklang['unknown']) {
                     echo $hesklang['unknown'];
                 } else {
                     echo '<a href="../ip_whois.php?ip=' . urlencode($ticket['ip']) . '">' . $ticket['ip'] . '</a>';
