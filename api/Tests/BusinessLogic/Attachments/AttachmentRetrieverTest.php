@@ -4,8 +4,11 @@
 namespace BusinessLogic\Attachments;
 
 
+use BusinessLogic\Security\UserContext;
+use BusinessLogic\Security\UserToTicketChecker;
 use DataAccess\Attachments\AttachmentGateway;
 use DataAccess\Files\FileReader;
+use DataAccess\Tickets\TicketGateway;
 use PHPUnit\Framework\TestCase;
 
 class AttachmentRetrieverTest extends TestCase {
@@ -14,6 +17,12 @@ class AttachmentRetrieverTest extends TestCase {
 
     /* @var $fileReader \PHPUnit_Framework_MockObject_MockObject */
     private $fileReader;
+
+    /* @var $ticketGateway \PHPUnit_Framework_MockObject_MockObject */
+    private $ticketGateway;
+
+    /* @var $userToTicketChecker \PHPUnit_Framework_MockObject_MockObject */
+    private $userToTicketChecker;
 
     /* @var $attachmentRetriever AttachmentRetriever */
     private $attachmentRetriever;
@@ -24,9 +33,14 @@ class AttachmentRetrieverTest extends TestCase {
     protected function setUp() {
         $this->attachmentGateway = $this->createMock(AttachmentGateway::class);
         $this->fileReader = $this->createMock(FileReader::class);
+        $this->ticketGateway = $this->createMock(TicketGateway::class);
+        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::class);
         $this->heskSettings = array('attach_dir' => 'attachments');
 
-        $this->attachmentRetriever = new AttachmentRetriever($this->attachmentGateway, $this->fileReader);
+        $this->attachmentRetriever = new AttachmentRetriever($this->attachmentGateway, $this->fileReader,
+            $this->ticketGateway, $this->userToTicketChecker);
+
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
     }
 
     function testItGetsTheMetadataFromTheGateway() {
@@ -43,7 +57,7 @@ class AttachmentRetrieverTest extends TestCase {
             ->willReturn($attachmentContents);
 
         //-- Act
-        $actualContents = $this->attachmentRetriever->getAttachmentContentsForTicket(4, $this->heskSettings);
+        $actualContents = $this->attachmentRetriever->getAttachmentContentsForTicket(0, 4, new UserContext(), $this->heskSettings);
 
         //-- Assert
         self::assertThat($actualContents, self::equalTo($expectedContents));

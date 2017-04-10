@@ -4,6 +4,7 @@ namespace Controllers\Attachments;
 
 
 use BusinessLogic\Attachments\AttachmentHandler;
+use BusinessLogic\Attachments\AttachmentRetriever;
 use BusinessLogic\Attachments\CreateAttachmentForTicketModel;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Helpers;
@@ -11,10 +12,15 @@ use BusinessLogic\Security\UserToTicketChecker;
 use Controllers\JsonRetriever;
 
 class StaffTicketAttachmentsController {
-    function get($attachmentId) {
-        global $hesk_settings, $applicationContext;
+    function get($ticketId, $attachmentId) {
+        global $hesk_settings, $applicationContext, $userContext;
 
         $this->verifyAttachmentsAreEnabled($hesk_settings);
+
+        /* @var $attachmentRetriever AttachmentRetriever */
+        $attachmentRetriever = $applicationContext->get[AttachmentRetriever::class];
+
+        $attachmentRetriever->getAttachmentContentsForTicket($ticketId, $attachmentId, $userContext, $hesk_settings);
     }
 
     private function verifyAttachmentsAreEnabled($heskSettings) {
@@ -33,7 +39,8 @@ class StaffTicketAttachmentsController {
 
         $createAttachmentForTicketModel = $this->createModel(JsonRetriever::getJsonData(), $ticketId);
 
-        $createdAttachment = $attachmentHandler->createAttachmentForTicket($createAttachmentForTicketModel, $hesk_settings);
+        $createdAttachment = $attachmentHandler->createAttachmentForTicket(
+            $createAttachmentForTicketModel, $userContext, $hesk_settings);
 
         return output($createdAttachment, 201);
     }

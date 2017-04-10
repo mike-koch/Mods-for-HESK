@@ -2,6 +2,7 @@
 
 // Responsible for loading in all necessary classes. AKA a poor man's DI solution.
 use BusinessLogic\Attachments\AttachmentHandler;
+use BusinessLogic\Attachments\AttachmentRetriever;
 use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Emails\BasicEmailSender;
 use BusinessLogic\Emails\EmailSenderHelper;
@@ -21,6 +22,7 @@ use BusinessLogic\Tickets\TrackingIdGenerator;
 use BusinessLogic\Tickets\VerifiedEmailChecker;
 use DataAccess\Attachments\AttachmentGateway;
 use DataAccess\Categories\CategoryGateway;
+use DataAccess\Files\FileReader;
 use DataAccess\Files\FileWriter;
 use DataAccess\Logging\LoggingGateway;
 use DataAccess\Security\BanGateway;
@@ -99,9 +101,15 @@ class ApplicationContext {
         // Attachments
         $this->get[UserToTicketChecker::class] = new UserToTicketChecker($this->get[UserGateway::class]);
         $this->get[FileWriter::class] = new FileWriter();
+        $this->get[FileReader::class] = new FileReader();
         $this->get[AttachmentGateway::class] = new AttachmentGateway();
         $this->get[AttachmentHandler::class] = new AttachmentHandler($this->get[TicketGateway::class],
             $this->get[AttachmentGateway::class],
-            $this->get[FileWriter::class]);
+            $this->get[FileWriter::class],
+            $this->get[UserToTicketChecker::class]);
+        $this->get[AttachmentRetriever::class] = new AttachmentRetriever($this->get[AttachmentGateway::class],
+            $this->get[FileReader::class],
+            $this->get[TicketGateway::class],
+            $this->get[UserToTicketChecker::class]);
     }
 }
