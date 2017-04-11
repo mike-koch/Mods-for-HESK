@@ -159,8 +159,8 @@ if ($ticket['lastreplier']) {
 }
 
 // If IP is unknown (tickets via email pipe/pop3 fetching) assume current visitor IP as customer IP
-if ($ticket['ip'] == 'Unknown' || $ticket['ip'] == $hesklang['unknown']) {
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `ip` = '" . hesk_dbEscape($_SERVER['REMOTE_ADDR']) . "' WHERE `id`=" . intval($ticket['id']));
+if ($ticket['ip'] == '' || $ticket['ip'] == 'Unknown' || $ticket['ip'] == $hesklang['unknown']) {
+    hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `ip` = '".hesk_dbEscape(hesk_getClientIP())."' WHERE `id`=".intval($ticket['id']));
 }
 
 /* Get category name and ID */

@@ -77,8 +77,80 @@ if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') {
 // Load language file
 hesk_getLanguage();
 
+// Set timezone
+hesk_setTimezone();
+
 
 /*** FUNCTIONS ***/
+
+function hesk_getClientIP() {
+    global $hesk_settings;
+
+    // Already set? Just return it
+    if (isset($hesk_settings['client_IP'])) {
+        return $hesk_settings['client_IP'];
+    }
+
+    // Empty client IP, for example when used in CLI (piping, cron jobs, ...)
+    $hesk_settings['client_IP'] = '';
+
+    // Server (environment) variables to loop through
+    // the first valid one found will be returned as client IP
+    // Uncomment those used on your server
+    $server_client_IP_variables = array(
+        // 'HTTP_CF_CONNECTING_IP', // CloudFlare
+        // 'HTTP_CLIENT_IP',
+        // 'HTTP_X_FORWARDED_FOR',
+        // 'HTTP_X_FORWARDED',
+        // 'HTTP_FORWARDED_FOR',
+        // 'HTTP_FORWARDED',
+        'REMOTE_ADDR',
+    );
+
+    // The first valid environment variable is our client IP
+    foreach ($server_client_IP_variables as $server_client_IP_variable) {
+        // Must be set
+        if (!isset($_SERVER[$server_client_IP_variable])) {
+            continue;
+        }
+
+        // Must be a valid IP
+        if (!hesk_isValidIP($_SERVER[$server_client_IP_variable])) {
+            continue;
+        }
+
+        // Bingo!
+        $hesk_settings['client_IP'] = $_SERVER[$server_client_IP_variable];
+        break;
+    }
+
+    return $hesk_settings['client_IP'];
+
+} // END hesk_getClientIP()
+
+
+function hesk_isValidIP($ip) {
+    // Use filter_var for PHP 5.2.0
+    if (function_exists('filter_var') && filter_var($ip, FILTER_VALIDATE_IP) !== false) {
+        return true;
+    }
+
+    // Use regex for PHP < 5.2.0
+
+    // -> IPv4
+    if (preg_match('/^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/', $ip)) {
+        return true;
+    }
+
+    // -> IPv6
+    if (preg_match('/^[0-9A-Fa-f\:\.]$/', $ip)) {
+        return true;
+    }
+
+    // Not a valid IP
+    return false;
+
+} // END hesk_isValidIP()
 
 function hesk_setcookie($name, $value, $expire=0, $path=""){
     if (HESK_SSL) {
@@ -415,6 +487,9 @@ function hesk_getCustomerEmail($can_remember = 0, $field = '')
         }
     }
 
+    // Remove unwanted side-effects
+    $my_email = hesk_emailCleanup($my_email);
+
     $hesk_settings['e_param'] = '&e=' . rawurlencode($my_email);
     $hesk_settings['e_query'] = '&amp;e=' . rawurlencode($my_email);
     $hesk_settings['e_email'] = $my_email;
@@ -422,6 +497,10 @@ function hesk_getCustomerEmail($can_remember = 0, $field = '')
     return $my_email;
 
 } // END hesk_getCustomerEmail()
+
+function hesk_emailCleanup($my_email) {
+    return preg_replace("/(\\\)'/", "'", $my_email);
+} // END hesk_emailCleanup()
 
 
 function hesk_formatBytes($size, $translate_unit = 1, $precision = 2)
@@ -670,7 +749,7 @@ function hesk_cleanBfAttempts()
     }
 
     /* Delete expired logs from the database */
-    $res = hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logins` WHERE `ip`='" . hesk_dbEscape($_SERVER['REMOTE_ADDR']) . "'");
+    hesk_dbQuery("DELETE FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` WHERE `ip`='".hesk_dbEscape(hesk_getClientIP())."'");
 
     define('HESK_BF_CLEAN', 1);
 
@@ -683,7 +762,7 @@ function hesk_limitBfAttempts($showError = 1)
     global $hesk_settings, $hesklang;
 
     // Check if this IP is banned permanently
-    if (hesk_isBannedIP($_SERVER['REMOTE_ADDR'])) {
+    if (hesk_isBannedIP(hesk_getClientIP())) {
         hesk_error($hesklang['baned_ip'], 0);
     }
 
@@ -695,7 +774,7 @@ function hesk_limitBfAttempts($showError = 1)
     /* Define this constant to avoid duplicate checks */
     define('HESK_BF_LIMIT', 1);
 
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $ip = hesk_getClientIP();
 
     /* Get number of failed attempts from the database */
     $res = hesk_dbQuery("SELECT `number`, (CASE WHEN `last_attempt` IS NOT NULL AND DATE_ADD(`last_attempt`, INTERVAL " . intval($hesk_settings['attempt_banmin']) . " MINUTE ) > NOW() THEN 1 ELSE 0 END) AS `banned` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logins` WHERE `ip`='" . hesk_dbEscape($ip) . "' LIMIT 1");
@@ -1206,6 +1285,58 @@ function hesk_returnLanguage()
     return true;
 } // END hesk_returnLanguage()
 
+function hesk_setTimezone() {
+    global $hesk_settings;
+
+    // Get Hesk time difference from UTC in seconds
+    $seconds = date('Z') + 3600*$hesk_settings['diff_hours'] + 60*$hesk_settings['diff_minutes'];
+
+    // Daylight saving?
+    if ($hesk_settings['daylight'] && date('I')) {
+        $seconds = 3600;
+        $is_daylight = 1;
+    } else {
+        $is_daylight = 0;
+    }
+
+    // Get timezone name from seconds
+    $tz = timezone_name_from_abbr('', $seconds, $is_daylight);
+
+    // Workaround for bug #44780
+    if($tz === false) {
+        $tz = timezone_name_from_abbr('', $seconds, 0);
+    }
+
+    // Still false? Disregards minutes
+    if($tz === false) {
+        $seconds = date('Z') + 3600*$hesk_settings['diff_hours'];
+        $tz = timezone_name_from_abbr('', $seconds, 0);
+    }
+
+    // Set timezone
+    date_default_timezone_set($tz);
+
+    return true;
+
+} // END hesk_setTimezone()
+
+
+function hesk_timeToHHMM($time, $time_format="seconds", $signed=true) {
+    if ($time < 0) {
+        $time = abs($time);
+        $sign = "-";
+    } else {
+        $sign = "";
+    }
+
+    if ($time_format == 'minutes') {
+        $time *= 60;
+    }
+
+    return ($signed ? $sign : '') . gmdate('H:i', $time);
+
+} // END hesk_timeToHHMM()
+
 
 function hesk_date($dt = '', $from_database = false, $is_str = true, $return_str = true)
 {
@@ -1215,25 +1346,6 @@ function hesk_date($dt = '', $from_database = false, $is_str = true, $return_str
         $dt = time();
     } elseif ($is_str) {
         $dt = strtotime($dt);
-    }
-
-    // Adjust MySQL time if different from PHP time
-    if ($from_database) {
-        if (!defined('MYSQL_TIME_DIFF')) {
-            define('MYSQL_TIME_DIFF', time() - hesk_dbTime());
-        }
-
-        if (MYSQL_TIME_DIFF != 0) {
-            $dt += MYSQL_TIME_DIFF;
-        }
-    }
-
-    // Add HESK set time difference
-    $dt += 3600 * $hesk_settings['diff_hours'] + 60 * $hesk_settings['diff_minutes'];
-
-    // Daylight savings?
-    if ($hesk_settings['daylight'] && date('I', $dt)) {
-        $dt += 3600;
     }
 
     // Return formatted date
@@ -1728,7 +1840,7 @@ function hesk_check_maintenance($dodie = true)
             $hesk_settings['maintenance_mode'] == 0 &&
             $hesk_settings['question_ans'] == 'PB6YM' &&
 
-            $hesk_settings['site_title'] == 'My Web site' &&
+            $hesk_settings['site_title'] == 'Website' &&
             $hesk_settings['site_url'] == 'http://www.example.com' &&
             $hesk_settings['webmaster_mail'] == 'support@example.com' &&
             $hesk_settings['noreply_mail'] == 'support@example.com' &&
