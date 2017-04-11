@@ -87,7 +87,7 @@ if ($hesk_settings['secimg_use'] && !isset($_SESSION['img_verified'])) {
         require(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
 
         $resp = recaptcha_check_answer($hesk_settings['recaptcha_private_key'],
-            $_SERVER['REMOTE_ADDR'],
+            hesk_getClientIP(),
             hesk_POST('recaptcha_challenge_field', ''),
             hesk_POST('recaptcha_response_field', '')
         );
@@ -268,9 +268,9 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v) {
             $_SESSION["c_$k"] = '';
 
             if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $tmpvar[$k])) {
-                $date = strtotime($tmpvar[$k] . ' t00:00:00');
-                $dmin = strlen($v['value']['dmin']) ? strtotime($v['value']['dmin'] . ' t00:00:00') : false;
-                $dmax = strlen($v['value']['dmax']) ? strtotime($v['value']['dmax'] . ' t00:00:00') : false;
+                $date = strtotime($tmpvar[$k] . ' t00:00:00 UTC');
+                $dmin = strlen($v['value']['dmin']) ? strtotime($v['value']['dmin'] . ' t00:00:00 UTC') : false;
+                $dmax = strlen($v['value']['dmax']) ? strtotime($v['value']['dmax'] . ' t00:00:00 UTC') : false;
 
                 $_SESSION["c_$k"] = $tmpvar[$k];
 
@@ -317,7 +317,7 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v) {
 }
 
 // Check bans
-if ($email_available && ! isset($hesk_error_buffer['email']) && hesk_isBannedEmail($tmpvar['email']) || hesk_isBannedIP($_SERVER['REMOTE_ADDR'])) {
+if ($email_available && ! isset($hesk_error_buffer['email']) && hesk_isBannedEmail($tmpvar['email']) || hesk_isBannedIP(hesk_getClientIP())) {
     hesk_error($hesklang['baned_e']);
 }
 

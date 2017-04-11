@@ -125,7 +125,7 @@ if (count($hesk_error_buffer) != 0) {
 }
 
 // Check if this IP is temporarily locked out
-$res = hesk_dbQuery("SELECT `number` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logins` WHERE `ip`='" . hesk_dbEscape($_SERVER['REMOTE_ADDR']) . "' AND `last_attempt` IS NOT NULL AND DATE_ADD(`last_attempt`, INTERVAL " . intval($hesk_settings['attempt_banmin']) . " MINUTE ) > NOW() LIMIT 1");
+$res = hesk_dbQuery("SELECT `number` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` WHERE `ip`='".hesk_dbEscape(hesk_getClientIP())."' AND `last_attempt` IS NOT NULL AND DATE_ADD(`last_attempt`, INTERVAL ".intval($hesk_settings['attempt_banmin'])." MINUTE ) > NOW() LIMIT 1");
 if (hesk_dbNumRows($res) == 1) {
     if (hesk_dbResult($res) >= $hesk_settings['attempt_limit']) {
         unset($_SESSION);
@@ -157,7 +157,7 @@ if (hesk_dbNumRows($res) > 0) {
         $sequential_customer_replies = $tmp['staffid'] ? 0 : $sequential_customer_replies + 1;
     }
     if ($sequential_customer_replies > 10) {
-        hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logins` (`ip`, `number`) VALUES ('" . hesk_dbEscape($_SERVER['REMOTE_ADDR']) . "', " . intval($hesk_settings['attempt_limit'] + 1) . ")");
+        hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."logins` (`ip`, `number`) VALUES ('".hesk_dbEscape(hesk_getClientIP())."', ".intval($hesk_settings['attempt_limit'] + 1).")");
         hesk_error(sprintf($hesklang['yhbr'], $hesk_settings['attempt_banmin']), 0);
     }
 }

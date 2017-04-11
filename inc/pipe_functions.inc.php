@@ -266,7 +266,6 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
     // Not a reply, but a new ticket. Add it to the database
     $tmpvar['category'] = $set_category;
     $tmpvar['priority'] = $set_priority < 0 ? hesk_getCategoryPriority($tmpvar['category']) : $set_priority;
-    $_SERVER['REMOTE_ADDR'] = $hesklang['unknown'];
 
     // Auto assign tickets if aplicable
     $tmpvar['owner'] = 0;

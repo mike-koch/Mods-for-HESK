@@ -721,7 +721,7 @@ function print_add_ticket()
 
                 <!-- START KNOWLEDGEBASE SUGGEST -->
                 <?php
-                if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers']) {
+                if (has_public_kb() && $hesk_settings['kb_recommendanswers']) {
                     ?>
                     <div id="kb_suggestions" style="display:none">
                         <br/>&nbsp;<br/>
@@ -1116,7 +1116,7 @@ function print_add_ticket()
 
                                     <b><?php echo $hesklang['we_have']; ?>:</b>
                                     <ul>
-                                        <li><?php echo hesk_htmlspecialchars($_SERVER['REMOTE_ADDR']) . ' ' . $hesklang['recorded_ip']; ?></li>
+                                        <li><?php echo hesk_htmlspecialchars(hesk_getClientIP()) . ' ' . $hesklang['recorded_ip']; ?></li>
                                         <li><?php echo $hesklang['recorded_time']; ?></li>
                                     </ul>
                                 </div>
@@ -1206,15 +1206,25 @@ function print_start()
 {
 	global $hesk_settings, $hesklang;
 
-	if ($hesk_settings['kb_enable'])
-	{
-        require(HESK_PATH . 'inc/knowledgebase_functions.inc.php');
-	}
-
     // Connect to database
+    hesk_load_database_functions();
     hesk_dbConnect();
 
     define('PAGE_TITLE', 'CUSTOMER_HOME');
+
+    // This will be used to determine how much space to print after KB
+    $hesk_settings['kb_spacing'] = 4;
+
+    // Include KB functionality only if we have any public articles
+    has_public_kb();
+    if ($hesk_settings['kb_enable'])
+    {
+        require(HESK_PATH . 'inc/knowledgebase_functions.inc.php');
+    }
+    else
+    {
+        $hesk_settings['kb_spacing'] += 2;
+    }
 
 	/* Print header */
 	require_once(HESK_PATH . 'inc/header.inc.php');
@@ -1418,7 +1428,7 @@ require(HESK_PATH . 'inc/email_functions.inc.php');
 /* Get ticket(s) from database */
 hesk_dbConnect();
 
-$email = hesk_validateEmail(hesk_POST('email'), 'ERR', 0) or hesk_process_messages($hesklang['enter_valid_email'], 'ticket.php?remind=1');
+$email = hesk_emailCleanup(hesk_validateEmail(hesk_POST('email'), 'ERR', 0)) or hesk_process_messages($hesklang['enter_valid_email'], 'ticket.php?remind=1');
 
 if (isset($_POST['open_only'])) {
     $hesk_settings['open_only'] = $_POST['open_only'] == 1 ? 1 : 0;
@@ -1437,9 +1447,9 @@ $res = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix'])
 $num = hesk_dbNumRows($res);
 if ($num < 1) {
     if ($hesk_settings['open_only']) {
-        hesk_process_messages($hesklang['noopen'], 'ticket.php?remind=1&e=' . $email);
+        hesk_process_messages($hesklang['noopen'],'ticket.php?remind=1&e='.rawurlencode($email));
     } else {
-        hesk_process_messages($hesklang['tid_not_found'], 'ticket.php?remind=1&e=' . $email);
+        hesk_process_messages($hesklang['tid_not_found'],'ticket.php?remind=1&e='.rawurlencode($email));
     }
 }
 
@@ -1505,8 +1515,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 
         } // End forgot_tid()
 
-        function processEmail($msg, $name, $num, $tid_list)
-        {
+        function processEmail($msg, $name, $num, $tid_list) {
             global $hesk_settings;
 
             $msg = str_replace('%%NAME%%', $name, $msg);
@@ -1517,4 +1526,48 @@ require_once(HESK_PATH . 'inc/header.inc.php');
             return $msg;
         }
 
-        ?>
+function has_public_kb($use_cache=1) {
+    global $hesk_settings;
+
+    // Return if KB is disabled
+    if ( ! $hesk_settings['kb_enable']) {
+        return 0;
+    }
+
+    // Do we have a cached version available
+    $cache_dir = $hesk_settings['cache_dir'].'/';
+    $cache_file = $cache_dir . 'kb.cache.php';
+
+    if ($use_cache && file_exists($cache_file)) {
+        require($cache_file);
+        return $hesk_settings['kb_enable'];
+    }
+
+    // Make sure we have database connection
+    hesk_load_database_functions();
+    hesk_dbConnect();
+
+    // Do we have any public articles at all?
+    $res = hesk_dbQuery("SELECT `t1`.`id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+                        LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
+                        WHERE `t1`.`type`='0' AND `t2`.`type`='0' LIMIT 1");
+
+    // If no public articles, disable the KB functionality
+    if (hesk_dbNumRows($res) < 1) {
+        $hesk_settings['kb_enable'] = 0;
+    }
+
+    // Try to cache results
+    if ($use_cache && (is_dir($cache_dir) || (@mkdir($cache_dir, 0777) && is_writable($cache_dir)))) {
+        // Is there an index.htm file?
+        if ( ! file_exists($cache_dir.'index.htm')) {
+            @file_put_contents($cache_dir.'index.htm', '');
+        }
+
+        // Write data
+        @file_put_contents($cache_file, '<?php if (!defined(\'IN_SCRIPT\')) {die();} $hesk_settings[\'kb_enable\']=' . $hesk_settings['kb_enable'] . ';' );
+    }
+
+    return $hesk_settings['kb_enable'];
+
+} // End has_public_kb()
