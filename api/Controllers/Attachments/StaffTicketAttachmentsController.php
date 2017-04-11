@@ -20,7 +20,9 @@ class StaffTicketAttachmentsController {
         /* @var $attachmentRetriever AttachmentRetriever */
         $attachmentRetriever = $applicationContext->get[AttachmentRetriever::class];
 
-        $attachmentRetriever->getAttachmentContentsForTicket($ticketId, $attachmentId, $userContext, $hesk_settings);
+        $contents = $attachmentRetriever->getAttachmentContentsForTicket($ticketId, $attachmentId, $userContext, $hesk_settings);
+
+        output(array('contents' => base64_encode($contents)));
     }
 
     private function verifyAttachmentsAreEnabled($heskSettings) {
