@@ -118,6 +118,7 @@ hesk_dbConnect();
                                         <select name="current-version" class="form-control">
                                             <option disabled>Select One, or "No Previous Installation" Below</option>
                                             <optgroup label="Mods for HESK 3">
+                                                <option value="39">3.0.5</option>
                                                 <option value="38">3.0.4</option>
                                                 <option value="37">3.0.3</option>
                                                 <option value="36">3.0.2</option>
