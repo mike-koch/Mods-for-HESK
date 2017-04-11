@@ -130,7 +130,7 @@ function hesk_getClientIP() {
 
 
 function hesk_isValidIP($ip) {
-    // Use filter_var for PHP 5.2.0
+    // Use filter_var for PHP 5.2.0+
     if (function_exists('filter_var') && filter_var($ip, FILTER_VALIDATE_IP) !== false) {
         return true;
     }
@@ -143,7 +143,7 @@ function hesk_isValidIP($ip) {
     }
 
     // -> IPv6
-    if (preg_match('/^[0-9A-Fa-f\:\.]$/', $ip)) {
+    if (preg_match('/^[0-9A-Fa-f\:\.]+$/', $ip)) {
         return true;
     }
 
@@ -499,7 +499,7 @@ function hesk_getCustomerEmail($can_remember = 0, $field = '')
 } // END hesk_getCustomerEmail()
 
 function hesk_emailCleanup($my_email) {
-    return preg_replace("/(\\\)'/", "'", $my_email);
+    return preg_replace("/(\\\)+'/", "'", $my_email);
 } // END hesk_emailCleanup()
 
 
@@ -1294,7 +1294,7 @@ function hesk_setTimezone() {
 
     // Daylight saving?
     if ($hesk_settings['daylight'] && date('I')) {
-        $seconds = 3600;
+        $seconds += 3600;
         $is_daylight = 1;
     } else {
         $is_daylight = 0;
@@ -1327,7 +1327,7 @@ function hesk_timeToHHMM($time, $time_format="seconds", $signed=true) {
         $time = abs($time);
         $sign = "-";
     } else {
-        $sign = "";
+        $sign = "+";
     }
 
     if ($time_format == 'minutes') {
