@@ -116,7 +116,7 @@ else {
         F9ub3RpY2UnXS4nXCcpIj4nLiRoZXNrbGFuZ1snc2gnXS4nPC9hPjwvdGQ+PC90cj48L3RhYmxlPjxwP
         icuJGhlc2tsYW5nWydzdXBwb3J0X3JlbW92ZSddLicuIDxhIGhyZWY9Imh0dHBzOi8vd3d3Lmhlc2suY
         29tL2J1eS5waHAiIHRhcmdldD0iX2JsYW5rIj4nLiRoZXNrbGFuZ1snY2xpY2tfaW5mbyddLic8L2E+P
-        C9wPic7DQp9DQo=', "\112");
+        C9wPjxociAvPic7DQp9DQo=', "\112");
 
     /* Clean unneeded session variables */
     hesk_cleanSessionVars('hide');

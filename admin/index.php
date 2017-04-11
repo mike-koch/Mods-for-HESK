@@ -69,7 +69,7 @@ function do_login()
             require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
 
             $resp = recaptcha_check_answer($hesk_settings['recaptcha_private_key'],
-                $_SERVER['REMOTE_ADDR'],
+                hesk_getClientIP(),
                 hesk_POST('recaptcha_challenge_field', ''),
                 hesk_POST('recaptcha_response_field', '')
             );
@@ -88,7 +88,7 @@ function do_login()
 
             // Was there a reCAPTCHA response?
             if (isset($_POST["g-recaptcha-response"])) {
-                $resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], hesk_POST("g-recaptcha-response"));
+                $resp = $reCaptcha->verifyResponse(hesk_getClientIP(), hesk_POST("g-recaptcha-response"));
             }
 
             if ($resp != null && $resp->success) {

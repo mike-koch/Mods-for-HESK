@@ -101,7 +101,7 @@ function hesk_newTicket($ticket, $isVerified = true)
 		NOW(),
 		NOW(),
 		" . (isset($ticket['articles']) ? "'{$ticket['articles']}'" : 'NULL') . ",
-		'" . hesk_dbEscape($_SERVER['REMOTE_ADDR']) . "',
+		'" . hesk_dbEscape(hesk_getClientIP()) . "',
 		'" . hesk_dbEscape($language) . "',
 		'" . (isset($ticket['openedby']) ? intval($ticket['openedby']) : 0) . "',
 		'" . intval($ticket['owner']) . "',

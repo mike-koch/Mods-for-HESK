@@ -59,9 +59,6 @@ function hesk_kbTopArticles($how_many, $index = 1)
 
         // Show title in bold
         $font_weight = 'b';
-
-        // Print a line for spacing
-        echo '<hr />';
     }
     ?>
 
@@ -108,6 +105,8 @@ function hesk_kbTopArticles($how_many, $index = 1)
             $hesk_settings['kb_top_articles_printed'] = array();
 
             while ($article = hesk_dbFetchAssoc($res)) {
+                $hesk_settings['kb_spacing']--;
+
                 $hesk_settings['kb_top_articles_printed'][] = $article['id'];
 
                 $icon = 'fa fa-file';
@@ -217,6 +216,7 @@ function hesk_kbLatestArticles($how_many, $index = 1)
             /* We have some results, print them out */
             $colspan = $hesk_settings['kb_date'] ? '' : 'colspan="2"';
             while ($article = hesk_dbFetchAssoc($res)) {
+                $hesk_settings['kb_spacing']--;
                 $icon = 'fa fa-file';
                 $style = '';
 

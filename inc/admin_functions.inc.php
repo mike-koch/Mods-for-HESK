@@ -34,6 +34,8 @@ $hesk_settings['possible_ticket_list'] = array(
     'time_worked' => $hesklang['ts'],
 );
 
+define('HESK_NO_ROBOTS', true);
+
 /*** FUNCTIONS ***/
 
 
@@ -564,6 +566,8 @@ function hesk_verifyGoto()
 		'banned_emails.php' => '',
 		'banned_ips.php' => '',
         'change_status.php' => '',
+        'custom_fields.php' => '',
+        'custom_statuses.php' => '',
         'edit_post.php' => '',
 		'email_templates.php' => '',
         'export.php' => '',
@@ -572,6 +576,7 @@ function hesk_verifyGoto()
         'knowledgebase_private.php' => '',
         'lock.php' => '',
         'mail.php' => '',
+        'mail.php?a=read&id=1' => '',
         'manage_canned.php' => '',
         'manage_categories.php' => '',
         'manage_knowledgebase.php' => '',
@@ -714,6 +719,9 @@ function hesk_purge_cache($type = '', $expire_after_seconds = 0)
             break;
         case 'cf':
             $files = glob($cache_dir.'cf_*', GLOB_NOSORT);
+            break;
+        case 'kb':
+            $files = array($cache_dir.'kb.cache.php');
             break;
         default:
             hesk_rrmdir(trim($cache_dir, '/'), true);

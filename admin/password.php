@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
 
             $resp = recaptcha_check_answer($hesk_settings['recaptcha_private_key'],
-                $_SERVER['REMOTE_ADDR'],
+                hesk_getClientIP(),
                 hesk_POST('recaptcha_challenge_field', ''),
                 hesk_POST('recaptcha_response_field', '')
             );
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Was there a reCAPTCHA response?
             if (isset($_POST["g-recaptcha-response"])) {
-                $resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], hesk_POST("g-recaptcha-response"));
+                $resp = $reCaptcha->verifyResponse(hesk_getClientIP(), hesk_POST("g-recaptcha-response"));
             }
 
             if ($resp != null && $resp->success) {
@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             hesk_process_messages($hesklang['noace'], 'NOREDIRECT');
         } else {
             $row = hesk_dbFetchAssoc($res);
-            $hash = sha1(microtime() . $_SERVER['REMOTE_ADDR'] . mt_rand() . $row['id'] . $row['name'] . $row['pass']);
+            $hash = sha1(microtime() . hesk_getClientIP() . mt_rand() . $row['id'] . $row['name'] . $row['pass']);
 
             // Insert the verification hash into the database
             hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reset_password` (`user`, `hash`, `ip`) VALUES (" . intval($row['id']) . ", '{$hash}', '" . hesk_dbEscape($_SERVER['REMOTE_ADDR']) . "') ");

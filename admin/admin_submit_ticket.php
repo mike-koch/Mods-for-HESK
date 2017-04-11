@@ -123,9 +123,9 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v) {
             $tmpvar[$k] = hesk_POST($k);
             $_SESSION["as_$k"] = '';
             if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $tmpvar[$k])) {
-                $date = strtotime($tmpvar[$k] . ' t00:00:00');
-                $dmin = strlen($v['value']['dmin']) ? strtotime($v['value']['dmin'] . ' t00:00:00') : false;
-                $dmax = strlen($v['value']['dmax']) ? strtotime($v['value']['dmax'] . ' t00:00:00') : false;
+                $date = strtotime($tmpvar[$k] . ' t00:00:00 UTC');
+                $dmin = strlen($v['value']['dmin']) ? strtotime($v['value']['dmin'] . ' t00:00:00 UTC') : false;
+                $dmax = strlen($v['value']['dmax']) ? strtotime($v['value']['dmax'] . ' t00:00:00 UTC') : false;
 
                 $_SESSION["as_$k"] = $tmpvar[$k];
 

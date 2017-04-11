@@ -758,6 +758,12 @@ if (!$pop3_OK) {
     $tmp[] = '<span style="color:red; font-weight:bold">' . $hesklang['pop3e'] . ':</span> ' . $pop3_error . '<br /><br /><a href="Javascript:void(0)" onclick="Javascript:hesk_toggleLayerDisplay(\'pop3log\')">' . $hesklang['pop3log'] . '</a><div id="pop3log" style="display:none">&nbsp;<br /><textarea name="log" rows="10" cols="60">' . $pop3_log . '</textarea></div>';
 }
 
+// Clear the cache folder
+hesk_purge_cache('kb');
+hesk_purge_cache('cf');
+hesk_purge_cache('export', 14400);
+hesk_purge_cache('status');
+
 // Show the settings page and display any notices or success
 if (count($tmp)) {
     $errors = implode('<br /><br />', $tmp);
