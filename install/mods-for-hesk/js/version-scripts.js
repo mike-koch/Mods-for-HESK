@@ -113,6 +113,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 39) {
         startVersionUpgrade('305');
         executeUpdate(39, '305', '3.0.5');
+    } else if (startingVersion < 40) {
+        startVersionUpgrade('306');
+        executeUpdate(40, '306', '3.0.6');
     } else {
         installationFinished();
     }
