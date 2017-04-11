@@ -207,14 +207,14 @@ function output_attachment_id_holder_container($id) {
     echo '<div id="attachment-holder-' . $id . '" class="hide"></div>';
 }
 
-function build_dropzone_markup($admin = false, $id = 'filedrop') {
+function build_dropzone_markup($admin = false, $id = 'filedrop', $startingId = 1) {
     global $hesklang, $hesk_settings;
 
     $directory_separator = $admin ? '../' : '';
     echo '<div class="dropzone" id="' . $id . '">
         <div class="fallback">
             <input type="hidden" name="use-legacy-attachments" value="1">';
-            for ($i = 1; $i <= $hesk_settings['attachments']['max_number']; $i++) {
+            for ($i = $startingId; $i <= $hesk_settings['attachments']['max_number']; $i++) {
                 $cls = ($i == 1 && isset($_SESSION['iserror']) && in_array('attachments', $_SESSION['iserror'])) ? ' class="isError" ' : '';
                 echo '<input type="file" name="attachment[' . $i . ']" size="50" ' . $cls . ' /><br />';
             }
@@ -225,7 +225,7 @@ function build_dropzone_markup($admin = false, $id = 'filedrop') {
        onclick="Javascript:hesk_window(\'' . $directory_separator . 'file_limits.php\',250,500);return false;">'. $hesklang['ful'] . '</a>';
 }
 
-function display_dropzone_field($url, $id = 'filedrop') {
+function display_dropzone_field($url, $id = 'filedrop', $max_files_override = -1) {
     global $hesk_settings, $hesklang;
 
     output_dropzone_window();
@@ -233,7 +233,7 @@ function display_dropzone_field($url, $id = 'filedrop') {
 
     $acceptedFiles = implode(',', $hesk_settings['attachments']['allowed_types']);
     $size = mfh_bytesToUnits($hesk_settings['attachments']['max_size']);
-    $max_files = $hesk_settings['attachments']['max_number'];
+    $max_files = $max_files_override > -1 ? $max_files_override : $hesk_settings['attachments']['max_number'];
 
     echo "
     <script type=\"text/javascript\">

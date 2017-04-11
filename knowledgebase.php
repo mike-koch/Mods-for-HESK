@@ -20,10 +20,7 @@ require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/knowledgebase_functions.inc.php');
 
 
-// Load Knowledgebase-related functions
-hesk_load_database_functions();
-
-/* Connect to database */
+// Connect to database
 hesk_dbConnect();
 
 // Are we in maintenance mode?
@@ -31,10 +28,23 @@ hesk_check_maintenance();
 
 define('PAGE_TITLE', 'CUSTOMER_KB');
 
-/* Is Knowledgebase enabled? */
+// Is Knowledgebase enabled?
 if (!$hesk_settings['kb_enable']) {
     hesk_error($hesklang['kbdis']);
 }
+
+// Do we have any public articles at all?
+$res = hesk_dbQuery("SELECT `t1`.`id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` AS `t1`
+                    LEFT JOIN `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` AS `t2` ON `t1`.`catid` = `t2`.`id`
+                    WHERE `t1`.`type`='0' AND `t2`.`type`='0' LIMIT 1");
+
+// If yes, load KB functions; if not, disable and hide the KB
+if (hesk_dbNumRows($res) < 1) {
+    hesk_error($hesklang['noa']);
+}
+
+// Load KB functions
+require(HESK_PATH . 'inc/knowledgebase_functions.inc.php');
 
 /* Rating? */
 if (isset($_GET['rating'])) {
