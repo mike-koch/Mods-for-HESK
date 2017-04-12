@@ -17,10 +17,10 @@ define('HESK_PATH', './');
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
-require(HESK_PATH . 'inc/knowledgebase_functions.inc.php');
 
 
 // Connect to database
+hesk_load_database_functions();
 hesk_dbConnect();
 
 // Are we in maintenance mode?
