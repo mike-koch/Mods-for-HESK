@@ -980,3 +980,10 @@ function execute306Scripts() {
 
     updateVersion('3.0.6');
 }
+
+function execute307Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    updateVersion('3.0.7');
+}
