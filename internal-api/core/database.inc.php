@@ -33,7 +33,25 @@
 *******************************************************************************/
 
 /* Check if this is a valid include */
-if (!defined('IN_SCRIPT')) {die('Invalid attempt');} 
+if (!defined('IN_SCRIPT')) {die('Invalid attempt');}
+
+
+function hesk_dbCollate()
+{
+    global $hesklang;
+
+    // MySQL vesions prior to 5.6 don't support some collations
+    if ( in_array($hesklang['_COLLATE'], array('utf8_croatian_ci', 'utf8_german2_ci', 'utf8_vietnamese_ci')) )
+    {
+        if ( version_compare( hesk_dbResult( hesk_dbQuery('SELECT VERSION() AS version') ), '5.6', '<') )
+        {
+            $hesklang['_COLLATE'] = 'utf8_general_ci';
+        }
+    }
+
+    return hesk_dbEscape($hesklang['_COLLATE']);
+
+} // END hesk_dbCollate()
 
 
 function hesk_dbSetNames()
@@ -75,6 +93,16 @@ function hesk_dbTime()
 	$res = hesk_dbQuery("SELECT NOW()");
 	return strtotime(hesk_dbResult($res,0,0));
 } // END hesk_dbTime()
+
+
+function hesk_dbSetTimezone()
+{
+    global $hesk_settings;
+
+    hesk_dbQuery('SET time_zone = "'.hesk_timeToHHMM(date('Z')).'"');
+
+    return true;
+} // END hesk_dbSetTimezone()
 
 
 function hesk_dbEscape($in)
@@ -142,6 +170,9 @@ function hesk_dbConnect()
 
     // Check MySQL/PHP version and set encoding to utf8
     hesk_dbSetNames();
+
+    // Set the correct timezone
+    hesk_dbSetTimezone();
 
     return $hesk_db_link;
 
