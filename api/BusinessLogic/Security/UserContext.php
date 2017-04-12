@@ -64,7 +64,7 @@ class UserContext {
         $userContext = new UserContext();
         $userContext->id = $dataRow['id'];
         $userContext->username = $dataRow['user'];
-        $userContext->admin = $dataRow['isadmin'];
+        $userContext->admin = $dataRow['isadmin'] === '1';
         $userContext->name = $dataRow['name'];
         $userContext->email = $dataRow['email'];
         $userContext->signature = $dataRow['signature'];

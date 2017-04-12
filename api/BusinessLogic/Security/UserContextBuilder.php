@@ -33,7 +33,7 @@ class UserContextBuilder {
             throw new InvalidAuthenticationTokenException();
         }
 
-        return $this->fromDataRow($userRow);
+        return UserContext::fromDataRow($userRow);
     }
 
     /**

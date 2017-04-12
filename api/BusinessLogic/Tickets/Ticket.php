@@ -42,6 +42,10 @@ class Ticket {
             $attachments = explode(',', $row['attachments']);
             $attachmentArray = array();
             foreach ($attachments as $attachment) {
+                if (trim($attachment) === '') {
+                    continue;
+                }
+
                 $attachmentRow = explode('#', $attachment);
                 $attachmentModel = new Attachment();
 
