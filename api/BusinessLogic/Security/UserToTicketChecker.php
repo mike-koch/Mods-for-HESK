@@ -30,7 +30,9 @@ class UserToTicketChecker {
             $categoryManagerId = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
 
             $hasAccess = $hasAccess &&
-                (in_array(UserPrivilege::CAN_EDIT_TICKETS, $user->permissions) || $categoryManagerId == $user->id);
+                ($user->admin === true
+                    || in_array(UserPrivilege::CAN_EDIT_TICKETS, $user->permissions)
+                    || $categoryManagerId == $user->id);
         }
 
         return $hasAccess;

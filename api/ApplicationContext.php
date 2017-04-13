@@ -22,6 +22,7 @@ use BusinessLogic\Tickets\TrackingIdGenerator;
 use BusinessLogic\Tickets\VerifiedEmailChecker;
 use DataAccess\Attachments\AttachmentGateway;
 use DataAccess\Categories\CategoryGateway;
+use DataAccess\Files\FileDeleter;
 use DataAccess\Files\FileReader;
 use DataAccess\Files\FileWriter;
 use DataAccess\Logging\LoggingGateway;
@@ -102,11 +103,13 @@ class ApplicationContext {
         $this->get[UserToTicketChecker::class] = new UserToTicketChecker($this->get[UserGateway::class]);
         $this->get[FileWriter::class] = new FileWriter();
         $this->get[FileReader::class] = new FileReader();
+        $this->get[FileDeleter::class] = new FileDeleter();
         $this->get[AttachmentGateway::class] = new AttachmentGateway();
         $this->get[AttachmentHandler::class] = new AttachmentHandler($this->get[TicketGateway::class],
             $this->get[AttachmentGateway::class],
             $this->get[FileWriter::class],
-            $this->get[UserToTicketChecker::class]);
+            $this->get[UserToTicketChecker::class],
+            $this->get[FileDeleter::class]);
         $this->get[AttachmentRetriever::class] = new AttachmentRetriever($this->get[AttachmentGateway::class],
             $this->get[FileReader::class],
             $this->get[TicketGateway::class],

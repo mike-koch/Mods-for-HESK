@@ -9,6 +9,7 @@ use BusinessLogic\Security\UserContext;
 use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Tickets\Ticket;
 use DataAccess\Attachments\AttachmentGateway;
+use DataAccess\Files\FileDeleter;
 use DataAccess\Files\FileWriter;
 use DataAccess\Tickets\TicketGateway;
 use PHPUnit\Framework\TestCase;
@@ -33,6 +34,9 @@ class AttachmentHandlerTest extends TestCase {
     /* @var $fileWriter \PHPUnit_Framework_MockObject_MockObject */
     private $fileWriter;
 
+    /* @var $fileDeleter \PHPUnit_Framework_MockObject_MockObject */
+    private $fileDeleter;
+
     /* @var $userContext UserContext */
     private $userContext;
 
@@ -43,8 +47,8 @@ class AttachmentHandlerTest extends TestCase {
         $this->ticketGateway = $this->createMock(TicketGateway::class);
         $this->attachmentGateway = $this->createMock(AttachmentGateway::class);
         $this->fileWriter = $this->createMock(FileWriter::class);
+        $this->fileDeleter = $this->createMock(FileDeleter::class);
         $this->userToTicketChecker = $this->createMock(UserToTicketChecker::class);
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->heskSettings = array(
             'attach_dir' => 'attachments',
             'attachments' => array(
@@ -56,7 +60,8 @@ class AttachmentHandlerTest extends TestCase {
         $this->attachmentHandler = new AttachmentHandler($this->ticketGateway,
             $this->attachmentGateway,
             $this->fileWriter,
-            $this->userToTicketChecker);
+            $this->userToTicketChecker,
+            $this->fileDeleter);
         $this->createAttachmentForTicketModel = new CreateAttachmentForTicketModel();
         $this->createAttachmentForTicketModel->attachmentContents = base64_encode('string');
         $this->createAttachmentForTicketModel->displayName = 'DisplayName.txt';
@@ -67,6 +72,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsNull() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->attachmentContents = null;
 
         //-- Assert
@@ -79,6 +85,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsEmpty() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->attachmentContents = '';
 
         //-- Assert
@@ -91,6 +98,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsInvalidBase64() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->attachmentContents = 'invalid base 64';
 
         //-- Assert
@@ -103,6 +111,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheDisplayNameIsNull() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->displayName = null;
 
         //-- Assert
@@ -115,6 +124,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheDisplayNameIsEmpty() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->displayName = '';
 
         //-- Assert
@@ -127,6 +137,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheTicketIdIsNull() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->ticketId = null;
 
         //-- Assert
@@ -139,6 +150,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheTicketIdIsANonPositiveInteger() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->ticketId = 0;
 
         //-- Assert
@@ -151,6 +163,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheFileExtensionIsNotPermitted() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->heskSettings['attachments']['allowed_types'] = array('.gif');
         $this->createAttachmentForTicketModel->ticketId = 0;
 
@@ -164,6 +177,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheFileSizeIsLargerThanMaxPermitted() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->attachmentContents = base64_encode("msg");
         $this->heskSettings['attachments']['max_size'] = 1;
 
@@ -177,6 +191,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testItSavesATicketWithTheProperProperties() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->ticketId = 1;
         $ticket = new Ticket();
         $ticket->trackingId = 'ABC-DEF-1234';
@@ -205,6 +220,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testItSavesTheFileToTheFileSystem() {
         //-- Arrange
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->ticketId = 1;
         $ticket = new Ticket();
         $ticket->trackingId = 'ABC-DEF-1234';
@@ -229,4 +245,60 @@ class AttachmentHandlerTest extends TestCase {
     }
 
     //-- TODO Test UserToTicketChecker
+
+    function testDeleteThrowsAnExceptionWhenTheUserDoesNotHaveAccessToTheTicket() {
+        //-- Arrange
+        $ticketId = 1;
+        $ticket = new Ticket();
+        $this->ticketGateway->method('getTicketById')
+            ->with($ticketId, $this->heskSettings)->willReturn($ticket);
+        $this->userToTicketChecker->method('isTicketWritableToUser')
+            ->with($this->userContext, $ticket, true, $this->heskSettings)
+            ->willReturn(false);
+
+        //-- Assert
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("User does not have access to ticket {$ticketId} being created / edited!");
+
+        //-- Act
+        $this->attachmentHandler->deleteAttachmentFromTicket($ticketId, 1, $this->userContext, $this->heskSettings);
+    }
+
+    function testDeleteActuallyDeletesTheFile() {
+        //-- Arrange
+        $ticketId = 1;
+        $ticket = new Ticket();
+        $attachment = new Attachment();
+        $attachment->id = 5;
+        $attachment->savedName = 'foobar.txt';
+        $this->heskSettings['attach_dir'] = 'attach-dir';
+        $ticket->attachments = array($attachment);
+        $this->ticketGateway->method('getTicketById')->willReturn($ticket);
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+
+        //-- Assert
+        $this->fileDeleter->expects($this->once())->method('deleteFile')->with('foobar.txt', 'attach-dir');
+
+        //-- Act
+        $this->attachmentHandler->deleteAttachmentFromTicket($ticketId, 5, $this->userContext, $this->heskSettings);
+    }
+
+    function testDeleteUpdatesTheTicketItselfAndSavesIt() {
+        //-- Arrange
+        $ticketId = 1;
+        $ticket = new Ticket();
+        $attachment = new Attachment();
+        $attachment->id = 5;
+        $attachment->savedName = 'foobar.txt';
+        $this->heskSettings['attach_dir'] = 'attach-dir';
+        $ticket->attachments = array($attachment);
+        $this->ticketGateway->method('getTicketById')->willReturn($ticket);
+        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+
+        //-- Assert
+        $this->ticketGateway->expects($this->once())->method('updateAttachmentsForTicket');
+
+        //-- Act
+        $this->attachmentHandler->deleteAttachmentFromTicket($ticketId, 5, $this->userContext, $this->heskSettings);
+    }
 }

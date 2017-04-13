@@ -55,4 +55,15 @@ class StaffTicketAttachmentsController {
 
         return $model;
     }
+
+    function delete($ticketId, $attachmentId) {
+        global $applicationContext, $hesk_settings, $userContext;
+
+        /* @var $attachmentHandler AttachmentHandler */
+        $attachmentHandler = $applicationContext->get[AttachmentHandler::class];
+
+        $attachmentHandler->deleteAttachmentFromTicket($ticketId, $attachmentId, $userContext, $hesk_settings);
+
+        return http_response_code(204);
+    }
 }
