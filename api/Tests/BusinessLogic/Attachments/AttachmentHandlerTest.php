@@ -6,7 +6,9 @@ namespace BusinessLogic\Attachments;
 
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Security\UserContext;
+use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\Security\UserToTicketChecker;
+use BusinessLogic\Tickets\Reply;
 use BusinessLogic\Tickets\Ticket;
 use DataAccess\Attachments\AttachmentGateway;
 use DataAccess\Files\FileDeleter;
@@ -72,7 +74,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsNull() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->attachmentContents = null;
 
         //-- Assert
@@ -85,7 +87,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsEmpty() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->attachmentContents = '';
 
         //-- Assert
@@ -98,7 +100,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsInvalidBase64() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->attachmentContents = 'invalid base 64';
 
         //-- Assert
@@ -111,7 +113,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheDisplayNameIsNull() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->displayName = null;
 
         //-- Assert
@@ -124,7 +126,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheDisplayNameIsEmpty() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->displayName = '';
 
         //-- Assert
@@ -137,7 +139,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheTicketIdIsNull() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->ticketId = null;
 
         //-- Assert
@@ -150,7 +152,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheTicketIdIsANonPositiveInteger() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->ticketId = 0;
 
         //-- Assert
@@ -163,7 +165,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheFileExtensionIsNotPermitted() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->heskSettings['attachments']['allowed_types'] = array('.gif');
         $this->createAttachmentForTicketModel->ticketId = 0;
 
@@ -177,7 +179,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheFileSizeIsLargerThanMaxPermitted() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->attachmentContents = base64_encode("msg");
         $this->heskSettings['attachments']['max_size'] = 1;
 
@@ -191,7 +193,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testItSavesATicketWithTheProperProperties() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->ticketId = 1;
         $ticket = new Ticket();
         $ticket->trackingId = 'ABC-DEF-1234';
@@ -220,7 +222,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testItSavesTheFileToTheFileSystem() {
         //-- Arrange
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->ticketId = 1;
         $ticket = new Ticket();
         $ticket->trackingId = 'ABC-DEF-1234';
@@ -252,8 +254,8 @@ class AttachmentHandlerTest extends TestCase {
         $ticket = new Ticket();
         $this->ticketGateway->method('getTicketById')
             ->with($ticketId, $this->heskSettings)->willReturn($ticket);
-        $this->userToTicketChecker->method('isTicketWritableToUser')
-            ->with($this->userContext, $ticket, true, $this->heskSettings)
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')
+            ->with($this->userContext, $ticket, $this->heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS))
             ->willReturn(false);
 
         //-- Assert
@@ -274,7 +276,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->heskSettings['attach_dir'] = 'attach-dir';
         $ticket->attachments = array($attachment);
         $this->ticketGateway->method('getTicketById')->willReturn($ticket);
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
 
         //-- Assert
         $this->fileDeleter->expects($this->once())->method('deleteFile')->with('foobar.txt', 'attach-dir');
@@ -293,7 +295,28 @@ class AttachmentHandlerTest extends TestCase {
         $this->heskSettings['attach_dir'] = 'attach-dir';
         $ticket->attachments = array($attachment);
         $this->ticketGateway->method('getTicketById')->willReturn($ticket);
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
+
+        //-- Assert
+        $this->ticketGateway->expects($this->once())->method('updateAttachmentsForTicket');
+
+        //-- Act
+        $this->attachmentHandler->deleteAttachmentFromTicket($ticketId, 5, $this->userContext, $this->heskSettings);
+    }
+
+    function testDeleteHandlesReplies() {
+        //-- Arrange
+        $ticketId = 1;
+        $ticket = new Ticket();
+        $reply = new Reply();
+        $attachment = new Attachment();
+        $attachment->id = 5;
+        $attachment->savedName = 'foobar.txt';
+        $this->heskSettings['attach_dir'] = 'attach-dir';
+        $reply->attachments = array($attachment);
+        $ticket->replies = array($reply);
+        $this->ticketGateway->method('getTicketById')->willReturn($ticket);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
 
         //-- Assert
         $this->ticketGateway->expects($this->once())->method('updateAttachmentsForTicket');

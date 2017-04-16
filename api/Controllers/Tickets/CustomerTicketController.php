@@ -9,15 +9,15 @@ use BusinessLogic\Tickets\TicketRetriever;
 use Controllers\JsonRetriever;
 
 
-class TicketController {
-    function get($id) {
+class CustomerTicketController {
+    /*function get($id) {
         global $applicationContext, $hesk_settings, $userContext;
 
         /* @var $ticketRetriever TicketRetriever */
-        $ticketRetriever = $applicationContext->get[TicketRetriever::class];
+        /*$ticketRetriever = $applicationContext->get[TicketRetriever::class];
 
         output($ticketRetriever->getTicketById($id, $hesk_settings, $userContext));
-    }
+    }*/
 
     function post() {
         global $applicationContext, $hesk_settings, $userContext;
@@ -34,6 +34,10 @@ class TicketController {
         //else email all staff
 
         return output($ticket, 201);
+    }
+
+    function delete($id) {
+        global $applicationContext, $hesk_settings, $userContext;
     }
 
     /**

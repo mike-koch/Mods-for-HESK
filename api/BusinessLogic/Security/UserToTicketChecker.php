@@ -17,24 +17,34 @@ class UserToTicketChecker {
     /**
      * @param $user UserContext
      * @param $ticket Ticket
-     * @param $isEditing bool true if editing a ticket, false if creating
      * @param $heskSettings array
+     * @param $extraPermissions UserPrivilege[] additional privileges the user needs besides CAN_VIEW_TICKETS (if not an admin)
+     *     for this to return true
      * @return bool
      */
-    function isTicketWritableToUser($user, $ticket, $isEditing, $heskSettings) {
-        $hasAccess = $user->admin === true ||
-            (in_array($ticket->categoryId, $user->categories) &&
-                in_array(UserPrivilege::CAN_VIEW_TICKETS, $user->permissions));
-
-        if ($isEditing) {
-            $categoryManagerId = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
-
-            $hasAccess = $hasAccess &&
-                ($user->admin === true
-                    || in_array(UserPrivilege::CAN_EDIT_TICKETS, $user->permissions)
-                    || $categoryManagerId == $user->id);
+    function isTicketAccessibleToUser($user, $ticket, $heskSettings, $extraPermissions = array()) {
+        if ($user->admin === true) {
+            return true;
         }
 
-        return $hasAccess;
+        if (!in_array($ticket->categoryId, $user->categories)) {
+            return false;
+        }
+
+        $categoryManagerId = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
+        
+        if ($user->id === $categoryManagerId) {
+            return true;
+        }
+
+        $extraPermissions[] = UserPrivilege::CAN_VIEW_TICKETS;
+
+        foreach ($extraPermissions as $permission) {
+            if (!in_array($permission, $user->permissions)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

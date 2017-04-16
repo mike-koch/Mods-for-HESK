@@ -31,7 +31,7 @@ class AttachmentRetriever {
     function getAttachmentContentsForTicket($ticketId, $attachmentId, $userContext, $heskSettings) {
         $ticket = $this->ticketGateway->getTicketById($ticketId, $heskSettings);
 
-        if (!$this->userToTicketChecker->isTicketWritableToUser($userContext, $ticket, false, $heskSettings)) {
+        if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings)) {
             throw new \Exception("User does not have access to attachment {$attachmentId}!");
         }
 

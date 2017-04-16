@@ -127,7 +127,7 @@ class Ticket {
             $reply->isRead = $replyRow['read'];
             $reply->usesHtml = $replyRow['html'];
 
-            $replies[] = $reply;
+            $replies[$reply->id] = $reply;
         }
         $ticket->replies = $replies;
 

@@ -33,7 +33,7 @@ class UserToTicketCheckerTest extends TestCase {
         $ticket = new Ticket();
 
         //-- Act
-        $result = $this->userToTicketChecker->isTicketWritableToUser($user, $ticket, false, $this->heskSettings);
+        $result = $this->userToTicketChecker->isTicketAccessibleToUser($user, $ticket, $this->heskSettings);
 
         //-- Assert
         self::assertThat($result, self::isTrue());
@@ -51,7 +51,7 @@ class UserToTicketCheckerTest extends TestCase {
         $ticket->categoryId = 1;
 
         //-- Act
-        $result = $this->userToTicketChecker->isTicketWritableToUser($user, $ticket, false, $this->heskSettings);
+        $result = $this->userToTicketChecker->isTicketAccessibleToUser($user, $ticket, $this->heskSettings);
 
         //-- Assert
         self::assertThat($result, self::isTrue());
@@ -69,7 +69,7 @@ class UserToTicketCheckerTest extends TestCase {
         $ticket->categoryId = 1;
 
         //-- Act
-        $result = $this->userToTicketChecker->isTicketWritableToUser($user, $ticket, false, $this->heskSettings);
+        $result = $this->userToTicketChecker->isTicketAccessibleToUser($user, $ticket, $this->heskSettings);
 
         //-- Assert
         self::assertThat($result, self::isFalse());
@@ -87,7 +87,7 @@ class UserToTicketCheckerTest extends TestCase {
         $ticket->categoryId = 1;
 
         //-- Act
-        $result = $this->userToTicketChecker->isTicketWritableToUser($user, $ticket, true, $this->heskSettings);
+        $result = $this->userToTicketChecker->isTicketAccessibleToUser($user, $ticket, $this->heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS));
 
         //-- Assert
         self::assertThat($result, self::isFalse());
@@ -106,7 +106,7 @@ class UserToTicketCheckerTest extends TestCase {
         $ticket->categoryId = 1;
 
         //-- Act
-        $result = $this->userToTicketChecker->isTicketWritableToUser($user, $ticket, true, $this->heskSettings);
+        $result = $this->userToTicketChecker->isTicketAccessibleToUser($user, $ticket, $this->heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS));
 
         //-- Assert
         self::assertThat($result, self::isTrue());

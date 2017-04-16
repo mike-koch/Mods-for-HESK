@@ -3,6 +3,7 @@
 namespace DataAccess\Tickets;
 
 
+use BusinessLogic\Attachments\AttachmentType;
 use BusinessLogic\Tickets\Attachment;
 use BusinessLogic\Tickets\Ticket;
 use BusinessLogic\Tickets\TicketGatewayGeneratedFields;
@@ -55,8 +56,9 @@ class TicketGateway extends CommonDao {
         while ($row = hesk_dbFetchAssoc($rs)) {
             $linkedTicketsRs =
                 hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `parent` = " . intval($row['id']));
+            $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($id) . " ORDER BY `id` ASC");
 
-            $tickets[] = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $heskSettings);
+            $tickets[] = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings);
         }
 
         $this->close();
@@ -79,8 +81,9 @@ class TicketGateway extends CommonDao {
 
         $row = hesk_dbFetchAssoc($rs);
         $linkedTicketsRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `parent` = " . intval($trackingId));
+        $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($id) . " ORDER BY `id` ASC");
 
-        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $heskSettings);
+        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings);
 
         $this->close();
 
@@ -216,15 +219,42 @@ class TicketGateway extends CommonDao {
      */
     function updateAttachmentsForTicket($ticketId, $attachments, $heskSettings) {
         $this->init();
+        $this->updateAttachmentsFor($ticketId, $attachments, AttachmentType::MESSAGE, $heskSettings);
+        $this->close();
+    }
 
+    private function updateAttachmentsFor($id, $attachments, $attachmentType, $heskSettings) {
         $attachmentStrings = array();
         foreach ($attachments as $attachment) {
             $attachmentStrings[] = "{$attachment->id}#{$attachment->fileName}#{$attachment->savedName}";
         }
         $attachmentStringToSave = implode(',', $attachmentStrings);
 
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` 
+        $tableName = $attachmentType == AttachmentType::MESSAGE ? 'tickets' : 'replies';
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . $tableName . "` 
             SET `attachments` = '" . hesk_dbEscape($attachmentStringToSave) . "' 
-            WHERE `id` = " . intval($ticketId));
+            WHERE `id` = " . intval($id));
+    }
+
+    /**
+     * @param $replyId int
+     * @param $attachments Attachment[]
+     * @param $heskSettings array
+     *
+     * Crappy logic that should just be pulled from the attachments table, but using for backwards compatibility
+     */
+    function updateAttachmentsForReply($replyId, $attachments, $heskSettings) {
+        $this->init();
+        $this->updateAttachmentsFor($replyId, $attachments, AttachmentType::REPLY, $heskSettings);
+        $this->close();
+    }
+
+    /**
+     * @param $ticketId int
+     * @param $heskSettings array
+     */
+    function deleteTicket($ticketId, $heskSettings) {
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `id` = " . intval($ticketId));
     }
 }

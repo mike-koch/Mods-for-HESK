@@ -40,7 +40,7 @@ class AttachmentRetrieverTest extends TestCase {
         $this->attachmentRetriever = new AttachmentRetriever($this->attachmentGateway, $this->fileReader,
             $this->ticketGateway, $this->userToTicketChecker);
 
-        $this->userToTicketChecker->method('isTicketWritableToUser')->willReturn(true);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
     }
 
     function testItGetsTheMetadataFromTheGateway() {

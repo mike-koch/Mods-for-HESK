@@ -150,9 +150,10 @@ Link::all(array(
     '/v1/categories' => \Controllers\Categories\CategoryController::class . '::printAllCategories',
     '/v1/categories/{i}' => \Controllers\Categories\CategoryController::class,
     // Tickets
-    '/v1/tickets/{i}' => \Controllers\Tickets\TicketController::class,
-    '/v1/tickets' => \Controllers\Tickets\TicketController::class,
-
+    '/v1/tickets/{i}' => \Controllers\Tickets\CustomerTicketController::class,
+    '/v1/tickets' => \Controllers\Tickets\CustomerTicketController::class,
+    // Tickets - Staff
+    '/v1/staff/tickets/{i}' => null,
     // Attachments
     '/v1/staff/tickets/{i}/attachments' => \Controllers\Attachments\StaffTicketAttachmentsController::class,
     '/v1/staff/tickets/{i}/attachments/{i}' => \Controllers\Attachments\StaffTicketAttachmentsController::class,

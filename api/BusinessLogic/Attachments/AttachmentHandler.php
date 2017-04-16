@@ -6,6 +6,7 @@ namespace BusinessLogic\Attachments;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Security\UserContext;
+use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Tickets\Attachment;
 use BusinessLogic\Tickets\Ticket;
@@ -54,7 +55,11 @@ class AttachmentHandler {
 
         $ticket = $this->ticketGateway->getTicketById($createAttachmentModel->ticketId, $heskSettings);
 
-        if (!$this->userToTicketChecker->isTicketWritableToUser($userContext, $ticket, $createAttachmentModel->isEditing, $heskSettings)) {
+        $extraPermissions = $createAttachmentModel->isEditing
+            ? array(UserPrivilege::CAN_EDIT_TICKETS)
+            : array();
+
+        if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings, $extraPermissions)) {
             throw new \Exception("User does not have access to ticket {$ticket->id} being created / edited!");
         }
 
@@ -81,14 +86,26 @@ class AttachmentHandler {
         return $ticketAttachment;
     }
 
+    /**
+     * Supports deleting attachments from both ticket messages AND replies
+     *
+     * @param $ticketId int The ticket ID
+     * @param $attachmentId int The attachment ID
+     * @param $userContext UserContext
+     * @param $heskSettings array
+     * @throws ApiFriendlyException
+     * @throws \Exception
+     */
     function deleteAttachmentFromTicket($ticketId, $attachmentId, $userContext, $heskSettings) {
         $ticket = $this->ticketGateway->getTicketById($ticketId, $heskSettings);
 
-        if (!$this->userToTicketChecker->isTicketWritableToUser($userContext, $ticket, true, $heskSettings)) {
+        if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS))) {
             throw new \Exception("User does not have access to ticket {$ticketId} being created / edited!");
         }
 
         $indexToRemove = -1;
+        $attachmentType = AttachmentType::MESSAGE;
+        $replyId = -1;
         for ($i = 0; $i < count($ticket->attachments); $i++) {
             $attachment = $ticket->attachments[$i];
             if ($attachment->id === $attachmentId) {
@@ -97,13 +114,30 @@ class AttachmentHandler {
             }
         }
 
-        if ($indexToRemove === -1) {
-            throw new ApiFriendlyException("Attachment not found for ticket!", "Attachment not found", 404);
+        foreach ($ticket->replies as $reply) {
+            for ($i = 0; $i < count($reply->attachments); $i++) {
+                $attachment = $reply->attachments[$i];
+                if ($attachment->id === $attachmentId) {
+                    $indexToRemove = $i;
+                    $replyId = $reply->id;
+                    $attachmentType = AttachmentType::REPLY;
+                    $this->fileDeleter->deleteFile($attachment->savedName, $heskSettings['attach_dir']);
+                }
+            }
         }
 
-        $attachments = $ticket->attachments;
-        unset($attachments[$indexToRemove]);
-        $this->ticketGateway->updateAttachmentsForTicket($ticketId, $attachments, $heskSettings);
+        if ($indexToRemove === -1) {
+            throw new ApiFriendlyException("Attachment not found for ticket or reply! ID: {$attachmentId}", "Attachment not found", 404);
+        }
+
+        if ($attachmentType == AttachmentType::MESSAGE) {
+            $attachments = $ticket->attachments;
+            unset($attachments[$indexToRemove]);
+            $this->ticketGateway->updateAttachmentsForTicket($ticketId, $attachments, $heskSettings);
+        } else {
+            $attachments = $ticket->replies[$replyId]->attachments;
+            unset($attachments[$indexToRemove]);
+        }
     }
 
     /**
