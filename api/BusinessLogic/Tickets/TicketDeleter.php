@@ -36,7 +36,11 @@ class TicketDeleter {
             $this->attachmentHandler->deleteAttachmentFromTicket($ticketId, $attachment->id, $userContext, $heskSettings);
         }
 
-        //-- TODO Delete Replies
+        $this->ticketGateway->deleteReplyDraftsForTicket($ticketId, $heskSettings);
+
+        $this->ticketGateway->deleteRepliesForTicket($ticketId, $heskSettings);
+
+        $this->ticketGateway->deleteNotesForTicket($ticketId, $heskSettings);
 
         $this->ticketGateway->deleteTicket($ticketId, $heskSettings);
     }

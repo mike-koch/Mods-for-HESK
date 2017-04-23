@@ -58,6 +58,7 @@ class TicketDeleterTest extends TestCase {
         $attachmentTwo->id = 2;
         $attachments = array($attachmentOne, $attachmentTwo);
         $ticket->attachments = $attachments;
+        $ticket->replies = array();
         $this->ticketGateway->method('getTicketById')->willReturn($ticket);
         $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
 
@@ -70,16 +71,57 @@ class TicketDeleterTest extends TestCase {
 
     function testItDeletesAllRepliesForTheTicket() {
         //-- Arrange
-        
-        //-- Act
+        $ticket = new Ticket();
+        $ticket->attachments = array();
+        $ticket->replies = array();
+        $ticket->id = 1;
+        $this->ticketGateway->method('getTicketById')->willReturn($ticket);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
 
         //-- Assert
+        $this->ticketGateway->expects($this->once())->method('deleteRepliesForTicket')->with(1, $this->heskSettings);
+
+        //-- Act
+        $this->ticketDeleter->deleteTicket(1, $this->userContext, $this->heskSettings);
+    }
+
+    function testItDeleteAllReplyDrafts() {
+        //-- Arrange
+        $ticket = new Ticket();
+        $ticket->attachments = array();
+        $ticket->replies = array();
+        $ticket->id = 1;
+        $this->ticketGateway->method('getTicketById')->willReturn($ticket);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
+
+        //-- Assert
+        $this->ticketGateway->expects($this->once())->method('deleteReplyDraftsForTicket')->with(1, $this->heskSettings);
+
+        //-- Act
+        $this->ticketDeleter->deleteTicket(1, $this->userContext, $this->heskSettings);
+    }
+
+    function testItDeletesTheTicketNotes() {
+        //-- Arrange
+        $ticket = new Ticket();
+        $ticket->attachments = array();
+        $ticket->replies = array();
+        $ticket->id = 1;
+        $this->ticketGateway->method('getTicketById')->willReturn($ticket);
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
+
+        //-- Assert
+        $this->ticketGateway->expects($this->once())->method('deleteNotesForTicket')->with(1, $this->heskSettings);
+
+        //-- Act
+        $this->ticketDeleter->deleteTicket(1, $this->userContext, $this->heskSettings);
     }
 
     function testItDeletesTheTicket() {
         //-- Arrange
         $ticket = new Ticket();
         $ticket->attachments = array();
+        $ticket->replies = array();
         $ticket->id = 1;
         $this->ticketGateway->method('getTicketById')->willReturn($ticket);
         $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);

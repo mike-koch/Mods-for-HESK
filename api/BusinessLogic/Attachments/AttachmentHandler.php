@@ -137,6 +137,7 @@ class AttachmentHandler {
         } else {
             $attachments = $ticket->replies[$replyId]->attachments;
             unset($attachments[$indexToRemove]);
+            $this->ticketGateway->updateAttachmentsForReply($replyId, $attachments, $heskSettings);
         }
     }
 

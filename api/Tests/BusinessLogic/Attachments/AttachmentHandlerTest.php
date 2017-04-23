@@ -275,6 +275,7 @@ class AttachmentHandlerTest extends TestCase {
         $attachment->savedName = 'foobar.txt';
         $this->heskSettings['attach_dir'] = 'attach-dir';
         $ticket->attachments = array($attachment);
+        $ticket->replies = array();
         $this->ticketGateway->method('getTicketById')->willReturn($ticket);
         $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
 
@@ -289,6 +290,7 @@ class AttachmentHandlerTest extends TestCase {
         //-- Arrange
         $ticketId = 1;
         $ticket = new Ticket();
+        $ticket->replies = array();
         $attachment = new Attachment();
         $attachment->id = 5;
         $attachment->savedName = 'foobar.txt';
@@ -309,17 +311,18 @@ class AttachmentHandlerTest extends TestCase {
         $ticketId = 1;
         $ticket = new Ticket();
         $reply = new Reply();
+        $reply->id = 10;
         $attachment = new Attachment();
         $attachment->id = 5;
         $attachment->savedName = 'foobar.txt';
         $this->heskSettings['attach_dir'] = 'attach-dir';
         $reply->attachments = array($attachment);
-        $ticket->replies = array($reply);
+        $ticket->replies = array(10 => $reply);
         $this->ticketGateway->method('getTicketById')->willReturn($ticket);
         $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
 
         //-- Assert
-        $this->ticketGateway->expects($this->once())->method('updateAttachmentsForTicket');
+        $this->ticketGateway->expects($this->once())->method('updateAttachmentsForReply');
 
         //-- Act
         $this->attachmentHandler->deleteAttachmentFromTicket($ticketId, 5, $this->userContext, $this->heskSettings);

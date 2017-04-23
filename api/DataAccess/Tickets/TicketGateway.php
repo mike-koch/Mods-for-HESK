@@ -56,7 +56,7 @@ class TicketGateway extends CommonDao {
         while ($row = hesk_dbFetchAssoc($rs)) {
             $linkedTicketsRs =
                 hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `parent` = " . intval($row['id']));
-            $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($id) . " ORDER BY `id` ASC");
+            $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($row['id']) . " ORDER BY `id` ASC");
 
             $tickets[] = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings);
         }
@@ -74,14 +74,14 @@ class TicketGateway extends CommonDao {
     function getTicketByTrackingId($trackingId, $heskSettings) {
         $this->init();
 
-        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `id` = " . intval($trackingId));
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `trackid` = " . intval($trackingId));
         if (hesk_dbNumRows($rs) === 0) {
             return null;
         }
 
         $row = hesk_dbFetchAssoc($rs);
         $linkedTicketsRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `parent` = " . intval($trackingId));
-        $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($id) . " ORDER BY `id` ASC");
+        $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($row['id']) . " ORDER BY `id` ASC");
 
         $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings);
 
@@ -247,6 +247,30 @@ class TicketGateway extends CommonDao {
     function updateAttachmentsForReply($replyId, $attachments, $heskSettings) {
         $this->init();
         $this->updateAttachmentsFor($replyId, $attachments, AttachmentType::REPLY, $heskSettings);
+        $this->close();
+    }
+
+    function deleteRepliesForTicket($ticketId, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($ticketId));
+
+        $this->close();
+    }
+
+    function deleteReplyDraftsForTicket($ticketId, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "reply_drafts` WHERE `ticket`=" . intval($ticketId));
+
+        $this->close();
+    }
+
+    function deleteNotesForTicket($ticketId, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "notes` WHERE `ticket`='" . intval($ticketId) . "'");
+
         $this->close();
     }
 
