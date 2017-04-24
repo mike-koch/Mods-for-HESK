@@ -111,6 +111,7 @@ class AttachmentHandler {
             if ($attachment->id === $attachmentId) {
                 $indexToRemove = $i;
                 $this->fileDeleter->deleteFile($attachment->savedName, $heskSettings['attach_dir']);
+                $this->attachmentGateway->deleteAttachment($attachment->id, $heskSettings);
             }
         }
 
@@ -122,6 +123,7 @@ class AttachmentHandler {
                     $replyId = $reply->id;
                     $attachmentType = AttachmentType::REPLY;
                     $this->fileDeleter->deleteFile($attachment->savedName, $heskSettings['attach_dir']);
+                    $this->attachmentGateway->deleteAttachment($attachment->id, $heskSettings);
                 }
             }
         }

@@ -153,7 +153,7 @@ Link::all(array(
     '/v1/tickets/{i}' => \Controllers\Tickets\CustomerTicketController::class,
     '/v1/tickets' => \Controllers\Tickets\CustomerTicketController::class,
     // Tickets - Staff
-    '/v1/staff/tickets/{i}' => null,
+    '/v1/staff/tickets/{i}' => \Controllers\Tickets\StaffTicketController::class,
     // Attachments
     '/v1/staff/tickets/{i}/attachments' => \Controllers\Attachments\StaffTicketAttachmentsController::class,
     '/v1/staff/tickets/{i}/attachments/{i}' => \Controllers\Attachments\StaffTicketAttachmentsController::class,

@@ -279,6 +279,10 @@ class TicketGateway extends CommonDao {
      * @param $heskSettings array
      */
     function deleteTicket($ticketId, $heskSettings) {
+        $this->init();
+
         hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `id` = " . intval($ticketId));
+
+        $this->close();
     }
 }

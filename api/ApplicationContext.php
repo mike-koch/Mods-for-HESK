@@ -14,6 +14,7 @@ use BusinessLogic\Security\UserContextBuilder;
 use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Settings\ApiChecker;
 use BusinessLogic\Tickets\Autoassigner;
+use BusinessLogic\Tickets\TicketDeleter;
 use BusinessLogic\Tickets\TicketRetriever;
 use BusinessLogic\Tickets\TicketCreator;
 use BusinessLogic\Tickets\NewTicketValidator;
@@ -81,6 +82,7 @@ class ApplicationContext {
             $this->get[MailgunEmailSender::class]);
 
         // Tickets
+        $this->get[UserToTicketChecker::class] = new UserToTicketChecker($this->get[UserGateway::class]);
         $this->get[TicketGateway::class] = new TicketGateway();
         $this->get[TicketRetriever::class] = new TicketRetriever($this->get[TicketGateway::class]);
         $this->get[TicketValidators::class] = new TicketValidators($this->get[TicketGateway::class]);
@@ -98,9 +100,6 @@ class ApplicationContext {
             $this->get[EmailSenderHelper::class],
             $this->get[UserGateway::class],
             $this->get[ModsForHeskSettingsGateway::class]);
-
-        // Attachments
-        $this->get[UserToTicketChecker::class] = new UserToTicketChecker($this->get[UserGateway::class]);
         $this->get[FileWriter::class] = new FileWriter();
         $this->get[FileReader::class] = new FileReader();
         $this->get[FileDeleter::class] = new FileDeleter();
@@ -114,5 +113,9 @@ class ApplicationContext {
             $this->get[FileReader::class],
             $this->get[TicketGateway::class],
             $this->get[UserToTicketChecker::class]);
+        $this->get[TicketDeleter::class] =
+            new TicketDeleter($this->get[TicketGateway::class],
+                $this->get[UserToTicketChecker::class],
+                $this->get[AttachmentHandler::class]);
     }
 }

@@ -37,6 +37,7 @@ class Ticket {
         $ticket->lastReplier = $row['replierid'] === null ? null : intval($row['replierid']);
         $ticket->archived = intval($row['archive']) === 1;
         $ticket->locked = intval($row['locked']) === 1;
+        $ticket->attachments = array();
 
         if (trim($row['attachments']) !== '') {
             $attachments = explode(',', $row['attachments']);
@@ -110,6 +111,10 @@ class Ticket {
                 $attachments = explode(',', $replyRow['attachments']);
                 $attachmentArray = array();
                 foreach ($attachments as $attachment) {
+                    if (trim($attachment) === '') {
+                        continue;
+                    }
+
                     $attachmentRow = explode('#', $attachment);
                     $attachmentModel = new Attachment();
 

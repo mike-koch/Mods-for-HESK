@@ -53,4 +53,13 @@ class AttachmentGateway extends CommonDao {
 
         return $attachment;
     }
+
+    function deleteAttachment($attachmentId, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "attachments` 
+            WHERE `att_id` = " . intval($attachmentId));
+
+        $this->close();
+    }
 }
