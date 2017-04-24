@@ -9,7 +9,10 @@ class Ticket {
         $ticket->id = intval($row['id']);
         $ticket->trackingId = $row['trackid'];
         $ticket->name = $row['name'];
-        $ticket->email = $row['email'];
+        if ($row['email'] !== null) {
+            $emails = str_replace(';', ',', $row['email']);
+            $ticket->email = explode(',', strtolower($emails));
+        }
         $ticket->categoryId = intval($row['category']);
         $ticket->priorityId = intval($row['priority']);
         $ticket->subject = $row['subject'];
@@ -37,7 +40,6 @@ class Ticket {
         $ticket->lastReplier = $row['replierid'] === null ? null : intval($row['replierid']);
         $ticket->archived = intval($row['archive']) === 1;
         $ticket->locked = intval($row['locked']) === 1;
-        $ticket->attachments = array();
 
         if (trim($row['attachments']) !== '') {
             $attachments = explode(',', $row['attachments']);
@@ -72,7 +74,6 @@ class Ticket {
             }
         }
 
-        $ticket->linkedTicketIds = array();
         while ($linkedTicketsRow = hesk_dbFetchAssoc($linkedTicketsRs)) {
             $ticket->linkedTicketIds[] = $linkedTicketsRow['id'];
         }
@@ -155,7 +156,7 @@ class Ticket {
     public $name;
 
     /**
-     * @var string|null
+     * @var array|null
      */
     public $email;
 
@@ -200,9 +201,9 @@ class Ticket {
     public $closedDate;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
-    public $suggestedArticles;
+    public $suggestedArticles = array();
 
     /**
      * @var string
@@ -275,9 +276,9 @@ class Ticket {
     public $locked;
 
     /**
-     * @var Attachment[]|null
+     * @var Attachment[]
      */
-    public $attachments;
+    public $attachments = array();
 
     function getAttachmentsForDatabase() {
         $attachmentArray = array();
@@ -292,9 +293,9 @@ class Ticket {
     }
 
     /**
-     * @var int[]|null
+     * @var int[]
      */
-    public $mergedTicketIds;
+    public $mergedTicketIds = array();
 
     /**
      * @var string
@@ -309,7 +310,7 @@ class Ticket {
     /**
      * @var int[]
      */
-    public $linkedTicketIds;
+    public $linkedTicketIds = array();
 
     /**
      * @var float[]|null
@@ -347,5 +348,5 @@ class Ticket {
     /**
      * @var Reply[]
      */
-    public $replies;
+    public $replies = array();
 }
