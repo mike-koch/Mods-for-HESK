@@ -36,6 +36,20 @@ class TicketRetrieverTest extends TestCase {
         self::assertThat($actual, self::equalTo($ticket));
     }
 
+    function testItGetsTheParentTicketIfTheUserEntersInAMergedTicketId() {
+        //-- Arrange
+        $ticket = new Ticket();
+        $trackingId = '12345';
+        $this->ticketGateway->method('getTicketByTrackingId')->willReturn(null);
+        $this->ticketGateway->method('getTicketByMergedTrackingId')->with($trackingId, $this->heskSettings)->willReturn($ticket);
+
+        //-- Act
+        $actual = $this->ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, null, $this->heskSettings);
+
+        //-- Assert
+        self::assertThat($actual, self::equalTo($ticket));
+    }
+
     function testItChecksTheTicketsEmailIfThePageRequiresIt() {
         //-- Arrange
         $ticket = new Ticket();

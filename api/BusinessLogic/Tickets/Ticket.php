@@ -11,7 +11,8 @@ class Ticket {
         $ticket->name = $row['name'];
         if ($row['email'] !== null) {
             $emails = str_replace(';', ',', $row['email']);
-            $ticket->email = explode(',', strtolower($emails));
+            $emails = explode(',', strtolower($emails));
+            $ticket->email = array_filter($emails);
         }
         $ticket->categoryId = intval($row['category']);
         $ticket->priorityId = intval($row['priority']);

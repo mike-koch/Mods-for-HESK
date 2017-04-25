@@ -91,6 +91,26 @@ class TicketGateway extends CommonDao {
     }
 
     /**
+     * @param $trackingId string
+     * @param $heskSettings array
+     * @return Ticket|null
+     */
+    function getTicketByMergedTrackingId($trackingId, $heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT `trackid` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `merged` LIKE '%#" . hesk_dbEscape($trackingId) . "#%'");
+        if (hesk_dbNumRows($rs) === 0) {
+            return null;
+        }
+        $row = hesk_dbFetchAssoc($rs);
+        $actualTrackingId = $row['trackid'];
+
+        $this->close();
+
+        return $this->getTicketByTrackingId($actualTrackingId, $heskSettings);
+    }
+
+    /**
      * @param $ticket Ticket
      * @param $isEmailVerified
      * @param $heskSettings

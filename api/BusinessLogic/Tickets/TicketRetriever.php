@@ -3,6 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\ValidationModel;
 use DataAccess\Tickets\TicketGateway;
@@ -25,9 +26,17 @@ class TicketRetriever {
         $this->validate($trackingId, $emailAddress, $heskSettings);
 
         $ticket = $this->ticketGateway->getTicketByTrackingId($trackingId, $heskSettings);
+        if ($ticket === null) {
+            $ticket = $this->ticketGateway->getTicketByMergedTrackingId($trackingId, $heskSettings);
+
+            if ($ticket === null) {
+                return null;
+            }
+        }
 
         if ($heskSettings['email_view_ticket'] && !in_array($emailAddress, $ticket->email)) {
-            throw new \Exception("Email '{$emailAddress}' entered in for ticket '{$trackingId}' does not match!");
+            throw new ApiFriendlyException("Email '{$emailAddress}' entered in for ticket '{$trackingId}' does not match!",
+                "Email Does Not Match", 400);
         }
 
         return $ticket;

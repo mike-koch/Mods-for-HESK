@@ -147,6 +147,7 @@ class NewTicketValidatorTest extends TestCase {
     function testItSupportsMultipleEmails() {
         //-- Arrange
         $this->ticketRequest->email = 'something@email.com;another@valid.email';
+        $this->ticketRequest->language = 'English';
         $this->heskSettings['multi_eml'] = true;
 
         //-- Act
@@ -155,7 +156,7 @@ class NewTicketValidatorTest extends TestCase {
             $this->userContext);
 
         //-- Assert
-        $this->assertThat($validationModel->valid, $this->isTrue());
+        self::assertThat(count($validationModel->errorKeys), self::equalTo(0));
     }
 
     function testItAddsTheProperValidationErrorWhenCategoryIsNotANumber() {

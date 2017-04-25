@@ -6,18 +6,22 @@ use BusinessLogic\Helpers;
 use BusinessLogic\Tickets\CreateTicketByCustomerModel;
 use BusinessLogic\Tickets\TicketCreator;
 use BusinessLogic\Tickets\TicketRetriever;
+use BusinessLogic\ValidationModel;
 use Controllers\JsonRetriever;
 
 
 class CustomerTicketController {
-    /*function get($id) {
-        global $applicationContext, $hesk_settings, $userContext;
+    function get() {
+        global $applicationContext, $hesk_settings;
+
+        $trackingId = isset($_GET['trackingId']) ? $_GET['trackingId'] : null;
+        $emailAddress = isset($_GET['email']) ? $_GET['email'] : null;
 
         /* @var $ticketRetriever TicketRetriever */
-        /*$ticketRetriever = $applicationContext->get[TicketRetriever::class];
+        $ticketRetriever = $applicationContext->get[TicketRetriever::class];
 
-        output($ticketRetriever->getTicketById($id, $hesk_settings, $userContext));
-    }*/
+        output($ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, $emailAddress, $hesk_settings));
+    }
 
     function post() {
         global $applicationContext, $hesk_settings, $userContext;
@@ -29,15 +33,7 @@ class CustomerTicketController {
 
         $ticket = $ticketCreator->createTicketByCustomer($this->buildTicketRequestFromJson($jsonRequest), $hesk_settings, $userContext);
 
-        //if ticket is a stageTicket, email user
-        //else if assigned to owner, email new owner
-        //else email all staff
-
         return output($ticket, 201);
-    }
-
-    function delete($id) {
-        global $applicationContext, $hesk_settings, $userContext;
     }
 
     /**

@@ -86,7 +86,6 @@ class TicketCreator {
 
         if (count($validationModel->errorKeys) > 0) {
             // Validation failed
-            $validationModel->valid = false;
             throw new ValidationException($validationModel);
         }
 

@@ -8,13 +8,7 @@ class ValidationModel {
      */
     public $errorKeys;
 
-    /**
-     * @var bool
-     */
-    public $valid;
-
     function __construct() {
         $this->errorKeys = [];
-        $this->valid = true;
     }
 }

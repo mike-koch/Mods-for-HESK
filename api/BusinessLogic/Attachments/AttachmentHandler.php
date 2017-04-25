@@ -188,7 +188,6 @@ class AttachmentHandler {
         if (count($errorKeys) > 0) {
             $validationModel = new ValidationModel();
             $validationModel->errorKeys = $errorKeys;
-            $validationModel->valid = false;
             throw new ValidationException($validationModel);
         }
     }
