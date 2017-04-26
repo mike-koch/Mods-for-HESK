@@ -33,7 +33,7 @@ class CustomerTicketController {
 
         $ticket = $ticketCreator->createTicketByCustomer($this->buildTicketRequestFromJson($jsonRequest), $hesk_settings, $userContext);
 
-        return output($ticket, 201);
+        return output($ticket->ticket, $ticket->emailVerified ? 201 : 202);
     }
 
     /**

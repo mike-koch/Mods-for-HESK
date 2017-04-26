@@ -75,7 +75,7 @@ class TicketCreator {
      * @param $ticketRequest CreateTicketByCustomerModel
      * @param $heskSettings array HESK settings
      * @param $userContext
-     * @return Ticket The newly created ticket
+     * @return CreatedTicketModel The newly created ticket along with if the email is verified or not
      * @throws ValidationException When a required field in $ticket_request is missing
      * @throws \Exception When the default status for new tickets is not found
      */
@@ -143,8 +143,10 @@ class TicketCreator {
         $addressees = new Addressees();
         $addressees->to = $this->getAddressees($ticket->email);
 
-        if ($ticketRequest->sendEmailToCustomer) {
+        if ($ticketRequest->sendEmailToCustomer && $emailVerified) {
             $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_TICKET, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
+        } else if ($modsForHeskSettings[''] && !$emailVerified) {
+            $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::VERIFY_EMAIL, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
         }
 
         if ($ticket->ownerId !== null) {
@@ -166,7 +168,7 @@ class TicketCreator {
             }
         }
 
-        return $ticket;
+        return new CreatedTicketModel($ticket, $emailVerified);
     }
 
     private function getAddressees($emailAddress) {

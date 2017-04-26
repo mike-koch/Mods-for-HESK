@@ -164,7 +164,7 @@ class CreateTicketTest extends TestCase {
         $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
-        self::assertThat($ticket->trackingId, self::equalTo('123-456-7890'));
+        self::assertThat($ticket->ticket->trackingId, self::equalTo('123-456-7890'));
     }
 
     function testItSetsTheNextUserForAutoassign() {
@@ -183,7 +183,7 @@ class CreateTicketTest extends TestCase {
         $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
-        self::assertThat($ticket->ownerId, self::equalTo(1));
+        self::assertThat($ticket->ticket->ownerId, self::equalTo(1));
     }
 
     function testItDoesntCallTheAutoassignerWhenDisabledInHesk() {
@@ -194,7 +194,7 @@ class CreateTicketTest extends TestCase {
         $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
-        self::assertThat($ticket->ownerId, self::equalTo(null));
+        self::assertThat($ticket->ticket->ownerId, self::equalTo(null));
     }
 
     function testItTransformsTheBasicProperties() {
@@ -221,20 +221,20 @@ class CreateTicketTest extends TestCase {
         $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
-        self::assertThat($ticket->name, self::equalTo($this->ticketRequest->name));
-        self::assertThat($ticket->email, self::equalTo($this->ticketRequest->email));
-        self::assertThat($ticket->priorityId, self::equalTo($this->ticketRequest->priority));
-        self::assertThat($ticket->categoryId, self::equalTo($this->ticketRequest->category));
-        self::assertThat($ticket->subject, self::equalTo($this->ticketRequest->subject));
-        self::assertThat($ticket->message, self::equalTo($this->ticketRequest->message));
-        self::assertThat($ticket->usesHtml, self::equalTo($this->ticketRequest->html));
-        self::assertThat($ticket->customFields[1], self::equalTo($this->ticketRequest->customFields[1]));
-        self::assertThat($ticket->location, self::equalTo($this->ticketRequest->location));
-        self::assertThat($ticket->suggestedArticles, self::equalTo($this->ticketRequest->suggestedKnowledgebaseArticleIds));
-        self::assertThat($ticket->userAgent, self::equalTo($this->ticketRequest->userAgent));
-        self::assertThat($ticket->screenResolution, self::equalTo($this->ticketRequest->screenResolution));
-        self::assertThat($ticket->ipAddress, self::equalTo($this->ticketRequest->ipAddress));
-        self::assertThat($ticket->language, self::equalTo($this->ticketRequest->language));
+        self::assertThat($ticket->ticket->name, self::equalTo($this->ticketRequest->name));
+        self::assertThat($ticket->ticket->email, self::equalTo($this->ticketRequest->email));
+        self::assertThat($ticket->ticket->priorityId, self::equalTo($this->ticketRequest->priority));
+        self::assertThat($ticket->ticket->categoryId, self::equalTo($this->ticketRequest->category));
+        self::assertThat($ticket->ticket->subject, self::equalTo($this->ticketRequest->subject));
+        self::assertThat($ticket->ticket->message, self::equalTo($this->ticketRequest->message));
+        self::assertThat($ticket->ticket->usesHtml, self::equalTo($this->ticketRequest->html));
+        self::assertThat($ticket->ticket->customFields[1], self::equalTo($this->ticketRequest->customFields[1]));
+        self::assertThat($ticket->ticket->location, self::equalTo($this->ticketRequest->location));
+        self::assertThat($ticket->ticket->suggestedArticles, self::equalTo($this->ticketRequest->suggestedKnowledgebaseArticleIds));
+        self::assertThat($ticket->ticket->userAgent, self::equalTo($this->ticketRequest->userAgent));
+        self::assertThat($ticket->ticket->screenResolution, self::equalTo($this->ticketRequest->screenResolution));
+        self::assertThat($ticket->ticket->ipAddress, self::equalTo($this->ticketRequest->ipAddress));
+        self::assertThat($ticket->ticket->language, self::equalTo($this->ticketRequest->language));
     }
 
     function testItReturnsTheGeneratedPropertiesOnTheTicket() {
@@ -248,9 +248,9 @@ class CreateTicketTest extends TestCase {
         $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
-        self::assertThat($ticket->dateCreated, self::equalTo($this->ticketGatewayGeneratedFields->dateCreated));
-        self::assertThat($ticket->lastChanged, self::equalTo($this->ticketGatewayGeneratedFields->dateModified));
-        self::assertThat($ticket->id, self::equalTo($this->ticketGatewayGeneratedFields->id));
+        self::assertThat($ticket->ticket->dateCreated, self::equalTo($this->ticketGatewayGeneratedFields->dateCreated));
+        self::assertThat($ticket->ticket->lastChanged, self::equalTo($this->ticketGatewayGeneratedFields->dateModified));
+        self::assertThat($ticket->ticket->id, self::equalTo($this->ticketGatewayGeneratedFields->id));
     }
 
     function testItSetsTheDefaultStatus() {
@@ -261,7 +261,7 @@ class CreateTicketTest extends TestCase {
         $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
-        self::assertThat($ticket->statusId, self::equalTo(1));
+        self::assertThat($ticket->ticket->statusId, self::equalTo(1));
     }
 
     function testItSetsTheDefaultProperties() {
@@ -272,13 +272,13 @@ class CreateTicketTest extends TestCase {
         $ticket = $this->ticketCreator->createTicketByCustomer($this->ticketRequest, $this->heskSettings, $this->userContext);
 
         //-- Assert
-        self::assertThat($ticket->archived, self::isFalse());
-        self::assertThat($ticket->locked, self::isFalse());
-        self::assertThat($ticket->openedBy, self::equalTo(0));
-        self::assertThat($ticket->numberOfReplies, self::equalTo(0));
-        self::assertThat($ticket->numberOfStaffReplies, self::equalTo(0));
-        self::assertThat($ticket->timeWorked, self::equalTo('00:00:00'));
-        self::assertThat($ticket->lastReplier, self::equalTo(0));
+        self::assertThat($ticket->ticket->archived, self::isFalse());
+        self::assertThat($ticket->ticket->locked, self::isFalse());
+        self::assertThat($ticket->ticket->openedBy, self::equalTo(0));
+        self::assertThat($ticket->ticket->numberOfReplies, self::equalTo(0));
+        self::assertThat($ticket->ticket->numberOfStaffReplies, self::equalTo(0));
+        self::assertThat($ticket->ticket->timeWorked, self::equalTo('00:00:00'));
+        self::assertThat($ticket->ticket->lastReplier, self::equalTo(0));
     }
 
     function testItChecksIfTheEmailIsVerified() {
