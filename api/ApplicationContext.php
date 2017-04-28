@@ -13,6 +13,7 @@ use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContextBuilder;
 use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Settings\ApiChecker;
+use BusinessLogic\Statuses\StatusRetriever;
 use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\TicketDeleter;
 use BusinessLogic\Tickets\TicketEditor;
@@ -120,5 +121,8 @@ class ApplicationContext {
                 $this->get[AttachmentHandler::class]);
         $this->get[TicketEditor::class] =
             new TicketEditor($this->get[TicketGateway::class], $this->get[UserToTicketChecker::class]);
+
+        // Statuses
+        $this->get[StatusRetriever::class] = new StatusRetriever($this->get[StatusGateway::class]);
     }
 }

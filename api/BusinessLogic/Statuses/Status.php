@@ -6,7 +6,7 @@ namespace BusinessLogic\Statuses;
 class Status {
     static function fromDatabase($row, $languageRs) {
         $status = new Status();
-        $status->id = $row['ID'];
+        $status->id = intval($row['ID']);
         $status->textColor = $row['TextColor'];
         $status->defaultActions = array();
 
@@ -21,7 +21,7 @@ class Status {
             $localizedLanguages[$languageRow['language']] = new StatusLanguage($languageRow['language'], $languageRow['text']);
         }
         $status->localizedNames = $localizedLanguages;
-        $status->sort = $row['sort'];
+        $status->sort = intval($row['sort']);
 
         return $status;
     }
