@@ -305,4 +305,39 @@ class TicketGateway extends CommonDao {
 
         $this->close();
     }
+
+    /**
+     * @param $ticket Ticket
+     * @param $heskSettings array
+     */
+    function updateBasicTicketInfo($ticket, $heskSettings) {
+        $this->init();
+
+        // Escaped vars
+        $subject = hesk_dbEscape($ticket->subject);
+        $message = hesk_dbEscape($ticket->message);
+        $language = hesk_dbEscape($ticket->language);
+        $name = hesk_dbEscape($ticket->name);
+        $email = hesk_dbEscape($ticket->email);
+
+        // Prepare SQL for custom fields
+        $customSql = '';
+
+        for ($i=1; $i<=50; $i++)
+        {
+            $customSql .= ", `custom{$i}` = '" . (isset($ticket->customFields[$i]) ? hesk_dbEscape($ticket->customFields[$i]) : '') . "'";
+        }
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` 
+            SET `subject` = {$subject},
+                `message` = {$message},
+                `language` = {$language},
+                `name` = {$name},
+                `email` = {$email},
+                `html` = " . ($ticket->usesHtml ? 1 : 0) . "
+                {$customSql}
+            WHERE `id` = " . intval($ticket->id));
+
+        $this->close();
+    }
 }
