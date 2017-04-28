@@ -15,6 +15,7 @@ use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Settings\ApiChecker;
 use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\TicketDeleter;
+use BusinessLogic\Tickets\TicketEditor;
 use BusinessLogic\Tickets\TicketRetriever;
 use BusinessLogic\Tickets\TicketCreator;
 use BusinessLogic\Tickets\NewTicketValidator;
@@ -117,5 +118,7 @@ class ApplicationContext {
             new TicketDeleter($this->get[TicketGateway::class],
                 $this->get[UserToTicketChecker::class],
                 $this->get[AttachmentHandler::class]);
+        $this->get[TicketEditor::class] =
+            new TicketEditor($this->get[TicketGateway::class], $this->get[UserToTicketChecker::class]);
     }
 }

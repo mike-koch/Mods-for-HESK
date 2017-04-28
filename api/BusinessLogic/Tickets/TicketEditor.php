@@ -47,6 +47,14 @@ class TicketEditor {
         }
 
         $this->validate($editTicketModel, $ticket->categoryId, $heskSettings);
+
+        $ticket->name = $editTicketModel->name;
+        $ticket->email = $editTicketModel->email;
+        $ticket->subject = $editTicketModel->subject;
+        $ticket->message = $editTicketModel->message;
+        $ticket->customFields = $editTicketModel->customFields;
+
+        $this->ticketGateway->updateBasicTicketInfo($ticket, $heskSettings);
     }
 
     /**

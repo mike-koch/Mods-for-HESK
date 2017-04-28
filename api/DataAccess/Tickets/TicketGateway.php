@@ -329,12 +329,12 @@ class TicketGateway extends CommonDao {
         }
 
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` 
-            SET `subject` = {$subject},
-                `message` = {$message},
-                `language` = {$language},
-                `name` = {$name},
-                `email` = {$email},
-                `html` = " . ($ticket->usesHtml ? 1 : 0) . "
+            SET `subject` = '{$subject}',
+                `message` = '{$message}',
+                `language` = '{$language}',
+                `name` = '{$name}',
+                `email` = '{$email}',
+                `html` = " . ($ticket->usesHtml ? 1 : 0) . ",
                 {$customSql}
             WHERE `id` = " . intval($ticket->id));
 

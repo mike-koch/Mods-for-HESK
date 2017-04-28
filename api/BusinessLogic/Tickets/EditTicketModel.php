@@ -25,6 +25,6 @@ class EditTicketModel {
     /* @var $html bool */
     public $html;
 
-    /* @var $customFields array */
+    /* @var $customFields string[] */
     public $customFields;
 }
