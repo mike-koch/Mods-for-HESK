@@ -13,6 +13,7 @@ use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContextBuilder;
 use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Settings\ApiChecker;
+use BusinessLogic\Settings\SettingsRetriever;
 use BusinessLogic\Statuses\StatusRetriever;
 use BusinessLogic\Tickets\Autoassigner;
 use BusinessLogic\Tickets\TicketDeleter;
@@ -124,5 +125,8 @@ class ApplicationContext {
 
         // Statuses
         $this->get[StatusRetriever::class] = new StatusRetriever($this->get[StatusGateway::class]);
+
+        // Settings
+        $this->get[SettingsRetriever::class] = new SettingsRetriever($this->get[ModsForHeskSettingsGateway::class]);
     }
 }

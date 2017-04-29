@@ -159,6 +159,8 @@ Link::all(array(
     '/v1/staff/tickets/{i}/attachments/{i}' => \Controllers\Attachments\StaffTicketAttachmentsController::class,
     // Statuses
     '/v1/statuses' => \Controllers\Statuses\StatusController::class,
+    // Settings
+    '/v1/settings' => \Controllers\Settings\SettingsController::class,
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'
