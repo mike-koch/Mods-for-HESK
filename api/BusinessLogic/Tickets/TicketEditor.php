@@ -3,6 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\Exceptions\AccessViolationException;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Security\UserContext;
@@ -43,7 +44,7 @@ class TicketEditor {
         }
 
         if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS))) {
-            throw new \Exception("User does not have access to ticket {$editTicketModel->id}");
+            throw new AccessViolationException("User does not have access to ticket {$editTicketModel->id}");
         }
 
         $this->validate($editTicketModel, $ticket->categoryId, $heskSettings);
@@ -88,7 +89,7 @@ class TicketEditor {
             $customFieldNumber = intval(str_replace('custom', '', $key));
 
             //TODO test this
-            if (!array_key_exists($customFieldNumber, $editTicketModel->customFields)) {
+            if ($editTicketModel->customFields === null || !array_key_exists($customFieldNumber, $editTicketModel->customFields)) {
                 continue;
             }
 

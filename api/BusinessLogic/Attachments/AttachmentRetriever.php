@@ -3,6 +3,8 @@
 namespace BusinessLogic\Attachments;
 
 
+use BusinessLogic\Exceptions\AccessViolationException;
+use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Security\UserToTicketChecker;
 use DataAccess\Attachments\AttachmentGateway;
 use DataAccess\Files\FileReader;
@@ -31,8 +33,12 @@ class AttachmentRetriever {
     function getAttachmentContentsForTicket($ticketId, $attachmentId, $userContext, $heskSettings) {
         $ticket = $this->ticketGateway->getTicketById($ticketId, $heskSettings);
 
-        if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings)) {
-            throw new \Exception("User does not have access to attachment {$attachmentId}!");
+        if ($ticket === null) {
+            throw new ApiFriendlyException("Ticket {$ticketId} not found!", "Ticket Not Found", 404);
+        }
+
+        if ($this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings)) {
+            throw new AccessViolationException("User does not have access to attachment {$attachmentId}!");
         }
 
         $attachment = $this->attachmentGateway->getAttachmentById($attachmentId, $heskSettings);

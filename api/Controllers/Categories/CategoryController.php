@@ -3,10 +3,16 @@
 namespace Controllers\Categories;
 
 use BusinessLogic\Categories\CategoryRetriever;
+use BusinessLogic\Exceptions\ApiFriendlyException;
 
 class CategoryController {
     function get($id) {
         $categories = self::getAllCategories();
+
+        if (!isset($categories[$id])) {
+            throw new ApiFriendlyException("Category {$id} not found!", "Category Not Found", 404);
+        }
+
         output($categories[$id]);
     }
 

@@ -4,6 +4,8 @@ namespace BusinessLogic\Tickets;
 
 
 use BusinessLogic\Attachments\AttachmentHandler;
+use BusinessLogic\Exceptions\AccessViolationException;
+use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\Security\UserToTicketChecker;
 use DataAccess\Tickets\TicketGateway;
@@ -27,9 +29,13 @@ class TicketDeleter {
     function deleteTicket($ticketId, $userContext, $heskSettings) {
         $ticket = $this->ticketGateway->getTicketById($ticketId, $heskSettings);
 
+        if ($ticket === null) {
+            throw new ApiFriendlyException("Ticket {$ticketId} not found!", "Ticket Not Found", 404);
+        }
+
         if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings,
             array(UserPrivilege::CAN_DELETE_TICKETS))) {
-            throw new \Exception("User does not have access to ticket {$ticketId}");
+            throw new AccessViolationException("User does not have access to ticket {$ticketId}");
         }
 
         foreach ($ticket->attachments as $attachment) {

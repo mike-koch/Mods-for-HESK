@@ -3,6 +3,7 @@
 namespace BusinessLogic\Attachments;
 
 
+use BusinessLogic\Exceptions\AccessViolationException;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Security\UserContext;
@@ -55,12 +56,16 @@ class AttachmentHandler {
 
         $ticket = $this->ticketGateway->getTicketById($createAttachmentModel->ticketId, $heskSettings);
 
+        if ($ticket === null) {
+            throw new ApiFriendlyException("Ticket {$createAttachmentModel->ticketId} not found", "Ticket Not Found", 404);
+        }
+
         $extraPermissions = $createAttachmentModel->isEditing
             ? array(UserPrivilege::CAN_EDIT_TICKETS)
             : array();
 
         if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings, $extraPermissions)) {
-            throw new \Exception("User does not have access to ticket {$ticket->id} being created / edited!");
+            throw new AccessViolationException("User does not have access to ticket {$ticket->id} being created / edited!");
         }
 
         $cleanedFileName = $this->cleanFileName($createAttachmentModel->displayName);
@@ -99,8 +104,12 @@ class AttachmentHandler {
     function deleteAttachmentFromTicket($ticketId, $attachmentId, $userContext, $heskSettings) {
         $ticket = $this->ticketGateway->getTicketById($ticketId, $heskSettings);
 
+        if ($ticket === null) {
+            throw new ApiFriendlyException("Ticket {$ticketId} not found!", "Ticket Not Found", 404);
+        }
+
         if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS))) {
-            throw new \Exception("User does not have access to ticket {$ticketId} being created / edited!");
+            throw new AccessViolationException("User does not have access to ticket {$ticketId} being created / edited!");
         }
 
         $indexToRemove = -1;

@@ -17,6 +17,8 @@ class StaffTicketController {
         $ticketDeleter = $applicationContext->get[TicketDeleter::class];
 
         $ticketDeleter->deleteTicket($id, $userContext, $hesk_settings);
+
+        http_response_code(204);
     }
 
     function put($id) {

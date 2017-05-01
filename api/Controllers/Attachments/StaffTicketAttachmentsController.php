@@ -22,7 +22,7 @@ class StaffTicketAttachmentsController {
 
         $contents = $attachmentRetriever->getAttachmentContentsForTicket($ticketId, $attachmentId, $userContext, $hesk_settings);
 
-        output(array('contents' => base64_encode($contents)));
+        output(array('contents' => $contents));
     }
 
     private function verifyAttachmentsAreEnabled($heskSettings) {
@@ -51,6 +51,7 @@ class StaffTicketAttachmentsController {
         $model = new CreateAttachmentForTicketModel();
         $model->attachmentContents = Helpers::safeArrayGet($json, 'data');
         $model->displayName = Helpers::safeArrayGet($json, 'displayName');
+        $model->isEditing = Helpers::safeArrayGet($json, 'isEditing');
         $model->ticketId = $ticketId;
 
         return $model;

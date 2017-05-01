@@ -36,7 +36,11 @@ class LoggingGateway extends CommonDao {
 
         hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "logging` (`username`, `message`, `severity`, `location`, `timestamp`, `stack_trace`)
         VALUES ('" . hesk_dbEscape($userContext->username) . "',
-        '" . hesk_dbEscape($message) . "', " . intval($severity) . ", '" . hesk_dbEscape($location) . "', NOW(), '" . hesk_dbEscape($stackTrace) . "')");
+            '" . hesk_dbEscape(addslashes($message)) . "', 
+            " . intval($severity) . ", 
+            '" . hesk_dbEscape(addslashes($location)) . "', 
+            NOW(), 
+            '" . hesk_dbEscape(addslashes($stackTrace)) . "')");
 
         $insertedId = hesk_dbInsertID();
 

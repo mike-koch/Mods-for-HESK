@@ -18,7 +18,7 @@ class Status {
 
         $localizedLanguages = array();
         while ($languageRow = hesk_dbFetchAssoc($languageRs)) {
-            $localizedLanguages[$languageRow['language']] = new StatusLanguage($languageRow['language'], $languageRow['text']);
+            $localizedLanguages[$languageRow['language']] = $languageRow['text'];
         }
         $status->localizedNames = $localizedLanguages;
         $status->sort = intval($row['sort']);
