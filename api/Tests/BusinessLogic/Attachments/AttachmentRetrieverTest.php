@@ -1,0 +1,65 @@
+<?php
+
+
+namespace BusinessLogic\Attachments;
+
+
+use BusinessLogic\Security\UserContext;
+use BusinessLogic\Security\UserToTicketChecker;
+use DataAccess\Attachments\AttachmentGateway;
+use DataAccess\Files\FileReader;
+use DataAccess\Tickets\TicketGateway;
+use PHPUnit\Framework\TestCase;
+
+class AttachmentRetrieverTest extends TestCase {
+    /* @var $attachmentGateway \PHPUnit_Framework_MockObject_MockObject */
+    private $attachmentGateway;
+
+    /* @var $fileReader \PHPUnit_Framework_MockObject_MockObject */
+    private $fileReader;
+
+    /* @var $ticketGateway \PHPUnit_Framework_MockObject_MockObject */
+    private $ticketGateway;
+
+    /* @var $userToTicketChecker \PHPUnit_Framework_MockObject_MockObject */
+    private $userToTicketChecker;
+
+    /* @var $attachmentRetriever AttachmentRetriever */
+    private $attachmentRetriever;
+
+    /* @var $heskSettings array */
+    private $heskSettings;
+
+    protected function setUp() {
+        $this->attachmentGateway = $this->createMock(AttachmentGateway::class);
+        $this->fileReader = $this->createMock(FileReader::class);
+        $this->ticketGateway = $this->createMock(TicketGateway::class);
+        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::class);
+        $this->heskSettings = array('attach_dir' => 'attachments');
+
+        $this->attachmentRetriever = new AttachmentRetriever($this->attachmentGateway, $this->fileReader,
+            $this->ticketGateway, $this->userToTicketChecker);
+
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
+    }
+
+    function testItGetsTheMetadataFromTheGateway() {
+        //-- Arrange
+        $attachmentMeta = new Attachment();
+        $attachmentMeta->savedName = '5';
+        $attachmentContents = 'string';
+        $expectedContents = base64_encode($attachmentContents);
+        $this->attachmentGateway->method('getAttachmentById')
+            ->with(4, $this->heskSettings)
+            ->willReturn($attachmentMeta);
+        $this->fileReader->method('readFromFile')
+            ->with('5', $this->heskSettings['attach_dir'])
+            ->willReturn($attachmentContents);
+
+        //-- Act
+        $actualContents = $this->attachmentRetriever->getAttachmentContentsForTicket(0, 4, new UserContext(), $this->heskSettings);
+
+        //-- Assert
+        self::assertThat($actualContents, self::equalTo($expectedContents));
+    }
+}

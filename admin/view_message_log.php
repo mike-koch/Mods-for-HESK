@@ -97,6 +97,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <th><?php echo $hesklang['user']; ?></th>
                     <th><?php echo $hesklang['custom_place']; ?></th>
                     <th><?php echo $hesklang['message']; ?></th>
+                    <th><?php echo $hesklang['stack_trace_header']; ?></th>
                 </tr>
                 </thead>
                 <tbody></tbody>

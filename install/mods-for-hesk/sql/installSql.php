@@ -987,3 +987,10 @@ function execute307Scripts() {
 
     updateVersion('3.0.7');
 }
+
+function execute310Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` ADD COLUMN `stack_trace` TEXT");
+}

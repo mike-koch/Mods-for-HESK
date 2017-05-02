@@ -1,3 +1,8 @@
+# Mods for HESK-specific files
+api/vendor
+api/Tests/integration_test_mfh_settings.php
+
+# HESK Files
 admin/admin_suggest_articles.php
 admin/archive.php
 admin/custom_statuses.php
@@ -265,7 +270,7 @@ readme.html
 robots.txt
 .idea/
 attachments/__latest.txt
-attachments
+/attachments
 img/ban.png
 img/banned.png
 img/ico_tools.png

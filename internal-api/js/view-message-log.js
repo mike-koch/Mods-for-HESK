@@ -53,7 +53,8 @@ function displayResults(data) {
                 '<td>' + result.timestamp + '</td>' +
                 '<td>' + result.username + '</td>' +
                 '<td>' + result.location + '</td>' +
-                '<td>' + result.message + '</td>');
+                '<td>' + result.message + '</td>' +
+                '<td>' + result.stackTrace + '</td>');
         }
     }
 }

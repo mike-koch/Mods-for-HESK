@@ -262,13 +262,13 @@ function hesk_load_database_functions()
 
 function hesk_load_api_database_functions()
 {
-    require(HESK_PATH . 'api/core/json_error.php');
+    require(__DIR__ . '/../api/core/json_error.php');
     // Preferrably use the MySQLi functions
     if (function_exists('mysqli_connect')) {
-        require(HESK_PATH . 'api/core/database_mysqli.inc.php');
+        require(__DIR__ . '/../api/core/database_mysqli.inc.php');
     } // Default to MySQL
     else {
-        require(HESK_PATH . 'api/core/database.inc.php');
+        require(__DIR__ . '/../api/core/database.inc.php');
     }
 } // END hesk_load_database_functions()
 
@@ -1067,7 +1067,6 @@ function hesk_ticketToPlain($ticket, $specialchars = 0, $strip = 1)
         return hesk_msgToPlain($ticket, $specialchars, $strip);
     }
 } // END hesk_ticketToPlain()
-
 
 function hesk_msgToPlain($msg, $specialchars = 0, $strip = 1)
 {
