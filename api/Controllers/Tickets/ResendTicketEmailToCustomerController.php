@@ -3,8 +3,14 @@
 namespace Controllers\Tickets;
 
 
+use BusinessLogic\Emails\Addressees;
+use BusinessLogic\Emails\EmailSenderHelper;
+use BusinessLogic\Emails\EmailTemplate;
+use BusinessLogic\Emails\EmailTemplateRetriever;
+use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Tickets\TicketRetriever;
 use Controllers\InternalApiController;
+use DataAccess\Settings\ModsForHeskSettingsGateway;
 
 class ResendTicketEmailToCustomerController extends InternalApiController {
     function get($ticketId) {
@@ -16,11 +22,47 @@ class ResendTicketEmailToCustomerController extends InternalApiController {
         $ticketRetriever = $applicationContext->get[TicketRetriever::class];
         $ticket = $ticketRetriever->getTicketById($ticketId, $hesk_settings, $userContext);
 
-        $reply = -1;
-        if (isset($_GET['replyId'])) {
-            $reply = $_GET['replyId'];
+        /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
+        $modsForHeskSettingsGateway = $applicationContext->get[ModsForHeskSettingsGateway::class];
+        $modsForHeskSettings = $modsForHeskSettingsGateway->getAllSettings($hesk_settings);
+
+        /* @var $emailSender EmailSenderHelper */
+        $emailSender = $applicationContext->get[EmailSenderHelper::class];
+
+        $language = $ticket->language;
+
+        if ($language === null) {
+            $language = $hesk_settings['language'];
         }
 
-        //-- TODO Get reply if necessary including all attachments :O
+        if ($ticket === null) {
+            throw new ApiFriendlyException("Ticket {$ticketId} not found!", "Ticket Not Found", 404);
+        }
+
+        $reply = null;
+        if (isset($_GET['replyId'])) {
+            $replyId = $_GET['replyId'];
+
+            foreach ($ticket->replies as $ticketReply) {
+                if ($ticketReply->id === $replyId) {
+                    $reply = $ticketReply;
+                    break;
+                }
+            }
+
+            if ($reply === null) {
+                throw new ApiFriendlyException("Reply {$replyId} not found on ticket {$ticketId}!", "Reply Not Found", 404);
+            }
+
+            // Copy over reply properties onto the Ticket
+            $ticket->lastReplier = $reply->replierName;
+            $ticket->message = $reply->message;
+            $ticket->attachments = $reply->attachments;
+        }
+
+        $addressees = new Addressees();
+        $addressees->to = $ticket->email;
+
+        $emailSender->sendEmailForTicket(EmailTemplateRetriever::NEW_REPLY_BY_STAFF, $language, $addressees, $ticket, $hesk_settings, $modsForHeskSettings);
     }
 }
