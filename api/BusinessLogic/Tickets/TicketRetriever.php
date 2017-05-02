@@ -3,8 +3,10 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\Exceptions\AccessViolationException;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Exceptions\ValidationException;
+use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\ValidationModel;
 use DataAccess\Tickets\TicketGateway;
 
@@ -14,12 +16,27 @@ class TicketRetriever {
      */
     private $ticketGateway;
 
-    function __construct($ticketGateway) {
+    /* @var $userToTicketChecker UserToTicketChecker */
+    private $userToTicketChecker;
+
+    function __construct($ticketGateway, $userToTicketChecker) {
         $this->ticketGateway = $ticketGateway;
+        $this->userToTicketChecker = $userToTicketChecker;
     }
 
+    //TODO Properly test
     function getTicketById($id, $heskSettings, $userContext) {
-        return $this->ticketGateway->getTicketById($id, $heskSettings);
+        $ticket = $this->ticketGateway->getTicketById($id, $heskSettings);
+
+        if ($ticket !== null) {
+            throw new ApiFriendlyException("Ticket {$id} not found!", "Ticket Not Found", 404);
+        }
+
+        if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings)) {
+            throw new AccessViolationException("User does not have access to ticket {$id}!");
+        }
+
+        return $ticket;
     }
 
     function getTicketByTrackingIdAndEmail($trackingId, $emailAddress, $heskSettings) {

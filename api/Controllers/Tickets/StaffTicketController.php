@@ -7,9 +7,19 @@ use BusinessLogic\Helpers;
 use BusinessLogic\Tickets\EditTicketModel;
 use BusinessLogic\Tickets\TicketDeleter;
 use BusinessLogic\Tickets\TicketEditor;
+use BusinessLogic\Tickets\TicketRetriever;
 use Controllers\JsonRetriever;
 
 class StaffTicketController {
+    function get($id) {
+        global $applicationContext, $userContext, $hesk_settings;
+
+        /* @var $ticketRetriever TicketRetriever */
+        $ticketRetriever = $applicationContext->get[TicketRetriever::class];
+
+        output($ticketRetriever->getTicketById($id, $hesk_settings, $userContext));
+    }
+
     function delete($id) {
         global $applicationContext, $userContext, $hesk_settings;
 

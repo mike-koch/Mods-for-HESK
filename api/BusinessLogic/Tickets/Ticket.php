@@ -131,8 +131,8 @@ class Ticket {
 
             $reply->staffId = $replyRow['staffid'] > 0 ? $replyRow['staffid'] : null;
             $reply->rating = $replyRow['rating'];
-            $reply->isRead = $replyRow['read'];
-            $reply->usesHtml = $replyRow['html'];
+            $reply->isRead = $replyRow['read'] === '1';
+            $reply->usesHtml = $replyRow['html'] === '1';
 
             $replies[$reply->id] = $reply;
         }

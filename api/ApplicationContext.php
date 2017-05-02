@@ -87,7 +87,8 @@ class ApplicationContext {
         // Tickets
         $this->get[UserToTicketChecker::class] = new UserToTicketChecker($this->get[UserGateway::class]);
         $this->get[TicketGateway::class] = new TicketGateway();
-        $this->get[TicketRetriever::class] = new TicketRetriever($this->get[TicketGateway::class]);
+        $this->get[TicketRetriever::class] = new TicketRetriever($this->get[TicketGateway::class],
+            $this->get[UserToTicketChecker::class]);
         $this->get[TicketValidators::class] = new TicketValidators($this->get[TicketGateway::class]);
         $this->get[TrackingIdGenerator::class] = new TrackingIdGenerator($this->get[TicketGateway::class]);
         $this->get[Autoassigner::class] = new Autoassigner($this->get[CategoryGateway::class], $this->get[UserGateway::class]);
