@@ -145,7 +145,7 @@ class TicketCreator {
 
         if ($ticketRequest->sendEmailToCustomer && $emailVerified) {
             $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_TICKET, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
-        } else if ($modsForHeskSettings[''] && !$emailVerified) {
+        } else if ($modsForHeskSettings['customer_email_verification_required'] && !$emailVerified) {
             $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::VERIFY_EMAIL, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
         }
 

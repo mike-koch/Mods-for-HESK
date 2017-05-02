@@ -36,9 +36,9 @@ class TrackingIdGenerator {
             $trackingId = $this->formatTrackingId($trackingId);
 
             /* Check for duplicate IDs */
-            $ticket = $this->ticketGateway->getTicketByTrackingId($trackingId, $heskSettings);
+            $goodId = !$this->ticketGateway->doesTicketExist($trackingId, $heskSettings);
 
-            if ($ticket === null) {
+            if ($goodId) {
                 return $trackingId;
             }
 
@@ -57,9 +57,9 @@ class TrackingIdGenerator {
         /* Format the ID to the correct shape and check wording */
         $trackingId = $this->formatTrackingId($trackingId);
 
-        $ticket = $this->ticketGateway->getTicketByTrackingId($trackingId, $heskSettings);
+        $goodId = !$this->ticketGateway->doesTicketExist($trackingId, $heskSettings);
 
-        if ($ticket === null) {
+        if ($goodId) {
             return $trackingId;
         }
 

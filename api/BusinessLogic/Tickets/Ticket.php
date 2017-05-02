@@ -24,7 +24,13 @@ class Ticket {
         $ticket->closedDate = $row['closedat'];
 
         if (trim($row['articles']) !== '') {
-            $ticket->suggestedArticles = explode(',', $row['articles']);
+            $suggestedArticles = explode(',', $row['articles']);
+
+            $articlesAsInts = array();
+            foreach ($suggestedArticles as $article) {
+                $articlesAsInts[] = intval($article);
+            }
+            $ticket->suggestedArticles = $articlesAsInts;
         }
 
         $ticket->ipAddress = $row['ip'];
@@ -202,7 +208,7 @@ class Ticket {
     public $closedDate;
 
     /**
-     * @var string[]
+     * @var int[]
      */
     public $suggestedArticles = array();
 

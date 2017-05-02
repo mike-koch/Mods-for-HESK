@@ -55,7 +55,7 @@ class CustomerTicketController {
         $ticketRequest->screenResolution = Helpers::safeArrayGet($json, 'screenResolution');
         $ticketRequest->ipAddress = Helpers::safeArrayGet($json, 'ip');
         $ticketRequest->language = Helpers::safeArrayGet($json, 'language');
-        $ticketRequest->sendEmailToCustomer = Helpers::safeArrayGet($json, 'sendEmailToCustomer');
+        $ticketRequest->sendEmailToCustomer = true;
         $ticketRequest->customFields = array();
 
         $jsonCustomFields = Helpers::safeArrayGet($json, 'customFields');

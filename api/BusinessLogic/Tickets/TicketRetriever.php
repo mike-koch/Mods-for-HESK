@@ -28,7 +28,7 @@ class TicketRetriever {
     function getTicketById($id, $heskSettings, $userContext) {
         $ticket = $this->ticketGateway->getTicketById($id, $heskSettings);
 
-        if ($ticket !== null) {
+        if ($ticket === null) {
             throw new ApiFriendlyException("Ticket {$id} not found!", "Ticket Not Found", 404);
         }
 

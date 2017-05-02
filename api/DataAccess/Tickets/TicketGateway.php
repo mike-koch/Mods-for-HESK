@@ -69,6 +69,24 @@ class TicketGateway extends CommonDao {
     /**
      * @param $trackingId string
      * @param $heskSettings array
+     * @return bool
+     */
+    function doesTicketExist($trackingId, $heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT 1 FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` 
+            WHERE `trackid` = '" . hesk_dbEscape($trackingId) . "'");
+
+        $ticketExists = hesk_dbNumRows($rs) > 0;
+
+        $this->close();
+
+        return $ticketExists;
+    }
+
+    /**
+     * @param $trackingId string
+     * @param $heskSettings array
      * @return Ticket|null
      */
     function getTicketByTrackingId($trackingId, $heskSettings) {

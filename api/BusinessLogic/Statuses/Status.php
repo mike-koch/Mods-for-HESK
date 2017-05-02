@@ -66,7 +66,7 @@ class Status {
     public $sort;
 
     /**
-     * @var $name StatusLanguage[]
+     * @var $name string[]
      */
     public $localizedNames;
 }

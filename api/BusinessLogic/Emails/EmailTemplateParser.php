@@ -3,6 +3,7 @@
 namespace BusinessLogic\Emails;
 
 
+use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Exceptions\EmailTemplateNotFoundException;
 use BusinessLogic\Exceptions\InvalidEmailTemplateException;
 use BusinessLogic\Statuses\DefaultStatusForAction;
@@ -63,9 +64,21 @@ class EmailTemplateParser {
         $htmlTemplate = self::getFromFileSystem($emailTemplate->fileName, $languageCode, true);
         $subject = $hesklang[$emailTemplate->languageKey];
 
-        $subject = $this->parseSubject($subject, $ticket, $languageCode, $heskSettings);
-        $message = $this->parseMessage($template, $ticket, $languageCode, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, false);
-        $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $languageCode, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, true);
+        $fullLanguageName = null;
+        foreach ($heskSettings['languages'] as $key => $value) {
+            if ($value['folder'] === $languageCode) {
+                $fullLanguageName = $key;
+                break;
+            }
+        }
+
+        if ($fullLanguageName === null) {
+            throw new \Exception("Language code {$languageCode} did not return any valid HESK languages!");
+        }
+
+        $subject = $this->parseSubject($subject, $ticket, $fullLanguageName, $heskSettings);
+        $message = $this->parseMessage($template, $ticket, $fullLanguageName, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, false);
+        $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $fullLanguageName, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, true);
 
         return new ParsedEmailProperties($subject, $message, $htmlMessage);
     }
@@ -113,7 +126,7 @@ class EmailTemplateParser {
 
         // Status name and category name
         $defaultStatus = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
-        $statusName = $defaultStatus->localizedNames[$language]->text;
+        $statusName = $defaultStatus->localizedNames[$language];
         $category = $this->categoryGateway->getAllCategories($heskSettings)[$ticket->categoryId];
 
         switch ($ticket->priorityId) {
@@ -175,7 +188,7 @@ class EmailTemplateParser {
 
         // Status name and category name
         $defaultStatus = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
-        $statusName = hesk_msgToPlain($defaultStatus->localizedNames[$language]->text);
+        $statusName = hesk_msgToPlain($defaultStatus->localizedNames[$language]);
         $category = hesk_msgToPlain($this->categoryGateway->getAllCategories($heskSettings)[$ticket->categoryId]->name);
         $owner = hesk_msgToPlain($this->userGateway->getUserById($ticket->ownerId, $heskSettings)->name);
 
@@ -217,7 +230,7 @@ class EmailTemplateParser {
         for ($i=1; $i<=50; $i++) {
             $k = 'custom'.$i;
 
-            if (isset($heskSettings['custom_fields'][$k])) {
+            if (isset($heskSettings['custom_fields'][$k]) && isset($ticket->customFields[$i])) {
                 $v = $heskSettings['custom_fields'][$k];
 
                 switch ($v['type']) {
