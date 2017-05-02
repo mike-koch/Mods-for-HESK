@@ -18,8 +18,14 @@ function handle404() {
 function before() {
     assertApiIsEnabled();
 
-    $token = \BusinessLogic\Helpers::getHeader('X-AUTH-TOKEN');
-    buildUserContext($token);
+    $internalUse = \BusinessLogic\Helpers::getHeader('X-INTERNAL-CALL');
+
+    if ($internalUse === 'true') {
+        buildUserContextFromSession();
+    } else {
+        $token = \BusinessLogic\Helpers::getHeader('X-AUTH-TOKEN');
+        buildUserContext($token);
+    }
 }
 
 function assertApiIsEnabled() {
@@ -34,6 +40,19 @@ function assertApiIsEnabled() {
     }
 
     return;
+}
+
+function buildUserContextFromSession() {
+    global $userContext;
+
+    hesk_session_start();
+
+    if (!hesk_isLoggedIn(false)) {
+        throw new \BusinessLogic\Exceptions\SessionNotActiveException();
+    }
+
+    /* @var $userContext \BusinessLogic\Security\UserContext */
+    $userContext = \BusinessLogic\Security\UserContext::fromDataRow($_SESSION);
 }
 
 function buildUserContext($xAuthToken) {
@@ -160,6 +179,10 @@ Link::all(array(
     '/v1/statuses' => \Controllers\Statuses\StatusController::class,
     // Settings
     '/v1/settings' => \Controllers\Settings\SettingsController::class,
+
+    /* Internal use only routes */
+    // Resend email response
+    '/v1/staff/tickets/{i}/resend-email' => \Controllers\Tickets\ResendTicketEmailToCustomerController::class,
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'
