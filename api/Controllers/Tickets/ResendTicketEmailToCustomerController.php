@@ -40,8 +40,10 @@ class ResendTicketEmailToCustomerController extends InternalApiController {
         }
 
         $reply = null;
+        $emailTemplate = EmailTemplateRetriever::NEW_TICKET;
         if (isset($_GET['replyId'])) {
             $replyId = $_GET['replyId'];
+            $emailTemplate = EmailTemplateRetriever::NEW_REPLY_BY_STAFF;
 
             foreach ($ticket->replies as $ticketReply) {
                 if ($ticketReply->id === $replyId) {
@@ -63,6 +65,8 @@ class ResendTicketEmailToCustomerController extends InternalApiController {
         $addressees = new Addressees();
         $addressees->to = $ticket->email;
 
-        $emailSender->sendEmailForTicket(EmailTemplateRetriever::NEW_REPLY_BY_STAFF, $language, $addressees, $ticket, $hesk_settings, $modsForHeskSettings);
+        $emailSender->sendEmailForTicket($emailTemplate, $language, $addressees, $ticket, $hesk_settings, $modsForHeskSettings);
+
+        http_response_code(204);
     }
 }

@@ -142,6 +142,9 @@ function getLoggingLocation($exception) {
     $trace = $exception->getTrace();
     $lastCall = $trace[0];
     $location = basename($lastCall['file'], '.php');
+    if ($location === null || trim($location) === '') {
+        $location = 'N/A';
+    }
     return "REST API: {$location}";
 }
 
@@ -182,7 +185,7 @@ Link::all(array(
 
     /* Internal use only routes */
     // Resend email response
-    '/v1/staff/tickets/{i}/resend-email' => \Controllers\Tickets\ResendTicketEmailToCustomerController::class,
+    '/v1-internal/staff/tickets/{i}/resend-email' => \Controllers\Tickets\ResendTicketEmailToCustomerController::class,
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'
