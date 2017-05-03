@@ -1949,6 +1949,7 @@ function hesk_printReplyForm()
 
                             ?></textarea>
                         <div class="help-block with-errors" id="message-help-block"></div></span>
+                        <p id="lang_ticket_message_contents_exist" style="display: none"><?php echo $hesklang['ticket_message_contents_exist']; ?></p>
                 </div>
             </div>
             <?php

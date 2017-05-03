@@ -41,5 +41,29 @@ $(document).ready(function() {
     $('#related-tickets-link').click(function() {
         $(this).hide();
         $('.related-ticket').show();
-    })
+    });
+
+    window.onbeforeunload = function (e) {
+        e = e || window.event;
+
+        var plaintextEditorHasContents = $('textarea[name="message"]').val() !== '';
+        var htmlEditorHasContents = false;
+
+        if (tinymce.get("message") !== undefined) {
+            plaintextEditorHasContents = false;
+            htmlEditorHasContents = tinymce.get("message").getContent() !== '';
+        }
+
+        if (plaintextEditorHasContents || htmlEditorHasContents) {
+            var $langText = $('#lang_ticket_message_contents_exist');
+
+            // For IE and Firefox prior to version 4
+            if (e) {
+                e.returnValue = $langText.text();
+            }
+
+            // For Safari
+            return $langText.text();
+        }
+    };
 });
