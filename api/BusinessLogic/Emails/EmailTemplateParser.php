@@ -179,7 +179,7 @@ class EmailTemplateParser {
         $heskSettings['site_title'] = hesk_msgToPlain($heskSettings['site_title'], 1);
 
         // Is email required to view ticket (for customers only)?
-        $heskSettings['e_param'] = $heskSettings['email_view_ticket'] ? '&e=' . rawurlencode($ticket->email) : '';
+        $heskSettings['e_param'] = $heskSettings['email_view_ticket'] ? '&e=' . rawurlencode(implode(';', $ticket->email)) : '';
 
         /* Generate the ticket URLs */
         $trackingURL = $heskSettings['hesk_url'];
@@ -221,7 +221,7 @@ class EmailTemplateParser {
         $msg = str_replace('%%PRIORITY%%', $priority, $msg);
         $msg = str_replace('%%OWNER%%', $owner, $msg);
         $msg = str_replace('%%STATUS%%', $statusName, $msg);
-        $msg = str_replace('%%EMAIL%%', $ticket->email, $msg);
+        $msg = str_replace('%%EMAIL%%', implode(';',$ticket->email), $msg);
         $msg = str_replace('%%CREATED%%', $ticket->dateCreated, $msg);
         $msg = str_replace('%%UPDATED%%', $ticket->lastChanged, $msg);
         $msg = str_replace('%%ID%%', $ticket->id, $msg);
@@ -252,7 +252,8 @@ class EmailTemplateParser {
         if (strpos($msg, '%%MESSAGE%%') !== false) {
             // Replace message
             if ($html) {
-                $htmlMessage = nl2br($ticket->message);
+                $htmlMessage = html_entity_decode($ticket->message);
+                $htmlMessage = nl2br($htmlMessage);
                 $msg = str_replace('%%MESSAGE%%', $htmlMessage, $msg);
             } else {
                 $plainTextMessage = $ticket->message;

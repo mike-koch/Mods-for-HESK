@@ -460,7 +460,7 @@ function hesk_autoLogin($noredirect = 0)
 } // END hesk_autoLogin()
 
 
-function hesk_isLoggedIn()
+function hesk_isLoggedIn($redirect_if_not_logged_in = true)
 {
     global $hesk_settings;
 
@@ -482,8 +482,13 @@ function hesk_isLoggedIn()
         }
 
         hesk_session_stop();
-        header('Location: ' . $url);
-        exit();
+
+        if ($redirect_if_not_logged_in) {
+            header('Location: ' . $url);
+            exit();
+        } else {
+            return false;
+        }
     } else {
         hesk_session_regenerate_id();
 
@@ -493,8 +498,13 @@ function hesk_isLoggedIn()
         // Exit if user not found
         if (hesk_dbNumRows($res) != 1) {
             hesk_session_stop();
-            header('Location: ' . $url);
-            exit();
+
+            if ($redirect_if_not_logged_in) {
+                header('Location: ' . $url);
+                exit();
+            } else {
+                return false;
+            }
         }
 
         // Fetch results from database
@@ -503,8 +513,13 @@ function hesk_isLoggedIn()
         // Verify this session is still valid
         if (!hesk_activeSessionValidate($me['user'], $me['pass'], $_SESSION['session_verify'])) {
             hesk_session_stop();
-            header('Location: ' . $url);
-            exit();
+
+            if ($redirect_if_not_logged_in) {
+                header('Location: ' . $url);
+                exit();
+            } else {
+                return false;
+            }
         }
 
         // Update session variables as needed
