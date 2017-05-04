@@ -247,6 +247,7 @@ if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY') {
 ?>
 <body onload="<?php echo $onload;
 unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js <?php echo $modsForHesk_settings['admin_color_scheme']; ?>">
+<span style="display: none" id="heskUrl"><?php echo $hesk_settings['hesk_url']; ?></span>
 
 <?php
 include(HESK_PATH . 'header.txt');

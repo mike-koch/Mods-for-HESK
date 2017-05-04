@@ -47,7 +47,7 @@ function buildUserContextFromSession() {
 
     hesk_session_start();
 
-    if (!hesk_isLoggedIn(false)) {
+    if (empty($_SESSION['id'])) {
         throw new \BusinessLogic\Exceptions\SessionNotActiveException();
     }
 

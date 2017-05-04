@@ -43,6 +43,27 @@ $(document).ready(function() {
         $('.related-ticket').show();
     });
 
+    $('button[data-action="resend-email-notification"]').click(function() {
+        var $this = $(this);
+
+        var ticketId = $this.data('ticket-id');
+        var replyId = $this.data('reply-id');
+        var heskUrl = $('span#heskUrl').text();
+        var apiUrl = heskUrl + '/api/v1-internal/staff/tickets/' + ticketId + '/resend-email?replyId=' + replyId;
+
+        $.ajax({
+            method: 'GET',
+            url: apiUrl,
+            headers: { 'X-Internal-Call': true },
+            success: function() {
+                $.jGrowl("Email notification sent!", { theme: 'alert-success', closeTemplate: '' });
+            },
+            error: function() {
+                $.jGrowl("Error occurred when trying to send notification email", { theme: 'alert-danger', closeTemplate: '' });
+            }
+        });
+    });
+
     window.onbeforeunload = function (e) {
         e = e || window.event;
 

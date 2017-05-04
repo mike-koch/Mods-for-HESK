@@ -1500,6 +1500,15 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
 
     $options = $reply ? '' : '<div class="pull-right">';
 
+    // Resend email notification
+    if ($reply) {
+        $options .= '
+        <button class="btn btn-default" data-action="resend-email-notification" data-reply-id="' . $reply['id'] . '" data-ticket-id="' . $ticket['id'] . '">
+            <i class="fa fa-envelope navy-blue"></i> Resend Email Notification[!]
+        </button>
+        ';
+    }
+
     /* Edit post */
     if ($can_edit) {
         $tmp = $reply ? '&amp;reply=' . $reply['id'] : '';
