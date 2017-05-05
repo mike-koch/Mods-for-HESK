@@ -49,42 +49,26 @@ $(document).ready(function() {
         var ticketId = $this.data('ticket-id');
         var replyId = $this.data('reply-id');
         var heskUrl = $('span#heskUrl').text();
-        var apiUrl = heskUrl + '/api/v1-internal/staff/tickets/' + ticketId + '/resend-email?replyId=' + replyId;
+        var apiUrl = heskUrl + '/api/v1-internal/staff/tickets/' + ticketId + '/resend-email';
 
+        if (replyId !== undefined) {
+            apiUrl += '?replyId=' + replyId;
+        }
+
+        $this.attr('disabled', true);
         $.ajax({
             method: 'GET',
             url: apiUrl,
             headers: { 'X-Internal-Call': true },
             success: function() {
-                $.jGrowl("Email notification sent!", { theme: 'alert-success', closeTemplate: '' });
+                $.jGrowl($('#lang_email_notification_sent').text(), { theme: 'alert-success', closeTemplate: '' });
             },
             error: function() {
-                $.jGrowl("Error occurred when trying to send notification email", { theme: 'alert-danger', closeTemplate: '' });
+                $.jGrowl($('#lang_email_notification_resend_failed').text(), { theme: 'alert-danger', closeTemplate: '' });
+            },
+            complete: function() {
+                $this.attr('disabled', false);
             }
         });
     });
-
-    window.onbeforeunload = function (e) {
-        e = e || window.event;
-
-        var plaintextEditorHasContents = $('textarea[name="message"]').val() !== '';
-        var htmlEditorHasContents = false;
-
-        if (tinymce.get("message") !== undefined) {
-            plaintextEditorHasContents = false;
-            htmlEditorHasContents = tinymce.get("message").getContent() !== '';
-        }
-
-        if (plaintextEditorHasContents || htmlEditorHasContents) {
-            var $langText = $('#lang_ticket_message_contents_exist');
-
-            // For IE and Firefox prior to version 4
-            if (e) {
-                e.returnValue = $langText.text();
-            }
-
-            // For Safari
-            return $langText.text();
-        }
-    };
 });

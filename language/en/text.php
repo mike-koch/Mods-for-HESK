@@ -48,6 +48,9 @@ $hesklang['EMAIL_HR']='------ Reply above this line ------';
 // ADDED OR MODIFIED IN Mods for HESK 3.1.0
 $hesklang['stack_trace_header'] = 'Stack Trace';
 $hesklang['ticket_message_contents_exist'] = 'The ticket message is not empty. Are you sure you want to leave this page?';
+$hesklang['resend_email_notification'] = 'Re-send Email Notification';
+$hesklang['email_notification_sent'] = 'Email notification sent!';
+$hesklang['email_notification_resend_failed'] = 'Error occurred when trying to send notification email.';
 
 // ADDED OR MODIFIED IN Mods for HESK 3.0.0
 $hesklang['you_have_x_messages'] = 'You have %s new %s'; // %s: Number of new messages, "message" or "messages", depending on # 
