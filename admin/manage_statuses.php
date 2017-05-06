@@ -132,7 +132,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <table class="table table-hover">
                                         <thead>
                                         <tr>
-                                            <th><?php echo $hesklang['name']; ?></th>
+                                            <th><?php echo $hesklang['status_name_title']; ?></th>
                                             <th><?php echo $hesklang['closable_question']; ?></th>
                                             <th><?php echo $hesklang['closedQuestionMark']; ?></th>
                                             <th><?php echo $hesklang['actions']; ?></th>

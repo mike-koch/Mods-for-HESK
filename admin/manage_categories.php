@@ -351,7 +351,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         ';
                         }
                     }
-                    echo '<a href="javascript:;" class="category-modal-trigger" data-category-id="' . $mycat['id'] . '"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="Edit"></i></a>';
+                    echo '<a href="javascript:;" class="category-modal-trigger" data-category-id="' . $mycat['id'] . '"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="' . $hesklang['edit'] . '"></i></a>';
                     echo $remove_code . '</td>
                 </tr>
                 ';
@@ -370,16 +370,16 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
         <div class="modal-content">
             <div class="modal-header" style="cursor: move">
                 <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Edit Category</h4>
+                <h4 class="modal-title" id="myModalLabel"><?php echo $hesklang['edit_category']; ?></h4>
             </div>
             <form action="manage_categories.php" class="form-horizontal" data-toggle="validator" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['name']; ?></label>
+                                <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['cat_name']; ?></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="name" class="form-control" placeholder="<?php echo $hesklang['name']; ?>"
+                                    <input type="text" name="name" class="form-control" placeholder="<?php echo $hesklang['cat_name']; ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
                                     <div class="help-block with-errors"></div>
