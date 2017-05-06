@@ -64,6 +64,7 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/displays.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.fancybox.min.css?v=<? echo MODS_FOR_HESK_BUILD ?>">
     <?php if (defined('USE_JQUERY_2')): ?>
         <script src="<?php echo HESK_PATH; ?>js/jquery-2.2.4.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php else: ?>
@@ -88,6 +89,7 @@ $modsForHesk_settings = mfh_getSettings();
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.jgrowl.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.slimscroll.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.fancybox.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;
