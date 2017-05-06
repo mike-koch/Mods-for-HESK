@@ -50,21 +50,7 @@ var loadJquery = function()
     $('.clockpicker').clockpicker();
 
     // Set the proper text color for background-volatile elements
-    $('.background-volatile').each(function() {
-        $this = $(this);
-        var background = $this.css('background-color');
-
-        if (background !== 'rgba(0, 0, 0, 0)'
-            && background !== 'transparent') {
-            var grayCount = calculateGrayCount(background);
-
-            if (grayCount > 186) {
-                $this.css('color', '#000');
-            } else {
-                $this.css('color', '#fff');
-            }
-        }
-    });
+    refreshBackgroundVolatileItems();
 
     // Initialize colorpicker
     $('.colorpicker-trigger').colorpicker({
@@ -100,6 +86,24 @@ var loadJquery = function()
         $('#' + hide).hide();
     })
 };
+
+function refreshBackgroundVolatileItems() {
+    $('.background-volatile').each(function() {
+        $this = $(this);
+        var background = $this.css('background-color');
+
+        if (background !== 'rgba(0, 0, 0, 0)'
+            && background !== 'transparent') {
+            var grayCount = calculateGrayCount(background);
+
+            if (grayCount > 186) {
+                $this.css('color', '#000');
+            } else {
+                $this.css('color', '#fff');
+            }
+        }
+    });
+}
 
 function calculateGrayCount(background) {
     var parts = background.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
