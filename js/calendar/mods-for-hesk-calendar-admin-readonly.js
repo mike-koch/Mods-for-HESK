@@ -85,7 +85,15 @@ $(document).ready(function() {
                 animation: true,
                 container: 'body',
                 placement: 'auto'
-            }).popover('show');
+            }).data('bs.popover')
+                .tip()
+                .css('padding', '0')
+                .find('.popover-title')
+                .css('background-color', event.color === '#fff' ? '#f7f7f7' : event.color)
+                .addClass('background-volatile');
+
+            $eventMarkup.popover('show');
+            refreshBackgroundVolatileItems();
         },
         eventMouseout: function() {
             $(this).popover('destroy');
