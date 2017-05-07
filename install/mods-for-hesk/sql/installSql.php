@@ -993,4 +993,17 @@ function execute310Scripts() {
     hesk_dbConnect();
 
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` ADD COLUMN `stack_trace` TEXT");
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element` 
+        (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+         image_url TEXT,
+         font_icon VARCHAR(200),
+         place INT NOT NULL)");
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element_to_text`
+        (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+         nav_element_id INT NOT NULL,
+         language VARCHAR(200) NOT NULL,
+         text VARCHAR(200) NOT NULL,
+         subtext VARCHAR(200))");
+
+    updateVersion('3.1.0');
 }
