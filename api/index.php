@@ -186,6 +186,8 @@ Link::all(array(
     /* Internal use only routes */
     // Resend email response
     '/v1-internal/staff/tickets/{i}/resend-email' => \Controllers\Tickets\ResendTicketEmailToCustomerController::class,
+    // Custom Navigation
+    '/v1-internal/custom-navigation' => \Controllers\Navigation\CustomNavElementController::class . '::getAll',
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'

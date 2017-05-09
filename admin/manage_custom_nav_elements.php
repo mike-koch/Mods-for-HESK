@@ -16,15 +16,7 @@ hesk_session_start();
 hesk_dbConnect();
 hesk_isLoggedIn();
 
-//hesk_checkPermission('can_man_email_tpl');
-
-// Are we performing an action?
-$showEditPanel = false;
-if (isset($_GET['action'])) {
-    if ($_GET['action'] == 'edit') {
-        $showEditPanel = true;
-    }
-}
+//hesk_checkPermission('can_man_custom_nav');
 
 // Are we saving?
 if (isset($_POST['action'])) {
@@ -52,21 +44,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>
                 </div>
                 <div class="box-body">
-                    <?php if ($showEditPanel): ?>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>EDIT CUSTOM NAV ELEMENT[!]</h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <form action="manage_custom_nav_elements.php" method="post">
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endif; ?>
                     <div class="row">
                         <div class="col-md-12">
                             <?php
@@ -149,7 +126,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                                 echo 'INVALID!!';
                                             } ?>
                                         </td>
-                                        <td>EDIT, DELETE</td>
+                                        <td>
+                                            <a href="manage_custom_nav_elements.php?edit=<?php echo $row['id'];?>">
+                                                <i class="fa fa-pencil icon-link orange"
+                                                 data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
+                                            </a>
+                                            <a href="manage_custom_nav_elements.php?delete=<?php echo $row['id']; ?>">
+                                                <i class="fa fa-times icon-link red"
+                                                 data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                                 </tbody>
@@ -158,12 +144,37 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>
                 </div>
             </div>
+            <?php
+            if ($showEditPanel):
+                ?>
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h1 class="box-title">
+                            Edit Custom Navigation Menu Element
+                        </h1>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <form action="manage_custom_nav_elements.php" method="post">
+                        </form>
+                    </div>
+                </div>
+            <?php endif; ?>
         </section>
     </div>
+<section id="table-row-template" style="display: none">
+    <tr>
+        <td data-property="id"></td>
+        <td data-property="text"></td>
+        <td data-property="subtext"></td>
+        <td data-property="icon-url"></td>
+        <td data-property="place"></td>
+        <td data-property="action"></td>
+    </tr>
+</section>
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
-exit();
-
-function save()
-{
-}

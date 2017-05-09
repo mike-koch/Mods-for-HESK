@@ -61,7 +61,6 @@ class UserContext {
      * @return UserContext the built user context
      */
     static function fromDataRow($dataRow) {
-        var_dump($dataRow);
         $userContext = new UserContext();
         $userContext->id = intval($dataRow['id']);
         $userContext->username = $dataRow['user'];
