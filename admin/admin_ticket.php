@@ -470,7 +470,7 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
     }
 
     //-- Check if the ticket is already a child.
-    $childRs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `parent` = ' . intval($ticket['id']) . ' AND `trackid` = \'' . hesk_dbEscape(hesk_POST(['childTrackingId'])) . '\'');
+    $childRs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `parent` = ' . intval($ticket['id']) . ' AND `trackid` = \'' . hesk_dbEscape(hesk_POST('childTrackingId')) . '\'');
     if (hesk_dbNumRows($childRs) > 0) {
         hesk_process_messages(sprintf($hesklang['is_already_linked'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'NOTICE');
     }
