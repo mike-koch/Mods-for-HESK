@@ -4,6 +4,7 @@ define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('PAGE_TITLE', 'ADMIN_CUSTOM_NAV_ELEMENTS');
 define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
+define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/manage-custom-nav-elements.js"></script>');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -18,12 +19,6 @@ hesk_isLoggedIn();
 
 //hesk_checkPermission('can_man_custom_nav');
 
-// Are we saving?
-if (isset($_POST['action'])) {
-    if ($_POST['action'] == 'save') {
-        save();
-    }
-}
 /* Print header */
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 
@@ -68,113 +63,38 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <?php
-                                if (hesk_dbNumRows($customElementsRs) === 0) {
-                                    echo '<tr><td colspan="6">No custom navigation elements</td></tr>';
-                                }
+                                <tbody id="table-body">
 
-                                while ($row = hesk_dbFetchAssoc($customElementsRs)):
-                                    $localizedTextRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element_to_text`
-                                        WHERE `nav_element_id` = " . intval($row['id']));
-                                    $languageText = array();
-                                    while ($textRow = hesk_dbFetchAssoc($localizedTextRs)) {
-                                        $languageText[$textRow['language']] = $textRow;
-                                    } ?>
-                                    <tr>
-                                        <td><?php echo $row['id']; ?></td>
-                                        <td>
-                                            <ul class="list-unstyled">
-                                                <?php foreach ($languageText as $key => $value): ?>
-                                                    <li>
-                                                        <b><?php echo $key; ?>: </b>
-                                                        <?php echo $value['text']; ?>
-                                                    </li>
-                                                <?php endforeach; ?>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <ul class="list-unstyled">
-                                                <?php
-                                                if ($row['place'] == 0) {
-                                                    foreach ($languageText as $key => $value): ?>
-                                                        <li>
-                                                            <b><?php echo $key; ?>: </b>
-                                                            <?php echo $value['subtext']; ?>
-                                                        </li>
-                                                    <?php endforeach;
-                                                } else {
-                                                    echo '-';
-                                                } ?>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <?php if ($row['image_url'] !== null) {
-                                                echo $row['image_url'];
-                                            } else {
-                                                echo '<i class="' . $row['font_icon'] . '"></i>';
-                                            } ?>
-                                        </td>
-                                        <td>
-                                            <?php if ($row['place'] == 0) {
-                                                echo 'Homepage - Block';
-                                            } elseif ($row['place'] == 1) {
-                                                echo 'Customer Navbar';
-                                            } elseif ($row['place'] == 2) {
-                                                echo 'Staff Navbar';
-                                            } else {
-                                                echo 'INVALID!!';
-                                            } ?>
-                                        </td>
-                                        <td>
-                                            <a href="manage_custom_nav_elements.php?edit=<?php echo $row['id'];?>">
-                                                <i class="fa fa-pencil icon-link orange"
-                                                 data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
-                                            </a>
-                                            <a href="manage_custom_nav_elements.php?delete=<?php echo $row['id']; ?>">
-                                                <i class="fa fa-times icon-link red"
-                                                 data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                <?php endwhile; ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <?php
-            if ($showEditPanel):
-                ?>
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h1 class="box-title">
-                            Edit Custom Navigation Menu Element
-                        </h1>
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <form action="manage_custom_nav_elements.php" method="post">
-                        </form>
-                    </div>
-                </div>
-            <?php endif; ?>
         </section>
     </div>
-<section id="table-row-template" style="display: none">
-    <tr>
-        <td data-property="id"></td>
-        <td data-property="text"></td>
-        <td data-property="subtext"></td>
-        <td data-property="icon-url"></td>
-        <td data-property="place"></td>
-        <td data-property="action"></td>
+<p style="display: none" id="lang_edit"><?php echo $hesklang['edit']; ?></p>
+<p style="display: none" id="lang_delete"><?php echo $hesklang['delete']; ?></p>
+<script type="text/html" id="nav-element-template">
+    <tr id="nav-element-template">
+        <td><span data-property="id"></span></td>
+        <td><span>
+                <ul data-property="text" class="list-unstyled"></ul>
+            </span></td>
+        <td><span data-property="subtext"></span></td>
+        <td><span data-property="image-or-font"></span></td>
+        <td><span data-property="place"></span></td>
+        <td>
+            <a href="#" data-action="edit">
+                <i class="fa fa-pencil icon-link orange"
+                   data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
+            </a>
+            <a href="#" data-action="delete">
+                <i class="fa fa-times icon-link red"
+                   data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
+            </a>
+        </td>
     </tr>
-</section>
+</script>
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');

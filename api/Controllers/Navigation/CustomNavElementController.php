@@ -13,7 +13,7 @@ class CustomNavElementController extends InternalApiController {
     static function getAll() {
         global $applicationContext, $hesk_settings;
 
-        self::checkForInternalUseOnly();
+        self::staticCheckForInternalUseOnly();
 
         /* @var $handler CustomNavElementHandler */
         $handler = $applicationContext->get[CustomNavElementHandler::class];
