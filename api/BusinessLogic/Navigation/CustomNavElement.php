@@ -7,10 +7,10 @@ class CustomNavElement {
     /* @var $id int*/
     public $id;
 
-    /* @var $text string[string] */
+    /* @var $text string[] */
     public $text;
 
-    /* @var $subtext string[string]|null */
+    /* @var $subtext string[]|null */
     public $subtext;
 
     /* @var $imageUrl string|null */

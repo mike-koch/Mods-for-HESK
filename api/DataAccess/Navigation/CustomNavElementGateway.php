@@ -17,13 +17,15 @@ class CustomNavElementGateway extends CommonDao {
                 ON `t1`.`id` = `t2`.`nav_element_id`");
 
         $elements = array();
+
+        /* @var $element CustomNavElement */
         $element = null;
         $previousId = -1;
         while ($row = hesk_dbFetchAssoc($rs)) {
             $id = intval($row['id']);
             if ($previousId !== $id) {
                 if ($element !== null) {
-                    $elements[] = $element;
+                    $elements[$element->id] = $element;
                 }
                 $element = new CustomNavElement();
                 $element->id = $id;
@@ -47,5 +49,104 @@ class CustomNavElementGateway extends CommonDao {
         $this->close();
 
         return $elements;
+    }
+
+    /**
+     * @param $id int
+     * @param $heskSettings array
+     */
+    function deleteCustomNavElement($id, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element_to_text` 
+            WHERE `nav_element_id` = " . intval($id));
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element` 
+            WHERE `id` = " . intval($id));
+
+        $this->close();
+    }
+
+    /**
+     * @param $element CustomNavElement
+     * @param $heskSettings array
+     */
+    function saveCustomNavElement($element, $heskSettings) {
+        $this->init();
+
+        //-- Delete previous records - easier than inserting/updating
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element_to_text` 
+            WHERE `nav_element_id` = " . intval($element->id));
+
+        $languageTextAndSubtext = array();
+        foreach ($element->text as $key => $text) {
+            $languageTextAndSubtext[$key]['text'] = $text;
+        }
+        foreach ($element->subtext as $key => $subtext) {
+            $languageTextAndSubtext[$key]['subtext'] = $subtext;
+        }
+
+        foreach ($languageTextAndSubtext as $key => $values) {
+            $subtext = 'NULL';
+            if (isset($values['subtext'])) {
+                $subtext = "'" . hesk_dbEscape($values['subtext']) . "'";
+            }
+            hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element_to_text`
+                (`nav_element_id`, `language`, `text`, `subtext`) VALUES (" . intval($element->id) . ", 
+                '" . hesk_dbEscape($key) . "',
+                '" . hesk_dbEscape($values['text']) . "', 
+                " . $subtext . ")");
+        }
+
+        $imageUrl = $element->imageUrl == null ? 'NULL' : "'" . hesk_dbEscape($element->imageUrl) . "'";
+        $fontIcon = $element->fontIcon == null ? 'NULL' : "'" . hesk_dbEscape($element->fontIcon) . "'";
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
+            SET `image_url` = {$imageUrl},
+                `font_icon` = {$fontIcon},
+                `place` = " . intval($element->place) .
+            " WHERE `id` = " . intval($element->id));
+
+        $this->close();
+    }
+
+    /**
+     * @param $element CustomNavElement
+     * @param $heskSettings array
+     * @return CustomNavElement
+     */
+    function createCustomNavElement($element, $heskSettings) {
+        $this->init();
+
+        $imageUrl = $element->imageUrl == null ? 'NULL' : "'" . hesk_dbEscape($element->imageUrl) . "'";
+        $fontIcon = $element->fontIcon == null ? 'NULL' : "'" . hesk_dbEscape($element->fontIcon) . "'";
+        hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
+            (`image_url`, `font_icon`, `place`) 
+            VALUES ({$imageUrl}, {$fontIcon}, " . intval($element->place) . ")");
+
+        $element->id = hesk_dbInsertID();
+
+
+        $languageTextAndSubtext = array();
+        foreach ($element->text as $key => $text) {
+            $languageTextAndSubtext[$key]['text'] = $text;
+        }
+        foreach ($element->subtext as $key => $subtext) {
+            $languageTextAndSubtext[$key]['subtext'] = $subtext;
+        }
+
+        foreach ($languageTextAndSubtext as $key => $values) {
+            $subtext = 'NULL';
+            if (isset($values['subtext'])) {
+                $subtext = "'" . hesk_dbEscape($values['subtext']) . "'";
+            }
+            hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element_to_text`
+                (`nav_element_id`, `language`, `text`, `subtext`) VALUES (" . intval($element->id) . ", 
+                '" . hesk_dbEscape($key) . "',
+                '" . hesk_dbEscape($values['text']) . "', 
+                " . $subtext . ")");
+        }
+
+        $this->close();
+
+        return $element;
     }
 }

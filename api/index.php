@@ -187,7 +187,9 @@ Link::all(array(
     // Resend email response
     '/v1-internal/staff/tickets/{i}/resend-email' => \Controllers\Tickets\ResendTicketEmailToCustomerController::class,
     // Custom Navigation
-    '/v1-internal/custom-navigation' => \Controllers\Navigation\CustomNavElementController::class . '::getAll',
+    '/v1-internal/custom-navigation/all' => \Controllers\Navigation\CustomNavElementController::class . '::getAll',
+    '/v1-internal/custom-navigation' => \Controllers\Navigation\CustomNavElementController::class,
+    '/v1-internal/custom-navigation/{i}' => \Controllers\Navigation\CustomNavElementController::class,
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'
