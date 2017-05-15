@@ -111,7 +111,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <?php echo $language; ?>
                                     </label>
                                     <div class="col-md-8 col-sm-12">
-                                        <input type="text" name="text[<?php echo $language; ?>]" class="form-control"
+                                        <input type="text" name="text[]" class="form-control"
                                                data-text-language="<?php echo $language; ?>"
                                                id="text[<?php echo $language; ?>" placeholder="<?php echo $language; ?>">
                                     </div>
@@ -125,7 +125,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             <?php echo $language; ?>
                                         </label>
                                         <div class="col-md-8 col-sm-12">
-                                            <input type="text" name="subtext[<?php echo $language; ?>]" class="form-control"
+                                            <input type="text" name="subtext[]" class="form-control"
                                                    data-subtext-language="<?php echo $language; ?>"
                                                    id="subtext[<?php echo $language; ?>" placeholder="<?php echo $language; ?>">
                                         </div>
@@ -147,13 +147,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <div class="form-group" id="image-url-group">
                                 <label for="image-url" class="col-md-4 col-sm-12 control-label">Image URL [!]</label>
                                 <div class="col-md-8 col-sm-12">
-                                    <input type="text" class="form-control" placeholder="Image URL[!]">
+                                    <input type="text" name="image-url" class="form-control" placeholder="Image URL[!]">
                                 </div>
                             </div>
                             <div class="form-group" id="font-icon-group">
                                 <label for="font-icon" class="col-md-4 col-sm-12 control-label">Font Icon [!]</label>
                                 <div class="col-md-8 col-sm-12">
-                                    <span>Iconpicker</span>
+                                    <div class="btn btn-default iconpicker-container" data-toggle="iconpicker">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +184,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <td><span>
                 <ul data-property="text" class="list-unstyled"></ul>
             </span></td>
-        <td><span data-property="subtext"></span></td>
+        <td><span>
+                <ul data-property="subtext" class="list-unstyled"></ul>
+            </span></td>
         <td><span data-property="image-or-font"></span></td>
         <td style="display: none"><span data-property="place-id"></span></td>
         <td><span data-property="place"></span></td>

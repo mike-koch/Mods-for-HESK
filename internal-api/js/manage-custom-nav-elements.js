@@ -1,11 +1,36 @@
+var elements = [];
+
 $(document).ready(function() {
     loadTable();
 
     $(document).on('click', '[data-action="edit"]', function() {
-        var $tableRow = $(this).parent().parent();
+        var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
+        console.log(element);
         var $modal = $('#nav-element-modal');
 
-        $modal.find('select[name="place"]').val($tableRow.find('[data-property="place-id"]').text());
+        $modal.find('select[name="place"]').val(element.place).text();
+        var $textLanguages = $modal.find('[data-text-language]');
+        $.each($textLanguages, function() {
+            var language = $(this).data('text-language');
+
+            $(this).val(element.text[language]);
+        });
+
+        var $subtextLanguages = $modal.find('[data-subtext-language]');
+        $.each($subtextLanguages, function() {
+            var language = $(this).data('subtext-language');
+
+            $(this).val(element.subtext[language]);
+        });
+
+        if (element.imageUrl !== null) {
+            $modal.find('select[name="image-type"]').val('image-url');
+            $modal.find('input[name="image-url"]').val(element.imageUrl);
+        } else {
+            $modal.find('select[name="image-type"]').val('font-icon');
+            $('[data-toggle="iconpicker"]').iconpicker('setIcon', element.fontIcon);
+        }
+
 
         $modal.modal('show');
     })
@@ -43,15 +68,17 @@ function loadTable() {
                 $template.find('ul[data-property="text"]').html(text);
 
                 var subtext = '-';
-                if (this.place == 1) {
+                if (this.place === 1) {
                     subtext = '';
                     $.each(this.subtext, function(key, value) {
                         subtext += '<li><b>' + escape(key) + ':</b> ' + escape(value) + '</li>';
                     });
                 }
-                $template.find('ul[data-property="subtext"]').html(text);
+                $template.find('ul[data-property="subtext"]').html(subtext);
 
                 $('#table-body').append($template);
+
+                elements[this.id] = this;
             });
         },
         error: function(data) {
