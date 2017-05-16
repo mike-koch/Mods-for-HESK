@@ -4,6 +4,16 @@ $(document).ready(function() {
     loadTable();
     bindEditModal();
 
+    $('[data-toggle="nav-iconpicker"]').iconpicker({
+        iconset: ['fontawesome', 'octicon'],
+        selectedClass: "btn-warning",
+        labelNoIcon: $('#no-icon').text(),
+        searchText: $('#search-icon').text(),
+        labelFooter: $('#footer-icon').text(),
+        resetButton: false,
+        icon: 'fa fa-adn'
+    });
+
     $('select[name="place"]').change(function() {
         var $subtextField = $('#subtext');
         if (parseInt($(this).val()) === 1) {
@@ -24,7 +34,47 @@ $(document).ready(function() {
             $imageUrl.hide();
             $fontIcon.show();
         }
-    })
+    });
+
+    $('form#manage-nav-element').submit(function(e) {
+        e.preventDefault();
+
+        var $modal = $('#nav-element-modal');
+
+        var place = parseInt($modal.find('select[name="place"]').val());
+
+        var $textLanguages = $modal.find('[data-text-language]');
+        var text = {};
+        $.each($textLanguages, function() {
+            text[$(this).data('text-language')] = $(this).val();
+        });
+
+        var subtext = {};
+        if (place === 1) {
+            var $subtextLanguages = $modal.find('[data-subtext-language]');
+            $.each($subtextLanguages, function() {
+                subtext[$(this).data('subtext-language')] = $(this).val();
+            });
+        }
+
+        var imageUrl = null;
+        var fontIcon = null;
+        if ($modal.find('select[name="image-type"]').val() === 'image-url') {
+            imageUrl = $modal.find('input[name="image-url"]').val();
+        } else {
+            fontIcon = $modal.find('.iconpicker').find('input[type="hidden"]').val();
+        }
+
+        var data = {
+            place: place,
+            text: text,
+            subtext: subtext,
+            imageUrl: imageUrl,
+            fontIcon: fontIcon
+        };
+
+        console.log(data);
+    });
 });
 
 function loadTable() {
@@ -92,7 +142,8 @@ function bindEditModal() {
         var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
         var $modal = $('#nav-element-modal');
 
-        $modal.find('select[name="place"]').val(element.place).text();
+        $modal.find('select[name="place"]').val(element.place);
+        $modal.find('input[name="id"]').val(element.id);
         var $textLanguages = $modal.find('[data-text-language]');
         $.each($textLanguages, function() {
             var language = $(this).data('text-language');

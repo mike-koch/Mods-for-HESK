@@ -83,17 +83,20 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <div class="modal-header" style="cursor: move">
                 <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">
-                    <?php echo 'Edit Custom Nav Element'; ?>
+                    <?php echo 'Edit Custom Nav Element[!]'; ?>
                 </h4>
             </div>
-            <form id="create-form" class="form-horizontal" data-toggle="validator">
+            <form id="manage-nav-element" class="form-horizontal" data-toggle="validator">
+                <input type="hidden" name="id">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="place" class="col-md-4 col-sm-12 control-label">Place[!]</label>
                                 <div class="col-md-8 col-sm-12">
-                                    <select name="place" id="place" class="form-control">
+                                    <select name="place" id="place" class="form-control"
+                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                            required>
                                         <option value="1">Homepage - Block</option>
                                         <option value="2">Customer Navbar</option>
                                         <option value="3">Staff Navbar</option>
@@ -111,9 +114,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <?php echo $language; ?>
                                     </label>
                                     <div class="col-md-8 col-sm-12">
-                                        <input type="text" name="text[]" class="form-control"
+                                        <input type="text" name="text" class="form-control"
                                                data-text-language="<?php echo $language; ?>"
-                                               id="text[<?php echo $language; ?>" placeholder="<?php echo $language; ?>">
+                                               id="text[<?php echo $language; ?>" placeholder="<?php echo $language; ?>"
+                                               data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                               required>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -125,9 +130,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             <?php echo $language; ?>
                                         </label>
                                         <div class="col-md-8 col-sm-12">
-                                            <input type="text" name="subtext[]" class="form-control"
+                                            <input type="text" name="subtext" class="form-control"
                                                    data-subtext-language="<?php echo $language; ?>"
-                                                   id="subtext[<?php echo $language; ?>" placeholder="<?php echo $language; ?>">
+                                                   id="subtext[<?php echo $language; ?>" placeholder="<?php echo $language; ?>"
+                                                   data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                                   required>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
@@ -138,7 +145,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <div class="form-group">
                                 <label for="image-type" class="col-md-4 col-sm-12 control-label">Image Type[!]</label>
                                 <div class="col-md-8 col-sm-12">
-                                    <select name="image-type" id="image-type" class="form-control">
+                                    <select name="image-type" id="image-type" class="form-control"
+                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                            required>
                                         <option value="image-url">Image URL</option>
                                         <option value="font-icon">Font Icon</option>
                                     </select>
@@ -151,9 +160,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="form-group" id="font-icon-group">
+                                <p style="display:none" id="no-icon"><?php echo $hesklang['sm_no_icon']; ?></p>
+
+                                <p style="display:none" id="search-icon"><?php echo $hesklang['sm_search_icon']; ?></p>
+
+                                <p style="display:none"
+                                   id="footer-icon"><?php echo $hesklang['sm_iconpicker_footer_label']; ?></p>
                                 <label for="font-icon" class="col-md-4 col-sm-12 control-label">Font Icon [!]</label>
                                 <div class="col-md-8 col-sm-12">
-                                    <div class="btn btn-default iconpicker-container" data-toggle="iconpicker">
+                                    <div class="btn btn-default iconpicker-container" data-toggle="nav-iconpicker">
                                     </div>
                                 </div>
                             </div>
@@ -162,11 +177,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default cancel-callback" data-dismiss="modal">
+                        <button type="button" class="btn btn-default cancel-button" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>
                             <span><?php echo $hesklang['cancel']; ?></span>
                         </button>
-                        <button type="button" class="btn btn-success callback-btn">
+                        <button type="submit" class="btn btn-success save-button">
                             <i class="fa fa-check-circle"></i>
                             <span><?php echo $hesklang['save']; ?></span>
                         </button>
