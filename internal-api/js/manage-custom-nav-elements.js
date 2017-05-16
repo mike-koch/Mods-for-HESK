@@ -2,37 +2,28 @@ var elements = [];
 
 $(document).ready(function() {
     loadTable();
+    bindEditModal();
 
-    $(document).on('click', '[data-action="edit"]', function() {
-        var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
-        console.log(element);
-        var $modal = $('#nav-element-modal');
-
-        $modal.find('select[name="place"]').val(element.place).text();
-        var $textLanguages = $modal.find('[data-text-language]');
-        $.each($textLanguages, function() {
-            var language = $(this).data('text-language');
-
-            $(this).val(element.text[language]);
-        });
-
-        var $subtextLanguages = $modal.find('[data-subtext-language]');
-        $.each($subtextLanguages, function() {
-            var language = $(this).data('subtext-language');
-
-            $(this).val(element.subtext[language]);
-        });
-
-        if (element.imageUrl !== null) {
-            $modal.find('select[name="image-type"]').val('image-url');
-            $modal.find('input[name="image-url"]').val(element.imageUrl);
+    $('select[name="place"]').change(function() {
+        var $subtextField = $('#subtext');
+        if (parseInt($(this).val()) === 1) {
+            $subtextField.show();
         } else {
-            $modal.find('select[name="image-type"]').val('font-icon');
-            $('[data-toggle="iconpicker"]').iconpicker('setIcon', element.fontIcon);
+            $subtextField.hide();
         }
+    });
 
+    $('select[name="image-type"]').change(function() {
+        var $imageUrl = $('#image-url-group');
+        var $fontIcon = $('#font-icon-group');
 
-        $modal.modal('show');
+        if ($(this).val() === 'image-url') {
+            $imageUrl.show();
+            $fontIcon.hide();
+        } else {
+            $imageUrl.hide();
+            $fontIcon.show();
+        }
     })
 });
 
@@ -96,8 +87,45 @@ function escape(str) {
     return div.innerHTML;
 }
 
-function displayModal(element) {
-    var creatingElement = element === undefined;
+function bindEditModal() {
+    $(document).on('click', '[data-action="edit"]', function() {
+        var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
+        var $modal = $('#nav-element-modal');
 
-    var $form = $('#nav-element-modal').find('form');
+        $modal.find('select[name="place"]').val(element.place).text();
+        var $textLanguages = $modal.find('[data-text-language]');
+        $.each($textLanguages, function() {
+            var language = $(this).data('text-language');
+
+            $(this).val(element.text[language]);
+        });
+
+        var $subtextLanguages = $modal.find('[data-subtext-language]');
+        $.each($subtextLanguages, function() {
+            var language = $(this).data('subtext-language');
+
+            $(this).val(element.subtext[language]);
+        });
+
+        if (this.place === 1) {
+            $('#subtext').show();
+        } else {
+            $('#subtext').hide();
+        }
+
+        if (element.imageUrl !== null) {
+            $modal.find('select[name="image-type"]').val('image-url');
+            $modal.find('input[name="image-url"]').val(element.imageUrl);
+            $modal.find('#font-icon-group').hide();
+            $modal.find('#image-url-group').show();
+        } else {
+            $modal.find('select[name="image-type"]').val('font-icon');
+            $('[data-toggle="iconpicker"]').iconpicker('setIcon', element.fontIcon);
+            $modal.find('#font-icon-group').show();
+            $modal.find('#image-url-group').hide();
+        }
+
+
+        $modal.modal('show');
+    });
 }
