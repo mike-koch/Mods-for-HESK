@@ -40,18 +40,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
             <div class="box-body">
                 <div class="row">
+                    <div class="col-md-12 text-right">
+                        <button id="create-button" class="btn btn-success">Create New Element [!]</button>
+                    </div>
                     <div class="col-md-12">
-                        <?php
-                        /* This will handle error, success and notice messages */
-                        hesk_handle_messages();
-
-                        $languages = array();
-                        foreach ($hesk_settings['languages'] as $key => $value) {
-                            $languages[$key] = $hesk_settings['languages'][$key]['folder'];
-                        }
-
-                        $customElementsRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element`");
-                        ?>
                         <table class="table table-default">
                             <thead>
                             <tr>
@@ -101,6 +93,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <option value="2">Customer Navbar</option>
                                         <option value="3">Staff Navbar</option>
                                     </select>
+                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                         </div>
@@ -119,6 +112,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                                id="text[<?php echo $language; ?>" placeholder="<?php echo $language; ?>"
                                                data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                                required>
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -135,6 +129,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                                    id="subtext[<?php echo $language; ?>" placeholder="<?php echo $language; ?>"
                                                    data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                                    required>
+                                            <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
@@ -151,12 +146,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <option value="image-url">Image URL</option>
                                         <option value="font-icon">Font Icon</option>
                                     </select>
+                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group" id="image-url-group">
                                 <label for="image-url" class="col-md-4 col-sm-12 control-label">Image URL [!]</label>
                                 <div class="col-md-8 col-sm-12">
-                                    <input type="text" name="image-url" class="form-control" placeholder="Image URL[!]">
+                                    <input type="text" name="image-url" class="form-control"
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           placeholder="Image URL[!]" required>
+                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group" id="font-icon-group">
@@ -194,7 +193,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <p style="display: none" id="lang_edit"><?php echo $hesklang['edit']; ?></p>
 <p style="display: none" id="lang_delete"><?php echo $hesklang['delete']; ?></p>
 <script type="text/html" id="nav-element-template">
-    <tr id="nav-element-template">
+    <tr>
         <td><span data-property="id"></span></td>
         <td><span>
                 <ul data-property="text" class="list-unstyled"></ul>

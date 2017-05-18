@@ -3,6 +3,7 @@ var elements = [];
 $(document).ready(function() {
     loadTable();
     bindEditModal();
+    bindCreateModal();
 
     $('[data-toggle="nav-iconpicker"]').iconpicker({
         iconset: ['fontawesome', 'octicon'],
@@ -38,6 +39,7 @@ $(document).ready(function() {
 
     $('form#manage-nav-element').submit(function(e) {
         e.preventDefault();
+        var heskUrl = $('#heskUrl').text();
 
         var $modal = $('#nav-element-modal');
 
@@ -65,6 +67,8 @@ $(document).ready(function() {
             fontIcon = $modal.find('.iconpicker').find('input[type="hidden"]').val();
         }
 
+        var id = parseInt($modal.find('input[name="id"]').val());
+
         var data = {
             place: place,
             text: text,
@@ -73,11 +77,30 @@ $(document).ready(function() {
             fontIcon: fontIcon
         };
 
-        console.log(data);
+        var url = heskUrl + '/api/v1-internal/custom-navigation/';
+        var method = 'POST';
+
+        if (id !== -1) {
+            url += id;
+            method = 'PUT';
+        }
+
+        $.ajax({
+            method: method,
+            url: url,
+            headers: { 'X-Internal-Call': true },
+            data: JSON.stringify(data),
+            success: function(data) {
+                loadTable($modal);
+            },
+            error: function(data) {
+                console.error(data);
+            }
+        });
     });
 });
 
-function loadTable() {
+function loadTable(modalToClose) {
     var heskUrl = $('#heskUrl').text();
     var places = [];
     places[1] = 'Homepage - Block';
@@ -89,6 +112,9 @@ function loadTable() {
         url: heskUrl + '/api/v1-internal/custom-navigation/all',
         headers: { 'X-Internal-Call': true },
         success: function(data) {
+            $('#table-body').html('');
+            elements = [];
+
             $.each(data, function() {
                 var $template = $($('#nav-element-template').html());
 
@@ -117,10 +143,15 @@ function loadTable() {
                 }
                 $template.find('ul[data-property="subtext"]').html(subtext);
 
+                console.log($template);
                 $('#table-body').append($template);
 
                 elements[this.id] = this;
             });
+
+            if (modalToClose !== undefined) {
+                modalToClose.modal('hide');
+            }
         },
         error: function(data) {
             console.error(data);
@@ -158,7 +189,7 @@ function bindEditModal() {
             $(this).val(element.subtext[language]);
         });
 
-        if (this.place === 1) {
+        if (element.place === 1) {
             $('#subtext').show();
         } else {
             $('#subtext').hide();
@@ -176,6 +207,36 @@ function bindEditModal() {
             $modal.find('#image-url-group').hide();
         }
 
+
+        $modal.modal('show');
+    });
+}
+
+function bindCreateModal() {
+    $('#create-button').click(function() {
+        var $modal = $('#nav-element-modal');
+        $modal.find('select[name="place"]').val(1);
+        $modal.find('input[name="id"]').val(-1);
+        var $textLanguages = $modal.find('[data-text-language]');
+        $.each($textLanguages, function() {
+            var language = $(this).data('text-language');
+
+            $(this).val('');
+        });
+
+        var $subtextLanguages = $modal.find('[data-subtext-language]');
+        $.each($subtextLanguages, function() {
+            var language = $(this).data('subtext-language');
+
+            $(this).val('');
+        });
+
+        $('#subtext').show();
+
+        $modal.find('select[name="image-type"]').val('image-url');
+        $modal.find('input[name="image-url"]').val('');
+        $modal.find('#font-icon-group').hide();
+        $modal.find('#image-url-group').show();
 
         $modal.modal('show');
     });
