@@ -14,7 +14,8 @@ class CustomNavElementGateway extends CommonDao {
 
         $rs = hesk_dbQuery("SELECT {$columns} FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element` AS `t1`
             INNER JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element_to_text` AS `t2`
-                ON `t1`.`id` = `t2`.`nav_element_id`");
+                ON `t1`.`id` = `t2`.`nav_element_id`
+            ORDER BY `t1`.`place` ASC, `t1`.`sort` ASC");
 
         $elements = array();
 

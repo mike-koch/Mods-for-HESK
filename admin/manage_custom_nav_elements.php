@@ -44,7 +44,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <button id="create-button" class="btn btn-success">Create New Element [!]</button>
                     </div>
                     <div class="col-md-12">
-                        <table class="table table-default">
+                        <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -190,6 +190,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 </div>
 <p style="display: none" id="lang_edit"><?php echo $hesklang['edit']; ?></p>
 <p style="display: none" id="lang_delete"><?php echo $hesklang['delete']; ?></p>
+<p style="display: none" id="lang_no_custom_nav_elements_found"><?php echo $hesklang['no_custom_nav_elements_found']; ?></p>
 <script type="text/html" id="nav-element-template">
     <tr>
         <td><span data-property="id"></span></td>

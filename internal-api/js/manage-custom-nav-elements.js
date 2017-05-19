@@ -103,6 +103,7 @@ $(document).ready(function() {
 
 function loadTable(modalToClose) {
     var heskUrl = $('#heskUrl').text();
+    var notFoundText = $('#lang_no_custom_nav_elements_found').text();
     var places = [];
     places[1] = 'Homepage - Block';
     places[2] = 'Customer Navbar';
@@ -116,7 +117,26 @@ function loadTable(modalToClose) {
             $('#table-body').html('');
             elements = [];
 
+            if (data.length === 0) {
+                $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
+                return;
+            }
+
+            $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[1] + '</b></i></td></tr>');
+            var currentPlace = 1;
+            var addedElementToPlace = false;
             $.each(data, function() {
+                if (this.place !== currentPlace) {
+                    if (!addedElementToPlace) {
+                        $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
+                    }
+
+                    $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[this.place] + '</b></i></td></tr>');
+                    currentPlace = this.place;
+                    console.log(this);
+                    addedElementToPlace = false;
+                }
+
                 var $template = $($('#nav-element-template').html());
 
                 $template.find('span[data-property="id"]').text(this.id);
@@ -147,7 +167,19 @@ function loadTable(modalToClose) {
                 $('#table-body').append($template);
 
                 elements[this.id] = this;
+
+                addedElementToPlace = true;
             });
+
+            //-- Add missing headers if no elements are in them
+            if (currentPlace === 1) {
+                $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[2] + '</b></i></td></tr>');
+                $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
+            }
+            if (currentPlace === 2) {
+                $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[3] + '</b></i></td></tr>');
+                $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
+            }
 
             if (modalToClose !== undefined) {
                 modalToClose.modal('hide');

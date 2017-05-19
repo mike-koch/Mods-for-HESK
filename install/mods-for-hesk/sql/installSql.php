@@ -997,7 +997,8 @@ function execute310Scripts() {
         (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
          image_url TEXT,
          font_icon VARCHAR(200),
-         place INT NOT NULL)");
+         place INT NOT NULL,
+         sort INT NOT NULL)");
     executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element_to_text`
         (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
          nav_element_id INT NOT NULL,
