@@ -4,6 +4,7 @@ $(document).ready(function() {
     loadTable();
     bindEditModal();
     bindCreateModal();
+    bindDeleteButton();
 
     $('[data-toggle="nav-iconpicker"]').iconpicker({
         iconset: ['fontawesome', 'octicon'],
@@ -143,7 +144,6 @@ function loadTable(modalToClose) {
                 }
                 $template.find('ul[data-property="subtext"]').html(subtext);
 
-                console.log($template);
                 $('#table-body').append($template);
 
                 elements[this.id] = this;
@@ -157,7 +157,7 @@ function loadTable(modalToClose) {
             console.error(data);
         },
         complete: function() {
-            $('#loader').hide();
+            $('#overlay').hide();
         }
     });
 }
@@ -239,5 +239,27 @@ function bindCreateModal() {
         $modal.find('#image-url-group').show();
 
         $modal.modal('show');
+    });
+}
+
+function bindDeleteButton() {
+    $(document).on('click', '[data-action="delete"]', function() {
+        $('#overlay').show();
+
+        var heskUrl = $('#heskUrl').text();
+        var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
+
+        $.ajax({
+            method: 'DELETE',
+            url: heskUrl + '/api/v1-internal/custom-navigation/' + element.id,
+            headers: { 'X-Internal-Call': true },
+            success: function() {
+                console.log('DELETED!');
+                loadTable();
+            },
+            error: function(data) {
+                console.error(data);
+            }
+        });
     });
 }

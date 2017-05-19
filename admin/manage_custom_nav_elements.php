@@ -56,15 +56,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </tr>
                             </thead>
                             <tbody id="table-body">
-                            <tr id="loader">
-                                <td colspan="6">
-                                    <i class="fa fa-spinner fa-spin"></i> Loading Custom Nav Elements&hellip;
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+            <div class="overlay" id="overlay">
+                <i class="fa fa-spinner fa-spin"></i>
             </div>
         </div>
     </section>
