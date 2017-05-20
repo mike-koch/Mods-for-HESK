@@ -190,6 +190,7 @@ Link::all(array(
     '/v1-internal/custom-navigation/all' => \Controllers\Navigation\CustomNavElementController::class . '::getAll',
     '/v1-internal/custom-navigation' => \Controllers\Navigation\CustomNavElementController::class,
     '/v1-internal/custom-navigation/{i}' => \Controllers\Navigation\CustomNavElementController::class,
+    '/v1-internal/custom-navigation/{i}/sort/{s}' => \Controllers\Navigation\CustomNavElementController::class . '::sort',
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'

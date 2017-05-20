@@ -31,6 +31,7 @@ class CustomNavElementHandler {
 
     function deleteCustomNavElement($id, $heskSettings) {
         $this->customNavElementGateway->deleteCustomNavElement($id, $heskSettings);
+        $this->customNavElementGateway->resortAllElements($heskSettings);
     }
 
     function saveCustomNavElement($element, $heskSettings) {
@@ -38,6 +39,23 @@ class CustomNavElementHandler {
     }
 
     function createCustomNavElement($element, $heskSettings) {
-        return $this->customNavElementGateway->createCustomNavElement($element, $heskSettings);
+        $element = $this->customNavElementGateway->createCustomNavElement($element, $heskSettings);
+        $this->customNavElementGateway->resortAllElements($heskSettings);
+
+        return $element;
+    }
+
+    function sortCustomNavElement($elementId, $direction, $heskSettings) {
+        /* @var $element CustomNavElement */
+        $element = $this->customNavElementGateway->getAllCustomNavElements($heskSettings)[$elementId];
+
+        if ($direction === 'up') {
+            $element->sort -= 15;
+        } else {
+            $element->sort += 15;
+        }
+
+        $this->customNavElementGateway->saveCustomNavElement($element, $heskSettings);
+        $this->customNavElementGateway->resortAllElements($heskSettings);
     }
 }

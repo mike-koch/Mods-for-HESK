@@ -21,6 +21,17 @@ class CustomNavElementController extends InternalApiController {
         output($handler->getAllCustomNavElements($hesk_settings));
     }
 
+    static function sort($id, $direction) {
+        global $applicationContext, $hesk_settings;
+
+        self::staticCheckForInternalUseOnly();
+
+        /* @var $handler CustomNavElementHandler */
+        $handler = $applicationContext->get[CustomNavElementHandler::class];
+
+        $handler->sortCustomNavElement($id, $direction, $hesk_settings);
+    }
+
     function get($id) {
         global $applicationContext, $hesk_settings;
 
@@ -81,6 +92,8 @@ class CustomNavElementController extends InternalApiController {
         $element->imageUrl = Helpers::safeArrayGet($data, 'imageUrl');
         $element->text = Helpers::safeArrayGet($data, 'text');
         $element->subtext = Helpers::safeArrayGet($data, 'subtext');
+        $element->url = Helpers::safeArrayGet($data, 'url');
+        $element->sort = intval(Helpers::safeArrayGet($data, 'sort'));
 
         return $element;
     }

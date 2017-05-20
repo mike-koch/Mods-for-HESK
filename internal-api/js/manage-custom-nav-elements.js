@@ -125,29 +125,38 @@ function loadTable(modalToClose) {
             $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[1] + '</b></i></td></tr>');
             var currentPlace = 1;
             var addedElementToPlace = false;
+            var first = true;
+            var lastElement = null;
             $.each(data, function() {
                 if (this.place !== currentPlace) {
                     if (!addedElementToPlace) {
                         $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
                     }
 
+                    if (lastElement !== null) {
+                        //-- Hide the down arrow on the last element
+                        $('[data-value="' + lastElement.id + '"]').parent().parent()
+                            .find('[data-direction="down"]').find('i').removeClass('fa-arrow-down');
+                        lastElement = null;
+                    }
+
                     $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[this.place] + '</b></i></td></tr>');
                     currentPlace = this.place;
                     console.log(this);
                     addedElementToPlace = false;
+                    first = true;
                 }
 
                 var $template = $($('#nav-element-template').html());
 
-                $template.find('span[data-property="id"]').text(this.id);
+                $template.find('span[data-property="id"]').text(this.id).attr('data-value', this.id);
                 if (this.imageUrl === null) {
                     $template.find('span[data-property="image-or-font"]').html('<i class="' + escape(this.fontIcon) + '"></i>');
                 } else {
                     $template.find('span[data-property="image-or-font"]').text(this.imageUrl);
                 }
 
-                $template.find('span[data-property="place"]').text(places[this.place]);
-                $template.find('span[data-property="place-id"]').text(this.place);
+                $template.find('span[data-property="url"]').text(places[this.url]);
 
                 var text = '';
                 $.each(this.text, function(key, value) {
@@ -164,11 +173,17 @@ function loadTable(modalToClose) {
                 }
                 $template.find('ul[data-property="subtext"]').html(subtext);
 
+                if (first) {
+                    $template.find('[data-direction="up"]').find('i').removeClass('fa-arrow-up');
+                    first = false;
+                }
+
                 $('#table-body').append($template);
 
                 elements[this.id] = this;
 
                 addedElementToPlace = true;
+                lastElement = this;
             });
 
             //-- Add missing headers if no elements are in them
@@ -179,6 +194,12 @@ function loadTable(modalToClose) {
             if (currentPlace === 2) {
                 $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[3] + '</b></i></td></tr>');
                 $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
+            }
+
+            if (lastElement) {
+                //-- Hide the down arrow on the last element
+                $('[data-value="' + lastElement.id + '"]').parent().parent()
+                    .find('[data-direction="down"]').find('i').removeClass('fa-arrow-down');
             }
 
             if (modalToClose !== undefined) {

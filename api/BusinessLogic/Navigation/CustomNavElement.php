@@ -21,4 +21,10 @@ class CustomNavElement {
 
     /* @var $place int */
     public $place;
+
+    /* @var $url string */
+    public $url;
+
+    /* @var $sort int */
+    public $sort;
 }

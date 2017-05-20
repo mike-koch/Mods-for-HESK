@@ -51,7 +51,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 <th>Text</th>
                                 <th>Subtext</th>
                                 <th>Image URL / Font Icon</th>
-                                <th>Place</th>
+                                <th>URL</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
@@ -193,7 +193,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <p style="display: none" id="lang_no_custom_nav_elements_found"><?php echo $hesklang['no_custom_nav_elements_found']; ?></p>
 <script type="text/html" id="nav-element-template">
     <tr>
-        <td><span data-property="id"></span></td>
+        <td><span data-property="id" data-value="x"></span></td>
         <td><span>
                 <ul data-property="text" class="list-unstyled"></ul>
             </span></td>
@@ -201,15 +201,24 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 <ul data-property="subtext" class="list-unstyled"></ul>
             </span></td>
         <td><span data-property="image-or-font"></span></td>
-        <td style="display: none"><span data-property="place-id"></span></td>
-        <td><span data-property="place"></span></td>
+        <td><span data-property="url"></span></td>
         <td>
             <a href="#" data-action="edit">
-                <i class="fa fa-pencil icon-link orange"
+                <i class="fa fa-fw fa-pencil icon-link orange"
                    data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
             </a>
+            <a href="#" data-action="sort"
+               data-direction="up">
+                <i class="fa fa-fw fa-arrow-up icon-link green"
+                   data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
+            </a>
+            <a href="#" data-action="sort"
+               data-direction="down">
+                <i class="fa fa-fw fa-arrow-down icon-link green"
+                   data-toggle="tooltip" title="<?php echo $hesklang['move_dn'] ?>"></i>
+            </a>
             <a href="#" data-action="delete">
-                <i class="fa fa-times icon-link red"
+                <i class="fa fa-fw fa-times icon-link red"
                    data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
             </a>
         </td>

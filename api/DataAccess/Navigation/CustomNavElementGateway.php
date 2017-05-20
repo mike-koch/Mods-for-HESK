@@ -117,11 +117,16 @@ class CustomNavElementGateway extends CommonDao {
     function createCustomNavElement($element, $heskSettings) {
         $this->init();
 
+        $rs = hesk_dbQuery("SELECT MAX(`sort`) FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
+            WHERE `place` = " . intval($element->place));
+        $maxSort = hesk_dbFetchAssoc($rs);
+        $sortValue = intval($maxSort['sort']) + 1;
+
         $imageUrl = $element->imageUrl == null ? 'NULL' : "'" . hesk_dbEscape($element->imageUrl) . "'";
         $fontIcon = $element->fontIcon == null ? 'NULL' : "'" . hesk_dbEscape($element->fontIcon) . "'";
         hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
-            (`image_url`, `font_icon`, `place`) 
-            VALUES ({$imageUrl}, {$fontIcon}, " . intval($element->place) . ")");
+            (`image_url`, `font_icon`, `place`, `sort`) 
+            VALUES ({$imageUrl}, {$fontIcon}, " . intval($element->place) . ", " . $sortValue . ")");
 
         $element->id = hesk_dbInsertID();
 
@@ -149,5 +154,24 @@ class CustomNavElementGateway extends CommonDao {
         $this->close();
 
         return $element;
+    }
+
+
+    function resortAllElements($heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
+            ORDER BY `place` ASC, `sort` ASC");
+
+        $sortValue = 10;
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
+                SET `sort` = " . intval($sortValue) . "
+                WHERE `id` = " . intval($row['id']));
+
+            $sortValue += 10;
+        }
+
+        $this->close();
     }
 }
