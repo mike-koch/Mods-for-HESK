@@ -134,6 +134,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
+                            <h4>URL[!]</h4>
+                            <div class="form-group">
+                                <label for="image-type" class="col-md-4 col-sm-12 control-label">URL[!]</label>
+                                <div class="col-md-8 col-sm-12">
+                                    <input type="text" name="url" class="form-control"
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           placeholder="<?php echo 'URL'; ?>" required>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
                             <h4>Image[!]</h4>
                             <div class="form-group">
                                 <label for="image-type" class="col-md-4 col-sm-12 control-label">Image Type[!]</label>

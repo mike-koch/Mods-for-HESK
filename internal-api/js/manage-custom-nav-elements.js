@@ -69,13 +69,15 @@ $(document).ready(function() {
         }
 
         var id = parseInt($modal.find('input[name="id"]').val());
+        var navUrl = $modal.find('input[name="url"]').val();
 
         var data = {
             place: place,
             text: text,
             subtext: subtext,
             imageUrl: imageUrl,
-            fontIcon: fontIcon
+            fontIcon: fontIcon,
+            url: navUrl
         };
 
         var url = heskUrl + '/api/v1-internal/custom-navigation/';
@@ -136,7 +138,7 @@ function loadTable(modalToClose) {
                     if (lastElement !== null) {
                         //-- Hide the down arrow on the last element
                         $('[data-value="' + lastElement.id + '"]').parent().parent()
-                            .find('[data-direction="down"]').find('i').removeClass('fa-arrow-down');
+                            .find('[data-direction="down"]').css('visibility', 'hidden');
                         lastElement = null;
                     }
 
@@ -156,7 +158,7 @@ function loadTable(modalToClose) {
                     $template.find('span[data-property="image-or-font"]').text(this.imageUrl);
                 }
 
-                $template.find('span[data-property="url"]').text(places[this.url]);
+                $template.find('span[data-property="url"]').text(this.url);
 
                 var text = '';
                 $.each(this.text, function(key, value) {
@@ -174,7 +176,7 @@ function loadTable(modalToClose) {
                 $template.find('ul[data-property="subtext"]').html(subtext);
 
                 if (first) {
-                    $template.find('[data-direction="up"]').find('i').removeClass('fa-arrow-up');
+                    $template.find('[data-direction="up"]').css('visibility', 'hidden');
                     first = false;
                 }
 
@@ -191,7 +193,7 @@ function loadTable(modalToClose) {
                 $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[2] + '</b></i></td></tr>');
                 $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
             }
-            if (currentPlace === 2) {
+            if (currentPlace === 1 || currentPlace === 2) {
                 $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[3] + '</b></i></td></tr>');
                 $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
             }
@@ -199,7 +201,7 @@ function loadTable(modalToClose) {
             if (lastElement) {
                 //-- Hide the down arrow on the last element
                 $('[data-value="' + lastElement.id + '"]').parent().parent()
-                    .find('[data-direction="down"]').find('i').removeClass('fa-arrow-down');
+                    .find('[data-direction="down"]').css('visibility', 'hidden');
             }
 
             if (modalToClose !== undefined) {
@@ -228,6 +230,7 @@ function bindEditModal() {
 
         $modal.find('select[name="place"]').val(element.place);
         $modal.find('input[name="id"]').val(element.id);
+        $modal.find('input[name="url"]').val(element.url);
         var $textLanguages = $modal.find('[data-text-language]');
         $.each($textLanguages, function() {
             var language = $(this).data('text-language');
@@ -290,6 +293,7 @@ function bindCreateModal() {
         $modal.find('input[name="image-url"]').val('');
         $modal.find('#font-icon-group').hide();
         $modal.find('#image-url-group').show();
+        $modal.find('input[name="url"]').val('');
 
         $modal.modal('show');
     });

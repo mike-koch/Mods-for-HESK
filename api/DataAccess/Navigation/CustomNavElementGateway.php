@@ -10,7 +10,7 @@ class CustomNavElementGateway extends CommonDao {
     function getAllCustomNavElements($heskSettings) {
         $this->init();
 
-        $columns = '`t1`.`id`, `t1`.`image_url`, `t1`.`font_icon`, `t1`.`place`, `t2`.`language`, `t2`.`text`, `t2`.`subtext`';
+        $columns = '`t1`.`id`, `t1`.`image_url`, `t1`.`font_icon`, `t1`.`place`, `t1`.`url`, `t2`.`language`, `t2`.`text`, `t2`.`subtext`';
 
         $rs = hesk_dbQuery("SELECT {$columns} FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element` AS `t1`
             INNER JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element_to_text` AS `t2`
@@ -33,6 +33,7 @@ class CustomNavElementGateway extends CommonDao {
                 $element->place = intval($row['place']);
                 $element->imageUrl = $row['image_url'];
                 $element->fontIcon = $row['font_icon'];
+                $element->url = $row['url'];
                 $element->text = array();
                 $element->subtext = array();
             }
@@ -103,6 +104,7 @@ class CustomNavElementGateway extends CommonDao {
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
             SET `image_url` = {$imageUrl},
                 `font_icon` = {$fontIcon},
+                `url` = '" . hesk_dbEscape($element->url) . "',
                 `place` = " . intval($element->place) .
             " WHERE `id` = " . intval($element->id));
 
@@ -117,7 +119,7 @@ class CustomNavElementGateway extends CommonDao {
     function createCustomNavElement($element, $heskSettings) {
         $this->init();
 
-        $rs = hesk_dbQuery("SELECT MAX(`sort`) FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
+        $rs = hesk_dbQuery("SELECT MAX(`sort`) AS `sort` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
             WHERE `place` = " . intval($element->place));
         $maxSort = hesk_dbFetchAssoc($rs);
         $sortValue = intval($maxSort['sort']) + 1;
@@ -125,8 +127,8 @@ class CustomNavElementGateway extends CommonDao {
         $imageUrl = $element->imageUrl == null ? 'NULL' : "'" . hesk_dbEscape($element->imageUrl) . "'";
         $fontIcon = $element->fontIcon == null ? 'NULL' : "'" . hesk_dbEscape($element->fontIcon) . "'";
         hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element`
-            (`image_url`, `font_icon`, `place`, `sort`) 
-            VALUES ({$imageUrl}, {$fontIcon}, " . intval($element->place) . ", " . $sortValue . ")");
+            (`image_url`, `font_icon`, `place`, `sort`, `url`) 
+            VALUES ({$imageUrl}, {$fontIcon}, " . intval($element->place) . ", " . $sortValue . ", '" . hesk_dbEscape($element->url) . "')");
 
         $element->id = hesk_dbInsertID();
 
