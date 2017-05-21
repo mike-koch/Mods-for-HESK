@@ -29,7 +29,7 @@ class CustomNavElementController extends InternalApiController {
         /* @var $handler CustomNavElementHandler */
         $handler = $applicationContext->get[CustomNavElementHandler::class];
 
-        $handler->sortCustomNavElement($id, $direction, $hesk_settings);
+        $handler->sortCustomNavElement(intval($id), $direction, $hesk_settings);
     }
 
     function get($id) {

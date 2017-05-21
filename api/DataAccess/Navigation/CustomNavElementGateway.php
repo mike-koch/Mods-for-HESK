@@ -10,7 +10,8 @@ class CustomNavElementGateway extends CommonDao {
     function getAllCustomNavElements($heskSettings) {
         $this->init();
 
-        $columns = '`t1`.`id`, `t1`.`image_url`, `t1`.`font_icon`, `t1`.`place`, `t1`.`url`, `t2`.`language`, `t2`.`text`, `t2`.`subtext`';
+        $columns = '`t1`.`id`, `t1`.`image_url`, `t1`.`font_icon`, `t1`.`place`, `t1`.`url`, `t1`.`sort`, 
+            `t2`.`language`, `t2`.`text`, `t2`.`subtext`';
 
         $rs = hesk_dbQuery("SELECT {$columns} FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element` AS `t1`
             INNER JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "custom_nav_element_to_text` AS `t2`
@@ -26,7 +27,7 @@ class CustomNavElementGateway extends CommonDao {
             $id = intval($row['id']);
             if ($previousId !== $id) {
                 if ($element !== null) {
-                    $elements[$element->id] = $element;
+                    $elements[] = $element;
                 }
                 $element = new CustomNavElement();
                 $element->id = $id;
@@ -34,6 +35,7 @@ class CustomNavElementGateway extends CommonDao {
                 $element->imageUrl = $row['image_url'];
                 $element->fontIcon = $row['font_icon'];
                 $element->url = $row['url'];
+                $element->sort = $row['sort'];
                 $element->text = array();
                 $element->subtext = array();
             }
@@ -105,6 +107,7 @@ class CustomNavElementGateway extends CommonDao {
             SET `image_url` = {$imageUrl},
                 `font_icon` = {$fontIcon},
                 `url` = '" . hesk_dbEscape($element->url) . "',
+                `sort` = " . intval($element->sort) . ",
                 `place` = " . intval($element->place) .
             " WHERE `id` = " . intval($element->id));
 

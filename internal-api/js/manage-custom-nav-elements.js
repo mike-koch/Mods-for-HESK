@@ -5,6 +5,7 @@ $(document).ready(function() {
     bindEditModal();
     bindCreateModal();
     bindDeleteButton();
+    bindSortButtons();
 
     $('[data-toggle="nav-iconpicker"]').iconpicker({
         iconset: ['fontawesome', 'octicon'],
@@ -318,5 +319,28 @@ function bindDeleteButton() {
                 console.error(data);
             }
         });
+    });
+}
+
+function bindSortButtons() {
+    $(document).on('click', '[data-action="sort"]', function() {
+        $('#overlay').show();
+        var heskUrl = $('#heskUrl').text();
+        var direction = $(this).data('direction');
+        var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
+
+        $.ajax({
+            method: 'POST',
+            url: heskUrl + '/api/v1-internal/custom-navigation/' + element.id + '/sort/' + direction,
+            headers: { 'X-Internal-Call': true },
+            success: function() {
+                console.log('Resorted');
+                loadTable();
+            },
+            error: function(data) {
+                console.error(data);
+                $('#overlay').hide();
+            }
+        })
     });
 }

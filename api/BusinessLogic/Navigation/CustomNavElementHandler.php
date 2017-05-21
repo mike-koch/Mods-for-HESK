@@ -22,8 +22,10 @@ class CustomNavElementHandler {
     function getCustomNavElement($id, $heskSettings) {
         $elements = $this->getAllCustomNavElements($heskSettings);
 
-        if (isset($elements[$id])) {
-            return $elements[$id];
+        foreach ($elements as $element) {
+            if ($element->id === intval($id)) {
+                return output($element);
+            }
         }
 
         throw new ApiFriendlyException("Custom nav element {$id} not found!", "Element Not Found", 404);
@@ -47,15 +49,22 @@ class CustomNavElementHandler {
 
     function sortCustomNavElement($elementId, $direction, $heskSettings) {
         /* @var $element CustomNavElement */
-        $element = $this->customNavElementGateway->getAllCustomNavElements($heskSettings)[$elementId];
-
-        if ($direction === 'up') {
-            $element->sort -= 15;
-        } else {
-            $element->sort += 15;
+        $elements = $this->customNavElementGateway->getAllCustomNavElements($heskSettings);
+        $elementToChange = null;
+        foreach ($elements as $element) {
+            if ($element->id === intval($elementId)) {
+                $elementToChange = $element;
+            }
         }
 
-        $this->customNavElementGateway->saveCustomNavElement($element, $heskSettings);
+
+        if ($direction === Direction::UP) {
+            $elementToChange->sort -= 15;
+        } else {
+            $elementToChange->sort += 15;
+        }
+
+        $this->customNavElementGateway->saveCustomNavElement($elementToChange, $heskSettings);
         $this->customNavElementGateway->resortAllElements($heskSettings);
     }
 }
