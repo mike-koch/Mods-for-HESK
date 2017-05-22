@@ -291,3 +291,7 @@ div.ticket-info {
 .black {
     color: black;
 }
+
+#toast-container > div {
+    opacity: 1;
+}

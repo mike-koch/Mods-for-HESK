@@ -89,35 +89,51 @@ $(document).ready(function() {
             method = 'PUT';
         }
 
+        $modal.find('#action-buttons').find('.cancel-button').attr('disabled', 'disabled');
+        $modal.find('#action-buttons').find('.save-button').attr('disabled', 'disabled');
+
         $.ajax({
             method: method,
             url: url,
             headers: { 'X-Internal-Call': true },
             data: JSON.stringify(data),
             success: function(data) {
-                loadTable($modal);
+                if (id === -1) {
+                    mfhAlert.success(mfhLang.text('custom_nav_element_created'));
+                } else {
+                    mfhAlert.success(mfhLang.text('custom_nav_element_saved'));
+                }
+                $modal.modal('hide');
+                loadTable();
             },
             error: function(data) {
+                mfhAlert.error("[!]Error saving custom nav element (" + data.responseJSON.logId + ")");
                 console.error(data);
+            },
+            complete: function() {
+                $modal.find('#action-buttons').find('.cancel-button').removeAttr('disabled');
+                $modal.find('#action-buttons').find('.save-button').removeAttr('disabled');
             }
         });
     });
 });
 
-function loadTable(modalToClose) {
+function loadTable() {
+    $('#overlay').show();
     var heskUrl = $('#heskUrl').text();
-    var notFoundText = $('#lang_no_custom_nav_elements_found').text();
+    var notFoundText = mfhLang.text('no_custom_nav_elements_found');
     var places = [];
-    places[1] = 'Homepage - Block';
-    places[2] = 'Customer Navbar';
-    places[3] = 'Staff Navbar';
+    var $tableBody = $('#table-body');
+    places[1] = mfhLang.text('homepage_block');
+    places[2] = mfhLang.text('customer_navigation');
+    places[3] = mfhLang.text('staff_navigation');
 
     $.ajax({
         method: 'GET',
         url: heskUrl + '/api/v1-internal/custom-navigation/all',
         headers: { 'X-Internal-Call': true },
         success: function(data) {
-            $('#table-body').html('');
+            $tableBody.html('');
             elements = [];
 
             if (data.length === 0) {
@@ -125,17 +141,12 @@ function loadTable(modalToClose) {
                 return;
             }
 
-            $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[1] + '</b></i></td></tr>');
-            var currentPlace = 1;
+            var currentPlace = 0;
             var addedElementToPlace = false;
             var first = true;
             var lastElement = null;
             $.each(data, function() {
                 if (this.place !== currentPlace) {
-                    if (!addedElementToPlace) {
-                        $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
-                    }
-
                     if (lastElement !== null) {
                         //-- Hide the down arrow on the last element
                         $('[data-value="' + lastElement.id + '"]').parent().parent()
@@ -145,7 +156,6 @@ function loadTable(modalToClose) {
 
                     $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[this.place] + '</b></i></td></tr>');
                     currentPlace = this.place;
-                    console.log(this);
                     addedElementToPlace = false;
                     first = true;
                 }
@@ -181,7 +191,7 @@ function loadTable(modalToClose) {
                     first = false;
                 }
 
-                $('#table-body').append($template);
+                $tableBody.append($template);
 
                 elements[this.id] = this;
 
@@ -189,27 +199,14 @@ function loadTable(modalToClose) {
                 lastElement = this;
             });
 
-            //-- Add missing headers if no elements are in them
-            if (currentPlace === 1) {
-                $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[2] + '</b></i></td></tr>');
-                $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
-            }
-            if (currentPlace === 1 || currentPlace === 2) {
-                $('#table-body').append('<tr><td colspan="6" class="bg-gray"><i><b>' + places[3] + '</b></i></td></tr>');
-                $('#table-body').append('<tr><td colspan="6">' + notFoundText + '</td></tr>');
-            }
-
             if (lastElement) {
                 //-- Hide the down arrow on the last element
                 $('[data-value="' + lastElement.id + '"]').parent().parent()
                     .find('[data-direction="down"]').css('visibility', 'hidden');
             }
-
-            if (modalToClose !== undefined) {
-                modalToClose.modal('hide');
-            }
         },
         error: function(data) {
+            mfhAlert.errorWithLog(mfhLang.text('failed_to_load_custom_nav_elements'), data.responseJSON);
             console.error(data);
         },
         complete: function() {
@@ -229,6 +226,8 @@ function bindEditModal() {
         var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
         var $modal = $('#nav-element-modal');
 
+        $modal.find('#edit-label').show();
+        $modal.find('#crate-label').hide();
         $modal.find('select[name="place"]').val(element.place);
         $modal.find('input[name="id"]').val(element.id);
         $modal.find('input[name="url"]').val(element.url);
@@ -272,6 +271,8 @@ function bindEditModal() {
 function bindCreateModal() {
     $('#create-button').click(function() {
         var $modal = $('#nav-element-modal');
+        $modal.find('#edit-label').hide();
+        $modal.find('#crate-label').show();
         $modal.find('select[name="place"]').val(1);
         $modal.find('input[name="id"]').val(-1);
         var $textLanguages = $modal.find('[data-text-language]');
@@ -312,10 +313,12 @@ function bindDeleteButton() {
             url: heskUrl + '/api/v1-internal/custom-navigation/' + element.id,
             headers: { 'X-Internal-Call': true },
             success: function() {
-                console.log('DELETED!');
+                mfhAlert.success(mfhLang.text('custom_nav_element_deleted'));
                 loadTable();
             },
             error: function(data) {
+                $('#overlay').hide();
+                mfhAlert.errorWithLog(mfhLang.text('error_deleting_custom_nav_element'), data.responseJSON);
                 console.error(data);
             }
         });
@@ -334,10 +337,10 @@ function bindSortButtons() {
             url: heskUrl + '/api/v1-internal/custom-navigation/' + element.id + '/sort/' + direction,
             headers: { 'X-Internal-Call': true },
             success: function() {
-                console.log('Resorted');
                 loadTable();
             },
             error: function(data) {
+                mfhAlert.errorWithLog(mfhLang.text('error_sorting_custom_nav_elements'), data.responseJSON);
                 console.error(data);
                 $('#overlay').hide();
             }

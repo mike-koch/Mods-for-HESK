@@ -3,6 +3,7 @@
 namespace Controllers\Navigation;
 
 
+use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Helpers;
 use BusinessLogic\Navigation\CustomNavElement;
 use BusinessLogic\Navigation\CustomNavElementHandler;

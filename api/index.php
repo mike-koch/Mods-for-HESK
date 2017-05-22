@@ -98,14 +98,14 @@ function exceptionHandler($exception) {
                 $userContext, $hesk_settings);
 
         $logIdText = $logId === null ? "Additionally, the error could not be logged! :'(" : "Log ID: {$logId}";
-        print_error("SQL Exception", "Fought an uncaught SQL exception. Check the logs for more information. {$logIdText}");
+        print_error("SQL Exception", "Fought an uncaught SQL exception. Check the logs for more information. {$logIdText}", $logId);
     } else {
         $logId = tryToLog(getLoggingLocation($exception),
             $exception->getMessage(), $exception->getTraceAsString(),
             $userContext, $hesk_settings);
 
         $logIdText = $logId === null ? "Additionally, the error could not be logged! :'(" : "Log ID: {$logId}";
-        print_error("Exception Occurred", "Fought an uncaught exception. Check the logs for more information. {$logIdText}");
+        print_error("Exception Occurred", "Fought an uncaught exception. Check the logs for more information. {$logIdText}", $logId);
     }
 
     die();

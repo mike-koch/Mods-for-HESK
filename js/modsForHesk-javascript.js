@@ -84,7 +84,11 @@ var loadJquery = function()
     $('[data-hide]').click(function() {
         var hide = $(this).attr('data-hide');
         $('#' + hide).hide();
-    })
+    });
+
+    //-- Initialize toastr properties
+    toastr.options.progressBar = true;
+    toastr.options.closeButton = true;
 };
 
 function refreshBackgroundVolatileItems() {
