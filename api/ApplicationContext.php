@@ -9,6 +9,7 @@ use BusinessLogic\Emails\EmailSenderHelper;
 use BusinessLogic\Emails\EmailTemplateParser;
 use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Emails\MailgunEmailSender;
+use BusinessLogic\Navigation\CustomNavElementHandler;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Security\UserContextBuilder;
 use BusinessLogic\Security\UserToTicketChecker;
@@ -30,6 +31,7 @@ use DataAccess\Files\FileDeleter;
 use DataAccess\Files\FileReader;
 use DataAccess\Files\FileWriter;
 use DataAccess\Logging\LoggingGateway;
+use DataAccess\Navigation\CustomNavElementGateway;
 use DataAccess\Security\BanGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
@@ -41,6 +43,9 @@ use DataAccess\Tickets\VerifiedEmailGateway;
 class ApplicationContext {
     public $get;
 
+    /**
+     * ApplicationContext constructor.
+     */
     function __construct() {
         $this->get = array();
 
@@ -49,6 +54,10 @@ class ApplicationContext {
 
         // API Checker
         $this->get[ApiChecker::class] = new ApiChecker($this->get[ModsForHeskSettingsGateway::class]);
+
+        // Custom Navigation
+        $this->get[CustomNavElementGateway::class] = new CustomNavElementGateway();
+        $this->get[CustomNavElementHandler::class] = new CustomNavElementHandler($this->get[CustomNavElementGateway::class]);
 
         // Logging
         $this->get[LoggingGateway::class] = new LoggingGateway();

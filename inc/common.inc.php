@@ -2143,3 +2143,15 @@ function mfh_get_stars($rating) {
 
     return $markup;
 }
+
+function mfh_get_hidden_fields_for_language($keys) {
+    global $hesklang;
+
+    $output = '<div class="hide">';
+    foreach ($keys as $key) {
+        $output .= sprintf('<p id="lang_%s">%s</p>', $key, $hesklang[$key]);
+    }
+    $output .= '</div>';
+
+    return $output;
+}

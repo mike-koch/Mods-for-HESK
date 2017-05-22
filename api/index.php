@@ -98,14 +98,14 @@ function exceptionHandler($exception) {
                 $userContext, $hesk_settings);
 
         $logIdText = $logId === null ? "Additionally, the error could not be logged! :'(" : "Log ID: {$logId}";
-        print_error("SQL Exception", "Fought an uncaught SQL exception. Check the logs for more information. {$logIdText}");
+        print_error("SQL Exception", "Fought an uncaught SQL exception. Check the logs for more information. {$logIdText}", $logId);
     } else {
         $logId = tryToLog(getLoggingLocation($exception),
             $exception->getMessage(), $exception->getTraceAsString(),
             $userContext, $hesk_settings);
 
         $logIdText = $logId === null ? "Additionally, the error could not be logged! :'(" : "Log ID: {$logId}";
-        print_error("Exception Occurred", "Fought an uncaught exception. Check the logs for more information. {$logIdText}");
+        print_error("Exception Occurred", "Fought an uncaught exception. Check the logs for more information. {$logIdText}", $logId);
     }
 
     die();
@@ -186,6 +186,11 @@ Link::all(array(
     /* Internal use only routes */
     // Resend email response
     '/v1-internal/staff/tickets/{i}/resend-email' => \Controllers\Tickets\ResendTicketEmailToCustomerController::class,
+    // Custom Navigation
+    '/v1-internal/custom-navigation/all' => \Controllers\Navigation\CustomNavElementController::class . '::getAll',
+    '/v1-internal/custom-navigation' => \Controllers\Navigation\CustomNavElementController::class,
+    '/v1-internal/custom-navigation/{i}' => \Controllers\Navigation\CustomNavElementController::class,
+    '/v1-internal/custom-navigation/{i}/sort/{s}' => \Controllers\Navigation\CustomNavElementController::class . '::sort',
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'

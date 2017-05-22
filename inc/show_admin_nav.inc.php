@@ -123,7 +123,26 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                         </li>
                         <?php
                     endif;
-                    ?>
+
+                    $customNavRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element` AS `t1`
+                    INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element_to_text` AS `t2`
+                        ON `t1`.`id` = `t2`.`nav_element_id`
+                        AND `t2`.`language` = '" . hesk_dbEscape($hesk_settings['language']) . "'
+                    WHERE `t1`.`place` = 3");
+
+                    while ($row = hesk_dbFetchAssoc($customNavRs)):
+                        ?>
+                        <li>
+                            <a href="<?php echo $row['url']; ?>">
+                                <?php if ($row['image_url'] !== null): ?>
+                                    <img src="<?php echo $row['image_url']; ?>" alt="<?php echo $row['text']; ?>" <?php echo $iconDisplay; ?>>
+                                <?php else: ?>
+                                    <i class="<?php echo $row['font_icon']; ?>" <?php echo $iconDisplay; ?>></i>
+                                <?php endif; ?>
+                                <?php echo $row['text']; ?>
+                            </a>
+                        </li>
+                    <?php endwhile; ?>
                 </ul>
             </div>
             <!-- Navbar Right Menu -->
