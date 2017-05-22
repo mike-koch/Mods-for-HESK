@@ -14,6 +14,7 @@ $(document).ready(function() {
         searchText: $('#search-icon').text(),
         labelFooter: $('#footer-icon').text(),
         resetButton: false,
+        search: false,
         icon: 'fa fa-adn'
     });
 
@@ -107,7 +108,7 @@ $(document).ready(function() {
                 loadTable();
             },
             error: function(data) {
-                mfhAlert.error("[!]Error saving custom nav element (" + data.responseJSON.logId + ")");
+                mfhAlert.errorWithLog(mfhLang.text('error_saving_custom_nav_element'), data.responseJSON);
                 console.error(data);
             },
             complete: function() {
@@ -227,7 +228,7 @@ function bindEditModal() {
         var $modal = $('#nav-element-modal');
 
         $modal.find('#edit-label').show();
-        $modal.find('#crate-label').hide();
+        $modal.find('#create-label').hide();
         $modal.find('select[name="place"]').val(element.place);
         $modal.find('input[name="id"]').val(element.id);
         $modal.find('input[name="url"]').val(element.url);
@@ -258,7 +259,7 @@ function bindEditModal() {
             $modal.find('#image-url-group').show();
         } else {
             $modal.find('select[name="image-type"]').val('font-icon');
-            $('[data-toggle="iconpicker"]').iconpicker('setIcon', element.fontIcon);
+            $('[data-toggle="nav-iconpicker"]').iconpicker('setIcon', element.fontIcon);
             $modal.find('#font-icon-group').show();
             $modal.find('#image-url-group').hide();
         }
@@ -272,7 +273,7 @@ function bindCreateModal() {
     $('#create-button').click(function() {
         var $modal = $('#nav-element-modal');
         $modal.find('#edit-label').hide();
-        $modal.find('#crate-label').show();
+        $modal.find('#create-label').show();
         $modal.find('select[name="place"]').val(1);
         $modal.find('input[name="id"]').val(-1);
         var $textLanguages = $modal.find('[data-text-language]');

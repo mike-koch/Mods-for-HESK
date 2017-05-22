@@ -75,7 +75,11 @@ $hesklang['create_custom_nav_element_title_case'] = 'Create Custom Nav Element';
 $hesklang['place'] = 'Place';
 $hesklang['image_type'] = 'Image Type';
 $hesklang['image_url'] = 'Image URL';
+$hesklang['image_url_help'] = 'The URL of the image you wish to use. For customer/staff navigation, recommended size is <b>16x16px</b>. For the homepage blocks, recommended size is <b>32x32px</b>.';
 $hesklang['font_icon'] = 'Font Icon';
+$hesklang['error_saving_custom_nav_element'] = 'Error saving custom nav element!';
+$hesklang['place_help'] = 'The location of the custom navigation element.';
+$hesklang['url_help'] = 'The URL where the user should be taken to. Both relative and absolute URLs are supported.';
 
 // ADDED OR MODIFIED IN Mods for HESK 3.0.0
 $hesklang['you_have_x_messages'] = 'You have %s new %s'; // %s: Number of new messages, "message" or "messages", depending on # 

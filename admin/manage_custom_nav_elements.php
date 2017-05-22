@@ -88,7 +88,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="place" class="col-md-4 col-sm-12 control-label"><?php echo $hesklang['place']; ?></label>
+                                <label for="place" class="col-md-4 col-sm-12 control-label">
+                                    <?php echo $hesklang['place']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                       title="<?php echo $hesklang['place']; ?>"
+                                       data-content="<?php echo $hesklang['place_help']; ?>"></i>
+                                </label>
                                 <div class="col-md-8 col-sm-12">
                                     <select name="place" id="place" class="form-control"
                                             data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
@@ -142,7 +147,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="col-md-6 col-sm-12">
                             <h4><?php echo $hesklang['url']; ?></h4>
                             <div class="form-group">
-                                <label for="image-type" class="col-md-4 col-sm-12 control-label"><?php echo $hesklang['url']; ?></label>
+                                <label for="image-type" class="col-md-4 col-sm-12 control-label">
+                                    <?php echo $hesklang['url']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                       title="<?php echo $hesklang['url']; ?>"
+                                       data-content="<?php echo $hesklang['url_help']; ?>"></i>
+                                </label>
                                 <div class="col-md-8 col-sm-12">
                                     <input type="text" name="url" class="form-control"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
@@ -164,7 +174,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="form-group" id="image-url-group">
-                                <label for="image-url" class="col-md-4 col-sm-12 control-label"><?php echo $hesklang['image_url']; ?></label>
+                                <label for="image-url" class="col-md-4 col-sm-12 control-label">
+                                    <?php echo $hesklang['image_url']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                       title="<?php echo $hesklang['image_url']; ?>"
+                                       data-content="<?php echo $hesklang['image_url_help']; ?>"></i>
+                                </label>
                                 <div class="col-md-8 col-sm-12">
                                     <input type="text" name="image-url" class="form-control"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
@@ -219,6 +234,7 @@ echo mfh_get_hidden_fields_for_language(
         'homepage_block',
         'customer_navigation',
         'staff_navigation',
+        'error_saving_custom_nav_element',
     )
 );
 ?>
