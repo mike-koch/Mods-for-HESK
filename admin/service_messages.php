@@ -361,7 +361,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                                 <p style="display:none"
                                                    id="footer-icon"><?php echo $hesklang['sm_iconpicker_footer_label']; ?></p>
 
-                                                <div class="btn btn-default iconpicker-container" data-toggle="iconpicker"
+                                                <div name="icon" class="btn btn-default iconpicker-container" data-toggle="iconpicker"
                                                      data-icon="<?php echo $icon; ?>"></div>
                                             </div>
                                         </div>
