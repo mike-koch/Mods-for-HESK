@@ -1,5 +1,5 @@
 <?php
-\
+
 define('IN_SCRIPT', 1);
 define('VALIDATOR', 1);
 define('HESK_PATH', '../');
