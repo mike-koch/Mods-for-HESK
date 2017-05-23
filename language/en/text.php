@@ -80,6 +80,9 @@ $hesklang['font_icon'] = 'Font Icon';
 $hesklang['error_saving_custom_nav_element'] = 'Error saving custom nav element!';
 $hesklang['place_help'] = 'The location of the custom navigation element.';
 $hesklang['url_help'] = 'The URL where the user should be taken to. Both relative and absolute URLs are supported.';
+$hesklang['common_properties'] = 'Common Properties';
+$hesklang['customer_view'] = 'Customer View';
+$hesklang['admin_panel'] = 'Admin Panel';
 
 // ADDED OR MODIFIED IN Mods for HESK 3.0.0
 $hesklang['you_have_x_messages'] = 'You have %s new %s'; // %s: Number of new messages, "message" or "messages", depending on # 

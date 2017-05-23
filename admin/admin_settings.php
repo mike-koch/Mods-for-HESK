@@ -115,6 +115,7 @@ if ($hesk_settings['attachments']['use'] && !defined('HESK_DEMO')) {
 
     // Check max post size
     $tmp = @ini_get('post_max_size');
+    var_dump($tmp);
     if ($tmp) {
         $last = strtoupper(substr($tmp, -1));
 
@@ -3527,7 +3528,7 @@ $modsForHesk_settings = mfh_getSettings();
                 </div>
             </div>
             <div class="box-body">
-                <h4>Common Properties</h4>
+                <h4><?php echo $hesklang['common_properties']; ?></h4>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
                         <div class="form-group">
@@ -3548,7 +3549,7 @@ $modsForHesk_settings = mfh_getSettings();
                     </div>
                 </div>
 
-                <h4>Customer View</h4>
+                <h4><?php echo $hesklang['customer_view']; ?></h4>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
                         <div class="form-group">
@@ -3731,7 +3732,7 @@ $modsForHesk_settings = mfh_getSettings();
                         </div>
                     </div>
                 </div>
-                <h4>Admin Panel</h4>
+                <h4><?php echo $hesklang['admin_panel']; ?></h4>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="form-group">
