@@ -115,7 +115,6 @@ if ($hesk_settings['attachments']['use'] && !defined('HESK_DEMO')) {
 
     // Check max post size
     $tmp = @ini_get('post_max_size');
-    var_dump($tmp);
     if ($tmp) {
         $last = strtoupper(substr($tmp, -1));
 
