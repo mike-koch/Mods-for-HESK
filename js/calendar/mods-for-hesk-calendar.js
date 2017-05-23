@@ -25,7 +25,7 @@ $(document).ready(function() {
                     updateCategoryVisibility();
                 },
                 error: function(data) {
-                    $.jGrowl($('#lang_error_loading_events').text(), { theme: 'alert-danger', closeTemplate: '' });
+                    mfhAlert.error(mfhLang.text('error_loading_events'));
                 }
             });
         },
@@ -161,11 +161,11 @@ $(document).ready(function() {
             data: data,
             success: function() {
                 removeFromCalendar(data.id);
-                $.jGrowl($('#lang_event_deleted').text(), { theme: 'alert-success', closeTemplate: '' });
+                mfhAlert.success(mfhLang.text('event_deleted'));
                 $('#edit-event-modal').modal('hide');
             },
             error: function() {
-                $.jGrowl($('#lang_error_deleting_event').text(), { theme: 'alert-danger', closeTemplate: '' });
+                mfhAlert.error(mfhLang.text('error_deleting_event'));
             }
         });
     });
@@ -210,7 +210,7 @@ $(document).ready(function() {
                 updateCategoryVisibility();
             },
             error: function() {
-                $.jGrowl($('#lang_error_creating_event').text(), { theme: 'alert-danger', closeTemplate: '' });
+                mfhAlert.error(mfhLang.text('error_creating_event'));
             }
         });
     });
@@ -256,7 +256,7 @@ $(document).ready(function() {
                 $('#edit-event-modal').modal('hide');
             },
             error: function() {
-                $.jGrowl($('#lang_error_updating_event').text(), { theme: 'alert-danger', closeTemplate: '' });
+                mfhAlert.error(mfhLang.text('error_updating_event'));
             }
         });
     });
@@ -267,7 +267,7 @@ $(document).ready(function() {
 function addToCalendar(id, event, successMessage) {
     var eventObject = buildEvent(id, event);
     $('#calendar').fullCalendar('renderEvent', eventObject);
-    $.jGrowl(successMessage, { theme: 'alert-success', closeTemplate: '' });
+    mfhAlert.success(successMessage);
 }
 
 function removeFromCalendar(id) {
@@ -471,10 +471,10 @@ function respondToDragAndDrop(event, delta, revertFunc) {
                     startTime: event.start
                 });
                 $('#calendar').fullCalendar('updateEvent', event);
-                $.jGrowl($('#lang_ticket_due_date_updated').text(), { theme: 'alert-success', closeTemplate: '' });
+                mfhAlert.success(mfhLang.text('ticket_due_date_updated'));
             },
             error: function() {
-                $.jGrowl($('#lang_error_updating_ticket_due_date').text(), { theme: 'alert-danger', closeTemplate: '' });
+                mfhAlert.error(mfhLang.text('error_updating_ticket_due_date'));
                 revertFunc();
             }
         });
@@ -511,10 +511,10 @@ function respondToDragAndDrop(event, delta, revertFunc) {
             url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
             data: data,
             success: function() {
-                $.jGrowl($('#lang_event_updated').text(), { theme: 'alert-success', closeTemplate: '' });
+                mfhAlert.success(mfhLang.text('event_updated'));
             },
             error: function() {
-                $.jGrowl($('#lang_error_updating_event').text(), { theme: 'alert-danger', closeTemplate: '' });
+                mfhAlert.error(mfhLang.text('error_updating_event'));
                 revertFunc();
             }
         });

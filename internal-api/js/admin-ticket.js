@@ -27,13 +27,13 @@ $(document).ready(function() {
                 dueDate: newDueDate
             },
             success: function() {
-                $.jGrowl($('#lang_ticket_due_date_updated').text(), { theme: 'alert-success', closeTemplate: '' });
+                mfhAlert.success(mfhLang.text('ticket_due_date_updated'));
                 $readonlyDueDateContainer.find('span#due-date').text(newDueDate == '' ? $('#lang_none').text() : newDueDate);
                 $readonlyDueDateContainer.show();
                 $editableDueDateContainer.hide();
             },
             error: function() {
-                $.jGrowl($('#lang_error_updating_ticket_due_date').text(), { theme: 'alert-danger', closeTemplate: '' });
+                mfhAlert.error(mfhLang.text('error_updating_ticket_due_date'));
             }
         });
     });
@@ -61,10 +61,10 @@ $(document).ready(function() {
             url: apiUrl,
             headers: { 'X-Internal-Call': true },
             success: function() {
-                $.jGrowl($('#lang_email_notification_sent').text(), { theme: 'alert-success', closeTemplate: '' });
+                mfhAlert.success(mfhLang.text('email_notification_sent'));
             },
             error: function() {
-                $.jGrowl($('#lang_email_notification_resend_failed').text(), { theme: 'alert-danger', closeTemplate: '' });
+                mfhAlert.error(mfhLang.text('email_notification_resend_failed'));
             },
             complete: function() {
                 $this.attr('disabled', false);

@@ -26,7 +26,7 @@ $(document).ready(function() {
                 },
                 error: function(data) {
                     console.error(data);
-                    $.jGrowl($('#lang_error_loading_events').text(), { theme: 'alert-danger', closeTemplate: '' });
+                    mfhAlert.error(mfhLang.text('error_loading_events'));
                 }
             });
         },

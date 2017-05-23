@@ -87,9 +87,9 @@ if (is_dir(HESK_PATH . 'install')) {
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone-basic.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/fullcalendar.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.fancybox.min.css?v=<? echo MODS_FOR_HESK_BUILD ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/toastr.min.css?v=<?php echo MODS_FOR_HESK_BUILD ?>">   
     <?php if (defined('USE_JQUERY_2')): ?>
         <script src="<?php echo HESK_PATH; ?>js/jquery-2.2.4.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php else: ?>
@@ -110,9 +110,9 @@ if (is_dir(HESK_PATH . 'install')) {
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core.php?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.jgrowl.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.fancybox.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/toastr.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
     <style>
         .navbar-default {
             background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
