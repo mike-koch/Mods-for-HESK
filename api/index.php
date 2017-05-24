@@ -18,14 +18,9 @@ function handle404() {
 function before() {
     global $userContext;
 
+    return;
+
     assertApiIsEnabled();
-
-    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-    if (preg_match('/^.*\/v1-public\/staff\/inline-attachment\/\d+$/', $path)) {
-        $userContext = \BusinessLogic\Security\UserContext::buildAnonymousUser();
-        return;
-    }
 
     $internalUse = \BusinessLogic\Helpers::getHeader('X-INTERNAL-CALL');
 
@@ -185,10 +180,9 @@ Link::all(array(
     // Tickets - Staff
     '/v1/staff/tickets/{i}' => \Controllers\Tickets\StaffTicketController::class,
     // Attachments
+    '/v1/tickets/{a}/attachments/{i}' => \Controllers\Attachments\PublicAttachmentController::class . '::getRaw',
     '/v1/staff/tickets/{i}/attachments' => \Controllers\Attachments\StaffTicketAttachmentsController::class,
     '/v1/staff/tickets/{i}/attachments/{i}' => \Controllers\Attachments\StaffTicketAttachmentsController::class,
-    '/v1-internal/staff/tickets/{i}/attachments/{i}/inline' => \Controllers\Attachments\StaffTicketAttachmentsController::class . '::buildInline',
-    '/v1-public/staff/inline-attachment/{i}' => \Controllers\Attachments\StaffTicketAttachmentsController::class . '::viewInline',
     // Statuses
     '/v1/statuses' => \Controllers\Statuses\StatusController::class,
     // Settings
