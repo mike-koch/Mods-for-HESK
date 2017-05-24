@@ -15,8 +15,7 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
 
     /* List attachments */
     $att = explode(',', substr($attachments, 0, -1));
-    $uniq_identifier = null;
-    echo '<div class="table-responsive">';
+    echo '<div class="table-responsive" data-toggle="lightbox">';
     echo '<table class="table table-striped attachment-table">';
     echo '<thead>
         <tr>
@@ -32,10 +31,6 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
     foreach ($att as $myatt) {
         list($att_id, $att_name) = explode('#', $myatt);
 
-        if ($uniq_identifier === null) {
-            $uniq_identifier = $att_id;
-        }
-
         $fileparts = pathinfo($att_name);
         $fontAwesomeIcon = mfh_getFontAwesomeIconForFileExtension($fileparts['extension']);
         echo '
@@ -49,7 +44,7 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
             if ($path == '') {
                 echo '<i class="fa fa-ban fa-4x" data-toggle="tooltip" title="' . $hesklang['attachment_removed'] . '"></i>';
             } else {
-                echo '<a href="' . $path . '" data-fancybox="' . htmlspecialchars($uniq_identifier) . '">
+                echo '<a href="' . $path . '" data-toggle="lightbox-item">
                           <img src="' . $path . '" alt="' . $hesklang['image'] . '" data-toggle="tooltip" title="' . $hesklang['click_to_preview'] . '">
                       </a>';
             }

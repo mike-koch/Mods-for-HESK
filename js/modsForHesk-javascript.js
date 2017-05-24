@@ -86,6 +86,15 @@ var loadJquery = function()
         $('#' + hide).hide();
     });
 
+    $('[data-toggle="lightbox"]').magnificPopup({
+        delegate: 'a[data-toggle="lightbox-item"]',
+        type: 'image',
+        gallery: {
+            enabled: true
+        },
+        closeOnContentClick: true
+    });
+
     //-- Initialize toastr properties
     toastr.options.progressBar = true;
     toastr.options.closeButton = true;

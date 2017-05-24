@@ -42,8 +42,8 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/skins/_all-skins.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.fancybox.min.css?v=<?php echo MODS_FOR_HESK_BUILD ?>">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/toastr.min.css?v=<?php echo MODS_FOR_HESK_BUILD ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/toastr.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/magnific-popup.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
@@ -71,10 +71,10 @@ $modsForHesk_settings = mfh_getSettings();
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core-admin.php?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.slimscroll.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/toastr.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/alerts.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/lang.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.fancybox.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/toastr.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.magnific-popup.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/alerts.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/lang.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;
