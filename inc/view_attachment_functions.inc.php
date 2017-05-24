@@ -44,9 +44,20 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
             if ($path == '') {
                 echo '<i class="fa fa-ban fa-4x" data-toggle="tooltip" title="' . $hesklang['attachment_removed'] . '"></i>';
             } else {
-                echo '<a href="' . $path . '" data-toggle="lightbox-item">
+                echo '<a href="' . $path . '" data-toggle="lightbox-item" class="mfp-image">
                           <img src="' . $path . '" alt="' . $hesklang['image'] . '" data-toggle="tooltip" title="' . $hesklang['click_to_preview'] . '">
                       </a>';
+            }
+        } elseif (in_array($fontAwesomeIcon, array('fa fa-file-word-o', 'fa fa-file-excel-o', 'fa fa-file-powerpoint-o'))) {
+            //-- Get the actual image location and display a thumbnail. It will be linked to a modal to view a larger size.
+            $path = mfh_getSavedNameUrlForAttachment($att_id, $is_staff);
+
+            if ($path == '') {
+                echo '<i class="fa fa-ban fa-4x" data-toggle="tooltip" title="' . $hesklang['attachment_removed'] . '"></i>';
+            } else {
+                echo '<a class="mfp-iframe" data-toggle="lightbox-item" href="https://view.officeapps.live.com/op/embed.aspx?src=' . $path . '">
+                    <i class="' . $fontAwesomeIcon . ' fa-4x"></i>
+                </a>';
             }
         } else {
             //-- Display the FontAwesome icon in the panel's body
