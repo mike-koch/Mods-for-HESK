@@ -31,6 +31,12 @@ class StaffTicketAttachmentsController {
         }
     }
 
+    private static function staticVerifyAttachmentsAreEnabled($heskSettings) {
+        if (!$heskSettings['attachments']['use']) {
+            throw new ApiFriendlyException('Attachments are disabled on this server', 'Attachments Disabled', 404);
+        }
+    }
+
     function post($ticketId) {
         global $hesk_settings, $applicationContext, $userContext;
 
@@ -66,5 +72,14 @@ class StaffTicketAttachmentsController {
         $attachmentHandler->deleteAttachmentFromTicket($ticketId, $attachmentId, $userContext, $hesk_settings);
 
         return http_response_code(204);
+    }
+
+    static function inline($ticketId, $attachmentId) {
+        global $hesk_settings, $applicationContext, $userContext;
+
+        self::staticVerifyAttachmentsAreEnabled($hesk_settings);
+
+        /* @var $attachmentRetriever AttachmentRetriever */
+        $attachmentRetriever = $applicationContext->get[AttachmentRetriever::class];
     }
 }

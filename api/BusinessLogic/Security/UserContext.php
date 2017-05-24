@@ -55,6 +55,10 @@ class UserContext {
     /* @var $active bool */
     public $active;
 
+    function isAnonymousUser() {
+        return $this->id === -1;
+    }
+
     /**
      * Builds a user context based on the current session. **The session must be active!**
      * @param $dataRow array the $_SESSION superglobal or the hesk_users result set
@@ -101,6 +105,12 @@ class UserContext {
         $notifications->overdueTicketUnassigned = boolval($dataRow['notify_overdue_unassigned']);
         $userContext->notificationSettings = $notifications;
 
+        return $userContext;
+    }
+
+    static function buildAnonymousUser() {
+        $userContext = new UserContext();
+        $userContext->id = -1;
         return $userContext;
     }
 }
