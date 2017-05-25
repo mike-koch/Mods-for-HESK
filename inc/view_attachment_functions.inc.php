@@ -51,11 +51,12 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
         } elseif (in_array($fontAwesomeIcon, array('fa fa-file-word-o', 'fa fa-file-excel-o', 'fa fa-file-powerpoint-o'))) {
             //-- Get the actual image location and display a thumbnail. It will be linked to a modal to view a larger size.
             $path = mfh_getSavedNameUrlForAttachment($att_id, $is_staff);
+            $apiPath = preg_replace('/https?:\/\//i', '', $hesk_settings['hesk_url'] . '/api/index.php/v1/tickets/' . $trackingID . '/attachments/' . $att_id);
 
             if ($path == '') {
                 echo '<i class="fa fa-ban fa-4x" data-toggle="tooltip" title="' . $hesklang['attachment_removed'] . '"></i>';
             } else {
-                echo '<a class="mfp-iframe" data-toggle="lightbox-item" href="https://view.officeapps.live.com/op/embed.aspx?src=' . $path . '">
+                echo '<a class="mfp-iframe" data-toggle="lightbox-item" href="https://view.officeapps.live.com/op/embed.aspx?src=' . $apiPath . '">
                     <i class="' . $fontAwesomeIcon . ' fa-4x"></i>
                 </a>';
             }
