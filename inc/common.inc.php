@@ -2032,6 +2032,7 @@ function hesk_getFeatureArray()
         'can_change_notification_settings', /* User can change notification settings */
         'can_view_logs', /* User can view the message logs */
         'can_man_calendar', /* User can manage calendar events */
+        'can_man_custom_nav', /* User can manage custom nav elements */
     );
 }
 

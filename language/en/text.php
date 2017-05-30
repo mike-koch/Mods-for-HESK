@@ -2125,6 +2125,8 @@ $hesklang['url_help'] = 'The URL where the user should be taken to. Both relativ
 $hesklang['common_properties'] = 'Common Properties';
 $hesklang['customer_view'] = 'Customer View';
 $hesklang['admin_panel'] = 'Admin Panel';
+$hesklang['manage_custom_nav_elements'] = 'Manage Custom Nav Elements';
+$hesklang['can_man_custom_nav'] = 'Can manage custom nav elements';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

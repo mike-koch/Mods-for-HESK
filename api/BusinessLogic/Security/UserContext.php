@@ -69,7 +69,11 @@ class UserContext {
         $userContext->email = $dataRow['email'];
         $userContext->signature = $dataRow['signature'];
         $userContext->language = $dataRow['language'];
-        $userContext->categories = explode(',', $dataRow['categories']);
+        if (is_array($dataRow['categories'])) {
+            $userContext->categories = $dataRow['categories'];
+        } else {
+            $userContext->categories = explode(',', $dataRow['categories']);
+        }
         $userContext->permissions = explode(',', $dataRow['heskprivileges']);
         $userContext->autoAssign = boolval($dataRow['autoassign']);
         $userContext->ratingNegative = intval($dataRow['ratingneg']);

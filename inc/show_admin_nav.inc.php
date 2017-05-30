@@ -438,6 +438,21 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             </a>
                         </li>';
                     }
+                    if (hesk_checkPermission('can_man_custom_nav', 0)) {
+                        $number_of_settings++;
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CUSTOM_NAV_ELEMENTS') {
+                            $active = 'active';
+                        }
+
+                        $markup .= '
+                        <li class="' . $active . '">
+                            <a href="manage_custom_nav_elements.php">
+                                <i class="fa fa-fw fa-navicon" ' . $iconDisplay . '></i>
+                                <span>' . $hesklang['manage_custom_nav_elements'] . '</span>
+                            </a>
+                        </li>';
+                    }
                     if ($number_of_settings > 0 &&
                         (hesk_checkPermission('can_view_logs', 0) || hesk_checkPermission('can_man_settings', 0))) {
                         $markup .= '<li class="divider"></li>';
