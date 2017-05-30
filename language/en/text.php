@@ -1965,8 +1965,6 @@ $hesklang['attachment_cancel'] = 'Cancel';
 $hesklang['attachment_confirm_cancel'] = 'Are you sure you want to cancel this upload?';
 $hesklang['attachment_remove'] = 'Remove attachment';
 $hesklang['due_date'] = 'Due Date';
-$hesklang['category_color'] = 'Color';
-$hesklang['category_color_help'] = 'The hex code for the color to be used on the view ticket screen and calendar. Leave blank for no color';
 $hesklang['category_updated'] = 'Changes to <i>%s</i> have been saved';
 $hesklang['new_event'] = 'New Event';
 $hesklang['create_event'] = 'Create Event';
@@ -2127,6 +2125,9 @@ $hesklang['customer_view'] = 'Customer View';
 $hesklang['admin_panel'] = 'Admin Panel';
 $hesklang['manage_custom_nav_elements'] = 'Manage Custom Nav Elements';
 $hesklang['can_man_custom_nav'] = 'Can manage custom nav elements';
+$hesklang['category_background_color'] = 'Background Color';
+$hesklang['category_foreground_color'] = 'Foreground Color';
+$hesklang['category_color_help'] = 'The hex code for the color to be used on the view ticket screen and calendar.';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

@@ -277,11 +277,15 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                     }
 
                     $tmp = $i ? 'White' : 'Blue';
-                    $style = '';
-                    if ($mycat['color'] == null) {
-                        $style .= 'color: black; border: solid 1px #000';
-                    } else {
-                        $style .= 'background: ' . $mycat['color'];
+                    $style = 'background: ' . $mycat['background_color'];
+                    $backgroundVolatile = 'background-volatile';
+                    if ($mycat['foreground_color'] != 'AUTO') {
+                        $style .= '; color: ' . $mycat['foreground_color'];
+                        $backgroundVolatile = '';
+
+                        if ($mycat['display_border_outline']) {
+                            $style .= '; border: solid 1px ' . $mycat['foreground_color'];
+                        }
                     }
                     $i = $i ? 0 : 1;
 
@@ -319,10 +323,12 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
 
                     echo '
                 <tr data-category-id="' . $mycat['id'] . '" data-name="' . htmlspecialchars($mycat['name']) . '"
-                    data-color="'. htmlspecialchars($mycat['color']) . '" data-priority="' . $mycat['priority'] . '"
+                    data-foreground-color="' . htmlspecialchars($mycat['foreground_color']) . '"
+                    data-border="' . $mycat['display_border_outline'] . '"
+                    data-background-color="'. htmlspecialchars($mycat['background_color']) . '" data-priority="' . $mycat['priority'] . '"
                     data-manager="' . $mycat['manager'] . '" data-usage="'. $mycat['usage'] .'">
                 <td style="display: none">' . $mycat['id'] . '</td>
-                <td><span class="label background-volatile category-label" style="'.$style.'">' . $mycat['name'] . '</span></td>
+                <td><span class="label ' . $backgroundVolatile . ' category-label" style="'.$style.'">' . $mycat['name'] . '</span></td>
                 <td width="1" style="white-space: nowrap;">' . $priorities[$mycat['priority']]['formatted'] . '</td>
                 <td><a href="show_tickets.php?category=' . $mycat['id'] . '&amp;s_all=1&amp;s_my=1&amp;s_ot=1&amp;s_un=1" alt="' . $hesklang['list_tickets_cat'] . '" title="' . $hesklang['list_tickets_cat'] . '">' . $all . '</a></td>
                 <td>
@@ -386,15 +392,28 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="color" class="col-sm-3 control-label">
-                                    <?php echo $hesklang['category_color']; ?>
+                                <label for="background-color" class="col-sm-3 control-label">
+                                    <?php echo $hesklang['category_background_color']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                       title="<?php echo htmlspecialchars($hesklang['category_color']); ?>"
+                                       title="<?php echo htmlspecialchars($hesklang['category_background_color']); ?>"
                                        data-content="<?php echo htmlspecialchars($hesklang['category_color_help']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="color" class="form-control category-colorpicker"
-                                           placeholder="<?php echo $hesklang['category_color']; ?>">
+                                    <input type="text" name="background-color" class="form-control category-colorpicker"
+                                           placeholder="<?php echo $hesklang['category_background_color']; ?>">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="foreground-color" class="col-sm-3 control-label">
+                                    <?php echo $hesklang['category_foreground_color']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                       title="<?php echo htmlspecialchars($hesklang['category_foreground_color']); ?>"
+                                       data-content="<?php echo htmlspecialchars($hesklang['category_color_help']); ?>"></i>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="foreground-color" class="form-control category-colorpicker"
+                                           placeholder="<?php echo $hesklang['category_foreground_color']; ?>">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -471,7 +490,8 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
             var name = tempNameElement.value;
 
             var id = $row.attr('data-category-id');
-            var color = $row.attr('data-color');
+            var backgroundColor = $row.attr('data-background-color');
+            var foregroundColor = $row.attr('data-foreground-color');
             var priority = $row.attr('data-priority');
             var manager = $row.attr('data-manager');
             var usage = $row.attr('data-usage');
@@ -482,29 +502,29 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 .find('select[name="manager"]').val(manager).end()
                 .find('input[name="id"]').val(id).end()
                 .find('select[name="usage"]').val(usage).end()
-                .find('input[name="color"]').val(color).end();
+                .find('input[name="background-color"]').val(backgroundColor).end()
+                .find('input[name="foreground-color"]').val(foregroundColor).end();
 
-            var colorpickerOptions = null;
-            if (color == '') {
-                colorpickerOptions = {
-                    format: 'hex'
-                };
-            } else {
-                colorpickerOptions = {
-                    format: 'hex',
-                    color: color
-                };
-            }
-            $modal.find('input[name="color"]')
+            var colorpickerOptions = {
+                format: 'hex',
+                color: backgroundColor
+            };
+            $modal.find('input[name="background-color"]')
                 .colorpicker(colorpickerOptions).end().modal('show');
+            colorpickerOptions = {
+                format: 'hex',
+                color: foregroundColor
+            };
 
-            if (color == '') {
-                $modal.find('input[name="color"]').val('');
-            }
+            $modal.find('input[name="foreground-color"]')
+                .colorpicker(colorpickerOptions).end().modal('show');
         });
 
         $('.cancel-callback').click(function() {
-            $('#edit-category-modal').find('input[name="color"]').val('').colorpicker('destroy').end();
+            var $editCategoryModal = $('#edit-category-modal');
+
+            $editCategoryModal.find('input[name="background-color"]').val('').colorpicker('destroy').end();
+            $editCategoryModal.find('input[name="foreground-color"]').val('').colorpicker('destroy').end();
         });
     });
 </script>
