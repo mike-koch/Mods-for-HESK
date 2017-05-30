@@ -111,6 +111,7 @@
 }
 
 
+.attachment-table > tbody > tr > td > a > i,
 .attachment-table > tbody > tr > td > i,
 .dropdown-empty > i {
     color: #ddd;

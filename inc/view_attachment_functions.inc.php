@@ -56,7 +56,7 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
                 echo '<i class="fa fa-ban fa-4x" data-toggle="tooltip" title="' . $hesklang['attachment_removed'] . '"></i>';
             } else {
                 echo '<a class="mfp-iframe" data-toggle="lightbox-item" href="https://view.officeapps.live.com/op/embed.aspx?src=' . $path . '">
-                    <i class="' . $fontAwesomeIcon . ' fa-4x"></i>
+                    <i class="' . $fontAwesomeIcon . ' fa-4x" data-toggle="tooltip"  title="' . $hesklang['click_to_preview'] . '"></i>
                 </a>';
             }
         } else {
