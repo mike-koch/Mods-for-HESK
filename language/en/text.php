@@ -2128,6 +2128,8 @@ $hesklang['can_man_custom_nav'] = 'Can manage custom nav elements';
 $hesklang['category_background_color'] = 'Background Color';
 $hesklang['category_foreground_color'] = 'Foreground Color';
 $hesklang['category_color_help'] = 'The hex code for the color to be used on the view ticket screen and calendar.';
+$hesklang['category_display_border'] = 'Display Border';
+$hesklang['category_display_border_help'] = 'Choose to decide whether or not to display a border around the category (uses foreground color)';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

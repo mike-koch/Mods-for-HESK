@@ -400,7 +400,8 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                 </label>
                                 <div class="col-sm-9">
                                     <input type="text" name="background-color" class="form-control category-colorpicker"
-                                           placeholder="<?php echo $hesklang['category_background_color']; ?>">
+                                           placeholder="<?php echo $hesklang['category_background_color']; ?>"
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -413,8 +414,32 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                 </label>
                                 <div class="col-sm-9">
                                     <input type="text" name="foreground-color" class="form-control category-colorpicker"
-                                           placeholder="<?php echo $hesklang['category_foreground_color']; ?>">
+                                           placeholder="<?php echo $hesklang['category_foreground_color']; ?>"
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           required>
                                     <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="display-border" class="col-sm-3 control-label">
+                                    <?php echo $hesklang['category_display_border']; ?>
+                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                       title="<?php echo htmlspecialchars($hesklang['category_display_border']); ?>"
+                                       data-content="<?php echo htmlspecialchars($hesklang['category_display_border_help']); ?>"></i>
+                                </label>
+                                <div class="col-sm-9 form-inline">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="display-border" value="1">
+                                            <?php echo $hesklang['yes']; ?>
+                                        </label>
+                                    </div>&nbsp;&nbsp;&nbsp;
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="display-border" value="0" checked>
+                                            <?php echo $hesklang['no']; ?>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -649,9 +674,9 @@ function new_cat()
     /* Category name */
     $catname = hesk_input(hesk_POST('name'), $hesklang['enter_cat_name'], 'manage_categories.php');
 
-    $color = hesk_POST('color', null);
-    $color = str_replace('#', '', $color);
-    $color = $color != null ? "'#" . hesk_dbEscape($color) . "'" : 'NULL';
+    $background_color = hesk_POST('background-color', '#ffffff');
+    $foreground_color = hesk_POST('foreground-color', '#000000');
+    $display_border = hesk_POST('display-border', 0);
 
     $usage = hesk_POST('usage', 0);
 
@@ -667,7 +692,11 @@ function new_cat()
     $row = hesk_dbFetchRow($res);
     $my_order = $row[0] + 10;
 
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` (`name`,`cat_order`,`autoassign`,`type`, `priority`, `color`, `usage`) VALUES ('" . hesk_dbEscape($catname) . "','" . intval($my_order) . "','" . intval($_SESSION['cat_autoassign']) . "','" . intval($_SESSION['cat_type']) . "','{$_SESSION['cat_priority']}', {$color}, " . intval($usage) . ")");
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` 
+        (`name`,`cat_order`,`autoassign`,`type`, `priority`, `background_color`, `foreground_color`, `display_border_outline`, `usage`) VALUES 
+        ('" . hesk_dbEscape($catname) . "','" . intval($my_order) . "','" . intval($_SESSION['cat_autoassign']) . "',
+        '" . intval($_SESSION['cat_type']) . "','{$_SESSION['cat_priority']}', '" . hesk_dbEscape($background_color) . "', 
+        '" . hesk_dbEscape($foreground_color) . "', '" . intval($display_border) . "', " . intval($usage) . ")");
 
     hesk_cleanSessionVars('catname');
     hesk_cleanSessionVars('cat_autoassign');
@@ -867,6 +896,8 @@ function get_manager($user_id, $user_array) {
             return $user['name'];
         }
     }
+
+    return 'Error!';
 }
 
 ?>
