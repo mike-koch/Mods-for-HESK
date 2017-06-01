@@ -160,7 +160,9 @@ hesk_dbConnect();
             $all_good = $all_good & run_column_check('calendar_event_reminder', '`email_sent`');
             $all_good = $all_good & run_column_check('tickets', '`due_date`');
             $all_good = $all_good & run_column_check('tickets', '`overdue_email_sent`');
-            $all_good = $all_good & run_column_check('categories', '`color`');
+
+            // Changed in 3.1.0
+            //$all_good = $all_good & run_column_check('categories', '`color`');
             $all_good = $all_good & run_column_check('categories', '`usage`');
             $all_good = $all_good & run_column_check('users', '`notify_overdue_unassigned`');
             $all_good = $all_good & run_column_check('users', '`default_calendar_view`');

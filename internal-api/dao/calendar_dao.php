@@ -6,7 +6,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
     $start_time_sql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($start) . " / 1000), @@session.time_zone, '+00:00')";
     $end_time_sql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($end) . " / 1000), @@session.time_zone, '+00:00')";
 
-    $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color` ";
+    $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`background_color` AS `category_color` ";
 
     if ($staff) {
         $sql .= ",`reminders`.`amount` AS `reminder_value`, `reminders`.`unit` AS `reminder_unit` ";
@@ -63,7 +63,7 @@ function get_events($start, $end, $hesk_settings, $staff = true) {
         $current_date = hesk_date();
         $hesk_settings['timeformat'] = $old_time_setting;
 
-        $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`color` AS `category_color`,
+        $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`background_color` AS `category_color`,
           CASE WHEN `due_date` < '{$current_date}' THEN 1 ELSE 0 END AS `overdue`, `owner`.`name` AS `owner_name`, `tickets`.`owner` AS `owner_id`,
            `tickets`.`priority` AS `priority`
         FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `tickets`

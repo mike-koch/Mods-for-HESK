@@ -287,6 +287,11 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                             $style .= '; border: solid 1px ' . $mycat['foreground_color'];
                         }
                     }
+
+                    if ($mycat['foreground_color'] == 'AUTO') {
+                        $mycat['foreground_color'] = '';
+                    }
+
                     $i = $i ? 0 : 1;
 
                     /* Number of tickets and graph width */
@@ -325,7 +330,8 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 <tr data-category-id="' . $mycat['id'] . '" data-name="' . htmlspecialchars($mycat['name']) . '"
                     data-foreground-color="' . htmlspecialchars($mycat['foreground_color']) . '"
                     data-border="' . $mycat['display_border_outline'] . '"
-                    data-background-color="'. htmlspecialchars($mycat['background_color']) . '" data-priority="' . $mycat['priority'] . '"
+                    data-background-color="'. htmlspecialchars($mycat['background_color']) . '"
+                    data-priority="' . $mycat['priority'] . '"
                     data-manager="' . $mycat['manager'] . '" data-usage="'. $mycat['usage'] .'">
                 <td style="display: none">' . $mycat['id'] . '</td>
                 <td><span class="label ' . $backgroundVolatile . ' category-label" style="'.$style.'">' . $mycat['name'] . '</span></td>
@@ -334,7 +340,6 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 <td>
                     <div class="progress" style="width: 160px; margin-bottom: 0" title="' . sprintf($hesklang['perat'], $width_all . '%') . '" data-toggle="tooltip">
                         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: ' . $width_all . '%">
-                            <span class="sr-only">40% Complete (success)</span>
                         </div>
                     </div>
                 </td>
@@ -396,12 +401,13 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                     <?php echo $hesklang['category_background_color']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                        title="<?php echo htmlspecialchars($hesklang['category_background_color']); ?>"
-                                       data-content="<?php echo htmlspecialchars($hesklang['category_color_help']); ?>"></i>
+                                       data-content="<?php echo htmlspecialchars($hesklang['category_background_color_help']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
                                     <input type="text" name="background-color" class="form-control category-colorpicker"
                                            placeholder="<?php echo $hesklang['category_background_color']; ?>"
-                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>">
+                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                           required>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -410,20 +416,18 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                                     <?php echo $hesklang['category_foreground_color']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                        title="<?php echo htmlspecialchars($hesklang['category_foreground_color']); ?>"
-                                       data-content="<?php echo htmlspecialchars($hesklang['category_color_help']); ?>"></i>
+                                       data-content="<?php echo htmlspecialchars($hesklang['category_foreground_color_help']); ?>"></i>
                                 </label>
                                 <div class="col-sm-9">
                                     <input type="text" name="foreground-color" class="form-control category-colorpicker"
-                                           placeholder="<?php echo $hesklang['category_foreground_color']; ?>"
-                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                           required>
+                                           placeholder="<?php echo $hesklang['category_foreground_color']; ?>">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="display-border" class="col-sm-3 control-label">
                                     <?php echo $hesklang['category_display_border']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
                                        title="<?php echo htmlspecialchars($hesklang['category_display_border']); ?>"
                                        data-content="<?php echo htmlspecialchars($hesklang['category_display_border_help']); ?>"></i>
                                 </label>
@@ -536,10 +540,13 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
             };
             $modal.find('input[name="background-color"]')
                 .colorpicker(colorpickerOptions).end().modal('show');
+
             colorpickerOptions = {
-                format: 'hex',
-                color: foregroundColor
+                format: 'hex'
             };
+            if (foregroundColor != '') {
+                colorpickerOptions.color = foregroundColor;
+            }
 
             $modal.find('input[name="foreground-color"]')
                 .colorpicker(colorpickerOptions).end().modal('show');
@@ -677,6 +684,10 @@ function new_cat()
     $background_color = hesk_POST('background-color', '#ffffff');
     $foreground_color = hesk_POST('foreground-color', '#000000');
     $display_border = hesk_POST('display-border', 0);
+    if ($foreground_color == '') {
+        $foreground_color = 'AUTO';
+        $display_border = 0;
+    }
 
     $usage = hesk_POST('usage', 0);
 
@@ -725,9 +736,13 @@ function update_category()
     $catname = hesk_input(hesk_POST('name'), $hesklang['cat_ren_name'], $_SERVER['PHP_SELF']);
     $_SESSION['catname2'] = $catname;
 
-    $color = hesk_POST('color', null);
-    $color = str_replace('#', '', $color);
-    $color = $color != null ? "'#" . hesk_dbEscape($color) . "'" : 'NULL';
+    $background_color = hesk_POST('background-color', '#ffffff');
+    $foreground_color = hesk_POST('foreground-color', '#000000');
+    $display_border = hesk_POST('display-border', 0);
+    if ($foreground_color == '') {
+        $foreground_color = 'AUTO';
+        $display_border = 0;
+    }
     $manager = hesk_POST('manager', 0);
     $priority = hesk_POST('priority', 0);
     $usage = hesk_POST('usage', 0);
@@ -736,7 +751,9 @@ function update_category()
     hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `name`='" . hesk_dbEscape($catname) . "',
      `priority` = '" . hesk_dbEscape($priority) . "',
      `manager` = " . intval($manager) . ",
-     `color` = " . $color . ",
+     `background_color` = '" . hesk_dbEscape($background_color) . "',
+     `foreground_color` = '" . hesk_dbEscape($foreground_color) . "',
+     `display_border_outline` = '" . intval($display_border) . "',
      `usage` = " . intval($usage) . "
      WHERE `id`='" . intval($catid) . "'");
 

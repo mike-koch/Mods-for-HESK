@@ -267,14 +267,15 @@ div.ticket-info {
     color: #444;
 }
 
+.event-category[data-checked="0"] {
+    background: #777 !important;
+    border: none !important;
+    color: #aaa !important;
+}
+
 .event-category:hover {
     border: solid 1px #fff !important;
     cursor: pointer;
-}
-
-.event-category[data-checked="0"] {
-    background: #777 !important;
-    color: #aaa !important;
 }
 
 .anchor {
