@@ -49,7 +49,7 @@ $(document).ready(function() {
         var ticketId = $this.data('ticket-id');
         var replyId = $this.data('reply-id');
         var heskUrl = $('span#heskUrl').text();
-        var apiUrl = heskUrl + '/api/v1-internal/staff/tickets/' + ticketId + '/resend-email';
+        var apiUrl = heskUrl + '/api/index.php/v1-internal/staff/tickets/' + ticketId + '/resend-email';
 
         if (replyId !== undefined) {
             apiUrl += '?replyId=' + replyId;

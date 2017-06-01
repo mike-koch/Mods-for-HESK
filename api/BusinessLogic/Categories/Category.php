@@ -32,9 +32,19 @@ class Category {
     public $usage;
 
     /**
-     * @var string? The color of the Categories
+     * @var string
      */
-    public $color;
+    public $backgroundColor;
+
+    /**
+     * @var string
+     */
+    public $foregroundColor;
+
+    /**
+     * @var bool
+     */
+    public $displayBorder;
 
     /**
      * @var int The default Tickets priority

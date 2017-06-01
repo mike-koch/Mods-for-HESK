@@ -28,7 +28,9 @@ class CategoryGateway extends CommonDao {
             $category->autoAssign = $row['autoassign'] == 1;
             $category->type = intval($row['type']);
             $category->usage = intval($row['usage']);
-            $category->color = $row['color'];
+            $category->backgroundColor = $row['background_color'];
+            $category->foregroundColor = $row['foreground_color'];
+            $category->displayBorder = $row['display_border_outline'] === '1';
             $category->priority = intval($row['priority']);
             $category->manager = intval($row['manager']) == 0 ? NULL : intval($row['manager']);
             $results[$category->id] = $category;
