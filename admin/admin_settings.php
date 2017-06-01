@@ -3791,6 +3791,19 @@ $modsForHesk_settings = mfh_getSettings();
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="login-background" class="col-sm-3 col-xs-5 control-label">
+                                LOGIN BACKGROUND [!]
+                            </label>
+                            <div class="col-sm-9 col-xs-7">
+                                <input type="text" name="login-background" class="form-control" placeholder="LOGIN BACKGROUND [!]"
+                                       value="<?php echo $modsForHesk_settings['login_background']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-group" style="margin-left: 10px">

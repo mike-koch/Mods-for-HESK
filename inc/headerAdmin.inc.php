@@ -92,7 +92,7 @@ $modsForHesk_settings = mfh_getSettings();
 
         <?php if (defined('PAGE_TITLE') && PAGE_TITLE == 'LOGIN'): ?>
         body {
-            background: #d2d6de;
+            background: <?php echo $modsForHesk_settings['login_background']; ?>;
         }
         <?php endif; ?>
     </style>
