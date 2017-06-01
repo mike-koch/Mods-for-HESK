@@ -78,8 +78,16 @@ $(document).ready(function() {
                 .tip()
                 .css('padding', '0')
                 .find('.popover-title')
-                .css('background-color', event.color === '#fff' ? '#f7f7f7' : event.color)
+                .css('background-color', event.backgroundColor)
                 .addClass('background-volatile');
+
+            if (event.textColor === 'AUTO') {
+                $eventMarkup.addClass('background-volatile');
+            } else {
+                $eventMarkup.data('bs.popover').tip().find('.popover-title')
+                    .css('color', event.textColor)
+                    .css('border', 'solid 1px ' + event.borderColor);
+            }
 
             $eventMarkup.popover('show');
             refreshBackgroundVolatileItems();
@@ -116,15 +124,16 @@ function buildEvent(id, dbObject) {
         categoryId: dbObject.categoryId,
         categoryName: dbObject.categoryName,
         className: 'category-' + dbObject.categoryId,
-        color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
-        textColor: calculateTextColor(dbObject.categoryColor),
+        backgroundColor: dbObject.backgroundColor,
+        textColor: dbObject.foregroundColor === 'AUTO' ? calculateTextColor(dbObject.backgroundColor) : dbObject.foregroundColor,
+        borderColor: parseInt(dbObject.displayBorder) === 1 ? dbObject.foregroundColor : dbObject.backgroundColor,
         reminderValue: dbObject.reminderValue == null ? '' : dbObject.reminderValue,
         reminderUnits: dbObject.reminderUnits
     };
 }
 
 function calculateTextColor(color) {
-    if (color === null || color === '') {
+    if (color === null || color === '' || color === undefined) {
         return 'black';
     }
 
