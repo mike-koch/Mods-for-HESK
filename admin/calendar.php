@@ -33,14 +33,26 @@ if ($modsForHesk_settings['enable_calendar'] == '0') {
 
 // Get categories for the dropdown
 $order_by = $modsForHesk_settings['category_order_column'];
-$rs = hesk_dbQuery("SELECT `id`, `name`, `color` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `usage` <> 1 ORDER BY `" . hesk_dbEscape($order_by) . "`");
+$rs = hesk_dbQuery("SELECT `id`, `name`, `background_color`, `foreground_color`, `display_border_outline` 
+  FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` 
+  WHERE `usage` <> 1 ORDER BY `" . hesk_dbEscape($order_by) . "`");
 $categories = array();
 while ($row = hesk_dbFetchAssoc($rs)) {
     if (!$_SESSION['isadmin'] && !in_array($row['id'], $_SESSION['categories'])) {
         continue;
     }
 
-    $row['css_style'] = $row['color'] == null ? 'background: white; color: black; border: solid 1px #000;' : 'border: solid 1px ' . $row['color'] . '; background: ' . $row['color'];
+    $row['css_style'] = "background: {$row['background_color']};";
+    $row['background_volatile'] = 'background-volatile';
+    if ($row['foreground_color'] != 'AUTO') {
+        $row['background_volatile'] = '';
+        $row['css_style'] .= " color: {$row['foreground_color']};";
+
+        if ($row['display_border_outline'] == '1') {
+            $row['css_style'] .= " border: solid 1px {$row['foreground_color']};";
+        }
+    }
+
     $categories[] = $row;
 }
 
@@ -57,7 +69,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <?php foreach ($categories as $category): ?>
                 <li>
                     <div class="ticket-info">
-                        <div class="hide-on-overflow no-wrap event-category background-volatile"
+                        <div class="hide-on-overflow no-wrap event-category <?php echo $category['background_volatile']; ?>"
                              data-select-toggle="category-toggle" data-name="category-toggle" data-category-value="<?php echo $category['id']; ?>"
                              data-checked="1"
                              data-toggle="tooltip"

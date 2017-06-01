@@ -31,7 +31,16 @@ $categorySql = "SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "c
 $categoryRs = hesk_dbQuery($categorySql);
 while ($row = hesk_dbFetchAssoc($categoryRs))
 {
-    $row['css_style'] = $row['color'] == null ? 'color: black; border: solid 1px #000; padding-right: 14px' : 'background: ' . $row['color'];
+    $row['css_style'] = "background: {$row['background_color']};";
+    $row['background_volatile'] = 'background-volatile';
+    if ($row['foreground_color'] != 'AUTO') {
+        $row['background_volatile'] = '';
+        $row['css_style'] .= " color: {$row['foreground_color']};";
+
+        if ($row['display_border_outline'] == '1') {
+            $row['css_style'] .= " border: solid 1px {$row['foreground_color']};";
+        }
+    }
     $categories[] = $row;
 }
 
@@ -55,7 +64,8 @@ require_once(HESK_PATH . 'inc/header.inc.php');
                             <div class="checkbox">
                                 <input type="checkbox" data-select-target="category-toggle" name="category-toggle" value="<?php echo $category['id']; ?>" checked>
                             </div>
-                            <div class="hide-on-overflow no-wrap event-category background-volatile" style="<?php echo $category['css_style']; ?>">
+                            <div class="hide-on-overflow no-wrap event-category <?php echo $category['background_volatile']; ?>"
+                                 style="<?php echo $category['css_style']; ?>">
                                 <?php echo $category['name']; ?>
                             </div>
                         </li>

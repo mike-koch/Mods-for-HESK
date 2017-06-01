@@ -102,8 +102,16 @@ $(document).ready(function() {
                 .tip()
                 .css('padding', '0')
                 .find('.popover-title')
-                .css('background-color', event.color === '#fff' ? '#f7f7f7' : event.color)
-                .addClass('background-volatile');
+                .css('background-color', event.backgroundColor);
+
+            if (event.textColor === 'AUTO') {
+                $eventMarkup.addClass('background-volatile');
+            } else {
+                $eventMarkup.data('bs.popover').tip().find('.popover-title')
+                        .css('color', event.textColor)
+                        .css('border', 'solid 1px ' + event.borderColor);
+            }
+
 
             $eventMarkup.popover('show');
             refreshBackgroundVolatileItems();
@@ -282,7 +290,9 @@ function buildEvent(id, dbObject) {
             trackingId: dbObject.trackingId,
             start: moment(dbObject.startTime),
             url: dbObject.url,
-            color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
+            backgroundColor: dbObject.backgroundColor,
+            textColor: dbObject.foregroundColor === 'AUTO' ? calculateTextColor(dbObject.backgroundColor) : dbObject.foregroundColor,
+            borderColor: parseInt(dbObject.displayBorder) === 1 ? dbObject.foregroundColor : dbObject.backgroundColor,
             allDay: true,
             type: dbObject.type,
             categoryId: dbObject.categoryId,
@@ -290,7 +300,6 @@ function buildEvent(id, dbObject) {
             className: 'category-' + dbObject.categoryId,
             owner: dbObject.owner,
             priority: dbObject.priority,
-            textColor: calculateTextColor(dbObject.categoryColor),
             fontIconMarkup: getIcon(dbObject)
         };
     }
@@ -299,7 +308,7 @@ function buildEvent(id, dbObject) {
     if (dbObject.allDay) {
         endTime.add(1, 'days');
     }
-
+    console.log(dbObject);
     return {
         id: id,
         title: dbObject.title,
@@ -313,8 +322,9 @@ function buildEvent(id, dbObject) {
         categoryId: dbObject.categoryId,
         categoryName: dbObject.categoryName,
         className: 'category-' + dbObject.categoryId,
-        color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
-        textColor: calculateTextColor(dbObject.categoryColor),
+        backgroundColor: dbObject.backgroundColor,
+        textColor: dbObject.foregroundColor === 'AUTO' ? calculateTextColor(dbObject.backgroundColor) : dbObject.foregroundColor,
+        borderColor: parseInt(dbObject.displayBorder) === 1 ? dbObject.foregroundColor : dbObject.backgroundColor,
         reminderValue: dbObject.reminderValue == null ? '' : dbObject.reminderValue,
         reminderUnits: dbObject.reminderUnits,
         fontIconMarkup: '<i class="fa fa-calendar"></i>'
@@ -332,7 +342,7 @@ function getIcon(dbObject) {
 }
 
 function calculateTextColor(color) {
-    if (color === null || color === '') {
+    if (color === null || color === '' || color === undefined) {
         return 'black';
     }
 
