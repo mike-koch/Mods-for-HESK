@@ -3797,9 +3797,22 @@ $modsForHesk_settings = mfh_getSettings();
                             <label for="login-background" class="col-sm-3 col-xs-5 control-label">
                                 LOGIN BACKGROUND [!]
                             </label>
-                            <div class="col-sm-9 col-xs-7">
-                                <input type="text" name="login-background" class="form-control" placeholder="LOGIN BACKGROUND [!]"
-                                       value="<?php echo $modsForHesk_settings['login_background']; ?>">
+                            <div class="col-sm-9 col-xs-7 form-inline">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="login-background" value="color">
+                                        SOLID COLOR
+                                    </label>
+                                </div>&nbsp;&nbsp;&nbsp;
+                                <input title="LOGIN BACKGROUND COLOR" type="text" name="login-background-color" class="form-control colorpicker-trigger">
+                                <br>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="login-background" value="image">
+                                        IMAGE URL
+                                    </label>
+                                </div>&nbsp;&nbsp;&nbsp;
+                                <input title="LOGIN BACKGROUND COLOR" type="text" name="login-background-url" class="form-control">
                             </div>
                         </div>
                     </div>
