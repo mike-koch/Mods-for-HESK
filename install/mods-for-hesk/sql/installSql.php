@@ -1009,6 +1009,7 @@ function execute310Scripts() {
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ADD COLUMN `foreground_color` VARCHAR(7) NOT NULL DEFAULT 'AUTO'");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ADD COLUMN `display_border_outline` ENUM('0','1') NOT NULL DEFAULT '0'");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` CHANGE `color` `background_color` VARCHAR(7) NOT NULL DEFAULT '#FFFFFF'");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('login_background_type', 'color')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('login_background', '#d2d6de')");
 
     updateVersion('3.1.0');

@@ -3800,19 +3800,39 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-9 col-xs-7 form-inline">
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="login-background" value="color">
+                                        <input type="radio" name="login-background" value="color" <?php if ($modsForHesk_settings['login_background_type'] == 'color') { echo 'checked'; } ?>>
                                         SOLID COLOR
                                     </label>
                                 </div>&nbsp;&nbsp;&nbsp;
-                                <input title="LOGIN BACKGROUND COLOR" type="text" name="login-background-color" class="form-control colorpicker-trigger">
+                                <input title="LOGIN BACKGROUND COLOR" type="text" name="login-background-color" class="form-control" <?php if ($modsForHesk_settings['login_background_type'] == 'image') { echo 'disabled'; } ?>>
                                 <br>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="login-background" value="image">
+                                        <input type="radio" name="login-background" value="image" <?php if ($modsForHesk_settings['login_background_type'] == 'image') { echo 'checked'; } ?>>
                                         IMAGE URL
                                     </label>
-                                </div>&nbsp;&nbsp;&nbsp;
-                                <input title="LOGIN BACKGROUND COLOR" type="text" name="login-background-url" class="form-control">
+                                </div>
+                                <input title="LOGIN BACKGROUND COLOR" type="file" name="login-background-image" style="display: inline;vertical-align: bottom" <?php if ($modsForHesk_settings['login_background_type'] == 'color') { echo 'disabled'; } ?>>
+                                <?php if ($modsForHesk_settings['login_background_type'] == 'image'): ?>
+                                    <br>
+                                    <img src="<?php echo $modsForHesk_settings['login_background']; ?>" alt="Login Background" height="125" width="125" class="push-down-10">
+                                <?php endif; ?>
+                                <script type="text/javascript">
+                                    $('input[name="login-background-color"]').colorpicker({
+                                        format: 'hex',
+                                        color: <?php if ($modsForHesk_settings['login_background_type'] == 'color') { echo "'{$modsForHesk_settings['login_background']}'"; } else { echo 'false'; } ?>
+                                    });
+
+                                    $('input[name="login-background"]').change(function() {
+                                        if ($(this).val() == 'color') {
+                                            $('input[name="login-background-color"]').removeAttr('disabled');
+                                            $('input[name="login-background-image"]').attr('disabled', 'disabled');
+                                        } else {
+                                            $('input[name="login-background-image"]').removeAttr('disabled');
+                                            $('input[name="login-background-color"]').attr('disabled', 'disabled');
+                                        }
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>
