@@ -495,6 +495,25 @@ $set['dropdownItemTextHoverColor'] = hesk_input(hesk_POST('dropdownItemTextHover
 $set['questionMarkColor'] = hesk_input(hesk_POST('questionMarkColor'));
 $set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownItemTextHoverBackgroundColor'));
 $set['admin_color_scheme'] = hesk_input(hesk_POST('admin-color-scheme'));
+
+$set['login_background_type'] = hesk_input(hesk_POST('login-background'));
+
+if ($set['login_background_type'] == 'color') {
+    unlink($hesk_settings['cache_dir'] . '/' . $set['login_background']);
+    $set['login_background'] = hesk_input(hesk_POST('login-background-color'));
+} else {
+    $file_name = $_FILES['login-attachment-image']['name'];
+
+    if (!empty($file_name)) {
+        unlink($hesk_settings['cache_dir'] . '/' . $set['login_background']);
+
+        $file_size = $_FILES['login-attachment-image']['size'];
+        if ($file_size > $hesk_settings['attachments']['max_size']) {
+            return hesk_fileError(sprintf($hesklang['file_too_large'], $file_name));
+        }
+
+    }
+}
 $set['login_background'] = hesk_input(hesk_POST('login-background'));
 mfh_updateSetting('rtl', $set['rtl']);
 mfh_updateSetting('show_icons', $set['show-icons']);
