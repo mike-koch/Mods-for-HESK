@@ -531,7 +531,7 @@ $modsForHesk_settings = mfh_getSettings();
            onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['settings_intro']) . '\n\n' . hesk_makeJsString($hesklang['all_req']); ?>')"><i
                 class="fa fa-question-circle settingsquestionmark"></i></a>
     </h2>
-    <form method="post" action="admin_settings_save.php" name="form1" onsubmit="return hesk_checkFields()"
+    <form method="post" enctype="multipart/form-data" action="admin_settings_save.php" name="form1" onsubmit="return hesk_checkFields()"
           class="form-horizontal" role="form">
 
         <!-- General Settings -->
@@ -3815,7 +3815,7 @@ $modsForHesk_settings = mfh_getSettings();
                                 <input title="LOGIN BACKGROUND COLOR" type="file" name="login-background-image" style="display: inline;vertical-align: bottom" <?php if ($modsForHesk_settings['login_background_type'] == 'color') { echo 'disabled'; } ?>>
                                 <?php if ($modsForHesk_settings['login_background_type'] == 'image'): ?>
                                     <br>
-                                    <img src="<?php echo $modsForHesk_settings['login_background']; ?>" alt="Login Background" height="125" width="125" class="push-down-10">
+                                    <img src="../<?php echo $hesk_settings['cache_dir']; ?>/login-background/<?php echo $modsForHesk_settings['login_background']; ?>" alt="Login Background" height="125" width="125" class="push-down-10">
                                 <?php endif; ?>
                                 <script type="text/javascript">
                                     $('input[name="login-background-color"]').colorpicker({

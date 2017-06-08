@@ -501,16 +501,25 @@ $set['login_background_type'] = hesk_input(hesk_POST('login-background'));
 if ($set['login_background_type'] == 'color') {
     unlink($hesk_settings['cache_dir'] . '/' . $set['login_background']);
     $set['login_background'] = hesk_input(hesk_POST('login-background-color'));
+    if ($set['login_background'] == '') {
+        $set['login_background'] = '#d2d6de';
+    }
 } else {
-    $file_name = hesk_cleanFileName($_FILES['login-attachment-image']['name']);
+    include(HESK_PATH . 'inc/attachments.inc.php');
+    include(HESK_PATH . 'inc/posting_functions.inc.php');
+
+    $file_name = hesk_cleanFileName($_FILES['login-background-image']['name']);
+
 
     if (!empty($file_name)) {
-        $file_size = $_FILES['login-attachment-image']['size'];
+        $file_size = $_FILES['login-background-image']['size'];
         if ($file_size > $hesk_settings['attachments']['max_size']) {
             return hesk_fileError(sprintf($hesklang['file_too_large'], $file_name));
         }
 
-        unlink($hesk_settings['cache_dir'] . '/login-background/' . $set['login_background']);
+        if (file_exists($hesk_settings['cache_dir'] . '/login-background/' . $set['login_background'])) {
+            unlink($hesk_settings['cache_dir'] . '/login-background/' . $set['login_background']);
+        }
 
         $useChars = 'AEUYBDGHJLMNPQRSTVWXZ123456789';
         $tmp = uniqid();
@@ -518,8 +527,10 @@ if ($set['login_background_type'] == 'color') {
             $tmp .= $useChars{mt_rand(0, 29)};
         }
 
-        $file_to_move = $_FILES['login-attachment-image']['tmp_name'];
-        if (!move_uploaded_file($file_to_move, __DIR__ . '/../' . $hesk_settings['cache_dir'] . '/login-background/' . $file_name)) {
+        $file_to_move = $_FILES['login-background-image']['tmp_name'];
+
+
+        if (!move_uploaded_file($file_to_move, dirname(dirname(__FILE__)) . '/' . $hesk_settings['cache_dir'] . '/login-background/' . $file_name)) {
             hesk_error($hesklang['cannot_move_tmp']);
         }
 
@@ -564,6 +575,7 @@ mfh_updateSetting('first_day_of_week', $set['first_day_of_week'], false);
 mfh_updateSetting('default_calendar_view', $set['default_view'], true);
 mfh_updateSetting('admin_color_scheme', $set['admin_color_scheme'], true);
 mfh_updateSetting('login_background', $set['login_background'], true);
+mfh_updateSetting('login_background_type', $set['login_background_type'], true);
 
 // Prepare settings file and save it
 $settings_file_content = '<?php
