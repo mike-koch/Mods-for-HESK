@@ -498,20 +498,24 @@ $set['admin_color_scheme'] = hesk_input(hesk_POST('admin-color-scheme'));
 
 $set['login_background_type'] = hesk_input(hesk_POST('login-background'));
 
+$changedBackground = false;
 if ($set['login_background_type'] == 'color') {
     unlink($hesk_settings['cache_dir'] . '/' . $set['login_background']);
     $set['login_background'] = hesk_input(hesk_POST('login-background-color'));
     if ($set['login_background'] == '') {
         $set['login_background'] = '#d2d6de';
     }
+
+    $changedBackground = true;
 } else {
     include(HESK_PATH . 'inc/attachments.inc.php');
     include(HESK_PATH . 'inc/posting_functions.inc.php');
 
+
     $file_name = hesk_cleanFileName($_FILES['login-background-image']['name']);
 
 
-    if (!empty($file_name)) {
+    if (!empty($_FILES['login-background-image']['name'])) {
         $file_size = $_FILES['login-background-image']['size'];
         if ($file_size > $hesk_settings['attachments']['max_size']) {
             return hesk_fileError(sprintf($hesklang['file_too_large'], $file_name));
@@ -535,6 +539,7 @@ if ($set['login_background_type'] == 'color') {
         }
 
         $set['login_background'] = $file_name;
+        $changedBackground = true;
     }
 }
 mfh_updateSetting('rtl', $set['rtl']);
@@ -574,8 +579,11 @@ mfh_updateSetting('enable_calendar', $set['enable_calendar'], false);
 mfh_updateSetting('first_day_of_week', $set['first_day_of_week'], false);
 mfh_updateSetting('default_calendar_view', $set['default_view'], true);
 mfh_updateSetting('admin_color_scheme', $set['admin_color_scheme'], true);
-mfh_updateSetting('login_background', $set['login_background'], true);
-mfh_updateSetting('login_background_type', $set['login_background_type'], true);
+
+if ($changedBackground) {
+    mfh_updateSetting('login_background', $set['login_background'], true);
+    mfh_updateSetting('login_background_type', $set['login_background_type'], true);
+}
 
 // Prepare settings file and save it
 $settings_file_content = '<?php
