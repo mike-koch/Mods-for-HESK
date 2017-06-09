@@ -3815,7 +3815,7 @@ $modsForHesk_settings = mfh_getSettings();
                                 <input title="LOGIN BACKGROUND COLOR" type="file" name="login-background-image" style="display: inline;vertical-align: bottom" <?php if ($modsForHesk_settings['login_background_type'] == 'color') { echo 'disabled'; } ?>>
                                 <?php if ($modsForHesk_settings['login_background_type'] == 'image'): ?>
                                     <br>
-                                    <img src="../<?php echo $hesk_settings['cache_dir']; ?>/login-background/<?php echo $modsForHesk_settings['login_background']; ?>" alt="Login Background" height="125" width="125" class="push-down-10">
+                                    <img src="../<?php echo $hesk_settings['cache_dir']; ?>/lb_<?php echo $modsForHesk_settings['login_background']; ?>" alt="Login Background" height="125" width="125" class="push-down-10">
                                 <?php endif; ?>
                                 <script type="text/javascript">
                                     $('input[name="login-background-color"]').colorpicker({

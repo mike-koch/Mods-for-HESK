@@ -90,11 +90,26 @@ $modsForHesk_settings = mfh_getSettings();
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
         }
 
-        <?php if (defined('PAGE_TITLE') && PAGE_TITLE == 'LOGIN'): ?>
+        <?php
+        if (defined('PAGE_TITLE') && PAGE_TITLE == 'LOGIN'):
+            if ($modsForHesk_settings['login_background_type'] == 'color'):
+        ?>
         body {
             background: <?php echo $modsForHesk_settings['login_background']; ?>;
         }
-        <?php endif; ?>
+        <?php else: ?>
+        body {
+            background: url('<?php echo HESK_PATH . 'cache/lb_' . $modsForHesk_settings['login_background']; ?>')
+                no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .login-box-background {
+            background: url('<?php echo HESK_PATH . 'cache/lb_' . $modsForHesk_settings['login_background']; ?>')
+                no-repeat center center fixed;
+            background-size: cover;
+        }
+        <?php endif; endif; ?>
     </style>
 
     <?php

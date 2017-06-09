@@ -500,7 +500,7 @@ $set['login_background_type'] = hesk_input(hesk_POST('login-background'));
 
 $changedBackground = false;
 if ($set['login_background_type'] == 'color') {
-    unlink($hesk_settings['cache_dir'] . '/' . $set['login_background']);
+    unlink($hesk_settings['cache_dir'] . '/lb_' . $set['login_background']);
     $set['login_background'] = hesk_input(hesk_POST('login-background-color'));
     if ($set['login_background'] == '') {
         $set['login_background'] = '#d2d6de';
@@ -520,25 +520,22 @@ if ($set['login_background_type'] == 'color') {
         if ($file_size > $hesk_settings['attachments']['max_size']) {
             return hesk_fileError(sprintf($hesklang['file_too_large'], $file_name));
         }
+        $ext = strtolower(strrchr($file_name, "."));
 
-        if (file_exists($hesk_settings['cache_dir'] . '/login-background/' . $set['login_background'])) {
-            unlink($hesk_settings['cache_dir'] . '/login-background/' . $set['login_background']);
+        if (file_exists($hesk_settings['cache_dir'] . '/lb_' . $set['login_background'])) {
+            unlink($hesk_settings['cache_dir'] . '/lb_' . $set['login_background']);
         }
 
-        $useChars = 'AEUYBDGHJLMNPQRSTVWXZ123456789';
-        $tmp = uniqid();
-        for ($j = 1; $j < 10; $j++) {
-            $tmp .= $useChars{mt_rand(0, 29)};
-        }
+        $saved_name = 'login-background' . $ext;
 
         $file_to_move = $_FILES['login-background-image']['tmp_name'];
 
 
-        if (!move_uploaded_file($file_to_move, dirname(dirname(__FILE__)) . '/' . $hesk_settings['cache_dir'] . '/login-background/' . $file_name)) {
+        if (!move_uploaded_file($file_to_move, dirname(dirname(__FILE__)) . '/' . $hesk_settings['cache_dir'] . '/lb_' . $saved_name)) {
             hesk_error($hesklang['cannot_move_tmp']);
         }
 
-        $set['login_background'] = $file_name;
+        $set['login_background'] = $saved_name;
         $changedBackground = true;
     }
 }
