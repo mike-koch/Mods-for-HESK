@@ -4114,7 +4114,7 @@ $modsForHesk_settings = mfh_getSettings();
                         background: #fff;
                         color: black;
                         font: 68.8%/1.5 Verdana, Geneva, Arial, Helvetica, sans-serif;
-                        text-align: left; ?>;
+                        text-align: left;
                     }
 
                     p {
