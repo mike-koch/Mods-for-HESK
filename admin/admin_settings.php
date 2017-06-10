@@ -3427,27 +3427,6 @@ $modsForHesk_settings = mfh_getSettings();
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="rtl" class="col-sm-4 col-xs-12 control-label">
-                        <span class="label label-primary"
-                              data-toggle="tooltip"
-                              title="<?php echo $hesklang['added_in_mods_for_hesk'] ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
-                        <?php echo $hesklang['displayRtl']; ?>
-                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                           title="<?php echo $hesklang['displayRtl']; ?>"
-                           data-content="<?php echo $hesklang['displayRtlHelp']; ?>"></i>
-                    </label>
-
-                    <div class="col-sm-8 col-xs-12">
-                        <div class="checkbox">
-                            <label>
-                                <input id="rtl" name="rtl" type="checkbox" <?php if ($modsForHesk_settings['rtl']) {
-                                    echo 'checked';
-                                } ?>> <?php echo $hesklang['display_rtl']; ?>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="show-icons" class="col-sm-4 col-xs-12 control-label">
                         <span class="label label-primary"
                               data-toggle="tooltip"
@@ -4135,7 +4114,7 @@ $modsForHesk_settings = mfh_getSettings();
                         background: #fff;
                         color: black;
                         font: 68.8%/1.5 Verdana, Geneva, Arial, Helvetica, sans-serif;
-                        text-align: <?php if ($modsForHesk_settings['rtl']) { echo 'right'; } else { echo 'left'; } ?>;
+                        text-align: left; ?>;
                     }
 
                     p {

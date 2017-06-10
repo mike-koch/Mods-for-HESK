@@ -25,7 +25,6 @@ $modsForHesk_settings = array();
 if (is_dir(HESK_PATH . 'install')) {
     define('MAINTENANCE_MODE', true);
     $modsForHesk_settings['navbar_title_url'] = 'javascript:;';
-    $modsForHesk_settings['rtl'] = 0;
     $modsForHesk_settings['use_bootstrap_theme'] = 1;
     $modsForHesk_settings['show_icons'] = 1;
     $modsForHesk_settings['navbarBackgroundColor'] = '#414a5c';
@@ -52,13 +51,7 @@ if (is_dir(HESK_PATH . 'install')) {
     <meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>"/>
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="theme-color" content="<?php echo '#414a5c'; ?>">
-    <?php if ($modsForHesk_settings['rtl']) { ?>
-        <link href="<?php echo HESK_PATH; ?>hesk_style_RTL.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } else { ?>
-        <link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } ?>
+    <link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
           rel="stylesheet"/>
@@ -66,19 +59,10 @@ if (is_dir(HESK_PATH . 'install')) {
           rel="stylesheet" <?php if ($modsForHesk_settings['use_bootstrap_theme'] == 0) {
         echo 'disabled';
     } ?>>
-    <?php if ($modsForHesk_settings['rtl']) { ?>
-        <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>"
-              type="text/css" rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>"
-              type="text/css" rel="stylesheet"/>
-    <?php } else { ?>
-        <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } ?>
+    <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
+          rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
+          rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css">

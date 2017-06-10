@@ -449,7 +449,6 @@ foreach ($postArray as $value) {
 }
 
 // Save the modsForHesk_settings.inc.php file
-$set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
 $set['custom-field-setting'] = empty($_POST['custom-field-setting']) ? 0 : 1;
 $set['customer-email-verification-required'] = empty($_POST['email-verification']) ? 0 : 1;
@@ -591,7 +590,6 @@ if ($set['login_box_header'] == 'image') {
     $changedLoginImage = true;
 }
 
-mfh_updateSetting('rtl', $set['rtl']);
 mfh_updateSetting('show_icons', $set['show-icons']);
 mfh_updateSetting('custom_field_setting', $set['custom-field-setting']);
 mfh_updateSetting('customer_email_verification_required', $set['customer-email-verification-required']);
