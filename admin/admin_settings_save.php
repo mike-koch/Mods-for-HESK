@@ -39,6 +39,8 @@ hesk_checkPermission('can_manage_settings');
 // A security check
 hesk_token_check('POST');
 
+$modsForHesk_settings = mfh_getSettings();
+
 // Demo mode
 if (defined('HESK_DEMO')) {
     hesk_process_messages($hesklang['sdemo'], 'admin_settings.php');
@@ -497,10 +499,14 @@ $set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownIte
 $set['admin_color_scheme'] = hesk_input(hesk_POST('admin-color-scheme'));
 
 $set['login_background_type'] = hesk_input(hesk_POST('login-background'));
+$set['login_box_header'] = hesk_input(hesk_POST('login-box-header'));
 
 $changedBackground = false;
+$loadedAttachmentFuncs = false;
 if ($set['login_background_type'] == 'color') {
-    unlink($hesk_settings['cache_dir'] . '/lb_' . $set['login_background']);
+    if (file_exists($hesk_settings['cache_dir'] . '/lb_' . $set['login_background'])) {
+        unlink($hesk_settings['cache_dir'] . '/lb_' . $set['login_background']);
+    }
     $set['login_background'] = hesk_input(hesk_POST('login-background-color'));
     if ($set['login_background'] == '') {
         $set['login_background'] = '#d2d6de';
@@ -508,8 +514,11 @@ if ($set['login_background_type'] == 'color') {
 
     $changedBackground = true;
 } else {
-    include(HESK_PATH . 'inc/attachments.inc.php');
-    include(HESK_PATH . 'inc/posting_functions.inc.php');
+    if (!$loadedAttachmentFuncs) {
+        include(HESK_PATH . 'inc/attachments.inc.php');
+        include(HESK_PATH . 'inc/posting_functions.inc.php');
+        $loadedAttachmentFuncs = true;
+    }
 
 
     $file_name = hesk_cleanFileName($_FILES['login-background-image']['name']);
@@ -522,8 +531,8 @@ if ($set['login_background_type'] == 'color') {
         }
         $ext = strtolower(strrchr($file_name, "."));
 
-        if (file_exists($hesk_settings['cache_dir'] . '/lb_' . $set['login_background'])) {
-            unlink($hesk_settings['cache_dir'] . '/lb_' . $set['login_background']);
+        if (file_exists($hesk_settings['cache_dir'] . '/lb_' . $modsForHesk_settings['login_background'])) {
+            unlink($hesk_settings['cache_dir'] . '/lb_' . $modsForHesk_settings['login_background']);
         }
 
         $saved_name = 'login-background' . $ext;
@@ -539,6 +548,49 @@ if ($set['login_background_type'] == 'color') {
         $changedBackground = true;
     }
 }
+$changedLoginImage = false;
+if ($set['login_box_header'] == 'image') {
+    if (!$loadedAttachmentFuncs) {
+        include(HESK_PATH . 'inc/attachments.inc.php');
+        include(HESK_PATH . 'inc/posting_functions.inc.php');
+        $loadedAttachmentFuncs = true;
+    }
+
+
+    $file_name = hesk_cleanFileName($_FILES['login-box-header-image']['name']);
+
+    if (!empty($_FILES['login-box-header-image']['name'])) {
+        $file_size = $_FILES['login-box-header-image']['size'];
+        if ($file_size > $hesk_settings['attachments']['max_size']) {
+            return hesk_fileError(sprintf($hesklang['file_too_large'], $file_name));
+        }
+        $ext = strtolower(strrchr($file_name, "."));
+
+        if (file_exists($hesk_settings['cache_dir'] . '/lbh_' . $modsForHesk_settings['login_box_header_image'])) {
+            unlink($hesk_settings['cache_dir'] . '/lbh_' . $modsForHesk_settings['login_box_header_image']);
+        }
+
+        $saved_name = 'login-box-header-image' . $ext;
+
+        $file_to_move = $_FILES['login-box-header-image']['tmp_name'];
+
+
+        if (!move_uploaded_file($file_to_move, dirname(dirname(__FILE__)) . '/' . $hesk_settings['cache_dir'] . '/lbh_' . $saved_name)) {
+            hesk_error($hesklang['cannot_move_tmp']);
+        }
+
+        $set['login_box_header_image'] = $saved_name;
+        $changedLoginImage = true;
+    }
+} else {
+    if (file_exists($hesk_settings['cache_dir'] . '/lbh_' . $set['login_box_header_image'])) {
+        unlink($hesk_settings['cache_dir'] . '/lbh_' . $set['login_box_header_image']);
+    }
+
+    $set['login_box_header_image'] = '';
+    $changedLoginImage = true;
+}
+
 mfh_updateSetting('rtl', $set['rtl']);
 mfh_updateSetting('show_icons', $set['show-icons']);
 mfh_updateSetting('custom_field_setting', $set['custom-field-setting']);
@@ -577,9 +629,14 @@ mfh_updateSetting('first_day_of_week', $set['first_day_of_week'], false);
 mfh_updateSetting('default_calendar_view', $set['default_view'], true);
 mfh_updateSetting('admin_color_scheme', $set['admin_color_scheme'], true);
 
+mfh_updateSetting('login_background_type', $set['login_background_type'], true);
 if ($changedBackground) {
     mfh_updateSetting('login_background', $set['login_background'], true);
-    mfh_updateSetting('login_background_type', $set['login_background_type'], true);
+}
+
+mfh_updateSetting('login_box_header', $set['login_box_header'], true);
+if ($changedLoginImage) {
+    mfh_updateSetting('login_box_header_image', $set['login_box_header_image'], true);
 }
 
 // Prepare settings file and save it

@@ -3791,6 +3791,7 @@ $modsForHesk_settings = mfh_getSettings();
                         </div>
                     </div>
                 </div>
+                <h4>LOGIN PAGE</h4>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="form-group">
@@ -3800,7 +3801,9 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-9 col-xs-7 form-inline">
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="login-background" value="color" <?php if ($modsForHesk_settings['login_background_type'] == 'color') { echo 'checked'; } ?>>
+                                        <input type="radio" name="login-background"
+                                               data-activate="input[name='login-background-color']" data-deactivate="input[name='login-background-image']"
+                                               value="color" <?php if ($modsForHesk_settings['login_background_type'] == 'color') { echo 'checked'; } ?>>
                                         SOLID COLOR
                                     </label>
                                 </div>&nbsp;&nbsp;&nbsp;
@@ -3808,31 +3811,51 @@ $modsForHesk_settings = mfh_getSettings();
                                 <br>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="login-background" value="image" <?php if ($modsForHesk_settings['login_background_type'] == 'image') { echo 'checked'; } ?>>
-                                        IMAGE URL
+                                        <input type="radio" name="login-background"
+                                               data-activate="input[name='login-background-image']" data-deactivate="input[name='login-background-color']"
+                                               value="image" <?php if ($modsForHesk_settings['login_background_type'] == 'image') { echo 'checked'; } ?>>
+                                        IMAGE
                                     </label>
                                 </div>
                                 <input title="LOGIN BACKGROUND COLOR" type="file" name="login-background-image" style="display: inline;vertical-align: bottom" <?php if ($modsForHesk_settings['login_background_type'] == 'color') { echo 'disabled'; } ?>>
                                 <?php if ($modsForHesk_settings['login_background_type'] == 'image'): ?>
                                     <br>
-                                    <img src="../<?php echo $hesk_settings['cache_dir']; ?>/lb_<?php echo $modsForHesk_settings['login_background']; ?>" alt="Login Background" height="125" width="125" class="push-down-10">
+                                    <img src="<?php echo HESK_PATH . $hesk_settings['cache_dir']; ?>/lb_<?php echo $modsForHesk_settings['login_background']; ?>" alt="Login Background" height="125" width="125" class="push-down-10">
                                 <?php endif; ?>
                                 <script type="text/javascript">
                                     $('input[name="login-background-color"]').colorpicker({
                                         format: 'hex',
                                         color: <?php if ($modsForHesk_settings['login_background_type'] == 'color') { echo "'{$modsForHesk_settings['login_background']}'"; } else { echo 'false'; } ?>
                                     });
-
-                                    $('input[name="login-background"]').change(function() {
-                                        if ($(this).val() == 'color') {
-                                            $('input[name="login-background-color"]').removeAttr('disabled');
-                                            $('input[name="login-background-image"]').attr('disabled', 'disabled');
-                                        } else {
-                                            $('input[name="login-background-image"]').removeAttr('disabled');
-                                            $('input[name="login-background-color"]').attr('disabled', 'disabled');
-                                        }
-                                    });
                                 </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="login-box-header" class="col-sm-3 col-xs-5 control-label">
+                                LOGIN BOX HEADER
+                            </label>
+                            <div class="col-sm-9 col-xs-7 form-inline">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="login-box-header" value="helpdesk-title" data-deactivate="input[name='login-box-header-image']" <?php if ($modsForHesk_settings['login_box_header'] == 'helpdesk-title') { echo 'checked'; } ?>>
+                                        HELPDESK TITLE
+                                    </label>
+                                </div><br>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="login-box-header" value="image" data-activate="input[name='login-box-header-image']" <?php if ($modsForHesk_settings['login_box_header'] == 'image') { echo 'checked'; } ?>>
+                                        IMAGE
+                                    </label>
+                                    <input title="LOGIN HEADER IMAGE" type="file" name="login-box-header-image" style="display: inline;vertical-align: bottom" <?php if ($modsForHesk_settings['login_box_header'] == 'helpdesk-title') { echo 'disabled'; } ?>>
+                                    <?php if ($modsForHesk_settings['login_box_header'] == 'image'): ?>
+                                        <br>
+                                        <img src="<?php echo HESK_PATH . $hesk_settings['cache_dir']; ?>/lbh_<?php echo $modsForHesk_settings['login_box_header_image']; ?>" alt="<?php echo $modsForHesk_settings['login_box_header_image']; ?>" height="125" width="125" class="push-down-10">
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                     </div>

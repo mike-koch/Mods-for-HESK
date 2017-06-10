@@ -94,6 +94,16 @@ var loadJquery = function()
         closeOnContentClick: true
     });
 
+    $('[data-activate]').click(function() {
+        var activate = $(this).data('activate');
+        $(activate).removeAttr('disabled');
+    });
+
+    $('[data-deactivate]').click(function() {
+        var deactivate = $(this).data('deactivate');
+        $(deactivate).attr('disabled', 'disabled');
+    });
+
     //-- Initialize toastr properties
     toastr.options.progressBar = true;
     toastr.options.closeButton = true;
