@@ -246,7 +246,7 @@ function do_login()
 
 function print_login()
 {
-	global $hesk_settings, $hesklang;
+	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
     // Tell header to load reCaptcha API if needed
     if ($hesk_settings['recaptcha_use'] == 2)
@@ -279,7 +279,12 @@ function print_login()
                 ?>
             </div>
             <div class="login-logo">
-                <?php echo $hesk_settings['hesk_title']; ?>
+                <?php if ($modsForHesk_settings['login_box_header'] == 'image'): ?>
+                    <img src="<?php echo HESK_PATH . $hesk_settings['cache_dir'] . '/lbh_' . $modsForHesk_settings['login_box_header_image']; ?>"
+                         style="height: 75px">
+                <?php else:
+                    echo $hesk_settings['hesk_title'];
+                endif; ?>
             </div>
             <h4 class="login-box-msg">
                 <?php echo $hesklang['staff_login_title']; ?>

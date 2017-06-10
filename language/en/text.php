@@ -1699,7 +1699,7 @@ $hesklang['saved_ticket_tpl'] = 'Saved Templates';
 $hesklang['new_ticket_tpl']='Add or Edit a Ticket Template';
 $hesklang['and_change_status_to'] = 'and change status to'; // Used in combination with $hesklang['submit_reply'] (Reads as "Submit reply and change status to")
 $hesklang['closed_title'] = 'Closed';
-$hesklang['image'] = 'Image'; // Used for alt tag
+$hesklang['image'] = 'Image';
 $hesklang['close_modal'] = 'Close';
 $hesklang['email_custom_field'] = 'Email Address';
 $hesklang['email_custom_field_help'] = 'Allows the input of an email address. Similar to a text field, however the email address(es) will be added to all emails for this ticket, in the Cc or Bcc section, depending on the option selected.';
@@ -2130,7 +2130,15 @@ $hesklang['category_foreground_color'] = 'Foreground Color';
 $hesklang['category_background_color_help'] = 'The hex code for the background color to be used on the view ticket screen and calendar.';
 $hesklang['category_foreground_color_help'] = 'The hex code for the foreground color to be used on the view ticket and calendar screens. Leave blank for automatic color based on background.';
 $hesklang['category_display_border'] = 'Display Border';
-$hesklang['category_display_border_help'] = 'Choose to decide whether or not to display a border around the category (uses foreground color). <b>This is ignored if foreground color is set to automatic.</b>';
+$hesklang['category_display_border_help'] = 'Choose to decide whether or not to display a border around the category (uses foreground color). <b>
+This is ignored if foreground color is set to automatic.</b>';
+$hesklang['login_page'] = 'Login Page'; // Header on admin settings page
+$hesklang['login_background'] = 'Login Background';
+$hesklang['solid_color'] = 'Solid Color';
+$hesklang['login_background_color'] = 'Login Background Color'; // Input field information for screen-readers. Does not appear on-screen
+$hesklang['login_background_image'] = 'Login Background Image'; // Input field information for screen-readers. Does not appear on-screen
+$hesklang['login_box_header'] = 'Login Box Header';
+$hesklang['login_header_image'] = 'Login Header Image'; // Input field information for screen-readers. Does not appear on-screen
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
