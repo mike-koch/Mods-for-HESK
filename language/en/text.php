@@ -1609,13 +1609,13 @@ $hesklang['changeLanguage'] = 'Change language to';
 
 // ADDED OR MODIFIED IN Mods For HESK 1.4.0
 $hesklang['navbarBackgroundColor'] = 'Navbar Background Color';
-$hesklang['navbarBackgroundColorHelp'] = 'The main color of the top navigation bar. This applies to both the client and staff-side.';
+$hesklang['navbarBackgroundColorHelp'] = 'The main color of the top navigation bar. This applies only to the client-side.';
 $hesklang['navbarBrandColor'] = 'Navbar Brand Color';
 $hesklang['navbarBrandColorHelp'] = 'The text color of the \'brand\' on the left (also the name of the Help Desk).';
 $hesklang['navbarBrandHoverColor'] = 'Navbar Brand Hover Color';
 $hesklang['navbarBrandHoverColorHelp'] = 'The text color of the \'brand\' on the left when the use moves their mouse over the text.';
 $hesklang['navbarItemTextColor'] = 'Navbar Item Text Color';
-$hesklang['navbarItemTextColorHelp'] = 'The text color of the navigation items on the navigation bar (by default \'Home\', \'Ticket\', and \'Knowledgebase\' are the three items on the client-side).';
+$hesklang['navbarItemTextColorHelp'] = 'The text color of the navigation items on the navigation bar.';
 $hesklang['navbarItemTextHoverColor'] = 'Navbar Item Text Hover Color';
 $hesklang['navbarItemTextHoverColorHelp'] = 'The text color of the navigation items on the navigation bar when the user hovers over one of the items.';
 $hesklang['navbarItemTextSelectedColor'] = 'Navbar Item Text Selected Color';
@@ -2139,6 +2139,19 @@ $hesklang['login_background_color'] = 'Login Background Color'; // Input field i
 $hesklang['login_background_image'] = 'Login Background Image'; // Input field information for screen-readers. Does not appear on-screen
 $hesklang['login_box_header'] = 'Login Box Header';
 $hesklang['login_header_image'] = 'Login Header Image'; // Input field information for screen-readers. Does not appear on-screen
+$hesklang['background_color'] = 'Background Color';
+$hesklang['background_color_help'] = 'The background color.';
+$hesklang['text_color'] = 'Text Color';
+$hesklang['text_color_help'] = 'The text color';
+$hesklang['text_hover_color'] = 'Hover Color: Text';
+$hesklang['text_hover_color_help'] = 'The text color when hovering over a link';
+$hesklang['background_hover_color'] = 'Hover Color: Background';
+$hesklang['background_hover_color_help'] = 'The background color when hovering over a link';
+$hesklang['navbar'] = 'Navigation Bar';
+$hesklang['navbar_brand'] = 'Navigation Brand';
+$hesklang['sidebar'] = 'Sidebar';
+$hesklang['sidebar_header'] = 'Sidebar Header';
+
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

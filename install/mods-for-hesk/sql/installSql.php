@@ -1015,5 +1015,62 @@ function execute310Scripts() {
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('login_box_header_image', '')");
     executeQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'rtl'");
 
+    // Copy over color presets to the custom values
+    $theme_preset_rs = executeQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'admin_color_scheme'");
+    if (hesk_dbNumRows($theme_preset_rs) === 0) {
+        $theme = 'skin-blue';
+    } else {
+        $theme_preset_row = hesk_dbFetchAssoc($theme_preset_rs);
+        $theme = $theme_preset_row['Value'];
+    }
+
+    $navbar = array(
+        'background' => '',
+        'text' => '',
+        'text_hover' => '',
+        'background_hover' => ''
+    );
+    $navbar_brand = array(
+        'background' => '',
+        'text' => '',
+        'text_hover' => '',
+        'background_hover' => ''
+    );
+    $sidebar = array(
+        'background' => '',
+        'text' => '',
+        'text_hover' => '',
+        'background_hover' => ''
+    );
+    $sidebar_header = array(
+        'background' => '',
+        'text' => '',
+        'text_hover' => '',
+        'background_hover' => ''
+    );
+    if ($theme == 'skin-blue') {
+        $navbar['background'] = '';
+        $navbar['text'] = '';
+        $navbar['text_hover'] = '';
+        $navbar['background_hover'] = '';
+
+        $navbar_brand['background'] = '';
+        $navbar_brand['text'] = '';
+        $navbar_brand['text_hover'] = '';
+        $navbar_brand['background_hover'] = '';
+
+        $sidebar['background'] = '';
+        $sidebar['text'] = '';
+        $sidebar['text_hover'] = '';
+        $sidebar['background_hover'] = '';
+
+        $sidebar_header['background'] = '';
+        $sidebar_header['text'] = '';
+        $sidebar_header['text_hover'] = '';
+        $sidebar_header['background_hover'] = '';
+    } elseif ($theme = 'skin-blue-light') {
+
+    }
+
     updateVersion('3.1.0');
 }

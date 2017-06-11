@@ -3770,6 +3770,306 @@ $modsForHesk_settings = mfh_getSettings();
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="col-sm-5 col-sm-offset-7 col-xs-12">
+                            <h4><?php echo $hesklang['navbar']; ?></h4>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-navbar-background-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['background_color']; ?>"
+                                   data-content="<?php echo $hesklang['background_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-background-color" name="admin-navbar-background-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="col-sm-5 col-sm-offset-7 col-xs-12">
+                            <h4><?php echo $hesklang['navbar_brand']; ?></h4>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-navbar-brand-background-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="left"
+                                   title="<?php echo $hesklang['background_color']; ?>"
+                                   data-content="<?php echo $hesklang['background_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-brand-background-color" name="admin-navbar-brand-background-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-text-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['text_color']; ?>"
+                                   data-content="<?php echo $hesklang['text_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-brand-text-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['text_color']; ?>"
+                                   data-content="<?php echo $hesklang['text_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-hover-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_hover_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['text_hover_color']; ?>"
+                                   data-content="<?php echo $hesklang['text_hover_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_hover_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-brand-text-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_hover_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['text_hover_color']; ?>"
+                                   data-content="<?php echo $hesklang['text_hover_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_hover_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-background-hover-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_hover_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['background_hover_color']; ?>"
+                                   data-content="<?php echo $hesklang['background_hover_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-background-hover-color" name="admin-navbar-background-hover-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-brand-background-hover-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_hover_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['background_hover_color']; ?>"
+                                   data-content="<?php echo $hesklang['background_hover_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-brand-background-hover-color" name="admin-navbar-brand-background-hover-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_hover_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="col-sm-5 col-sm-offset-7 col-xs-12">
+                            <h4><?php echo $hesklang['sidebar']; ?></h4>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-navbar-background-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['background_color']; ?>"
+                                   data-content="<?php echo $hesklang['background_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-background-color" name="admin-navbar-background-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="col-sm-5 col-sm-offset-7 col-xs-12">
+                            <h4><?php echo $hesklang['sidebar_header']; ?></h4>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-navbar-brand-background-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="left"
+                                   title="<?php echo $hesklang['background_color']; ?>"
+                                   data-content="<?php echo $hesklang['background_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-brand-background-color" name="admin-navbar-brand-background-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-text-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['text_color']; ?>"
+                                   data-content="<?php echo $hesklang['text_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-brand-text-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['text_color']; ?>"
+                                   data-content="<?php echo $hesklang['text_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-hover-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_hover_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['text_hover_color']; ?>"
+                                   data-content="<?php echo $hesklang['text_hover_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_hover_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-brand-text-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_hover_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['text_hover_color']; ?>"
+                                   data-content="<?php echo $hesklang['text_hover_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_hover_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-background-hover-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_hover_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['background_hover_color']; ?>"
+                                   data-content="<?php echo $hesklang['background_hover_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-background-hover-color" name="admin-navbar-background-hover-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="admin-navbar-brand-background-hover-color"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_hover_color']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   data-placement="top"
+                                   title="<?php echo $hesklang['background_hover_color']; ?>"
+                                   data-content="<?php echo $hesklang['background_hover_color_help']; ?>"></i>
+                            </label>
+
+                            <div class="col-sm-5 col-xs-12">
+                                <input type="text" id="admin-navbar-brand-background-hover-color" name="admin-navbar-brand-background-hover-color"
+                                       class="form-control"
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_hover_color']; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <h4><?php echo $hesklang['login_page']; ?></h4>
                 <div class="row">
                     <div class="col-xs-12">
