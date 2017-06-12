@@ -2134,7 +2134,7 @@ $hesklang['category_display_border_help'] = 'Choose to decide whether or not to 
 This is ignored if foreground color is set to automatic.</b>';
 $hesklang['login_page'] = 'Login Page'; // Header on admin settings page
 $hesklang['login_background'] = 'Login Background';
-$hesklang['solid_color'] = 'Solid Color';
+$hesklang['solid_color'] = 'Solid color';
 $hesklang['login_background_color'] = 'Login Background Color'; // Input field information for screen-readers. Does not appear on-screen
 $hesklang['login_background_image'] = 'Login Background Image'; // Input field information for screen-readers. Does not appear on-screen
 $hesklang['login_box_header'] = 'Login Box Header';

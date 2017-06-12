@@ -4016,23 +4016,6 @@ $modsForHesk_settings = mfh_getSettings();
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-navbar-brand-text-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_hover_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['text_hover_color']; ?>"
-                                   data-content="<?php echo $hesklang['text_hover_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_hover_color']; ?>">
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
@@ -4052,10 +4035,12 @@ $modsForHesk_settings = mfh_getSettings();
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label for="admin-navbar-brand-background-hover-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_hover_color']; ?>
+                            <label for="admin-sidebar-font-weight"
+                                   class="col-sm-7 col-xs-12 control-label"><?php echo 'FONT WEIGHT'; ?>
                                 <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                    data-placement="top"
                                    title="<?php echo $hesklang['background_hover_color']; ?>"
@@ -4063,9 +4048,9 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-brand-background-hover-color" name="admin-navbar-brand-background-hover-color"
+                                <input type="text" id="admin-navbar-background-hover-color" name="admin-navbar-background-hover-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_hover_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover_color']; ?>">
                             </div>
                         </div>
                     </div>
