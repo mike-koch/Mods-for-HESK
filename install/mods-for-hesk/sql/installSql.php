@@ -1048,14 +1048,14 @@ function execute310Scripts() {
         'background' => $light_theme ? '#f9fafc' : '#1a2226',
         'text' => $light_theme ? '#848484' : '#4b646f',
         'text_hover' => $light_theme ? '#848484' : '#4b646f',
-        'background_hover' => $light_theme ? '#f9fafc': '#1a2226'
+        'background_hover' => $light_theme ? '#f9fafc': '#1e282c'
     );
     if (preg_match('/skin-blue.*/g', $theme)) {
         $navbar['background'] = '#3c8dbc';
         $navbar['background_hover'] = '#367fa9';
 
         $navbar_brand['background'] = $light_theme ? '#3c8dbc' : '#367fa9';
-        $navbar_brand['background_hover'] = $light_theme ? '#3b8ab8' : '#367fa9';
+        $navbar_brand['background_hover'] = $light_theme ? '#3b8ab8' : '#357ca5';
     } elseif (preg_match('/skin-yellow.*/g', $theme)) {
         $navbar['background'] = '#f39c12';
         $navbar['background_hover'] = '#da8c10';
@@ -1089,9 +1089,9 @@ function execute310Scripts() {
     }
 
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
-        VALUES ('admin_navbar_background_color', '{$navbar['background']}')");
+        VALUES ('admin_navbar_background', '{$navbar['background']}')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
-        VALUES ('admin_navbar_background_color_hover', '{$navbar['background_hover']}')");
+        VALUES ('admin_navbar_background_hover', '{$navbar['background_hover']}')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
         VALUES ('admin_navbar_text', '{$navbar['text']}')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
@@ -1119,9 +1119,9 @@ function execute310Scripts() {
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
         VALUES ('admin_sidebar_header_background_hover', '{$sidebar_header['background_hover']}')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
-        VALUES ('admin_sidebar_text', '{$sidebar_header['text']}')");
+        VALUES ('admin_sidebar_header_text', '{$sidebar_header['text']}')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
-        VALUES ('admin_sidebar_text_hover', '{$sidebar_header['text_hover']}')");
+        VALUES ('admin_sidebar_header_text_hover', '{$sidebar_header['text_hover']}')");
 
     updateVersion('3.1.0');
 }

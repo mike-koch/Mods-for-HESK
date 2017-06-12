@@ -3787,7 +3787,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-background-color" name="admin-navbar-background-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3807,7 +3807,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-brand-background-color" name="admin-navbar-brand-background-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3826,7 +3826,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_text']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3843,7 +3843,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3862,7 +3862,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_hover_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_hover']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3879,7 +3879,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_hover_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_hover']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3898,7 +3898,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-background-hover-color" name="admin-navbar-background-hover-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3915,7 +3915,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-brand-background-hover-color" name="admin-navbar-brand-background-hover-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_hover_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_hover']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3937,7 +3937,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-background-color" name="admin-navbar-background-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3957,7 +3957,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-brand-background-color" name="admin-navbar-brand-background-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3976,7 +3976,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_text']; ?>">
                             </div>
                         </div>
                     </div>
@@ -3993,7 +3993,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text']; ?>">
                             </div>
                         </div>
                     </div>
@@ -4012,7 +4012,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_hover_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_hover']; ?>">
                             </div>
                         </div>
                     </div>
@@ -4031,7 +4031,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-background-hover-color" name="admin-navbar-background-hover-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover']; ?>">
                             </div>
                         </div>
                     </div>
@@ -4050,7 +4050,7 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12">
                                 <input type="text" id="admin-navbar-background-hover-color" name="admin-navbar-background-hover-color"
                                        class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover_color']; ?>">
+                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover']; ?>">
                             </div>
                         </div>
                     </div>
