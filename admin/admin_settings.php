@@ -3715,39 +3715,28 @@ $modsForHesk_settings = mfh_getSettings();
                     <div class="col-xs-12">
                         <div class="form-group">
                             <label for="admin-color-scheme"
-                                   class="col-sm-3 col-xs-5 control-label"><?php echo $hesklang['color_scheme']; ?>
+                                   class="col-sm-3 col-xs-5 control-label"><?php echo $hesklang['color_preset']; ?>
                                 <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                    data-placement="left"
-                                   title="<?php echo $hesklang['color_scheme']; ?>"
-                                   data-content="<?php echo $hesklang['color_scheme_help']; ?>"></i>
+                                   title="<?php echo $hesklang['color_preset']; ?>"
+                                   data-content="<?php echo $hesklang['color_preset_help']; ?>"></i>
                             </label>
 
                             <div class="col-sm-9 col-xs-7">
                                 <select name="admin-color-scheme" class="form-control">
-                                    <option value="skin-blue"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-blue') { echo 'selected'; } ?>>Blue</option>
-                                    <option value="skin-blue-light"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-blue-light') { echo 'selected'; } ?>>Blue (Light)</option>
-                                    <option value="skin-yellow"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-yellow') { echo 'selected'; } ?>>Yellow</option>
-                                    <option value="skin-yellow-light"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-yellow-light') { echo 'selected'; } ?>>Yellow (Light)</option>
-                                    <option value="skin-green"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-green') { echo 'selected'; } ?>>Green</option>
-                                    <option value="skin-green-light"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-green-light') { echo 'selected'; } ?>>Green (Light)</option>
-                                    <option value="skin-purple"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-purple') { echo 'selected'; } ?>>Purple</option>
-                                    <option value="skin-purple-light"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-purple-light') { echo 'selected'; } ?>>Purple (Light)</option>
-                                    <option value="skin-red"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-red') { echo 'selected'; } ?>>Red</option>
-                                    <option value="skin-red-light"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-red-light') { echo 'selected'; } ?>>Red (Light)</option>
-                                    <option value="skin-black"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-black') { echo 'selected'; } ?>>Black</option>
-                                    <option value="skin-black-light"
-                                        <?php if ($modsForHesk_settings['admin_color_scheme'] == 'skin-black-light') { echo 'selected'; } ?>>Black (Light)</option>
+                                    <option value="SELECT"><?php echo $hesklang['select_a_preset']; ?></option>
+                                    <option value="skin-blue">Blue</option>
+                                    <option value="skin-blue-light">Blue (Light)</option>
+                                    <option value="skin-yellow">Yellow</option>
+                                    <option value="skin-yellow-light">Yellow (Light)</option>
+                                    <option value="skin-green">Green</option>
+                                    <option value="skin-green-light">Green (Light)</option>
+                                    <option value="skin-purple">Purple</option>
+                                    <option value="skin-purple-light">Purple (Light)</option>
+                                    <option value="skin-red">Red</option>
+                                    <option value="skin-red-light">Red (Light)</option>
+                                    <option value="skin-black">Black</option>
+                                    <option value="skin-black-light">Black (Light)</option>
                                 </select>
                             </div>
                             <script>

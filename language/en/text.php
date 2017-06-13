@@ -2082,8 +2082,6 @@ $hesklang['canned_responses_dropdown_title'] = 'Canned Responses';
 $hesklang['helpdesk_settings'] = 'Helpdesk Settings';
 $hesklang['click_to_toggle'] = 'Click to toggle';
 $hesklang['see_all_messages'] = 'See All Messages';
-$hesklang['color_scheme'] = 'Color Scheme';
-$hesklang['color_scheme_help'] = 'The color scheme for the backend to use.';
 
 // ADDED OR MODIFIED IN Mods for HESK 3.1.0
 $hesklang['stack_trace_header'] = 'Stack Trace';
@@ -2155,7 +2153,10 @@ $hesklang['font_weight'] = 'Font Weight';
 $hesklang['font_weight_help'] = 'The font weight for text';
 $hesklang['normal'] = 'Normal';
 $hesklang['bold'] = 'Bold';
-
+$hesklang['color_preset'] = 'Color Preset';
+$hesklang['color_preset_help'] = 'Select a color preset for the backend, or define custom colors below.';
+$hesklang['select_a_preset'] = '-- Select a Preset --';
+;
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
