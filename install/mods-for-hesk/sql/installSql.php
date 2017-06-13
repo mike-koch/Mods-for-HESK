@@ -1042,7 +1042,7 @@ function execute310Scripts() {
         'text' => $light_theme ? '#444' : '#b8c7ce',
         'text_hover' => $light_theme ? '#444' : '#b8c7ce',
         'background_hover' => $light_theme ? '#f4f4f5' : '#1e282c',
-        'font_weight' => $light_theme ? '600' : 'normal'
+        'font_weight' => $light_theme ? 'bold' : 'normal'
     );
     $sidebar_header = array(
         'background' => $light_theme ? '#f9fafc' : '#1a2226',

@@ -2151,6 +2151,10 @@ $hesklang['navbar'] = 'Navigation Bar';
 $hesklang['navbar_brand'] = 'Navigation Brand';
 $hesklang['sidebar'] = 'Sidebar';
 $hesklang['sidebar_header'] = 'Sidebar Header';
+$hesklang['font_weight'] = 'Font Weight';
+$hesklang['font_weight_help'] = 'The font weight for text';
+$hesklang['normal'] = 'Normal';
+$hesklang['bold'] = 'Bold';
 
 
 // DO NOT CHANGE BELOW
