@@ -3723,37 +3723,82 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-9 col-xs-7">
-                                <select name="admin-color-scheme" class="form-control">
+                                <select name="admin-color-scheme" id="admin-color-scheme" class="form-control">
                                     <option value="SELECT"><?php echo $hesklang['select_a_preset']; ?></option>
-                                    <option value="skin-blue">Blue</option>
-                                    <option value="skin-blue-light">Blue (Light)</option>
-                                    <option value="skin-yellow">Yellow</option>
-                                    <option value="skin-yellow-light">Yellow (Light)</option>
-                                    <option value="skin-green">Green</option>
-                                    <option value="skin-green-light">Green (Light)</option>
-                                    <option value="skin-purple">Purple</option>
-                                    <option value="skin-purple-light">Purple (Light)</option>
-                                    <option value="skin-red">Red</option>
-                                    <option value="skin-red-light">Red (Light)</option>
-                                    <option value="skin-black">Black</option>
-                                    <option value="skin-black-light">Black (Light)</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="blue-light">Blue (Light)</option>
+                                    <option value="yellow">Yellow</option>
+                                    <option value="yellow-light">Yellow (Light)</option>
+                                    <option value="green">Green</option>
+                                    <option value="green-light">Green (Light)</option>
+                                    <option value="purple">Purple</option>
+                                    <option value="purple-light">Purple (Light)</option>
+                                    <option value="red">Red</option>
+                                    <option value="red-light">Red (Light)</option>
+                                    <option value="black">Black</option>
+                                    <option value="black-light">Black (Light)</option>
                                 </select>
                             </div>
                             <script>
                                 $('select[name="admin-color-scheme"]').change(function() {
-                                    $('body').removeClass('skin-blue')
-                                        .removeClass('skin-blue-light')
-                                        .removeClass('skin-yellow')
-                                        .removeClass('skin-yellow-light')
-                                        .removeClass('skin-green')
-                                        .removeClass('skin-green-light')
-                                        .removeClass('skin-purple')
-                                        .removeClass('skin-purple-light')
-                                        .removeClass('skin-red')
-                                        .removeClass('skin-red-light')
-                                        .removeClass('skin-black')
-                                        .removeClass('skin-black-light')
-                                        .addClass($(this).val());
+                                    var val = $(this).val();
+
+                                    if (val === 'SELECT') {
+                                        return;
+                                    }
+
+                                    var lightTheme = val.match(/.+-light/i);
+
+                                    $('input[name="admin-sidebar-background-color"]').val(lightTheme ? '#f9fafc' : '#222d32');
+                                    $('input[name="admin-sidebar-header-background-color"]').val(lightTheme ? '#f9fafc' : '#1a2226');
+                                    $('input[name="admin-sidebar-text-color"]').val(lightTheme ? '#444' : '#b8c7ce');
+                                    $('input[name="admin-sidebar-header-text-color"]').val(lightTheme ? '#848484' : '#4b646f');
+                                    $('input[name="admin-sidebar-text-hover-color"]').val(lightTheme ? '#444' : '#b8c7ce');
+                                    $('input[name="admin-sidebar-background-hover-color"]').val(lightTheme ? '#f4f4f5' : '#1e282c');
+                                    $('input[name="admin-sidebar-font-weight"]').val(lightTheme ? ['bold'] : ['normal']);
+
+                                    $('input[name="admin-navbar-text-color"]').val('#fff');
+                                    $('input[name="admin-navbar-text-hover-color"]').val('#fff');
+                                    $('input[name="admin-navbar-brand-text-color"]').val('#fff');
+                                    $('input[name="admin-navbar-brand-text-hover-color"]').val('#fff');
+                                    if (val.match(/blue.*/i)) {
+                                        $('input[name="admin-navbar-background-color"]').val('#3c8dbc');
+                                        $('input[name="admin-navbar-background-hover-color"]').val('#367fa9');
+
+                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#3c8dbc' : '#367fa9');
+                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#3b8ab8' : '#357ca5');
+                                    } else if (val.match(/yellow.*/i)) {
+                                        $('input[name="admin-navbar-background-color"]').val('#f39c12');
+                                        $('input[name="admin-navbar-background-hover-color"]').val('#da8c10');
+
+                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#f39c12' : '#e08e0b');
+                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#f39a0d' : '#db8b0b');
+                                    } else if (val.match(/green.*/i)) {
+                                        $('input[name="admin-navbar-background-color"]').val('#00a65a');
+                                        $('input[name="admin-navbar-background-hover-color"]').val('#009551');
+
+                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#00a65a' : '#008d4c');
+                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#00a157' : '#008749');
+                                    } else if (val.match(/purple.*/i)) {
+                                        $('input[name="admin-navbar-background-color"]').val('#605ca8');
+                                        $('input[name="admin-navbar-background-hover-color"]').val('#565397');
+
+                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#605ca8' : '#555299');
+                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#5d59a6' : '#545096');
+                                    } else if (val.match(/red.*/i)) {
+                                        $('input[name="admin-navbar-background-color"]').val('#dd4b39');
+                                        $('input[name="admin-navbar-background-hover-color"]').val('#c64333');
+
+                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#dd4b39' : '#d73925');
+                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#dc4735' : '#d33724');
+                                    } else {
+                                        //-- Black
+                                        $('input[name="admin-navbar-background-color"]').val('#fff');
+                                        $('input[name="admin-navbar-background-hover-color"]').val('#eee');
+
+                                        $('input[name="admin-navbar-brand-background-color"]').val('#fff');
+                                        $('input[name="admin-navbar-brand-background-hover-color"]').val('#fcfcfc');
+                                    }
                                 });
                             </script>
                         </div>
@@ -3924,7 +3969,7 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-background-color" name="admin-navbar-background-color"
+                                <input type="text" id="admin-sidebar-background-color" name="admin-sidebar-background-color"
                                        class="form-control"
                                        value="<?php echo $modsForHesk_settings['admin_sidebar_background']; ?>">
                             </div>
@@ -3944,7 +3989,7 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-brand-background-color" name="admin-navbar-brand-background-color"
+                                <input type="text" id="admin-sidebar-header-background-color" name="admin-sidebar-header-background-color"
                                        class="form-control"
                                        value="<?php echo $modsForHesk_settings['admin_sidebar_header_background']; ?>">
                             </div>
@@ -3963,7 +4008,7 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
+                                <input type="text" id="admin-sidebar-text-color" name="admin-sidebar-text-color"
                                        class="form-control"
                                        value="<?php echo $modsForHesk_settings['admin_sidebar_text']; ?>">
                             </div>
@@ -3971,7 +4016,7 @@ $modsForHesk_settings = mfh_getSettings();
                     </div>
                     <div class="col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label for="admin-sidebar-brand-text-color"
+                            <label for="admin-sidebar-header-text-color"
                                    class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_color']; ?>
                                 <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                    data-placement="top"
@@ -3980,7 +4025,7 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
+                                <input type="text" id="admin-sidebar-header-text-color" name="admin-sidebar-header-text-color"
                                        class="form-control"
                                        value="<?php echo $modsForHesk_settings['admin_sidebar_header_text']; ?>">
                             </div>
@@ -3999,7 +4044,7 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
+                                <input type="text" id="admin-sidebar-text-hover-color" name="admin-sidebar-text-hover-color"
                                        class="form-control"
                                        value="<?php echo $modsForHesk_settings['admin_sidebar_text_hover']; ?>">
                             </div>
@@ -4018,7 +4063,7 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-background-hover-color" name="admin-navbar-background-hover-color"
+                                <input type="text" id="admin-sidebar-background-hover-color" name="admin-sidebar-background-hover-color"
                                        class="form-control"
                                        value="<?php echo $modsForHesk_settings['admin_sidebar_background_hover']; ?>">
                             </div>
