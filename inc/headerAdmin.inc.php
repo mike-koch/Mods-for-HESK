@@ -81,6 +81,57 @@ $modsForHesk_settings = mfh_getSettings();
     }
     ?>
     <style>
+        <?php // ADMIN COLOR SCHEME ?>
+        .main-header .logo {
+            background-color: <?php echo $modsForHesk_settings['admin_navbar_brand_background']; ?>;
+            color: <?php echo $modsForHesk_settings['admin_navbar_brand_text']; ?>;
+        }
+
+        .main-header .logo:hover {
+            background-color: <?php echo $modsForHesk_settings['admin_navbar_brand_background_hover']; ?>;
+            color: <?php echo $modsForHesk_settings['admin_navbar_brand_text_hover']; ?>;
+        }
+
+        .main-header .navbar {
+            background-color: <?php echo $modsForHesk_settings['admin_navbar_background']; ?>;
+
+        }
+
+        .main-header .navbar .nav > li > a,
+        .main-header .navbar .sidebar-toggle {
+            color: <?php echo $modsForHesk_settings['admin_navbar_text']; ?>;
+        }
+
+        .main-header .navbar .nav > li > a:hover,
+        .main-header .navbar .sidebar-toggle:hover {
+            background-color: <?php echo $modsForHesk_settings['admin_navbar_background_hover']; ?>;
+            color: <?php echo $modsForHesk_settings['admin_navbar_text_hover']; ?>;
+        }
+
+        .main-sidebar, .left-side {
+            background-color: <?php echo $modsForHesk_settings['admin_sidebar_background']; ?>
+        }
+
+        .sidebar-menu > li.header {
+            color: <?php echo $modsForHesk_settings['admin_sidebar_header_text']; ?>;
+            background-color: <?php echo $modsForHesk_settings['admin_sidebar_header_background']; ?>;
+        }
+
+        .sidebar a {
+            color: <?php echo $modsForHesk_settings['admin_sidebar_text']; ?>;
+        }
+
+        .sidebar-menu > li > a {
+            font-weight: <?php echo $modsForHesk_settings['admin_sidebar_font_weight'] == 'normal' ? 'normal' : 600; ?>;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu > li:hover > a {
+            color: <?php echo $modsForHesk_settings['admin_sidebar_text_hover']; ?>;
+            background: <?php echo $modsForHesk_settings['admin_sidebar_background_hover']; ?>;
+            border-left-color: <?php echo $modsForHesk_settings['admin_navbar_background']; ?>;
+        }
+
         .settingsquestionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
             cursor: pointer;
@@ -248,7 +299,7 @@ if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY') {
 }
 ?>
 <body onload="<?php echo $onload;
-unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js <?php echo $modsForHesk_settings['admin_color_scheme']; ?>">
+unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js">
 
 <?php // GLOBAL JAVASCRIPT IDs ?>
 <p style="display: none" id="heskUrl"><?php echo $hesk_settings['hesk_url']; ?></p>
