@@ -1013,7 +1013,7 @@ function execute310Scripts() {
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('login_background', '#d2d6de')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('login_box_header', 'helpdesk-title')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('login_box_header_image', '')");
-    executeQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'rtl'");
+    executeQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` IN ('rtl', 'admin_color_scheme')");
 
     // Copy over color presets to the custom values
     $theme_preset_rs = executeQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'admin_color_scheme'");
@@ -1047,8 +1047,6 @@ function execute310Scripts() {
     $sidebar_header = array(
         'background' => $light_theme ? '#f9fafc' : '#1a2226',
         'text' => $light_theme ? '#848484' : '#4b646f',
-        'text_hover' => $light_theme ? '#848484' : '#4b646f',
-        'background_hover' => $light_theme ? '#f9fafc': '#1e282c'
     );
     if (preg_match('/skin-blue.*/g', $theme)) {
         $navbar['background'] = '#3c8dbc';
@@ -1117,11 +1115,7 @@ function execute310Scripts() {
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
         VALUES ('admin_sidebar_header_background', '{$sidebar_header['background']}')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
-        VALUES ('admin_sidebar_header_background_hover', '{$sidebar_header['background_hover']}')");
-    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
         VALUES ('admin_sidebar_header_text', '{$sidebar_header['text']}')");
-    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
-        VALUES ('admin_sidebar_header_text_hover', '{$sidebar_header['text_hover']}')");
 
     updateVersion('3.1.0');
 }

@@ -2156,7 +2156,18 @@ $hesklang['bold'] = 'Bold';
 $hesklang['color_preset'] = 'Color Preset';
 $hesklang['color_preset_help'] = 'Select a color preset for the backend, or define custom colors below.';
 $hesklang['select_a_preset'] = '-- Select a Preset --';
-;
+$hesklang['preset_blue'] = 'Blue';
+$hesklang['preset_blue_light'] = 'Blue (light)';
+$hesklang['preset_yellow'] = 'Yellow';
+$hesklang['preset_yellow_light'] = 'Yellow (light)';
+$hesklang['preset_green'] = 'Green';
+$hesklang['preset_green_light'] = 'Green (light)';
+$hesklang['preset_purple'] = 'Purple';
+$hesklang['preset_purple_light'] = 'Purple (light)';
+$hesklang['preset_red'] = 'Red';
+$hesklang['preset_red_light'] = 'Red (light)';
+$hesklang['preset_black'] = 'Black';
+$hesklang['preset_black_light'] = 'Black (light)';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

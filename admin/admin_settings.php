@@ -3725,18 +3725,18 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-9 col-xs-7">
                                 <select name="admin-color-scheme" id="admin-color-scheme" class="form-control">
                                     <option value="SELECT"><?php echo $hesklang['select_a_preset']; ?></option>
-                                    <option value="blue">Blue</option>
-                                    <option value="blue-light">Blue (Light)</option>
-                                    <option value="yellow">Yellow</option>
-                                    <option value="yellow-light">Yellow (Light)</option>
-                                    <option value="green">Green</option>
-                                    <option value="green-light">Green (Light)</option>
-                                    <option value="purple">Purple</option>
-                                    <option value="purple-light">Purple (Light)</option>
-                                    <option value="red">Red</option>
-                                    <option value="red-light">Red (Light)</option>
-                                    <option value="black">Black</option>
-                                    <option value="black-light">Black (Light)</option>
+                                    <option value="blue"><?php echo $hesklang['preset_blue']; ?></option>
+                                    <option value="blue-light"><?php echo $hesklang['preset_blue_light']; ?></option>
+                                    <option value="yellow"><?php echo $hesklang['preset_yellow']; ?></option>
+                                    <option value="yellow-light"><?php echo $hesklang['preset_yellow_light']; ?></option>
+                                    <option value="green"><?php echo $hesklang['preset_green']; ?></option>
+                                    <option value="green-light"><?php echo $hesklang['preset_green_light']; ?></option>
+                                    <option value="purple"><?php echo $hesklang['preset_purple']; ?></option>
+                                    <option value="purple-light"><?php echo $hesklang['preset_purple_light']; ?></option>
+                                    <option value="red"><?php echo $hesklang['preset_red']; ?></option>
+                                    <option value="red-light"><?php echo $hesklang['preset_red_light']; ?></option>
+                                    <option value="black"><?php echo $hesklang['preset_black']; ?></option>
+                                    <option value="black-light"><?php echo $hesklang['preset_black_light']; ?></option>
                                 </select>
                             </div>
                             <script>
