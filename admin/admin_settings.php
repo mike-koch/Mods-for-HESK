@@ -3530,184 +3530,64 @@ $modsForHesk_settings = mfh_getSettings();
                 <h4><?php echo $hesklang['customer_view']; ?></h4>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="navbarBackgroundColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBackgroundColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['navbarBackgroundColor']; ?>"
-                                   data-content="<?php echo $hesklang['navbarBackgroundColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="navbarBackgroundColor" name="navbarBackgroundColor"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('navbarBackgroundColor', 'navbarBackgroundColor', $modsForHesk_settings['navbarBackgroundColor'], 'Help');
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="navbarBrandColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBrandColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['navbarBrandColor']; ?>"
-                                   data-content="<?php echo $hesklang['navbarBrandColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="navbarBrandColor" name="navbarBrandColor"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['navbarBrandColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('navbarBrandColor', 'navbarBrandColor', $modsForHesk_settings['navbarBrandColor'], 'Help');
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="navbarBrandHoverColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarBrandHoverColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['navbarBrandHoverColor']; ?>"
-                                   data-content="<?php echo $hesklang['navbarBrandHoverColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="navbarBrandHoverColor" name="navbarBrandHoverColor"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['navbarBrandHoverColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('navbarBrandHoverColor', 'navbarBrandHoverColor', $modsForHesk_settings['navbarBrandHoverColor'], 'Help');
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="navbarItemTextColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['navbarItemTextColor']; ?>"
-                                   data-content="<?php echo $hesklang['navbarItemTextColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="navbarItemTextColor" name="navbarItemTextColor"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['navbarItemTextColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('navbarItemTextColor', 'navbarItemTextColor', $modsForHesk_settings['navbarItemTextColor'], 'Help');
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="navbarItemTextHoverColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextHoverColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['navbarItemTextHoverColor']; ?>"
-                                   data-content="<?php echo $hesklang['navbarItemTextHoverColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="navbarItemTextHoverColor" name="navbarItemTextHoverColor"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['navbarItemTextHoverColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('navbarItemTextHoverColor', 'navbarItemTextHoverColor', $modsForHesk_settings['navbarItemTextHoverColor'], 'Help');
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="navbarItemTextSelectedColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemTextSelectedColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['navbarItemTextSelectedColor']; ?>"
-                                   data-content="<?php echo $hesklang['navbarItemTextSelectedColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="navbarItemTextSelectedColor"
-                                       name="navbarItemTextSelectedColor" class="form-control"
-                                       value="<?php echo $modsForHesk_settings['navbarItemTextSelectedColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('navbarItemTextSelectedColor', 'navbarItemTextSelectedColor', $modsForHesk_settings['navbarItemTextSelectedColor'], 'Help');
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="navbarItemSelectedBackgroundColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['navbarItemSelectedBackgroundColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['navbarItemSelectedBackgroundColor']; ?>"
-                                   data-content="<?php echo $hesklang['navbarItemSelectedBackgroundColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="navbarItemSelectedBackgroundColor"
-                                       name="navbarItemSelectedBackgroundColor" class="form-control"
-                                       value="<?php echo $modsForHesk_settings['navbarItemSelectedBackgroundColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('navbarItemSelectedBackgroundColor', 'navbarItemSelectedBackgroundColor', $modsForHesk_settings['navbarItemSelectedBackgroundColor'], 'Help');
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="dropdownItemTextColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['dropdownItemTextColor']; ?>"
-                                   data-content="<?php echo $hesklang['dropdownItemTextColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="dropdownItemTextColor" name="dropdownItemTextColor"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('dropdownItemTextColor', 'dropdownItemTextColor', $modsForHesk_settings['dropdownItemTextColor'], 'Help');
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="dropdownItemTextHoverColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextHoverColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['dropdownItemTextHoverColor']; ?>"
-                                   data-content="<?php echo $hesklang['dropdownItemTextHoverColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="dropdownItemTextHoverColor" name="dropdownItemTextHoverColor"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('dropdownItemTextHoverColor', 'dropdownItemTextHoverColor', $modsForHesk_settings['dropdownItemTextHoverColor'], 'Help');
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="dropdownItemTextHoverBackgroundColor"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['dropdownItemTextHoverBackgroundColor']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['dropdownItemTextHoverBackgroundColor']; ?>"
-                                   data-content="<?php echo $hesklang['dropdownItemTextHoverBackgroundColorHelp']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="dropdownItemTextHoverBackgroundColor"
-                                       name="dropdownItemTextHoverBackgroundColor" class="form-control"
-                                       value="<?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('dropdownItemTextHoverBackgroundColor', 'dropdownItemTextHoverBackgroundColor', $modsForHesk_settings['dropdownItemTextHoverBackgroundColor'], 'Help');
+                        ?>
                     </div>
                 </div>
                 <h4><?php echo $hesklang['admin_panel']; ?></h4>
@@ -3809,149 +3689,53 @@ $modsForHesk_settings = mfh_getSettings();
                         <div class="col-sm-5 col-sm-offset-7 col-xs-12">
                             <h4><?php echo $hesklang['navbar']; ?></h4>
                         </div>
-                        <div class="form-group">
-                            <label for="admin-navbar-background-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['background_color']; ?>"
-                                   data-content="<?php echo $hesklang['background_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-background-color" name="admin-navbar-background-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_background']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-navbar-background-color', 'background_color', $modsForHesk_settings['admin_navbar_background']);
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
                         <div class="col-sm-5 col-sm-offset-7 col-xs-12">
                             <h4><?php echo $hesklang['navbar_brand']; ?></h4>
                         </div>
-                        <div class="form-group">
-                            <label for="admin-navbar-brand-background-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['background_color']; ?>"
-                                   data-content="<?php echo $hesklang['background_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-brand-background-color" name="admin-navbar-brand-background-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-navbar-brand-background-color', 'background_color', $modsForHesk_settings['admin_navbar_brand_background']);
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-navbar-text-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['text_color']; ?>"
-                                   data-content="<?php echo $hesklang['text_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_text']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-navbar-text-color', 'text_color', $modsForHesk_settings['admin_navbar_text']);
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-navbar-brand-text-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['text_color']; ?>"
-                                   data-content="<?php echo $hesklang['text_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-navbar-brand-text-color', 'text_color', $modsForHesk_settings['admin_navbar_brand_text']);
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-navbar-text-hover-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_hover_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['text_hover_color']; ?>"
-                                   data-content="<?php echo $hesklang['text_hover_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-text-hover-color" name="admin-navbar-text-hover-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_text_hover']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-navbar-text-hover-color', 'text_hover_color', $modsForHesk_settings['admin_navbar_text_hover']);
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-navbar-brand-text-hover-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_hover_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['text_hover_color']; ?>"
-                                   data-content="<?php echo $hesklang['text_hover_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-brand-text-hover-color" name="admin-navbar-brand-text-hover-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_hover']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-navbar-brand-text-hover-color', 'text_hover_color', $modsForHesk_settings['admin_navbar_brand_text_hover']);
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-navbar-background-hover-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_hover_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['background_hover_color']; ?>"
-                                   data-content="<?php echo $hesklang['background_hover_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-background-hover-color" name="admin-navbar-background-hover-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_background_hover']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-navbar-background-hover-color', 'background_hover_color', $modsForHesk_settings['admin_navbar_background_hover']);
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-navbar-brand-background-hover-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_hover_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['background_hover_color']; ?>"
-                                   data-content="<?php echo $hesklang['background_hover_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-brand-background-hover-color" name="admin-navbar-brand-background-hover-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_navbar_brand_background_hover']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-navbar-brand-background-hover-color', 'background_hover_color', $modsForHesk_settings['admin_navbar_brand_background_hover']);
+                        ?>
                     </div>
                 </div>
                 <div class="row">
@@ -3959,115 +3743,43 @@ $modsForHesk_settings = mfh_getSettings();
                         <div class="col-sm-5 col-sm-offset-7 col-xs-12">
                             <h4><?php echo $hesklang['sidebar']; ?></h4>
                         </div>
-                        <div class="form-group">
-                            <label for="admin-sidebar-background-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['background_color']; ?>"
-                                   data-content="<?php echo $hesklang['background_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-sidebar-background-color" name="admin-sidebar-background-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_sidebar_background']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-sidebar-background-color', 'background_color', $modsForHesk_settings['admin_sidebar_background']);
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
                         <div class="col-sm-5 col-sm-offset-7 col-xs-12">
                             <h4><?php echo $hesklang['sidebar_header']; ?></h4>
                         </div>
-                        <div class="form-group">
-                            <label for="admin-sidebar-header-background-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="left"
-                                   title="<?php echo $hesklang['background_color']; ?>"
-                                   data-content="<?php echo $hesklang['background_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-sidebar-header-background-color" name="admin-sidebar-header-background-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_sidebar_header_background']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-sidebar-header-background-color', 'background_color', $modsForHesk_settings['admin_sidebar_header_background']);
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-sidebar-text-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['text_color']; ?>"
-                                   data-content="<?php echo $hesklang['text_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-sidebar-text-color" name="admin-sidebar-text-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_sidebar_text']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-sidebar-text-color', 'text_color', $modsForHesk_settings['admin_sidebar_text']);
+                        ?>
                     </div>
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-sidebar-header-text-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['text_color']; ?>"
-                                   data-content="<?php echo $hesklang['text_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-sidebar-header-text-color" name="admin-sidebar-header-text-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_sidebar_header_text']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-sidebar-header-text-color', 'text_color', $modsForHesk_settings['admin_sidebar_header_text']);
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-sidebar-text-hover-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['text_hover_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['text_hover_color']; ?>"
-                                   data-content="<?php echo $hesklang['text_hover_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-sidebar-text-hover-color" name="admin-sidebar-text-hover-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_sidebar_text_hover']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-sidebar-text-hover-color', 'text_hover_color', $modsForHesk_settings['admin_sidebar_text_hover']);
+                        ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label for="admin-sidebar-background-hover-color"
-                                   class="col-sm-7 col-xs-12 control-label"><?php echo $hesklang['background_hover_color']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   data-placement="top"
-                                   title="<?php echo $hesklang['background_hover_color']; ?>"
-                                   data-content="<?php echo $hesklang['background_hover_color_help']; ?>"></i>
-                            </label>
-
-                            <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-sidebar-background-hover-color" name="admin-sidebar-background-hover-color"
-                                       class="form-control"
-                                       value="<?php echo $modsForHesk_settings['admin_sidebar_background_hover']; ?>">
-                            </div>
-                        </div>
+                        <?php
+                        buildColorSchemeColorpicker('admin-sidebar-background-hover-color', 'background_hover_color', $modsForHesk_settings['admin_sidebar_background_hover']);
+                        ?>
                     </div>
                 </div>
                 <div class="row">
@@ -4190,6 +3902,37 @@ $modsForHesk_settings = mfh_getSettings();
     <?php
     require_once(HESK_PATH . 'inc/footer.inc.php');
     exit();
+
+    function buildColorSchemeColorpicker($field_name, $label_key, $color, $help_suffix = '_help') {
+        global $hesklang;
+
+        echo '
+        <div class="form-group">
+            <label for="admin-navbar-background-color"
+                   class="col-sm-7 col-xs-12 control-label">'. $hesklang[$label_key] . '
+                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                   data-placement="top"
+                   title="' . htmlspecialchars($hesklang[$label_key]) . '"
+                   data-content="' . htmlspecialchars($hesklang[$label_key . $help_suffix]) . '"></i>
+            </label>
+
+            <div class="col-sm-5 col-xs-12">
+                <div id="cp' . $field_name . '" class="input-group">
+                    <input type="text" id="' . $field_name . '" name="' . $field_name . '"
+                       class="form-control"
+                       value="' . $color . '">
+                    <span class="input-group-addon"><i></i></span>
+                </div>
+            </div>
+        </div>
+        <script>
+            $("#cp' . $field_name . '").colorpicker({
+                color: "' . $color . '",
+                format: "hex"
+            });
+        </script>
+        ';
+    }
 
 
     function hesk_checkVersion()
