@@ -3753,7 +3753,7 @@ $modsForHesk_settings = mfh_getSettings();
                                     $('input[name="admin-sidebar-header-background-color"]').val(lightTheme ? '#f9fafc' : '#1a2226');
                                     $('input[name="admin-sidebar-text-color"]').val(lightTheme ? '#444' : '#b8c7ce');
                                     $('input[name="admin-sidebar-header-text-color"]').val(lightTheme ? '#848484' : '#4b646f');
-                                    $('input[name="admin-sidebar-text-hover-color"]').val(lightTheme ? '#444' : '#b8c7ce');
+                                    $('input[name="admin-sidebar-text-hover-color"]').val(lightTheme ? '#444' : '#fff');
                                     $('input[name="admin-sidebar-background-hover-color"]').val(lightTheme ? '#f4f4f5' : '#1e282c');
                                     $('input[name="admin-sidebar-font-weight"]').val(lightTheme ? ['bold'] : ['normal']);
 
@@ -3894,7 +3894,7 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-text-color" name="admin-navbar-text-color"
+                                <input type="text" id="admin-navbar-text-hover-color" name="admin-navbar-text-hover-color"
                                        class="form-control"
                                        value="<?php echo $modsForHesk_settings['admin_navbar_text_hover']; ?>">
                             </div>
@@ -3911,7 +3911,7 @@ $modsForHesk_settings = mfh_getSettings();
                             </label>
 
                             <div class="col-sm-5 col-xs-12">
-                                <input type="text" id="admin-navbar-brand-text-color" name="admin-navbar-brand-text-color"
+                                <input type="text" id="admin-navbar-brand-text-hover-color" name="admin-navbar-brand-text-hover-color"
                                        class="form-control"
                                        value="<?php echo $modsForHesk_settings['admin_navbar_brand_text_hover']; ?>">
                             </div>

@@ -103,7 +103,10 @@ $modsForHesk_settings = mfh_getSettings();
         }
 
         .main-header .navbar .nav > li > a:hover,
-        .main-header .navbar .sidebar-toggle:hover {
+        .main-header .navbar .sidebar-toggle:hover,
+        .main-header .navbar .nav > .active > a,
+        .main-header .navbar .nav .open > a,
+        .main-header .navbar .nav > li > a:focus {
             background-color: <?php echo $modsForHesk_settings['admin_navbar_background_hover']; ?>;
             color: <?php echo $modsForHesk_settings['admin_navbar_text_hover']; ?>;
         }
@@ -117,7 +120,8 @@ $modsForHesk_settings = mfh_getSettings();
             background-color: <?php echo $modsForHesk_settings['admin_sidebar_header_background']; ?>;
         }
 
-        .sidebar a {
+        .sidebar a,
+        .sidebar .ticket-info {
             color: <?php echo $modsForHesk_settings['admin_sidebar_text']; ?>;
         }
 
