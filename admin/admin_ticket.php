@@ -17,7 +17,7 @@ define('WYSIWYG', 1);
 define('VALIDATOR', 1);
 define('MFH_PAGE_LAYOUT', 'TOP_AND_SIDE');
 
-define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/admin-ticket.js"></script>');
+define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/admin-ticket.js"></script><script src="'.HESK_PATH.'js/jquery.dirtyforms.min.js"></script>');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -1884,7 +1884,7 @@ function hesk_printReplyForm()
             $onsubmit = 'onsubmit="force_stop();return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
         }
         ?>
-        <form role="form" data-toggle="validator" class="form-horizontal" method="post" action="admin_reply_ticket.php"
+        <form id="reply-form" role="form" data-toggle="validator" class="form-horizontal" method="post" action="admin_reply_ticket.php"
               enctype="multipart/form-data" name="form1" <?php echo $onsubmit; ?>>
             <?php
 
@@ -2061,6 +2061,7 @@ function hesk_printReplyForm()
                 </div>
             </div>
         </form>
+        <script>$('form#reply-form').dirtyForms();</script>
     </div>
 </div>
     <!-- END REPLY FORM -->
