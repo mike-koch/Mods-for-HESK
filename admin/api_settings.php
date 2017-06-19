@@ -2,7 +2,7 @@
 
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
-define('PAGE_TITLE', 'ADMIN_SETTINGS');
+define('PAGE_TITLE', 'ADMIN_API_SETTINGS');
 define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 
 // Make sure the install folder is deleted

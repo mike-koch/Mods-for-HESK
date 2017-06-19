@@ -473,7 +473,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                         </li>';
                     }
                     if (hesk_checkPermission('can_man_settings', 0)) {
-                        $number_of_settings++;
+                        $number_of_settings += 2;
                         $active = '';
                         if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_SETTINGS') {
                             $active = 'active';
@@ -484,6 +484,19 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             <a href="admin_settings.php">
                                 <i class="fa fa-fw fa-cog" ' . $iconDisplay . '></i>
                                 <span>' . $hesklang['helpdesk_settings'] . '</span>
+                            </a>
+                        </li>';
+
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_API_SETTINGS') {
+                            $active = 'active';
+                        }
+
+                        $markup .= '
+                        <li class="' . $active . '">
+                            <a href="api_settings.php">
+                                <i class="fa fa-fw fa-cog" ' . $iconDisplay . '></i>
+                                <span>' . $hesklang['api_settings'] . '</span>
                             </a>
                         </li>';
                     }
