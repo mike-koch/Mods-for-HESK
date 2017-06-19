@@ -184,6 +184,21 @@ hesk_dbConnect();
             $all_good = $all_good & run_column_check('custom_nav_element_to_text', 'language');
             $all_good = $all_good & run_column_check('custom_nav_element_to_text', 'text');
             $all_good = $all_good & run_column_check('custom_nav_element_to_text', 'subtext');
+            $all_good = $all_good & run_setting_check('admin_navbar_background');
+            $all_good = $all_good & run_setting_check('admin_navbar_background_hover');
+            $all_good = $all_good & run_setting_check('admin_navbar_text');
+            $all_good = $all_good & run_setting_check('admin_navbar_text_hover');
+            $all_good = $all_good & run_setting_check('admin_navbar_brand_background');
+            $all_good = $all_good & run_setting_check('admin_navbar_brand_background_hover');
+            $all_good = $all_good & run_setting_check('admin_navbar_brand_text');
+            $all_good = $all_good & run_setting_check('admin_navbar_brand_text_hover');
+            $all_good = $all_good & run_setting_check('admin_sidebar_background');
+            $all_good = $all_good & run_setting_check('admin_sidebar_background_hover');
+            $all_good = $all_good & run_setting_check('admin_sidebar_text');
+            $all_good = $all_good & run_setting_check('admin_sidebar_text_hover');
+            $all_good = $all_good & run_setting_check('admin_sidebar_font_weight');
+            $all_good = $all_good & run_setting_check('admin_sidebar_header_background');
+            $all_good = $all_good & run_setting_check('admin_sidebar_header_text');
 
             if ($all_good) {
                 echo "<script>$('#all-good').show()</script>";
@@ -198,6 +213,16 @@ hesk_dbConnect();
 </body>
 </html>
 <?php
+function run_setting_check($setting_name) {
+    global $hesk_settings;
+
+    $all_good = run_check("SELECT 1 FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = '{$setting_name}'");
+
+    output_result('<b>Setting Exists</b>: ' . $setting_name, $all_good);
+
+    return $all_good !== false;
+}
+
 function run_table_check($table_name) {
     return run_column_check($table_name, '1');
 }

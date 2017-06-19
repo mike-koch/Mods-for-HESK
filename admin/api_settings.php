@@ -3,7 +3,7 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
 define('PAGE_TITLE', 'ADMIN_SETTINGS');
-define('MFH_PAGE_LAYOUT', 'TOP_AND_SIDE');
+define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 
 // Make sure the install folder is deleted
 if (is_dir(HESK_PATH . 'install')) {
@@ -92,7 +92,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#general" data-toggle="tab"><?php echo $hesklang['tab_1']; ?></a></li>
                 <li><a href="#user-security" data-toggle="tab"><?php echo $hesklang['user_security']; ?></a></li>
-                <li><a href="#" target="_blank"><?php echo $hesklang['api_documentation']; ?> <i class="fa fa-external-link"></i></a></li>
+                <li><a href="https://mods-for-hesk.readme.io/reference" target="_blank"><?php echo $hesklang['api_documentation']; ?> <i class="fa fa-external-link"></i></a></li>
             </ul>
             <div class="tab-content summaryList tabPadding">
                 <div class="tab-pane fade in active" id="general">
