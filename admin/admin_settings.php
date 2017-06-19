@@ -3629,55 +3629,55 @@ $modsForHesk_settings = mfh_getSettings();
 
                                     var lightTheme = val.match(/.+-light/i);
 
-                                    $('input[name="admin-sidebar-background-color"]').val(lightTheme ? '#f9fafc' : '#222d32');
-                                    $('input[name="admin-sidebar-header-background-color"]').val(lightTheme ? '#f9fafc' : '#1a2226');
-                                    $('input[name="admin-sidebar-text-color"]').val(lightTheme ? '#444' : '#b8c7ce');
-                                    $('input[name="admin-sidebar-header-text-color"]').val(lightTheme ? '#848484' : '#4b646f');
-                                    $('input[name="admin-sidebar-text-hover-color"]').val(lightTheme ? '#444' : '#fff');
-                                    $('input[name="admin-sidebar-background-hover-color"]').val(lightTheme ? '#f4f4f5' : '#1e282c');
+                                    $('#cpadmin-sidebar-background-color').colorpicker('setValue', lightTheme ? '#f9fafc' : '#222d32');
+                                    $('#cpadmin-sidebar-header-background-color').colorpicker('setValue', lightTheme ? '#f9fafc' : '#1a2226');
+                                    $('#cpadmin-sidebar-text-color').colorpicker('setValue', lightTheme ? '#444' : '#b8c7ce');
+                                    $('#cpadmin-sidebar-header-text-color').colorpicker('setValue', lightTheme ? '#848484' : '#4b646f');
+                                    $('#cpadmin-sidebar-text-hover-color').colorpicker('setValue', lightTheme ? '#444' : '#fff');
+                                    $('#cpadmin-sidebar-background-hover-color').colorpicker('setValue', lightTheme ? '#f4f4f5' : '#1e282c');
                                     $('input[name="admin-sidebar-font-weight"]').val(lightTheme ? ['bold'] : ['normal']);
 
-                                    $('input[name="admin-navbar-text-color"]').val('#fff');
-                                    $('input[name="admin-navbar-text-hover-color"]').val('#fff');
-                                    $('input[name="admin-navbar-brand-text-color"]').val('#fff');
-                                    $('input[name="admin-navbar-brand-text-hover-color"]').val('#fff');
+                                    $('#cpadmin-navbar-text-color').colorpicker('setValue', '#fff');
+                                    $('#cpadmin-navbar-text-hover-color').colorpicker('setValue', '#fff');
+                                    $('#cpadmin-navbar-brand-text-color').colorpicker('setValue', '#fff');
+                                    $('#cpadmin-navbar-brand-text-hover-color').colorpicker('setValue', '#fff');
                                     if (val.match(/blue.*/i)) {
-                                        $('input[name="admin-navbar-background-color"]').val('#3c8dbc');
-                                        $('input[name="admin-navbar-background-hover-color"]').val('#367fa9');
+                                        $('#cpadmin-navbar-background-color').colorpicker('setValue', '#3c8dbc');
+                                        $('#cpadmin-navbar-background-hover-color').colorpicker('setValue', '#367fa9');
 
-                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#3c8dbc' : '#367fa9');
-                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#3b8ab8' : '#357ca5');
+                                        $('#cpadmin-navbar-brand-background-color').colorpicker('setValue', lightTheme ? '#3c8dbc' : '#367fa9');
+                                        $('#cpadmin-navbar-brand-background-hover-color').colorpicker('setValue', lightTheme ? '#3b8ab8' : '#357ca5');
                                     } else if (val.match(/yellow.*/i)) {
-                                        $('input[name="admin-navbar-background-color"]').val('#f39c12');
-                                        $('input[name="admin-navbar-background-hover-color"]').val('#da8c10');
+                                        $('#cpadmin-navbar-background-color').colorpicker('setValue', '#f39c12');
+                                        $('#cpadmin-navbar-background-hover-color').colorpicker('setValue', '#da8c10');
 
-                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#f39c12' : '#e08e0b');
-                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#f39a0d' : '#db8b0b');
+                                        $('#cpadmin-navbar-brand-background-color').colorpicker('setValue', lightTheme ? '#f39c12' : '#e08e0b');
+                                        $('#cpadmin-navbar-brand-background-hover-color').colorpicker('setValue', lightTheme ? '#f39a0d' : '#db8b0b');
                                     } else if (val.match(/green.*/i)) {
-                                        $('input[name="admin-navbar-background-color"]').val('#00a65a');
-                                        $('input[name="admin-navbar-background-hover-color"]').val('#009551');
+                                        $('#cpadmin-navbar-background-color').colorpicker('setValue', '#00a65a');
+                                        $('#cpadmin-navbar-background-hover-color').colorpicker('setValue', '#009551');
 
-                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#00a65a' : '#008d4c');
-                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#00a157' : '#008749');
+                                        $('#cpadmin-navbar-brand-background-color').colorpicker('setValue', lightTheme ? '#00a65a' : '#008d4c');
+                                        $('#cpadmin-navbar-brand-background-hover-color').colorpicker('setValue', lightTheme ? '#00a157' : '#008749');
                                     } else if (val.match(/purple.*/i)) {
-                                        $('input[name="admin-navbar-background-color"]').val('#605ca8');
-                                        $('input[name="admin-navbar-background-hover-color"]').val('#565397');
+                                        $('#cpadmin-navbar-background-color').colorpicker('setValue', '#605ca8');
+                                        $('#cpadmin-navbar-background-hover-color').colorpicker('setValue', '#565397');
 
-                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#605ca8' : '#555299');
-                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#5d59a6' : '#545096');
+                                        $('#cpadmin-navbar-brand-background-color').colorpicker('setValue', lightTheme ? '#605ca8' : '#555299');
+                                        $('#cpadmin-navbar-brand-background-hover-color').colorpicker('setValue', lightTheme ? '#5d59a6' : '#545096');
                                     } else if (val.match(/red.*/i)) {
-                                        $('input[name="admin-navbar-background-color"]').val('#dd4b39');
-                                        $('input[name="admin-navbar-background-hover-color"]').val('#c64333');
+                                        $('#cpadmin-navbar-background-color').colorpicker('setValue', '#dd4b39');
+                                        $('#cpadmin-navbar-background-hover-color').colorpicker('setValue', '#c64333');
 
-                                        $('input[name="admin-navbar-brand-background-color"]').val(lightTheme ? '#dd4b39' : '#d73925');
-                                        $('input[name="admin-navbar-brand-background-hover-color"]').val(lightTheme ? '#dc4735' : '#d33724');
+                                        $('#cpadmin-navbar-brand-background-color').colorpicker('setValue', lightTheme ? '#dd4b39' : '#d73925');
+                                        $('#cpadmin-navbar-brand-background-hover-color').colorpicker('setValue', lightTheme ? '#dc4735' : '#d33724');
                                     } else {
                                         //-- Black
-                                        $('input[name="admin-navbar-background-color"]').val('#fff');
-                                        $('input[name="admin-navbar-background-hover-color"]').val('#eee');
+                                        $('#cpadmin-navbar-background-color').colorpicker('setValue', '#fff');
+                                        $('#cpadmin-navbar-background-hover-color').colorpicker('setValue', '#eee');
 
-                                        $('input[name="admin-navbar-brand-background-color"]').val('#fff');
-                                        $('input[name="admin-navbar-brand-background-hover-color"]').val('#fcfcfc');
+                                        $('#cpadmin-navbar-brand-background-color').colorpicker('setValue', '#fff');
+                                        $('#cpadmin-navbar-brand-background-hover-color').colorpicker('setValue', '#fcfcfc');
                                     }
                                 });
                             </script>

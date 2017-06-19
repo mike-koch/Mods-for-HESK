@@ -41,7 +41,6 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/skins/_all-skins.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/toastr.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/magnific-popup.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
