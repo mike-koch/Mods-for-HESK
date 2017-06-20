@@ -1013,7 +1013,6 @@ function execute310Scripts() {
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('login_background', '#d2d6de')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('login_box_header', 'helpdesk-title')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('login_box_header_image', '')");
-    executeQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` IN ('rtl', 'admin_color_scheme')");
 
     // Copy over color presets to the custom values
     $theme_preset_rs = executeQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'admin_color_scheme'");
@@ -1048,31 +1047,31 @@ function execute310Scripts() {
         'background' => $light_theme ? '#f9fafc' : '#1a2226',
         'text' => $light_theme ? '#848484' : '#4b646f',
     );
-    if (preg_match('/skin-blue.*/g', $theme)) {
+    if (preg_match('/skin-blue.*/', $theme)) {
         $navbar['background'] = '#3c8dbc';
         $navbar['background_hover'] = '#367fa9';
 
         $navbar_brand['background'] = $light_theme ? '#3c8dbc' : '#367fa9';
         $navbar_brand['background_hover'] = $light_theme ? '#3b8ab8' : '#357ca5';
-    } elseif (preg_match('/skin-yellow.*/g', $theme)) {
+    } elseif (preg_match('/skin-yellow.*/', $theme)) {
         $navbar['background'] = '#f39c12';
         $navbar['background_hover'] = '#da8c10';
 
         $navbar_brand['background'] = $light_theme ? '#f39c12' : '#e08e0b';
         $navbar_brand['background_hover'] = $light_theme ? '#f39a0d' : '#db8b0b';
-    } elseif (preg_match('/skin-green.*/g', $theme)) {
+    } elseif (preg_match('/skin-green.*/', $theme)) {
         $navbar['background'] = '#00a65a';
         $navbar['background_hover'] = '#009551';
 
         $navbar_brand['background'] = $light_theme ? '#00a65a' : '#008d4c';
         $navbar_brand['background_hover'] = $light_theme ? '#00a157' : '#008749';
-    } elseif (preg_match('/skin-purple.*/g', $theme)) {
+    } elseif (preg_match('/skin-purple.*/', $theme)) {
         $navbar['background'] = '#605ca8';
         $navbar['background_hover'] = '#565397';
 
         $navbar_brand['background'] = $light_theme ? '#605ca8' : '#555299';
         $navbar_brand['background_hover'] = $light_theme ? '#5d59a6' : '#545096';
-    } elseif (preg_match('/skin-red.*/g', $theme)) {
+    } elseif (preg_match('/skin-red.*/', $theme)) {
         $navbar['background'] = '#dd4b39';
         $navbar['background_hover'] = '#c64333';
 
@@ -1081,9 +1080,13 @@ function execute310Scripts() {
     } else {
         $navbar['background'] = '#fff';
         $navbar['background_hover'] = '#eee';
+        $navbar['text_color'] = '#333';
+        $navbar['text_hover'] = '#333';
 
         $navbar_brand['background'] = '#fff';
         $navbar_brand['background_hover'] = '#fcfcfc';
+        $navbar_brand['text'] = '#333';
+        $navbar_brand['text_hover'] = '#333';
     }
 
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
@@ -1116,6 +1119,7 @@ function execute310Scripts() {
         VALUES ('admin_sidebar_header_background', '{$sidebar_header['background']}')");
     executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) 
         VALUES ('admin_sidebar_header_text', '{$sidebar_header['text']}')");
+    executeQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` IN ('rtl', 'admin_color_scheme')");
 
     updateVersion('3.1.0');
 }
