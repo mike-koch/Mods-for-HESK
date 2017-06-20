@@ -310,6 +310,9 @@ if ($modsForHesk_settings['show_icons']) {
                 </li>
                 <?php endif; ?>
                 <?php
+                $table_exists_rs = hesk_dbQuery("SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element'");
+
+                if (!defined('MAINTENANCE_MODE') && hesk_dbNumRows($table_exists_rs)) {
                 $customNavRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element` AS `t1`
                     INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element_to_text` AS `t2`
                         ON `t1`.`id` = `t2`.`nav_element_id`
@@ -317,7 +320,7 @@ if ($modsForHesk_settings['show_icons']) {
                     WHERE `t1`.`place` = 2");
 
                 while ($row = hesk_dbFetchAssoc($customNavRs)):
-                ?>
+                    ?>
                     <li>
                         <a href="<?php echo $row['url']; ?>">
                             <?php if ($row['image_url'] !== null): ?>
@@ -328,7 +331,8 @@ if ($modsForHesk_settings['show_icons']) {
                             <?php echo $row['text']; ?>
                         </a>
                     </li>
-                <?php endwhile; ?>
+                <?php endwhile;
+                } ?>
             </ul>
             <?php if ($hesk_settings['can_sel_lang']) { ?>
                 <div class="navbar-form navbar-right" role="search" style="margin-right: 20px; min-width: 80px;">
