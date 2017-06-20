@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    var heskPath = $('p#hesk-path').text();
+
     $('#calendar').fullCalendar({
         header: {
             left: 'prevYear,prev,next,nextYear today',
@@ -13,7 +15,7 @@ $(document).ready(function() {
         defaultView: $('#setting_default_view').text().trim(),
         events: function(start, end, timezone, callback) {
             $.ajax({
-                url: getHelpdeskUrl() + '/internal-api/admin/calendar/?start=' + start + '&end=' + end,
+                url: heskPath + 'internal-api/admin/calendar/?start=' + start + '&end=' + end,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -165,7 +167,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
+            url: heskPath + 'internal-api/admin/calendar/',
             data: data,
             success: function() {
                 removeFromCalendar(data.id);
@@ -210,7 +212,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
+            url: heskPath + 'internal-api/admin/calendar/',
             data: data,
             success: function(id) {
                 addToCalendar(id, data, $('#lang_event_created').text());
@@ -256,7 +258,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
+            url: heskPath + 'internal-api/admin/calendar/',
             data: data,
             success: function() {
                 removeFromCalendar(data.id);
@@ -308,7 +310,7 @@ function buildEvent(id, dbObject) {
     if (dbObject.allDay) {
         endTime.add(1, 'days');
     }
-    console.log(dbObject);
+
     return {
         id: id,
         title: dbObject.title,
@@ -432,7 +434,9 @@ function displayEditModal(date) {
     }
 
 
-    var createTicketLink = getHelpdeskUrl() + '/' + getAdminDirectory() + '/new_ticket.php?subject=';
+    var heskPath = $('p#hesk-path').text();
+    var adminDir = $('p#admin-dir').text();
+    var createTicketLink = heskPath + adminDir + '/new_ticket.php?subject=';
     createTicketLink += encodeURI('[' + date.start.format('YYYY-MM-DD') + '] ' + date.title);
     if (date.location != '') {
         createTicketLink += encodeURI(' @ ' + date.location);
@@ -467,10 +471,11 @@ function updateCategoryVisibility() {
 }
 
 function respondToDragAndDrop(event, delta, revertFunc) {
+    var heskPath = $('p#hesk-path').text();
     if (event.type === 'TICKET') {
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
+            url: heskPath + 'internal-api/admin/calendar/',
             data: {
                 trackingId: event.trackingId,
                 action: 'update-ticket',
@@ -518,7 +523,7 @@ function respondToDragAndDrop(event, delta, revertFunc) {
         };
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
+            url: heskPath + 'internal-api/admin/calendar/',
             data: data,
             success: function() {
                 mfhAlert.success(mfhLang.text('event_updated'));

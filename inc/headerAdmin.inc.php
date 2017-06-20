@@ -67,7 +67,6 @@ $modsForHesk_settings = mfh_getSettings();
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core-admin.php?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.slimscroll.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/toastr.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
@@ -305,7 +304,8 @@ if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY') {
 unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js">
 
 <?php // GLOBAL JAVASCRIPT IDs ?>
-<p style="display: none" id="heskUrl"><?php echo $hesk_settings['hesk_url']; ?></p>
+<p style="display: none" id="hesk-path"><?php echo HESK_PATH; ?></p>
+<p style="display: none" id="admin-dir"><?php echo $hesk_settings['admin_dir']; ?></p>
 <p style="display: none" id="lang_alert_success"><?php echo $hesklang['alert_success']; ?></p>
 <p style="display: none" id="lang_alert_error"><?php echo $hesklang['alert_error']; ?></p>
 

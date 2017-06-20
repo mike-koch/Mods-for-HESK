@@ -300,9 +300,10 @@ function outputAttachmentIdHolder(value, id) {
 }
 
 function removeAttachment(id) {
+    var heskPath = $('p#hesk-path').text();
     $('input[name="attachment-ids[]"][value="' + id + '"]').remove();
     $.ajax({
-        url: getHelpdeskUrl() + '/internal-api/ticket/delete-attachment.php?id=' + id,
+        url: heskPath + 'internal-api/ticket/delete-attachment.php?id=' + id,
         method: 'GET'
     });
 }

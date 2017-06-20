@@ -93,7 +93,6 @@ if (is_dir(HESK_PATH . 'install')) {
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core.php?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/toastr.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.magnific-popup.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
@@ -349,3 +348,5 @@ if ($modsForHesk_settings['show_icons']) {
             <?php } ?>
         </div>
     </nav>
+    <?php // GLOBAL JAVASCRIPT IDs ?>
+    <p style="display: none" id="hesk-path"><?php echo HESK_PATH; ?></p>

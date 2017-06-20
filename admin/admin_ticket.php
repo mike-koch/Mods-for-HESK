@@ -1506,13 +1506,15 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
         $replyDataAttribute = 'data-reply-id="' . $reply['id'] . '"';
     }
 
-    $options .= '
+    if ($ticket['email'] !== '') {
+        $options .= '
         <button class="btn btn-default" data-action="resend-email-notification" ' . $replyDataAttribute . ' data-ticket-id="' . $ticket['id'] . '">
             <i class="fa fa-envelope navy-blue"></i> ' . $hesklang['resend_email_notification'] . '
         </button>
         <span id="lang_email_notification_sent" style="display: none">' . $hesklang['email_notification_sent'] . '</span>
         <span id="lang_email_notification_resend_failed" style="display: none">' . $hesklang['email_notification_resend_failed'] . '</span>
         ';
+    }
 
     /* Edit post */
     if ($can_edit) {

@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    var heskPath = $('p#hesk-path').text();
+
     var $readonlyDueDateContainer = $('#readonly-due-date');
     var $changeButton = $readonlyDueDateContainer.find('#change-button');
     var $editableDueDateContainer = $('#editable-due-date');
@@ -20,7 +22,7 @@ $(document).ready(function() {
         var newDueDate = $editableDueDateContainer.find('input[type="text"][name="due-date"]').val();
         $.ajax({
             method: 'POST',
-            url: getHelpdeskUrl() + '/internal-api/admin/calendar/',
+            url: heskPath + 'internal-api/admin/calendar/',
             data: {
                 trackingId: $('input[type="hidden"][name="track"]').val(),
                 action: 'update-ticket',
@@ -48,8 +50,7 @@ $(document).ready(function() {
 
         var ticketId = $this.data('ticket-id');
         var replyId = $this.data('reply-id');
-        var heskUrl = $('span#heskUrl').text();
-        var apiUrl = heskUrl + '/api/index.php/v1-internal/staff/tickets/' + ticketId + '/resend-email';
+        var apiUrl = heskPath + 'api/index.php/v1-internal/staff/tickets/' + ticketId + '/resend-email';
 
         if (replyId !== undefined) {
             apiUrl += '?replyId=' + replyId;

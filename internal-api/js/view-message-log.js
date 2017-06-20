@@ -20,8 +20,8 @@ function getNullableField(value) {
 }
 
 function searchLogs(location, fromDate, toDate, severity) {
-    var endpoint = getHelpdeskUrl();
-    endpoint += '/internal-api/admin/message-log/';
+    var heskPath = $('p#hesk-path').text();
+    var endpoint = heskPath + 'internal-api/admin/message-log/';
 
     $.ajax({
         url: endpoint,

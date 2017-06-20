@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    var heskPath = $('p#hesk-path').text();
+
     $('#calendar').fullCalendar({
         header: {
             left: 'prevYear,prev,next,nextYear today',
@@ -13,7 +15,7 @@ $(document).ready(function() {
         defaultView: $('#setting_default_view').text().trim(),
         events: function(start, end, timezone, callback) {
             $.ajax({
-                url: getHelpdeskUrl() + '/internal-api/admin/calendar/?start=' + start + '&end=' + end,
+                url: heskPath + 'internal-api/admin/calendar/?start=' + start + '&end=' + end,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
