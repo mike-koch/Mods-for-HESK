@@ -459,7 +459,7 @@ if (!isset($_SESSION['hide']['new_article']))
                                     <?php build_dropzone_markup(true); ?>
                                 </div>
                                 <?php
-                                display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php');
+                                display_dropzone_field(HESK_PATH . 'internal-api/admin/knowledgebase/upload-attachment.php');
                             endif; // End attachments
 
                             ?>
@@ -1517,7 +1517,7 @@ function edit_article()
 
                             <?php
                             build_dropzone_markup(true);
-                            display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/admin/knowledgebase/upload-attachment.php');
+                            display_dropzone_field(HESK_PATH . 'internal-api/admin/knowledgebase/upload-attachment.php');
                             ?>
                         </div>
                         <?php endif; //End attachments ?>

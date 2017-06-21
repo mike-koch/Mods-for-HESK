@@ -1167,7 +1167,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <?php build_dropzone_markup(true, 'notesFiledrop'); ?>
                         </div>
                     </div>
-                    <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php', 'notesFiledrop'); ?>
+                    <?php display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php', 'notesFiledrop'); ?>
                     <div class="text-right">
                         <i><?php echo $hesklang['nhid']; ?></i>&nbsp;
                         <div class="btn-group">
@@ -1965,7 +1965,6 @@ function hesk_printReplyForm()
 
                             ?></textarea>
                         <div class="help-block with-errors" id="message-help-block"></div></span>
-                        <p id="lang_ticket_message_contents_exist" style="display: none"><?php echo $hesklang['ticket_message_contents_exist']; ?></p>
                 </div>
             </div>
             <?php
@@ -1980,7 +1979,7 @@ function hesk_printReplyForm()
                     </div>
                 </div>
                 <?php
-                display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
+                display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php');
             }
             ?>
             <div class="form-group">
