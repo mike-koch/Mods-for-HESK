@@ -207,7 +207,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             echo '<option value="">'.$hesklang['select'].'</option>';
                                         }
                                         foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category['id']; ?>" data-color="<?php echo htmlspecialchars($category['color']); ?>">
+                                            <option value="<?php echo $category['id']; ?>" data-background-color="<?php echo htmlspecialchars($category['background_color']); ?>"
+                                                data-foreground-color="<?php echo htmlspecialchars($category['foreground_color']); ?>"
+                                                data-display-border="<?php echo htmlspecialchars($category['display_border_outline']); ?>">
                                                 <?php echo $category['name']; ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -377,7 +379,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             echo '<option value="">'.$hesklang['select'].'</option>';
                                         }
                                         foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category['id']; ?>" data-color="<?php echo $category['color']; ?>">
+                                            <option value="<?php echo $category['id']; ?>" data-background-color="<?php echo htmlspecialchars($category['background_color']); ?>"
+                                                    data-foreground-color="<?php echo htmlspecialchars($category['foreground_color']); ?>"
+                                                    data-display-border="<?php echo htmlspecialchars($category['display_border_outline']); ?>">
                                                 <?php echo $category['name']; ?>
                                             </option>
                                         <?php endforeach; ?>
