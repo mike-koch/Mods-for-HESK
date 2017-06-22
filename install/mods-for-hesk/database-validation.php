@@ -216,7 +216,8 @@ hesk_dbConnect();
 function run_setting_check($setting_name) {
     global $hesk_settings;
 
-    $all_good = run_check("SELECT 1 FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = '{$setting_name}'");
+    $res = run_check("SELECT 1 FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = '{$setting_name}'");
+	$all_good = hesk_dbNumRows($res) > 0;
 
     output_result('<b>Setting Exists</b>: ' . $setting_name, $all_good);
 
