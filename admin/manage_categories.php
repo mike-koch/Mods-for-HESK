@@ -107,8 +107,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
         <div class="box-body">
             <form action="manage_categories.php" method="post" role="form" class="form-horizontal" data-toggle="validator">
                 <div class="form-group">
-                    <p class="col-sm-4 control-label" style="font-size: .87em">
-                        <b><?php echo $hesklang['cat_name']; ?></b> (<?php echo $hesklang['max_chars']; ?>)</p>
+                    <label for="name" class="col-sm-4 control-label"><?php echo $hesklang['cat_name']; ?></label>
 
                     <div class="col-sm-8">
                         <input class="form-control"
@@ -121,12 +120,12 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                             ?>
                                data-error="<?php echo htmlspecialchars($hesklang['enter_cat_name']); ?>"
                                required>
+                        <div class="help-block"><?php echo $hesklang['max_chars']; ?></div>
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="priority" class="col-sm-4 control-label"
-                           style="font-size: .87em"><?php echo $hesklang['def_pri']; ?> <a href="#"
+                    <label for="priority" class="col-sm-4 control-label"><?php echo $hesklang['def_pri']; ?> <a href="#"
                                                                                            onclick="alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')"><i
                                 class="fa fa-question-circle settingsquestionmark"></i> </a> </label>
 
@@ -149,15 +148,51 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 </div>
                 <div class="form-group">
                     <label for="color" class="col-sm-4 control-label">
-                        <?php echo $hesklang['category_color']; ?>
+                        <?php echo $hesklang['category_background_color']; ?>
                         <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                           title="<?php echo htmlspecialchars($hesklang['category_color']); ?>"
-                           data-content="<?php echo htmlspecialchars($hesklang['category_color_help']); ?>"></i>
+                           title="<?php echo htmlspecialchars($hesklang['category_background_color']); ?>"
+                           data-content="<?php echo htmlspecialchars($hesklang['category_background_color_help']); ?>"></i>
                     </label>
                     <div class="col-sm-8">
                         <input class="form-control colorpicker-trigger"
-                               placeholder="<?php echo htmlspecialchars($hesklang['category_color']); ?>" type="text"
-                               name="color" maxlength="7">
+                               placeholder="<?php echo htmlspecialchars($hesklang['category_background_color']); ?>" type="text"
+                               name="background-color" maxlength="7" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="color" class="col-sm-4 control-label">
+                        <?php echo $hesklang['category_foreground_color']; ?>
+                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                           title="<?php echo htmlspecialchars($hesklang['category_foreground_color']); ?>"
+                           data-content="<?php echo htmlspecialchars($hesklang['category_foreground_color_help']); ?>"></i>
+                    </label>
+                    <div class="col-sm-8">
+                        <input class="form-control colorpicker-trigger"
+                               placeholder="<?php echo htmlspecialchars($hesklang['category_foreground_color']); ?>" type="text"
+                               name="foreground-color" maxlength="7">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="display-border" class="col-sm-4 control-label">
+                        <?php echo $hesklang['category_display_border']; ?>
+                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                           title="<?php echo htmlspecialchars($hesklang['category_display_border']); ?>"
+                           data-content="<?php echo htmlspecialchars($hesklang['category_display_border_help']); ?>"></i>
+                    </label>
+                    <div class="col-sm-8 form-inline">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="display-border" value="1">
+                                <?php echo $hesklang['yes']; ?>
+                            </label>
+                        </div>&nbsp;&nbsp;&nbsp;
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="display-border" value="0" checked>
+                                <?php echo $hesklang['no']; ?>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -194,10 +229,12 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         </div>
                     </div>
                 </div>
-                <div class="form-group text-center">
-                    <input type="hidden" name="a" value="new"/>
-                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
-                    <input type="submit" value="<?php echo $hesklang['create_cat']; ?>" class="btn btn-default"/>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-4">
+                        <input type="hidden" name="a" value="new"/>
+                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
+                        <input type="submit" value="<?php echo $hesklang['create_cat']; ?>" class="btn btn-default"/>
+                    </div>
                 </div>
             </form>
         </div>
