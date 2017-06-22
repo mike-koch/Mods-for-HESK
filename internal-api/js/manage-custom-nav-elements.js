@@ -121,7 +121,7 @@ $(document).ready(function() {
 
 function loadTable() {
     $('#overlay').show();
-    var heskUrl = $('#heskUrl').text();
+    var heskUrl = $('p#hesk-path').text();
     var notFoundText = mfhLang.text('no_custom_nav_elements_found');
     var places = [];
     var $tableBody = $('#table-body');
@@ -131,7 +131,7 @@ function loadTable() {
 
     $.ajax({
         method: 'GET',
-        url: heskUrl + '/api/v1-internal/custom-navigation/all',
+        url: heskUrl + 'api/v1-internal/custom-navigation/all',
         headers: { 'X-Internal-Call': true },
         success: function(data) {
             $tableBody.html('');
