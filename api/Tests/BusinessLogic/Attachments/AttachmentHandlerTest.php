@@ -100,6 +100,7 @@ class AttachmentHandlerTest extends TestCase {
 
     function testThatValidateThrowsAnExceptionWhenTheAttachmentBodyIsInvalidBase64() {
         //-- Arrange
+        $this->ticketGateway->method('getTicketById')->willReturn(new Ticket());
         $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(true);
         $this->createAttachmentForTicketModel->attachmentContents = 'invalid base 64';
 
