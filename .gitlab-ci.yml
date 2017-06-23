@@ -4,6 +4,7 @@ before_script:
 - bash ci/docker_install.sh > /dev/null
 
 test:app:
+  when: manual
   script:
   -  cd api/Tests
   -  phpunit
