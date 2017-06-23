@@ -1,0 +1,8 @@
+image: php:7.0
+
+before_script:
+- bash ci/docker_install.sh > /dev/null
+
+test:app:
+  script:
+  - phpunit --configuration api/Tests/phpunit.xml
