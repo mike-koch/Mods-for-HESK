@@ -39,6 +39,8 @@ hesk_checkPermission('can_manage_settings');
 // A security check
 hesk_token_check('POST');
 
+$modsForHesk_settings = mfh_getSettings();
+
 // Demo mode
 if (defined('HESK_DEMO')) {
     hesk_process_messages($hesklang['sdemo'], 'admin_settings.php');
@@ -447,7 +449,6 @@ foreach ($postArray as $value) {
 }
 
 // Save the modsForHesk_settings.inc.php file
-$set['rtl'] = empty($_POST['rtl']) ? 0 : 1;
 $set['show-icons'] = empty($_POST['show-icons']) ? 0 : 1;
 $set['custom-field-setting'] = empty($_POST['custom-field-setting']) ? 0 : 1;
 $set['customer-email-verification-required'] = empty($_POST['email-verification']) ? 0 : 1;
@@ -494,8 +495,115 @@ $set['dropdownItemTextColor'] = hesk_input(hesk_POST('dropdownItemTextColor'));
 $set['dropdownItemTextHoverColor'] = hesk_input(hesk_POST('dropdownItemTextHoverColor'));
 $set['questionMarkColor'] = hesk_input(hesk_POST('questionMarkColor'));
 $set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownItemTextHoverBackgroundColor'));
-$set['admin_color_scheme'] = hesk_input(hesk_POST('admin-color-scheme'));
-mfh_updateSetting('rtl', $set['rtl']);
+$set['admin_navbar_background'] = hesk_input(hesk_POST('admin-navbar-background-color'));
+$set['admin_navbar_background_hover'] = hesk_input(hesk_POST('admin-navbar-background-hover-color'));
+$set['admin_navbar_brand_background'] = hesk_input(hesk_POST('admin-navbar-brand-background-color'));
+$set['admin_navbar_brand_background_hover'] = hesk_input(hesk_POST('admin-navbar-brand-background-hover-color'));
+$set['admin_navbar_brand_text'] = hesk_input(hesk_POST('admin-navbar-brand-text-color'));
+$set['admin_navbar_brand_text_hover'] = hesk_input(hesk_POST('admin-navbar-brand-text-hover-color'));
+$set['admin_navbar_text'] = hesk_input(hesk_POST('admin-navbar-text-color'));
+$set['admin_navbar_text_hover'] = hesk_input(hesk_POST('admin-navbar-text-hover-color'));
+$set['admin_sidebar_background'] = hesk_input(hesk_POST('admin-sidebar-background-color'));
+$set['admin_sidebar_background_hover'] = hesk_input(hesk_POST('admin-sidebar-header-background-color'));
+$set['admin_sidebar_font_weight'] = hesk_input(hesk_POST('admin-sidebar-font-weight'));
+$set['admin_sidebar_header_background'] = hesk_input(hesk_POST('admin-sidebar-header-background-color'));
+$set['admin_sidebar_header_text'] = hesk_input(hesk_POST('admin-sidebar-header-text-color'));
+$set['admin_sidebar_text'] = hesk_input(hesk_POST('admin-sidebar-text-color'));
+$set['admin_sidebar_text_hover'] = hesk_input(hesk_POST('admin-sidebar-text-hover-color'));
+
+$set['login_background_type'] = hesk_input(hesk_POST('login-background'));
+$set['login_box_header'] = hesk_input(hesk_POST('login-box-header'));
+
+$changedBackground = false;
+$loadedAttachmentFuncs = false;
+if ($set['login_background_type'] == 'color') {
+    if (file_exists($hesk_settings['cache_dir'] . '/lb_' . $set['login_background'])) {
+        unlink($hesk_settings['cache_dir'] . '/lb_' . $set['login_background']);
+    }
+    $set['login_background'] = hesk_input(hesk_POST('login-background-color'));
+    if ($set['login_background'] == '') {
+        $set['login_background'] = '#d2d6de';
+    }
+
+    $changedBackground = true;
+} else {
+    if (!$loadedAttachmentFuncs) {
+        include(HESK_PATH . 'inc/attachments.inc.php');
+        include(HESK_PATH . 'inc/posting_functions.inc.php');
+        $loadedAttachmentFuncs = true;
+    }
+
+
+    $file_name = hesk_cleanFileName($_FILES['login-background-image']['name']);
+
+
+    if (!empty($_FILES['login-background-image']['name'])) {
+        $file_size = $_FILES['login-background-image']['size'];
+        if ($file_size > $hesk_settings['attachments']['max_size']) {
+            return hesk_fileError(sprintf($hesklang['file_too_large'], $file_name));
+        }
+        $ext = strtolower(strrchr($file_name, "."));
+
+        if (file_exists($hesk_settings['cache_dir'] . '/lb_' . $modsForHesk_settings['login_background'])) {
+            unlink($hesk_settings['cache_dir'] . '/lb_' . $modsForHesk_settings['login_background']);
+        }
+
+        $saved_name = 'login-background' . $ext;
+
+        $file_to_move = $_FILES['login-background-image']['tmp_name'];
+
+
+        if (!move_uploaded_file($file_to_move, dirname(dirname(__FILE__)) . '/' . $hesk_settings['cache_dir'] . '/lb_' . $saved_name)) {
+            hesk_error($hesklang['cannot_move_tmp']);
+        }
+
+        $set['login_background'] = $saved_name;
+        $changedBackground = true;
+    }
+}
+$changedLoginImage = false;
+if ($set['login_box_header'] == 'image') {
+    if (!$loadedAttachmentFuncs) {
+        include(HESK_PATH . 'inc/attachments.inc.php');
+        include(HESK_PATH . 'inc/posting_functions.inc.php');
+        $loadedAttachmentFuncs = true;
+    }
+
+
+    $file_name = hesk_cleanFileName($_FILES['login-box-header-image']['name']);
+
+    if (!empty($_FILES['login-box-header-image']['name'])) {
+        $file_size = $_FILES['login-box-header-image']['size'];
+        if ($file_size > $hesk_settings['attachments']['max_size']) {
+            return hesk_fileError(sprintf($hesklang['file_too_large'], $file_name));
+        }
+        $ext = strtolower(strrchr($file_name, "."));
+
+        if (file_exists($hesk_settings['cache_dir'] . '/lbh_' . $modsForHesk_settings['login_box_header_image'])) {
+            unlink($hesk_settings['cache_dir'] . '/lbh_' . $modsForHesk_settings['login_box_header_image']);
+        }
+
+        $saved_name = 'login-box-header-image' . $ext;
+
+        $file_to_move = $_FILES['login-box-header-image']['tmp_name'];
+
+
+        if (!move_uploaded_file($file_to_move, dirname(dirname(__FILE__)) . '/' . $hesk_settings['cache_dir'] . '/lbh_' . $saved_name)) {
+            hesk_error($hesklang['cannot_move_tmp']);
+        }
+
+        $set['login_box_header_image'] = $saved_name;
+        $changedLoginImage = true;
+    }
+} else {
+    if (file_exists($hesk_settings['cache_dir'] . '/lbh_' . $set['login_box_header_image'])) {
+        unlink($hesk_settings['cache_dir'] . '/lbh_' . $set['login_box_header_image']);
+    }
+
+    $set['login_box_header_image'] = '';
+    $changedLoginImage = true;
+}
+
 mfh_updateSetting('show_icons', $set['show-icons']);
 mfh_updateSetting('custom_field_setting', $set['custom-field-setting']);
 mfh_updateSetting('customer_email_verification_required', $set['customer-email-verification-required']);
@@ -521,6 +629,21 @@ mfh_updateSetting('dropdownItemTextColor', $set['dropdownItemTextColor'], true);
 mfh_updateSetting('dropdownItemTextHoverColor', $set['dropdownItemTextHoverColor'], true);
 mfh_updateSetting('questionMarkColor', $set['questionMarkColor'], true);
 mfh_updateSetting('dropdownItemTextHoverBackgroundColor', $set['dropdownItemTextHoverBackgroundColor'], true);
+mfh_updateSetting('admin_navbar_background', $set['admin_navbar_background'], true);
+mfh_updateSetting('admin_navbar_background_hover', $set['admin_navbar_background_hover'], true);
+mfh_updateSetting('admin_navbar_brand_background', $set['admin_navbar_brand_background'], true);
+mfh_updateSetting('admin_navbar_brand_background_hover', $set['admin_navbar_brand_background_hover'], true);
+mfh_updateSetting('admin_navbar_brand_text', $set['admin_navbar_brand_text'], true);
+mfh_updateSetting('admin_navbar_brand_text_hover', $set['admin_navbar_brand_text_hover'], true);
+mfh_updateSetting('admin_navbar_text', $set['admin_navbar_text'], true);
+mfh_updateSetting('admin_navbar_text_hover', $set['admin_navbar_text_hover'], true);
+mfh_updateSetting('admin_sidebar_background', $set['admin_sidebar_background'], true);
+mfh_updateSetting('admin_sidebar_background_hover', $set['admin_sidebar_background_hover'], true);
+mfh_updateSetting('admin_sidebar_font_weight', $set['admin_sidebar_font_weight'], true);
+mfh_updateSetting('admin_sidebar_header_background', $set['admin_sidebar_header_background'], true);
+mfh_updateSetting('admin_sidebar_header_text', $set['admin_sidebar_header_text'], true);
+mfh_updateSetting('admin_sidebar_text', $set['admin_sidebar_text'], true);
+mfh_updateSetting('admin_sidebar_text_hover', $set['admin_sidebar_text_hover'], true);
 mfh_updateSetting('display_user_agent_information', $set['display_user_agent_information']);
 mfh_updateSetting('navbar_title_url', $set['navbar_title_url'], true);
 if ($set['use_mailgun'] == 1) {
@@ -532,6 +655,16 @@ mfh_updateSetting('enable_calendar', $set['enable_calendar'], false);
 mfh_updateSetting('first_day_of_week', $set['first_day_of_week'], false);
 mfh_updateSetting('default_calendar_view', $set['default_view'], true);
 mfh_updateSetting('admin_color_scheme', $set['admin_color_scheme'], true);
+
+mfh_updateSetting('login_background_type', $set['login_background_type'], true);
+if ($changedBackground) {
+    mfh_updateSetting('login_background', $set['login_background'], true);
+}
+
+mfh_updateSetting('login_box_header', $set['login_box_header'], true);
+if ($changedLoginImage) {
+    mfh_updateSetting('login_box_header_image', $set['login_box_header_image'], true);
+}
 
 // Prepare settings file and save it
 $settings_file_content = '<?php

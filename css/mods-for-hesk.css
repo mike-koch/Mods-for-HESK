@@ -35,7 +35,7 @@ button.dropdown-submit {
     vertical-align: middle;
 }
 
-.attachment-table > tbody > tr > td > span > img {
+.attachment-table > tbody > tr > td > a > img {
     max-height: 80px;
     max-width: 80px;
     cursor: pointer;

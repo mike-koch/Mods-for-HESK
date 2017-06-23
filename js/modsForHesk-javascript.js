@@ -50,21 +50,7 @@ var loadJquery = function()
     $('.clockpicker').clockpicker();
 
     // Set the proper text color for background-volatile elements
-    $('.background-volatile').each(function() {
-        $this = $(this);
-        var background = $this.css('background-color');
-
-        if (background !== 'rgba(0, 0, 0, 0)'
-            && background !== 'transparent') {
-            var grayCount = calculateGrayCount(background);
-
-            if (grayCount > 186) {
-                $this.css('color', '#000');
-            } else {
-                $this.css('color', '#fff');
-            }
-        }
-    });
+    refreshBackgroundVolatileItems();
 
     // Initialize colorpicker
     $('.colorpicker-trigger').colorpicker({
@@ -98,8 +84,48 @@ var loadJquery = function()
     $('[data-hide]').click(function() {
         var hide = $(this).attr('data-hide');
         $('#' + hide).hide();
-    })
+    });
+
+    $('[data-toggle="lightbox"]').magnificPopup({
+        delegate: 'a[data-toggle="lightbox-item"]',
+        gallery: {
+            enabled: true
+        },
+        closeOnContentClick: true
+    });
+
+    $('[data-activate]').click(function() {
+        var activate = $(this).data('activate');
+        $(activate).removeAttr('disabled');
+    });
+
+    $('[data-deactivate]').click(function() {
+        var deactivate = $(this).data('deactivate');
+        $(deactivate).attr('disabled', 'disabled');
+    });
+
+    //-- Initialize toastr properties
+    toastr.options.progressBar = true;
+    toastr.options.closeButton = true;
 };
+
+function refreshBackgroundVolatileItems() {
+    $('.background-volatile').each(function() {
+        $this = $(this);
+        var background = $this.css('background-color');
+
+        if (background !== 'rgba(0, 0, 0, 0)'
+            && background !== 'transparent') {
+            var grayCount = calculateGrayCount(background);
+
+            if (grayCount > 186) {
+                $this.css('color', '#000');
+            } else {
+                $this.css('color', '#fff');
+            }
+        }
+    });
+}
 
 function calculateGrayCount(background) {
     var parts = background.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
@@ -274,9 +300,10 @@ function outputAttachmentIdHolder(value, id) {
 }
 
 function removeAttachment(id) {
+    var heskPath = $('p#hesk-path').text();
     $('input[name="attachment-ids[]"][value="' + id + '"]').remove();
     $.ajax({
-        url: getHelpdeskUrl() + '/internal-api/ticket/delete-attachment.php?id=' + id,
+        url: heskPath + 'internal-api/ticket/delete-attachment.php?id=' + id,
         method: 'GET'
     });
 }

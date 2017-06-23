@@ -608,7 +608,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </div>
                         </div>
                         <?php
-                        display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php',
+                        display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php',
                             'filedrop',
                             $hesk_settings['attachments']['max_number'] - $number_of_attachments);
                     endif; ?>

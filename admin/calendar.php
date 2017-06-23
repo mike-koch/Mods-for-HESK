@@ -1,32 +1,4 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.5 from 28th August 2015
- *  Author: Klemen Stirn
- *  Website: https://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2015 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
 
 define('IN_SCRIPT', 1);
 define('VALIDATOR', 1);
@@ -61,14 +33,26 @@ if ($modsForHesk_settings['enable_calendar'] == '0') {
 
 // Get categories for the dropdown
 $order_by = $modsForHesk_settings['category_order_column'];
-$rs = hesk_dbQuery("SELECT `id`, `name`, `color` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `usage` <> 1 ORDER BY `" . hesk_dbEscape($order_by) . "`");
+$rs = hesk_dbQuery("SELECT `id`, `name`, `background_color`, `foreground_color`, `display_border_outline` 
+  FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` 
+  WHERE `usage` <> 1 ORDER BY `" . hesk_dbEscape($order_by) . "`");
 $categories = array();
 while ($row = hesk_dbFetchAssoc($rs)) {
     if (!$_SESSION['isadmin'] && !in_array($row['id'], $_SESSION['categories'])) {
         continue;
     }
 
-    $row['css_style'] = $row['color'] == null ? 'background: white; color: black; border: solid 1px #000;' : 'border: solid 1px ' . $row['color'] . '; background: ' . $row['color'];
+    $row['css_style'] = "background: {$row['background_color']};";
+    $row['background_volatile'] = 'background-volatile';
+    if ($row['foreground_color'] != 'AUTO') {
+        $row['background_volatile'] = '';
+        $row['css_style'] .= " color: {$row['foreground_color']};";
+
+        if ($row['display_border_outline'] == '1') {
+            $row['css_style'] .= " border: solid 1px {$row['foreground_color']};";
+        }
+    }
+
     $categories[] = $row;
 }
 
@@ -85,7 +69,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <?php foreach ($categories as $category): ?>
                 <li>
                     <div class="ticket-info">
-                        <div class="hide-on-overflow no-wrap event-category background-volatile"
+                        <div class="hide-on-overflow no-wrap event-category <?php echo $category['background_volatile']; ?>"
                              data-select-toggle="category-toggle" data-name="category-toggle" data-category-value="<?php echo $category['id']; ?>"
                              data-checked="1"
                              data-toggle="tooltip"
@@ -223,7 +207,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             echo '<option value="">'.$hesklang['select'].'</option>';
                                         }
                                         foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category['id']; ?>" data-color="<?php echo htmlspecialchars($category['color']); ?>">
+                                            <option value="<?php echo $category['id']; ?>" data-background-color="<?php echo htmlspecialchars($category['background_color']); ?>"
+                                                data-foreground-color="<?php echo htmlspecialchars($category['foreground_color']); ?>"
+                                                data-display-border="<?php echo htmlspecialchars($category['display_border_outline']); ?>">
                                                 <?php echo $category['name']; ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -393,7 +379,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                             echo '<option value="">'.$hesklang['select'].'</option>';
                                         }
                                         foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category['id']; ?>" data-color="<?php echo $category['color']; ?>">
+                                            <option value="<?php echo $category['id']; ?>" data-background-color="<?php echo htmlspecialchars($category['background_color']); ?>"
+                                                    data-foreground-color="<?php echo htmlspecialchars($category['foreground_color']); ?>"
+                                                    data-display-border="<?php echo htmlspecialchars($category['display_border_outline']); ?>">
                                                 <?php echo $category['name']; ?>
                                             </option>
                                         <?php endforeach; ?>

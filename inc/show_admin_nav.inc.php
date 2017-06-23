@@ -123,7 +123,26 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                         </li>
                         <?php
                     endif;
-                    ?>
+
+                    $customNavRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element` AS `t1`
+                    INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element_to_text` AS `t2`
+                        ON `t1`.`id` = `t2`.`nav_element_id`
+                        AND `t2`.`language` = '" . hesk_dbEscape($hesk_settings['language']) . "'
+                    WHERE `t1`.`place` = 3");
+
+                    while ($row = hesk_dbFetchAssoc($customNavRs)):
+                        ?>
+                        <li>
+                            <a href="<?php echo $row['url']; ?>">
+                                <?php if ($row['image_url'] !== null): ?>
+                                    <img src="<?php echo $row['image_url']; ?>" alt="<?php echo $row['text']; ?>" <?php echo $iconDisplay; ?>>
+                                <?php else: ?>
+                                    <i class="<?php echo $row['font_icon']; ?>" <?php echo $iconDisplay; ?>></i>
+                                <?php endif; ?>
+                                <?php echo $row['text']; ?>
+                            </a>
+                        </li>
+                    <?php endwhile; ?>
                 </ul>
             </div>
             <!-- Navbar Right Menu -->
@@ -419,6 +438,21 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             </a>
                         </li>';
                     }
+                    if (hesk_checkPermission('can_man_custom_nav', 0)) {
+                        $number_of_settings++;
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CUSTOM_NAV_ELEMENTS') {
+                            $active = 'active';
+                        }
+
+                        $markup .= '
+                        <li class="' . $active . '">
+                            <a href="manage_custom_nav_elements.php">
+                                <i class="fa fa-fw fa-navicon" ' . $iconDisplay . '></i>
+                                <span>' . $hesklang['manage_custom_nav_elements'] . '</span>
+                            </a>
+                        </li>';
+                    }
                     if ($number_of_settings > 0 &&
                         (hesk_checkPermission('can_view_logs', 0) || hesk_checkPermission('can_man_settings', 0))) {
                         $markup .= '<li class="divider"></li>';
@@ -439,7 +473,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                         </li>';
                     }
                     if (hesk_checkPermission('can_man_settings', 0)) {
-                        $number_of_settings++;
+                        $number_of_settings += 2;
                         $active = '';
                         if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_SETTINGS') {
                             $active = 'active';
@@ -450,6 +484,19 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             <a href="admin_settings.php">
                                 <i class="fa fa-fw fa-cog" ' . $iconDisplay . '></i>
                                 <span>' . $hesklang['helpdesk_settings'] . '</span>
+                            </a>
+                        </li>';
+
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_API_SETTINGS') {
+                            $active = 'active';
+                        }
+
+                        $markup .= '
+                        <li class="' . $active . '">
+                            <a href="api_settings.php">
+                                <i class="fa fa-fw fa-cog" ' . $iconDisplay . '></i>
+                                <span>' . $hesklang['api_settings'] . '</span>
                             </a>
                         </li>';
                     }

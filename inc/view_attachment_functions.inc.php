@@ -15,7 +15,7 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
 
     /* List attachments */
     $att = explode(',', substr($attachments, 0, -1));
-    echo '<div class="table-responsive">';
+    echo '<div class="table-responsive" data-toggle="lightbox">';
     echo '<table class="table table-striped attachment-table">';
     echo '<thead>
         <tr>
@@ -29,8 +29,8 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
         </thead>';
     echo '<tbody>';
     foreach ($att as $myatt) {
-
         list($att_id, $att_name) = explode('#', $myatt);
+
         $fileparts = pathinfo($att_name);
         $fontAwesomeIcon = mfh_getFontAwesomeIconForFileExtension($fileparts['extension']);
         echo '
@@ -44,30 +44,21 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
             if ($path == '') {
                 echo '<i class="fa fa-ban fa-4x" data-toggle="tooltip" title="' . $hesklang['attachment_removed'] . '"></i>';
             } else {
-                echo '<span data-toggle="tooltip" title="' . $hesklang['click_to_preview'] . '">
-                                  <img src="' . $path . '" alt="' . $hesklang['image'] . '" data-toggle="modal" data-target="#modal-attachment-' . $att_id . '">
-                              </span>';
-                $download_path = '';
-                if ($is_staff) {
-                    $download_path = '../';
-                }
-                echo '<div class="modal fade" id="modal-attachment-' . $att_id . '" tabindex="-1" role="dialog" aria-hidden="true">
-                                  <div class="modal-dialog">
-                                      <div class="modal-content">
-                                          <div class="modal-header">
-                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                              <h4 class="modal-title" id="myModalLabel">' . $att_name . '</h4>
-                                          </div>
-                                          <div class="modal-body">
-                                              <img class="img-responsive" src="' . $path . '" alt="' . $hesklang['image'] . '">
-                                          </div>
-                                          <div class="modal-footer">
-                                              <button type="button" class="btn btn-default" data-dismiss="modal">' . $hesklang['close_modal'] . '</button>
-                                              <a href="' . $download_path . 'download_attachment.php?att_id=' . $att_id . '&amp;track=' . $trackingID . $email . '" class="btn btn-success">' . $hesklang['dnl'] . '</a>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>';
+                echo '<a href="' . $path . '" data-toggle="lightbox-item" class="mfp-image">
+                          <img src="' . $path . '" alt="' . $hesklang['image'] . '" data-toggle="tooltip" title="' . $hesklang['click_to_preview'] . '">
+                      </a>';
+            }
+        } elseif (in_array($fontAwesomeIcon, array('fa fa-file-word-o', 'fa fa-file-excel-o', 'fa fa-file-powerpoint-o'))) {
+            //-- Get the actual image location and display a thumbnail. It will be linked to a modal to view a larger size.
+            $path = mfh_getSavedNameUrlForAttachment($att_id, $is_staff);
+            $apiPath = preg_replace('/https?:\/\//i', '', $hesk_settings['hesk_url'] . '/api/index.php/v1/tickets/' . $trackingID . '/attachments/' . $att_id);
+
+            if ($path == '') {
+                echo '<i class="fa fa-ban fa-4x" data-toggle="tooltip" title="' . $hesklang['attachment_removed'] . '"></i>';
+            } else {
+                echo '<a class="mfp-iframe" data-toggle="lightbox-item" href="https://view.officeapps.live.com/op/embed.aspx?src=' . $apiPath . '">
+                    <i class="' . $fontAwesomeIcon . ' fa-4x" data-toggle="tooltip"  title="' . $hesklang['click_to_preview'] . '"></i>
+                </a>';
             }
         } else {
             //-- Display the FontAwesome icon in the panel's body

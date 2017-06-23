@@ -983,7 +983,7 @@ function print_add_ticket()
                         </div>
                     </div>
                     <?php
-                    display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
+                    display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php');
                 }
 
                 if ($hesk_settings['question_use'] || $hesk_settings['secimg_use'])
@@ -1391,7 +1391,38 @@ function print_start()
                         </div>
                     </a>
                 </div>
-            <?php endif; ?>
+            <?php endif;
+
+            $customNavRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element` AS `t1`
+                    INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element_to_text` AS `t2`
+                        ON `t1`.`id` = `t2`.`nav_element_id`
+                        AND `t2`.`language` = '" . hesk_dbEscape($hesk_settings['language']) . "'
+                    WHERE `t1`.`place` = 1");
+
+            while ($row = hesk_dbFetchAssoc($customNavRs)):
+                ?>
+                <div class="col-sm-6 col-xs-12">
+                    <a href="<?php echo $row['url']; ?>" class="button-link">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-1">
+                                        <?php if ($row['image_url'] !== null): ?>
+                                            <img src="<?php echo $row['image_url']; ?>" alt="<?php echo $row['text']; ?>">
+                                        <?php else: ?>
+                                            <i class="<?php echo $row['font_icon']; ?> black" style="font-size: 32px"></i>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="col-xs-11">
+                                        <b><?php echo $row['text']; ?></b><br>
+                                        <?php echo $row['subtext']; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            <?php endwhile; ?>
             </div>
             <?php
             if ($hesk_settings['kb_enable'])

@@ -111,6 +111,7 @@
 }
 
 
+.attachment-table > tbody > tr > td > a > i,
 .attachment-table > tbody > tr > td > i,
 .dropdown-empty > i {
     color: #ddd;
@@ -121,7 +122,7 @@
     vertical-align: middle;
 }
 
-.attachment-table > tbody > tr > td > span > img {
+.attachment-table > tbody > tr > td > a > img {
     max-height: 80px;
     max-width: 80px;
     cursor: pointer;
@@ -177,8 +178,36 @@ button.dropdown-submit {
     min-width: 350px;
 }
 
+.login-box-container {
+    position: relative;
+}
+
+.login-box-background {
+    /* Absolutely position it, but stretch it to all four corners, then put it just behind #search's z-index */
+    /* background is handled in the header logic */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+
+    /* Pull the background 70px higher to the same place as #bg's */
+    /*background-position: center -70px;*/
+
+    -webkit-filter: blur(10px);
+    /*filter: url('/media/blur.svg#blur');*/
+    filter: blur(10px);
+}
+
 .login-box-body {
+    position: relative;
+    box-shadow: 0 0 50px 5px rgba(0,0,0,0.3),
+                0 0 5px -1px white;
+    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, .75);
     border-radius: 5px;
+    z-index: 100;
 }
 
 .button-link {
@@ -266,14 +295,15 @@ div.ticket-info {
     color: #444;
 }
 
+.event-category[data-checked="0"] {
+    background: #777 !important;
+    border: none !important;
+    color: #aaa !important;
+}
+
 .event-category:hover {
     border: solid 1px #fff !important;
     cursor: pointer;
-}
-
-.event-category[data-checked="0"] {
-    background: #777 !important;
-    color: #aaa !important;
 }
 
 .anchor {
@@ -290,4 +320,8 @@ div.ticket-info {
 
 .black {
     color: black;
+}
+
+#toast-container > div {
+    opacity: 1;
 }

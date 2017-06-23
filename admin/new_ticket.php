@@ -879,7 +879,7 @@ $show_quick_help = $show['show'];
                         </div>
                     </div>
                     <?php
-                    display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
+                    display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php');
                 }
 
                 if (!isset($_SESSION['as_notify'])) {

@@ -17,7 +17,7 @@ define('WYSIWYG', 1);
 define('VALIDATOR', 1);
 define('MFH_PAGE_LAYOUT', 'TOP_AND_SIDE');
 
-define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/admin-ticket.js"></script>');
+define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/admin-ticket.js"></script><script src="'.HESK_PATH.'js/jquery.dirtyforms.min.js"></script>');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -470,7 +470,7 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
     }
 
     //-- Check if the ticket is already a child.
-    $childRs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `parent` = ' . intval($ticket['id']) . ' AND `trackid` = \'' . hesk_dbEscape(hesk_POST(['childTrackingId'])) . '\'');
+    $childRs = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` WHERE `parent` = ' . intval($ticket['id']) . ' AND `trackid` = \'' . hesk_dbEscape(hesk_POST('childTrackingId')) . '\'');
     if (hesk_dbNumRows($childRs) > 0) {
         hesk_process_messages(sprintf($hesklang['is_already_linked'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'NOTICE');
     }
@@ -1167,7 +1167,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <?php build_dropzone_markup(true, 'notesFiledrop'); ?>
                         </div>
                     </div>
-                    <?php display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php', 'notesFiledrop'); ?>
+                    <?php display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php', 'notesFiledrop'); ?>
                     <div class="text-right">
                         <i><?php echo $hesklang['nhid']; ?></i>&nbsp;
                         <div class="btn-group">
@@ -1499,6 +1499,22 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
     global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
 
     $options = $reply ? '' : '<div class="pull-right">';
+
+    // Resend email notification
+    $replyDataAttribute = '';
+    if ($reply) {
+        $replyDataAttribute = 'data-reply-id="' . $reply['id'] . '"';
+    }
+
+    if ($ticket['email'] !== '') {
+        $options .= '
+        <button class="btn btn-default" data-action="resend-email-notification" ' . $replyDataAttribute . ' data-ticket-id="' . $ticket['id'] . '">
+            <i class="fa fa-envelope navy-blue"></i> ' . $hesklang['resend_email_notification'] . '
+        </button>
+        <span id="lang_email_notification_sent" style="display: none">' . $hesklang['email_notification_sent'] . '</span>
+        <span id="lang_email_notification_resend_failed" style="display: none">' . $hesklang['email_notification_resend_failed'] . '</span>
+        ';
+    }
 
     /* Edit post */
     if ($can_edit) {
@@ -1870,7 +1886,7 @@ function hesk_printReplyForm()
             $onsubmit = 'onsubmit="force_stop();return validateRichText(\'message-help-block\', \'message-group\', \'message\', \''.htmlspecialchars($hesklang['this_field_is_required']).'\')"';
         }
         ?>
-        <form role="form" data-toggle="validator" class="form-horizontal" method="post" action="admin_reply_ticket.php"
+        <form id="reply-form" role="form" data-toggle="validator" class="form-horizontal" method="post" action="admin_reply_ticket.php"
               enctype="multipart/form-data" name="form1" <?php echo $onsubmit; ?>>
             <?php
 
@@ -1963,7 +1979,7 @@ function hesk_printReplyForm()
                     </div>
                 </div>
                 <?php
-                display_dropzone_field($hesk_settings['hesk_url'] . '/internal-api/ticket/upload-attachment.php');
+                display_dropzone_field(HESK_PATH . 'internal-api/ticket/upload-attachment.php');
             }
             ?>
             <div class="form-group">
@@ -2046,6 +2062,7 @@ function hesk_printReplyForm()
                 </div>
             </div>
         </form>
+        <script>$('form#reply-form').dirtyForms();</script>
     </div>
 </div>
     <!-- END REPLY FORM -->

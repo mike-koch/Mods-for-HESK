@@ -8,8 +8,8 @@ $(document).ready(function() {
 });
 
 function updatePublicApi(enable) {
-    var endpoint = getHelpdeskUrl();
-    endpoint += '/internal-api/admin/api-settings/';
+    var heskPath = $('p#hesk-path').text();
+    var endpoint = heskPath + 'internal-api/admin/api-settings/';
     var data = {
         key: 'public_api',
         value: enable
@@ -66,8 +66,8 @@ function markFailure(id) {
 }
 
 function generateToken(userId) {
-    var endpoint = getHelpdeskUrl();
-    endpoint += '/internal-api/admin/api-authentication/';
+    var heskPath = $('p#hesk-path').text();
+    var endpoint = heskPath + 'internal-api/admin/api-authentication/';
     markSaving('token-' + userId);
     $('#token-' + userId + '-reset').addClass('hide');
     $('#token-' + userId + '-created').addClass('hide');
@@ -94,8 +94,8 @@ function generateToken(userId) {
 }
 
 function clearTokens(userId) {
-    var endpoint = getHelpdeskUrl();
-    endpoint += '/internal-api/admin/api-authentication/';
+    var heskPath = $('p#hesk-path').text();
+    var endpoint = heskPath + 'internal-api/admin/api-authentication/';
     markSaving('token-' + userId);
     $('#token-' + userId + '-reset').addClass('hide');
     $('#token-' + userId + '-created').addClass('hide');

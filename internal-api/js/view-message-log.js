@@ -20,8 +20,8 @@ function getNullableField(value) {
 }
 
 function searchLogs(location, fromDate, toDate, severity) {
-    var endpoint = getHelpdeskUrl();
-    endpoint += '/internal-api/admin/message-log/';
+    var heskPath = $('p#hesk-path').text();
+    var endpoint = heskPath + 'internal-api/admin/message-log/';
 
     $.ajax({
         url: endpoint,
@@ -45,7 +45,7 @@ function displayResults(data) {
     table.empty();
 
     if (data.length === 0) {
-        table.append('<tr><td colspan="4">No results found</td></tr>');
+        table.append('<tr><td colspan="5">No results found</td></tr>');
     } else {
         for (var index in data) {
             var result = data[index];
@@ -53,7 +53,8 @@ function displayResults(data) {
                 '<td>' + result.timestamp + '</td>' +
                 '<td>' + result.username + '</td>' +
                 '<td>' + result.location + '</td>' +
-                '<td>' + result.message + '</td>');
+                '<td>' + result.message + '</td>' +
+                '<td>' + result.stackTrace + '</td>');
         }
     }
 }

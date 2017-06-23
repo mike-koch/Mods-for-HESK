@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    var heskPath = $('p#hesk-path').text();
+
     $('#calendar').fullCalendar({
         header: {
             left: 'prevYear,prev,next,nextYear today',
@@ -13,7 +15,7 @@ $(document).ready(function() {
         defaultView: $('#setting_default_view').text().trim(),
         events: function(start, end, timezone, callback) {
             $.ajax({
-                url: getHelpdeskUrl() + '/internal-api/admin/calendar/?start=' + start + '&end=' + end,
+                url: heskPath + 'internal-api/admin/calendar/?start=' + start + '&end=' + end,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -26,7 +28,7 @@ $(document).ready(function() {
                 },
                 error: function(data) {
                     console.error(data);
-                    $.jGrowl($('#lang_error_loading_events').text(), { theme: 'alert-danger', closeTemplate: '' });
+                    mfhAlert.error(mfhLang.text('error_loading_events'));
                 }
             });
         },
@@ -85,7 +87,23 @@ $(document).ready(function() {
                 animation: true,
                 container: 'body',
                 placement: 'auto'
-            }).popover('show');
+            }).data('bs.popover')
+                .tip()
+                .css('padding', '0')
+                .find('.popover-title')
+                .css('background-color', event.backgroundColor)
+                .addClass('background-volatile');
+
+            if (event.textColor === 'AUTO') {
+                $eventMarkup.addClass('background-volatile');
+            } else {
+                $eventMarkup.data('bs.popover').tip().find('.popover-title')
+                    .css('color', event.textColor)
+                    .css('border', 'solid 1px ' + event.borderColor);
+            }
+
+            $eventMarkup.popover('show');
+            refreshBackgroundVolatileItems();
         },
         eventMouseout: function() {
             $(this).popover('destroy');
@@ -112,7 +130,9 @@ function buildEvent(id, dbObject) {
             trackingId: dbObject.trackingId,
             start: moment(dbObject.startTime),
             url: dbObject.url,
-            color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
+            backgroundColor: dbObject.backgroundColor,
+            textColor: dbObject.foregroundColor === 'AUTO' ? calculateTextColor(dbObject.backgroundColor) : dbObject.foregroundColor,
+            borderColor: parseInt(dbObject.displayBorder) === 1 ? dbObject.foregroundColor : dbObject.backgroundColor,
             allDay: true,
             type: dbObject.type,
             categoryId: dbObject.categoryId,
@@ -120,7 +140,6 @@ function buildEvent(id, dbObject) {
             className: 'category-' + dbObject.categoryId,
             owner: dbObject.owner,
             priority: dbObject.priority,
-            textColor: calculateTextColor(dbObject.categoryColor),
             fontIconMarkup: getIcon(dbObject)
         };
     }
@@ -143,8 +162,9 @@ function buildEvent(id, dbObject) {
         categoryId: dbObject.categoryId,
         categoryName: dbObject.categoryName,
         className: 'category-' + dbObject.categoryId,
-        color: dbObject.categoryColor === '' || dbObject.categoryColor === null ? '#fff' : dbObject.categoryColor,
-        textColor: calculateTextColor(dbObject.categoryColor),
+        backgroundColor: dbObject.backgroundColor,
+        textColor: dbObject.foregroundColor === 'AUTO' ? calculateTextColor(dbObject.backgroundColor) : dbObject.foregroundColor,
+        borderColor: parseInt(dbObject.displayBorder) === 1 ? dbObject.foregroundColor : dbObject.backgroundColor,
         reminderValue: dbObject.reminderValue == null ? '' : dbObject.reminderValue,
         reminderUnits: dbObject.reminderUnits,
         fontIconMarkup: '<i class="fa fa-calendar"></i>'
@@ -162,7 +182,7 @@ function getIcon(dbObject) {
 }
 
 function calculateTextColor(color) {
-    if (color === null || color === '') {
+    if (color === null || color === '' || color === undefined) {
         return 'black';
     }
 

@@ -1,32 +1,15 @@
 <?php
-/*******************************************************************************
- *  Title: Help Desk Software HESK
- *  Version: 2.6.8 from 10th August 2016
- *  Author: Klemen Stirn
- *  Website: https://www.hesk.com
- ********************************************************************************
- *  COPYRIGHT AND TRADEMARK NOTICE
- *  Copyright 2005-2014 Klemen Stirn. All Rights Reserved.
- *  HESK is a registered trademark of Klemen Stirn.
- *  The HESK may be used and modified free of charge by anyone
- *  AS LONG AS COPYRIGHT NOTICES AND ALL THE COMMENTS REMAIN INTACT.
- *  By using this code you agree to indemnify Klemen Stirn from any
- *  liability that might arise from it's use.
- *  Selling the code for this program, in part or full, without prior
- *  written consent is expressly forbidden.
- *  Using this code, in part or full, to create derivate work,
- *  new scripts or products is expressly forbidden. Obtain permission
- *  before redistributing this software over the Internet or in
- *  any other medium. In all cases copyright and header must remain intact.
- *  This Copyright is in full effect in any country that has International
- *  Trade Agreements with the United States of America or
- *  with the European Union.
- *  Removing any of the copyright notices without purchasing a license
- *  is expressly forbidden. To remove HESK copyright notice you must purchase
- *  a license for this script. For more information on how to obtain
- *  a license please visit the page below:
- *  https://www.hesk.com/buy.php
- *******************************************************************************/
+/**
+ *
+ * This file is part of HESK - PHP Help Desk Software.
+ *
+ * (c) Copyright Klemen Stirn. All rights reserved.
+ * https://www.hesk.com
+ *
+ * For the full copyright and license agreement information visit
+ * https://www.hesk.com/eula.php
+ *
+ */
 
 require_once(HESK_PATH . 'build.php');
 
@@ -56,10 +39,10 @@ $modsForHesk_settings = mfh_getSettings();
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone-basic.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/fullcalendar.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/skins/_all-skins.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/toastr.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/magnific-popup.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
@@ -84,16 +67,73 @@ $modsForHesk_settings = mfh_getSettings();
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core-admin.php?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.jgrowl.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.slimscroll.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/toastr.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.magnific-popup.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/alerts.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/lang.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;
     }
     ?>
     <style>
+        <?php // ADMIN COLOR SCHEME ?>
+        .main-header .logo {
+            background-color: <?php echo $modsForHesk_settings['admin_navbar_brand_background']; ?>;
+            color: <?php echo $modsForHesk_settings['admin_navbar_brand_text']; ?>;
+        }
+
+        .main-header .logo:hover {
+            background-color: <?php echo $modsForHesk_settings['admin_navbar_brand_background_hover']; ?>;
+            color: <?php echo $modsForHesk_settings['admin_navbar_brand_text_hover']; ?>;
+        }
+
+        .main-header .navbar {
+            background-color: <?php echo $modsForHesk_settings['admin_navbar_background']; ?>;
+
+        }
+
+        .main-header .navbar .nav > li > a,
+        .main-header .navbar .sidebar-toggle {
+            color: <?php echo $modsForHesk_settings['admin_navbar_text']; ?>;
+        }
+
+        .main-header .navbar .nav > li > a:hover,
+        .main-header .navbar .sidebar-toggle:hover,
+        .main-header .navbar .nav > .active > a,
+        .main-header .navbar .nav .open > a,
+        .main-header .navbar .nav > li > a:focus {
+            background-color: <?php echo $modsForHesk_settings['admin_navbar_background_hover']; ?>;
+            color: <?php echo $modsForHesk_settings['admin_navbar_text_hover']; ?>;
+        }
+
+        .main-sidebar, .left-side {
+            background-color: <?php echo $modsForHesk_settings['admin_sidebar_background']; ?>
+        }
+
+        .sidebar-menu > li.header {
+            color: <?php echo $modsForHesk_settings['admin_sidebar_header_text']; ?>;
+            background-color: <?php echo $modsForHesk_settings['admin_sidebar_header_background']; ?>;
+        }
+
+        .sidebar a,
+        .sidebar .ticket-info {
+            color: <?php echo $modsForHesk_settings['admin_sidebar_text']; ?>;
+        }
+
+        .sidebar-menu > li > a {
+            font-weight: <?php echo $modsForHesk_settings['admin_sidebar_font_weight'] == 'normal' ? 'normal' : 600; ?>;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu > li:hover > a {
+            color: <?php echo $modsForHesk_settings['admin_sidebar_text_hover']; ?>;
+            background: <?php echo $modsForHesk_settings['admin_sidebar_background_hover']; ?>;
+            border-left-color: <?php echo $modsForHesk_settings['admin_navbar_background']; ?>;
+        }
+
         .settingsquestionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
             cursor: pointer;
@@ -103,11 +143,26 @@ $modsForHesk_settings = mfh_getSettings();
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
         }
 
-        <?php if (defined('PAGE_TITLE') && PAGE_TITLE == 'LOGIN'): ?>
+        <?php
+        if (defined('PAGE_TITLE') && PAGE_TITLE == 'LOGIN'):
+            if ($modsForHesk_settings['login_background_type'] == 'color'):
+        ?>
         body {
-            background: #d2d6de;
+            background: <?php echo $modsForHesk_settings['login_background']; ?>;
         }
-        <?php endif; ?>
+        <?php else: ?>
+        body {
+            background: url('<?php echo HESK_PATH . 'cache/lb_' . $modsForHesk_settings['login_background']; ?>')
+                no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .login-box-background {
+            background: url('<?php echo HESK_PATH . 'cache/lb_' . $modsForHesk_settings['login_background']; ?>')
+                no-repeat center center fixed;
+            background-size: cover;
+        }
+        <?php endif; endif; ?>
     </style>
 
     <?php
@@ -246,7 +301,13 @@ if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY') {
 }
 ?>
 <body onload="<?php echo $onload;
-unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js <?php echo $modsForHesk_settings['admin_color_scheme']; ?>">
+unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js">
+
+<?php // GLOBAL JAVASCRIPT IDs ?>
+<p style="display: none" id="hesk-path"><?php echo HESK_PATH; ?></p>
+<p style="display: none" id="admin-dir"><?php echo $hesk_settings['admin_dir']; ?></p>
+<p style="display: none" id="lang_alert_success"><?php echo $hesklang['alert_success']; ?></p>
+<p style="display: none" id="lang_alert_error"><?php echo $hesklang['alert_error']; ?></p>
 
 <?php
 include(HESK_PATH . 'header.txt');

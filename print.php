@@ -117,7 +117,7 @@ $modsForHesk_settings = mfh_getSettings();
             background-color: #9e9e9e;
             height: 1px;
             width: 100%;
-            text-align: <?php if ($modsForHesk_settings['rtl']) {echo 'right';} else {echo 'left';} ?>;
+            text-align: left;
         }
     </style>
 </head>

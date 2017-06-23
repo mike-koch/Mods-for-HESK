@@ -2,6 +2,10 @@
     color: #fff;
 }
 
+.black {
+    color: #000;
+}
+
 .red,
 .important,
 .critical-priority {
@@ -31,6 +35,10 @@
 
 .blue {
     color: blue;
+}
+
+.navy-blue {
+    color: #3c8dbc;
 }
 
 .med-low-priority {

@@ -25,7 +25,6 @@ $modsForHesk_settings = array();
 if (is_dir(HESK_PATH . 'install')) {
     define('MAINTENANCE_MODE', true);
     $modsForHesk_settings['navbar_title_url'] = 'javascript:;';
-    $modsForHesk_settings['rtl'] = 0;
     $modsForHesk_settings['use_bootstrap_theme'] = 1;
     $modsForHesk_settings['show_icons'] = 1;
     $modsForHesk_settings['navbarBackgroundColor'] = '#414a5c';
@@ -52,13 +51,7 @@ if (is_dir(HESK_PATH . 'install')) {
     <meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>"/>
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="theme-color" content="<?php echo '#414a5c'; ?>">
-    <?php if ($modsForHesk_settings['rtl']) { ?>
-        <link href="<?php echo HESK_PATH; ?>hesk_style_RTL.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } else { ?>
-        <link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } ?>
+    <link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
           rel="stylesheet"/>
@@ -66,19 +59,10 @@ if (is_dir(HESK_PATH . 'install')) {
           rel="stylesheet" <?php if ($modsForHesk_settings['use_bootstrap_theme'] == 0) {
         echo 'disabled';
     } ?>>
-    <?php if ($modsForHesk_settings['rtl']) { ?>
-        <link href="<?php echo HESK_PATH; ?>css/bootstrap-rtl.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>"
-              type="text/css" rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/hesk_newStyleRTL.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>"
-              type="text/css" rel="stylesheet"/>
-    <?php } else { ?>
-        <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-        <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-              rel="stylesheet"/>
-    <?php } ?>
+    <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
+          rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
+          rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css">
@@ -87,8 +71,9 @@ if (is_dir(HESK_PATH . 'install')) {
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone-basic.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/fullcalendar.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-clockpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/jquery.jgrowl.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-colorpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/toastr.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/magnific-popup.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <?php if (defined('USE_JQUERY_2')): ?>
         <script src="<?php echo HESK_PATH; ?>js/jquery-2.2.4.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php else: ?>
@@ -108,9 +93,9 @@ if (is_dir(HESK_PATH . 'install')) {
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/core.php?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.jgrowl.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/toastr.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.magnific-popup.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
     <style>
         .navbar-default {
             background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
@@ -323,7 +308,30 @@ if ($modsForHesk_settings['show_icons']) {
                     <a href="<?php echo HESK_PATH; ?>calendar.php"><i class="fa fa-calendar" <?php echo $iconDisplay; ?>></i>&nbsp;<?php echo $hesklang['calendar_title_case']; ?></a>
                 </li>
                 <?php endif; ?>
-                <?php include('custom/header-custom.inc.php'); ?>
+                <?php
+                $table_exists_rs = hesk_dbQuery("SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element'");
+
+                if (!defined('MAINTENANCE_MODE') && hesk_dbNumRows($table_exists_rs)) {
+                $customNavRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element` AS `t1`
+                    INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element_to_text` AS `t2`
+                        ON `t1`.`id` = `t2`.`nav_element_id`
+                        AND `t2`.`language` = '" . hesk_dbEscape($hesk_settings['language']) . "'
+                    WHERE `t1`.`place` = 2");
+
+                while ($row = hesk_dbFetchAssoc($customNavRs)):
+                    ?>
+                    <li>
+                        <a href="<?php echo $row['url']; ?>">
+                            <?php if ($row['image_url'] !== null): ?>
+                                <img src="<?php echo $row['image_url']; ?>" alt="<?php echo $row['text']; ?>" <?php echo $iconDisplay; ?>>
+                            <?php else: ?>
+                                <i class="<?php echo $row['font_icon']; ?>" <?php echo $iconDisplay; ?>></i>
+                            <?php endif; ?>
+                            <?php echo $row['text']; ?>
+                        </a>
+                    </li>
+                <?php endwhile;
+                } ?>
             </ul>
             <?php if ($hesk_settings['can_sel_lang']) { ?>
                 <div class="navbar-form navbar-right" role="search" style="margin-right: 20px; min-width: 80px;">
@@ -340,3 +348,5 @@ if ($modsForHesk_settings['show_icons']) {
             <?php } ?>
         </div>
     </nav>
+    <?php // GLOBAL JAVASCRIPT IDs ?>
+    <p style="display: none" id="hesk-path"><?php echo HESK_PATH; ?></p>

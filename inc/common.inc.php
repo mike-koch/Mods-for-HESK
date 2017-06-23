@@ -262,13 +262,13 @@ function hesk_load_database_functions()
 
 function hesk_load_api_database_functions()
 {
-    require(HESK_PATH . 'api/core/json_error.php');
+    require(__DIR__ . '/../api/core/json_error.php');
     // Preferrably use the MySQLi functions
     if (function_exists('mysqli_connect')) {
-        require(HESK_PATH . 'api/core/database_mysqli.inc.php');
+        require(__DIR__ . '/../api/core/database_mysqli.inc.php');
     } // Default to MySQL
     else {
-        require(HESK_PATH . 'api/core/database.inc.php');
+        require(__DIR__ . '/../api/core/database.inc.php');
     }
 } // END hesk_load_database_functions()
 
@@ -1067,7 +1067,6 @@ function hesk_ticketToPlain($ticket, $specialchars = 0, $strip = 1)
         return hesk_msgToPlain($ticket, $specialchars, $strip);
     }
 } // END hesk_ticketToPlain()
-
 
 function hesk_msgToPlain($msg, $specialchars = 0, $strip = 1)
 {
@@ -2033,6 +2032,7 @@ function hesk_getFeatureArray()
         'can_change_notification_settings', /* User can change notification settings */
         'can_view_logs', /* User can view the message logs */
         'can_man_calendar', /* User can manage calendar events */
+        'can_man_custom_nav', /* User can manage custom nav elements */
     );
 }
 
@@ -2143,4 +2143,16 @@ function mfh_get_stars($rating) {
     }
 
     return $markup;
+}
+
+function mfh_get_hidden_fields_for_language($keys) {
+    global $hesklang;
+
+    $output = '<div class="hide">';
+    foreach ($keys as $key) {
+        $output .= sprintf('<p id="lang_%s">%s</p>', $key, $hesklang[$key]);
+    }
+    $output .= '</div>';
+
+    return $output;
 }
