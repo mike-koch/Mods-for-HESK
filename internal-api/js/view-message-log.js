@@ -45,7 +45,7 @@ function displayResults(data) {
     table.empty();
 
     if (data.length === 0) {
-        table.append('<tr><td colspan="4">No results found</td></tr>');
+        table.append('<tr><td colspan="5">No results found</td></tr>');
     } else {
         for (var index in data) {
             var result = data[index];

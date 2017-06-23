@@ -82,7 +82,7 @@ $(document).ready(function() {
             url: navUrl
         };
 
-        var url = heskUrl + '/api/v1-internal/custom-navigation/';
+        var url = heskUrl + 'api/index.php/v1-internal/custom-navigation/';
         var method = 'POST';
 
         if (id !== -1) {
@@ -131,7 +131,7 @@ function loadTable() {
 
     $.ajax({
         method: 'GET',
-        url: heskUrl + 'api/v1-internal/custom-navigation/all',
+        url: heskUrl + 'api/index.php/v1-internal/custom-navigation/all',
         headers: { 'X-Internal-Call': true },
         success: function(data) {
             $tableBody.html('');
@@ -311,7 +311,7 @@ function bindDeleteButton() {
 
         $.ajax({
             method: 'DELETE',
-            url: heskUrl + '/api/v1-internal/custom-navigation/' + element.id,
+            url: heskUrl + 'api/index.php/v1-internal/custom-navigation/' + element.id,
             headers: { 'X-Internal-Call': true },
             success: function() {
                 mfhAlert.success(mfhLang.text('custom_nav_element_deleted'));
@@ -335,7 +335,7 @@ function bindSortButtons() {
 
         $.ajax({
             method: 'POST',
-            url: heskUrl + '/api/v1-internal/custom-navigation/' + element.id + '/sort/' + direction,
+            url: heskUrl + 'api/index.php/v1-internal/custom-navigation/' + element.id + '/sort/' + direction,
             headers: { 'X-Internal-Call': true },
             success: function() {
                 loadTable();
