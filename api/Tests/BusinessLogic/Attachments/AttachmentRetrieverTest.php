@@ -6,6 +6,7 @@ namespace BusinessLogic\Attachments;
 
 use BusinessLogic\Security\UserContext;
 use BusinessLogic\Security\UserToTicketChecker;
+use BusinessLogic\Tickets\Ticket;
 use DataAccess\Attachments\AttachmentGateway;
 use DataAccess\Files\FileReader;
 use DataAccess\Tickets\TicketGateway;
@@ -55,6 +56,10 @@ class AttachmentRetrieverTest extends TestCase {
         $this->fileReader->method('readFromFile')
             ->with('5', $this->heskSettings['attach_dir'])
             ->willReturn($attachmentContents);
+        $this->ticketGateway->method('getTicketById')
+            ->willReturn(new Ticket());
+        $this->userToTicketChecker->method('isTicketAccessibleToUser')
+            ->willReturn(true);
 
         //-- Act
         $actualContents = $this->attachmentRetriever->getAttachmentContentsForTicket(0, 4, new UserContext(), $this->heskSettings);

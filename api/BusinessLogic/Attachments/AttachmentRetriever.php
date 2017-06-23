@@ -37,7 +37,7 @@ class AttachmentRetriever {
             throw new ApiFriendlyException("Ticket {$ticketId} not found!", "Ticket Not Found", 404);
         }
 
-        if ($this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings)) {
+        if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings)) {
             throw new AccessViolationException("User does not have access to attachment {$attachmentId}!");
         }
 

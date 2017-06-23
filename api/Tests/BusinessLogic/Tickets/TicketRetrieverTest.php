@@ -3,6 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\Security\UserToTicketChecker;
 use DataAccess\Tickets\TicketGateway;
 use PHPUnit\Framework\TestCase;
 
@@ -13,14 +14,18 @@ class TicketRetrieverTest extends TestCase {
     /* @var $ticketGateway \PHPUnit_Framework_MockObject_MockObject */
     private $ticketGateway;
 
+    /* @var $userToTicketChecker \PHPUnit_Framework_MockObject_MockObject */
+    private $userToTicketChecker;
+
     /* @var $heskSettings array */
     private $heskSettings;
 
     protected function setUp() {
         $this->ticketGateway = $this->createMock(TicketGateway::class);
+        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::class);
         $this->heskSettings = array('email_view_ticket' => 0);
 
-        $this->ticketRetriever = new TicketRetriever($this->ticketGateway);
+        $this->ticketRetriever = new TicketRetriever($this->ticketGateway, $this->userToTicketChecker);
     }
 
     function testItGetsTheTicketByTrackingId() {

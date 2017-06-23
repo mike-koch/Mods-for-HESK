@@ -41,8 +41,8 @@ class TrackingIdGeneratorTest extends TestCase {
     function testItThrowsAnExceptionWhenItWasUnableToGenerateAValidTrackingId() {
         //-- Arrange
         $exceptionThrown = false;
-        $this->ticketGateway->method('getTicketByTrackingId')
-                    ->willReturn(new Ticket());
+        $this->ticketGateway->method('doesTicketExist')
+                    ->willReturn(true);
 
         //-- Act
         try {

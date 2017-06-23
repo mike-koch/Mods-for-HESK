@@ -39,6 +39,7 @@ class TicketDeleterTest extends TestCase {
 
     function testItThrowsAnExceptionWhenTheUserDoesNotHavePermissionToDeleteTheTicket() {
         //-- Arrange
+        $this->ticketGateway->method('getTicketById')->willReturn(new Ticket());
         $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(false);
 
         //-- Assert
