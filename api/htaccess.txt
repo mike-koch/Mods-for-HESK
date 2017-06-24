@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# If your helpdesk is installed in a sub-directory, change /api to /<your subfolder>/api
+RewriteBase /api
+
+# remove index.php from URLs
+RewriteCond %{THE_REQUEST} /index\.php [NC]
+RewriteRule ^(.*?)index\.php$ $1 [L,R=302,NC,NE]
+
+RewriteRule ^index\.php$ - [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L]
+</IfModule>

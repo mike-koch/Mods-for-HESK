@@ -1,9 +1,16 @@
 $(document).ready(function() {
     $('#enable-api-button').click(function() {
-        updatePublicApi('1', '#enable-api-button');
+        updatePublicApi('1');
     });
     $('#disable-api-button').click(function() {
-        updatePublicApi('0', '#disable-api-button');
+        updatePublicApi('0');
+    });
+
+    $('#enable-url-rewrite-button').click(function() {
+        updateUrlRewrite('1');
+    });
+    $('#disable-url-rewrite-button').click(function() {
+        updateUrlRewrite('0');
     });
 });
 
@@ -16,53 +23,49 @@ function updatePublicApi(enable) {
     };
     $('#enable-api-button').addClass('disabled');
     $('#disable-api-button').addClass('disabled');
-    markSaving('public-api');
     $.ajax({
         url: endpoint,
         data: data,
         method: 'POST',
         success: function() {
+            mfhAlert.success(mfhLang.text('api_settings_saved'), mfhLang.text('success'));
             $('#enable-api-button').removeClass('disabled');
             $('#disable-api-button').removeClass('disabled');
-            markSuccess('public-api');
-
-            if (enable == '1') {
-                $('#public-api-sidebar').addClass('success')
-                    .removeClass('danger');
-                $('#public-api-sidebar-enabled').removeClass('hide');
-                $('#public-api-sidebar-disabled').addClass('hide');
-            } else {
-                $('#public-api-sidebar').addClass('danger')
-                    .removeClass('success');
-                $('#public-api-sidebar-disabled').removeClass('hide');
-                $('#public-api-sidebar-enabled').addClass('hide');
-            }
         },
         error: function(data) {
             console.error(data);
             $('#enable-api-button').removeClass('disabled');
             $('#disable-api-button').removeClass('disabled');
-            markFailure('public-api');
+            mfhAlert.error(mfhLang.text('an_error_occurred'), mfhLang.text('error'));
         }
     });
 }
 
-function markSuccess(id) {
-    $('#' + id + '-saving').addClass('hide');
-    $('#' + id + '-failure').addClass('hide');
-    $('#' + id + '-success').removeClass('hide');
-}
-
-function markSaving(id) {
-    $('#' + id + '-saving').removeClass('hide');
-    $('#' + id + '-failure').addClass('hide');
-    $('#' + id + '-success').addClass('hide');
-}
-
-function markFailure(id) {
-    $('#' + id + '-saving').addClass('hide');
-    $('#' + id + '-failure').removeClass('hide');
-    $('#' + id + '-success').addClass('hide');
+function updateUrlRewrite(enable) {
+    var heskPath = $('p#hesk-path').text();
+    var endpoint = heskPath + 'internal-api/admin/api-settings/';
+    var data = {
+        key: 'api_url_rewrite',
+        value: enable
+    };
+    $('#enable-url-rewrite-button').addClass('disabled');
+    $('#disable-url-rewrite-button').addClass('disabled');
+    $.ajax({
+        url: endpoint,
+        data: data,
+        method: 'POST',
+        success: function() {
+            mfhAlert.success(mfhLang.text('url_rewrite_saved'), mfhLang.text('success'));
+            $('#enable-url-rewrite-button').removeClass('disabled');
+            $('#disable-url-rewrite-button').removeClass('disabled');
+        },
+        error: function(data) {
+            console.error(data);
+            $('#enable-url-rewrite-button').removeClass('disabled');
+            $('#disable-url-rewrite-button').removeClass('disabled');
+            mfhAlert.error(mfhLang.text('an_error_occurred'), mfhLang.text('error'));
+        }
+    });
 }
 
 function generateToken(userId) {

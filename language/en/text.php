@@ -2168,6 +2168,11 @@ $hesklang['preset_red'] = 'Red';
 $hesklang['preset_red_light'] = 'Red (light)';
 $hesklang['preset_black'] = 'Black';
 $hesklang['preset_black_light'] = 'Black (light)';
+$hesklang['url_rewrite'] = 'URL Rewrite';
+$hesklang['url_rewrite_help'] = 'Remove the need to include /index.php in API URLs (i.e. /api/index.php/v1/... -> /api/v1/...). Rename htaccess.txt to .htaccess in the /api folder to use.';
+$hesklang['url_rewrite_saved'] = 'URL rewrite setting saved!';
+$hesklang['api_settings_saved'] = 'API settings saved!';
+$hesklang['an_error_occurred'] = 'An error occurred. Check the logs for more information';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

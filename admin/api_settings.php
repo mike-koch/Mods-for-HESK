@@ -105,27 +105,43 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                    data-content="<?php echo $hesklang['external_api_help']; ?>"></i>
                             </label>
                             <div class="col-sm-9">
+                                <span class="btn-group" data-toggle="buttons">
+                                    <?php
+                                    $on = $modsForHesk_settings['public_api'] == '1' ? 'active' : '';
+                                    $off = $modsForHesk_settings['public_api'] == '1' ? '' : 'active';
+                                    ?>
+                                    <label id="enable-api-button" class="btn btn-success <?php echo $on; ?>">
+                                        <input type="radio" name="public-api" value="1"> <i class="fa fa-check-circle"></i>
+                                        <?php echo $hesklang['enable']; ?>
+                                    </label>
+                                    <label id="disable-api-button" class="btn btn-danger <?php echo $off; ?>">
+                                        <input type="radio" name="public-api" value="0"> <i class="fa fa-times-circle"></i>
+                                        <?php echo $hesklang['disable']; ?>
+                                    </label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="url-rewrite" class="col-sm-3 control-label">
+                                <?php echo $hesklang['url_rewrite']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                                   title="<?php echo $hesklang['url_rewrite']; ?>"
+                                   data-content="<?php echo $hesklang['url_rewrite_help']; ?>"></i>
+                            </label>
+                            <div class="col-sm-9">
                             <span class="btn-group" data-toggle="buttons">
                                 <?php
-                                $on = $modsForHesk_settings['public_api'] == '1' ? 'active' : '';
-                                $off = $modsForHesk_settings['public_api'] == '1' ? '' : 'active';
+                                $on = $modsForHesk_settings['api_url_rewrite'] == '1' ? 'active' : '';
+                                $off = $modsForHesk_settings['api_url_rewrite'] == '1' ? '' : 'active';
                                 ?>
-                                <label id="enable-api-button" class="btn btn-success <?php echo $on; ?>">
-                                    <input type="radio" name="public-api" value="1"> <i class="fa fa-check-circle"></i>
+                                <label id="enable-url-rewrite-button" class="btn btn-success <?php echo $on; ?>">
+                                    <input type="radio" name="url-rewrite" value="1"> <i class="fa fa-check-circle"></i>
                                     <?php echo $hesklang['enable']; ?>
                                 </label>
-                                <label id="disable-api-button" class="btn btn-danger <?php echo $off; ?>">
-                                    <input type="radio" name="public-api" value="0"> <i class="fa fa-times-circle"></i>
+                                <label id="disable-url-rewrite-button" class="btn btn-danger <?php echo $off; ?>">
+                                    <input type="radio" name="url-rewrite" value="0"> <i class="fa fa-times-circle"></i>
                                     <?php echo $hesklang['disable']; ?>
                                 </label>
-                            </span>
-                            <span>
-                                <i id="public-api-success" class="fa fa-check-circle fa-2x green hide media-middle"
-                                   data-toggle="tooltip" title="<?php echo $hesklang['changes_saved']; ?>"></i>
-                                <i id="public-api-failure" class="fa fa-times-circle fa-2x red hide media-middle"
-                                   data-toggle="tooltip" title="<?php echo $hesklang['save_failed_check_logs']; ?>"></i>
-                                <i id="public-api-saving" class="fa fa-spin fa-spinner fa-2x hide media-middle"
-                                   data-toggle="tooltip" title="<?php echo $hesklang['saving']; ?>"></i>
                             </span>
                             </div>
                         </div>
@@ -204,7 +220,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     </div>
 </section>
 </div>
-
 <?php
+echo mfh_get_hidden_fields_for_language(array('success', 'url_rewrite_saved', 'api_settings_saved', 'an_error_occurred'));
+
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
