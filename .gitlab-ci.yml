@@ -8,6 +8,5 @@ test:app:
   script:
   -  cd api/Tests
   -  phpunit
-  artifacts:
-    paths:
-      - .*
+  -  cd ../../ci
+  -  php deploy_release_to_github.php
