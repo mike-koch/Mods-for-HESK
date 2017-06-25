@@ -7,25 +7,25 @@ stages:
 before_script:
   - apt-get update
   - apt-get install zip unzip
-
-test:
-  stage: test
-  script:
   - cd api
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php');"
   - php composer.phar update
   - composer install
-  - cd Tests
-  - phpunit
-  - cd ../../ci
-  - bash build_zip.sh
-  #-  php deploy_release_to_github.php
+
+test:
+  stage: test
+  script:
+    - cd api
+    - phpunit
 
 deploy:
   when: manual
   stage: deploy
   script:
-  - ls
-  - php -r "echo 'Hello, world!';"
+    - cd ../ci
+    - bash build_zip.sh
+  artifacts:
+    paths:
+      - release.zip
