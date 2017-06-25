@@ -5,7 +5,7 @@ stages:
   - deploy
 
 test:
-  stage: testing
+  stage: test
   before_script:
   - apt-get update
   - apt-get install zip unzip
@@ -24,7 +24,7 @@ test:
 
 deploy:
   when: manual
-  stage: release
+  stage: deploy
   script:
   - ls
   - php -r "echo 'Hello, world!';"
