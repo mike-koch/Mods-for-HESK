@@ -3,7 +3,7 @@ image: tetraweb/php
 #before_script:
 #- bash ci/docker_install.sh > /dev/null
 
-test:app:
+test:
   #when: manual
   before_script:
   - apt-get update
