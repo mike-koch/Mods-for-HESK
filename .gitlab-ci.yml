@@ -11,12 +11,12 @@ test:app:
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php');"
-  - php composer.phar update
   script:
-  -  cd api
-  -  composer install
-  -  cd Tests
-  -  phpunit
-  -  cd ../../ci
-  -  bash build_zip.sh
+  - cd api
+  - php composer.phar update
+  - composer install
+  - cd Tests
+  - phpunit
+  - cd ../../ci
+  - bash build_zip.sh
   #-  php deploy_release_to_github.php
