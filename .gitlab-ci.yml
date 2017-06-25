@@ -21,7 +21,7 @@ test:
   - bash build_zip.sh
   #-  php deploy_release_to_github.php
 
-deploy:
+production:
   when: manual
   script:
   - ls
