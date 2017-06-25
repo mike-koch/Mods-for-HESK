@@ -8,5 +8,6 @@ test:app:
   script:
   -  cd api/Tests
   -  phpunit
-  paths:
-  - *
+  artifacts:
+    paths:
+      - .*
