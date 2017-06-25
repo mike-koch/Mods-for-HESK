@@ -8,11 +8,11 @@ test:app:
   before_script:
   - apt-get update
   - apt-get install zip unzip
+  script:
+  - cd api
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php');"
-  script:
-  - cd api
   - php composer.phar update
   - composer install
   - cd Tests
