@@ -1,4 +1,4 @@
-image: php:7.0
+image: ubuntu:17.10
 
 before_script:
 - bash ci/docker_install.sh > /dev/null
