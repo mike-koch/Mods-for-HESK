@@ -4,11 +4,12 @@ stages:
   - test
   - deploy
 
-test:
-  stage: test
-  before_script:
+before_script:
   - apt-get update
   - apt-get install zip unzip
+
+test:
+  stage: test
   script:
   - cd api
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
