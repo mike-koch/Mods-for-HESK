@@ -4,7 +4,8 @@ stages:
   - test
   - deploy
 
-test:app:
+test:
+  stage: testing
   before_script:
   - apt-get update
   - apt-get install zip unzip
@@ -21,8 +22,9 @@ test:app:
   - bash build_zip.sh
   #-  php deploy_release_to_github.php
 
-deploy:app:
+deploy:
   when: manual
+  stage: release
   script:
   - ls
   - php -r "echo 'Hello, world!';"
