@@ -1,2 +1,2 @@
 <?php
-echo scandir('.');
+var_dump(scandir('.'));
