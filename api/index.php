@@ -20,6 +20,9 @@ function before() {
 
     if ($internalUse === 'true') {
         buildUserContextFromSession();
+    } elseif (preg_match('/\/v1\/tickets\/.+\/attachments\/\d+/', $_SERVER['PATH_INFO'])) {
+        //-- TODO Clean this up
+        return;
     } else {
         assertApiIsEnabled();
         $token = \BusinessLogic\Helpers::getHeader('X-AUTH-TOKEN');
@@ -168,13 +171,14 @@ Link::before('before');
 
 Link::all(array(
     // Categories
-    '/v1/categories' => \Controllers\Categories\CategoryController::class . '::printAllCategories',
+    '/v1/categories' => [\Controllers\Categories\CategoryController::class . '::printAllCategories'],
     '/v1/categories/{i}' => \Controllers\Categories\CategoryController::class,
     // Tickets
     '/v1/tickets' => \Controllers\Tickets\CustomerTicketController::class,
     // Tickets - Staff
     '/v1/staff/tickets/{i}' => \Controllers\Tickets\StaffTicketController::class,
     // Attachments
+    '/v1/tickets/{a}/attachments/{i}' => \Controllers\Attachments\PublicAttachmentController::class . '::getRaw',
     '/v1/staff/tickets/{i}/attachments' => \Controllers\Attachments\StaffTicketAttachmentsController::class,
     '/v1/staff/tickets/{i}/attachments/{i}' => \Controllers\Attachments\StaffTicketAttachmentsController::class,
     // Statuses

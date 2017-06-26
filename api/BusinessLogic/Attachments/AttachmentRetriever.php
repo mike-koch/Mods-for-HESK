@@ -30,6 +30,20 @@ class AttachmentRetriever {
         $this->userToTicketChecker = $userToTicketChecker;
     }
 
+    //-- TODO Test
+    function getAttachmentContentsForTrackingId($trackingId, $attachmentId, $userContext, $heskSettings) {
+        $ticket = $this->ticketGateway->getTicketByTrackingId($trackingId, $heskSettings);
+
+        if ($ticket === null) {
+            throw new ApiFriendlyException("Ticket {$trackingId} not found!", "Ticket Not Found", 404);
+        }
+
+        $attachment = $this->attachmentGateway->getAttachmentById($attachmentId, $heskSettings);
+
+        return array('meta' => $attachment,
+            'contents' => $this->fileReader->readFromFile($attachment->savedName, $heskSettings['attach_dir']));
+    }
+
     function getAttachmentContentsForTicket($ticketId, $attachmentId, $userContext, $heskSettings) {
         $ticket = $this->ticketGateway->getTicketById($ticketId, $heskSettings);
 

@@ -262,13 +262,13 @@ function hesk_load_database_functions()
 
 function hesk_load_api_database_functions()
 {
-    require(__DIR__ . '/../api/core/json_error.php');
+    require(__DIR__ . '/../api/Core/json_error.php');
     // Preferrably use the MySQLi functions
     if (function_exists('mysqli_connect')) {
-        require(__DIR__ . '/../api/core/database_mysqli.inc.php');
+        require(__DIR__ . '/../api/Core/database_mysqli.inc.php');
     } // Default to MySQL
     else {
-        require(__DIR__ . '/../api/core/database.inc.php');
+        require(__DIR__ . '/../api/Core/database.inc.php');
     }
 } // END hesk_load_database_functions()
 
