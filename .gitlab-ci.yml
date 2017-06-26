@@ -12,11 +12,11 @@ before_script:
   - php composer-setup.php
   - php -r "unlink('composer-setup.php');"
   - php composer.phar update
-  - composer install
 
 test:
   stage: test
   script:
+    - composer install
     - cd Tests
     - phpunit
 
@@ -24,6 +24,7 @@ deploy:
   when: manual
   stage: deploy
   script:
+    - composer install --no-dev
     - cd ../ci
     - bash build_zip.sh
   artifacts:
