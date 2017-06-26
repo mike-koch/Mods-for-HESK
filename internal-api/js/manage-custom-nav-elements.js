@@ -42,7 +42,7 @@ $(document).ready(function() {
 
     $('form#manage-nav-element').submit(function(e) {
         e.preventDefault();
-        var heskUrl = $('#heskUrl').text();
+        var heskUrl = $('p#hesk-path').text();
 
         var $modal = $('#nav-element-modal');
 
@@ -306,7 +306,7 @@ function bindDeleteButton() {
     $(document).on('click', '[data-action="delete"]', function() {
         $('#overlay').show();
 
-        var heskUrl = $('#heskUrl').text();
+        var heskUrl = $('p#hesk-path').text();
         var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
 
         $.ajax({
@@ -329,7 +329,7 @@ function bindDeleteButton() {
 function bindSortButtons() {
     $(document).on('click', '[data-action="sort"]', function() {
         $('#overlay').show();
-        var heskUrl = $('#heskUrl').text();
+        var heskUrl = $('p#hesk-path').text();
         var direction = $(this).data('direction');
         var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
 
