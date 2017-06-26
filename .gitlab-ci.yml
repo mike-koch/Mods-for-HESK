@@ -17,6 +17,7 @@ before_script:
 test:
   stage: test
   script:
+    - cd Tests
     - phpunit
 
 deploy:
