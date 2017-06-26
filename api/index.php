@@ -16,13 +16,12 @@ function handle404() {
 }
 
 function before() {
-    assertApiIsEnabled();
-
     $internalUse = \BusinessLogic\Helpers::getHeader('X-INTERNAL-CALL');
 
     if ($internalUse === 'true') {
         buildUserContextFromSession();
     } else {
+        assertApiIsEnabled();
         $token = \BusinessLogic\Helpers::getHeader('X-AUTH-TOKEN');
         buildUserContext($token);
     }
