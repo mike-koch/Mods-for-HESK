@@ -12,5 +12,5 @@ rm apidoc.json
 rm CONTRIBUTING.md
 
 cd ../
-zip -r $VERSION_NUMBER.zip $VERSION_NUMBER
+zip -r release.zip $VERSION_NUMBER
 rm -rf $VERSION_NUMBER
