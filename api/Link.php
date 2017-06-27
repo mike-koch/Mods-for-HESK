@@ -39,7 +39,7 @@ class Link
 		}
 
 		self::$routes = $routes;
-		$method = strtolower($_SERVER['REQUEST_METHOD']);
+		$method = self::getRequestMethod();
 		$path = '/';
 		$handler = null;
 		$matched = array();
@@ -107,6 +107,21 @@ class Link
 				call_user_func( $afterFunc[0] );
 			}
 	}
+
+	private static function getRequestMethod() {
+        $headers = getallheaders();
+
+        $uppercaseHeaders = array();
+        foreach ($headers as $header => $value) {
+            $uppercaseHeaders[strtoupper($header)] = $value;
+        }
+
+        if (isset($uppercaseHeaders['X-HTTP-METHOD-OVERRIDE'])) {
+            return $uppercaseHeaders['X-HTTP-METHOD-OVERRIDE'];
+        }
+
+        return $_SERVER['REQUEST_METHOD'];
+    }
 
 	/**
 	 * Static function that helps you generate links effortlessly and pass parameters to them, thus enabling to generate dynamic links
