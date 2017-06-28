@@ -16,6 +16,11 @@ function handle404() {
 }
 
 function before() {
+    if (defined('HESK_DEMO') && $_SERVER['REQUEST_METHOD'] !== 'GET') {
+        print_error('Demo Mode', 'Only read-only commands are available in demo mode!', null, 401);
+        die();
+    }
+
     $internalUse = \BusinessLogic\Helpers::getHeader('X-INTERNAL-CALL');
 
     if ($internalUse === 'true') {
