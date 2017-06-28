@@ -96,6 +96,24 @@ function generateToken(userId) {
     });
 }
 
+function markSuccess(id) {
+    $('#' + id + '-saving').addClass('hide');
+    $('#' + id + '-failure').addClass('hide');
+    $('#' + id + '-success').removeClass('hide');
+}
+
+function markSaving(id) {
+    $('#' + id + '-saving').removeClass('hide');
+    $('#' + id + '-failure').addClass('hide');
+    $('#' + id + '-success').addClass('hide');
+}
+
+function markFailure(id) {
+    $('#' + id + '-saving').addClass('hide');
+    $('#' + id + '-failure').removeClass('hide');
+    $('#' + id + '-success').addClass('hide');
+}
+
 function clearTokens(userId) {
     var heskPath = $('p#hesk-path').text();
     var endpoint = heskPath + 'internal-api/admin/api-authentication/';

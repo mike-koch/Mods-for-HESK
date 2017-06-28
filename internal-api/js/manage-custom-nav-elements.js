@@ -94,9 +94,12 @@ $(document).ready(function() {
         $modal.find('#action-buttons').find('.save-button').attr('disabled', 'disabled');
 
         $.ajax({
-            method: method,
+            method: 'POST',
             url: url,
-            headers: { 'X-Internal-Call': true },
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': method
+            },
             data: JSON.stringify(data),
             success: function(data) {
                 if (id === -1) {
@@ -310,9 +313,12 @@ function bindDeleteButton() {
         var element = elements[$(this).parent().parent().find('[data-property="id"]').text()];
 
         $.ajax({
-            method: 'DELETE',
+            method: 'POST',
             url: heskUrl + 'api/index.php/v1-internal/custom-navigation/' + element.id,
-            headers: { 'X-Internal-Call': true },
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'DELETE'
+            },
             success: function() {
                 mfhAlert.success(mfhLang.text('custom_nav_element_deleted'));
                 loadTable();
