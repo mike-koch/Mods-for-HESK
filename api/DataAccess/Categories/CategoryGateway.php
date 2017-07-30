@@ -40,4 +40,23 @@ class CategoryGateway extends CommonDao {
 
         return $results;
     }
+
+    /**
+     * @param $category Category
+     * @param $heskSettings array
+     */
+    function createCategory($category, $heskSettings) {
+        $this->init();
+
+        $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` ()
+            VALUES ()";
+
+        $this->close();
+    }
+
+    function updateCategory($category, $heskSettings) {
+        $this->init();
+
+        $this->close();
+    }
 }

@@ -4,6 +4,7 @@ namespace Controllers\Categories;
 
 use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Exceptions\ApiFriendlyException;
+use Controllers\JsonRetriever;
 
 class CategoryController {
     function get($id) {
@@ -27,5 +28,19 @@ class CategoryController {
         $categoryRetriever = $applicationContext->get[CategoryRetriever::class];
 
         return $categoryRetriever->getAllCategories($hesk_settings, $userContext);
+    }
+
+    function post() {
+        //-- TODO: Create Category
+        $data = JsonRetriever::getJsonData();
+
+    }
+
+    function put($id) {
+        //-- TODO: Edit category
+    }
+
+    function delete($id) {
+        //-- TODO: Delete category
     }
 }
