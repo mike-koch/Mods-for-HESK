@@ -15,6 +15,10 @@ class BasicEmailSender implements EmailSender {
         if ($heskSettings['smtp']) {
             $mailer->isSMTP();
             $mailer->SMTPAuth = true;
+
+            //-- We'll set this explicitly below if the user has it enabled.
+            $mailer->SMTPAutoTLS = false;
+            
             if ($heskSettings['smtp_ssl']) {
                 $mailer->SMTPSecure = "ssl";
             } elseif ($heskSettings['smtp_tls']) {
