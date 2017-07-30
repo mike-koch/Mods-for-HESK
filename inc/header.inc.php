@@ -55,7 +55,7 @@ if (is_dir(HESK_PATH . 'install')) {
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
           rel="stylesheet"/>
-    <?php if ($modsForHesk_settings['use_bootstrap_theme'] == 0) { ?>
+    <?php if ($modsForHesk_settings['use_bootstrap_theme'] != 0) { ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
           rel="stylesheet" />
     <?php } ?>
