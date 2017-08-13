@@ -43,6 +43,7 @@ if (is_dir(HESK_PATH . 'install')) {
     $modsForHesk_settings = mfh_getSettings();
 }
 
+header('X-UA-Compatible: IE=edge');
 ?>
 <!DOCTYPE html>
 <html>
