@@ -21,6 +21,8 @@ if (!defined('IN_SCRIPT')) {
 define('ADMIN_PAGE', true);
 
 $modsForHesk_settings = mfh_getSettings();
+
+header('X-UA-Compatible: IE=edge');
 ?>
 <!DOCTYPE html>
 <html>
