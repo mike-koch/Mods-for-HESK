@@ -381,7 +381,7 @@ $modsForHesk_settings = mfh_getSettings();
                                 var heskUrl = $('p#hesk-path').text();
                                 var $versionStatus = $('#hesk-version-status');
                                 $.ajax({
-                                    url: heskUrl + 'api/v1-public/hesk-version',
+                                    url: heskUrl + 'api/index.php/v1-public/hesk-version',
                                     method: 'GET',
                                     success: function(data) {
                                         if ('<?php echo $hesk_settings['hesk_version']; ?>' === data.version) {
@@ -446,7 +446,7 @@ $modsForHesk_settings = mfh_getSettings();
                             var heskUrl = $('p#hesk-path').text();
                             var $mfhVersionStatus = $('#mfh-version-status');
                             $.ajax({
-                                url: heskUrl + 'api/v1-public/mods-for-hesk-version',
+                                url: heskUrl + 'api/index.php/v1-public/mods-for-hesk-version',
                                 method: 'GET',
                                 success: function(data) {
                                     if ('<?php echo $modsForHeskVersion; ?>' === data.version) {
