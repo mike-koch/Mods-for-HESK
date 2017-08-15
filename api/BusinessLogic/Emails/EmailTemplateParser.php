@@ -190,7 +190,9 @@ class EmailTemplateParser {
         $defaultStatus = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
         $statusName = hesk_msgToPlain($defaultStatus->localizedNames[$language]);
         $category = hesk_msgToPlain($this->categoryGateway->getAllCategories($heskSettings)[$ticket->categoryId]->name);
-        $owner = hesk_msgToPlain($this->userGateway->getUserById($ticket->ownerId, $heskSettings)->name);
+        $owner = $this->userGateway->getUserById($ticket->ownerId, $heskSettings);
+
+        $ownerName = $owner === null ? $hesklang['unas'] : hesk_msgToPlain($owner->name);
 
         switch ($ticket->priorityId) {
             case Priority::CRITICAL:
@@ -219,7 +221,7 @@ class EmailTemplateParser {
         $msg = str_replace('%%SITE_URL%%', $heskSettings['site_url'], $msg);
         $msg = str_replace('%%CATEGORY%%', $category, $msg);
         $msg = str_replace('%%PRIORITY%%', $priority, $msg);
-        $msg = str_replace('%%OWNER%%', $owner, $msg);
+        $msg = str_replace('%%OWNER%%', $ownerName, $msg);
         $msg = str_replace('%%STATUS%%', $statusName, $msg);
         $msg = str_replace('%%EMAIL%%', implode(';',$ticket->email), $msg);
         $msg = str_replace('%%CREATED%%', $ticket->dateCreated, $msg);

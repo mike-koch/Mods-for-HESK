@@ -355,86 +355,121 @@ $modsForHesk_settings = mfh_getSettings();
                     <td class="text-right">
                         <?php echo $hesklang['v']; ?>:
                     </td>
-                    <?php
-                    $cellClass = '';
-                    if ($hesk_settings['check_updates']) {
-                        $latest = hesk_checkVersion();
-
-                        if ($latest === true) {
-                            $cellClass = 'success';
-                        } elseif ($latest != -1) {
-                            $cellClass = 'warning';
-                        }
-                    }
-                    ?>
-                    <td class="pad-right-10 <?php echo $cellClass; ?>">
+                    <td class="pad-right-10" id="hesk-version-status">
                         <?php echo $hesk_settings['hesk_version']; ?>
-                        <?php
-                        if ($hesk_settings['check_updates']) {
-
-                            if ($latest === true) {
-                                echo ' - <span class="green">' . $hesklang['hud'] . '</span> ';
-                            } elseif ($latest != -1) {
-                                // Is this a beta/dev version?
-                                if (strpos($hesk_settings['hesk_version'], 'beta') || strpos($hesk_settings['hesk_version'], 'dev') || strpos($hesk_settings['hesk_version'], 'RC')) {
-                                    echo ' <span class="dark-orange">' . $hesklang['beta'] . '</span> '; ?> <a
-                                    href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
-                                    target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
-                                } else {
-                                    echo ' - <span class="dark-orange bold">' . $hesklang['hnw'] . '</span> '; ?> <a
-                                    href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
-                                    target="_blank"><?php echo $hesklang['getup']; ?></a><?php
-                                }
-                            } else {
-                                ?> - <a
-                                href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
-                                target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
-                            }
-                        } else {
-                            ?> - <a
+                        <?php if ($hesk_settings['check_updates']) : ?>
+                            -
+                            <i class="spinner fa fa-spin fa-spinner"></i>
+                            <span class="up-to-date green" style="display: none">
+                                <?php echo $hesklang['hud']; ?>
+                            </span>
+                            <span class="beta-version orange" style="display: none">
+                                <?php echo $hesklang['beta']; ?>
+                                <a href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
+                                    target="_blank"><?php echo $hesklang['check4updates']; ?></a>
+                            </span>
+                            <span class="update-available orange" style="display: none">
+                                <?php echo $hesklang['hnw']; ?>
+                                <a href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
+                                    target="_blank">
+                                    <?php echo $hesklang['getup']; ?>
+                                </a>
+                            </span>
+                            <a class="response-error" href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
+                                target="_blank" style="display: none"><?php echo $hesklang['check4updates']; ?></a>
+                            <script>
+                                var heskUrl = $('p#hesk-path').text();
+                                var $versionStatus = $('#hesk-version-status');
+                                $.ajax({
+                                    url: heskUrl + 'api/index.php/v1-public/hesk-version',
+                                    method: 'GET',
+                                    success: function(data) {
+                                        if ('<?php echo $hesk_settings['hesk_version']; ?>' === data.version) {
+                                            $versionStatus.addClass('success');
+                                            $versionStatus.find('.up-to-date').show();
+                                        } else if (<?php echo strpos($hesk_settings['hesk_version'], 'beta') ||
+                                            strpos($hesk_settings['hesk_version'], 'dev') ||
+                                            strpos($hesk_settings['hesk_version'], 'RC') ? 'true' : 'false'; ?>) {
+                                            $versionStatus.addClass('warning');
+                                            $versionStatus.find('.beta-version').show();
+                                        } else {
+                                            $versionStatus.addClass('warning');
+                                            $versionStatus.find('.update-available').show();
+                                        }
+                                    },
+                                    error: function() {
+                                        $versionStatus.find('.response-error').show();
+                                    },
+                                    complete: function(data) {
+                                        $versionStatus.find('.spinner').hide();
+                                    }
+                                });
+                            </script>
+                        <?php else: ?>
+                            - <a
                             href="https://www.hesk.com/update.php?v=<?php echo $hesk_settings['hesk_version']; ?>"
-                            target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
-                        }
-                        ?>
+                            target="_blank"><?php echo $hesklang['check4updates']; ?></a>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <tr>
                     <td class="text-right pad-up-5">
                         <?php echo $hesklang['mods_for_hesk_version']; ?>:
                     </td>
-                    <?php
-                    $cellClass = '';
-                    if ($hesk_settings['check_updates']) {
-                        $latest = hesk_checkMfhVersion($modsForHeskVersion);
-                        if ($latest === true) {
-                            $cellClass = 'success';
-                        } elseif ($latest != -1) {
-                            $cellClass = 'warning';
-                        }
-                    }
-                    ?>
-                    <td class="pad-right-10 pad-up-5 <?php echo $cellClass; ?>">
+                    <td class="pad-right-10 pad-up-5" id="mfh-version-status">
                         <?php echo $modsForHeskVersion; ?>
-                        <?php
-                        if ($hesk_settings['check_updates']) {
-                            if (strpos($modsForHeskVersion, 'beta') || strpos($modsForHeskVersion, 'dev') || strpos($modsForHeskVersion, 'RC')) {
-                                echo ' <span class="dark-orange">' . $hesklang['beta'] . '</span> '; ?> <a
-                                href="https://mods-for-hesk.mkochcs.com/versioncheck.php?v=<?php echo $modsForHeskVersion; ?>"
-                                target="_blank"><?php echo $hesklang['check4updates']; ?></a><?php
-                            } elseif ($latest === true) {
-                                echo ' - <span class="green">' . $hesklang['mfh_up_to_date'] . '</span>';
-                            } else {
-                                ?> - <a href="https://mods-for-hesk.mkochcs.com" target="_blank"
-                                        class="orange bold"><?php echo $hesklang['hnw']; ?></a>
-                                <?php
-                            }
-                        } else {
-                            ?> - <a
-                                href="https://mods-for-hesk.mkochcs.com/versioncheck.php?version=<?php echo $modsForHeskVersion; ?>"
+                        <?php if ($hesk_settings['check_updates']) : ?>
+                            -
+                            <i class="spinner fa fa-spin fa-spinner"></i>
+                            <span class="up-to-date green" style="display: none">
+                                <?php echo $hesklang['mfh_up_to_date']; ?>
+                            </span>
+                            <span class="beta-version orange" style="display: none">
+                                <?php echo $hesklang['beta']; ?>
+                                <a href="https://www.mods-for-hesk.com/versioncheck.php?v=<?php echo $modsForHeskVersion; ?>"
+                                   target="_blank"><?php echo $hesklang['check4updates']; ?></a>
+                            </span>
+                            <span class="update-available" style="display: none">
+                                <a class="orange" href="https://www.mods-for-hesk.com/versioncheck.php?version=<?php echo $hesk_settings['hesk_version']; ?>"
+                                   target="_blank">
+                                    <?php echo $hesklang['hnw']; ?>
+                                </a>
+                            </span>
+                            <a class="response-error" href="https://www.hesk.com/update.php?version=<?php echo $hesk_settings['hesk_version']; ?>"
+                               target="_blank" style="display: none"><?php echo $hesklang['check4updates']; ?></a>
+                        <?php else: ?>
+                            - <a
+                                href="https://www.mods-for-hesk.com/versioncheck.php?version=<?php echo $modsForHeskVersion; ?>"
                                 target="_blank"><?php echo $hesklang['check4updates']; ?></a>
-                            <?php
-                        }
-                        ?>
+                        <?php endif; ?>
+                        <script>
+                            var heskUrl = $('p#hesk-path').text();
+                            var $mfhVersionStatus = $('#mfh-version-status');
+                            $.ajax({
+                                url: heskUrl + 'api/index.php/v1-public/mods-for-hesk-version',
+                                method: 'GET',
+                                success: function(data) {
+                                    if ('<?php echo $modsForHeskVersion; ?>' === data.version) {
+                                        $mfhVersionStatus.addClass('success');
+                                        $mfhVersionStatus.find('.up-to-date').show();
+                                    } else if (<?php echo strpos($modsForHeskVersion, 'beta') ||
+                                    strpos($modsForHeskVersion, 'dev') ||
+                                    strpos($modsForHeskVersion, 'RC') ? 'true' : 'false'; ?>) {
+                                        $mfhVersionStatus.addClass('warning');
+                                        $mfhVersionStatus.find('.beta-version').show();
+                                    } else {
+                                        $mfhVersionStatus.addClass('warning');
+                                        $mfhVersionStatus.find('.update-available').show();
+                                    }
+                                },
+                                error: function() {
+                                    $mfhVersionStatus.find('.response-error').show();
+                                },
+                                complete: function(data) {
+                                    $mfhVersionStatus.find('.spinner').hide();
+                                }
+                            });
+                        </script>
                     </td>
                 </tr>
                 <tr>
@@ -3932,130 +3967,6 @@ $modsForHesk_settings = mfh_getSettings();
             });
         </script>
         ';
-    }
-
-
-    function hesk_checkVersion()
-    {
-        global $hesk_settings;
-
-        if ($latest = hesk_getLatestVersion()) {
-            if (strlen($latest) > 12) {
-                return -1;
-            } elseif ($latest == $hesk_settings['hesk_version']) {
-                return true;
-            } else {
-                return $latest;
-            }
-        } else {
-            return -1;
-        }
-
-    } // END hesk_checkVersion()
-
-
-    function hesk_getLatestVersion()
-    {
-        global $hesk_settings;
-
-        // Do we have a cached version file?
-        if (file_exists(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest.txt')) {
-            if (preg_match('/^(\d+)\|([\d.]+)+$/', @file_get_contents(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest.txt'), $matches) && (time() - intval($matches[1])) < 3600) {
-                return $matches[2];
-            }
-        }
-
-        // No cached file or older than 3600 seconds, try to get an update
-        $hesk_version_url = 'https://hesk.com/version';
-
-        // Try using cURL
-        if (function_exists('curl_init')) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $hesk_version_url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
-            $latest = curl_exec($ch);
-            curl_close($ch);
-            return hesk_cacheLatestVersion($latest);
-        }
-
-        // Try using a simple PHP function instead
-        if ($latest = @file_get_contents($hesk_version_url)) {
-            return hesk_cacheLatestVersion($latest);
-        }
-
-        // Can't check automatically, will need a manual check
-        return false;
-
-    } // END hesk_getLatestVersion()
-
-    function hesk_cacheLatestVersion($latest)
-    {
-        global $hesk_settings;
-
-        @file_put_contents(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest.txt', time() . '|' . $latest);
-
-        return $latest;
-
-    } // END hesk_cacheLatestVersion()
-
-    function hesk_checkMfhVersion($currentVersion)
-    {
-        if ($latest = hesk_getMfhLatestVersion()) {
-            if (strlen($latest) > 12) {
-                return -1;
-            } elseif ($latest == $currentVersion) {
-                return true;
-            } else {
-                return $latest;
-            }
-        } else {
-            return -1;
-        }
-    }
-
-    function hesk_getMfhLatestVersion()
-    {
-        global $hesk_settings;
-
-        // Do we have a cached version file?
-        if (file_exists(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest-mfh.txt')) {
-            if (preg_match('/^(\d+)\|([\d.]+)+$/', @file_get_contents(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest-mfh.txt'), $matches) && (time() - intval($matches[1])) < 3600) {
-                return $matches[2];
-            }
-        }
-
-        // No cached file or older than 3600 seconds, try to get an update
-        $hesk_version_url = 'http://mods-for-hesk.mkochcs.com/latestversion.php';
-
-        // Try using cURL
-        if (function_exists('curl_init')) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $hesk_version_url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
-            $latest = curl_exec($ch);
-            curl_close($ch);
-            return hesk_cacheMfhLatestVersion($latest);
-        }
-
-        // Try using a simple PHP function instead
-        if ($latest = file_get_contents($hesk_version_url)) {
-            return hesk_cacheMfhLatestVersion($latest);
-        }
-
-        // Can't check automatically, will need a manual check
-        return false;
-    }
-
-    function hesk_cacheMfhLatestVersion($latest)
-    {
-        global $hesk_settings;
-
-        @file_put_contents(HESK_PATH . $hesk_settings['cache_dir'] . '/__latest-mfh.txt', time() . '|' . $latest);
-
-        return $latest;
-
     }
 
 

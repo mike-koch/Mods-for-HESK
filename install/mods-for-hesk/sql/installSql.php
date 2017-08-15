@@ -1124,3 +1124,10 @@ function execute310Scripts() {
 
     updateVersion('3.1.0');
 }
+
+function execute311Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    updateVersion('3.1.1');
+}

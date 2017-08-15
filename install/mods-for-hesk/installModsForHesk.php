@@ -51,6 +51,7 @@ $buildToVersionMap = array(
     40 => '3.0.6',
     41 => '3.0.7',
     42 => '3.1.0',
+    43 => '3.1.1',
 );
 
 function echoInitialVersionRows($version, $build_to_version_map)
