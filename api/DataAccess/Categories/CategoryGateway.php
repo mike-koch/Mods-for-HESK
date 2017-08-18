@@ -33,6 +33,7 @@ class CategoryGateway extends CommonDao {
             $category->displayBorder = $row['display_border_outline'] === '1';
             $category->priority = intval($row['priority']);
             $category->manager = intval($row['manager']) == 0 ? NULL : intval($row['manager']);
+            $category->description = $row['description'];
             $results[$category->id] = $category;
         }
 
@@ -44,14 +45,31 @@ class CategoryGateway extends CommonDao {
     /**
      * @param $category Category
      * @param $heskSettings array
+     * @return int The ID of the newly created category
      */
     function createCategory($category, $heskSettings) {
         $this->init();
 
-        $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` ()
-            VALUES ()";
+        $newOrderRs = hesk_dbQuery("SELECT `cat_order` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` ORDER BY `cat_order` DESC LIMIT 1");
+        $newOrder = hesk_dbFetchAssoc($newOrderRs);
+
+        $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` 
+            (`name`, `cat_order`, `autoassign`, `type`, `priority`, `manager`, `background_color`, `usage`, 
+                `foreground_color`, `display_border_outline`, `description`)
+            VALUES ('" . hesk_dbEscape($category->name) . "', " . intval($newOrder['cat_order']) . ",
+                '" . $category->autoAssign ? 1 : 0 . "', '" . intval($category->type) . "',
+                '" . intval($category->priority) . "', " . $category->manager === null ? 'NULL' : intval($category->manager) . ",
+                '" . hesk_dbEscape($category->backgroundColor)  . "', " . intval($category->usage) . ",
+                '" . hesk_dbEscape($category->foregroundColor) . "', '" . $category->displayBorder ? 1 : 0 . "',
+                '" . hesk_dbEscape($category->description) . "')";
+
+        hesk_dbQuery($sql);
+
+        $id = hesk_dbInsertID();
 
         $this->close();
+
+        return $id;
     }
 
     function updateCategory($category, $heskSettings) {
