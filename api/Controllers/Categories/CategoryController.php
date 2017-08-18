@@ -2,8 +2,11 @@
 
 namespace Controllers\Categories;
 
+use BusinessLogic\Categories\Category;
+use BusinessLogic\Categories\CategoryHandler;
 use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Exceptions\ApiFriendlyException;
+use BusinessLogic\Helpers;
 use Controllers\JsonRetriever;
 
 class CategoryController {
@@ -31,9 +34,37 @@ class CategoryController {
     }
 
     function post() {
-        //-- TODO: Create Category
+        global $hesk_settings, $applicationContext;
+
         $data = JsonRetriever::getJsonData();
 
+        $category = $this->buildCategoryFromJson($data);
+
+        /* @var $categoryHandler CategoryHandler */
+        $categoryHandler = $applicationContext->get[CategoryHandler::class];
+
+        $category = $categoryHandler->createCategory($category, $hesk_settings);
+
+        return output($category);
+    }
+
+    private function buildCategoryFromJson($json) {
+        $category = new Category();
+
+        $category->id = Helpers::safeArrayGet($json, 'id');
+        $category->autoAssign = Helpers::safeArrayGet($json, 'autoassign');
+        $category->backgroundColor = Helpers::safeArrayGet($json, 'backgroundColor');
+        $category->catOrder = Helpers::safeArrayGet($json, 'order');
+        $category->description = Helpers::safeArrayGet($json, 'description');
+        $category->displayBorder = Helpers::safeArrayGet($json, 'displayBorder');
+        $category->foregroundColor = Helpers::safeArrayGet($json, 'foregroundColor');
+        $category->manager = Helpers::safeArrayGet($json, 'manager');
+        $category->name = Helpers::safeArrayGet($json, 'name');
+        $category->priority = Helpers::safeArrayGet($json, 'priority');
+        $category->type = Helpers::safeArrayGet($json, 'type');
+        $category->usage = Helpers::safeArrayGet($json, 'usage');
+
+        return $category;
     }
 
     function put($id) {

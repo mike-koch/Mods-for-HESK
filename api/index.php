@@ -187,7 +187,7 @@ Link::before('globalBefore');
 
 Link::all(array(
     // Categories
-    '/v1/categories' => action(\Controllers\Categories\CategoryController::class . '::printAllCategories'),
+    '/v1/categories' => action(\Controllers\Categories\CategoryController::class . '::printAllCategories', [RequestMethod::GET]),
     '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::class),
     // Tickets
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::class),
@@ -225,8 +225,14 @@ Link::all(array(
     '404' => 'handle404'
 ));
 
-function action($class, $securityHandler = SecurityHandler::AUTH_TOKEN) {
-    return [$class, $class, $securityHandler];
+/**
+ * @param $class object|string The class name (and optional static method)
+ * @param $requestMethods array The accepted request methods for this endpoint
+ * @param $securityHandler string The proper security handler
+ * @return array The configured path
+ */
+function action($class, $requestMethods = RequestMethod::ALL, $securityHandler = SecurityHandler::AUTH_TOKEN) {
+    return [$class, $class, $securityHandler, $requestMethods];
 }
 
 class SecurityHandler {
