@@ -33,7 +33,7 @@ class CategoryGateway extends CommonDao {
             $category->displayBorder = $row['display_border_outline'] === '1';
             $category->priority = intval($row['priority']);
             $category->manager = intval($row['manager']) == 0 ? NULL : intval($row['manager']);
-            $category->description = $row['description'];
+            $category->description = $row['mfh_description'];
             $results[$category->id] = $category;
         }
 
@@ -55,7 +55,7 @@ class CategoryGateway extends CommonDao {
 
         $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` 
             (`name`, `cat_order`, `autoassign`, `type`, `priority`, `manager`, `background_color`, `usage`, 
-                `foreground_color`, `display_border_outline`, `description`)
+                `foreground_color`, `display_border_outline`, `mfh_description`)
             VALUES ('" . hesk_dbEscape($category->name) . "', " . intval($newOrder['cat_order']) . ",
                 '" . $category->autoAssign ? 1 : 0 . "', '" . intval($category->type) . "',
                 '" . intval($category->priority) . "', " . $category->manager === null ? 'NULL' : intval($category->manager) . ",
