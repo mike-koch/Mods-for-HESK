@@ -1,5 +1,7 @@
 <?php
 
+require_once 'RequestMethod.php';
+
 /**
  * @class Main class of the Link router that helps you create and deploy routes
  */	
@@ -40,9 +42,11 @@ class Link
 
 		self::$routes = $routes;
 		$method = self::getRequestMethod();
+		$acceptedMethods = RequestMethod::ALL;
 		$path = '/';
 		$handler = null;
 		$matched = array();
+		$middleware = null;
 		if ( !empty ( $_SERVER['PATH_INFO'] ) ) {
 			$path = $_SERVER['PATH_INFO'];
 		} else if ( !empty ( $_SERVER['REQUEST_URI'] ) ) {
@@ -52,6 +56,8 @@ class Link
 		if ( isset($routes[$path] ) ) {
 			if( is_array( $routes[$path] ) ) {
 				$handler = $routes[$path][0];
+				$middleware = $routes[$path][2];
+				$acceptedMethods = $routes[$path][3];
 			} else {
 				$handler = $routes[$path];
 			}
@@ -88,15 +94,15 @@ class Link
 		unset( $matched[0] );
 
 		if( isset($middleware) ){
-			$newMatched = self::callFunction( $middleware, $matched, $method );
+			$newMatched = self::callFunction( $middleware, $matched, $method, $acceptedMethods );
 			/* If new wildcard param are there pass them to main handler */
 			if( $newMatched ) { 
-				self::callFunction( $handler, $newMatched, $method );
+				self::callFunction( $handler, $newMatched, $method, $acceptedMethods );
 			} else {
-				self::callFunction( $handler, $matched, $method );
+				self::callFunction( $handler, $matched, $method, $acceptedMethods );
 			}
 		} else {
-			self::callFunction( $handler, $matched, $method );
+			self::callFunction( $handler, $matched, $method, $acceptedMethods );
 		}
 
 		/* Call all the function that are to be executed after routing */
@@ -160,17 +166,25 @@ class Link
 		}
 	}
 
-	/**
-	 * Static function to handle both middlewares' call and main handler's call.
-	 *
-	 * @param array|string $handler Handler that will handle the routes call or middleware
-	 * @param array $matched The parameters that we get from the route wildcard
-	 * @return array $newParams The parameters return in the case of middleware if you intend to
-	 * 							the wildcards that were originally passed, this newParams will 
-	 *							be next passed to main handler   
-	 */	
-	public static function callFunction( $handler , $matched, $method ) 
+    /**
+     * Static function to handle both middlewares' call and main handler's call.
+     *
+     * @param array|string $handler Handler that will handle the routes call or middleware
+     * @param array $matched The parameters that we get from the route wildcard
+     * @param $method string request method
+     * @param $acceptedMethods array Accepted request methods for the request
+     * @return array $newParams The parameters return in the case of middleware if you intend to
+     *                            the wildcards that were originally passed, this newParams will
+     * be next passed to main handler
+     */
+	public static function callFunction( $handler , $matched, $method, $acceptedMethods )
 	{
+	    if (!in_array($method, $acceptedMethods)) {
+	        print_r('Request method ' . $method . ' not allowed');
+	        header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed', true, 405);
+            die();
+        }
+
 		if ( $handler ) {	
 			if ( is_callable( $handler ) ) {
 				$newParams = call_user_func_array( $handler, $matched ) ;

@@ -4,6 +4,7 @@ namespace DataAccess\Categories;
 
 use BusinessLogic\Categories\Category;
 use DataAccess\CommonDao;
+use DataAccess\Logging\LoggingGateway;
 use Exception;
 
 class CategoryGateway extends CommonDao {
@@ -57,10 +58,10 @@ class CategoryGateway extends CommonDao {
             (`name`, `cat_order`, `autoassign`, `type`, `priority`, `manager`, `background_color`, `usage`, 
                 `foreground_color`, `display_border_outline`, `mfh_description`)
             VALUES ('" . hesk_dbEscape($category->name) . "', " . intval($newOrder['cat_order']) . ",
-                '" . $category->autoAssign ? 1 : 0 . "', '" . intval($category->type) . "',
-                '" . intval($category->priority) . "', " . $category->manager === null ? 'NULL' : intval($category->manager) . ",
+                '" . ($category->autoAssign ? 1 : 0) . "', '" . intval($category->type) . "',
+                '" . intval($category->priority) . "', " . ($category->manager === null ? 0 : intval($category->manager)) . ",
                 '" . hesk_dbEscape($category->backgroundColor)  . "', " . intval($category->usage) . ",
-                '" . hesk_dbEscape($category->foregroundColor) . "', '" . $category->displayBorder ? 1 : 0 . "',
+                '" . hesk_dbEscape($category->foregroundColor) . "', '" . ($category->displayBorder ? 1 : 0) . "',
                 '" . hesk_dbEscape($category->description) . "')";
 
         hesk_dbQuery($sql);

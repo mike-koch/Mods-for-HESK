@@ -3,6 +3,7 @@
 // Responsible for loading in all necessary classes. AKA a poor man's DI solution.
 use BusinessLogic\Attachments\AttachmentHandler;
 use BusinessLogic\Attachments\AttachmentRetriever;
+use BusinessLogic\Categories\CategoryHandler;
 use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Emails\BasicEmailSender;
 use BusinessLogic\Emails\EmailSenderHelper;
@@ -73,6 +74,7 @@ class ApplicationContext {
         // Categories
         $this->get[CategoryGateway::class] = new CategoryGateway();
         $this->get[CategoryRetriever::class] = new CategoryRetriever($this->get[CategoryGateway::class]);
+        $this->get[CategoryHandler::class] = new CategoryHandler($this->get[CategoryGateway::class]);
 
         // Bans
         $this->get[BanGateway::class] = new BanGateway();
