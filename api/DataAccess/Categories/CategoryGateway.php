@@ -73,8 +73,46 @@ class CategoryGateway extends CommonDao {
         return $id;
     }
 
+    /**
+     * @param $category Category
+     * @param $heskSettings array
+     */
     function updateCategory($category, $heskSettings) {
         $this->init();
+
+        $sql = "UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` SET 
+            `name` = '" . hesk_dbEscape($category->name) . "',
+            `cat_order` = " . intval($category->catOrder) . ",
+            `autoassign` = '" . ($category->autoAssign ? 1 : 0) . "',
+            `type` = '" . intval($category->type) . "', 
+            `priority` = '" . intval($category->priority) . "', 
+            `manager` = " . ($category->manager === null ? 0 : intval($category->manager)) . ", 
+            `background_color` = '" . hesk_dbEscape($category->backgroundColor)  . "', 
+            `usage` = " . intval($category->usage) . ", 
+            `foreground_color` = '" . hesk_dbEscape($category->foregroundColor) . "', 
+            `display_border_outline` = '" . ($category->displayBorder ? 1 : 0) . "', 
+            `mfh_description` = '" . hesk_dbEscape($category->description) . "'
+            WHERE `id` = " . intval($category->id);
+
+        hesk_dbQuery($sql);
+
+        $this->close();
+    }
+
+    function resortAllCategories($heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories`
+            ORDER BY `cat_order` ASC");
+
+        $sortValue = 10;
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories`
+                SET `cat_order` = " . intval($sortValue) . "
+                WHERE `id` = " . intval($row['id']));
+
+            $sortValue += 10;
+        }
 
         $this->close();
     }

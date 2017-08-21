@@ -12,6 +12,7 @@ use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Emails\MailgunEmailSender;
 use BusinessLogic\Navigation\CustomNavElementHandler;
 use BusinessLogic\Security\BanRetriever;
+use BusinessLogic\Security\PermissionChecker;
 use BusinessLogic\Security\UserContextBuilder;
 use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\Settings\ApiChecker;
@@ -50,6 +51,9 @@ class ApplicationContext {
     function __construct() {
         $this->get = array();
 
+        // Permissions
+        $this->get[PermissionChecker::class] = new PermissionChecker();
+
         // Settings
         $this->get[ModsForHeskSettingsGateway::class] = new ModsForHeskSettingsGateway();
 
@@ -74,7 +78,9 @@ class ApplicationContext {
         // Categories
         $this->get[CategoryGateway::class] = new CategoryGateway();
         $this->get[CategoryRetriever::class] = new CategoryRetriever($this->get[CategoryGateway::class]);
-        $this->get[CategoryHandler::class] = new CategoryHandler($this->get[CategoryGateway::class]);
+        $this->get[CategoryHandler::class] = new CategoryHandler(
+            $this->get[CategoryGateway::class],
+            $this->get[PermissionChecker::class]);
 
         // Bans
         $this->get[BanGateway::class] = new BanGateway();

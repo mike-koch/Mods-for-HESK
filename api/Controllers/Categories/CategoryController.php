@@ -48,13 +48,16 @@ class CategoryController {
         return output($category);
     }
 
+    /**
+     * @param $json
+     * @return Category
+     */
     private function buildCategoryFromJson($json) {
         $category = new Category();
 
-        $category->id = Helpers::safeArrayGet($json, 'id');
         $category->autoAssign = Helpers::safeArrayGet($json, 'autoassign');
         $category->backgroundColor = Helpers::safeArrayGet($json, 'backgroundColor');
-        $category->catOrder = Helpers::safeArrayGet($json, 'order');
+        $category->catOrder = Helpers::safeArrayGet($json, 'catOrder');
         $category->description = Helpers::safeArrayGet($json, 'description');
         $category->displayBorder = Helpers::safeArrayGet($json, 'displayBorder');
         $category->foregroundColor = Helpers::safeArrayGet($json, 'foregroundColor');
@@ -68,7 +71,19 @@ class CategoryController {
     }
 
     function put($id) {
-        //-- TODO: Edit category
+        global $hesk_settings, $applicationContext;
+
+        $data = JsonRetriever::getJsonData();
+
+        $category = $this->buildCategoryFromJson($data);
+        $category->id = $id;
+
+        /* @var $categoryHandler CategoryHandler */
+        $categoryHandler = $applicationContext->get[CategoryHandler::class];
+
+        $category = $categoryHandler->editCategory($category, $hesk_settings);
+
+        return output($category);
     }
 
     function delete($id) {
