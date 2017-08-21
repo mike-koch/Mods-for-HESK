@@ -206,21 +206,21 @@ Link::all(array(
     /* Internal use only routes */
     // Resend email response
     '/v1-internal/staff/tickets/{i}/resend-email' =>
-        action(\Controllers\Tickets\ResendTicketEmailToCustomerController::class, SecurityHandler::INTERNAL),
+        action(\Controllers\Tickets\ResendTicketEmailToCustomerController::class, RequestMethod::ALL, SecurityHandler::INTERNAL),
     // Custom Navigation
     '/v1-internal/custom-navigation/all' =>
-        action(\Controllers\Navigation\CustomNavElementController::class . '::getAll', SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class . '::getAll', RequestMethod::ALL, SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation' =>
-        action(\Controllers\Navigation\CustomNavElementController::class, SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::ALL, SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation/{i}' =>
-        action(\Controllers\Navigation\CustomNavElementController::class, SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::ALL, SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation/{i}/sort/{s}' =>
-        action(\Controllers\Navigation\CustomNavElementController::class . '::sort', SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class . '::sort', RequestMethod::ALL, SecurityHandler::INTERNAL),
 
     '/v1-public/hesk-version' =>
-        action(\Controllers\System\HeskVersionController::class . '::getHeskVersion', SecurityHandler::OPEN),
+        action(\Controllers\System\HeskVersionController::class . '::getHeskVersion', RequestMethod::ALL, SecurityHandler::OPEN),
     '/v1-public/mods-for-hesk-version' =>
-        action(\Controllers\System\HeskVersionController::class . '::getModsForHeskVersion', SecurityHandler::OPEN),
+        action(\Controllers\System\HeskVersionController::class . '::getModsForHeskVersion', RequestMethod::ALL, SecurityHandler::OPEN),
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'

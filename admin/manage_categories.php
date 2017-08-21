@@ -93,10 +93,11 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
 ?>
 <div class="content-wrapper">
     <section class="content">
-    <div class="box collapsed-box">
+        <!-- OLD ADD CATEGORY -->
+    <!--<div class="box collapsed-box">
         <div class="box-header with-border">
             <h1 class="box-title">
-                <?php echo $hesklang['add_cat']; ?>
+                <?php /*echo $hesklang['add_cat']; */?>
             </h1>
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -107,32 +108,32 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
         <div class="box-body">
             <form action="manage_categories.php" method="post" role="form" class="form-horizontal" data-toggle="validator">
                 <div class="form-group">
-                    <label for="name" class="col-sm-4 control-label"><?php echo $hesklang['cat_name']; ?></label>
+                    <label for="name" class="col-sm-4 control-label"><?php /*echo $hesklang['cat_name']; */?></label>
 
                     <div class="col-sm-8">
                         <input class="form-control"
-                               placeholder="<?php echo htmlspecialchars($hesklang['cat_name']); ?>" type="text"
+                               placeholder="<?php /*echo htmlspecialchars($hesklang['cat_name']); */?>" type="text"
                                name="name" size="40" maxlength="40"
                             <?php
-                            if (isset($_SESSION['catname'])) {
+/*                            if (isset($_SESSION['catname'])) {
                                 echo ' value="' . hesk_input($_SESSION['catname']) . '" ';
                             }
-                            ?>
-                               data-error="<?php echo htmlspecialchars($hesklang['enter_cat_name']); ?>"
+                            */?>
+                               data-error="<?php /*echo htmlspecialchars($hesklang['enter_cat_name']); */?>"
                                required>
-                        <div class="help-block"><?php echo $hesklang['max_chars']; ?></div>
+                        <div class="help-block"><?php /*echo $hesklang['max_chars']; */?></div>
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="priority" class="col-sm-4 control-label"><?php echo $hesklang['def_pri']; ?> <a href="#"
-                                                                                           onclick="alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')"><i
+                    <label for="priority" class="col-sm-4 control-label"><?php /*echo $hesklang['def_pri']; */?> <a href="#"
+                                                                                           onclick="alert('<?php /*echo hesk_makeJsString($hesklang['cat_pri']); */?>')"><i
                                 class="fa fa-question-circle settingsquestionmark"></i> </a> </label>
 
                     <div class="col-sm-8">
                         <select name="priority" class="form-control">
                             <?php
-                            // Default priority: low
+/*                            // Default priority: low
                             if (!isset($_SESSION['cat_priority'])) {
                                 $_SESSION['cat_priority'] = 3;
                             }
@@ -141,104 +142,105 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                             foreach ($priorities as $value => $info) {
                                 echo '<option value="' . $value . '"' . ($_SESSION['cat_priority'] == $value ? ' selected="selected"' : '') . '>' . $info['text'] . '</option>';
                             }
-                            ?>
+                            */?>
                         </select>
 
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="color" class="col-sm-4 control-label">
-                        <?php echo $hesklang['category_background_color']; ?>
+                        <?php /*echo $hesklang['category_background_color']; */?>
                         <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                           title="<?php echo htmlspecialchars($hesklang['category_background_color']); ?>"
-                           data-content="<?php echo htmlspecialchars($hesklang['category_background_color_help']); ?>"></i>
+                           title="<?php /*echo htmlspecialchars($hesklang['category_background_color']); */?>"
+                           data-content="<?php /*echo htmlspecialchars($hesklang['category_background_color_help']); */?>"></i>
                     </label>
                     <div class="col-sm-8">
                         <input class="form-control colorpicker-trigger"
-                               placeholder="<?php echo htmlspecialchars($hesklang['category_background_color']); ?>" type="text"
+                               placeholder="<?php /*echo htmlspecialchars($hesklang['category_background_color']); */?>" type="text"
                                name="background-color" maxlength="7" required>
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="color" class="col-sm-4 control-label">
-                        <?php echo $hesklang['category_foreground_color']; ?>
+                        <?php /*echo $hesklang['category_foreground_color']; */?>
                         <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                           title="<?php echo htmlspecialchars($hesklang['category_foreground_color']); ?>"
-                           data-content="<?php echo htmlspecialchars($hesklang['category_foreground_color_help']); ?>"></i>
+                           title="<?php /*echo htmlspecialchars($hesklang['category_foreground_color']); */?>"
+                           data-content="<?php /*echo htmlspecialchars($hesklang['category_foreground_color_help']); */?>"></i>
                     </label>
                     <div class="col-sm-8">
                         <input class="form-control colorpicker-trigger"
-                               placeholder="<?php echo htmlspecialchars($hesklang['category_foreground_color']); ?>" type="text"
+                               placeholder="<?php /*echo htmlspecialchars($hesklang['category_foreground_color']); */?>" type="text"
                                name="foreground-color" maxlength="7">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="display-border" class="col-sm-4 control-label">
-                        <?php echo $hesklang['category_display_border']; ?>
+                        <?php /*echo $hesklang['category_display_border']; */?>
                         <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
-                           title="<?php echo htmlspecialchars($hesklang['category_display_border']); ?>"
-                           data-content="<?php echo htmlspecialchars($hesklang['category_display_border_help']); ?>"></i>
+                           title="<?php /*echo htmlspecialchars($hesklang['category_display_border']); */?>"
+                           data-content="<?php /*echo htmlspecialchars($hesklang['category_display_border_help']); */?>"></i>
                     </label>
                     <div class="col-sm-8 form-inline">
                         <div class="radio">
                             <label>
                                 <input type="radio" name="display-border" value="1">
-                                <?php echo $hesklang['yes']; ?>
+                                <?php /*echo $hesklang['yes']; */?>
                             </label>
                         </div>&nbsp;&nbsp;&nbsp;
                         <div class="radio">
                             <label>
                                 <input type="radio" name="display-border" value="0" checked>
-                                <?php echo $hesklang['no']; ?>
+                                <?php /*echo $hesklang['no']; */?>
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="usage" class="col-sm-4 control-label"><?php echo $hesklang['usage']; ?></label>
+                    <label for="usage" class="col-sm-4 control-label"><?php /*echo $hesklang['usage']; */?></label>
                     <div class="col-sm-8">
                         <select name="usage" class="form-control">
-                            <option value="0"><?php echo $hesklang['tickets_and_events']; ?></option>
-                            <option value="1"><?php echo $hesklang['tickets_only']; ?></option>
-                            <option value="2"><?php echo $hesklang['events_only']; ?></option>
+                            <option value="0"><?php /*echo $hesklang['tickets_and_events']; */?></option>
+                            <option value="1"><?php /*echo $hesklang['tickets_only']; */?></option>
+                            <option value="2"><?php /*echo $hesklang['events_only']; */?></option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="options" class="col-sm-4 control-label"><?php echo $hesklang['opt']; ?></label>
+                    <label for="options" class="col-sm-4 control-label"><?php /*echo $hesklang['opt']; */?></label>
 
                     <div class="col-sm-8">
                         <?php
-                        if ($hesk_settings['autoassign']) {
-                            ?>
+/*                        if ($hesk_settings['autoassign']) {
+                            */?>
                             <div class="checkbox">
                                 <label><input type="checkbox" name="autoassign"
-                                              value="Y" <?php if (!isset($_SESSION['cat_autoassign']) || $_SESSION['cat_autoassign'] == 1) {
+                                              value="Y" <?php /*if (!isset($_SESSION['cat_autoassign']) || $_SESSION['cat_autoassign'] == 1) {
                                         echo 'checked="checked"';
-                                    } ?> /> <?php echo $hesklang['cat_aa']; ?></label><br/>
+                                    } */?> /> <?php /*echo $hesklang['cat_aa']; */?></label><br/>
                             </div>
                             <?php
-                        }
-                        ?>
+/*                        }
+                        */?>
                         <div class="checkbox">
                             <label><input type="checkbox" name="type"
-                                          value="Y" <?php if (isset($_SESSION['cat_type']) && $_SESSION['cat_type'] == 1) {
+                                          value="Y" <?php /*if (isset($_SESSION['cat_type']) && $_SESSION['cat_type'] == 1) {
                                     echo 'checked="checked"';
-                                } ?> /> <?php echo $hesklang['cat_type']; ?></label>
+                                } */?> /> <?php /*echo $hesklang['cat_type']; */?></label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-4">
                         <input type="hidden" name="a" value="new"/>
-                        <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
-                        <input type="submit" value="<?php echo $hesklang['create_cat']; ?>" class="btn btn-default"/>
+                        <input type="hidden" name="token" value="<?php /*hesk_token_echo(); */?>"/>
+                        <input type="submit" value="<?php /*echo $hesklang['create_cat']; */?>" class="btn btn-default"/>
                     </div>
                 </div>
             </form>
         </div>
-    </div>
+    </div>-->
+        <!-- END OLD ADD CATEGORY -->
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">
@@ -253,6 +255,7 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
             </div>
         </div>
         <div class="box-body">
+
             <?php
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
@@ -261,109 +264,119 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 hesk_show_notice($hesklang['cat_pri_info'] . ' ' . $hesklang['cpri']);
             }
             ?>
-            <table class="table table-hover">
-                <tr>
-                    <th style="display: none"><?php echo $hesklang['id']; ?></th>
-                    <th><?php echo $hesklang['cat_name']; ?></th>
-                    <th><?php echo $hesklang['priority']; ?></th>
-                    <th><?php echo $hesklang['not']; ?></th>
-                    <th><?php echo $hesklang['graph']; ?></th>
-                    <th><?php echo $hesklang['usage']; ?></th>
-                    <th><?php echo $hesklang['manager']; ?></th>
-                    <th><?php echo $hesklang['opt']; ?></th>
-                </tr>
+            <div class="row">
+                <div class="col-md-12 text-right">
+                    <button id="create-button" class="btn btn-success">
+                        <i class="fa fa-plus-circle"></i>&nbsp;
+                        <?php echo $hesklang['create_new']; ?>
+                    </button>
+                </div>
+                <div class="col-md-12">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th style="display: none"><?php echo $hesklang['id']; ?></th>
+                            <th><?php echo $hesklang['cat_name']; ?></th>
+                            <th><?php echo $hesklang['priority']; ?></th>
+                            <th><?php echo $hesklang['not']; ?></th>
+                            <th><?php echo $hesklang['graph']; ?></th>
+                            <th><?php echo $hesklang['usage']; ?></th>
+                            <th><?php echo $hesklang['manager']; ?></th>
+                            <th><?php echo $hesklang['opt']; ?></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        /* Get number of tickets per category */
+                        $tickets_all = array();
+                        $tickets_total = 0;
 
-                <?php
-                /* Get number of tickets per category */
-                $tickets_all = array();
-                $tickets_total = 0;
+                        $res = hesk_dbQuery('SELECT COUNT(*) AS `cnt`, `category` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` GROUP BY `category`');
+                        while ($tmp = hesk_dbFetchAssoc($res)) {
+                            $tickets_all[$tmp['category']] = $tmp['cnt'];
+                            $tickets_total += $tmp['cnt'];
+                        }
 
-                $res = hesk_dbQuery('SELECT COUNT(*) AS `cnt`, `category` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` GROUP BY `category`');
-                while ($tmp = hesk_dbFetchAssoc($res)) {
-                    $tickets_all[$tmp['category']] = $tmp['cnt'];
-                    $tickets_total += $tmp['cnt'];
-                }
+                        /* Get list of categories */
+                        $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ORDER BY `" . $orderBy . "` ASC");
+                        $usersRes = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `isadmin` = '0' ORDER BY `name` ASC");
+                        $users = array();
+                        while ($userRow = hesk_dbFetchAssoc($usersRes)) {
+                            array_push($users, $userRow);
+                        }
 
-                /* Get list of categories */
-                $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ORDER BY `" . $orderBy . "` ASC");
-                $usersRes = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `isadmin` = '0' ORDER BY `name` ASC");
-                $users = array();
-                while ($userRow = hesk_dbFetchAssoc($usersRes)) {
-                    array_push($users, $userRow);
-                }
+                        $i = 1;
+                        $j = 0;
+                        $num = hesk_dbNumRows($res);
 
-                $i = 1;
-                $j = 0;
-                $num = hesk_dbNumRows($res);
-
-                $usage = array(
-                    0 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="' . $hesklang['tickets'] . '"></i>
+                        $usage = array(
+                            0 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="' . $hesklang['tickets'] . '"></i>
                                 <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="' . $hesklang['events'] . '"></i>',
-                    1 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="' . $hesklang['tickets'] . '"></i><i class="fa fa-fw"></i>',
-                    2 => '<i class="fa fa-fw icon-link">&nbsp;</i> <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="' . $hesklang['events'] . '"></i>'
-                );
+                            1 => '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="' . $hesklang['tickets'] . '"></i><i class="fa fa-fw"></i>',
+                            2 => '<i class="fa fa-fw icon-link">&nbsp;</i> <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="' . $hesklang['events'] . '"></i>'
+                        );
 
-                while ($mycat = hesk_dbFetchAssoc($res)) {
-                    $j++;
+                        while ($mycat = hesk_dbFetchAssoc($res)) {
+                            $j++;
 
-                    if (isset($_SESSION['selcat2']) && $mycat['id'] == $_SESSION['selcat2']) {
-                        $color = 'admin_green';
-                        unset($_SESSION['selcat2']);
-                    } else {
-                        $color = $i ? 'admin_white' : 'admin_gray';
-                    }
+                            if (isset($_SESSION['selcat2']) && $mycat['id'] == $_SESSION['selcat2']) {
+                                $color = 'admin_green';
+                                unset($_SESSION['selcat2']);
+                            } else {
+                                $color = $i ? 'admin_white' : 'admin_gray';
+                            }
 
-                    $tmp = $i ? 'White' : 'Blue';
-                    $style = 'background: ' . $mycat['background_color'];
-                    $backgroundVolatile = 'background-volatile';
-                    if ($mycat['foreground_color'] != 'AUTO') {
-                        $style .= '; color: ' . $mycat['foreground_color'];
-                        $backgroundVolatile = '';
+                            $tmp = $i ? 'White' : 'Blue';
+                            $style = 'background: ' . $mycat['background_color'];
+                            $backgroundVolatile = 'background-volatile';
+                            if ($mycat['foreground_color'] != 'AUTO') {
+                                $style .= '; color: ' . $mycat['foreground_color'];
+                                $backgroundVolatile = '';
 
-                        if ($mycat['display_border_outline']) {
-                            $style .= '; border: solid 1px ' . $mycat['foreground_color'];
-                        }
-                    }
+                                if ($mycat['display_border_outline']) {
+                                    $style .= '; border: solid 1px ' . $mycat['foreground_color'];
+                                }
+                            }
 
-                    if ($mycat['foreground_color'] == 'AUTO') {
-                        $mycat['foreground_color'] = '';
-                    }
+                            if ($mycat['foreground_color'] == 'AUTO') {
+                                $mycat['foreground_color'] = '';
+                            }
 
-                    $i = $i ? 0 : 1;
+                            $i = $i ? 0 : 1;
 
-                    /* Number of tickets and graph width */
-                    $all = isset($tickets_all[$mycat['id']]) ? $tickets_all[$mycat['id']] : 0;
-                    $width_all = 0;
-                    if ($tickets_total && $all) {
-                        $width_all = round(($all / $tickets_total) * 100);
-                    }
+                            /* Number of tickets and graph width */
+                            $all = isset($tickets_all[$mycat['id']]) ? $tickets_all[$mycat['id']] : 0;
+                            $width_all = 0;
+                            if ($tickets_total && $all) {
+                                $width_all = round(($all / $tickets_total) * 100);
+                            }
 
-                    /* Deleting category with ID 1 (default category) is not allowed */
-                    if ($mycat['id'] == 1) {
-                        $remove_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
-                    } else {
-                        $remove_code = ' <a href="manage_categories.php?a=remove&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete'] . '"></i></a>';
-                    }
+                            /* Deleting category with ID 1 (default category) is not allowed */
+                            if ($mycat['id'] == 1) {
+                                $remove_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
+                            } else {
+                                $remove_code = ' <a href="manage_categories.php?a=remove&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete'] . '"></i></a>';
+                            }
 
-                    /* Is category private or public? */
-                    if ($mycat['type']) {
-                        $type_code = '<a href="manage_categories.php?a=type&amp;s=0&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '"><span class="glyphicon glyphicon-user gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['cat_private'] . '"></span></a>';
-                    } else {
-                        $type_code = '<a href="manage_categories.php?a=type&amp;s=1&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '"><span class="glyphicon glyphicon-user blue" data-toggle="tooltip" data-placement="top" title="' . $hesklang['cat_public'] . '"></span></a>';
-                    }
+                            /* Is category private or public? */
+                            if ($mycat['type']) {
+                                $type_code = '<a href="manage_categories.php?a=type&amp;s=0&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '"><span class="glyphicon glyphicon-user gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['cat_private'] . '"></span></a>';
+                            } else {
+                                $type_code = '<a href="manage_categories.php?a=type&amp;s=1&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '"><span class="glyphicon glyphicon-user blue" data-toggle="tooltip" data-placement="top" title="' . $hesklang['cat_public'] . '"></span></a>';
+                            }
 
-                    /* Is auto assign enabled? */
-                    if ($hesk_settings['autoassign']) {
-                        if ($mycat['autoassign']) {
-                            $autoassign_code = '<a href="manage_categories.php?a=autoassign&amp;s=0&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaon'] . '"></i></a>';
-                        } else {
-                            $autoassign_code = '<a href="manage_categories.php?a=autoassign&amp;s=1&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaoff'] . '"></i></a>';
-                        }
-                    } else {
-                        $autoassign_code = '';
-                    }
+                            /* Is auto assign enabled? */
+                            if ($hesk_settings['autoassign']) {
+                                if ($mycat['autoassign']) {
+                                    $autoassign_code = '<a href="manage_categories.php?a=autoassign&amp;s=0&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaon'] . '"></i></a>';
+                                } else {
+                                    $autoassign_code = '<a href="manage_categories.php?a=autoassign&amp;s=1&amp;catid=' . $mycat['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaoff'] . '"></i></a>';
+                                }
+                            } else {
+                                $autoassign_code = '';
+                            }
 
-                    echo '
+                            echo '
                 <tr data-category-id="' . $mycat['id'] . '" data-name="' . htmlspecialchars($mycat['name']) . '"
                     data-foreground-color="' . htmlspecialchars($mycat['foreground_color']) . '"
                     data-border="' . $mycat['display_border_outline'] . '"
@@ -387,27 +400,30 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                 ' . $autoassign_code . '
                 ' . $type_code . ' ';
 
-                    if ($orderBy != 'name' && $num > 1) {
-                        if ($j == 1) {
-                            echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_categories.php?a=order&amp;catid=' . $mycat['id'] . '&amp;move=15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['move_dn'] . '"></i></a>&nbsp;';
-                        } elseif ($j == $num) {
-                            echo '<a href="manage_categories.php?a=order&amp;catid=' . $mycat['id'] . '&amp;move=-15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['move_up'] . '"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
-                        } else {
-                            echo '
+                            if ($orderBy != 'name' && $num > 1) {
+                                if ($j == 1) {
+                                    echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" /> <a href="manage_categories.php?a=order&amp;catid=' . $mycat['id'] . '&amp;move=15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['move_dn'] . '"></i></a>&nbsp;';
+                                } elseif ($j == $num) {
+                                    echo '<a href="manage_categories.php?a=order&amp;catid=' . $mycat['id'] . '&amp;move=-15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['move_up'] . '"></i></a> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
+                                } else {
+                                    echo '
                         <a href="manage_categories.php?a=order&amp;catid=' . $mycat['id'] . '&amp;move=-15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-up icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['move_up'] . '"></i></a>
                         <a href="manage_categories.php?a=order&amp;catid=' . $mycat['id'] . '&amp;move=15&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-arrow-down icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['move_dn'] . '"></i></a>&nbsp;
                         ';
-                        }
-                    }
-                    echo '<a href="javascript:;" class="category-modal-trigger" data-category-id="' . $mycat['id'] . '"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="' . $hesklang['edit'] . '"></i></a>';
-                    echo $remove_code . '</td>
+                                }
+                            }
+                            echo '<a href="javascript:;" class="category-modal-trigger" data-category-id="' . $mycat['id'] . '"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" title="' . $hesklang['edit'] . '"></i></a>';
+                            echo $remove_code . '</td>
                 </tr>
                 ';
 
-                } // End while
+                        } // End while
 
-                ?>
-            </table>
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </section>
