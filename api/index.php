@@ -189,7 +189,7 @@ Link::all(array(
     // Categories
     '/v1/categories/all' => action(\Controllers\Categories\CategoryController::class . '::printAllCategories', [RequestMethod::GET]),
     '/v1/categories' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::POST]),
-    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::class),
+    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE]),
     // Tickets
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::class),
     // Tickets - Staff

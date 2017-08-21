@@ -116,4 +116,12 @@ class CategoryGateway extends CommonDao {
 
         $this->close();
     }
+
+    function deleteCategory($id, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` WHERE `id` = " . intval($id));
+
+        $this->close();
+    }
 }

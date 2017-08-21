@@ -117,4 +117,13 @@ class CategoryHandler {
 
         return $allCategories[$category->id];
     }
+
+    function deleteCategory($id, $userContext, $heskSettings) {
+        if (!$this->permissionChecker->doesUserHavePermission($userContext, UserPrivilege::CAN_MANAGE_CATEGORIES)) {
+            throw new AccessViolationException('User cannot manage categories!');
+        }
+
+        $this->categoryGateway->deleteCategory($id, $heskSettings);
+        $this->categoryGateway->resortAllCategories($heskSettings);
+    }
 }

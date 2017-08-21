@@ -34,7 +34,7 @@ class CategoryController {
     }
 
     function post() {
-        global $hesk_settings, $applicationContext;
+        global $hesk_settings, $userContext, $applicationContext;
 
         $data = JsonRetriever::getJsonData();
 
@@ -43,9 +43,9 @@ class CategoryController {
         /* @var $categoryHandler CategoryHandler */
         $categoryHandler = $applicationContext->get[CategoryHandler::class];
 
-        $category = $categoryHandler->createCategory($category, $hesk_settings);
+        $category = $categoryHandler->createCategory($category, $userContext, $hesk_settings);
 
-        return output($category);
+        return output($category, 201);
     }
 
     /**
@@ -71,7 +71,7 @@ class CategoryController {
     }
 
     function put($id) {
-        global $hesk_settings, $applicationContext;
+        global $hesk_settings, $userContext, $applicationContext;
 
         $data = JsonRetriever::getJsonData();
 
@@ -81,12 +81,19 @@ class CategoryController {
         /* @var $categoryHandler CategoryHandler */
         $categoryHandler = $applicationContext->get[CategoryHandler::class];
 
-        $category = $categoryHandler->editCategory($category, $hesk_settings);
+        $category = $categoryHandler->editCategory($category, $userContext, $hesk_settings);
 
         return output($category);
     }
 
     function delete($id) {
-        //-- TODO: Delete category
+        global $hesk_settings, $userContext, $applicationContext;
+
+        /* @var $categoryHandler CategoryHandler */
+        $categoryHandler = $applicationContext->get[CategoryHandler::class];
+
+        $categoryHandler->deleteCategory($id, $userContext, $hesk_settings);
+
+        return http_response_code(204);
     }
 }

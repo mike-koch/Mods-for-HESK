@@ -82,6 +82,7 @@ class Link
 						$handler = $routeDesc[0];
 						if( isset( $routeDesc[2] )) {
 							$middleware = $routeDesc[2];
+							$acceptedMethods = $routeDesc[3];
 						}
 					}
 					else 
