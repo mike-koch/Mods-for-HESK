@@ -65,4 +65,9 @@ class Category {
      * @var string
      */
     public $description;
+
+    /**
+     * @var int
+     */
+    public $numberOfTickets;
 }

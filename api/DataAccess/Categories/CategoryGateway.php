@@ -15,7 +15,11 @@ class CategoryGateway extends CommonDao {
     function getAllCategories($hesk_settings) {
         $this->init();
 
-        $sql = 'SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories`';
+        $sql = 'SELECT `cat`.*, COUNT(`tickets`.`id`) AS `number_of_tickets`
+            FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` `cat`
+            LEFT JOIN `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` `tickets`
+                ON `cat`.`id` = `tickets`.`category` 
+            GROUP BY `cat`.`id`';
 
         $response = hesk_dbQuery($sql);
 
@@ -35,6 +39,7 @@ class CategoryGateway extends CommonDao {
             $category->priority = intval($row['priority']);
             $category->manager = intval($row['manager']) == 0 ? NULL : intval($row['manager']);
             $category->description = $row['mfh_description'];
+            $category->numberOfTickets = intval($row['number_of_tickets']);
             $results[$category->id] = $category;
         }
 

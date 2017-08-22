@@ -84,12 +84,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 <?php
 $orderBy = $modsForHesk_settings['category_order_column'];
 $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ORDER BY `" . $orderBy . "` ASC");
-$options = '';
-while ($mycat = hesk_dbFetchAssoc($res)) {
-    $options .= '<option value="' . $mycat['id'] . '" ';
-    $options .= (isset($_SESSION['selcat']) && $mycat['id'] == $_SESSION['selcat']) ? ' selected="selected" ' : '';
-    $options .= '>' . $mycat['name'] . '</option>';
-}
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -241,21 +235,22 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
         </div>
     </div>-->
         <!-- END OLD ADD CATEGORY -->
-    <div class="box">
-        <div class="box-header with-border">
-            <h1 class="box-title">
-                <?php echo $hesklang['manage_cat']; ?> <a href="javascript:void(0)"
-                                                          onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['cat_intro']); ?>')"><i
-                        class="fa fa-question-circle settingsquestionmark"></i></a>
-            </h1>
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                </button>
+        <div class="box">
+            <div class="box-header with-border">
+                <h1 class="box-title">
+                    <?php echo $hesklang['manage_cat']; ?> <a href="javascript:void(0)"
+                                                              onclick="javascript:alert('<?php echo hesk_makeJsString($hesklang['cat_intro']); ?>')"><i
+                                class="fa fa-question-circle settingsquestionmark"></i></a>
+                </h1>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
             </div>
         </div>
+    <div class="box">
         <div class="box-body">
-
             <?php
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
@@ -271,6 +266,25 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                         <?php echo $hesklang['create_new']; ?>
                     </button>
                 </div>
+                <div class="col-md-12">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th style="display: none"><?php echo $hesklang['id']; ?></th>
+                            <th><?php echo $hesklang['cat_name']; ?></th>
+                            <th><?php echo $hesklang['priority']; ?></th>
+                            <th><?php echo $hesklang['not']; ?></th>
+                            <th><?php echo $hesklang['graph']; ?></th>
+                            <th><?php echo $hesklang['usage']; ?></th>
+                            <th><?php echo $hesklang['manager']; ?></th>
+                            <th><?php echo $hesklang['opt']; ?></th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-body">
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="col-md-12">
                     <table class="table table-striped">
                         <thead>
@@ -424,6 +438,9 @@ while ($mycat = hesk_dbFetchAssoc($res)) {
                     </table>
                 </div>
             </div>
+        </div>
+        <div class="overlay" id="overlay">
+            <i class="fa fa-spinner fa-spin"></i>
         </div>
     </div>
 </section>
