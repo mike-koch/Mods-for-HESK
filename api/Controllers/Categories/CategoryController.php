@@ -13,11 +13,13 @@ class CategoryController {
     function get($id) {
         $categories = self::getAllCategories();
 
-        if (!isset($categories[$id])) {
-            throw new ApiFriendlyException("Category {$id} not found!", "Category Not Found", 404);
+        foreach ($categories as $category) {
+            if ($category->id === $id) {
+                return output($category);
+            }
         }
 
-        output($categories[$id]);
+        throw new ApiFriendlyException("Category {$id} not found!", "Category Not Found", 404);
     }
 
     static function printAllCategories() {

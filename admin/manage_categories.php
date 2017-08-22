@@ -16,6 +16,7 @@ define('HESK_PATH', '../');
 define('VALIDATOR', 1);
 define('PAGE_TITLE', 'ADMIN_CATEGORIES');
 define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
+define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/manage-categories.js"></script>');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -632,6 +633,8 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
 </script>
 
 <?php
+echo mfh_get_hidden_fields_for_language(array());
+
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
 

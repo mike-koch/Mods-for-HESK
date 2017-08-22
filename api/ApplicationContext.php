@@ -77,10 +77,12 @@ class ApplicationContext {
 
         // Categories
         $this->get[CategoryGateway::class] = new CategoryGateway();
-        $this->get[CategoryRetriever::class] = new CategoryRetriever($this->get[CategoryGateway::class]);
+        $this->get[CategoryRetriever::class] = new CategoryRetriever($this->get[CategoryGateway::class],
+            $this->get[ModsForHeskSettingsGateway::class]);
         $this->get[CategoryHandler::class] = new CategoryHandler(
             $this->get[CategoryGateway::class],
-            $this->get[PermissionChecker::class]);
+            $this->get[PermissionChecker::class],
+            $this->get[ModsForHeskSettingsGateway::class]);
 
         // Bans
         $this->get[BanGateway::class] = new BanGateway();

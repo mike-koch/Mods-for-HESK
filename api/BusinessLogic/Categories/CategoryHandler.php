@@ -9,6 +9,7 @@ use BusinessLogic\Security\PermissionChecker;
 use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\ValidationModel;
 use DataAccess\Categories\CategoryGateway;
+use DataAccess\Settings\ModsForHeskSettingsGateway;
 
 class CategoryHandler {
     /* @var $categoryGateway CategoryGateway */
@@ -17,19 +18,27 @@ class CategoryHandler {
     /* @var $permissionChecker PermissionChecker */
     private $permissionChecker;
 
-    function __construct($categoryGateway, $permissionChecker) {
+    /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
+    private $modsForHeskSettingsGateway;
+
+    function __construct($categoryGateway, $permissionChecker, $modsForHeskSettingsGateway) {
         $this->categoryGateway = $categoryGateway;
         $this->permissionChecker = $permissionChecker;
+        $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
     }
 
     /**
      * @param $category Category
+     * @param $userContext
      * @param $heskSettings array
      * @return Category The newly created category with ID
      * @throws ValidationException When validation fails
+     * @throws \Exception When the newly created category was not retrieved
      */
     //TODO Test
     function createCategory($category, $userContext, $heskSettings) {
+        $modsForHeskSettings = $this->modsForHeskSettingsGateway->getAllSettings($heskSettings);
+
         $validationModel = $this->validate($category, $userContext);
 
         if (count($validationModel->errorKeys) > 0) {
@@ -38,9 +47,15 @@ class CategoryHandler {
 
         $id = $this->categoryGateway->createCategory($category, $heskSettings);
 
-        $allCategories = $this->categoryGateway->getAllCategories($heskSettings);
+        $allCategories = $this->categoryGateway->getAllCategories($heskSettings, $modsForHeskSettings);
 
-        return $allCategories[$id];
+        foreach ($allCategories as $innerCategory) {
+            if ($innerCategory->id === $id) {
+                return $innerCategory;
+            }
+        }
+
+        throw new \Exception("Newly created category {$id} lost! :O");
     }
 
     /**
@@ -99,11 +114,15 @@ class CategoryHandler {
 
     /**
      * @param $category Category
+     * @param $userContext
      * @param $heskSettings array
      * @return Category
      * @throws ValidationException
+     * @throws \Exception When the category is missing
      */
     function editCategory($category, $userContext, $heskSettings) {
+        $modsForHeskSettings = $this->modsForHeskSettingsGateway->getAllSettings($heskSettings);
+
         $validationModel = $this->validate($category, $userContext, false);
 
         if (count($validationModel->errorKeys) > 0) {
@@ -113,9 +132,15 @@ class CategoryHandler {
         $this->categoryGateway->updateCategory($category, $heskSettings);
         $this->categoryGateway->resortAllCategories($heskSettings);
 
-        $allCategories = $this->categoryGateway->getAllCategories($heskSettings);
+        $allCategories = $this->categoryGateway->getAllCategories($heskSettings, $modsForHeskSettings);
 
-        return $allCategories[$category->id];
+        foreach ($allCategories as $innerCategory) {
+            if ($innerCategory->id === $category->id) {
+                return $innerCategory;
+            }
+        }
+
+        throw new \Exception("Category {$category->id} vanished! :O");
     }
 
     function deleteCategory($id, $userContext, $heskSettings) {

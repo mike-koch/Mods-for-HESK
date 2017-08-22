@@ -12,14 +12,18 @@ class CategoryGateway extends CommonDao {
      * @param $hesk_settings
      * @return Category[]
      */
-    function getAllCategories($hesk_settings) {
+    function getAllCategories($hesk_settings, $modsForHesk_settings) {
         $this->init();
+
+        $sortColumn = $modsForHesk_settings['category_order_column'];
 
         $sql = 'SELECT `cat`.*, COUNT(`tickets`.`id`) AS `number_of_tickets`
             FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` `cat`
             LEFT JOIN `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` `tickets`
-                ON `cat`.`id` = `tickets`.`category` 
-            GROUP BY `cat`.`id`';
+                ON `cat`.`id` = `tickets`.`category`
+            GROUP BY `cat`.`id`
+            ORDER BY `cat`.`' . $sortColumn . '` ASC';
+
 
         $response = hesk_dbQuery($sql);
 
@@ -40,7 +44,7 @@ class CategoryGateway extends CommonDao {
             $category->manager = intval($row['manager']) == 0 ? NULL : intval($row['manager']);
             $category->description = $row['mfh_description'];
             $category->numberOfTickets = intval($row['number_of_tickets']);
-            $results[$category->id] = $category;
+            $results[] = $category;
         }
 
         $this->close();

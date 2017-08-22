@@ -4,6 +4,7 @@ namespace BusinessLogic\Categories;
 
 use BusinessLogic\Security\UserContext;
 use DataAccess\Categories\CategoryGateway;
+use DataAccess\Settings\ModsForHeskSettingsGateway;
 
 class CategoryRetriever {
     /**
@@ -11,8 +12,14 @@ class CategoryRetriever {
      */
     private $categoryGateway;
 
-    function __construct($categoryGateway) {
+    /**
+     * @param $modsForHeskSettingsGateway ModsForHeskSettingsGateway
+     */
+    private $modsForHeskSettingsGateway;
+
+    function __construct($categoryGateway, $modsForHeskSettingsGateway) {
         $this->categoryGateway = $categoryGateway;
+        $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
     }
 
     /**
@@ -21,7 +28,9 @@ class CategoryRetriever {
      * @return array
      */
     function getAllCategories($heskSettings, $userContext) {
-        $categories = $this->categoryGateway->getAllCategories($heskSettings);
+        $modsForHeskSettings = $this->modsForHeskSettingsGateway->getAllSettings($heskSettings);
+
+        $categories = $this->categoryGateway->getAllCategories($heskSettings, $modsForHeskSettings);
 
         foreach ($categories as $category) {
             $category->accessible = $userContext->admin ||
