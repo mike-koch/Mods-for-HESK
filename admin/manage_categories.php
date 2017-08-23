@@ -271,13 +271,12 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th style="display: none"><?php echo $hesklang['id']; ?></th>
+                            <th><?php echo $hesklang['id']; ?></th>
                             <th><?php echo $hesklang['cat_name']; ?></th>
                             <th><?php echo $hesklang['priority']; ?></th>
                             <th><?php echo $hesklang['not']; ?></th>
                             <th><?php echo $hesklang['graph']; ?></th>
                             <th><?php echo $hesklang['usage']; ?></th>
-                            <th><?php echo $hesklang['manager']; ?></th>
                             <th><?php echo $hesklang['opt']; ?></th>
                         </tr>
                         </thead>
@@ -631,9 +630,66 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         });
     });
 </script>
-
+<script type="text/html" id="category-row-template">
+    <tr>
+        <td><span data-property="id" data-value="x"></span></td>
+        <td><span data-property="category-name"></span></td>
+        <td><span data-property="priority"></span></td>
+        <td><a data-property="number-of-tickets" href="#"></a></td>
+        <td>
+            <div class="progress" style="width: 160px; margin-bottom: 0" title="Width tooltip" data-toggle="tooltip">
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+        </td>
+        <td>
+            <i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="<?php echo $hesklang['tickets']; ?>"></i>
+            <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="<?php echo $hesklang['events']; ?>"></i>
+        </td>
+        <td>
+            <a data-property="generate-link" href="#">
+                <i class="fa fa-fw fa-code icon-link" style="color: green" data-toggle="tooltip"
+                   data-placement="top" title="<?php $hesklang['geco']; ?>"></i>
+            </a>
+            <a data-property="autoassign-link" href="#">
+                <i class="fa fa-fw fa-bolt icon-link orange"
+                   data-toggle="tooltip" data-placement="top" title="Category autoassign tooltip"></i>
+            </a>
+            <a data-property="type-link" href="#">
+                <?php // fa-lock or fa-unlock-alt ?>
+                <i class="fa fa-fw fa-lock gray" data-toggle="tooltip" data-placement="top" title="Category type tooltip"></i>
+            </a>
+            <span class="sort-arrows">
+                <a href="#" data-action="sort"
+                   data-direction="up">
+                    <i class="fa fa-fw fa-arrow-up icon-link green"
+                       data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
+                </a>
+                <a href="#" data-action="sort"
+                   data-direction="down">
+                    <i class="fa fa-fw fa-arrow-down icon-link green"
+                       data-toggle="tooltip" title="<?php echo $hesklang['move_dn'] ?>"></i>
+                </a>
+            </span>
+            <a href="#" data-action="edit">
+                <i class="fa fa-fw fa-pencil icon-link orange"
+                   data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
+            </a>
+            <a href="#" data-action="delete">
+                <i class="fa fa-fw fa-times icon-link red"
+                   data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
+            </a>
+        </td>
+    </tr>
+</script>
 <?php
-echo mfh_get_hidden_fields_for_language(array());
+echo mfh_get_hidden_fields_for_language(array(
+    'critical',
+    'high',
+    'medium',
+    'low',
+    'perat',
+));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
