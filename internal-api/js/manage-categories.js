@@ -72,6 +72,11 @@ function loadTable() {
                 categories[this.id] = this;
 
                 lastElement = this;
+
+                if (first) {
+                    $template.find('[data-direction="up"]').css('visibility', 'hidden');
+                    first = false;
+                }
             });
 
             if (lastElement) {
