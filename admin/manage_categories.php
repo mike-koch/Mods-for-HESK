@@ -445,13 +445,16 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
     </div>
 </section>
 </div>
-<!-- Edit category modal -->
-<div class="modal fade" id="edit-category-modal" tabindex="-1" role="dialog" style="overflow: hidden">
+<!-- Category modal -->
+<div class="modal fade" id="category-modal" tabindex="-1" role="dialog" style="overflow: hidden">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="cursor: move">
                 <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"><?php echo $hesklang['edit_category']; ?></h4>
+                <h4 class="modal-title" id="myModalLabel">
+                    <span id="title-edit-category"><?php echo $hesklang['edit_category']; ?></span>
+                    <span id="title-add-category"><?php echo $hesklang['create_cat']; ?></span>
+                </h4>
             </div>
             <form action="manage_categories.php" class="form-horizontal" data-toggle="validator" method="post">
                 <div class="modal-body">
@@ -536,15 +539,6 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="manager" class="col-sm-3 control-label">
-                                    <?php echo $hesklang['manager']; ?>
-                                </label>
-                                <div class="col-sm-9">
-                                    <?php echo output_user_dropdown($users); ?>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label for="usage" class="col-sm-3 control-label">
                                     <?php echo $hesklang['usage']; ?>
                                 </label>
@@ -578,62 +572,13 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function() {
-        $('.category-modal-trigger').click(function() {
-            var $row = $('tr[data-category-id="' + $(this).attr('data-category-id') + '"]');
-
-            // Since the data-name attribute is escaped, this needs to be converted back via this fancy method.
-            var tempNameElement = document.createElement('textarea');
-            tempNameElement.innerHTML = $row.attr('data-name');
-            var name = tempNameElement.value;
-
-            var id = $row.attr('data-category-id');
-            var backgroundColor = $row.attr('data-background-color');
-            var foregroundColor = $row.attr('data-foreground-color');
-            var priority = $row.attr('data-priority');
-            var manager = $row.attr('data-manager');
-            var usage = $row.attr('data-usage');
-
-            var $modal = $('#edit-category-modal');
-            $modal.find('input[name="name"]').val(name).end()
-                .find('select[name="priority"]').val(priority).end()
-                .find('select[name="manager"]').val(manager).end()
-                .find('input[name="id"]').val(id).end()
-                .find('select[name="usage"]').val(usage).end()
-                .find('input[name="background-color"]').val(backgroundColor).end()
-                .find('input[name="foreground-color"]').val(foregroundColor).end();
-
-            var colorpickerOptions = {
-                format: 'hex',
-                color: backgroundColor
-            };
-            $modal.find('input[name="background-color"]')
-                .colorpicker(colorpickerOptions).end().modal('show');
-
-            colorpickerOptions = {
-                format: 'hex'
-            };
-            if (foregroundColor != '') {
-                colorpickerOptions.color = foregroundColor;
-            }
-
-            $modal.find('input[name="foreground-color"]')
-                .colorpicker(colorpickerOptions).end().modal('show');
-        });
-
-        $('.cancel-callback').click(function() {
-            var $editCategoryModal = $('#edit-category-modal');
-
-            $editCategoryModal.find('input[name="background-color"]').val('').colorpicker('destroy').end();
-            $editCategoryModal.find('input[name="foreground-color"]').val('').colorpicker('destroy').end();
-        });
-    });
-</script>
 <script type="text/html" id="category-row-template">
     <tr>
         <td><span data-property="id" data-value="x"></span></td>
-        <td><span data-property="category-name"></span></td>
+        <td>
+            <span class="label category-label" data-property="category-name">
+            </span>
+        </td>
         <td><span data-property="priority"></span></td>
         <td><a data-property="number-of-tickets" href="#"></a></td>
         <td>
@@ -648,11 +593,11 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         </td>
         <td>
             <a data-property="generate-link" href="#">
-                <i class="fa fa-fw fa-code icon-link" style="color: green" data-toggle="tooltip"
-                   data-placement="top" title="<?php $hesklang['geco']; ?>"></i>
+                <i class="fa fa-fw fa-code icon-link" data-toggle="tooltip"
+                   data-placement="top" title="#"></i>
             </a>
             <a data-property="autoassign-link" href="#">
-                <i class="fa fa-fw fa-bolt icon-link orange"
+                <i class="fa fa-fw fa-bolt icon-link"
                    data-toggle="tooltip" data-placement="top" title="Category autoassign tooltip"></i>
             </a>
             <a data-property="type-link" href="#">
@@ -689,6 +634,12 @@ echo mfh_get_hidden_fields_for_language(array(
     'medium',
     'low',
     'perat',
+    'aaon',
+    'aaoff',
+    'cat_private',
+    'cat_public',
+    'geco',
+    'cpric',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
@@ -1005,30 +956,6 @@ function toggle_type()
     hesk_process_messages($tmp, './manage_categories.php', 'SUCCESS');
 
 } // End toggle_type()
-
-function output_user_dropdown($userArray)
-{
-    global $hesklang;
-
-    if (!hesk_checkPermission('can_set_manager', 0)) {
-        foreach ($userArray as $user) {
-            if ($user['id'] == $selectId) {
-                return '<p>' . $user['name'] . '</p><input type="hidden" name="manager">';
-            }
-        }
-        return '<p>' . $hesklang['no_manager'] . '</p><input type="hidden" name="manager">';
-    } else {
-        $dropdownMarkup = '<select class="form-control" name="manager">
-                <option value="0">' . $hesklang['no_manager'] . '</option>';
-        foreach ($userArray as $user) {
-            $dropdownMarkup .= '<option value="' . $user['id'] . '">' . $user['name'] . '</option>';
-        }
-        $dropdownMarkup .= '</select>';
-
-
-        return $dropdownMarkup;
-    }
-}
 
 function get_manager($user_id, $user_array) {
     global $hesklang;
