@@ -92,15 +92,14 @@ function loadTable() {
                     // Private
                     $template.find('[data-property="type-link"]').attr('href', '#private')
                         .find('i').addClass('fa-lock').attr('title', mfhLang.text('cat_private')).addClass('gray');
-                    $template.find('[data-property="generate-link"]')
-                        .find('i').removeClass('fa-code').addClass('fa-ban').addClass('red')
-                            .attr('title', mfhLang.text('cpric'));
+                    $template.find('.generate-link-group').find('i.fa-ban');
+                    $template.find('.generate-link-group').find('a').hide();
                 } else {
                     // Public
                     $template.find('[data-property="type-link"]').attr('href', '#public')
                         .find('i').addClass('fa-unlock-alt').attr('title', mfhLang.text('cat_public')).addClass('blue');
-                    $template.find('[data-property="generate-link"]')
-                        .find('i').addClass('green').attr('title', mfhLang.text('geco'));
+                    $template.find('.generate-link-group').find('i.fa-ban').hide();
+                    $template.find('.generate-link-group').find('a');
                 }
 
                 $tableBody.append($template);

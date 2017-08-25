@@ -595,10 +595,14 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="<?php echo $hesklang['events']; ?>"></i>
         </td>
         <td>
-            <a data-property="generate-link" href="#">
-                <i class="fa fa-fw fa-code icon-link" data-toggle="tooltip"
-                   data-placement="top" title="#"></i>
-            </a>
+            <span class="generate-link-group">
+                <a data-property="generate-link" href="#">
+                    <i class="fa fa-fw fa-code icon-link green" data-toggle="tooltip"
+                       data-placement="top" title="<?php echo $hesklang['geco']; ?>"></i>
+                </a>
+                <i class="fa fa-fw fa-ban icon-link red" data-toggle="tooltip" data-placement="top"
+                      title="<?php echo $hesklang['cpric']; ?>"></i>
+            </span>
             <a data-property="autoassign-link" href="#">
                 <i class="fa fa-fw fa-bolt icon-link"
                    data-toggle="tooltip" data-placement="top" title="Category autoassign tooltip"></i>
@@ -641,8 +645,6 @@ echo mfh_get_hidden_fields_for_language(array(
     'aaoff',
     'cat_private',
     'cat_public',
-    'geco',
-    'cpric',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
