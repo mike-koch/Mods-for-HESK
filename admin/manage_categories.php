@@ -456,7 +456,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                     <span id="title-add-category"><?php echo $hesklang['create_cat']; ?></span>
                 </h4>
             </div>
-            <form action="manage_categories.php" class="form-horizontal" data-toggle="validator" method="post">
+            <form id="manage-category" class="form-horizontal" data-toggle="validator" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
@@ -557,6 +557,9 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                     <input type="hidden" name="id">
                     <input type="hidden" name="a" value="edit">
                     <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
+                    <input type="hidden" name="cat-order">
+                    <input type="hidden" name="type">
+                    <input type="hidden" name="autoassign">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default cancel-callback" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>

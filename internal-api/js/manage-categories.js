@@ -4,6 +4,7 @@ $(document).ready(function() {
     loadTable();
     bindEditModal();
     bindModalCancelCallback();
+    bindFormSubmit();
 });
 
 
@@ -142,7 +143,9 @@ function bindEditModal() {
         $modal.find('input[name="name"]').val(element.name).end()
             .find('select[name="priority"]').val(element.priority).end()
             .find('input[name="id"]').val(element.id).end()
-            .find('select[name="usage"]').val(element.usage).end();
+            .find('select[name="usage"]').val(element.usage).end()
+            .find('input[name="display-border"][value="' + (element.displayBorder ? 1 : 0) + '"]')
+                .prop('checked', 'checked').end();
 
         var backgroundColor = element.backgroundColor;
         var foregroundColor = element.foregroundColor;
@@ -162,41 +165,7 @@ function bindEditModal() {
 
         $modal.find('input[name="foreground-color"]')
             .colorpicker(colorpickerOptions).end().modal('show');
-
-        /*$modal.find('select[name="place"]').val(element.place);
-        $modal.find('input[name="id"]').val(element.id);
-        $modal.find('input[name="url"]').val(element.url);
-        var $textLanguages = $modal.find('[data-text-language]');
-        $.each($textLanguages, function() {
-            var language = $(this).data('text-language');
-
-            $(this).val(element.text[language]);
-        });
-
-        var $subtextLanguages = $modal.find('[data-subtext-language]');
-        $.each($subtextLanguages, function() {
-            var language = $(this).data('subtext-language');
-
-            $(this).val(element.subtext[language]);
-        });
-
-        if (element.place === 1) {
-            $('#subtext').show();
-        } else {
-            $('#subtext').hide();
-        }
-
-        if (element.imageUrl !== null) {
-            $modal.find('select[name="image-type"]').val('image-url');
-            $modal.find('input[name="image-url"]').val(element.imageUrl);
-            $modal.find('#font-icon-group').hide();
-            $modal.find('#image-url-group').show();
-        } else {
-            $modal.find('select[name="image-type"]').val('font-icon');
-            $('[data-toggle="nav-iconpicker"]').iconpicker('setIcon', element.fontIcon);
-            $modal.find('#font-icon-group').show();
-            $modal.find('#image-url-group').hide();
-        }*/
+        $modal.find('input[name="cat-order"]').val(element.catOrder);
 
         $modal.modal('show');
     });
@@ -208,5 +177,70 @@ function bindModalCancelCallback() {
 
         $editCategoryModal.find('input[name="background-color"]').val('').colorpicker('destroy').end();
         $editCategoryModal.find('input[name="foreground-color"]').val('').colorpicker('destroy').end();
+        $editCategoryModal.find('input[name="display-border"][value="1"]').prop('checked');
+        $editCategoryModal.find('input[name="display-border"][value="0"]').prop('checked');
+    });
+}
+
+function bindFormSubmit() {
+    $('form#manage-category').submit(function(e) {
+        e.preventDefault();
+        var heskUrl = $('p#hesk-path').text();
+
+        var $modal = $('#category-modal');
+
+        var data = {
+            autoassign: $modal.find('input[name="autoassign"]').val(),
+            backgroundColor: $modal.find('input[name="background-color"]').val(),
+            description: $modal.find('textarea[name="description"]').val(),
+            displayBorder: $modal.find('input[name="display-border"]:checked').val(),
+            foregroundColor: $modal.find('input[name="foreground-color"]').val() === '' ? 'AUTO' : $modal.find('input[name="foreground-color"]'),
+            name: $modal.find('input[name="name"]').val(),
+            priority: $modal.find('select[name="priority"]').val(),
+            type: $modal.find('input[name="type"]').val(),
+            usage: $modal.find('select[name="usage"]').val(),
+            catOrder: $modal.find('input[name="cat-order"]').val()
+        };
+
+        var url = heskUrl + 'api/index.php/v1/categories/';
+        var method = 'POST';
+
+        var categoryId = $modal.find('input[name="id"]').val();
+        if (categoryId !== -1) {
+            url += id;
+            method = 'PUT';
+        }
+
+        $modal.find('#action-buttons').find('.cancel-button').attr('disabled', 'disabled');
+        $modal.find('#action-buttons').find('.save-button').attr('disabled', 'disabled');
+
+        console.log('')
+
+        /*$.ajax({
+            method: 'POST',
+            url: url,
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': method
+            },
+            data: JSON.stringify(data),
+            success: function(data) {
+                if (id === -1) {
+                    mfhAlert.success('CREATED');
+                } else {
+                    mfhAlert.success('SAVED');
+                }
+                $modal.modal('hide');
+                loadTable();
+            },
+            error: function(data) {
+                mfhAlert.errorWithLog('ERROR SAVING/CREATING', data.responseJSON);
+                console.error(data);
+            },
+            complete: function(data) {
+                $modal.find('#action-buttons').find('.cancel-button').removeAttr('disabled');
+                $modal.find('#action-buttons').find('.save-button').removeAttr('disabled');
+            }
+        });*/
     });
 }
