@@ -13,7 +13,7 @@ class CategoryRetriever {
     private $categoryGateway;
 
     /**
-     * @param $modsForHeskSettingsGateway ModsForHeskSettingsGateway
+     * @var ModsForHeskSettingsGateway
      */
     private $modsForHeskSettingsGateway;
 

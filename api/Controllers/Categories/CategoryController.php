@@ -78,7 +78,7 @@ class CategoryController {
         $data = JsonRetriever::getJsonData();
 
         $category = $this->buildCategoryFromJson($data);
-        $category->id = $id;
+        $category->id = intval($id);
 
         /* @var $categoryHandler CategoryHandler */
         $categoryHandler = $applicationContext->get[CategoryHandler::class];

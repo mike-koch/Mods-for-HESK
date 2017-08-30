@@ -62,9 +62,10 @@ function loadTable() {
                     // Low
                     $priority.text(mfhLang.text('low')).addClass('normal');
                 }
+                var linkPattern = $('input[name="show-tickets-path"]').val();
                 $template.find('a[data-property="number-of-tickets"]')
                     .text(this.numberOfTickets)
-                    .attr('href', '#' + this.numberOfTickets);
+                    .attr('href', linkPattern.replace('{0}', this.id));
                 var percentText = mfhLang.text('perat');
                 var percentage = Math.round(this.numberOfTickets / totalNumberOfTickets * 100);
                 $template.find('div.progress').attr('title', percentText.replace('%s', percentage + '%'));
@@ -165,6 +166,9 @@ function bindEditModal() {
         $modal.find('input[name="foreground-color"]')
             .colorpicker(colorpickerOptions).end().modal('show');
         $modal.find('input[name="cat-order"]').val(element.catOrder);
+        $modal.find('input[name="autoassign"]').val(element.autoAssign);
+        $modal.find('input[name="type"]').val(element.type);
+        $modal.find('textarea[name="description"]').val(element.description === null ? '' : element.description);
 
         $modal.modal('show');
     });
@@ -189,16 +193,16 @@ function bindFormSubmit() {
         var $modal = $('#category-modal');
 
         var data = {
-            autoassign: $modal.find('input[name="autoassign"]').val(),
+            autoassign: $modal.find('input[name="autoassign"]').val() === 'true',
             backgroundColor: $modal.find('input[name="background-color"]').val(),
             description: $modal.find('textarea[name="description"]').val(),
-            displayBorder: $modal.find('input[name="display-border"]:checked').val(),
-            foregroundColor: $modal.find('input[name="foreground-color"]').val() === '' ? 'AUTO' : $modal.find('input[name="foreground-color"]'),
+            displayBorder: $modal.find('input[name="display-border"]:checked').val() === '1',
+            foregroundColor: $modal.find('input[name="foreground-color"]').val() === '' ? 'AUTO' : $modal.find('input[name="foreground-color"]').val(),
             name: $modal.find('input[name="name"]').val(),
-            priority: $modal.find('select[name="priority"]').val(),
-            type: $modal.find('input[name="type"]').val(),
-            usage: $modal.find('select[name="usage"]').val(),
-            catOrder: $modal.find('input[name="cat-order"]').val()
+            priority: parseInt($modal.find('select[name="priority"]').val()),
+            type: parseInt($modal.find('input[name="type"]').val()),
+            usage: parseInt($modal.find('select[name="usage"]').val()),
+            catOrder: parseInt($modal.find('input[name="cat-order"]').val())
         };
 
         var url = heskUrl + 'api/index.php/v1/categories/';
@@ -206,16 +210,14 @@ function bindFormSubmit() {
 
         var categoryId = $modal.find('input[name="id"]').val();
         if (categoryId !== -1) {
-            url += id;
+            url += categoryId;
             method = 'PUT';
         }
 
         $modal.find('#action-buttons').find('.cancel-button').attr('disabled', 'disabled');
         $modal.find('#action-buttons').find('.save-button').attr('disabled', 'disabled');
 
-        console.log('')
-
-        /*$.ajax({
+        $.ajax({
             method: 'POST',
             url: url,
             headers: {
@@ -224,7 +226,7 @@ function bindFormSubmit() {
             },
             data: JSON.stringify(data),
             success: function(data) {
-                if (id === -1) {
+                if (categoryId === -1) {
                     mfhAlert.success('CREATED');
                 } else {
                     mfhAlert.success('SAVED');
@@ -240,6 +242,6 @@ function bindFormSubmit() {
                 $modal.find('#action-buttons').find('.cancel-button').removeAttr('disabled');
                 $modal.find('#action-buttons').find('.save-button').removeAttr('disabled');
             }
-        });*/
+        });
     });
 }

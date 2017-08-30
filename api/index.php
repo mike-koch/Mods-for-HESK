@@ -188,8 +188,8 @@ Link::before('globalBefore');
 Link::all(array(
     // Categories
     '/v1/categories/all' => action(\Controllers\Categories\CategoryController::class . '::printAllCategories', [RequestMethod::GET], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1/categories' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::POST]),
-    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE]),
+    '/v1/categories' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::POST], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     // Tickets
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::class),
     // Tickets - Staff
