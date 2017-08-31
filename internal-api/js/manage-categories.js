@@ -93,16 +93,14 @@ function loadTable() {
 
                 if (this.type === 1) {
                     // Private
-                    $template.find('[data-property="type-link"]').attr('href', '#private')
-                        .find('i').addClass('fa-lock').attr('title', mfhLang.text('cat_private')).addClass('gray');
-                    $template.find('.generate-link-group').find('i.fa-ban');
+                    $template.find('[data-property="type"]').text(mfhLang.text('cat_private'));
+                    $template.find('.fa-lock').show();
                     $template.find('.generate-link-group').find('a').hide();
                 } else {
                     // Public
-                    $template.find('[data-property="type-link"]').attr('href', '#public')
-                        .find('i').addClass('fa-unlock-alt').attr('title', mfhLang.text('cat_public')).addClass('blue');
+                    $template.find('[data-property="type"]').text(mfhLang.text('cat_public'));
+                    $template.find('.fa-unlock-alt').show();
                     $template.find('.generate-link-group').find('i.fa-ban').hide();
-                    $template.find('.generate-link-group').find('a');
                 }
 
                 $tableBody.append($template);

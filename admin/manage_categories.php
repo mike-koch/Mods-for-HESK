@@ -271,6 +271,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                             <tr>
                                 <th><?php echo $hesklang['id']; ?></th>
                                 <th><?php echo $hesklang['cat_name']; ?></th>
+                                <th><?php echo $hesklang['visibility']; ?></th>
                                 <th><?php echo $hesklang['priority']; ?></th>
                                 <th><?php echo $hesklang['not']; ?></th>
                                 <th><?php echo $hesklang['graph']; ?></th>
@@ -474,6 +475,11 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <span class="label category-label" data-property="category-name">
             </span>
         </td>
+        <td>
+            <i style="display: none" class="fa fa-fw fa-lock icon-link gray"></i>
+            <i style="display: none" class="fa fa-fw fa-unlock-alt icon-link blue"></i>
+            <span data-property="type"></span>
+        </td>
         <td><span data-property="priority"></span></td>
         <td><a data-property="number-of-tickets" href="#"></a></td>
         <td>
@@ -498,9 +504,6 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <a data-property="autoassign-link" href="#">
                 <i class="fa fa-fw fa-bolt icon-link"
                    data-toggle="tooltip" data-placement="top" title="Category autoassign tooltip"></i>
-            </a>
-            <a data-property="type-link" href="#">
-                <i class="fa fa-fw fa-lock gray" data-toggle="tooltip" data-placement="top" title="Category type tooltip"></i>
             </a>
             <span class="sort-arrows">
                 <a href="#" data-action="sort"
