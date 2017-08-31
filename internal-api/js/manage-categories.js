@@ -5,6 +5,8 @@ $(document).ready(function() {
     bindEditModal();
     bindModalCancelCallback();
     bindFormSubmit();
+    bindDeleteButton();
+    bindCreateModal();
 });
 
 
@@ -165,10 +167,49 @@ function bindEditModal() {
 
         $modal.find('input[name="foreground-color"]')
             .colorpicker(colorpickerOptions).end().modal('show');
+
+        if (foregroundColor === '' || foregroundColor === 'AUTO') {
+            $modal.find('input[name="foreground-color"]').colorpicker('setValue', '#fff');
+            $modal.find('input[name="foreground-color"]').val('');
+        }
+
         $modal.find('input[name="cat-order"]').val(element.catOrder);
-        $modal.find('input[name="autoassign"]').val(element.autoAssign);
-        $modal.find('input[name="type"]').val(element.type);
+        $modal.find('input[name="autoassign"][value="' + (element.autoAssign ? 1 : 0) + '"]')
+            .prop('checked', 'checked');
+        $modal.find('input[name="type"][value="' + (element.type ? 1 : 0) + '"]');
         $modal.find('textarea[name="description"]').val(element.description === null ? '' : element.description);
+
+        $modal.modal('show');
+    });
+}
+
+function bindCreateModal() {
+    $('#create-button').click(function() {
+        var $modal = $('#category-modal');
+        $modal.find('#edit-label').hide();
+        $modal.find('#create-label').show();
+
+        $modal.find('input[name="name"]').val('');
+        $modal.find('select[name="priority"]').val(3); // Low priority
+        $modal.find('select[name="usage"]').val(0); // Tickets and events
+        $modal.find('input[name="id"]').val(-1);
+        $modal.find('textarea[name="description"]').val('');
+        $modal.find('input[name="cat-order"]').val('');
+        $modal.find('input[name="type"][value="0"]').prop('checked', 'checked');
+        $modal.find('input[name="autoassign"][value="0"]').prop('checked', 'checked');
+        $modal.find('input[name="display-border"][value="0"]')
+            .prop('checked', 'checked');
+
+        var colorpickerOptions = {
+            format: 'hex',
+            color: '#fff'
+        };
+        $modal.find('input[name="background-color"]')
+            .colorpicker(colorpickerOptions).end().modal('show');
+        $modal.find('input[name="background-color"]').val('');
+        $modal.find('input[name="foreground-color"]')
+            .colorpicker(colorpickerOptions).end().modal('show');
+        $modal.find('input[name="foreground-color"]').val('');
 
         $modal.modal('show');
     });
@@ -182,6 +223,8 @@ function bindModalCancelCallback() {
         $editCategoryModal.find('input[name="foreground-color"]').val('').colorpicker('destroy').end();
         $editCategoryModal.find('input[name="display-border"][value="1"]').prop('checked');
         $editCategoryModal.find('input[name="display-border"][value="0"]').prop('checked');
+        $editCategoryModal.find('input[name="autoassign"][value="1"]').prop('checked');
+        $editCategoryModal.find('input[name="autoassign"][value="0"]').prop('checked');
     });
 }
 
@@ -241,6 +284,33 @@ function bindFormSubmit() {
             complete: function(data) {
                 $modal.find('#action-buttons').find('.cancel-button').removeAttr('disabled');
                 $modal.find('#action-buttons').find('.save-button').removeAttr('disabled');
+            }
+        });
+    });
+}
+
+function bindDeleteButton() {
+    $(document).on('click', '[data-action="delete"]', function() {
+        $('#overlay').show();
+
+        var heskUrl = $('p#hesk-path').text();
+        var element = categories[$(this).parent().parent().find('[data-property="id"]').text()];
+
+        $.ajax({
+            method: 'POST',
+            url: heskUrl + 'api/index.php/v1/categories/' + element.id,
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'DELETE'
+            },
+            success: function() {
+                mfhAlert.success(mfhLang.text('cat_removed'));
+                loadTable();
+            },
+            error: function(data) {
+                $('#overlay').hide();
+                mfhAlert.errorWithLog(mfhLang.text('error_deleting_category'), data.responseJSON);
+                console.error(data);
             }
         });
     });

@@ -2173,6 +2173,9 @@ $hesklang['url_rewrite_help'] = 'Remove the need to include /index.php in API UR
 $hesklang['url_rewrite_saved'] = 'URL rewrite setting saved!';
 $hesklang['api_settings_saved'] = 'API settings saved!';
 $hesklang['an_error_occurred'] = 'An error occurred. Check the logs for more information';
+$hesklang['error_deleting_category'] = 'An error occurred when trying to delete the category.';
+$hesklang['cat_private'] = 'Private';
+$hesklang['cat_public'] = 'Public';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

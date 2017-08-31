@@ -297,17 +297,18 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <div class="modal-header" style="cursor: move">
                 <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">
-                    <span id="title-edit-category"><?php echo $hesklang['edit_category']; ?></span>
-                    <span id="title-add-category"><?php echo $hesklang['create_cat']; ?></span>
+                    <span id="edit-label"><?php echo $hesklang['edit_category']; ?></span>
+                    <span id="create-label"><?php echo $hesklang['create_cat']; ?></span>
                 </h4>
             </div>
             <form id="manage-category" class="form-horizontal" data-toggle="validator" method="post">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <h4><?php echo $hesklang['basicProperties']; ?></h4>
                             <div class="form-group">
-                                <label for="name" class="col-sm-3 control-label"><?php echo $hesklang['cat_name']; ?></label>
-                                <div class="col-sm-9">
+                                <label for="name" class="col-sm-5 control-label"><?php echo $hesklang['cat_name']; ?></label>
+                                <div class="col-sm-7">
                                     <input type="text" name="name" class="form-control" placeholder="<?php echo $hesklang['cat_name']; ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
@@ -315,13 +316,24 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="background-color" class="col-sm-3 control-label">
+                                <label for="description" class="col-sm-5 control-label">
+                                    <?php echo $hesklang['description']; ?>
+                                </label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control" name="description" placeholder="<?php echo $hesklang['description']; ?>"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4><?php echo $hesklang['color']; ?></h4>
+                            <div class="form-group">
+                                <label for="background-color" class="col-sm-5 control-label">
                                     <?php echo $hesklang['category_background_color']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                        title="<?php echo htmlspecialchars($hesklang['category_background_color']); ?>"
                                        data-content="<?php echo htmlspecialchars($hesklang['category_background_color_help']); ?>"></i>
                                 </label>
-                                <div class="col-sm-9">
+                                <div class="col-sm-7">
                                     <input type="text" name="background-color" class="form-control category-colorpicker"
                                            placeholder="<?php echo $hesklang['category_background_color']; ?>"
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
@@ -330,26 +342,26 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="foreground-color" class="col-sm-3 control-label">
+                                <label for="foreground-color" class="col-sm-5 control-label">
                                     <?php echo $hesklang['category_foreground_color']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
                                        title="<?php echo htmlspecialchars($hesklang['category_foreground_color']); ?>"
                                        data-content="<?php echo htmlspecialchars($hesklang['category_foreground_color_help']); ?>"></i>
                                 </label>
-                                <div class="col-sm-9">
+                                <div class="col-sm-7">
                                     <input type="text" name="foreground-color" class="form-control category-colorpicker"
                                            placeholder="<?php echo $hesklang['category_foreground_color']; ?>">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="display-border" class="col-sm-3 control-label">
+                                <label for="display-border" class="col-sm-5 control-label">
                                     <?php echo $hesklang['category_display_border']; ?>
                                     <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
                                        title="<?php echo htmlspecialchars($hesklang['category_display_border']); ?>"
                                        data-content="<?php echo htmlspecialchars($hesklang['category_display_border_help']); ?>"></i>
                                 </label>
-                                <div class="col-sm-9 form-inline">
+                                <div class="col-sm-7 form-inline">
                                     <div class="radio">
                                         <label>
                                             <input type="radio" name="display-border" value="1">
@@ -364,14 +376,21 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>PROPERTIES [!]</h4>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label for="priority" class="col-sm-3 control-label">
+                                <label for="priority" class="col-sm-5 control-label">
                                     <?php echo $hesklang['priority']; ?>
                                     <a href="#"
                                        onclick="alert('<?php echo hesk_makeJsString($hesklang['cat_pri']); ?>')"><i
-                                            class="fa fa-question-circle settingsquestionmark"></i> </a>
+                                                class="fa fa-question-circle settingsquestionmark"></i> </a>
                                 </label>
-                                <div class="col-sm-9">
+                                <div class="col-sm-7">
                                     <select name="priority" class="form-control">
                                         <?php
                                         // List possible priorities
@@ -384,10 +403,10 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="usage" class="col-sm-3 control-label">
+                                <label for="usage" class="col-sm-5 control-label">
                                     <?php echo $hesklang['usage']; ?>
                                 </label>
-                                <div class="col-sm-9">
+                                <div class="col-sm-7">
                                     <select name="usage" class="form-control">
                                         <option value="0"><?php echo $hesklang['tickets_and_events']; ?></option>
                                         <option value="1"><?php echo $hesklang['tickets_only']; ?></option>
@@ -395,12 +414,36 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label for="description" class="col-sm-3 control-label">
-                                    <?php echo $hesklang['description']; ?>
+                                <label for="autoassign" class="col-sm-5 control-label">
+                                    <?php echo $hesklang['aass']; ?>
                                 </label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" name="description"></textarea>
+                                <div class="col-sm-7 form-inline">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="autoassign" value="1">
+                                            <?php echo $hesklang['yes']; ?>
+                                        </label>
+                                    </div>&nbsp;&nbsp;&nbsp;
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="autoassign" value="0" checked>
+                                            <?php echo $hesklang['no']; ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="type" class="col-sm-5 control-label">
+                                    <?php echo $hesklang['visibility']; ?>
+                                </label>
+                                <div class="col-sm-7">
+                                    <select name="type" class="form-control">
+                                        <option value="0"><?php echo $hesklang['cat_public']; ?></option>
+                                        <option value="1"><?php echo $hesklang['cat_private']; ?></option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -408,11 +451,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id">
-                    <input type="hidden" name="a" value="edit">
-                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
                     <input type="hidden" name="cat-order">
-                    <input type="hidden" name="type">
-                    <input type="hidden" name="autoassign">
                     <div id="action-buttons" class="btn-group">
                         <button type="button" class="btn btn-default cancel-button cancel-callback" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>
@@ -498,6 +537,8 @@ echo mfh_get_hidden_fields_for_language(array(
     'aaoff',
     'cat_private',
     'cat_public',
+    'cat_removed',
+    'error_deleting_category',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
