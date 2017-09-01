@@ -84,23 +84,29 @@ function loadTable() {
                 }
 
                 if (this.autoAssign) {
-                    $template.find('[data-property="autoassign-link"]').attr('href', '#on')
-                        .find('i').attr('title', mfhLang.text('aaon')).addClass('orange');
+                    $template.find('.fa-bolt').addClass('orange');
+                    $template.find('[data-property="autoassign"]').text(mfhLang.text('enabled_title_case'));
                 } else {
-                    $template.find('[data-property="autoassign-link"]').attr('href', '#off')
-                        .find('i').attr('title', mfhLang.text('aaoff')).addClass('gray');
+                    $template.find('.fa-bolt').addClass('gray');
+                    $template.find('[data-property="autoassign"]').text(mfhLang.text('disabled_title_case'));
                 }
 
                 if (this.type === 1) {
                     // Private
                     $template.find('[data-property="type"]').text(mfhLang.text('cat_private'));
                     $template.find('.fa-lock').show();
-                    $template.find('.generate-link-group').find('a').hide();
+                    $template.find('[data-property="generate-link"]').find('i')
+                        .addClass('fa-ban')
+                        .addClass('red')
+                        .attr('title', mfhLang.text('cpric'));
                 } else {
                     // Public
                     $template.find('[data-property="type"]').text(mfhLang.text('cat_public'));
                     $template.find('.fa-unlock-alt').show();
-                    $template.find('.generate-link-group').find('i.fa-ban').hide();
+                    $template.find('[data-property="generate-link"]').find('i')
+                        .addClass('fa-code')
+                        .addClass('green')
+                        .attr('title', mfhLang.text('geco'));
                 }
 
                 $tableBody.append($template);

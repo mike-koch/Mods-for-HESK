@@ -272,6 +272,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                 <th><?php echo $hesklang['id']; ?></th>
                                 <th><?php echo $hesklang['cat_name']; ?></th>
                                 <th><?php echo $hesklang['visibility']; ?></th>
+                                <th><?php echo $hesklang['aass']; ?></th>
                                 <th><?php echo $hesklang['priority']; ?></th>
                                 <th><?php echo $hesklang['not']; ?></th>
                                 <th><?php echo $hesklang['graph']; ?></th>
@@ -480,6 +481,10 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <i style="display: none" class="fa fa-fw fa-unlock-alt icon-link blue"></i>
             <span data-property="type"></span>
         </td>
+        <td>
+            <i class="fa fa-fw fa-bolt icon-link"></i>
+            <span data-property="autoassign"></span>
+        </td>
         <td><span data-property="priority"></span></td>
         <td><a data-property="number-of-tickets" href="#"></a></td>
         <td>
@@ -495,16 +500,10 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         <td>
             <span class="generate-link-group">
                 <a data-property="generate-link" href="#">
-                    <i class="fa fa-fw fa-code icon-link green" data-toggle="tooltip"
-                       data-placement="top" title="<?php echo $hesklang['geco']; ?>"></i>
+                    <i class="fa fa-fw icon-link" data-toggle="tooltip"
+                       data-placement="top"></i>
                 </a>
-                <i class="fa fa-fw fa-ban icon-link red" data-toggle="tooltip" data-placement="top"
-                      title="<?php echo $hesklang['cpric']; ?>"></i>
             </span>
-            <a data-property="autoassign-link" href="#">
-                <i class="fa fa-fw fa-bolt icon-link"
-                   data-toggle="tooltip" data-placement="top" title="Category autoassign tooltip"></i>
-            </a>
             <span class="sort-arrows">
                 <a href="#" data-action="sort"
                    data-direction="up">
@@ -542,6 +541,10 @@ echo mfh_get_hidden_fields_for_language(array(
     'cat_public',
     'cat_removed',
     'error_deleting_category',
+    'enabled_title_case',
+    'disabled_title_case',
+    'geco',
+    'cpric',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
