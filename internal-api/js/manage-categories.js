@@ -51,6 +51,12 @@ function loadTable() {
                     $nameField.css('border', 'solid 1px ' + this.foregroundColor);
                 }
                 $nameField.html(this.name);
+
+                if (this.description === '' || this.description === null) {
+                    $template.find('.fa-info-circle').hide();
+                } else {
+                    $template.find('.fa-info-circle').attr('data-content', this.description);
+                }
                 var $priority = $template.find('span[data-property="priority"]');
                 if (this.priority === 0) {
                     // Critical
@@ -136,6 +142,10 @@ function loadTable() {
         },
         complete: function() {
             refreshBackgroundVolatileItems();
+            $('[data-toggle="popover"]').popover({
+                trigger: 'hover',
+                container: 'body'
+            });
             $('#overlay').hide();
         }
     });
