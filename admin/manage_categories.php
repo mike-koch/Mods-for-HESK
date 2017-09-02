@@ -307,7 +307,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4><?php echo $hesklang['basicProperties']; ?></h4>
+                            <h4><?php echo $hesklang['cat_name_description']; ?></h4>
                             <div class="form-group">
                                 <label for="name" class="col-sm-5 control-label"><?php echo $hesklang['cat_name']; ?></label>
                                 <div class="col-sm-7">
@@ -382,7 +382,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <h4>PROPERTIES [!]</h4>
+                            <h4><?php echo $hesklang['basicProperties']; ?></h4>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -441,11 +441,19 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                 <label for="type" class="col-sm-5 control-label">
                                     <?php echo $hesklang['visibility']; ?>
                                 </label>
-                                <div class="col-sm-7">
-                                    <select name="type" class="form-control">
-                                        <option value="0"><?php echo $hesklang['cat_public']; ?></option>
-                                        <option value="1"><?php echo $hesklang['cat_private']; ?></option>
-                                    </select>
+                                <div class="col-sm-7 form-inline">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="type" value="0">
+                                            <?php echo $hesklang['cat_public']; ?>
+                                        </label>
+                                    </div><br>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="type" value="1" checked>
+                                            <?php echo $hesklang['cat_private']; ?>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -2176,6 +2176,7 @@ $hesklang['an_error_occurred'] = 'An error occurred. Check the logs for more inf
 $hesklang['error_deleting_category'] = 'An error occurred when trying to delete the category.';
 $hesklang['cat_private'] = 'Private';
 $hesklang['cat_public'] = 'Public';
+$hesklang['cat_name_description'] = 'Name / Description';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

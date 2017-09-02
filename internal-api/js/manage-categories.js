@@ -146,8 +146,8 @@ function bindEditModal() {
         var element = categories[$(this).parent().parent().find('[data-property="id"]').text()];
         var $modal = $('#category-modal');
 
-        $modal.find('#title-edit-category').show();
-        $modal.find('#title-add-category').hide();
+        $modal.find('#edit-label').show();
+        $modal.find('#create-label').hide();
 
         $modal.find('input[name="name"]').val(element.name).end()
             .find('select[name="priority"]').val(element.priority).end()
@@ -183,7 +183,8 @@ function bindEditModal() {
         $modal.find('input[name="cat-order"]').val(element.catOrder);
         $modal.find('input[name="autoassign"][value="' + (element.autoAssign ? 1 : 0) + '"]')
             .prop('checked', 'checked');
-        $modal.find('input[name="type"][value="' + (element.type ? 1 : 0) + '"]');
+        $modal.find('input[name="type"][value="' + (element.type ? 1 : 0) + '"]')
+            .prop('checked', 'checked');
         $modal.find('textarea[name="description"]').val(element.description === null ? '' : element.description);
 
         $modal.modal('show');
@@ -250,7 +251,7 @@ function bindFormSubmit() {
             foregroundColor: $modal.find('input[name="foreground-color"]').val() === '' ? 'AUTO' : $modal.find('input[name="foreground-color"]').val(),
             name: $modal.find('input[name="name"]').val(),
             priority: parseInt($modal.find('select[name="priority"]').val()),
-            type: parseInt($modal.find('input[name="type"]').val()),
+            type: parseInt($modal.find('input[name="type"]:checked').val()),
             usage: parseInt($modal.find('select[name="usage"]').val()),
             catOrder: parseInt($modal.find('input[name="cat-order"]').val())
         };
@@ -258,7 +259,7 @@ function bindFormSubmit() {
         var url = heskUrl + 'api/index.php/v1/categories/';
         var method = 'POST';
 
-        var categoryId = $modal.find('input[name="id"]').val();
+        var categoryId = parseInt($modal.find('input[name="id"]').val());
         if (categoryId !== -1) {
             url += categoryId;
             method = 'PUT';
@@ -324,19 +325,18 @@ function bindDeleteButton() {
 }
 
 function bindGenerateLinkModal() {
+    var $modal = $('#generate-link-modal');
+
+    $modal.find('.input-group-addon').click(function() {
+        clipboard.copy($modal.find('input[type="text"]').val());
+        mfhAlert.success('Copied to clipboard', 'Success');
+    });
+
     $(document).on('click', '[data-property="generate-link"] i.fa-code', function () {
-
-        var $modal = $('#generate-link-modal');
-
         var heskUrl = $('p#hesk-url').text();
 
         var url = heskUrl + '/index.php?a=add&catid=' + $(this).parent().data('category-id');
 
-        $modal.find('input[type="text"]').val(url).end()
-            .find('.input-group-addon').click(function() {
-                clipboard.copy($modal.find('input[type="text"]').val());
-                mfhAlert.success('Copied to clipboard', 'Success');
-            }).end()
-            .modal('show');
+        $modal.find('input[type="text"]').val(url).end().modal('show');
     });
 }
