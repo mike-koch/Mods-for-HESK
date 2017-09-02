@@ -75,6 +75,7 @@ header('X-UA-Compatible: IE=edge');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.magnific-popup.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/alerts.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/lang.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/clipboard.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;
@@ -306,6 +307,7 @@ if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY') {
 unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js">
 
 <?php // GLOBAL JAVASCRIPT IDs ?>
+<p style="display: none" id="hesk-url"><?php echo $hesk_settings['hesk_url']; ?></p>
 <p style="display: none" id="hesk-path"><?php echo HESK_PATH; ?></p>
 <p style="display: none" id="admin-dir"><?php echo $hesk_settings['admin_dir']; ?></p>
 <p style="display: none" id="lang_alert_success"><?php echo $hesklang['alert_success']; ?></p>

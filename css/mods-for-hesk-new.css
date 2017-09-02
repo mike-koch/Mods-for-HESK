@@ -325,3 +325,12 @@ div.ticket-info {
 #toast-container > div {
     opacity: 1;
 }
+
+.input-group-addon {
+    padding: 0;
+    border: 0;
+}
+
+.input-group-addon.button > button {
+    border-radius: 0;
+}

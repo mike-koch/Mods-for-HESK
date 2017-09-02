@@ -7,6 +7,7 @@ $(document).ready(function() {
     bindFormSubmit();
     bindDeleteButton();
     bindCreateModal();
+    bindGenerateLinkModal();
 });
 
 
@@ -73,7 +74,9 @@ function loadTable() {
                 $template.find('div.progress').attr('title', percentText.replace('%s', percentage + '%'));
                 $template.find('div.progress-bar').attr('aria-value-now', percentage).css('width', percentage + '%');
 
-                $template.find('[data-property="generate-link"]').find('i').attr('title', mfhLang.text('geco'));
+                $template.find('[data-property="generate-link"]')
+                    .attr('data-category-id', this.id)
+                    .find('i').attr('title', mfhLang.text('geco'));
 
                 if (this.usage === 1) {
                     // Tickets only
@@ -317,5 +320,23 @@ function bindDeleteButton() {
                 console.error(data);
             }
         });
+    });
+}
+
+function bindGenerateLinkModal() {
+    $(document).on('click', '[data-property="generate-link"] i.fa-code', function () {
+
+        var $modal = $('#generate-link-modal');
+
+        var heskUrl = $('p#hesk-url').text();
+
+        var url = heskUrl + '/index.php?a=add&catid=' + $(this).parent().data('category-id');
+
+        $modal.find('input[type="text"]').val(url).end()
+            .find('.input-group-addon').click(function() {
+                clipboard.copy($modal.find('input[type="text"]').val());
+                mfhAlert.success('Copied to clipboard', 'Success');
+            }).end()
+            .modal('show');
     });
 }

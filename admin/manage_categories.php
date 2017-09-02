@@ -469,6 +469,43 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         </div>
     </div>
 </div>
+<div class="modal fade" id="generate-link-modal" tabindex="-1" role="dialog" style="overflow: hidden">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="cursor: move">
+                <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><?php echo $hesklang['genl']; ?></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p><?php echo $hesklang['genl2']; ?></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <div class="input-group">
+                            <input type="text" id="link" class="form-control white-readonly"
+                                   title="<?php echo $hesklang['genl']; ?>" readonly>
+                            <div class="input-group-addon button" data-toggle="tooltip" title="Copy to clipboard"
+                                style="padding:0; border: none">
+                                <button class="btn btn-primary">
+                                    <i class="fa fa-files-o"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel-button cancel-callback" data-dismiss="modal">
+                    <i class="fa fa-times-circle"></i>
+                    <span><?php echo $hesklang['close_modal']; ?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/html" id="category-row-template">
     <tr>
         <td><span data-property="id" data-value="x"></span></td>
@@ -498,12 +535,10 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="<?php echo $hesklang['events']; ?>"></i>
         </td>
         <td>
-            <span class="generate-link-group">
-                <a data-property="generate-link" href="#">
-                    <i class="fa fa-fw icon-link" data-toggle="tooltip"
-                       data-placement="top"></i>
-                </a>
-            </span>
+            <a data-property="generate-link" href="#">
+                <i class="fa fa-fw icon-link" data-toggle="tooltip"
+                   data-placement="top"></i>
+            </a>
             <span class="sort-arrows">
                 <a href="#" data-action="sort"
                    data-direction="up">
@@ -549,102 +584,6 @@ echo mfh_get_hidden_fields_for_language(array(
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
 exit();
-
-
-/*** START FUNCTIONS ***/
-
-
-function change_priority()
-{
-    global $hesk_settings, $hesklang, $priorities;
-
-    /* A security check */
-    hesk_token_check('POST');
-
-    $_SERVER['PHP_SELF'] = 'manage_categories.php?catid=' . intval(hesk_POST('catid'));
-
-    $catid = hesk_isNumber(hesk_POST('catid'), $hesklang['choose_cat_ren'], $_SERVER['PHP_SELF']);
-    $_SESSION['selcat'] = $catid;
-    $_SESSION['selcat2'] = $catid;
-
-    $priority = intval(hesk_POST('priority', 3));
-    if (!array_key_exists($priority, $priorities)) {
-        $priority = 3;
-    }
-
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `priority`='{$priority}' WHERE `id`='" . intval($catid) . "'");
-
-    hesk_cleanSessionVars('cat_ch_priority');
-
-    hesk_process_messages($hesklang['cat_pri_ch'] . ' ' . $priorities[$priority]['formatted'], $_SERVER['PHP_SELF'], 'SUCCESS');
-} // END change_priority()
-
-
-function generate_link_code() {
-	global $hesk_settings, $hesklang;
-	?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML; 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-<head>
-<title><?php echo $hesklang['genl']; ?></title>
-<meta http-equiv="Content-Type" content="text/html;charset=<?php echo $hesklang['ENCODING']; ?>" />
-<style type="text/css">
-body
-{
-        margin:5px 5px;
-        padding:0;
-        background:#fff;
-        color: black;
-        font : 68.8%/1.5 Verdana, Geneva, Arial, Helvetica, sans-serif;
-}
-
-p
-{
-        color : black;
-        font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-        font-size: 1.0em;
-}
-h3
-{
-        color : #AF0000;
-        font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-        font-weight: bold;
-        font-size: 1.0em;
-}
-</style>
-</head>
-<body>
-
-<div class="text-center">
-
-<h3><?php echo $hesklang['genl']; ?></h3>
-
-<?php
-if ( ! empty($_GET['p']) )
-{
-	echo '<p>&nbsp;<br />' . $hesklang['cpric'] . '<br />&nbsp;</p>';
-}
-else
-{
-	?>
-	<p><i><?php echo $hesklang['genl2']; ?></i></p>
-
-	<textarea rows="3" cols="50" onfocus="this.select()"><?php echo $hesk_settings['hesk_url'].'/index.php?a=add&amp;catid='.intval( hesk_GET('catid') ); ?></textarea>
-	<?php
-}
-?>
-
-<p align="center"><a href="#" onclick="Javascript:window.close()"><?php echo $hesklang['cwin']; ?></a></p>
-
-</div>
-
-</body>
-
-</html>
-	<?php
-    exit();
-}
-
 
 function new_cat()
 {
