@@ -98,4 +98,13 @@ class CategoryController {
 
         return http_response_code(204);
     }
+
+    static function sort($id, $direction) {
+        global $applicationContext, $hesk_settings;
+
+        /* @var $handler CategoryHandler */
+        $handler = $applicationContext->get[CategoryHandler::class];
+
+        $handler->sortCategory(intval($id), $direction, $hesk_settings);
+    }
 }

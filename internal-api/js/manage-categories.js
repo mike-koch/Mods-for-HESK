@@ -8,6 +8,7 @@ $(document).ready(function() {
     bindDeleteButton();
     bindCreateModal();
     bindGenerateLinkModal();
+    bindSortButtons();
 });
 
 
@@ -348,5 +349,28 @@ function bindGenerateLinkModal() {
         var url = heskUrl + '/index.php?a=add&catid=' + $(this).parent().data('category-id');
 
         $modal.find('input[type="text"]').val(url).end().modal('show');
+    });
+}
+
+function bindSortButtons() {
+    $(document).on('click', '[data-action="sort"]', function() {
+        $('#overlay').show();
+        var heskUrl = $('p#hesk-path').text();
+        var direction = $(this).data('direction');
+        var element = categories[$(this).parent().parent().parent().find('[data-property="id"]').text()];
+
+        $.ajax({
+            method: 'POST',
+            url: heskUrl + 'api/index.php/v1-internal/categories/' + element.id + '/sort/' + direction,
+            headers: { 'X-Internal-Call': true },
+            success: function() {
+                loadTable();
+            },
+            error: function(data) {
+                mfhAlert.errorWithLog(mfhLang.text('error_sorting_categories'), data.responseJSON);
+                console.error(data);
+                $('#overlay').hide();
+            }
+        })
     });
 }

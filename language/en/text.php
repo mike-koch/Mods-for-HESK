@@ -2177,6 +2177,7 @@ $hesklang['error_deleting_category'] = 'An error occurred when trying to delete 
 $hesklang['cat_private'] = 'Private';
 $hesklang['cat_public'] = 'Public';
 $hesklang['cat_name_description'] = 'Name / Description';
+$hesklang['error_sorting_categories'] = 'An error occurred sorting categories!';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

@@ -5,6 +5,7 @@ namespace BusinessLogic\Categories;
 
 use BusinessLogic\Exceptions\AccessViolationException;
 use BusinessLogic\Exceptions\ValidationException;
+use BusinessLogic\Navigation\Direction;
 use BusinessLogic\Security\PermissionChecker;
 use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\ValidationModel;
@@ -149,6 +150,32 @@ class CategoryHandler {
         }
 
         $this->categoryGateway->deleteCategory($id, $heskSettings);
+        $this->categoryGateway->resortAllCategories($heskSettings);
+    }
+
+    function sortCategory($id, $direction, $heskSettings) {
+        $modsForHeskSettings = $this->modsForHeskSettingsGateway->getAllSettings($heskSettings);
+
+        $categories = $this->categoryGateway->getAllCategories($heskSettings, $modsForHeskSettings);
+        $category = null;
+        foreach ($categories as $innerCategory) {
+            if ($innerCategory->id === intval($id)) {
+                $category = $innerCategory;
+                break;
+            }
+        }
+
+        if ($category === null) {
+            throw new \Exception("Could not find category with ID {$id}!");
+        }
+
+        if ($direction === Direction::UP) {
+            $category->catOrder -= 15;
+        } else {
+            $category->catOrder += 15;
+        }
+
+        $this->categoryGateway->updateCategory($category, $heskSettings);
         $this->categoryGateway->resortAllCategories($heskSettings);
     }
 }
