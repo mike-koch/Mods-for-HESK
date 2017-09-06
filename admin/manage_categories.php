@@ -375,8 +375,8 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <i class="fa fa-info-circle" data-toggle="popover" title="<?php echo $hesklang['description']; ?>"></i>
         </td>
         <td>
-            <i style="display: none" class="fa fa-fw fa-lock icon-link gray"></i>
-            <i style="display: none" class="fa fa-fw fa-unlock-alt icon-link blue"></i>
+            <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-lock icon-link gray"></i>
+            <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-unlock-alt icon-link blue"></i>
             <span data-property="type"></span>
         </td>
         <td>
@@ -437,6 +437,11 @@ echo mfh_get_hidden_fields_for_language(array(
     'cat_public',
     'cat_removed',
     'error_deleting_category',
+    'error_retrieving_categories',
+    'error_saving_updating_category',
+    'copied_to_clipboard',
+    'category_updated',
+    'cat_name_added',
     'enabled_title_case',
     'disabled_title_case',
     'geco',

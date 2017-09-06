@@ -1131,3 +1131,13 @@ function execute311Scripts() {
 
     updateVersion('3.1.1');
 }
+
+function execute320Scripts() {
+    global $hesk_settings;
+    hesk_dbConnect();
+
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` 
+        ADD COLUMN `mfh_description` VARCHAR(255)");
+
+    updateVersion('3.2.0');
+}

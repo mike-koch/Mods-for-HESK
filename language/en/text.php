@@ -2178,6 +2178,10 @@ $hesklang['cat_private'] = 'Private';
 $hesklang['cat_public'] = 'Public';
 $hesklang['cat_name_description'] = 'Name / Description';
 $hesklang['error_sorting_categories'] = 'An error occurred sorting categories!';
+$hesklang['error_retrieving_categories'] = 'An error occurred retrieving categories!';
+$hesklang['error_saving_updating_category'] = 'An error occurred creating / saving the category!';
+$hesklang['description_colon'] = 'Description:'; // Same as 'description', but with a colon (:) afterwards
+$hesklang['copied_to_clipboard'] = 'Copied to clipboard';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

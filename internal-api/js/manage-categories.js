@@ -25,7 +25,7 @@ function loadTable() {
             $tableBody.html('');
 
             if (data.length === 0) {
-                mfhAlert.error("I couldn't find any categories :(", "No categories found");
+                mfhAlert.error("No categories were found. This shouldn't happen.", "No categories found");
                 $('#overlay').hide();
                 return;
             }
@@ -138,7 +138,7 @@ function loadTable() {
             }
         },
         error: function(data) {
-            mfhAlert.errorWithLog(mfhLang.text('Something bad happened...'), data.responseJSON);
+            mfhAlert.errorWithLog(mfhLang.text('error_retrieving_categories'), data.responseJSON);
             console.error(data);
         },
         complete: function() {
@@ -288,16 +288,19 @@ function bindFormSubmit() {
             },
             data: JSON.stringify(data),
             success: function(data) {
+                var format = undefined;
                 if (categoryId === -1) {
-                    mfhAlert.success('CREATED');
+                    format = mfhLang.html('cat_name_added');
+                    mfhAlert.success(format.replace('%s', data.name));
                 } else {
-                    mfhAlert.success('SAVED');
+                    format = mfhLang.html('category_updated');
+                    mfhAlert.success(format.replace('%s', data.name));
                 }
                 $modal.modal('hide');
                 loadTable();
             },
             error: function(data) {
-                mfhAlert.errorWithLog('ERROR SAVING/CREATING', data.responseJSON);
+                mfhAlert.errorWithLog(mfhLang.text('error_saving_updating_category'), data.responseJSON);
                 console.error(data);
             },
             complete: function(data) {
@@ -340,7 +343,7 @@ function bindGenerateLinkModal() {
 
     $modal.find('.input-group-addon').click(function() {
         clipboard.copy($modal.find('input[type="text"]').val());
-        mfhAlert.success('Copied to clipboard', 'Success');
+        mfhAlert.success(mfhLang.text('copied_to_clipboard'));
     });
 
     $(document).on('click', '[data-property="generate-link"] i.fa-code', function () {
