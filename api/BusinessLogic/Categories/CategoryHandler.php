@@ -11,10 +11,14 @@ use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\ValidationModel;
 use DataAccess\Categories\CategoryGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
+use DataAccess\Tickets\TicketGateway;
 
 class CategoryHandler {
     /* @var $categoryGateway CategoryGateway */
     private $categoryGateway;
+
+    /* @var $ticketGateway TicketGateway */
+    private $ticketGateway;
 
     /* @var $permissionChecker PermissionChecker */
     private $permissionChecker;
@@ -22,8 +26,9 @@ class CategoryHandler {
     /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
     private $modsForHeskSettingsGateway;
 
-    function __construct($categoryGateway, $permissionChecker, $modsForHeskSettingsGateway) {
+    function __construct($categoryGateway, $ticketGateway, $permissionChecker, $modsForHeskSettingsGateway) {
         $this->categoryGateway = $categoryGateway;
+        $this->ticketGateway = $ticketGateway;
         $this->permissionChecker = $permissionChecker;
         $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
     }
@@ -149,6 +154,11 @@ class CategoryHandler {
             throw new AccessViolationException('User cannot manage categories!');
         }
 
+        if ($id === 1) {
+            throw new \Exception("Category 1 cannot be deleted!");
+        }
+
+        $this->ticketGateway->moveTicketsToDefaultCategory($id, $heskSettings);
         $this->categoryGateway->deleteCategory($id, $heskSettings);
         $this->categoryGateway->resortAllCategories($heskSettings);
     }

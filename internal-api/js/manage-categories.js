@@ -119,6 +119,10 @@ function loadTable() {
                         .attr('title', mfhLang.text('geco'));
                 }
 
+                if (this.id === 1) {
+                    $template.find('[data-action="delete"]').hide();
+                }
+
                 $tableBody.append($template);
 
                 categories[this.id] = this;
