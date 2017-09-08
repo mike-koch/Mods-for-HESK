@@ -33,7 +33,11 @@ class AttachmentHandler {
     /* @var  $userToTicketChecker UserToTicketChecker */
     private $userToTicketChecker;
 
-    function __construct($ticketGateway, $attachmentGateway, $fileWriter, $userToTicketChecker, $fileDeleter) {
+    function __construct(TicketGateway $ticketGateway,
+                         AttachmentGateway $attachmentGateway,
+                         FileWriter $fileWriter,
+                         UserToTicketChecker $userToTicketChecker,
+                         FileDeleter $fileDeleter) {
         $this->ticketGateway = $ticketGateway;
         $this->attachmentGateway = $attachmentGateway;
         $this->fileWriter = $fileWriter;

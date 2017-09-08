@@ -10,7 +10,7 @@ class StatusRetriever {
     /* @var $statusGateway StatusGateway */
     private $statusGateway;
 
-    function __construct($statusGateway) {
+    function __construct(StatusGateway $statusGateway) {
         $this->statusGateway = $statusGateway;
     }
 

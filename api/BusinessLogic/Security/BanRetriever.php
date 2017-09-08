@@ -11,7 +11,7 @@ class BanRetriever {
      */
     private $banGateway;
 
-    function __construct($banGateway) {
+    function __construct(BanGateway $banGateway) {
         $this->banGateway = $banGateway;
     }
 

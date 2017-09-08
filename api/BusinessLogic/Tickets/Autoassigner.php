@@ -15,7 +15,8 @@ class Autoassigner {
     /* @var $userGateway UserGateway */
     private $userGateway;
 
-    function __construct($categoryGateway, $userGateway) {
+    function __construct(CategoryGateway $categoryGateway,
+                         UserGateway $userGateway) {
         $this->categoryGateway = $categoryGateway;
         $this->userGateway = $userGateway;
     }

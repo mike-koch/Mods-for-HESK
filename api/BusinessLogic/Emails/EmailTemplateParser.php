@@ -35,7 +35,10 @@ class EmailTemplateParser {
      */
     private $emailTemplateRetriever;
 
-    function __construct($statusGateway, $categoryGateway, $userGateway, $emailTemplateRetriever) {
+    function __construct(StatusGateway $statusGateway,
+                         CategoryGateway $categoryGateway,
+                         UserGateway $userGateway,
+                         EmailTemplateRetriever $emailTemplateRetriever) {
         $this->statusGateway = $statusGateway;
         $this->categoryGateway = $categoryGateway;
         $this->userGateway = $userGateway;
@@ -50,6 +53,7 @@ class EmailTemplateParser {
      * @param $modsForHeskSettings array
      * @return ParsedEmailProperties
      * @throws InvalidEmailTemplateException
+     * @throws \Exception
      */
     function getFormattedEmailForLanguage($templateId, $languageCode, $ticket, $heskSettings, $modsForHeskSettings) {
         global $hesklang;

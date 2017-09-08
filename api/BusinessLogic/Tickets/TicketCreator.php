@@ -56,8 +56,15 @@ class TicketCreator {
     /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
     private $modsForHeskSettingsGateway;
 
-    function __construct($newTicketValidator, $trackingIdGenerator, $autoassigner, $statusGateway, $ticketGateway,
-                         $verifiedEmailChecker, $emailSenderHelper, $userGateway, $modsForHeskSettingsGateway) {
+    function __construct(NewTicketValidator $newTicketValidator,
+                         TrackingIdGenerator $trackingIdGenerator,
+                         Autoassigner $autoassigner,
+                         StatusGateway $statusGateway,
+                         TicketGateway $ticketGateway,
+                         VerifiedEmailChecker $verifiedEmailChecker,
+                         EmailSenderHelper $emailSenderHelper,
+                         UserGateway $userGateway,
+                         ModsForHeskSettingsGateway $modsForHeskSettingsGateway) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
         $this->autoassigner = $autoassigner;

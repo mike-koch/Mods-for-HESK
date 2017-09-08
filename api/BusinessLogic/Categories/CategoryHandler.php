@@ -26,7 +26,10 @@ class CategoryHandler {
     /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
     private $modsForHeskSettingsGateway;
 
-    function __construct($categoryGateway, $ticketGateway, $permissionChecker, $modsForHeskSettingsGateway) {
+    function __construct(CategoryGateway $categoryGateway,
+                         TicketGateway $ticketGateway,
+                         PermissionChecker $permissionChecker,
+                         ModsForHeskSettingsGateway $modsForHeskSettingsGateway) {
         $this->categoryGateway = $categoryGateway;
         $this->ticketGateway = $ticketGateway;
         $this->permissionChecker = $permissionChecker;

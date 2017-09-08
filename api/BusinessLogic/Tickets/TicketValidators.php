@@ -10,7 +10,7 @@ class TicketValidators {
      */
     private $ticketGateway;
 
-    function __construct($ticketGateway) {
+    function __construct(TicketGateway $ticketGateway) {
         $this->ticketGateway = $ticketGateway;
     }
 

@@ -19,7 +19,8 @@ class TicketRetriever {
     /* @var $userToTicketChecker UserToTicketChecker */
     private $userToTicketChecker;
 
-    function __construct($ticketGateway, $userToTicketChecker) {
+    function __construct(TicketGateway $ticketGateway,
+                         UserToTicketChecker $userToTicketChecker) {
         $this->ticketGateway = $ticketGateway;
         $this->userToTicketChecker = $userToTicketChecker;
     }

@@ -17,7 +17,8 @@ class CategoryRetriever {
      */
     private $modsForHeskSettingsGateway;
 
-    function __construct($categoryGateway, $modsForHeskSettingsGateway) {
+    function __construct(CategoryGateway $categoryGateway,
+                         ModsForHeskSettingsGateway $modsForHeskSettingsGateway) {
         $this->categoryGateway = $categoryGateway;
         $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
     }
