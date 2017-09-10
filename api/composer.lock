@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7d3d7ef4a481f28ec59f1218cbc9a1a",
+    "content-hash": "c94a62f4b72739c52334647f4b759251",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -624,16 +624,16 @@
         },
         {
             "name": "php-di/php-di",
-            "version": "4.4.10",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PHP-DI/PHP-DI.git",
-                "reference": "cc10862b66267b6e6f793eda2867b0aef5b693be"
+                "url": "https://github.com/mike-koch/PHP-DI.git",
+                "reference": "02ae2f2f79f3c09f711f8936e2c69cc65a530f1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/cc10862b66267b6e6f793eda2867b0aef5b693be",
-                "reference": "cc10862b66267b6e6f793eda2867b0aef5b693be",
+                "url": "https://api.github.com/repos/mike-koch/PHP-DI/zipball/02ae2f2f79f3c09f711f8936e2c69cc65a530f1b",
+                "reference": "02ae2f2f79f3c09f711f8936e2c69cc65a530f1b",
                 "shasum": ""
             },
             "require": {
@@ -657,7 +657,12 @@
                     "src/DI/functions.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "DI\\Test\\IntegrationTest\\": "tests/IntegrationTest/",
+                    "DI\\Test\\UnitTest\\": "tests/UnitTest/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -668,7 +673,10 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2015-07-24T09:21:24+00:00"
+            "support": {
+                "source": "https://github.com/mike-koch/PHP-DI/tree/master"
+            },
+            "time": "2017-09-08 02:07:52"
         },
         {
             "name": "php-di/phpdoc-reader",
@@ -1767,7 +1775,7 @@
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
-            "time": "2017-04-07T07:07:10+00:00"
+            "time": "2017-04-07 07:07:10"
         },
         {
             "name": "phar-io/version",
@@ -2087,7 +2095,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-08-25T06:32:04+00:00"
+            "time": "2017-08-25 06:32:04"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2416,7 +2424,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2017-08-03T14:08:16+00:00"
+            "time": "2017-08-03 14:08:16"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2525,7 +2533,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-08-20T14:03:32+00:00"
+            "time": "2017-08-20 14:03:32"
         },
         {
             "name": "sebastian/diff",
@@ -2627,7 +2635,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2017-07-01T08:51:00+00:00"
+            "time": "2017-07-01 08:51:00"
         },
         {
             "name": "sebastian/exporter",
@@ -2694,7 +2702,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2017-04-03T13:19:02+00:00"
+            "time": "2017-04-03 13:19:02"
         },
         {
             "name": "sebastian/global-state",
@@ -2792,7 +2800,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2017-08-03T12:35:26+00:00"
+            "time": "2017-08-03 12:35:26"
         },
         {
             "name": "sebastian/object-reflector",
@@ -2837,7 +2845,7 @@
             ],
             "description": "Allows reflection of object attributes, including inherited and non-public ones",
             "homepage": "https://github.com/sebastianbergmann/object-reflector/",
-            "time": "2017-03-29T09:07:27+00:00"
+            "time": "2017-03-29 09:07:27"
         },
         {
             "name": "sebastian/recursion-context",
@@ -3020,7 +3028,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "php-di/php-di": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

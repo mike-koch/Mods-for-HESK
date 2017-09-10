@@ -30,7 +30,7 @@ class CategoryController {
         global $hesk_settings, $applicationContext, $userContext;
 
         /* @var $categoryRetriever CategoryRetriever */
-        $categoryRetriever = $applicationContext->get[CategoryRetriever::class];
+        $categoryRetriever = $applicationContext->get(CategoryRetriever::class);
 
         return $categoryRetriever->getAllCategories($hesk_settings, $userContext);
     }
@@ -43,7 +43,7 @@ class CategoryController {
         $category = $this->buildCategoryFromJson($data);
 
         /* @var $categoryHandler CategoryHandler */
-        $categoryHandler = $applicationContext->get[CategoryHandler::class];
+        $categoryHandler = $applicationContext->get(CategoryHandler::class);
 
         $category = $categoryHandler->createCategory($category, $userContext, $hesk_settings);
 
@@ -81,7 +81,7 @@ class CategoryController {
         $category->id = intval($id);
 
         /* @var $categoryHandler CategoryHandler */
-        $categoryHandler = $applicationContext->get[CategoryHandler::class];
+        $categoryHandler = $applicationContext->get(CategoryHandler::class);
 
         $category = $categoryHandler->editCategory($category, $userContext, $hesk_settings);
 
@@ -92,7 +92,7 @@ class CategoryController {
         global $hesk_settings, $userContext, $applicationContext;
 
         /* @var $categoryHandler CategoryHandler */
-        $categoryHandler = $applicationContext->get[CategoryHandler::class];
+        $categoryHandler = $applicationContext->get(CategoryHandler::class);
 
         $categoryHandler->deleteCategory($id, $userContext, $hesk_settings);
 
@@ -103,7 +103,7 @@ class CategoryController {
         global $applicationContext, $hesk_settings;
 
         /* @var $handler CategoryHandler */
-        $handler = $applicationContext->get[CategoryHandler::class];
+        $handler = $applicationContext->get(CategoryHandler::class);
 
         $handler->sortCategory(intval($id), $direction, $hesk_settings);
     }

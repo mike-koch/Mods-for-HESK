@@ -15,7 +15,7 @@ class StaffTicketController {
         global $applicationContext, $userContext, $hesk_settings;
 
         /* @var $ticketRetriever TicketRetriever */
-        $ticketRetriever = $applicationContext->get[TicketRetriever::class];
+        $ticketRetriever = $applicationContext->get(TicketRetriever::class);
 
         output($ticketRetriever->getTicketById($id, $hesk_settings, $userContext));
     }
@@ -24,7 +24,7 @@ class StaffTicketController {
         global $applicationContext, $userContext, $hesk_settings;
 
         /* @var $ticketDeleter TicketDeleter */
-        $ticketDeleter = $applicationContext->get[TicketDeleter::class];
+        $ticketDeleter = $applicationContext->get(TicketDeleter::class);
 
         $ticketDeleter->deleteTicket($id, $userContext, $hesk_settings);
 
@@ -35,7 +35,7 @@ class StaffTicketController {
         global $applicationContext, $userContext, $hesk_settings;
 
         /* @var $ticketEditor TicketEditor */
-        $ticketEditor = $applicationContext->get[TicketEditor::class];
+        $ticketEditor = $applicationContext->get(TicketEditor::class);
 
         $jsonRequest = JsonRetriever::getJsonData();
 

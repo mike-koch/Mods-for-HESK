@@ -21,4 +21,7 @@ global $hesk_settings;
 require_once(__DIR__ . '/../inc/custom_fields.inc.php');
 
 // Load the ApplicationContext
-$applicationContext = new \ApplicationContext();
+$builder = new \DI\ContainerBuilder();
+$builder->setDefinitionCache(new \Doctrine\Common\Cache\ArrayCache());
+
+$applicationContext = $builder->build();

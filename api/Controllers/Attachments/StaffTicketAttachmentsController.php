@@ -18,7 +18,7 @@ class StaffTicketAttachmentsController {
         $this->verifyAttachmentsAreEnabled($hesk_settings);
 
         /* @var $attachmentRetriever AttachmentRetriever */
-        $attachmentRetriever = $applicationContext->get[AttachmentRetriever::class];
+        $attachmentRetriever = $applicationContext->get(AttachmentRetriever::class);
 
         $contents = $attachmentRetriever->getAttachmentContentsForTicket($ticketId, $attachmentId, $userContext, $hesk_settings);
 
@@ -37,7 +37,7 @@ class StaffTicketAttachmentsController {
         $this->verifyAttachmentsAreEnabled($hesk_settings);
 
         /* @var $attachmentHandler AttachmentHandler */
-        $attachmentHandler = $applicationContext->get[AttachmentHandler::class];
+        $attachmentHandler = $applicationContext->get(AttachmentHandler::class);
 
         $createAttachmentForTicketModel = $this->createModel(JsonRetriever::getJsonData(), $ticketId);
 
@@ -61,7 +61,7 @@ class StaffTicketAttachmentsController {
         global $applicationContext, $hesk_settings, $userContext;
 
         /* @var $attachmentHandler AttachmentHandler */
-        $attachmentHandler = $applicationContext->get[AttachmentHandler::class];
+        $attachmentHandler = $applicationContext->get(AttachmentHandler::class);
 
         $attachmentHandler->deleteAttachmentFromTicket($ticketId, $attachmentId, $userContext, $hesk_settings);
 

@@ -18,7 +18,7 @@ class CustomerTicketController {
         $emailAddress = isset($_GET['email']) ? $_GET['email'] : null;
 
         /* @var $ticketRetriever TicketRetriever */
-        $ticketRetriever = $applicationContext->get[TicketRetriever::class];
+        $ticketRetriever = $applicationContext->get(TicketRetriever::class);
 
         output($ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, $emailAddress, $hesk_settings));
     }
@@ -27,7 +27,7 @@ class CustomerTicketController {
         global $applicationContext, $hesk_settings, $userContext;
 
         /* @var $ticketCreator TicketCreator */
-        $ticketCreator = $applicationContext->get[TicketCreator::class];
+        $ticketCreator = $applicationContext->get(TicketCreator::class);
 
         $jsonRequest = JsonRetriever::getJsonData();
 

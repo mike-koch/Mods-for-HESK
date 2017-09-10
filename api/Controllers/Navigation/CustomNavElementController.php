@@ -3,7 +3,6 @@
 namespace Controllers\Navigation;
 
 
-use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Helpers;
 use BusinessLogic\Navigation\CustomNavElement;
 use BusinessLogic\Navigation\CustomNavElementHandler;
@@ -17,7 +16,7 @@ class CustomNavElementController extends InternalApiController {
         self::staticCheckForInternalUseOnly();
 
         /* @var $handler CustomNavElementHandler */
-        $handler = $applicationContext->get[CustomNavElementHandler::class];
+        $handler = $applicationContext->get(CustomNavElementHandler::class);
 
         output($handler->getAllCustomNavElements($hesk_settings));
     }
@@ -28,7 +27,7 @@ class CustomNavElementController extends InternalApiController {
         self::staticCheckForInternalUseOnly();
 
         /* @var $handler CustomNavElementHandler */
-        $handler = $applicationContext->get[CustomNavElementHandler::class];
+        $handler = $applicationContext->get(CustomNavElementHandler::class);
 
         $handler->sortCustomNavElement(intval($id), $direction, $hesk_settings);
     }
@@ -39,7 +38,7 @@ class CustomNavElementController extends InternalApiController {
         $this->checkForInternalUseOnly();
 
         /* @var $handler CustomNavElementHandler */
-        $handler = $applicationContext->get[CustomNavElementHandler::class];
+        $handler = $applicationContext->get(CustomNavElementHandler::class);
 
         output($handler->getCustomNavElement($id, $hesk_settings));
     }
@@ -50,7 +49,7 @@ class CustomNavElementController extends InternalApiController {
         $this->checkForInternalUseOnly();
 
         /* @var $handler CustomNavElementHandler */
-        $handler = $applicationContext->get[CustomNavElementHandler::class];
+        $handler = $applicationContext->get(CustomNavElementHandler::class);
 
         $data = JsonRetriever::getJsonData();
         $element = $handler->createCustomNavElement($this->buildElementModel($data), $hesk_settings);
@@ -64,7 +63,7 @@ class CustomNavElementController extends InternalApiController {
         $this->checkForInternalUseOnly();
 
         /* @var $handler CustomNavElementHandler */
-        $handler = $applicationContext->get[CustomNavElementHandler::class];
+        $handler = $applicationContext->get(CustomNavElementHandler::class);
 
         $data = JsonRetriever::getJsonData();
         $handler->saveCustomNavElement($this->buildElementModel($data, $id), $hesk_settings);
@@ -78,7 +77,7 @@ class CustomNavElementController extends InternalApiController {
         $this->checkForInternalUseOnly();
 
         /* @var $handler CustomNavElementHandler */
-        $handler = $applicationContext->get[CustomNavElementHandler::class];
+        $handler = $applicationContext->get(CustomNavElementHandler::class);
 
         $handler->deleteCustomNavElement($id, $hesk_settings);
 

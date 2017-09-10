@@ -50,7 +50,7 @@ function assertApiIsEnabled() {
     global $applicationContext, $hesk_settings;
 
     /* @var $apiChecker \BusinessLogic\Settings\ApiChecker */
-    $apiChecker = $applicationContext->get[\BusinessLogic\Settings\ApiChecker::class];
+    $apiChecker = $applicationContext->get(\BusinessLogic\Settings\ApiChecker::class);
 
     if (!$apiChecker->isApiEnabled($hesk_settings)) {
         print output(array('message' => 'API Disabled'), 404);
@@ -77,7 +77,7 @@ function buildUserContext($xAuthToken) {
     global $applicationContext, $userContext, $hesk_settings;
 
     /* @var $userContextBuilder \BusinessLogic\Security\UserContextBuilder */
-    $userContextBuilder = $applicationContext->get[\BusinessLogic\Security\UserContextBuilder::class];
+    $userContextBuilder = $applicationContext->get(\BusinessLogic\Security\UserContextBuilder::class);
 
     $userContext = $userContextBuilder->buildUserContext($xAuthToken, $hesk_settings);
 }
@@ -90,16 +90,12 @@ function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {
  * @param $exception Exception
  */
 function exceptionHandler($exception) {
-    global $applicationContext, $userContext, $hesk_settings;
+    global $userContext, $hesk_settings;
 
     if (strpos($exception->getTraceAsString(), 'LoggingGateway') !== false) {
         //-- Suppress these for now, as it would cause issues to output two JSONs at one time.
         return;
     }
-
-
-    /* @var $loggingGateway \DataAccess\Logging\LoggingGateway */
-    $loggingGateway = $applicationContext->get[\DataAccess\Logging\LoggingGateway::class];
 
     // We don't cast API Friendly Exceptions as they're user-generated errors
     if (exceptionIsOfType($exception, \BusinessLogic\Exceptions\ApiFriendlyException::class)) {
@@ -142,7 +138,7 @@ function tryToLog($location, $message, $stackTrace, $userContext, $heskSettings)
     global $applicationContext;
 
     /* @var $loggingGateway \DataAccess\Logging\LoggingGateway */
-    $loggingGateway = $applicationContext->get[\DataAccess\Logging\LoggingGateway::class];
+    $loggingGateway = $applicationContext->get(\DataAccess\Logging\LoggingGateway::class);
 
     try {
         return $loggingGateway->logError($location, $message, $stackTrace, $userContext, $heskSettings);
