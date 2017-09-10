@@ -63,7 +63,6 @@ class CategoryController {
         $category->description = Helpers::safeArrayGet($json, 'description');
         $category->displayBorder = Helpers::safeArrayGet($json, 'displayBorder');
         $category->foregroundColor = Helpers::safeArrayGet($json, 'foregroundColor');
-        $category->manager = Helpers::safeArrayGet($json, 'manager');
         $category->name = Helpers::safeArrayGet($json, 'name');
         $category->priority = Helpers::safeArrayGet($json, 'priority');
         $category->type = Helpers::safeArrayGet($json, 'type');

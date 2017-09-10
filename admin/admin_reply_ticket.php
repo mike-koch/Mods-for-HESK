@@ -39,9 +39,7 @@ hesk_dbConnect();
 hesk_isLoggedIn();
 
 /* Check permissions for this feature */
-if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
-    hesk_checkPermission('can_reply_tickets');
-}
+hesk_checkPermission('can_reply_tickets');
 
 /* A security check */
 # hesk_token_check('POST');
@@ -281,7 +279,7 @@ if ($time_worked == '00:00:00') {
     $sql .= ",`time_worked` = ADDTIME(`time_worked`,'" . hesk_dbEscape($time_worked) . "') ";
 }
 
-if (!empty($_POST['assign_self']) && (hesk_checkPermission('can_assign_self', 0) || (isset($_REQUEST['isManager']) && $_REQUEST['isManager']))) {
+if (!empty($_POST['assign_self']) && (hesk_checkPermission('can_assign_self', 0))) {
     $revision = sprintf($hesklang['thist2'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')', $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
     $sql .= " , `owner`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
 }
