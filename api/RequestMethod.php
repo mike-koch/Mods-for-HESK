@@ -6,5 +6,8 @@ class RequestMethod {
     const PUT = 'PUT';
     const DELETE = 'DELETE';
     const PATCH = 'PATCH';
-    const ALL = [self::GET, self::POST, self::PUT, self::DELETE, self::PATCH];
+
+    static function all() {
+        return array(self::GET, self::POST, self::PUT, self::DELETE, self::PATCH);
+    }
 }

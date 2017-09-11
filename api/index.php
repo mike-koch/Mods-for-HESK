@@ -188,36 +188,36 @@ Link::all(array(
     '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::class . '::sort', [RequestMethod::POST], SecurityHandler::INTERNAL),
     // Tickets
-    '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::class),
+    '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::class, RequestMethod::all()),
     // Tickets - Staff
-    '/v1/staff/tickets/{i}' => action(\Controllers\Tickets\StaffTicketController::class),
+    '/v1/staff/tickets/{i}' => action(\Controllers\Tickets\StaffTicketController::class, RequestMethod::all()),
     // Attachments
-    '/v1/tickets/{a}/attachments/{i}' => action(\Controllers\Attachments\PublicAttachmentController::class . '::getRaw'),
-    '/v1/staff/tickets/{i}/attachments' => action(\Controllers\Attachments\StaffTicketAttachmentsController::class),
-    '/v1/staff/tickets/{i}/attachments/{i}' => action(\Controllers\Attachments\StaffTicketAttachmentsController::class),
+    '/v1/tickets/{a}/attachments/{i}' => action(\Controllers\Attachments\PublicAttachmentController::class . '::getRaw', RequestMethod::all()),
+    '/v1/staff/tickets/{i}/attachments' => action(\Controllers\Attachments\StaffTicketAttachmentsController::class, RequestMethod::all()),
+    '/v1/staff/tickets/{i}/attachments/{i}' => action(\Controllers\Attachments\StaffTicketAttachmentsController::class, RequestMethod::all()),
     // Statuses
-    '/v1/statuses' => action(\Controllers\Statuses\StatusController::class),
+    '/v1/statuses' => action(\Controllers\Statuses\StatusController::class, RequestMethod::all()),
     // Settings
-    '/v1/settings' => action(\Controllers\Settings\SettingsController::class),
+    '/v1/settings' => action(\Controllers\Settings\SettingsController::class, RequestMethod::all()),
 
     /* Internal use only routes */
     // Resend email response
     '/v1-internal/staff/tickets/{i}/resend-email' =>
-        action(\Controllers\Tickets\ResendTicketEmailToCustomerController::class, RequestMethod::ALL, SecurityHandler::INTERNAL),
+        action(\Controllers\Tickets\ResendTicketEmailToCustomerController::class, RequestMethod::all(), SecurityHandler::INTERNAL),
     // Custom Navigation
     '/v1-internal/custom-navigation/all' =>
-        action(\Controllers\Navigation\CustomNavElementController::class . '::getAll', RequestMethod::ALL, SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class . '::getAll', RequestMethod::all(), SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation' =>
-        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::ALL, SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::all(), SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation/{i}' =>
-        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::ALL, SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::all(), SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation/{i}/sort/{s}' =>
-        action(\Controllers\Navigation\CustomNavElementController::class . '::sort', RequestMethod::ALL, SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class . '::sort', RequestMethod::all(), SecurityHandler::INTERNAL),
 
     '/v1-public/hesk-version' =>
-        action(\Controllers\System\HeskVersionController::class . '::getHeskVersion', RequestMethod::ALL, SecurityHandler::OPEN),
+        action(\Controllers\System\HeskVersionController::class . '::getHeskVersion', RequestMethod::all(), SecurityHandler::OPEN),
     '/v1-public/mods-for-hesk-version' =>
-        action(\Controllers\System\HeskVersionController::class . '::getModsForHeskVersion', RequestMethod::ALL, SecurityHandler::OPEN),
+        action(\Controllers\System\HeskVersionController::class . '::getModsForHeskVersion', RequestMethod::all(), SecurityHandler::OPEN),
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'
@@ -229,7 +229,7 @@ Link::all(array(
  * @param $securityHandler string The proper security handler
  * @return array The configured path
  */
-function action($class, $requestMethods = RequestMethod::ALL, $securityHandler = SecurityHandler::AUTH_TOKEN) {
+function action($class, $requestMethods, $securityHandler = SecurityHandler::AUTH_TOKEN) {
     return [$class, $class, $securityHandler, $requestMethods];
 }
 
