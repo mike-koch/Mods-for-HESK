@@ -10,7 +10,7 @@ class UserToTicketChecker {
     /* @var $userGateway UserGateway */
     private $userGateway;
 
-    function __construct($userGateway) {
+    function __construct(UserGateway $userGateway) {
         $this->userGateway = $userGateway;
     }
 
@@ -29,12 +29,6 @@ class UserToTicketChecker {
 
         if (!in_array($ticket->categoryId, $user->categories)) {
             return false;
-        }
-
-        $categoryManagerId = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
-        
-        if ($user->id === $categoryManagerId) {
-            return true;
         }
 
         $extraPermissions[] = UserPrivilege::CAN_VIEW_TICKETS;

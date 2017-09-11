@@ -9,7 +9,7 @@ class ApiChecker {
     /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
     private $modsForHeskSettingsGateway;
 
-    function __construct($modsForHeskSettingsGateway) {
+    function __construct(ModsForHeskSettingsGateway $modsForHeskSettingsGateway) {
         $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
     }
 

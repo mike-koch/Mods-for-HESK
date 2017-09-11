@@ -21,7 +21,9 @@ class EmailSenderHelper {
      */
     private $mailgunEmailSender;
 
-    function __construct($emailTemplateParser, $basicEmailSender, $mailgunEmailSender) {
+    function __construct(EmailTemplateParser $emailTemplateParser,
+                         BasicEmailSender $basicEmailSender,
+                         MailgunEmailSender $mailgunEmailSender) {
         $this->emailTemplateParser = $emailTemplateParser;
         $this->basicEmailSender = $basicEmailSender;
         $this->mailgunEmailSender = $mailgunEmailSender;

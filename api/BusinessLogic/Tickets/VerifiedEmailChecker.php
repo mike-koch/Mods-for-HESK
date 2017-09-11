@@ -17,7 +17,7 @@ class VerifiedEmailChecker {
      */
     private $verifiedEmailGateway;
 
-    function __construct($verifiedEmailGateway) {
+    function __construct(VerifiedEmailGateway $verifiedEmailGateway) {
         $this->verifiedEmailGateway = $verifiedEmailGateway;
     }
 

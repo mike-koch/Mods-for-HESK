@@ -20,7 +20,9 @@ class TicketDeleter {
     /* @var $attachmentHandler AttachmentHandler */
     private $attachmentHandler;
 
-    function __construct($ticketGateway, $userToTicketChecker, $attachmentHandler) {
+    function __construct(TicketGateway $ticketGateway,
+                         UserToTicketChecker $userToTicketChecker,
+                         AttachmentHandler $attachmentHandler) {
         $this->ticketGateway = $ticketGateway;
         $this->userToTicketChecker = $userToTicketChecker;
         $this->attachmentHandler = $attachmentHandler;

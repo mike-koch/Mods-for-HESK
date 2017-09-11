@@ -33,7 +33,6 @@ Mods for HESK is a set of modifications for [HESK](https://www.hesk.com) v2.7.x,
                 <li>Custom service message icons</li>
                 <li>Permission templates</li>
                 <li>Request users location in tickets</li>
-                <li>Category managers</li>
                 <li>Show number of merged tickets in ticket search view</li>
                 <li>Enable / disable staff members</li>
                 <li>More-restricted settings page access</li>

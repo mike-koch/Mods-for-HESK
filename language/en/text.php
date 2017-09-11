@@ -1831,10 +1831,6 @@ $hesklang['your_current_location'] = 'Your location';
 $hesklang['requesting_location_ellipsis'] = 'Requesting location...';
 $hesklang['unable_to_determine_location'] = 'Unable to determine your location, or you declined to share it.';
 $hesklang['save_to_see_updated_address'] = 'Save the new location to see the updated address';
-$hesklang['manager'] = 'Manager';
-$hesklang['manager_updated'] = 'Category manager has been updated.';
-$hesklang['can_set_manager'] = 'Can set category managers';
-$hesklang['no_manager'] = 'No manager';
 $hesklang['manage_permission_templates'] = 'Manage Permission Templates';
 $hesklang['manage_permission_templates_help'] = 'Here you can create and edit permission templates. These templates will appear when creating/editing a user.
 Please note that if you change the permission template\'s settings, it will NOT change the permissions of any users that are set to this permission template.';
@@ -2173,6 +2169,15 @@ $hesklang['url_rewrite_help'] = 'Remove the need to include /index.php in API UR
 $hesklang['url_rewrite_saved'] = 'URL rewrite setting saved!';
 $hesklang['api_settings_saved'] = 'API settings saved!';
 $hesklang['an_error_occurred'] = 'An error occurred. Check the logs for more information';
+$hesklang['error_deleting_category'] = 'An error occurred when trying to delete the category.';
+$hesklang['cat_private'] = 'Private';
+$hesklang['cat_public'] = 'Public';
+$hesklang['cat_name_description'] = 'Name / Description';
+$hesklang['error_sorting_categories'] = 'An error occurred sorting categories!';
+$hesklang['error_retrieving_categories'] = 'An error occurred retrieving categories!';
+$hesklang['error_saving_updating_category'] = 'An error occurred creating / saving the category!';
+$hesklang['description_colon'] = 'Description:'; // Same as 'description', but with a colon (:) afterwards
+$hesklang['copied_to_clipboard'] = 'Copied to clipboard';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

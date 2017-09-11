@@ -358,4 +358,14 @@ class TicketGateway extends CommonDao {
 
         $this->close();
     }
+
+    function moveTicketsToDefaultCategory($oldCategoryId, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets`
+            SET `category` = 1
+            WHERE `category` = " . intval($oldCategoryId));
+
+        $this->close();
+    }
 }

@@ -50,7 +50,7 @@ function assertApiIsEnabled() {
     global $applicationContext, $hesk_settings;
 
     /* @var $apiChecker \BusinessLogic\Settings\ApiChecker */
-    $apiChecker = $applicationContext->get[\BusinessLogic\Settings\ApiChecker::class];
+    $apiChecker = $applicationContext->get(\BusinessLogic\Settings\ApiChecker::class);
 
     if (!$apiChecker->isApiEnabled($hesk_settings)) {
         print output(array('message' => 'API Disabled'), 404);
@@ -77,7 +77,7 @@ function buildUserContext($xAuthToken) {
     global $applicationContext, $userContext, $hesk_settings;
 
     /* @var $userContextBuilder \BusinessLogic\Security\UserContextBuilder */
-    $userContextBuilder = $applicationContext->get[\BusinessLogic\Security\UserContextBuilder::class];
+    $userContextBuilder = $applicationContext->get(\BusinessLogic\Security\UserContextBuilder::class);
 
     $userContext = $userContextBuilder->buildUserContext($xAuthToken, $hesk_settings);
 }
@@ -90,16 +90,12 @@ function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {
  * @param $exception Exception
  */
 function exceptionHandler($exception) {
-    global $applicationContext, $userContext, $hesk_settings;
+    global $userContext, $hesk_settings;
 
     if (strpos($exception->getTraceAsString(), 'LoggingGateway') !== false) {
         //-- Suppress these for now, as it would cause issues to output two JSONs at one time.
         return;
     }
-
-
-    /* @var $loggingGateway \DataAccess\Logging\LoggingGateway */
-    $loggingGateway = $applicationContext->get[\DataAccess\Logging\LoggingGateway::class];
 
     // We don't cast API Friendly Exceptions as they're user-generated errors
     if (exceptionIsOfType($exception, \BusinessLogic\Exceptions\ApiFriendlyException::class)) {
@@ -142,7 +138,7 @@ function tryToLog($location, $message, $stackTrace, $userContext, $heskSettings)
     global $applicationContext;
 
     /* @var $loggingGateway \DataAccess\Logging\LoggingGateway */
-    $loggingGateway = $applicationContext->get[\DataAccess\Logging\LoggingGateway::class];
+    $loggingGateway = $applicationContext->get(\DataAccess\Logging\LoggingGateway::class);
 
     try {
         return $loggingGateway->logError($location, $message, $stackTrace, $userContext, $heskSettings);
@@ -187,8 +183,10 @@ Link::before('globalBefore');
 
 Link::all(array(
     // Categories
-    '/v1/categories' => action(\Controllers\Categories\CategoryController::class . '::printAllCategories'),
-    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::class),
+    '/v1/categories/all' => action(\Controllers\Categories\CategoryController::class . '::printAllCategories', [RequestMethod::GET], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/categories' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::POST], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::class . '::sort', [RequestMethod::POST], SecurityHandler::INTERNAL),
     // Tickets
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::class),
     // Tickets - Staff
@@ -205,28 +203,34 @@ Link::all(array(
     /* Internal use only routes */
     // Resend email response
     '/v1-internal/staff/tickets/{i}/resend-email' =>
-        action(\Controllers\Tickets\ResendTicketEmailToCustomerController::class, SecurityHandler::INTERNAL),
+        action(\Controllers\Tickets\ResendTicketEmailToCustomerController::class, RequestMethod::ALL, SecurityHandler::INTERNAL),
     // Custom Navigation
     '/v1-internal/custom-navigation/all' =>
-        action(\Controllers\Navigation\CustomNavElementController::class . '::getAll', SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class . '::getAll', RequestMethod::ALL, SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation' =>
-        action(\Controllers\Navigation\CustomNavElementController::class, SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::ALL, SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation/{i}' =>
-        action(\Controllers\Navigation\CustomNavElementController::class, SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::ALL, SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation/{i}/sort/{s}' =>
-        action(\Controllers\Navigation\CustomNavElementController::class . '::sort', SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::class . '::sort', RequestMethod::ALL, SecurityHandler::INTERNAL),
 
     '/v1-public/hesk-version' =>
-        action(\Controllers\System\HeskVersionController::class . '::getHeskVersion', SecurityHandler::OPEN),
+        action(\Controllers\System\HeskVersionController::class . '::getHeskVersion', RequestMethod::ALL, SecurityHandler::OPEN),
     '/v1-public/mods-for-hesk-version' =>
-        action(\Controllers\System\HeskVersionController::class . '::getModsForHeskVersion', SecurityHandler::OPEN),
+        action(\Controllers\System\HeskVersionController::class . '::getModsForHeskVersion', RequestMethod::ALL, SecurityHandler::OPEN),
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'
 ));
 
-function action($class, $securityHandler = SecurityHandler::AUTH_TOKEN) {
-    return [$class, $class, $securityHandler];
+/**
+ * @param $class object|string The class name (and optional static method)
+ * @param $requestMethods array The accepted request methods for this endpoint
+ * @param $securityHandler string The proper security handler
+ * @return array The configured path
+ */
+function action($class, $requestMethods = RequestMethod::ALL, $securityHandler = SecurityHandler::AUTH_TOKEN) {
+    return [$class, $class, $securityHandler, $requestMethods];
 }
 
 class SecurityHandler {

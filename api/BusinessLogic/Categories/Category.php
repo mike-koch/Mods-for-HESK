@@ -52,12 +52,17 @@ class Category {
     public $priority;
 
     /**
-     * @var int|null The manager for the Categories, if applicable
-     */
-    public $manager;
-
-    /**
      * @var bool Indication if the user has access to the Categories
      */
     public $accessible;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var int
+     */
+    public $numberOfTickets;
 }

@@ -14,7 +14,7 @@ class UserContextBuilder {
      */
     private $userGateway;
 
-    function __construct($userGateway) {
+    function __construct(UserGateway $userGateway) {
         $this->userGateway = $userGateway;
     }
 

@@ -12,7 +12,7 @@ class TrackingIdGenerator {
      */
     private $ticketGateway;
 
-    function __construct($ticketGateway) {
+    function __construct(TicketGateway $ticketGateway) {
         $this->ticketGateway = $ticketGateway;
     }
 

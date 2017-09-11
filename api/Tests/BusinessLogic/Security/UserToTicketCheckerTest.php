@@ -92,23 +92,4 @@ class UserToTicketCheckerTest extends TestCase {
         //-- Assert
         self::assertThat($result, self::isFalse());
     }
-
-    function testItReturnsTrueWhenTheUserDoesNotHaveEditPermissionsButIsTheCategoryManager() {
-        //-- Arrange
-        $user = new UserContext();
-        $user->admin = false;
-        $user->categories = array(1);
-        $user->permissions = array(UserPrivilege::CAN_VIEW_TICKETS, 'something else');
-        $user->id = 1;
-        $this->userGateway->method('getManagerForCategory')->willReturn(1);
-
-        $ticket = new Ticket();
-        $ticket->categoryId = 1;
-
-        //-- Act
-        $result = $this->userToTicketChecker->isTicketAccessibleToUser($user, $ticket, $this->heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS));
-
-        //-- Assert
-        self::assertThat($result, self::isTrue());
-    }
 }

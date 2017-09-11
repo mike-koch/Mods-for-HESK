@@ -4,6 +4,7 @@ namespace DataAccess\Categories;
 
 use BusinessLogic\Categories\Category;
 use DataAccess\CommonDao;
+use DataAccess\Logging\LoggingGateway;
 use Exception;
 
 class CategoryGateway extends CommonDao {
@@ -11,10 +12,18 @@ class CategoryGateway extends CommonDao {
      * @param $hesk_settings
      * @return Category[]
      */
-    function getAllCategories($hesk_settings) {
+    function getAllCategories($hesk_settings, $modsForHesk_settings) {
         $this->init();
 
-        $sql = 'SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories`';
+        $sortColumn = $modsForHesk_settings['category_order_column'];
+
+        $sql = 'SELECT `cat`.*, COUNT(`tickets`.`id`) AS `number_of_tickets`
+            FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` `cat`
+            LEFT JOIN `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` `tickets`
+                ON `cat`.`id` = `tickets`.`category`
+            GROUP BY `cat`.`id`
+            ORDER BY `cat`.`' . $sortColumn . '` ASC';
+
 
         $response = hesk_dbQuery($sql);
 
@@ -32,12 +41,94 @@ class CategoryGateway extends CommonDao {
             $category->foregroundColor = $row['foreground_color'];
             $category->displayBorder = $row['display_border_outline'] === '1';
             $category->priority = intval($row['priority']);
-            $category->manager = intval($row['manager']) == 0 ? NULL : intval($row['manager']);
-            $results[$category->id] = $category;
+            $category->description = $row['mfh_description'];
+            $category->numberOfTickets = intval($row['number_of_tickets']);
+            $results[] = $category;
         }
 
         $this->close();
 
         return $results;
+    }
+
+    /**
+     * @param $category Category
+     * @param $heskSettings array
+     * @return int The ID of the newly created category
+     */
+    function createCategory($category, $heskSettings) {
+        $this->init();
+
+        $newOrderRs = hesk_dbQuery("SELECT `cat_order` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` ORDER BY `cat_order` DESC LIMIT 1");
+        $newOrder = hesk_dbFetchAssoc($newOrderRs);
+
+        $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` 
+            (`name`, `cat_order`, `autoassign`, `type`, `priority`, `background_color`, `usage`, 
+                `foreground_color`, `display_border_outline`, `mfh_description`)
+            VALUES ('" . hesk_dbEscape($category->name) . "', " . intval($newOrder['cat_order']) . ",
+                '" . ($category->autoAssign ? 1 : 0) . "', '" . intval($category->type) . "',
+                '" . intval($category->priority) . "',
+                '" . hesk_dbEscape($category->backgroundColor)  . "', " . intval($category->usage) . ",
+                '" . hesk_dbEscape($category->foregroundColor) . "', '" . ($category->displayBorder ? 1 : 0) . "',
+                '" . hesk_dbEscape($category->description) . "')";
+
+        hesk_dbQuery($sql);
+
+        $id = hesk_dbInsertID();
+
+        $this->close();
+
+        return $id;
+    }
+
+    /**
+     * @param $category Category
+     * @param $heskSettings array
+     */
+    function updateCategory($category, $heskSettings) {
+        $this->init();
+
+        $sql = "UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` SET 
+            `name` = '" . hesk_dbEscape($category->name) . "',
+            `cat_order` = " . intval($category->catOrder) . ",
+            `autoassign` = '" . ($category->autoAssign ? 1 : 0) . "',
+            `type` = '" . intval($category->type) . "', 
+            `priority` = '" . intval($category->priority) . "', 
+            `background_color` = '" . hesk_dbEscape($category->backgroundColor)  . "', 
+            `usage` = " . intval($category->usage) . ", 
+            `foreground_color` = '" . hesk_dbEscape($category->foregroundColor) . "', 
+            `display_border_outline` = '" . ($category->displayBorder ? 1 : 0) . "', 
+            `mfh_description` = '" . hesk_dbEscape($category->description) . "'
+            WHERE `id` = " . intval($category->id);
+
+        hesk_dbQuery($sql);
+
+        $this->close();
+    }
+
+    function resortAllCategories($heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories`
+            ORDER BY `cat_order` ASC");
+
+        $sortValue = 10;
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories`
+                SET `cat_order` = " . intval($sortValue) . "
+                WHERE `id` = " . intval($row['id']));
+
+            $sortValue += 10;
+        }
+
+        $this->close();
+    }
+
+    function deleteCategory($id, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` WHERE `id` = " . intval($id));
+
+        $this->close();
     }
 }

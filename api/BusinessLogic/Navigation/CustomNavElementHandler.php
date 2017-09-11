@@ -10,7 +10,7 @@ class CustomNavElementHandler {
     /* @var $customNavElementGateway CustomNavElementGateway */
     private $customNavElementGateway;
 
-    function __construct($customNavElementGateway) {
+    function __construct(CustomNavElementGateway $customNavElementGateway) {
         $this->customNavElementGateway = $customNavElementGateway;
     }
 
