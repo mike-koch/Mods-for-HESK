@@ -1,24 +1,39 @@
-image: tetraweb/php
-
 stages:
   - test
   - deploy
 
 before_script:
+  - bash ci/docker_install.sh > /dev/null
   - cd api
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php');"
   - php composer.phar update
 
-test:
+test:7.1:
+  image: php:7.1
   stage: test
   script:
     - composer install
     - cd Tests
     - phpunit
+    - cd ../../
+    - bash ci/php_lint.sh ./
+
+test:7.0:
+  image: php:7.0
+  stage: test
+  script:
+    - bash ci/php_lint.sh ./
+
+test:5.5:
+  image: php:5.5
+  stage: test
+  script:
+    - bash ci/php_lint.sh ./
 
 deploy:
+  image: tetraweb/php
   when: manual
   stage: deploy
   script:
