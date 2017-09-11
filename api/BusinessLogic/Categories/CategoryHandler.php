@@ -114,10 +114,6 @@ class CategoryHandler {
             $validationModel->errorKeys[] = 'INVALID_TYPE';
         }
 
-        if ($category->type === null || intval($category->type) < 0 || intval($category->type) > 2) {
-            $validationModel->errorKeys[] = 'INVALID_TYPE';
-        }
-
         return $validationModel;
     }
 
