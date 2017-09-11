@@ -12,7 +12,7 @@ while test $# -gt 0; do
         continue
     fi
 
-    for file in `find $current -type f -not -path "*vendor/*" -name "*.php"` ; do
+    for file in `find $current -type f -not -path "*vendor/*" -not -path "*api/*" -name "*.php"` ; do
         RESULTS=`php -l $file`
 		echo $RESULTS
 
