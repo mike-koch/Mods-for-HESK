@@ -3,7 +3,7 @@
 namespace BusinessLogic\Attachments;
 
 
-class Attachment {
+class Attachment extends \BaseClass {
     /* @var $id int */
     public $id;
 

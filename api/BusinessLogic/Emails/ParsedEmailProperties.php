@@ -3,7 +3,7 @@
 namespace BusinessLogic\Emails;
 
 
-class ParsedEmailProperties {
+class ParsedEmailProperties extends \BaseClass {
     function __construct($subject, $message, $htmlMessage) {
         $this->subject = $subject;
         $this->message = $message;

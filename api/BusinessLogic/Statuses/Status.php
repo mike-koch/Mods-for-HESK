@@ -3,7 +3,7 @@
 namespace BusinessLogic\Statuses;
 
 
-class Status {
+class Status extends \BaseClass {
     static function fromDatabase($row, $languageRs) {
         $status = new Status();
         $status->id = intval($row['ID']);

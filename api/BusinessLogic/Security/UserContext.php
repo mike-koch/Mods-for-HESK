@@ -3,7 +3,7 @@
 namespace BusinessLogic\Security;
 
 
-class UserContext {
+class UserContext extends \BaseClass {
     /* @var $id int */
     public $id;
 

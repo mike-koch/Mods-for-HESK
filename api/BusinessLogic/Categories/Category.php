@@ -2,7 +2,7 @@
 
 namespace BusinessLogic\Categories;
 
-class Category {
+class Category extends \BaseClass {
     /**
      * @var int The Categories ID
      */

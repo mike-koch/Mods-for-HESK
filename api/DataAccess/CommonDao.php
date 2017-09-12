@@ -5,7 +5,7 @@ namespace DataAccess;
 
 use Exception;
 
-class CommonDao {
+class CommonDao extends \BaseClass {
     /**
      * @throws Exception if the database isn't properly configured
      */

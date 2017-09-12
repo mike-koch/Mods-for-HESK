@@ -10,7 +10,7 @@ use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\Security\UserToTicketChecker;
 use DataAccess\Tickets\TicketGateway;
 
-class TicketDeleter {
+class TicketDeleter extends \BaseClass {
     /* @var $ticketGateway TicketGateway */
     private $ticketGateway;
 

@@ -2,9 +2,7 @@
 
 namespace Core\Exceptions;
 
-use Exception;
-
-class SQLException extends Exception {
+class SQLException extends \BaseException {
     /**
      * @var $failingQuery string
      */

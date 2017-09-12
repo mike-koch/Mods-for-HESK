@@ -7,7 +7,7 @@ use BusinessLogic\Attachments\Attachment;
 use BusinessLogic\Attachments\AttachmentRetriever;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 
-class PublicAttachmentController {
+class PublicAttachmentController extends \BaseClass {
     static function getRaw($trackingId, $attachmentId) {
         global $hesk_settings, $applicationContext, $userContext;
 

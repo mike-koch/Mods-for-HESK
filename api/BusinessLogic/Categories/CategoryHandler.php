@@ -13,7 +13,7 @@ use DataAccess\Categories\CategoryGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 use DataAccess\Tickets\TicketGateway;
 
-class CategoryHandler {
+class CategoryHandler extends \BaseClass {
     /* @var $categoryGateway CategoryGateway */
     private $categoryGateway;
 

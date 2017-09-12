@@ -3,7 +3,7 @@
 namespace Controllers;
 
 
-class JsonRetriever {
+class JsonRetriever extends \BaseClass {
     /**
      * Support POST, PUT, and PATCH request (and possibly more)
      *

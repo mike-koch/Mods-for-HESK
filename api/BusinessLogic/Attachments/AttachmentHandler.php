@@ -17,7 +17,7 @@ use DataAccess\Files\FileDeleter;
 use DataAccess\Files\FileWriter;
 use DataAccess\Tickets\TicketGateway;
 
-class AttachmentHandler {
+class AttachmentHandler extends \BaseClass {
     /* @var $ticketGateway TicketGateway */
     private $ticketGateway;
 

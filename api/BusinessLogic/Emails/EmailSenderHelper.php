@@ -5,7 +5,7 @@ namespace BusinessLogic\Emails;
 
 use BusinessLogic\Tickets\Ticket;
 
-class EmailSenderHelper {
+class EmailSenderHelper extends \BaseClass {
     /**
      * @var $emailTemplateParser EmailTemplateParser
      */

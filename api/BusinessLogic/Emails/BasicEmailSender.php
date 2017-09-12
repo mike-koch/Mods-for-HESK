@@ -7,7 +7,7 @@ use BusinessLogic\Tickets\Attachment;
 use BusinessLogic\Tickets\Ticket;
 use PHPMailer;
 
-class BasicEmailSender implements EmailSender {
+class BasicEmailSender extends \BaseClass implements EmailSender {
 
     function sendEmail($emailBuilder, $heskSettings, $modsForHeskSettings, $sendAsHtml) {
         $mailer = new PHPMailer();

@@ -6,7 +6,7 @@ namespace BusinessLogic\Navigation;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 use DataAccess\Navigation\CustomNavElementGateway;
 
-class CustomNavElementHandler {
+class CustomNavElementHandler extends \BaseClass {
     /* @var $customNavElementGateway CustomNavElementGateway */
     private $customNavElementGateway;
 

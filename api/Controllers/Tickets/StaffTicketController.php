@@ -10,7 +10,7 @@ use BusinessLogic\Tickets\TicketEditor;
 use BusinessLogic\Tickets\TicketRetriever;
 use Controllers\JsonRetriever;
 
-class StaffTicketController {
+class StaffTicketController extends \BaseClass {
     function get($id) {
         global $applicationContext, $userContext, $hesk_settings;
 

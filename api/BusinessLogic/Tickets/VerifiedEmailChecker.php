@@ -11,7 +11,7 @@ namespace BusinessLogic\Tickets;
 
 use DataAccess\Tickets\VerifiedEmailGateway;
 
-class VerifiedEmailChecker {
+class VerifiedEmailChecker extends \BaseClass {
     /**
      * @var $verifiedEmailGateway VerifiedEmailGateway
      */

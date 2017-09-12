@@ -13,7 +13,7 @@ use DataAccess\Categories\CategoryGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Statuses\StatusGateway;
 
-class EmailTemplateParser {
+class EmailTemplateParser extends \BaseClass {
 
     /**
      * @var $statusGateway StatusGateway

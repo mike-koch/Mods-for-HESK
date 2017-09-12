@@ -8,7 +8,7 @@ use BusinessLogic\Security\UserPrivilege;
 use DataAccess\Categories\CategoryGateway;
 use DataAccess\Security\UserGateway;
 
-class Autoassigner {
+class Autoassigner extends \BaseClass {
     /* @var $categoryGateway CategoryGateway */
     private $categoryGateway;
 

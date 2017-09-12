@@ -15,7 +15,7 @@ use BusinessLogic\Validators;
 use Core\Constants\CustomField;
 use DataAccess\Tickets\TicketGateway;
 
-class TicketEditor {
+class TicketEditor extends \BaseClass {
     /* @var $ticketGateway TicketGateway */
     private $ticketGateway;
 

@@ -5,7 +5,7 @@ namespace Controllers\Settings;
 
 use BusinessLogic\Settings\SettingsRetriever;
 
-class SettingsController {
+class SettingsController extends \BaseClass {
     function get() {
         global $applicationContext, $hesk_settings;
 

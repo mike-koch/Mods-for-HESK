@@ -10,7 +10,7 @@ use BusinessLogic\ValidationModel;
 use Controllers\JsonRetriever;
 
 
-class CustomerTicketController {
+class CustomerTicketController extends \BaseClass {
     function get() {
         global $applicationContext, $hesk_settings;
 

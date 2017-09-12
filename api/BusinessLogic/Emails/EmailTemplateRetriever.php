@@ -3,7 +3,7 @@
 namespace BusinessLogic\Emails;
 
 
-class EmailTemplateRetriever {
+class EmailTemplateRetriever extends \BaseClass {
     /**
      * @var $validTemplates EmailTemplate[]
      */

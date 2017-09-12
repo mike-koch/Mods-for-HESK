@@ -3,7 +3,7 @@
 namespace Controllers\System;
 
 
-class HeskVersionController {
+class HeskVersionController extends \BaseClass {
     static function getHeskVersion() {
         global $hesk_settings;
 

@@ -3,7 +3,7 @@
 namespace BusinessLogic\Navigation;
 
 
-class CustomNavElement {
+class CustomNavElement extends \BaseClass {
     /* @var $id int*/
     public $id;
 

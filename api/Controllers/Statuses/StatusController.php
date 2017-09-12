@@ -5,7 +5,7 @@ namespace Controllers\Statuses;
 
 use BusinessLogic\Statuses\StatusRetriever;
 
-class StatusController {
+class StatusController extends \BaseClass {
     function get() {
         global $applicationContext, $hesk_settings;
 

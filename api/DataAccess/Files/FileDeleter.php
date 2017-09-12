@@ -3,9 +3,7 @@
 namespace DataAccess\Files;
 
 
-use BusinessLogic\Exceptions\ApiFriendlyException;
-
-class FileDeleter {
+class FileDeleter extends \BaseClass {
     function deleteFile($name, $folder) {
         $path = __DIR__ . "/../../../{$folder}/{$name}";
         if (!file_exists($path)) {

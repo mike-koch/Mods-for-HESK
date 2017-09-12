@@ -10,7 +10,7 @@ use BusinessLogic\Security\UserToTicketChecker;
 use BusinessLogic\ValidationModel;
 use DataAccess\Tickets\TicketGateway;
 
-class TicketRetriever {
+class TicketRetriever extends \BaseClass {
     /**
      * @var $ticketGateway TicketGateway
      */

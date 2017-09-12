@@ -42,7 +42,7 @@ class Link
 
 		self::$routes = $routes;
 		$method = self::getRequestMethod();
-		$acceptedMethods = RequestMethod::ALL;
+		$acceptedMethods = RequestMethod::all();
 		$path = '/';
 		$handler = null;
 		$matched = array();

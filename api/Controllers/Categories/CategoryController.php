@@ -9,7 +9,7 @@ use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Helpers;
 use Controllers\JsonRetriever;
 
-class CategoryController {
+class CategoryController extends \BaseClass {
     function get($id) {
         $categories = self::getAllCategories();
 

@@ -3,7 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
-class Ticket {
+class Ticket extends \BaseClass {
     static function fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings) {
         $ticket = new Ticket();
         $ticket->id = intval($row['id']);

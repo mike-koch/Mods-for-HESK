@@ -3,7 +3,7 @@
 namespace BusinessLogic\Security;
 
 
-class PermissionChecker {
+class PermissionChecker extends \BaseClass {
     /**
      * @param $userContext UserContext
      * @param $permission string

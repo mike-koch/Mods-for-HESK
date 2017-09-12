@@ -6,7 +6,7 @@ namespace Controllers;
 use BusinessLogic\Exceptions\InternalUseOnlyException;
 use BusinessLogic\Helpers;
 
-abstract class InternalApiController {
+abstract class InternalApiController extends \BaseClass {
     static function staticCheckForInternalUseOnly() {
         $tokenHeader = Helpers::getHeader('X-AUTH-TOKEN');
         if ($tokenHeader !== null && trim($tokenHeader) !== '') {

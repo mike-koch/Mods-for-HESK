@@ -5,7 +5,7 @@ namespace BusinessLogic\Settings;
 
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 
-class ApiChecker {
+class ApiChecker extends \BaseClass {
     /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
     private $modsForHeskSettingsGateway;
 

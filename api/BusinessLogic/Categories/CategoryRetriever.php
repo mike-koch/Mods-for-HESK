@@ -6,7 +6,7 @@ use BusinessLogic\Security\UserContext;
 use DataAccess\Categories\CategoryGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 
-class CategoryRetriever {
+class CategoryRetriever extends \BaseClass {
     /**
      * @var CategoryGateway
      */

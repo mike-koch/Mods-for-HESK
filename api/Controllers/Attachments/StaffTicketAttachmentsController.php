@@ -11,7 +11,7 @@ use BusinessLogic\Helpers;
 use BusinessLogic\Security\UserToTicketChecker;
 use Controllers\JsonRetriever;
 
-class StaffTicketAttachmentsController {
+class StaffTicketAttachmentsController extends \BaseClass {
     function get($ticketId, $attachmentId) {
         global $hesk_settings, $applicationContext, $userContext;
 

@@ -8,7 +8,7 @@ use BusinessLogic\Exceptions\MissingAuthenticationTokenException;
 use BusinessLogic\Helpers;
 use DataAccess\Security\UserGateway;
 
-class UserContextBuilder {
+class UserContextBuilder extends \BaseClass {
     /**
      * @var UserGateway
      */

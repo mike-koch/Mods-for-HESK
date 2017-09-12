@@ -3,7 +3,7 @@
 namespace BusinessLogic\Navigation;
 
 
-class Direction {
+class Direction extends \BaseClass {
     const UP = 'up';
     const DOWN = 'down';
 }

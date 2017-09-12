@@ -4,7 +4,7 @@ namespace BusinessLogic\Tickets;
 
 use DataAccess\Tickets\TicketGateway;
 
-class TicketValidators {
+class TicketValidators extends \BaseClass {
     /**
      * @var $ticketGateway TicketGateway
      */

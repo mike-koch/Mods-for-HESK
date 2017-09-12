@@ -3,7 +3,7 @@
 namespace BusinessLogic\Emails;
 
 
-class Addressees {
+class Addressees extends \BaseClass {
     /**
      * @var $to string[]
      */

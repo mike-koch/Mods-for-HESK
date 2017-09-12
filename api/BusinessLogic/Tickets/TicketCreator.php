@@ -12,7 +12,7 @@ use DataAccess\Settings\ModsForHeskSettingsGateway;
 use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\TicketGateway;
 
-class TicketCreator {
+class TicketCreator extends \BaseClass {
     /**
      * @var $newTicketValidator NewTicketValidator
      */

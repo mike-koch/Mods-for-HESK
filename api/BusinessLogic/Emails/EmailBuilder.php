@@ -5,7 +5,7 @@ namespace BusinessLogic\Emails;
 
 use BusinessLogic\Tickets\Attachment;
 
-class EmailBuilder {
+class EmailBuilder extends \BaseClass {
     /**
      * @var $to string[]
      */

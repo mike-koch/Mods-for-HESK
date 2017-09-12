@@ -5,7 +5,7 @@ namespace BusinessLogic\Security;
 
 use DataAccess\Security\BanGateway;
 
-class BanRetriever {
+class BanRetriever extends \BaseClass {
     /**
      * @var BanGateway
      */

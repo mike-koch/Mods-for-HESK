@@ -2,7 +2,7 @@
 
 namespace BusinessLogic;
 
-class ValidationModel {
+class ValidationModel extends \BaseClass {
     /**
      * @var array
      */

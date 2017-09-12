@@ -3,7 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
-class TicketGatewayGeneratedFields {
+class TicketGatewayGeneratedFields extends \BaseClass {
     public $id;
     public $dateCreated;
     public $dateModified;

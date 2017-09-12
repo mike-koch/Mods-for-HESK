@@ -5,7 +5,7 @@ namespace DataAccess\Files;
 
 use BusinessLogic\Exceptions\ApiFriendlyException;
 
-class FileReader {
+class FileReader extends \BaseClass {
     /**
      * @param $name string - The file name (including extension)
      * @param $folder - The folder name (relative to the ROOT of the helpdesk)

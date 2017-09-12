@@ -3,7 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
-class EditTicketModel {
+class EditTicketModel extends \BaseClass {
     /* @var $id int */
     public $id;
 

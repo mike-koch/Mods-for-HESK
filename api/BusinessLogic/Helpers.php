@@ -3,7 +3,7 @@
 namespace BusinessLogic;
 
 
-class Helpers {
+class Helpers extends \BaseClass {
     static function getHeader($key) {
         $headers = getallheaders();
 

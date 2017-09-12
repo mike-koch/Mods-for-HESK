@@ -5,7 +5,7 @@ namespace BusinessLogic\Exceptions;
 
 use Exception;
 
-class ApiFriendlyException extends Exception {
+class ApiFriendlyException extends \BaseException {
     public $title;
     public $httpResponseCode;
 

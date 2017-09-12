@@ -3,7 +3,7 @@
 namespace BusinessLogic\Security;
 
 
-class UserContextNotifications {
+class UserContextNotifications extends \BaseClass {
     public $newUnassigned;
     public $newAssignedToMe;
     public $replyUnassigned;

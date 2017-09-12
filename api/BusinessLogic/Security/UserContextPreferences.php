@@ -3,7 +3,7 @@
 namespace BusinessLogic\Security;
 
 
-class UserContextPreferences {
+class UserContextPreferences extends \BaseClass {
     public $afterReply;
     public $autoStartTimeWorked;
     public $autoreload;

@@ -50,7 +50,7 @@ function assertApiIsEnabled() {
     global $applicationContext, $hesk_settings;
 
     /* @var $apiChecker \BusinessLogic\Settings\ApiChecker */
-    $apiChecker = $applicationContext->get(\BusinessLogic\Settings\ApiChecker::class);
+    $apiChecker = $applicationContext->get(\BusinessLogic\Settings\ApiChecker::clazz());
 
     if (!$apiChecker->isApiEnabled($hesk_settings)) {
         print output(array('message' => 'API Disabled'), 404);
@@ -77,7 +77,7 @@ function buildUserContext($xAuthToken) {
     global $applicationContext, $userContext, $hesk_settings;
 
     /* @var $userContextBuilder \BusinessLogic\Security\UserContextBuilder */
-    $userContextBuilder = $applicationContext->get(\BusinessLogic\Security\UserContextBuilder::class);
+    $userContextBuilder = $applicationContext->get(\BusinessLogic\Security\UserContextBuilder::clazz());
 
     $userContext = $userContextBuilder->buildUserContext($xAuthToken, $hesk_settings);
 }
@@ -98,12 +98,12 @@ function exceptionHandler($exception) {
     }
 
     // We don't cast API Friendly Exceptions as they're user-generated errors
-    if (exceptionIsOfType($exception, \BusinessLogic\Exceptions\ApiFriendlyException::class)) {
+    if (exceptionIsOfType($exception, \BusinessLogic\Exceptions\ApiFriendlyException::clazz())) {
         /* @var $castedException \BusinessLogic\Exceptions\ApiFriendlyException */
         $castedException = $exception;
 
         print_error($castedException->title, $castedException->getMessage(), $castedException->httpResponseCode);
-    } elseif (exceptionIsOfType($exception, \Core\Exceptions\SQLException::class)) {
+    } elseif (exceptionIsOfType($exception, \Core\Exceptions\SQLException::clazz())) {
         /* @var $castedException \Core\Exceptions\SQLException */
         $castedException = $exception;
 
@@ -138,7 +138,7 @@ function tryToLog($location, $message, $stackTrace, $userContext, $heskSettings)
     global $applicationContext;
 
     /* @var $loggingGateway \DataAccess\Logging\LoggingGateway */
-    $loggingGateway = $applicationContext->get(\DataAccess\Logging\LoggingGateway::class);
+    $loggingGateway = $applicationContext->get(\DataAccess\Logging\LoggingGateway::clazz());
 
     try {
         return $loggingGateway->logError($location, $message, $stackTrace, $userContext, $heskSettings);
@@ -183,41 +183,41 @@ Link::before('globalBefore');
 
 Link::all(array(
     // Categories
-    '/v1/categories/all' => action(\Controllers\Categories\CategoryController::class . '::printAllCategories', [RequestMethod::GET], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1/categories' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::POST], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::class, [RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::class . '::sort', [RequestMethod::POST], SecurityHandler::INTERNAL),
+    '/v1/categories/all' => action(\Controllers\Categories\CategoryController::clazz() . '::printAllCategories', [RequestMethod::GET], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/categories' => action(\Controllers\Categories\CategoryController::clazz(), [RequestMethod::POST], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::clazz(), [RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::clazz() . '::sort', [RequestMethod::POST], SecurityHandler::INTERNAL),
     // Tickets
-    '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::class, RequestMethod::all()),
+    '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::clazz(), RequestMethod::all()),
     // Tickets - Staff
-    '/v1/staff/tickets/{i}' => action(\Controllers\Tickets\StaffTicketController::class, RequestMethod::all()),
+    '/v1/staff/tickets/{i}' => action(\Controllers\Tickets\StaffTicketController::clazz(), RequestMethod::all()),
     // Attachments
-    '/v1/tickets/{a}/attachments/{i}' => action(\Controllers\Attachments\PublicAttachmentController::class . '::getRaw', RequestMethod::all()),
-    '/v1/staff/tickets/{i}/attachments' => action(\Controllers\Attachments\StaffTicketAttachmentsController::class, RequestMethod::all()),
-    '/v1/staff/tickets/{i}/attachments/{i}' => action(\Controllers\Attachments\StaffTicketAttachmentsController::class, RequestMethod::all()),
+    '/v1/tickets/{a}/attachments/{i}' => action(\Controllers\Attachments\PublicAttachmentController::clazz() . '::getRaw', RequestMethod::all()),
+    '/v1/staff/tickets/{i}/attachments' => action(\Controllers\Attachments\StaffTicketAttachmentsController::clazz(), RequestMethod::all()),
+    '/v1/staff/tickets/{i}/attachments/{i}' => action(\Controllers\Attachments\StaffTicketAttachmentsController::clazz(), RequestMethod::all()),
     // Statuses
-    '/v1/statuses' => action(\Controllers\Statuses\StatusController::class, RequestMethod::all()),
+    '/v1/statuses' => action(\Controllers\Statuses\StatusController::clazz(), RequestMethod::all()),
     // Settings
-    '/v1/settings' => action(\Controllers\Settings\SettingsController::class, RequestMethod::all()),
+    '/v1/settings' => action(\Controllers\Settings\SettingsController::clazz(), RequestMethod::all()),
 
     /* Internal use only routes */
     // Resend email response
     '/v1-internal/staff/tickets/{i}/resend-email' =>
-        action(\Controllers\Tickets\ResendTicketEmailToCustomerController::class, RequestMethod::all(), SecurityHandler::INTERNAL),
+        action(\Controllers\Tickets\ResendTicketEmailToCustomerController::clazz(), RequestMethod::all(), SecurityHandler::INTERNAL),
     // Custom Navigation
     '/v1-internal/custom-navigation/all' =>
-        action(\Controllers\Navigation\CustomNavElementController::class . '::getAll', RequestMethod::all(), SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::clazz() . '::getAll', RequestMethod::all(), SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation' =>
-        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::all(), SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::clazz(), RequestMethod::all(), SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation/{i}' =>
-        action(\Controllers\Navigation\CustomNavElementController::class, RequestMethod::all(), SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::clazz(), RequestMethod::all(), SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation/{i}/sort/{s}' =>
-        action(\Controllers\Navigation\CustomNavElementController::class . '::sort', RequestMethod::all(), SecurityHandler::INTERNAL),
+        action(\Controllers\Navigation\CustomNavElementController::clazz() . '::sort', RequestMethod::all(), SecurityHandler::INTERNAL),
 
     '/v1-public/hesk-version' =>
-        action(\Controllers\System\HeskVersionController::class . '::getHeskVersion', RequestMethod::all(), SecurityHandler::OPEN),
+        action(\Controllers\System\HeskVersionController::clazz() . '::getHeskVersion', RequestMethod::all(), SecurityHandler::OPEN),
     '/v1-public/mods-for-hesk-version' =>
-        action(\Controllers\System\HeskVersionController::class . '::getModsForHeskVersion', RequestMethod::all(), SecurityHandler::OPEN),
+        action(\Controllers\System\HeskVersionController::clazz() . '::getModsForHeskVersion', RequestMethod::all(), SecurityHandler::OPEN),
 
     // Any URL that doesn't match goes to the 404 handler
     '404' => 'handle404'

@@ -10,7 +10,7 @@ use BusinessLogic\ValidationModel;
 use BusinessLogic\Validators;
 use Core\Constants\CustomField;
 
-class NewTicketValidator {
+class NewTicketValidator extends \BaseClass {
     /**
      * @var $categoryRetriever CategoryRetriever
      */
