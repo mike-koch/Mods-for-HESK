@@ -14,7 +14,7 @@ class PublicAttachmentController extends \BaseClass {
         self::verifyAttachmentsAreEnabled($hesk_settings);
 
         /* @var $attachmentRetriever AttachmentRetriever */
-        $attachmentRetriever = $applicationContext->get(AttachmentRetriever::class);
+        $attachmentRetriever = $applicationContext->get(AttachmentRetriever::clazz());
 
         $attachment = $attachmentRetriever->getAttachmentContentsForTrackingId($trackingId, $attachmentId, $userContext, $hesk_settings);
 

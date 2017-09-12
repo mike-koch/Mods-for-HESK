@@ -10,7 +10,7 @@ class SettingsController extends \BaseClass {
         global $applicationContext, $hesk_settings;
 
         /* @var $settingsRetriever SettingsRetriever */
-        $settingsRetriever = $applicationContext->get(SettingsRetriever::class);
+        $settingsRetriever = $applicationContext->get(SettingsRetriever::clazz());
 
         output($settingsRetriever->getAllSettings($hesk_settings));
     }

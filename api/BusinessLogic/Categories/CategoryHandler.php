@@ -64,7 +64,7 @@ class CategoryHandler extends \BaseClass {
             }
         }
 
-        throw new \Exception("Newly created category {$id} lost! :O");
+        throw new \BaseException("Newly created category {$id} lost! :O");
     }
 
     /**
@@ -145,7 +145,7 @@ class CategoryHandler extends \BaseClass {
             }
         }
 
-        throw new \Exception("Category {$category->id} vanished! :O");
+        throw new \BaseException("Category {$category->id} vanished! :O");
     }
 
     function deleteCategory($id, $userContext, $heskSettings) {
@@ -154,7 +154,7 @@ class CategoryHandler extends \BaseClass {
         }
 
         if ($id === 1) {
-            throw new \Exception("Category 1 cannot be deleted!");
+            throw new \BaseException("Category 1 cannot be deleted!");
         }
 
         $this->ticketGateway->moveTicketsToDefaultCategory($id, $heskSettings);
@@ -175,7 +175,7 @@ class CategoryHandler extends \BaseClass {
         }
 
         if ($category === null) {
-            throw new \Exception("Could not find category with ID {$id}!");
+            throw new \BaseException("Could not find category with ID {$id}!");
         }
 
         if ($direction === Direction::UP) {

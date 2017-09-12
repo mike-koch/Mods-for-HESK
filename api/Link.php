@@ -224,7 +224,7 @@ class Link
 	 */	
 	public static function before( $funcName, $params = null )
 	{
-		array_push( self::$beforeFuncs, [ $funcName, $params ]);
+		array_push( self::$beforeFuncs, array($funcName, $params));
 	}
 
 	/**
@@ -236,6 +236,6 @@ class Link
 	 */	
 	public static function after( $funcName, $params = null )
 	{
-		array_push( self::$afterFuncs, [ $funcName, $params ]);
+		array_push( self::$afterFuncs, array($funcName, $params));
 	}
 }

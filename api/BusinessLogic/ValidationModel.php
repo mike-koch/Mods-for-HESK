@@ -9,6 +9,6 @@ class ValidationModel extends \BaseClass {
     public $errorKeys;
 
     function __construct() {
-        $this->errorKeys = [];
+        $this->errorKeys = array();
     }
 }

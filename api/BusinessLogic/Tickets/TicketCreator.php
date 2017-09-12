@@ -130,7 +130,7 @@ class TicketCreator extends \BaseClass {
         $status = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
 
         if ($status === null) {
-            throw new \Exception("Could not find the default status for a new ticket!");
+            throw new \BaseException("Could not find the default status for a new ticket!");
         }
         $ticket->statusId = $status->id;
 

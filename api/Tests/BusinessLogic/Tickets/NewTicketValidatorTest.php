@@ -48,9 +48,9 @@ class NewTicketValidatorTest extends TestCase {
     private $heskSettings = array();
 
     function setUp() {
-        $this->banRetriever = $this->createMock(BanRetriever::class);
-        $this->categoryRetriever = $this->createMock(CategoryRetriever::class);
-        $this->ticketValidators = $this->createMock(TicketValidators::class);
+        $this->banRetriever = $this->createMock(BanRetriever::clazz());
+        $this->categoryRetriever = $this->createMock(CategoryRetriever::clazz());
+        $this->ticketValidators = $this->createMock(TicketValidators::clazz());
         $this->newTicketValidator = new NewTicketValidator($this->categoryRetriever, $this->banRetriever, $this->ticketValidators);
         $this->userContext = new UserContext();
 

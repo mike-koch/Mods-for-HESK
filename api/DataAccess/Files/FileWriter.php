@@ -17,7 +17,7 @@ class FileWriter extends \BaseClass {
         $fileSize = file_put_contents($location, $contents);
 
         if ($fileSize === false) {
-            throw new \Exception("Failed to save the file!");
+            throw new \BaseException("Failed to save the file!");
         }
 
         return $fileSize;

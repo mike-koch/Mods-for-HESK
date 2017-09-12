@@ -23,7 +23,7 @@ class FileReader extends \BaseClass {
         $fileContents = file_get_contents($location);
 
         if ($fileContents === false) {
-            throw new \Exception("Failed to read the file!");
+            throw new \BaseException("Failed to read the file!");
         }
 
         return $fileContents;

@@ -28,8 +28,8 @@ class AutoassignerTest extends TestCase {
     private $heskSettings;
 
     protected function setUp() {
-        $this->categoryGateway = $this->createMock(CategoryGateway::class);
-        $this->userGateway = $this->createMock(UserGateway::class);
+        $this->categoryGateway = $this->createMock(CategoryGateway::clazz());
+        $this->userGateway = $this->createMock(UserGateway::clazz());
         $this->autoassigner = new Autoassigner($this->categoryGateway, $this->userGateway);
         $this->heskSettings = array(
             'autoassign' => 1

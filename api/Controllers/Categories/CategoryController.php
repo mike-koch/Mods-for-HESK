@@ -30,7 +30,7 @@ class CategoryController extends \BaseClass {
         global $hesk_settings, $applicationContext, $userContext;
 
         /* @var $categoryRetriever CategoryRetriever */
-        $categoryRetriever = $applicationContext->get(CategoryRetriever::class);
+        $categoryRetriever = $applicationContext->get(CategoryRetriever::clazz());
 
         return $categoryRetriever->getAllCategories($hesk_settings, $userContext);
     }
@@ -43,7 +43,7 @@ class CategoryController extends \BaseClass {
         $category = $this->buildCategoryFromJson($data);
 
         /* @var $categoryHandler CategoryHandler */
-        $categoryHandler = $applicationContext->get(CategoryHandler::class);
+        $categoryHandler = $applicationContext->get(CategoryHandler::clazz());
 
         $category = $categoryHandler->createCategory($category, $userContext, $hesk_settings);
 
@@ -80,7 +80,7 @@ class CategoryController extends \BaseClass {
         $category->id = intval($id);
 
         /* @var $categoryHandler CategoryHandler */
-        $categoryHandler = $applicationContext->get(CategoryHandler::class);
+        $categoryHandler = $applicationContext->get(CategoryHandler::clazz());
 
         $category = $categoryHandler->editCategory($category, $userContext, $hesk_settings);
 
@@ -91,7 +91,7 @@ class CategoryController extends \BaseClass {
         global $hesk_settings, $userContext, $applicationContext;
 
         /* @var $categoryHandler CategoryHandler */
-        $categoryHandler = $applicationContext->get(CategoryHandler::class);
+        $categoryHandler = $applicationContext->get(CategoryHandler::clazz());
 
         $categoryHandler->deleteCategory($id, $userContext, $hesk_settings);
 
@@ -102,7 +102,7 @@ class CategoryController extends \BaseClass {
         global $applicationContext, $hesk_settings;
 
         /* @var $handler CategoryHandler */
-        $handler = $applicationContext->get(CategoryHandler::class);
+        $handler = $applicationContext->get(CategoryHandler::clazz());
 
         $handler->sortCategory(intval($id), $direction, $hesk_settings);
     }

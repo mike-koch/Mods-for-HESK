@@ -98,15 +98,15 @@ class CreateTicketTest extends TestCase {
     private $modsForHeskSettings;
 
     protected function setUp() {
-        $this->ticketGateway = $this->createMock(TicketGateway::class);
-        $this->newTicketValidator = $this->createMock(NewTicketValidator::class);
-        $this->trackingIdGenerator = $this->createMock(TrackingIdGenerator::class);
-        $this->autoassigner = $this->createMock(Autoassigner::class);
-        $this->statusGateway = $this->createMock(StatusGateway::class);
-        $this->verifiedEmailChecker = $this->createMock(VerifiedEmailChecker::class);
-        $this->emailSenderHelper = $this->createMock(EmailSenderHelper::class);
-        $this->userGateway = $this->createMock(UserGateway::class);
-        $this->modsForHeskSettingsGateway = $this->createMock(ModsForHeskSettingsGateway::class);
+        $this->ticketGateway = $this->createMock(TicketGateway::clazz());
+        $this->newTicketValidator = $this->createMock(NewTicketValidator::clazz());
+        $this->trackingIdGenerator = $this->createMock(TrackingIdGenerator::clazz());
+        $this->autoassigner = $this->createMock(Autoassigner::clazz());
+        $this->statusGateway = $this->createMock(StatusGateway::clazz());
+        $this->verifiedEmailChecker = $this->createMock(VerifiedEmailChecker::clazz());
+        $this->emailSenderHelper = $this->createMock(EmailSenderHelper::clazz());
+        $this->userGateway = $this->createMock(UserGateway::clazz());
+        $this->modsForHeskSettingsGateway = $this->createMock(ModsForHeskSettingsGateway::clazz());
 
         $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator,
             $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker,

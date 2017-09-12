@@ -183,10 +183,10 @@ Link::before('globalBefore');
 
 Link::all(array(
     // Categories
-    '/v1/categories/all' => action(\Controllers\Categories\CategoryController::clazz() . '::printAllCategories', [RequestMethod::GET], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1/categories' => action(\Controllers\Categories\CategoryController::clazz(), [RequestMethod::POST], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::clazz(), [RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE], SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::clazz() . '::sort', [RequestMethod::POST], SecurityHandler::INTERNAL),
+    '/v1/categories/all' => action(\Controllers\Categories\CategoryController::clazz() . '::printAllCategories', array(RequestMethod::GET), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/categories' => action(\Controllers\Categories\CategoryController::clazz(), array(RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::clazz(), array(RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::clazz() . '::sort', array(RequestMethod::POST), SecurityHandler::INTERNAL),
     // Tickets
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::clazz(), RequestMethod::all()),
     // Tickets - Staff
@@ -230,7 +230,7 @@ Link::all(array(
  * @return array The configured path
  */
 function action($class, $requestMethods, $securityHandler = SecurityHandler::AUTH_TOKEN) {
-    return [$class, $class, $securityHandler, $requestMethods];
+    return array($class, $class, $securityHandler, $requestMethods);
 }
 
 class SecurityHandler {

@@ -3,7 +3,6 @@
 namespace BusinessLogic\Emails;
 
 
-use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Exceptions\EmailTemplateNotFoundException;
 use BusinessLogic\Exceptions\InvalidEmailTemplateException;
 use BusinessLogic\Statuses\DefaultStatusForAction;
@@ -77,10 +76,10 @@ class EmailTemplateParser extends \BaseClass {
         }
 
         if ($fullLanguageName === null) {
-            throw new \Exception("Language code {$languageCode} did not return any valid HESK languages!");
+            throw new \BaseException("Language code {$languageCode} did not return any valid HESK languages!");
         }
 
-        $subject = $this->parseSubject($subject, $ticket, $fullLanguageName, $heskSettings);
+        $subject = $this->parseSubject($subject, $ticket, $fullLanguageName, $heskSettings, $modsForHeskSettings);
         $message = $this->parseMessage($template, $ticket, $fullLanguageName, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, false);
         $htmlMessage = $this->parseMessage($htmlTemplate, $ticket, $fullLanguageName, $emailTemplate->forStaff, $heskSettings, $modsForHeskSettings, true);
 
@@ -117,11 +116,11 @@ class EmailTemplateParser extends \BaseClass {
      * @return string
      * @throws \Exception if common.inc.php isn't loaded
      */
-    private function parseSubject($subjectTemplate, $ticket, $language, $heskSettings) {
+    private function parseSubject($subjectTemplate, $ticket, $language, $heskSettings, $modsForHeskSettings) {
         global $hesklang;
 
         if (!function_exists('hesk_msgToPlain')) {
-            throw new \Exception("common.inc.php not loaded!");
+            throw new \BaseException("common.inc.php not loaded!");
         }
 
         if ($ticket === null) {
@@ -131,7 +130,14 @@ class EmailTemplateParser extends \BaseClass {
         // Status name and category name
         $defaultStatus = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
         $statusName = $defaultStatus->localizedNames[$language];
-        $category = $this->categoryGateway->getAllCategories($heskSettings)[$ticket->categoryId];
+        $categories = $this->categoryGateway->getAllCategories($heskSettings, $modsForHeskSettings);
+        $category = null;
+        foreach ($categories as $innerCategory) {
+            if ($innerCategory->id === $ticket->categoryId) {
+                $category = $innerCategory;
+                break;
+            }
+        }
 
         switch ($ticket->priorityId) {
             case Priority::CRITICAL:
@@ -173,7 +179,7 @@ class EmailTemplateParser extends \BaseClass {
         global $hesklang;
 
         if (!function_exists('hesk_msgToPlain')) {
-            throw new \Exception("common.inc.php not loaded!");
+            throw new \BaseException("common.inc.php not loaded!");
         }
 
         if ($ticket === null) {
@@ -193,7 +199,17 @@ class EmailTemplateParser extends \BaseClass {
         // Status name and category name
         $defaultStatus = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
         $statusName = hesk_msgToPlain($defaultStatus->localizedNames[$language]);
-        $category = hesk_msgToPlain($this->categoryGateway->getAllCategories($heskSettings)[$ticket->categoryId]->name);
+
+        $categories = $this->categoryGateway->getAllCategories($heskSettings, $modsForHeskSettings);
+        $category = null;
+        foreach ($categories as $innerCategory) {
+            if ($innerCategory->id === $ticket->categoryId) {
+                $category = $innerCategory;
+                break;
+            }
+        }
+
+        $category = hesk_msgToPlain($category->name);
         $owner = $this->userGateway->getUserById($ticket->ownerId, $heskSettings);
 
         $ownerName = $owner === null ? $hesklang['unas'] : hesk_msgToPlain($owner->name);

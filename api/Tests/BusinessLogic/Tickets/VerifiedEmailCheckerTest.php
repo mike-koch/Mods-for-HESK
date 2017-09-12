@@ -23,7 +23,7 @@ class VerifiedEmailCheckerTest extends TestCase {
     private $heskSettings;
 
     protected function setUp() {
-        $this->verifiedEmailGateway = $this->createMock(VerifiedEmailGateway::class);
+        $this->verifiedEmailGateway = $this->createMock(VerifiedEmailGateway::clazz());
         $this->heskSettings = array();
         $this->verifiedEmailChecker = new VerifiedEmailChecker($this->verifiedEmailGateway);
     }

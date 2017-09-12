@@ -32,10 +32,10 @@ class AttachmentRetrieverTest extends TestCase {
     private $heskSettings;
 
     protected function setUp() {
-        $this->attachmentGateway = $this->createMock(AttachmentGateway::class);
-        $this->fileReader = $this->createMock(FileReader::class);
-        $this->ticketGateway = $this->createMock(TicketGateway::class);
-        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::class);
+        $this->attachmentGateway = $this->createMock(AttachmentGateway::clazz());
+        $this->fileReader = $this->createMock(FileReader::clazz());
+        $this->ticketGateway = $this->createMock(TicketGateway::clazz());
+        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::clazz());
         $this->heskSettings = array('attach_dir' => 'attachments');
 
         $this->attachmentRetriever = new AttachmentRetriever($this->attachmentGateway, $this->fileReader,

@@ -46,11 +46,11 @@ class AttachmentHandlerTest extends TestCase {
     private $heskSettings;
 
     protected function setUp() {
-        $this->ticketGateway = $this->createMock(TicketGateway::class);
-        $this->attachmentGateway = $this->createMock(AttachmentGateway::class);
-        $this->fileWriter = $this->createMock(FileWriter::class);
-        $this->fileDeleter = $this->createMock(FileDeleter::class);
-        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::class);
+        $this->ticketGateway = $this->createMock(TicketGateway::clazz());
+        $this->attachmentGateway = $this->createMock(AttachmentGateway::clazz());
+        $this->fileWriter = $this->createMock(FileWriter::clazz());
+        $this->fileDeleter = $this->createMock(FileDeleter::clazz());
+        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::clazz());
         $this->heskSettings = array(
             'attach_dir' => 'attachments',
             'attachments' => array(
@@ -78,7 +78,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->createAttachmentForTicketModel->attachmentContents = null;
 
         //-- Assert
-        $this->expectException(ValidationException::class);
+        $this->expectException(ValidationException::clazz());
         $this->expectExceptionMessageRegExp('/CONTENTS_EMPTY/');
 
         //-- Act
@@ -91,7 +91,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->createAttachmentForTicketModel->attachmentContents = '';
 
         //-- Assert
-        $this->expectException(ValidationException::class);
+        $this->expectException(ValidationException::clazz());
         $this->expectExceptionMessageRegExp('/CONTENTS_EMPTY/');
 
         //-- Act
@@ -106,7 +106,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->createAttachmentForTicketModel->attachmentContents = 'invalid base 64';
 
         //-- Assert
-        $this->expectException(ValidationException::class);
+        $this->expectException(ValidationException::clazz());
         $this->expectExceptionMessageRegExp('/CONTENTS_NOT_BASE_64/');
 
         //-- Act
@@ -119,7 +119,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->createAttachmentForTicketModel->displayName = null;
 
         //-- Assert
-        $this->expectException(ValidationException::class);
+        $this->expectException(ValidationException::clazz());
         $this->expectExceptionMessageRegExp('/DISPLAY_NAME_EMPTY/');
 
         //-- Act
@@ -132,7 +132,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->createAttachmentForTicketModel->displayName = '';
 
         //-- Assert
-        $this->expectException(ValidationException::class);
+        $this->expectException(ValidationException::clazz());
         $this->expectExceptionMessageRegExp('/DISPLAY_NAME_EMPTY/');
 
         //-- Act
@@ -145,7 +145,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->createAttachmentForTicketModel->ticketId = null;
 
         //-- Assert
-        $this->expectException(ValidationException::class);
+        $this->expectException(ValidationException::clazz());
         $this->expectExceptionMessageRegExp('/TICKET_ID_MISSING/');
 
         //-- Act
@@ -158,7 +158,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->createAttachmentForTicketModel->ticketId = 0;
 
         //-- Assert
-        $this->expectException(ValidationException::class);
+        $this->expectException(ValidationException::clazz());
         $this->expectExceptionMessageRegExp('/TICKET_ID_MISSING/');
 
         //-- Act
@@ -172,7 +172,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->createAttachmentForTicketModel->ticketId = 0;
 
         //-- Assert
-        $this->expectException(ValidationException::class);
+        $this->expectException(ValidationException::clazz());
         $this->expectExceptionMessageRegExp('/EXTENSION_NOT_PERMITTED/');
 
         //-- Act
@@ -186,7 +186,7 @@ class AttachmentHandlerTest extends TestCase {
         $this->heskSettings['attachments']['max_size'] = 1;
 
         //-- Assert
-        $this->expectException(ValidationException::class);
+        $this->expectException(ValidationException::clazz());
         $this->expectExceptionMessageRegExp('/FILE_SIZE_TOO_LARGE/');
 
         //-- Act
@@ -261,7 +261,7 @@ class AttachmentHandlerTest extends TestCase {
             ->willReturn(false);
 
         //-- Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(\BaseException::clazz());
         $this->expectExceptionMessage("User does not have access to ticket {$ticketId} being created / edited!");
 
         //-- Act
