@@ -282,12 +282,12 @@ header('X-UA-Compatible: IE=edge');
     if (defined('MFH_CALENDAR')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
-        <script src="<?php echo HESK_PATH; ?>js/calendar/locale/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/locale-all.js"></script>
     <?php } else if (defined('MFH_CALENDAR_READONLY')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
-        <script src="<?php echo HESK_PATH; ?>js/calendar/locale/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/locale-all.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-admin-readonly.js"></script>
     <?php
     }
@@ -312,6 +312,7 @@ unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js">
 <p style="display: none" id="admin-dir"><?php echo $hesk_settings['admin_dir']; ?></p>
 <p style="display: none" id="lang_alert_success"><?php echo $hesklang['alert_success']; ?></p>
 <p style="display: none" id="lang_alert_error"><?php echo $hesklang['alert_error']; ?></p>
+<p style="display: none;" id="lang_CALENDAR_LANGUAGE"><?php echo $hesklang['CALENDAR_LANGUAGE']; ?></p>
 
 <?php
 include(HESK_PATH . 'header.txt');

@@ -97,6 +97,8 @@ header('X-UA-Compatible: IE=edge');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/toastr.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.magnific-popup.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/alerts.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/lang.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <style>
         .navbar-default {
             background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
@@ -225,7 +227,7 @@ header('X-UA-Compatible: IE=edge');
         ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
-        <script src="<?php echo HESK_PATH; ?>js/calendar/locale/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/locale-all.js"></script>
         <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-readonly.js"></script>
     <?php
     }
@@ -351,3 +353,4 @@ if ($modsForHesk_settings['show_icons']) {
     </nav>
     <?php // GLOBAL JAVASCRIPT IDs ?>
     <p style="display: none" id="hesk-path"><?php echo HESK_PATH; ?></p>
+    <p style="display: none;" id="lang_CALENDAR_LANGUAGE"><?php echo $hesklang['CALENDAR_LANGUAGE']; ?></p>

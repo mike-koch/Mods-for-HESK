@@ -2169,6 +2169,8 @@ $hesklang['url_rewrite_help'] = 'Remove the need to include /index.php in API UR
 $hesklang['url_rewrite_saved'] = 'URL rewrite setting saved!';
 $hesklang['api_settings_saved'] = 'API settings saved!';
 $hesklang['an_error_occurred'] = 'An error occurred. Check the logs for more information';
+
+// Added or modified in Mods for HESK 3.2.0
 $hesklang['error_deleting_category'] = 'An error occurred when trying to delete the category.';
 $hesklang['cat_private'] = 'Private';
 $hesklang['cat_public'] = 'Public';
@@ -2178,6 +2180,11 @@ $hesklang['error_retrieving_categories'] = 'An error occurred retrieving categor
 $hesklang['error_saving_updating_category'] = 'An error occurred creating / saving the category!';
 $hesklang['description_colon'] = 'Description:'; // Same as 'description', but with a colon (:) afterwards
 $hesklang['copied_to_clipboard'] = 'Copied to clipboard';
+
+// Language for the calendar pages
+// Supported language codes: https://github.com/fullcalendar/fullcalendar/tree/v3.0.1/locale (do not include .js!)
+// If your language is NOT in the supported langauges, leave 'en'
+$hesklang['CALENDAR_LANGUAGE']='en';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
