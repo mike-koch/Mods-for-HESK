@@ -280,6 +280,10 @@ button.dropdown-submit {
     width: 100%;
 }
 
+.bootstrap-select.full-width {
+    width: 100% !important;
+}
+
 .dropdown-title {
     padding: 3px 20px;
 }

@@ -930,24 +930,29 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     $options = array();
                     for ($i = 0; $i < 4; $i++) {
                         $selected = $ticket['priority'] == $i ? 'selected' : '';
-                        array_push($options, '<option value="' . $i . '" ' . $selected . '>' . $priorityLanguages[$i] . '</option>');
+                        $content = "<i class='fa fa-fw fa-%s %s' style='font-size: 1em'></i> {$priorityLanguages[$i]}";
+
+                        if ($i === 0) {
+                            $content = sprintf($content, 'long-arrow-up', 'red');
+                        } elseif ($i === 1) {
+                            $content = sprintf($content, 'angle-double-up', 'orange');
+                        } elseif ($i === 2) {
+                            $content = sprintf($content, 'angle-double-down', 'green');
+                        } else {
+                            $content = sprintf($content, 'long-arrow-down', 'blue');
+                        }
+
+                        array_push($options, '<option data-content="' . $content . '" value="' . $i . '" ' . $selected . '>' . $priorityLanguages[$i] . '</option>');
                     }
 
-                    echo '<div class="ticket-cell-admin col-md-3 col-sm-12 ';
-                    if ($ticket['priority'] == 0) {
-                        echo 'critical-priority">';
-                    } elseif ($ticket['priority'] == 1) {
-                        echo 'high-priority">';
-                    } else {
-                        echo 'med-low-priority">';
-                    }
+                    echo '<div class="ticket-cell-admin col-md-3 col-sm-12">';
 
                     echo '<p class="ticket-property-title">' . $hesklang['priority'] . '</p>';
 
                     echo '<form style="margin-bottom:0;" id="changePriorityForm" action="priority.php" method="post">
 
                     <span style="white-space:nowrap;">
-                    <select class="form-control" name="priority" onchange="document.getElementById(\'changePriorityForm\').submit();">';
+                    <select class="selectpicker full-width" name="priority" onchange="document.getElementById(\'changePriorityForm\').submit();">';
                     echo implode('', $options);
                     echo '
                     </select>
