@@ -1994,45 +1994,17 @@ function hesk_dateToString($dt, $returnName = 1, $returnTime = 0, $returnMonth =
 
 function hesk_getFeatureArray()
 {
-    return array(
-        'can_view_tickets',        /* User can read tickets */
-        'can_reply_tickets',    /* User can reply to tickets */
-        'can_del_tickets',        /* User can delete tickets */
-        'can_edit_tickets',        /* User can edit tickets */
-        'can_merge_tickets',    /* User can merge tickets */
-        'can_resolve',			/* User can resolve tickets */
-        'can_submit_any_cat',	/* User can submit a ticket to any category/department */
-        'can_del_notes',        /* User can delete ticket notes posted by other staff members */
-        'can_change_cat',		/* User can move ticket to any category/department */
-        'can_change_own_cat',	/* User can move ticket to a category/department he/she has access to */
-        'can_man_kb',            /* User can manage knowledgebase articles and categories */
-        'can_man_users',        /* User can create and edit staff accounts */
-        'can_man_cat',            /* User can manage categories/departments */
-        'can_man_canned',        /* User can manage canned responses */
-        'can_man_ticket_tpl',    /* User can manage ticket templates */
-        'can_add_archive',        /* User can mark tickets as "Tagged" */
-        'can_assign_self',        /* User can assign tickets to himself/herself */
-        'can_assign_others',    /* User can assign tickets to other staff members */
-        'can_view_unassigned',    /* User can view unassigned tickets */
-        'can_view_ass_others',    /* User can view tickets that are assigned to other staff */
-        'can_run_reports',        /* User can run reports and see statistics (only allowed categories and self) */
-        'can_run_reports_full', /* User can run reports and see statistics (unrestricted) */
-        'can_export',            /* User can export own tickets to Excel */
-        'can_view_online',        /* User can view what staff members are currently online */
-        'can_ban_emails',        /* User can ban email addresses */
-        'can_unban_emails',        /* User can delete email address bans. Also enables "can_ban_emails" */
-        'can_ban_ips',            /* User can ban IP addresses */
-        'can_unban_ips',        /* User can delete IP bans. Also enables "can_ban_ips" */
-        'can_service_msg',        /* User can manage service messages shown in customer interface */
-        'can_email_tpl',    /* User can manage email templates */
-        'can_man_ticket_statuses', /* User can manage ticket statuses */
-        'can_man_permission_tpl', /* User can manage permission templates */
-        'can_man_settings', /* User can manage helpdesk settings */
-        'can_change_notification_settings', /* User can change notification settings */
-        'can_view_logs', /* User can view the message logs */
-        'can_man_calendar', /* User can manage calendar events */
-        'can_man_custom_nav', /* User can manage custom nav elements */
-    );
+    global $hesk_settings;
+
+    $rs = hesk_dbQuery('SELECT `feature` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'features`');
+
+    $features = array();
+
+    while ($row = hesk_dbFetchAssoc($rs)) {
+        $features[] = $row['feature'];
+    }
+
+    return $features;
 }
 
 function mfh_doesStatusHaveXrefRecord($statusId, $language)

@@ -994,18 +994,18 @@ function execute310Scripts() {
 
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "logging` ADD COLUMN `stack_trace` TEXT");
     executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element` 
-        (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-         image_url TEXT,
-         font_icon VARCHAR(200),
-         place INT NOT NULL,
-         url VARCHAR(500) NOT NULL,
-         sort INT NOT NULL)");
+        (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+         `image_url` TEXT,
+         `font_icon` VARCHAR(200),
+         `place` INT NOT NULL,
+         `url` VARCHAR(500) NOT NULL,
+         `sort` INT NOT NULL)");
     executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_nav_element_to_text`
-        (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-         nav_element_id INT NOT NULL,
-         language VARCHAR(200) NOT NULL,
-         text VARCHAR(200) NOT NULL,
-         subtext VARCHAR(200))");
+        (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+         `nav_element_id` INT NOT NULL,
+         `language` VARCHAR(200) NOT NULL,
+         `text` VARCHAR(200) NOT NULL,
+         `subtext` VARCHAR(200))");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ADD COLUMN `foreground_color` VARCHAR(7) NOT NULL DEFAULT 'AUTO'");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ADD COLUMN `display_border_outline` ENUM('0','1') NOT NULL DEFAULT '0'");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` CHANGE `color` `background_color` VARCHAR(7) NOT NULL DEFAULT '#FFFFFF'");
@@ -1136,8 +1136,75 @@ function execute320Scripts() {
     global $hesk_settings;
     hesk_dbConnect();
 
-    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` 
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories`
         ADD COLUMN `mfh_description` VARCHAR(255)");
+
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (
+            `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `feature` VARCHAR(100) NOT NULL,
+            `global` INT NOT NULL
+        )");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_view_tickets', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_reply_tickets', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_del_tickets', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_edit_tickets', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_merge_tickets', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_resolve', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_submit_any_cat', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_del_notes', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_change_cat', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_change_own_cat', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_kb', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_users', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_cat', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_canned', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_ticket_tpl', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_add_archive', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_assign_self', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_assign_others', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_view_unassigned', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_view_ass_others', 0)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_run_reports', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_run_reports_full', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_export', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_view_online', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_ban_emails', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_unban_emails', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_ban_ips', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_unban_ips', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_service_msg', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_email_tpl', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_ticket_statuses', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_settings', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_change_notification_settings', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_view_logs', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_calendar', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_custom_nav', 1)");
+    executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features` (`feature`, `global`) VALUES ('can_man_permission_groups', 1)");
+
+    // TODO FIX
+    //-- Insert user features into cross reference table
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "user_to_feature_xref` (
+        `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `user_id` INT NOT NULL,
+        `feature_id` INT NOT NULL
+    )");
+
+    $usersRs = executeQuery("SELECT `id`, `heskprivileges` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `isadmin` = '0'");
+    $featureRs = executeQuery("SELECT `id`, `feature` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "features`");
+    $features = array();
+    while ($row = hesk_dbFetchAssoc($featureRs)) {
+        $features[$row['feature']] = $row['id'];
+    }
+    while ($row = hesk_dbFetchAssoc($usersRs)) {
+        $privileges = $row['heskprivileges'];
+        $array = explode(',', $privileges);
+        foreach ($array as $feature) {
+
+            executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "user_to_feature_xref` (`user_id`, `feature_id`)
+                VALUES (" . $row['id'] . ", " . intval($features[$feature]) . ")");
+        }
+    }
 
     updateVersion('3.2.0');
 }

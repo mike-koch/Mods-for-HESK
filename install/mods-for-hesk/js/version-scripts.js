@@ -125,6 +125,9 @@ function processUpdates(startingVersion) {
     } else if (startingVersion < 43) {
         startVersionUpgrade('311');
         executeUpdate(43, '311', '3.1.1');
+    } else if (startingVersion < 44) {
+        startVersionUpgrade('320');
+        executeUpdate(44, '320', '3.2.0');
     } else {
         installationFinished();
     }
