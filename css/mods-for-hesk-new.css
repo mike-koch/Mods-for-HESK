@@ -280,10 +280,6 @@ button.dropdown-submit {
     width: 100%;
 }
 
-.bootstrap-select.full-width {
-    width: 100% !important;
-}
-
 .dropdown-title {
     padding: 3px 20px;
 }
@@ -337,4 +333,21 @@ div.ticket-info {
 
 .input-group-addon.button > button {
     border-radius: 0;
+}
+
+.bootstrap-select .btn-default {
+    background-color: #fff;
+    border-radius: 0;
+}
+
+.bootstrap-select .btn-default:hover,
+.bootstrap-select .btn-default:active {
+    background-color: #fff;
+}
+
+.bootstrap-select .btn-default:focus {
+    background-color: #fff;
+    border-color: #3c8dbc;
+    box-shadow: none;
+    outline: 0;
 }

@@ -929,11 +929,23 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     );
                     $options = array();
                     for ($i = 0; $i < 4; $i++) {
+                        if ($ticket['priority'] == $i) {
+                            if ($i === 0) {
+                                $cssClass = 'critical-priority';
+                            } elseif ($i === 1) {
+                                $cssClass = 'high-priority';
+                            } elseif ($i === 2) {
+                                $cssClass = 'medium-priority';
+                            } else {
+                                $cssClass = 'low-priority';
+                            }
+                        }
+
                         $selected = $ticket['priority'] == $i ? 'selected' : '';
                         $content = "<i class='fa fa-fw fa-%s %s' style='font-size: 1em'></i> {$priorityLanguages[$i]}";
 
                         if ($i === 0) {
-                            $content = sprintf($content, 'long-arrow-up', 'red');
+                            $content = sprintf($content, 'long-arrow-up', 'critical');
                         } elseif ($i === 1) {
                             $content = sprintf($content, 'angle-double-up', 'orange');
                         } elseif ($i === 2) {
@@ -945,14 +957,14 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         array_push($options, '<option data-content="' . $content . '" value="' . $i . '" ' . $selected . '>' . $priorityLanguages[$i] . '</option>');
                     }
 
-                    echo '<div class="ticket-cell-admin col-md-3 col-sm-12">';
+                    echo '<div class="ticket-cell-admin col-md-3 col-sm-12 ' . $cssClass . '">';
 
                     echo '<p class="ticket-property-title">' . $hesklang['priority'] . '</p>';
 
                     echo '<form style="margin-bottom:0;" id="changePriorityForm" action="priority.php" method="post">
 
                     <span style="white-space:nowrap;">
-                    <select class="selectpicker full-width" name="priority" onchange="document.getElementById(\'changePriorityForm\').submit();">';
+                    <select class="selectpicker form-control" name="priority" onchange="document.getElementById(\'changePriorityForm\').submit();">';
                     echo implode('', $options);
                     echo '
                     </select>
@@ -970,13 +982,13 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     $results = mfh_getAllStatuses();
                     foreach ($results as $row) {
                         $selected = $ticket['status'] == $row['ID'] ? 'selected' : '';
-                        $status_options[$row['ID']] = '<option value="' . $row['ID'] . '" ' . $selected . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
+                        $status_options[$row['ID']] = '<option style="color: ' . $row['TextColor'] . '" value="' . $row['ID'] . '" ' . $selected . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
                     }
 
                     echo '
                     <form role="form" id="changeStatusForm" style="margin-bottom:0;" action="change_status.php" method="post">
                         <span style="white-space:nowrap;">
-                            <select class="form-control" onchange="document.getElementById(\'changeStatusForm\').submit();" name="s">
+                            <select class="selectpicker form-control" onchange="document.getElementById(\'changeStatusForm\').submit();" name="s">
                                 ' . implode('', $status_options) . '
                             </select>
 
@@ -991,7 +1003,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         echo '
                             <form style="margin-bottom:0;" id="changeOwnerForm" action="assign_owner.php" method="post">
                             <span style="white-space:nowrap;">
-                            <select class="form-control"  name="owner" onchange="document.getElementById(\'changeOwnerForm\').submit();">';
+                            <select class="selectpicker form-control"  name="owner" onchange="document.getElementById(\'changeOwnerForm\').submit();">';
                         $selectedForUnassign = 'selected';
                         foreach ($admins as $k => $v) {
                             $selected = '';
@@ -1026,7 +1038,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <form style="margin-bottom:0;" id="changeCategory" action="move_category.php" method="post">
 
                             <span style="white-space:nowrap;">
-                            <select name="category" class="form-control" onchange="document.getElementById(\'changeCategory\').submit();">
+                            <select name="category" class="selectpicker form-control" onchange="document.getElementById(\'changeCategory\').submit();">
                             ' . $categories_options . '
                             </select>
 
