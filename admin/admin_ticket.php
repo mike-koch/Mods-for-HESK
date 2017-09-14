@@ -107,14 +107,33 @@ if ($ticket['lastreplier']) {
 }
 
 /* Get category name and ID */
-$result = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `id`='" . intval($ticket['category']) . "' LIMIT 1");
+$result = hesk_dbQuery("SELECT `id`, `name`, `manager` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `id`='" . intval($ticket['category']) . "' LIMIT 1");
 
 /* If this category has been deleted use the default category with ID 1 */
 if (hesk_dbNumRows($result) != 1) {
-    $result = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `id`='1' LIMIT 1");
+    $result = hesk_dbQuery("SELECT `id`, `name`, `manager` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE `id`='1' LIMIT 1");
 }
 
 $category = hesk_dbFetchAssoc($result);
+$managerRS = hesk_dbQuery('SELECT * FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'users` WHERE `id` = ' . intval($_SESSION['id']));
+$managerRow = hesk_dbFetchAssoc($managerRS);
+$isManager = $managerRow['id'] == $category['manager'];
+if ($isManager) {
+    $can_del_notes =
+    $can_reply =
+    $can_delete =
+    $can_edit =
+    $can_archive =
+    $can_assign_self =
+    $can_view_unassigned =
+    $can_change_own_cat =
+    $can_change_cat =
+    $can_ban_emails =
+    $can_unban_emails =
+    $can_ban_ips =
+    $can_unban_ips =
+    $can_resolve = true;
+}
 
 /* Is this user allowed to view tickets inside this category? */
 hesk_okCategory($category['id']);
@@ -971,6 +990,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                     <input type="submit" style="display: none" value="' . $hesklang['go'] . '" /><input type="hidden" name="track" value="' . $trackingID . '" />
                     <input type="hidden" name="token" value="' . hesk_token_echo(0) . '" />';
+                    if ($isManager) {
+                        echo '<input type="hidden" name="isManager" value="1">';
+                    }
                     echo '</span>
 
                     </form>
@@ -994,12 +1016,15 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                             <input type="submit" style="display:none;" value="' . $hesklang['go'] . '" class="btn btn-default" /><input type="hidden" name="track" value="' . $trackingID . '" />
                             <input type="hidden" name="token" value="' . hesk_token_echo(0) . '" />';
+                    if ($isManager) {
+                        echo '<input type="hidden" name="isManager" value="1">';
+                    }
                     echo '</span>
                     </form>
                     </div>';
                     echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticket-property-title">' . $hesklang['owner'] . '</p>';
 
-                    if (hesk_checkPermission('can_assign_others', 0)) {
+                    if (hesk_checkPermission('can_assign_others', 0) || $isManager) {
                         echo '
                             <form style="margin-bottom:0;" id="changeOwnerForm" action="assign_owner.php" method="post">
                             <span style="white-space:nowrap;">
@@ -1242,14 +1267,15 @@ require_once(HESK_PATH . 'inc/footer.inc.php');
 
 function hesk_getAdminButtons($category_id)
 {
-    global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $can_resolve;
+    global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $can_resolve, $isManager;
 
     $options = '';
 
     /* Edit post */
     if ($can_edit) {
         $tmp = $reply ? '&amp;reply=' . $reply['id'] : '';
-        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['edit'] . '</a> ';
+        $mgr = $isManager ? '&amp;isManager=true' : '';
+        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['edit'] . '</a> ';
     }
 
 
@@ -1295,12 +1321,13 @@ function hesk_getAdminButtons($category_id)
     $isTicketClosed = $isTicketClosedRow['IsClosed'];
     $isClosable = $isTicketClosedRow['Closable'] == 'yes' || $isTicketClosedRow['Closable'] == 'sonly';
 
+    $mgr = $isManager ? '&amp;isManager=1' : '';
     if ($isTicketClosed == 0 && $isClosable && $can_resolve) // Ticket is still open
     {
-        $options .= '<a class="btn btn-default" href="change_status.php?track=' . $trackingID . '&amp;s=' . $staffClosedOptionStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
+        $options .= '<a class="btn btn-default" href="change_status.php?track=' . $trackingID . $mgr . '&amp;s=' . $staffClosedOptionStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
                     <i class="fa fa-check-circle green"></i> ' . $hesklang['close_action'] . '</a> ';
     } elseif ($isTicketClosed == 1) {
-        $options .= '<a class="btn btn-default" href="change_status.php?track=' . $trackingID . '&amp;s=' . $staffReopenedStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
+        $options .= '<a class="btn btn-default" href="change_status.php?track=' . $trackingID . $mgr . '&amp;s=' . $staffReopenedStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
                     <i class="fa fa-folder-open-o green"></i> ' . $hesklang['open_action'] . '</a> ';
     }
 
@@ -1486,7 +1513,7 @@ function hesk_getAdminButtons($category_id)
 
 function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
 {
-    global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete;
+    global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
 
     $options = $reply ? '' : '<div class="pull-right">';
 
@@ -1509,7 +1536,8 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
     /* Edit post */
     if ($can_edit) {
         $tmp = $reply ? '&amp;reply=' . $reply['id'] : '';
-        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['edtt'] . '</a> ';
+        $mgr = $isManager ? '&amp;isManager=true' : '';
+        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['edtt'] . '</a> ';
     }
 
 
@@ -2045,6 +2073,9 @@ function hesk_printReplyForm()
                         </ul>
                     </div>
                     <input class="btn btn-default" type="submit" name="save_reply" value="<?php echo $hesklang['sacl']; ?>">
+                    <?php if ($isManager): ?>
+                        <input type="hidden" name="isManager" value="1">
+                    <?php endif; ?>
                 </div>
             </div>
         </form>

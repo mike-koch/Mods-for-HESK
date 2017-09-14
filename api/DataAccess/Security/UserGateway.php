@@ -99,4 +99,25 @@ class UserGateway extends CommonDao {
 
         return $users;
     }
+
+    function getManagerForCategory($categoryId, $heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` 
+            WHERE `id` = (
+                SELECT `manager` 
+                FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories`
+                WHERE `id` = " . intval($categoryId) . ")");
+
+        if (hesk_dbNumRows($rs) === 0) {
+            $this->close();
+            return null;
+        }
+
+        $user = UserContext::fromDataRow(hesk_dbFetchAssoc($rs));
+
+        $this->close();
+
+        return $user;
+    }
 }

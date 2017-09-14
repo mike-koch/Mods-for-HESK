@@ -31,6 +31,12 @@ class UserToTicketChecker extends \BaseClass {
             return false;
         }
 
+        $categoryManagerId = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
+
+        if ($user->id === $categoryManagerId) {
+            return true;
+        }
+
         $extraPermissions[] = UserPrivilege::CAN_VIEW_TICKETS;
 
         foreach ($extraPermissions as $permission) {

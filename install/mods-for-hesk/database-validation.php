@@ -93,6 +93,7 @@ hesk_dbConnect();
             $all_good = $all_good & run_column_check('tickets', 'longitude');
             $all_good = $all_good & run_column_check('stage_tickets', 'latitude');
             $all_good = $all_good & run_column_check('stage_tickets', 'longitude');
+            $all_good = $all_good & run_column_check('categories', 'manager');
             $all_good = $all_good & run_column_check('users', 'permission_template');
             $all_good = $all_good & run_table_check('permission_templates');
             $all_good = $all_good & run_column_check('permission_templates', 'id');

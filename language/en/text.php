@@ -1831,6 +1831,10 @@ $hesklang['your_current_location'] = 'Your location';
 $hesklang['requesting_location_ellipsis'] = 'Requesting location...';
 $hesklang['unable_to_determine_location'] = 'Unable to determine your location, or you declined to share it.';
 $hesklang['save_to_see_updated_address'] = 'Save the new location to see the updated address';
+$hesklang['manager'] = 'Manager';
+$hesklang['manager_updated'] = 'Category manager has been updated.';
+$hesklang['can_set_manager'] = 'Can set category managers';
+$hesklang['no_manager'] = 'No manager';
 $hesklang['manage_permission_templates'] = 'Manage Permission Templates';
 $hesklang['manage_permission_templates_help'] = 'Here you can create and edit permission templates. These templates will appear when creating/editing a user.
 Please note that if you change the permission template\'s settings, it will NOT change the permissions of any users that are set to this permission template.';
