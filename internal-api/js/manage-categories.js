@@ -119,6 +119,12 @@ function loadTable() {
                         .attr('title', mfhLang.text('geco'));
                 }
 
+                if (this.manager === null) {
+                    $template.find('[data-property="manager"]').text(mfhLang.text('no_manager'));
+                } else {
+                    $template.find('[data-property="manager"]').text(users[this.manager].name);
+                }
+
                 if (this.id === 1) {
                     $template.find('[data-action="delete"]').hide();
                 }
