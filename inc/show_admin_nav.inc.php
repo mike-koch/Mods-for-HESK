@@ -297,9 +297,9 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
 
                         $markup .= '
                         <li class="' . $active . '">
-                            <a href="manage_permission_templates.php">
+                            <a href="manage_permission_groups.php">
                                 <i class="fa fa-fw fa-users" ' . $iconDisplay . '></i>
-                                <span>' . $hesklang['permission_templates'] . '</span>
+                                <span>' . $hesklang['manange_permission_groups_menu'] . '</span>
                             </a>
                         </li>';
                     }

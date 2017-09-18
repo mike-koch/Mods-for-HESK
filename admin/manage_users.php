@@ -214,7 +214,7 @@ if ($action = hesk_REQUEST('a')) {
                     <th><b><i><?php echo $hesklang['name']; ?></i></b></th>
                     <th><b><i><?php echo $hesklang['email']; ?></i></b></th>
                     <th><b><i><?php echo $hesklang['username']; ?></i></b></th>
-                    <th><b><i><?php echo $hesklang['permission_template']; ?></i></b></th>
+                    <th><b><i><?php echo $hesklang['permission_group']; ?></i></b></th>
                     <?php
                     /* Is user rating enabled? */
                     if ($hesk_settings['rating']) {
@@ -591,6 +591,7 @@ function update_user()
         $myuser['notify_overdue_unassigned'] = 0;
     }
 
+
     /* Check for duplicate usernames */
     $res = hesk_dbQuery("SELECT `id`,`isadmin`,`categories`,`heskprivileges` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `user` = '" . hesk_dbEscape($myuser['user']) . "' LIMIT 1");
     if (hesk_dbNumRows($res) == 1) {
@@ -699,7 +700,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     $myuser['email'] = hesk_validateEmail(hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer .= '<li>' . $hesklang['enter_valid_email'] . '</li>';
     $myuser['user'] = hesk_input(hesk_POST('user')) or $hesk_error_buffer .= '<li>' . $hesklang['enter_username'] . '</li>';
     $myuser['isadmin'] = hesk_POST('template') == '1' ? 1 : 0;
-    $myuser['template'] = hesk_POST('template');
+    $myuser['template'] = hesk_POST('reset-permission-template') === '1' ? -1 : hesk_POST('template');
     $myuser['signature'] = hesk_input(hesk_POST('signature'));
     $myuser['autoassign'] = hesk_POST('autoassign') == 'Y' ? 1 : 0;
     $myuser['active'] = empty($_POST['active']) ? 0 : 1;

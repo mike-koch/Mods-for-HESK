@@ -162,9 +162,10 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
             if (!$is_profile_page) {
                 ?>
                 <div role="tabpanel" class="tab-pane fade" id="permissions">
+                    <?php if ($_SESSION['isadmin']): ?>
                     <div class="form-group">
                         <label for="administrator"
-                               class="col-md-3 control-label"><?php echo $hesklang['permission_template_colon']; ?></label>
+                               class="col-md-3 control-label"><?php echo $hesklang['permission_group']; ?></label>
 
                         <div class="col-md-9">
                             <?php
@@ -181,10 +182,17 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                             $selected = $_SESSION[$session_array]['permission_template'] == '-1' ? 'selected' : '';
                             echo '<option value="-1" ' . $selected . '>' . htmlspecialchars($hesklang['custom']) . '</option>';
                             echo '</select>';
-                            outputCheckboxJavascript();
+                            outputCheckboxJavascript($action);
                             ?>
                         </div>
                     </div>
+                    <?php elseif ($action == 'update-user'): ?>
+                        <input type="hidden" name="permission-tpl"
+                               value="<?php echo $_SESSION[$session_array]['permission_template']; ?>" />
+                        <div id="changed-group-warning" class="alert alert-warning" style="display: none">
+                            [!] <b>Warning:</b> Changing a users categories / features will reset their permission group!
+                        </div>
+                    <?php endif; ?>
                     <div id="options">
                         <div class="form-group">
                             <label for="categories[]"
@@ -535,7 +543,7 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
     <?php
 } // END hesk_profile_tab()
 
-function outputCheckboxJavascript()
+function outputCheckboxJavascript($action)
 {
     global $hesk_settings, $hesklang;
 
@@ -595,6 +603,8 @@ function outputCheckboxJavascript()
     }
     function setTemplateToCustom() {
         $('#permission-tpl').val('-1');
+        
+        " . ($_SESSION['is_admin'] && $action == 'update-user' ? '' : "$('#changed-group-warning').show();") . "
     }
     </script>";
 }
