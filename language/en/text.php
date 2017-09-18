@@ -2186,6 +2186,7 @@ $hesklang['permission_groups'] = 'Permission Groups';
 $hesklang['can_man_permission_tpl'] = 'Can manage permission groups';
 $hesklang['permission_group_colon'] = 'Permission Group:';
 $hesklang['permission_group'] = 'Permission Group';
+$hesklang['changing_permissions_will_reset_permission_group'] = 'Changing a user\'s categories / features will reset their permission group! Click "Discard Changes" to reset the user\'s categories / features.';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

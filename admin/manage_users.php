@@ -700,7 +700,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
     $myuser['email'] = hesk_validateEmail(hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer .= '<li>' . $hesklang['enter_valid_email'] . '</li>';
     $myuser['user'] = hesk_input(hesk_POST('user')) or $hesk_error_buffer .= '<li>' . $hesklang['enter_username'] . '</li>';
     $myuser['isadmin'] = hesk_POST('template') == '1' ? 1 : 0;
-    $myuser['template'] = hesk_POST('reset-permission-template') === '1' ? -1 : hesk_POST('template');
+    $myuser['template'] = hesk_POST('template');
     $myuser['signature'] = hesk_input(hesk_POST('signature'));
     $myuser['autoassign'] = hesk_POST('autoassign') == 'Y' ? 1 : 0;
     $myuser['active'] = empty($_POST['active']) ? 0 : 1;

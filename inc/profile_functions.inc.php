@@ -182,17 +182,19 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                             $selected = $_SESSION[$session_array]['permission_template'] == '-1' ? 'selected' : '';
                             echo '<option value="-1" ' . $selected . '>' . htmlspecialchars($hesklang['custom']) . '</option>';
                             echo '</select>';
-                            outputCheckboxJavascript($action);
                             ?>
                         </div>
                     </div>
-                    <?php elseif ($action == 'update-user'): ?>
-                        <input type="hidden" name="permission-tpl"
+                    <?php elseif ($action == 'edit_user'): ?>
+                        <input type="hidden" name="template"
                                value="<?php echo $_SESSION[$session_array]['permission_template']; ?>" />
                         <div id="changed-group-warning" class="alert alert-warning" style="display: none">
-                            [!] <b>Warning:</b> Changing a users categories / features will reset their permission group!
+                            <i class="fa fa-exclamation-triangle"></i> <?php echo $hesklang['changing_permissions_will_reset_permission_group']; ?>
                         </div>
-                    <?php endif; ?>
+                    <?php
+                    endif;
+                    outputCheckboxJavascript($action);
+                    ?>
                     <div id="options">
                         <div class="form-group">
                             <label for="categories[]"
@@ -602,9 +604,9 @@ function outputCheckboxJavascript($action)
         });
     }
     function setTemplateToCustom() {
-        $('#permission-tpl').val('-1');
+        $('input[name=\"template\"]').val('-1');
         
-        " . ($_SESSION['is_admin'] && $action == 'update-user' ? '' : "$('#changed-group-warning').show();") . "
+        " . ($action == 'edit_user' ? ($_SESSION['isadmin']  ? '' : "$('#changed-group-warning').show();") : '') . "
     }
     </script>";
 }
