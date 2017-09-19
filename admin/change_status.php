@@ -26,8 +26,10 @@ hesk_isLoggedIn();
 $modsForHesk_settings = mfh_getSettings();
 
 /* Check permissions for this feature */
-hesk_checkPermission('can_view_tickets');
-hesk_checkPermission('can_reply_tickets');
+if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
+    hesk_checkPermission('can_view_tickets');
+    hesk_checkPermission('can_reply_tickets');
+}
 
 /* A security check */
 hesk_token_check();

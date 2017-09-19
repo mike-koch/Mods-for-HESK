@@ -128,6 +128,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                 <th><?php echo $hesklang['priority']; ?></th>
                                 <th><?php echo $hesklang['not']; ?></th>
                                 <th><?php echo $hesklang['graph']; ?></th>
+                                <th><?php echo $hesklang['manager']; ?></th>
                                 <th><?php echo $hesklang['usage']; ?></th>
                                 <th><?php echo $hesklang['opt']; ?></th>
                             </tr>
@@ -144,6 +145,19 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         </div>
     </section>
 </div>
+<?php
+$usersRs = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `active` = '1' AND `isadmin` = '0'");
+echo '<script>var users = [];';
+$users = array();
+while ($row = hesk_dbFetchAssoc($usersRs)) {
+    $users[] = $row;
+    echo "users[" . $row['id'] . "] = {
+        id: ".$row['id'].",
+        name: '".$row['name']."'
+    }\n";
+}
+echo '</script>';
+?>
 <!-- Category modal -->
 <div class="modal fade" id="category-modal" tabindex="-1" role="dialog" style="overflow: hidden">
     <div class="modal-dialog modal-lg" role="document">
@@ -265,6 +279,19 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                         <option value="0"><?php echo $hesklang['tickets_and_events']; ?></option>
                                         <option value="1"><?php echo $hesklang['tickets_only']; ?></option>
                                         <option value="2"><?php echo $hesklang['events_only']; ?></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="manager" class="col-sm-5 control-label">
+                                    <?php echo $hesklang['manager']; ?>
+                                </label>
+                                <div class="col-sm-7">
+                                    <select name="manager" class="form-control">
+                                        <option value="0"><?php echo $hesklang['no_manager']; ?></option>
+                                        <?php foreach ($users as $user): ?>
+                                            <option value="<?php echo $user['id']; ?>"><?php echo $user['name']; ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
@@ -392,6 +419,9 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             </div>
         </td>
         <td>
+            <span data-property="manager"></span>
+        </td>
+        <td>
             <i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="<?php echo $hesklang['tickets']; ?>"></i>
             <i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="<?php echo $hesklang['events']; ?>"></i>
         </td>
@@ -446,6 +476,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'disabled_title_case',
     'geco',
     'cpric',
+    'no_manager',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');

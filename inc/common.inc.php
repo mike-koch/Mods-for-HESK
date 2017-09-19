@@ -2026,6 +2026,7 @@ function hesk_getFeatureArray()
         'can_service_msg',        /* User can manage service messages shown in customer interface */
         'can_email_tpl',    /* User can manage email templates */
         'can_man_ticket_statuses', /* User can manage ticket statuses */
+        'can_set_manager', /* User can set category managers */
         'can_man_permission_tpl', /* User can manage permission templates */
         'can_man_settings', /* User can manage helpdesk settings */
         'can_change_notification_settings', /* User can change notification settings */

@@ -32,8 +32,11 @@ hesk_dbConnect();
 hesk_isLoggedIn();
 
 /* Check permissions for this feature */
-hesk_checkPermission('can_view_tickets');
-hesk_checkPermission('can_edit_tickets');
+if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
+    hesk_checkPermission('can_view_tickets');
+    hesk_checkPermission('can_edit_tickets');
+}
+
 $modsForHesk_settings = mfh_getSettings();
 
 /* Ticket ID */
@@ -59,7 +62,10 @@ if (defined('HESK_DEMO')) {
 }
 
 /* Is this user allowed to view tickets inside this category? */
-hesk_okCategory($ticket['category']);
+if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
+    hesk_okCategory($ticket['category']);
+}
+
 
 if (hesk_isREQUEST('reply')) {
     $tmpvar['id'] = intval(hesk_REQUEST('reply')) or die($hesklang['id_not_valid']);
@@ -626,6 +632,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     ?>
                     <input type="hidden" name="html" value="<?php echo $html; ?>">
                     <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default">
+                    <?php if (isset($_REQUEST['isManager']) && $_REQUEST['isManager']): ?>
+                        <input type="hidden" name="isManager" value="1">
+                    <?php endif; ?>
                     <a class="btn btn-default" href="javascript:history.go(-1)"><?php echo $hesklang['back']; ?></a>
                 </div>
             </form>

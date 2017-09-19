@@ -119,6 +119,12 @@ function loadTable() {
                         .attr('title', mfhLang.text('geco'));
                 }
 
+                if (this.manager === null) {
+                    $template.find('[data-property="manager"]').text(mfhLang.text('no_manager'));
+                } else {
+                    $template.find('[data-property="manager"]').text(users[this.manager].name);
+                }
+
                 if (this.id === 1) {
                     $template.find('[data-action="delete"]').hide();
                 }
@@ -166,6 +172,7 @@ function bindEditModal() {
 
         $modal.find('input[name="name"]').val(element.name).end()
             .find('select[name="priority"]').val(element.priority).end()
+            .find('select[name="manager"]').val(element.manager === null ? 0 : element.manager).end()
             .find('input[name="id"]').val(element.id).end()
             .find('select[name="usage"]').val(element.usage).end()
             .find('input[name="display-border"][value="' + (element.displayBorder ? 1 : 0) + '"]')
@@ -258,14 +265,17 @@ function bindFormSubmit() {
 
         var $modal = $('#category-modal');
 
+        var foregroundColor = $modal.find('input[name="foreground-color"]').val();
+        var manager = parseInt($modal.find('select[name="manager"]').val());
         var data = {
             autoassign: $modal.find('input[name="autoassign"]').val() === 'true',
             backgroundColor: $modal.find('input[name="background-color"]').val(),
             description: $modal.find('textarea[name="description"]').val(),
             displayBorder: $modal.find('input[name="display-border"]:checked').val() === '1',
-            foregroundColor: $modal.find('input[name="foreground-color"]').val() === '' ? 'AUTO' : $modal.find('input[name="foreground-color"]').val(),
+            foregroundColor: foregroundColor === '' ? 'AUTO' : foregroundColor,
             name: $modal.find('input[name="name"]').val(),
             priority: parseInt($modal.find('select[name="priority"]').val()),
+            manager: manager === 0 ? null : manager,
             type: parseInt($modal.find('input[name="type"]:checked').val()),
             usage: parseInt($modal.find('select[name="usage"]').val()),
             catOrder: parseInt($modal.find('input[name="cat-order"]').val())
