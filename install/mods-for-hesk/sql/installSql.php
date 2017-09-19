@@ -1138,6 +1138,14 @@ function execute320Scripts() {
 
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` 
         ADD COLUMN `mfh_description` VARCHAR(255)");
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_fields`
+        ADD COLUMN `mfh_description` VARCHAR(255)");
+
+    // Purge the custom field caches as we're adding a new field
+    foreach ($hesk_settings['languages'] as $key => $value) {
+        $language_hash = sha1($key);
+        hesk_unlink(HESK_PATH . "cache/cf_{$language_hash}.cache.php");
+    }
 
     updateVersion('3.2.0');
 }

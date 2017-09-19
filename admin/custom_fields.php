@@ -166,7 +166,31 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 											</div>
 											<?php
 										}
-										?>
+
+										$descriptions = hesk_SESSION(array('new_cf','descriptions')); ?>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description[]" class="col-sm-3 control-label">
+                                            <?php echo $hesklang['description']; ?>
+                                        </label>
+										<?php if ($hesk_settings['can_sel_lang'] && count($hesk_settings['languages']) > 1): ?>
+                                            <table border="0">
+                                                <?php foreach ($hesk_settings['languages'] as $lang => $info): ?>
+                                                    <tr>
+                                                        <td><?php echo $lang; ?></td>
+                                                        <td>
+                                                            <textarea class="form-control"
+                                                                      name="description[<?php echo $lang; ?>]"><?php echo (isset($descriptions[$lang]) ? $descriptions[$lang] : ''); ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </table>
+                                        <?php else: ?>
+                                            <div class="col-sm-9">
+                                                <textarea class="form-control"
+                                                          name="description[<?php echo $hesk_settings['language']; ?>]"><?php echo (isset($descriptions[$hesk_settings['language']]) ? $descriptions[$hesk_settings['language']] : ''); ?></textarea>
+                                            </div>
+                                        <?php endif; ?>
 									</div>
 									<div class="form-group">
 										<label for="name[]" class="col-sm-3 control-label">
@@ -772,7 +796,16 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 										?>
 										<tr>
 											<td><?php echo $tmp_id; ?></td>
-											<td><?php echo $cf['name']; ?></td>
+											<td>
+                                            <?php
+                                                echo $cf['name'];
+                                                if ($cf['mfh_description'] !== null && trim($cf['mfh_description']) !== '') {
+                                                    echo ' <i class="fa fa-info-circle" data-toggle="popover" 
+                                                        data-title="' . htmlspecialchars($hesklang['description']) . '" 
+                                                        data-content="' . htmlspecialchars($cf['mfh_description']) . '"></i>';
+                                                }
+                                            ?>
+                                            </td>
 											<td><?php echo $cf['type']; ?></td>
 											<td><?php echo $cf['use']; ?></td>
 											<td><?php echo $cf['req']; ?></td>
@@ -916,6 +949,9 @@ function edit_cf()
 	$cf['names'] = json_decode($cf['name'], true);
 	unset($cf['name']);
 
+	$cf['descriptions'] = json_decode($cf['mfh_description'], true);
+	unset($cf['mfh_description']);
+
 	if (strlen($cf['category']))
 	{
 		$cf['categories'] = json_decode($cf['category'], true);
@@ -1056,6 +1092,27 @@ function cf_validate()
 	{
 		$hesk_error_buffer[] = $hesklang['err_custname'];
 	}
+
+	// Descriptions
+    $cf['descriptions'] = hesk_POST_array('descriptions');
+
+	// Make sure only non-empty descriptions pass
+    foreach ($cf['descriptions'] as $key => $description) {
+        if (!isset($hesk_settings['languages'][$key])) {
+            unset($cf['descriptions'][$key]);
+        } else {
+            $description = is_array($description) ? '' : hesk_input($description, 0, 0, HESK_SLASH);
+
+            if (strlen($description) < 1)
+            {
+                unset($cf['descriptions'][$key]);
+            }
+            else
+            {
+                $cf['descriptions'][$key] = stripslashes($description);
+            }
+        }
+    }
 
 	// Get type and values
 	$cf['type'] = hesk_POST('type');
@@ -1264,6 +1321,7 @@ function cf_validate()
 	}
 
 	$cf['names'] = addslashes(json_encode($cf['names']));
+	$cf['descriptions'] = addslashes(json_encode($cf['descriptions']));
 	$cf['value'] = $cf['type'] == 'date' ? json_encode($cf['value']) : addslashes(json_encode($cf['value']));
 
 	return $cf;
@@ -1305,7 +1363,8 @@ function new_cf()
 	`req`      = '{$cf['req']}',
 	`category` = ".(count($cf['categories']) ? "'".json_encode($cf['categories'])."'" : 'NULL').",
 	`name`     = '".hesk_dbEscape($cf['names'])."',
-	`value`    = ".(strlen($cf['value']) ? "'".hesk_dbEscape($cf['value'])."'" : 'NULL').",
+	`mfh_description` = '".hesk_dbEscape($cf['mfh_description'])."',
+    `value`    = ".(strlen($cf['value']) ? "'".hesk_dbEscape($cf['value'])."'" : 'NULL').",
 	`order`    = 990
 	WHERE `id`={$_SESSION['cford']}");
 
