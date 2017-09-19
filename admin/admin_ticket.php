@@ -1851,7 +1851,7 @@ function hesk_printTicketReplies()
 
 function hesk_printReplyForm()
 {
-    global $hesklang, $hesk_settings, $ticket, $admins, $can_options, $can_resolve, $options, $can_assign_self, $modsForHesk_settings;
+    global $hesklang, $hesk_settings, $ticket, $admins, $can_options, $can_resolve, $options, $can_assign_self, $modsForHesk_settings, $isManager;
 
     // Force assigning a ticket before allowing to reply?
     if ($hesk_settings['require_owner'] && ! $ticket['owner'])
