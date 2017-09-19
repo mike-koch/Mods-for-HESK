@@ -918,6 +918,7 @@ function save_cf()
 	`req`      = '{$cf['req']}',
 	`category` = ".(count($cf['categories']) ? "'".json_encode($cf['categories'])."'" : 'NULL').",
 	`name`     = '".hesk_dbEscape($cf['names'])."',
+	`mfh_description` = '".hesk_dbEscape($cf['descriptions'])."',
 	`value`    = ".(strlen($cf['value']) ? "'".hesk_dbEscape($cf['value'])."'" : 'NULL')."
 	WHERE `id`={$id}");
 
@@ -1094,7 +1095,7 @@ function cf_validate()
 	}
 
 	// Descriptions
-    $cf['descriptions'] = hesk_POST_array('descriptions');
+    $cf['descriptions'] = hesk_POST_array('description');
 
 	// Make sure only non-empty descriptions pass
     foreach ($cf['descriptions'] as $key => $description) {
@@ -1324,6 +1325,7 @@ function cf_validate()
 	$cf['descriptions'] = addslashes(json_encode($cf['descriptions']));
 	$cf['value'] = $cf['type'] == 'date' ? json_encode($cf['value']) : addslashes(json_encode($cf['value']));
 
+
 	return $cf;
 } // END cf_validate()
 
@@ -1363,7 +1365,7 @@ function new_cf()
 	`req`      = '{$cf['req']}',
 	`category` = ".(count($cf['categories']) ? "'".json_encode($cf['categories'])."'" : 'NULL').",
 	`name`     = '".hesk_dbEscape($cf['names'])."',
-	`mfh_description` = '".hesk_dbEscape($cf['mfh_description'])."',
+	`mfh_description` = '".hesk_dbEscape($cf['descriptions'])."',
     `value`    = ".(strlen($cf['value']) ? "'".hesk_dbEscape($cf['value'])."'" : 'NULL').",
 	`order`    = 990
 	WHERE `id`={$_SESSION['cford']}");

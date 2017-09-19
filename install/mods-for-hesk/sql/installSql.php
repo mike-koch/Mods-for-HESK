@@ -1136,7 +1136,7 @@ function execute320Scripts() {
     global $hesk_settings;
     hesk_dbConnect();
 
-    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` 
+    executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories`
         ADD COLUMN `mfh_description` VARCHAR(255)");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_fields`
         ADD COLUMN `mfh_description` VARCHAR(255)");
