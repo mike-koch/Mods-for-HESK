@@ -2188,5 +2188,23 @@ $hesklang['permission_group_colon'] = 'Permission Group:';
 $hesklang['permission_group'] = 'Permission Group';
 $hesklang['changing_permissions_will_reset_permission_group'] = 'Changing a user\'s categories / features will reset their permission group! Click "Discard Changes" to reset the user\'s categories / features.';
 
+// --> Ticket audit trail
+$hesklang['audit_moved_category']='%s moved ticket to category %s'; // %s = new category, user making change
+$hesklang['audit_assigned']='%s assigned ticket to %s'; // %s = assigned user, user making change
+$hesklang['audit_closed']='%s closed ticket';
+$hesklang['audit_opened']='%s opened ticket';
+$hesklang['audit_locked']='%s locked ticket';
+$hesklang['audit_unlocked']='%s unlocked ticket';
+$hesklang['audit_created']='%s created ticket';
+$hesklang['audit_priority']='%s changed priority to %s'; // %s = date,new priority, user making change
+$hesklang['audit_status']='%s changed status to %s'; // %s = date, new status, user making change
+$hesklang['audit_autoassigned']='%s automatically assigned to ticket';
+$hesklang['audit_submitted_via_piping']='Ticket submitted via e-mail piping';
+$hesklang['audit_attachment_deleted']='%s deleted attachment %s'; // %s = date, deleted attachment, user making change
+$hesklang['audit_merged']='%s merged ticket with ticket %s'; // %s = date, merged ticket ID, user making change
+$hesklang['audit_time_worked']='%s updated time worked to %s'; // %s = date, new time worked, user making change
+$hesklang['audit_submitted_by']='%s submitted ticket';
+$hesklang['audit_submitted_via_pop']='Ticket submitted via POP3 fetching';
+
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

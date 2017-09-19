@@ -1137,15 +1137,25 @@ function execute320Scripts() {
     hesk_dbConnect();
 
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories`
-        ADD COLUMN `mfh_description` VARCHAR(255)");
+        ADD COLUMN `mfh_description` TEXT");
     executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_fields`
-        ADD COLUMN `mfh_description` VARCHAR(255)");
+        ADD COLUMN `mfh_description` TEXT");
 
     // Purge the custom field caches as we're adding a new field
     foreach ($hesk_settings['languages'] as $key => $value) {
         $language_hash = sha1($key);
         hesk_unlink(HESK_PATH . "cache/cf_{$language_hash}.cache.php");
     }
+
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` (
+        `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+        `language_key` VARCHAR(100) NOT NULL, 
+        `date` TIMESTAMP NOT NULL)");
+    executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail_to_replacement_values` (
+        `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+        `audit_trail_id` INT NOT NULL, 
+        `replacement_index` INT NOT NULL, 
+        `replacement_value` TEXT NOT NULL)");
 
     updateVersion('3.2.0');
 }
