@@ -1031,7 +1031,7 @@ function remove_cf()
 	$id = intval( hesk_GET('id') ) or hesk_error($hesklang['cf_e_id']);
 
 	// Reset the custom field
-	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."custom_fields` SET `use`='0', `place`='0', `type`='text', `req`='0', `category`=NULL, `name`='', `value`=NULL, `order`=1000 WHERE `id`={$id}");
+	hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."custom_fields` SET `use`='0', `place`='0', `type`='text', `req`='0', `category`=NULL, `name`='', `mfh_description`=NULL, `value`=NULL, `order`=1000 WHERE `id`={$id}");
 
 	// Were we successful?
 	if ( hesk_dbAffectedRows() == 1 )
