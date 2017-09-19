@@ -302,6 +302,14 @@ div.setupButtons {
     color: black;
 }
 
+.critical-priority {
+    background-color: #9400d3;
+}
+
+.lowPriority {
+    background-color: blue;
+}
+
 .pad-down-20 {
     padding-top: 20px;
 }
