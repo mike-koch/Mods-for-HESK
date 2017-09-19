@@ -381,6 +381,10 @@ $show_quick_help = $show['show'];
                                         </div>';
                                 }
 
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
+
                                 echo '
                                     <div class="help-block with-errors"></div>
                                     </div>
@@ -410,8 +414,14 @@ $show_quick_help = $show['show'];
                                     echo '<option ' . $selected . '>' . $option . '</option>';
                                 }
 
-                                echo '</select>
-                                    <div class="help-block with-errors"></div></div></div>';
+                                echo '</select>';
+
+
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
+
+                                echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
 
                             /* Checkbox */
@@ -432,6 +442,11 @@ $show_quick_help = $show['show'];
 
                                     echo '<div class="checkbox"><label><input ' . $validator . ' type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . $required_attribute . '> ' . $option . '</label></div>';
                                 }
+
+
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
                                 echo '
                                     <div class="help-block with-errors"></div></div></div>';
                                 break;
@@ -442,8 +457,13 @@ $show_quick_help = $show['show'];
 
                                 echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
-                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>
-                                    <div class="help-block with-errors"></div></div></div>';
+                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>';
+
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
+
+                                echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
 
                             case 'date':
@@ -458,8 +478,13 @@ $show_quick_help = $show['show'];
                             <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                             <div class="col-sm-9">
                                 <input type="text" class="datepicker form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40"
-                                    value="' . $k_value . '" ' . $required_attribute . '>
-                                <div class="help-block with-errors"></div>
+                                    value="' . $k_value . '" ' . $required_attribute . '>';
+
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
+
+                                echo '<div class="help-block with-errors"></div>
                             </div>
                         </div>';
                                 break;
@@ -471,8 +496,13 @@ $show_quick_help = $show['show'];
                                 echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" value="' . $k_value . '" '.$suggest.$required_attribute.'>
-                            <div class="help-block with-errors"></div>
+                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" value="' . $k_value . '" '.$suggest.$required_attribute.'>';
+
+                            if (!empty($v['mfh_description'])) {
+                                echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                            }
+
+                            echo '<div class="help-block with-errors"></div>
                         </div>
                         </div><div id="'.$k.'_suggestions"></div>';
 
@@ -491,8 +521,13 @@ $show_quick_help = $show['show'];
                                 echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $cls . $required_attribute . '>
-                            <div class="help-block with-errors"></div>
+                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $cls . $required_attribute . '>';
+
+                            if (!empty($v['mfh_description'])) {
+                                echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                            }
+
+                            echo '<div class="help-block with-errors"></div>
                         </div>
                         </div>';
                         }
@@ -753,7 +788,9 @@ $show_quick_help = $show['show'];
 
                                     echo '<div class="radio"><label><input type="radio" name="' . $k . '" value="' . $option . '" ' . $checked . ' ' . $required_attribute . '> ' . $option . '</label></div>';
                                 }
-
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
                                 echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
 
@@ -780,7 +817,11 @@ $show_quick_help = $show['show'];
                                     echo '<option ' . $selected . '>' . $option . '</option>';
                                 }
 
-                                echo '</select><div class="help-block with-errors"></div></div></div>';
+                                echo '</select>';
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
+                                echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
 
                             /* Checkbox */
@@ -801,6 +842,9 @@ $show_quick_help = $show['show'];
 
                                     echo '<div class="checkbox"><label><input ' . $validator . ' type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . $required_attribute .'> ' . $option . '</label></div>';
                                 }
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
                                 echo '<div class="help-block with-errors"></div></div></div>';
                                 break;
 
@@ -810,8 +854,11 @@ $show_quick_help = $show['show'];
 
                                 echo '<div class="form-group' . $cls . '">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
-                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>
-                        <div class="help-block with-errors"></div></div>
+                        <div class="col-sm-9"><textarea class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>';
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
+                        echo '<div class="help-block with-errors"></div></div>
                         </div>';
                                 break;
 
@@ -827,8 +874,11 @@ $show_quick_help = $show['show'];
                             <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                             <div class="col-sm-9">
                                 <input type="text" class="datepicker form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40"
-                                    value="' . $k_value . '" ' . $required_attribute . '>
-                                <div class="help-block with-errors"></div>
+                                    value="' . $k_value . '" ' . $required_attribute . '>';
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
+                                echo '<div class="help-block with-errors"></div>
                             </div>
                         </div>';
                                 break;
@@ -840,8 +890,11 @@ $show_quick_help = $show['show'];
                                 echo '<div class="form-group">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" value="' . $k_value . '" '.$suggest.' ' . $required_attribute . '>
-                            <div class="help-block with-errors"></div>
+                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" value="' . $k_value . '" '.$suggest.' ' . $required_attribute . '>';
+                                if (!empty($v['mfh_description'])) {
+                                    echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                }
+                            echo '<div class="help-block with-errors"></div>
                         </div>
                         </div><div id="'.$k.'_suggestions"></div>';
 
@@ -859,8 +912,11 @@ $show_quick_help = $show['show'];
                                 echo '<div class="form-group">
                         <label for="' . $v['name'] . '" class="col-sm-3 control-label">' . $v['name'].' '.$v['req'] . '</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $required_attribute . '>
-                            <div class="help-block with-errors"></div>
+                            <input type="text" class="form-control" placeholder="' . $v['name'] . '" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $required_attribute . '>';
+                            if (!empty($v['mfh_description'])) {
+                                echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                            }
+                            echo '<div class="help-block with-errors"></div>
                         </div>
                         </div>';
                         }
