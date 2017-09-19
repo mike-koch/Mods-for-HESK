@@ -1146,6 +1146,7 @@ $hesklang['maxpost']='You probably tried to submit more data than this server ac
 
 // --> Ticket history log
 // Unless otherwise specified, first %s will be replaced with date and second with name/username
+// THESE STRINGS ARE DEPRECATED AS OF MODS FOR HESK 3.2.0
 $hesklang['thist1']='<li class="smaller">%s | moved to category %s by %s</li>'; // %s = date, new category, user making change
 $hesklang['thist2']='<li class="smaller">%s | assigned to %s by %s</li>'; // %s = date, assigned user, user making change
 $hesklang['thist3']='<li class="smaller">%s | closed by %s</li>';

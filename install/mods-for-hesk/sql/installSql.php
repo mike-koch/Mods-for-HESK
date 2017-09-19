@@ -1149,6 +1149,7 @@ function execute320Scripts() {
 
     executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` (
         `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+        `ticket_id` INT NOT NULL,
         `language_key` VARCHAR(100) NOT NULL, 
         `date` TIMESTAMP NOT NULL)");
     executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail_to_replacement_values` (
