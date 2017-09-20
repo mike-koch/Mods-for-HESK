@@ -2192,6 +2192,7 @@ $hesklang['changing_permissions_will_reset_permission_group'] = 'Changing a user
 // --> Ticket audit trail
 $hesklang['audit_moved_category']='%s moved ticket to category %s'; // %s = new category, user making change
 $hesklang['audit_assigned']='%s assigned ticket to %s'; // %s = assigned user, user making change
+$hesklang['audit_assigned_self'] = '%s assigned ticket to themself';
 $hesklang['audit_closed']='%s closed ticket';
 $hesklang['audit_opened']='%s opened ticket';
 $hesklang['audit_locked']='%s locked ticket';

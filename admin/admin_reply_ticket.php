@@ -211,9 +211,18 @@ if (!empty($_POST['set_priority'])) {
         3 => $hesklang['low']
     );
 
-    $revision = sprintf($hesklang['thist8'], hesk_date(), $options[$priority], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    $plain_options = array(
+        0 => 'critical',
+        1 => 'high',
+        2 => 'medium',
+        3 => 'low'
+    );
 
-    $priority_sql = ",`priority`='$priority', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+    $priority_sql = ",`priority`='$priority' ";
+
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_priority', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+              1 => $plain_options[$priority]));
 } else {
     $priority_sql = "";
 }
@@ -238,8 +247,8 @@ if ($ticket['locked']) {
         $newStatus = hesk_dbFetchAssoc($newStatusRs);
 
         if ($newStatus['IsClosed'] && hesk_checkPermission('can_resolve', 0)) {
-            $revision = sprintf($hesklang['thist3'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-            $sql_status = " , `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+            mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_closed', hesk_date(), array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+            $sql_status = " , `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . " ";
 
             // Lock the ticket if customers are not allowed to reopen tickets
             if ($hesk_settings['custopen'] != 1) {
@@ -247,8 +256,9 @@ if ($ticket['locked']) {
             }
         } else {
             // Ticket isn't being closed, just add the history to the sql query (or tried to close but doesn't have permission)
-            $revision = sprintf($hesklang['thist9'], hesk_date(), $hesklang[$newStatus['Key']], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-            $sql_status = " , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+            mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_status', hesk_date(),
+                array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+                      1 => mfh_getDisplayTextForStatusId($new_status)));
         }
     }
 } // -> Submit as Customer reply
@@ -259,8 +269,9 @@ elseif ($submit_as_customer) {
     $new_status = $customerReplyStatus['ID'];
 
     if ($ticket['status'] != $new_status) {
-        $revision = sprintf($hesklang['thist9'], hesk_date(), $hesklang['wait_reply'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-        $sql_status = " , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+        mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_status', hesk_date(),
+            array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+                  1 => mfh_getDisplayTextForStatusId($new_status)));
     }
 } // -> Default: submit as "Replied by staff"
 else {
@@ -282,8 +293,8 @@ if ($time_worked == '00:00:00') {
 }
 
 if (!empty($_POST['assign_self']) && (hesk_checkPermission('can_assign_self', 0) || (isset($_REQUEST['isManager']) && $_REQUEST['isManager']))) {
-    $revision = sprintf($hesklang['thist2'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')', $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-    $sql .= " , `owner`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_assigned_self', hesk_date(), array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+    $sql .= " , `owner`=" . intval($_SESSION['id']) . " ";
 }
 
 $sql .= " $priority_sql ";
