@@ -115,7 +115,7 @@ function hesk_newTicket($ticket, $isVerified = true)
 		" . hesk_dbEscape($ticket['screen_resolution_height']) . ",
 		" . hesk_dbEscape($ticket['screen_resolution_width']) . ",
 		{$due_date},
-		'" . hesk_dbEscape($ticket['history']) . "'
+		'',
 		{$custom_what}
 	)
 	");

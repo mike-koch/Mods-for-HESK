@@ -52,7 +52,7 @@ if ($status == 3) // Closed
     }
     $status = $closedStatus;
     $action = $hesklang['closed'];
-    $revision = sprintf($hesklang['thist3'], hesk_date(), $hesklang['customer']);
+    $revision_key = 'audit_closed';
 
     if ($hesk_settings['custopen'] != 1) {
         $locked = 1;
@@ -73,7 +73,7 @@ if ($status == 3) // Closed
     $status = $statusRow['ID'];
 
     $action = $hesklang['opened'];
-    $revision = sprintf($hesklang['thist4'], hesk_date(), $hesklang['customer']);
+    $revision_key = 'audit_opened';
 
     // We will ask the customer why is the ticket being reopened
     $_SESSION['force_form_top'] = true;
@@ -94,12 +94,9 @@ hesk_verifyEmailMatch($trackingID);
 $_SESSION['t_track'] = $trackingID;
 $_SESSION['t_email'] = $hesk_settings['e_email'];
 
-// Load statuses
-require_once(HESK_PATH . 'inc/statuses.inc.php');
-
 // Is current ticket status even changeable by customers?
-$ticket = hesk_dbFetchAssoc( hesk_dbQuery( "SELECT `status`, `staffreplies`, `lastreplier` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1") );
-if (!hesk_can_customer_change_status($ticket['status'])) {
+$ticket = hesk_dbFetchAssoc( hesk_dbQuery( "SELECT `id`, `status`, `staffreplies`, `lastreplier` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `trackid`='".hesk_dbEscape($trackingID)."' LIMIT 1") );
+if (!mfh_can_customer_change_status($ticket['status'])) {
     hesk_process_messages($hesklang['scno'],'ticket.php');
 }
 
@@ -121,7 +118,10 @@ if ($oldStatus == 2) {
 
 
 // Modify values in the database
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' AND `locked` != '1'");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql  WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' AND `locked` != '1'");
+
+// Insert audit trail record
+mfh_insert_audit_trail_record($ticket['id'], 'TICKET', $revision_key, hesk_date(), array(0 => $hesklang['customer']));
 
 // Did we modify anything*
 if (hesk_dbAffectedRows() != 1) {

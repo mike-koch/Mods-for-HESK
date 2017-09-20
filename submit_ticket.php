@@ -405,13 +405,11 @@ if ($hesk_settings['kb_enable'] && $hesk_settings['kb_recommendanswers'] && isse
 
 // All good now, continue with ticket creation
 $tmpvar['owner'] = 0;
-$tmpvar['history'] = sprintf($hesklang['thist15'], hesk_date(), $tmpvar['name']);
 
 // Auto assign tickets if aplicable
 $autoassign_owner = hesk_autoAssignTicket($tmpvar['category']);
 if ($autoassign_owner) {
     $tmpvar['owner'] = $autoassign_owner['id'];
-    $tmpvar['history'] .= sprintf($hesklang['thist10'], hesk_date(), $autoassign_owner['name'] . ' (' . $autoassign_owner['user'] . ')');
 }
 
 // Insert attachments
@@ -462,6 +460,14 @@ if ($modsForHesk_settings['customer_email_verification_required'] && $email_avai
 if ($createTicket) {
     //-- email has been verified, and a ticket can be created
     $ticket = hesk_newTicket($tmpvar);
+
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_submitted_by', hesk_date(),
+        array(0 => $tmpvar['name']));
+
+    if ($autoassign_owner) {
+        mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_autoassigned', hesk_date(),
+            array(0 => $autoassign_owner['name'] . ' (' . $autoassign_owner['user'] . ')'));
+    }
 
     // Notify the customer
     if ($hesk_settings['notify_new'] && $email_available) {

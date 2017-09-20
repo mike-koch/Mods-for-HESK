@@ -2156,3 +2156,34 @@ function mfh_get_hidden_fields_for_language($keys) {
 
     return $output;
 }
+
+/**
+ * Date will always be the current date/time
+ */
+function mfh_insert_audit_trail_record($entity_id, $entity_type, $language_key, $date, $replacement_values) {
+    global $hesk_settings;
+
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` (`entity_id`, `entity_type`, 
+        `language_key`, `date`) VALUES (" . intval($entity_id) . ", '" . hesk_dbEscape($entity_type) . "',
+            '" . hesk_dbEscape($language_key) . "', '" . hesk_dbEscape($date) . "')");
+
+    $audit_id = hesk_dbInsertID();
+
+    foreach ($replacement_values as $replacement_index => $replacement_value) {
+        hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail_to_replacement_values`
+            (`audit_trail_id`, `replacement_index`, `replacement_value`) VALUES (" . intval($audit_id) . ", 
+                " . intval($replacement_index) . ", '" . hesk_dbEscape($replacement_value) . "')");
+    }
+
+    return $audit_id;
+}
+
+function mfh_can_customer_change_status($status)
+{
+    global $hesk_settings;
+
+    $res = hesk_dbQuery("SELECT `Closable` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `ID` = " . intval($status));
+    $row = hesk_dbFetchAssoc($res);
+
+    return $row['Closable'] == 'yes' || $row['Closable'] == 'conly';
+} // END hesk_get_ticket_status()
