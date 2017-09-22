@@ -202,7 +202,6 @@ function do_login()
 
     /* Close any old tickets here so Cron jobs aren't necessary */
     if ($hesk_settings['autoclose']) {
-        $revision = sprintf($hesklang['thist3'], hesk_date(), $hesklang['auto']);
         $dt = date('Y-m-d H:i:s', time() - $hesk_settings['autoclose'] * 86400);
 
 
@@ -226,6 +225,7 @@ function do_login()
                         $ticket['dt'] = hesk_date($ticket['dt'], true);
                         $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
                         $ticket = hesk_ticketToPlain($ticket, 1, 0);
+                        mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_automatically_closed', hesk_date(), array());
                         hesk_notifyCustomer($modsForHesk_settings, 'ticket_closed');
                     }
                 }
@@ -234,7 +234,7 @@ function do_login()
             // Update ticket statuses and history in database if we're allowed to do so
             $defaultCloseRs = hesk_dbQuery('SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsAutocloseOption` = 1');
             $defaultCloseStatus = hesk_dbFetchAssoc($defaultCloseRs);
-            hesk_dbQuery("UPDATE `" . $hesk_settings['db_pfix'] . "tickets` SET `status`=" . intval($defaultCloseStatus['ID']) . ", `closedat`=NOW(), `closedby`='-1', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `status` = '" . $closedStatus['ID'] . "' AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
+            hesk_dbQuery("UPDATE `" . $hesk_settings['db_pfix'] . "tickets` SET `status`=" . intval($defaultCloseStatus['ID']) . ", `closedat`=NOW(), `closedby`='-1' WHERE `status` = '" . $closedStatus['ID'] . "' AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
         }
     }
 

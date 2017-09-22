@@ -439,8 +439,11 @@ if ($hesk_settings['time_worked'] && ($can_reply || $can_edit) && isset($_POST['
     $time_worked = hesk_getTime($h . ':' . $m . ':' . $s);
 
     /* Update database */
-    $revision = sprintf($hesklang['thist14'], hesk_date(), $time_worked, $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `time_worked`='" . hesk_dbEscape($time_worked) . "', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+    //audit_time_worked who - value
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_time_worked', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+              1 => $time_worked));
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `time_worked`='" . hesk_dbEscape($time_worked) . "' WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
     /* Show ticket */
     hesk_process_messages($hesklang['twu'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
@@ -528,7 +531,10 @@ if (isset($_GET['delatt']) && hesk_token_check()) {
     hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "attachments` WHERE `att_id`='" . intval($att_id) . "'");
 
     /* Update ticket or reply in the database */
-    $revision = sprintf($hesklang['thist12'], hesk_date(), $att['real_name'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    // audit_attachment_deleted
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_attachment_deleted', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+              1 => $att['real_name']));
     if ($reply) {
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`='" . intval($reply) . "'");
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($ticket['id']) . "'");

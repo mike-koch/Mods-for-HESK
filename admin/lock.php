@@ -37,27 +37,30 @@ hesk_token_check();
 /* Ticket ID */
 $trackingID = hesk_cleanID() or die($hesklang['int_error'] . ': ' . $hesklang['no_trackID']);
 
+
+// Get ticket info
+$result = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
+if (hesk_dbNumRows($result) != 1) {
+    hesk_error($hesklang['ticket_not_found']);
+}
+$ticket = hesk_dbFetchAssoc($result);
+
 /* New locked status */
 if (empty($_GET['locked'])) {
     $status = 0;
     $tmp = $hesklang['tunlock'];
-    $revision = sprintf($hesklang['thist6'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_unlocked', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
     $closedby_sql = ' , `closedat`=NULL, `closedby`=NULL ';
 } else {
     $status = 1;
     $tmp = $hesklang['tlock'];
-    $revision = sprintf($hesklang['thist5'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_locked', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
     $closedby_sql = ' , `closedat`=NOW(), `closedby`=' . intval($_SESSION['id']) . ' ';
 
     // Notify customer of closed ticket?
     if ($hesk_settings['notify_closed']) {
-        // Get ticket info
-        $result = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `trackid`='" . hesk_dbEscape($trackingID) . "' LIMIT 1");
-        if (hesk_dbNumRows($result) != 1) {
-            hesk_error($hesklang['ticket_not_found']);
-        }
-        $ticket = hesk_dbFetchAssoc($result);
-
         $closedStatusRS = hesk_dbQuery('SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsClosed` = 1');
         $ticketIsOpen = true;
         while ($row = hesk_dbFetchAssoc($closedStatusRS)) {
@@ -82,7 +85,7 @@ $statusRs = hesk_dbQuery($statusSql);
 $statusRow = hesk_dbFetchAssoc($statusRs);
 $statusId = $statusRow['ID'];
 
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`= {$statusId},`locked`='{$status}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "')  WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`= {$statusId},`locked`='{$status}' $closedby_sql  WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
 /* Back to ticket page and show a success message */
 hesk_process_messages($tmp, 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . rand(10000, 99999), 'SUCCESS');

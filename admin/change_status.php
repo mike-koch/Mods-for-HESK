@@ -37,6 +37,10 @@ hesk_token_check();
 /* Ticket ID */
 $trackingID = hesk_cleanID() or die($hesklang['int_error'] . ': ' . $hesklang['no_trackID']);
 
+$ticket_id_rs = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `trackid` = '" . hesk_dbEscape($trackingID) . "'");
+$ticket_id_row = hesk_dbFetchAssoc($ticket_id_rs);
+$ticket_id = $ticket_id_row['id'];
+
 /* Valid statuses */
 $statusSql = "SELECT `ID` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses`";
 $status_options = array();
@@ -62,10 +66,13 @@ if ($statusRow['IsClosed']) // Closed
     }
 
     $action = $hesklang['ticket_been'] . ' ' . $hesklang['close'];
-    $revision = sprintf($hesklang['thist3'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_closed', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+
 
     if ($hesk_settings['custopen'] != 1) {
         $locked = 1;
+        mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_automatically_locked', hesk_date(), array());
     }
 
     // Notify customer of closed ticket?
@@ -91,21 +98,24 @@ if ($statusRow['IsClosed']) // Closed
 } elseif ($statusRow['IsNewTicketStatus'] == 0) //Ticket is still open, but not new
 {
     $action = sprintf($hesklang['tsst'], $status_options[$status]);
-    $revision = sprintf($hesklang['thist9'], hesk_date(), $status_options[$status], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_status', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+              1 => $status_options[$status]));
 
     // Ticket is not resolved
     $closedby_sql = ' , `closedat`=NULL, `closedby`=NULL ';
 } else // Ticket is marked as "NEW"
 {
     $action = $hesklang['ticket_been'] . ' ' . $hesklang['opened'];
-    $revision = sprintf($hesklang['thist4'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_opened', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
 
     // Ticket is not resolved
     $closedby_sql = ' , `closedat`=NULL, `closedby`=NULL ';
 }
 
 
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql  WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
 if (hesk_dbAffectedRows() != 1) {
     hesk_error("$hesklang[int_error]: $hesklang[trackID_not_found].");

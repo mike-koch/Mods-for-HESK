@@ -2193,13 +2193,16 @@ $hesklang['changing_permissions_will_reset_permission_group'] = 'Changing a user
 $hesklang['audit_moved_category']='%s moved ticket to category %s'; // %s = new category, user making change
 $hesklang['audit_assigned']='%s assigned ticket to %s'; // %s = assigned user, user making change
 $hesklang['audit_assigned_self'] = '%s assigned ticket to themself';
-$hesklang['audit_closed']='%s closed ticket';
-$hesklang['audit_opened']='%s opened ticket';
-$hesklang['audit_locked']='%s locked ticket';
-$hesklang['audit_unlocked']='%s unlocked ticket';
+$hesklang['audit_unassigned'] = '%s unassigned ticket';
+$hesklang['audit_closed']='%s closed ticket'; // thist3
+$hesklang['audit_automatically_closed'] ='Ticket automatically closed';
+$hesklang['audit_opened']='%s opened ticket'; // thist4
+$hesklang['audit_locked']='%s locked ticket'; // thist5
+$hesklang['audit_automatically_locked'] = 'Ticket automatically locked';
+$hesklang['audit_unlocked']='%s unlocked ticket'; // thist6
 $hesklang['audit_created']='%s created ticket';
-$hesklang['audit_priority']='%s changed priority to %s'; // %s = date,new priority, user making change
-$hesklang['audit_status']='%s changed status to %s'; // %s = date, new status, user making change
+$hesklang['audit_priority']='%s changed priority to %s'; // %s = date,new priority, user making change, thist8
+$hesklang['audit_status']='%s changed status to %s'; // %s = date, new status, user making change, thist9
 $hesklang['audit_autoassigned']='%s automatically assigned to ticket';
 $hesklang['audit_submitted_via_piping']='Ticket submitted via e-mail piping';
 $hesklang['audit_attachment_deleted']='%s deleted attachment %s'; // %s = date, deleted attachment, user making change

@@ -176,11 +176,11 @@ foreach ($hesk_settings['custom_fields'] as $k=>$v) {
 $tmpvar['trackid'] = hesk_createID();
 
 // Log who submitted ticket
-$tmpvar['history'] = sprintf($hesklang['thist7'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
 $tmpvar['openedby'] = $_SESSION['id'];
 
 // Owner
 $tmpvar['owner'] = 0;
+$autoassign_owner = null;
 if (hesk_checkPermission('can_assign_others', 0)) {
     $tmpvar['owner'] = intval(hesk_POST('owner'));
 
@@ -192,7 +192,6 @@ if (hesk_checkPermission('can_assign_others', 0)) {
         $autoassign_owner = hesk_autoAssignTicket($tmpvar['category']);
         if ($autoassign_owner) {
             $tmpvar['owner'] = intval($autoassign_owner['id']);
-            $tmpvar['history'] .= sprintf($hesklang['thist10'], hesk_date(), $autoassign_owner['name'] . ' (' . $autoassign_owner['user'] . ')');
         } else {
             $tmpvar['owner'] = 0;
         }
@@ -314,6 +313,14 @@ $tmpvar['screen_resolution_width'] = "NULL";
 
 // Insert ticket to database
 $ticket = hesk_newTicket($tmpvar);
+
+mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_created', hesk_date(),
+    array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+
+if ($autoassign_owner) {
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_autoassigned', hesk_date(),
+        array(0 => $autoassign_owner['name'] . ' (' . $autoassign_owner['user'] . ')'));
+}
 
 // Notify the customer about the ticket?
 if ($notify && $email_available) {
