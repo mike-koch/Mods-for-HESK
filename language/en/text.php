@@ -2204,12 +2204,12 @@ $hesklang['audit_created']='%s created ticket';
 $hesklang['audit_priority']='%s changed priority to %s'; // %s = date,new priority, user making change, thist8
 $hesklang['audit_status']='%s changed status to %s'; // %s = date, new status, user making change, thist9
 $hesklang['audit_autoassigned']='%s automatically assigned to ticket'; //thist10
-$hesklang['audit_submitted_via_piping']='Ticket submitted via e-mail piping';
+$hesklang['audit_submitted_via_piping']='Ticket submitted via e-mail piping'; // thist11
 $hesklang['audit_attachment_deleted']='%s deleted attachment %s'; // %s = date, deleted attachment, user making change
 $hesklang['audit_merged']='%s merged ticket %s with this ticket'; // %s = date, merged ticket ID, user making change, thist13
 $hesklang['audit_time_worked']='%s updated time worked to %s'; // %s = date, new time worked, user making change
 $hesklang['audit_submitted_by']='%s submitted ticket';
-$hesklang['audit_submitted_via_pop']='Ticket submitted via POP3 fetching';
+$hesklang['audit_submitted_via_pop']='Ticket submitted via POP3 fetching'; // thist16
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

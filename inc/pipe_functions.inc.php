@@ -269,7 +269,6 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 
     // Auto assign tickets if aplicable
     $tmpvar['owner'] = 0;
-    $tmpvar['history'] = $pop3 ? sprintf($hesklang['thist16'], hesk_date()) : sprintf($hesklang['thist11'], hesk_date());
     $tmpvar['openedby'] = $pop3 ? -2 : -1;
 
     $autoassign_owner = hesk_autoAssignTicket($tmpvar['category']);
@@ -278,7 +277,6 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 
     if ($autoassign_owner) {
         $tmpvar['owner'] = $autoassign_owner['id'];
-        $tmpvar['history'] .= sprintf($hesklang['thist10'], hesk_date(), $autoassign_owner['name'] . ' (' . $autoassign_owner['user'] . ')');
     }
 
     // Custom fields will be empty as there is no reliable way of detecting them
@@ -296,6 +294,13 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 
     // Insert ticket to database
     $ticket = hesk_newTicket($tmpvar);
+
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', ($pop3 ? 'audit_submitted_via_pop' : 'audit_submitted_via_piping'), hesk_date());
+
+    if ($autoassign_owner) {
+        mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_autoassigned', hesk_date(),
+            array(0 => $autoassign_owner['name'] . ' (' . $autoassign_owner['user'] . ')'));
+    }
 
     // Notify the customer
     if ($hesk_settings['notify_new']) {

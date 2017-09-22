@@ -2157,10 +2157,7 @@ function mfh_get_hidden_fields_for_language($keys) {
     return $output;
 }
 
-/**
- * Date will always be the current date/time
- */
-function mfh_insert_audit_trail_record($entity_id, $entity_type, $language_key, $date, $replacement_values) {
+function mfh_insert_audit_trail_record($entity_id, $entity_type, $language_key, $date, $replacement_values = array()) {
     global $hesk_settings;
 
     hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` (`entity_id`, `entity_type`, 
