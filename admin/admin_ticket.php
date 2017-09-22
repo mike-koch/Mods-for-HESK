@@ -97,6 +97,17 @@ if (!$ticket['owner'] && !$can_view_unassigned) {
     hesk_error($hesklang['ycovtay']);
 }
 
+// Get audit information
+$auditRes = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` AS `audit` 
+    LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail_to_replacement_values` AS `values`
+        ON `audit`.`id` = `values`.`audit_trail_id`
+    WHERE `entity_type` = 'TICKET' AND `entity_id` = " . intval($ticket['id']));
+$auditRecords = array();
+$lastAuditRecord = null;
+while ($row = hesk_dbFetchAssoc($auditRes)) {
+    // TODO
+}
+
 /* Set last replier name */
 if ($ticket['lastreplier']) {
     if (empty($ticket['repliername'])) {
@@ -1611,7 +1622,7 @@ function print_form()
 } // End print_form()
 
 function mfh_print_message() {
-    global $ticket, $hesklang, $hesk_settings, $can_ban_emails, $can_ban_ips, $trackingID, $modsForHesk_settings;
+    global $ticket, $hesklang, $hesk_settings, $can_ban_emails, $can_ban_ips, $can_unban_emails, $can_unban_ips, $trackingID, $modsForHesk_settings;
     ?>
     <li><i class="fa fa-comment bg-red" data-toggle="tooltip" title="<?php echo $hesklang['original_message']; ?>"></i>
         <div class="timeline-item">
