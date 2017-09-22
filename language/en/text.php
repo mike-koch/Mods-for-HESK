@@ -2190,7 +2190,7 @@ $hesklang['permission_group'] = 'Permission Group';
 $hesklang['changing_permissions_will_reset_permission_group'] = 'Changing a user\'s categories / features will reset their permission group! Click "Discard Changes" to reset the user\'s categories / features.';
 
 // --> Ticket audit trail
-$hesklang['audit_moved_category']='%s moved ticket to category %s'; // %s = new category, user making change
+$hesklang['audit_moved_category']='%s moved ticket to category %s'; // %s = new category, user making change, thist1
 $hesklang['audit_assigned']='%s assigned ticket to %s'; // %s = assigned user, user making change
 $hesklang['audit_assigned_self'] = '%s assigned ticket to themself';
 $hesklang['audit_unassigned'] = '%s unassigned ticket';
@@ -2203,7 +2203,7 @@ $hesklang['audit_unlocked']='%s unlocked ticket'; // thist6
 $hesklang['audit_created']='%s created ticket';
 $hesklang['audit_priority']='%s changed priority to %s'; // %s = date,new priority, user making change, thist8
 $hesklang['audit_status']='%s changed status to %s'; // %s = date, new status, user making change, thist9
-$hesklang['audit_autoassigned']='%s automatically assigned to ticket';
+$hesklang['audit_autoassigned']='%s automatically assigned to ticket'; //thist10
 $hesklang['audit_submitted_via_piping']='Ticket submitted via e-mail piping';
 $hesklang['audit_attachment_deleted']='%s deleted attachment %s'; // %s = date, deleted attachment, user making change
 $hesklang['audit_merged']='%s merged ticket with ticket %s'; // %s = date, merged ticket ID, user making change
