@@ -201,7 +201,10 @@ function hesk_mergeTickets($merge_these, $merge_into)
         hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `id`='" . intval($row['id']) . "'");
 
         /* Log that ticket has been merged */
-        $history .= sprintf($hesklang['thist13'], hesk_date(), $row['trackid'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+        mfh_insert_audit_trail_record($merge_into, 'TICKET', 'audit_merged', hesk_date(), array(
+            0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => $row['trackid']
+        ));
 
         /* Add old ticket ID to target ticket "merged" field */
         $merged .= '#' . $row['trackid'];
@@ -234,7 +237,7 @@ function hesk_mergeTickets($merge_these, $merge_into)
     }
 
     /* Update history (log) and merged IDs of target ticket */
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET $replies_sql `time_worked`=ADDTIME(`time_worked`, '" . hesk_dbEscape($sec_worked) . "'), `merged`=CONCAT(`merged`,'" . hesk_dbEscape($merged . '#') . "'), `history`=CONCAT(`history`,'" . hesk_dbEscape($history) . "') WHERE `id`='" . intval($merge_into) . "'");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET $replies_sql `time_worked`=ADDTIME(`time_worked`, '" . hesk_dbEscape($sec_worked) . "'), `merged`=CONCAT(`merged`,'" . hesk_dbEscape($merged . '#') . "') WHERE `id`='" . intval($merge_into) . "'");
 
     return true;
 

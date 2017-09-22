@@ -2206,7 +2206,7 @@ $hesklang['audit_status']='%s changed status to %s'; // %s = date, new status, u
 $hesklang['audit_autoassigned']='%s automatically assigned to ticket'; //thist10
 $hesklang['audit_submitted_via_piping']='Ticket submitted via e-mail piping';
 $hesklang['audit_attachment_deleted']='%s deleted attachment %s'; // %s = date, deleted attachment, user making change
-$hesklang['audit_merged']='%s merged ticket with ticket %s'; // %s = date, merged ticket ID, user making change
+$hesklang['audit_merged']='%s merged ticket %s with this ticket'; // %s = date, merged ticket ID, user making change, thist13
 $hesklang['audit_time_worked']='%s updated time worked to %s'; // %s = date, new time worked, user making change
 $hesklang['audit_submitted_by']='%s submitted ticket';
 $hesklang['audit_submitted_via_pop']='Ticket submitted via POP3 fetching';
