@@ -71,7 +71,6 @@ if (hesk_dbNumRows($res) != 1) {
 $ticket = hesk_dbFetchAssoc($res);
 
 /* Log that ticket is being moved */
-//audit_moved_category
 mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_moved_category', hesk_date(), array(
     0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
     1 => $row['name']
