@@ -470,11 +470,10 @@ if ($hesk_settings['time_worked'] && ($can_reply || $can_edit) && isset($_POST['
     $time_worked = hesk_getTime($h . ':' . $m . ':' . $s);
 
     /* Update database */
-    //audit_time_worked who - value
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `time_worked`='" . hesk_dbEscape($time_worked) . "' WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
     mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_time_worked', hesk_date(),
         array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
-              1 => $time_worked));
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `time_worked`='" . hesk_dbEscape($time_worked) . "' WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+            1 => $time_worked));
 
     /* Show ticket */
     hesk_process_messages($hesklang['twu'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
@@ -562,10 +561,6 @@ if (isset($_GET['delatt']) && hesk_token_check()) {
     hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "attachments` WHERE `att_id`='" . intval($att_id) . "'");
 
     /* Update ticket or reply in the database */
-    // audit_attachment_deleted
-    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_attachment_deleted', hesk_date(),
-        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
-              1 => $att['real_name']));
     if ($reply) {
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`='" . intval($reply) . "'");
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($ticket['id']) . "'");
@@ -576,6 +571,9 @@ if (isset($_GET['delatt']) && hesk_token_check()) {
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`='" . intval($ticket['id']) . "'");
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name']) . ",',''), `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($ticket['id']) . "'");
     }
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_attachment_deleted', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => $att['real_name']));
 
     hesk_process_messages($hesklang['kb_att_rem'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 }

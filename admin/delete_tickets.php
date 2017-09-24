@@ -113,10 +113,10 @@ if (array_key_exists($_POST['a'], $priorities)) {
 
         hesk_okCategory($ticket['category']);
 
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `priority`='{$priority['value']}' WHERE `id`={$this_id}");
         mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_priority', hesk_date(),
             array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
-                  1 => $priority['lang']));
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `priority`='{$priority['value']}' WHERE `id`={$this_id}");
+                1 => $priority['lang']));
 
         $i++;
     }
@@ -222,9 +222,6 @@ else {
     hesk_token_check('POST');
     require(HESK_PATH . 'inc/email_functions.inc.php');
 
-    mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_closed', hesk_date(),
-        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
-
     foreach ($_POST['id'] as $this_id) {
         if (is_array($this_id)) {
             continue;
@@ -241,6 +238,10 @@ else {
         $closedStatus = hesk_dbFetchAssoc($closedStatusRS);
 
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='" . $closedStatus['ID'] . "', `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . " WHERE `id`='" . intval($this_id) . "'");
+
+        mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_closed', hesk_date(),
+            array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+
         $i++;
 
         // Notify customer of closed ticket?

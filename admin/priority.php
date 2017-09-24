@@ -57,12 +57,13 @@ $plain_options = array(
 $ticketRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `trackid` = '" . hesk_dbEscape($trackingID) . "'");
 $ticket = hesk_dbFetchAssoc($ticketRs);
 
+hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `priority`='{$priority}' WHERE `trackid`='".hesk_dbEscape($trackingID)."'");
+
 mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_priority', hesk_date(), array(
-	0 => $_SESSION['name'].' ('.$_SESSION['user'].')',
-	1 => $plain_options[$priority]
+    0 => $_SESSION['name'].' ('.$_SESSION['user'].')',
+    1 => $plain_options[$priority]
 ));
 
-hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `priority`='{$priority}' WHERE `trackid`='".hesk_dbEscape($trackingID)."'");
 if (hesk_dbAffectedRows() != 1)
 {
 	hesk_process_messages($hesklang['inpr'],'admin_ticket.php?track='.$trackingID.'&Refresh='.mt_rand(10000,99999),'NOTICE');

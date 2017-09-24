@@ -45,18 +45,19 @@ if (hesk_dbNumRows($result) != 1) {
 }
 $ticket = hesk_dbFetchAssoc($result);
 
+$audit_unlocked = null;
+$audit_locked = null;
+
 /* New locked status */
 if (empty($_GET['locked'])) {
     $status = 0;
     $tmp = $hesklang['tunlock'];
-    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_unlocked', hesk_date(),
-        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+    $audit_unlocked = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
     $closedby_sql = ' , `closedat`=NULL, `closedby`=NULL ';
 } else {
     $status = 1;
     $tmp = $hesklang['tlock'];
-    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_locked', hesk_date(),
-        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+    $audit_locked = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
     $closedby_sql = ' , `closedat`=NOW(), `closedby`=' . intval($_SESSION['id']) . ' ';
 
     // Notify customer of closed ticket?
@@ -86,6 +87,16 @@ $statusRow = hesk_dbFetchAssoc($statusRs);
 $statusId = $statusRow['ID'];
 
 hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`= {$statusId},`locked`='{$status}' $closedby_sql  WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+
+if ($audit_unlocked) {
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_unlocked', hesk_date(),
+        $audit_unlocked);
+}
+
+if ($audit_locked) {
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_locked', hesk_date(),
+        $audit_locked);
+}
 
 /* Back to ticket page and show a success message */
 hesk_process_messages($tmp, 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . rand(10000, 99999), 'SUCCESS');

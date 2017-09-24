@@ -198,6 +198,11 @@ if ($submit_as_customer) {
 $revision = '';
 
 /* Change the status of priority? */
+$audit_priority = null;
+$audit_closed = null;
+$audit_status = null;
+$audit_customer_status = null;
+$audit_assigned_self = null;
 if (!empty($_POST['set_priority'])) {
     $priority = intval(hesk_POST('priority'));
     if ($priority < 0 || $priority > 3) {
@@ -220,9 +225,8 @@ if (!empty($_POST['set_priority'])) {
 
     $priority_sql = ",`priority`='$priority' ";
 
-    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_priority', hesk_date(),
-        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
-              1 => $plain_options[$priority]));
+    $audit_priority = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+        1 => $plain_options[$priority]);
 } else {
     $priority_sql = "";
 }
@@ -247,7 +251,7 @@ if ($ticket['locked']) {
         $newStatus = hesk_dbFetchAssoc($newStatusRs);
 
         if ($newStatus['IsClosed'] && hesk_checkPermission('can_resolve', 0)) {
-            mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_closed', hesk_date(), array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+            $audit_closed = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
             $sql_status = " , `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . " ";
 
             // Lock the ticket if customers are not allowed to reopen tickets
@@ -256,9 +260,8 @@ if ($ticket['locked']) {
             }
         } else {
             // Ticket isn't being closed, just add the history to the sql query (or tried to close but doesn't have permission)
-            mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_status', hesk_date(),
-                array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
-                      1 => mfh_getDisplayTextForStatusId($new_status)));
+            $audit_status = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+                1 => mfh_getDisplayTextForStatusId($new_status));
         }
     }
 } // -> Submit as Customer reply
@@ -269,9 +272,8 @@ elseif ($submit_as_customer) {
     $new_status = $customerReplyStatus['ID'];
 
     if ($ticket['status'] != $new_status) {
-        mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_status', hesk_date(),
-            array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
-                  1 => mfh_getDisplayTextForStatusId($new_status)));
+        $audit_customer_status = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => mfh_getDisplayTextForStatusId($new_status));
     }
 } // -> Default: submit as "Replied by staff"
 else {
@@ -293,7 +295,7 @@ if ($time_worked == '00:00:00') {
 }
 
 if (!empty($_POST['assign_self']) && (hesk_checkPermission('can_assign_self', 0) || (isset($_REQUEST['isManager']) && $_REQUEST['isManager']))) {
-    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_assigned_self', hesk_date(), array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+    $audit_assigned_self = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
     $sql .= " , `owner`=" . intval($_SESSION['id']) . " ";
 }
 
@@ -316,6 +318,29 @@ unset($sql);
 
 /* Update number of replies in the users table */
 hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `replies`=`replies`+1 WHERE `id`='" . intval($_SESSION['id']) . "'");
+
+//-- Insert necessary audit trail records
+if ($audit_priority != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_priority', hesk_date(), $audit_priority);
+}
+
+if ($audit_closed != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_closed', hesk_date(), $audit_closed);
+}
+
+if ($audit_status != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_status', hesk_date(), $audit_status);
+}
+
+if ($audit_customer_status != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_status', hesk_date(),
+        $audit_customer_status);
+}
+
+if ($audit_assigned_self != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_assigned_self', hesk_date(), $audit_assigned_self);
+}
+
 
 // --> Prepare reply message
 

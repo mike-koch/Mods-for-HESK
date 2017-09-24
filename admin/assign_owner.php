@@ -52,9 +52,9 @@ $owner = intval(hesk_REQUEST('owner'));
 
 /* If ID is -1 the ticket will be unassigned */
 if ($owner == -1) {
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`=0 WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
     mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_unassigned', date(),
         array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
-    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`=0 WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
     hesk_process_messages($hesklang['tunasi2'], $_SERVER['PHP_SELF'], 'SUCCESS');
 } elseif ($owner < 1) {
@@ -97,6 +97,8 @@ if ($ticket['owner'] && $ticket['owner'] != $owner && hesk_REQUEST('unassigned')
 
 /* Assigning to self? */
 if ($can_assign_others || ($owner == $_SESSION['id'] && $can_assign_self)) {
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`={$owner} WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+
     if ($owner == $_SESSION['id'] && $can_assign_self) {
         mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_assigned_self', hesk_date(),
             array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
@@ -104,10 +106,8 @@ if ($can_assign_others || ($owner == $_SESSION['id'] && $can_assign_self)) {
         // current user -> assigned user
         mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_assigned', hesk_date(),
             array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
-                  1 => $row['name'] . ' (' . $row['user'] . ')'));
+                1 => $row['name'] . ' (' . $row['user'] . ')'));
     }
-
-    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`={$owner} WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
     if ($owner != $_SESSION['id'] && !hesk_checkPermission('can_view_ass_others', 0)) {
         $_SERVER['PHP_SELF'] = 'admin_main.php';
