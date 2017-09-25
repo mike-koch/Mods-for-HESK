@@ -4,7 +4,7 @@ namespace BusinessLogic\Tickets;
 
 
 class Ticket extends \BaseClass {
-    static function fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings) {
+    static function fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $auditRecords, $heskSettings) {
         $ticket = new Ticket();
         $ticket->id = intval($row['id']);
         $ticket->trackingId = $row['trackid'];
@@ -143,6 +143,7 @@ class Ticket extends \BaseClass {
             $replies[$reply->id] = $reply;
         }
         $ticket->replies = $replies;
+        $ticket->auditTrail = $auditRecords;
 
         return $ticket;
     }
@@ -308,6 +309,11 @@ class Ticket extends \BaseClass {
      * @var string
      */
     public $auditTrailHtml;
+
+    /**
+     * @var AuditTrail
+     */
+    public $auditTrail;
 
     /**
      * @var string[]

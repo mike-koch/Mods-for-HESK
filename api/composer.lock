@@ -155,7 +155,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2017-07-22T11:08:38+00:00"
+            "time": "2017-07-22 11:08:38"
         },
         {
             "name": "doctrine/cache",
@@ -231,7 +231,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2017-08-25T06:51:37+00:00"
+            "time": "2017-08-25 06:51:37"
         },
         {
             "name": "doctrine/lexer",
@@ -285,7 +285,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2017-07-24T09:37:08+00:00"
+            "time": "2017-07-24 09:37:08"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -401,7 +401,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2017-05-20T23:14:18+00:00"
+            "time": "2017-05-20 23:14:18"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -466,7 +466,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-07-17T09:11:21+00:00"
+            "time": "2017-07-17 09:11:21"
         },
         {
             "name": "mailgun/mailgun-php",
@@ -765,7 +765,7 @@
                 "http",
                 "httplug"
             ],
-            "time": "2017-08-05T15:50:10+00:00"
+            "time": "2017-08-05 15:50:10"
         },
         {
             "name": "php-http/curl-client",
@@ -883,7 +883,7 @@
                 "message",
                 "psr7"
             ],
-            "time": "2017-09-13T14:06:45+00:00"
+            "time": "2017-09-13 14:06:45"
         },
         {
             "name": "php-http/guzzle6-adapter",
@@ -943,7 +943,7 @@
                 "Guzzle",
                 "http"
             ],
-            "time": "2017-05-29T15:06:15+00:00"
+            "time": "2017-05-29 15:06:15"
         },
         {
             "name": "php-http/httplug",
@@ -999,7 +999,7 @@
                 "client",
                 "http"
             ],
-            "time": "2017-08-18T18:51:51+00:00"
+            "time": "2017-08-18 18:51:51"
         },
         {
             "name": "php-http/message",
@@ -1071,7 +1071,7 @@
                 "message",
                 "psr-7"
             ],
-            "time": "2017-07-05T06:40:53+00:00"
+            "time": "2017-07-05 06:40:53"
         },
         {
             "name": "php-http/message-factory",
@@ -1121,7 +1121,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2016-02-03T08:16:31+00:00"
+            "time": "2016-02-03 08:16:31"
         },
         {
             "name": "php-http/multipart-stream-builder",
@@ -1178,7 +1178,7 @@
                 "multipart stream",
                 "stream"
             ],
-            "time": "2017-05-21T18:01:57+00:00"
+            "time": "2017-05-21 18:01:57"
         },
         {
             "name": "php-http/promise",
@@ -1228,7 +1228,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-01-28T07:54:12+00:00"
+            "time": "2016-01-28 07:54:12"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -1354,7 +1354,7 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-06-28T15:35:32+00:00"
+            "time": "2017-06-28 15:35:32"
         },
         {
             "name": "psr/http-message",
@@ -1404,7 +1404,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "symfony/options-resolver",
@@ -1458,7 +1458,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2017-08-03T09:34:20+00:00"
+            "time": "2017-08-03 09:34:20"
         },
         {
             "name": "webmozart/assert",
@@ -1508,7 +1508,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23T20:04:41+00:00"
+            "time": "2016-11-23 20:04:41"
         },
         {
             "name": "zendframework/zend-code",
@@ -1614,7 +1614,7 @@
                 "events",
                 "zf2"
             ],
-            "time": "2017-07-11T19:19:12+00:00"
+            "time": "2017-07-11 19:19:12"
         }
     ],
     "packages-dev": [
@@ -1710,7 +1710,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2017-04-12T18:52:22+00:00"
+            "time": "2017-04-12 18:52:22"
         },
         {
             "name": "phar-io/manifest",
@@ -1765,7 +1765,7 @@
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
-            "time": "2017-04-07T07:07:10+00:00"
+            "time": "2017-04-07 07:07:10"
         },
         {
             "name": "phar-io/version",
@@ -2021,7 +2021,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-09-04T11:05:03+00:00"
+            "time": "2017-09-04 11:05:03"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2085,7 +2085,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-08-25T06:32:04+00:00"
+            "time": "2017-08-25 06:32:04"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2132,7 +2132,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03T07:40:28+00:00"
+            "time": "2016-10-03 07:40:28"
         },
         {
             "name": "phpunit/php-text-template",
@@ -2222,7 +2222,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-03-07T15:42:04+00:00"
+            "time": "2017-03-07 15:42:04"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -2271,7 +2271,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-08-20T05:47:52+00:00"
+            "time": "2017-08-20 05:47:52"
         },
         {
             "name": "phpunit/phpunit",
@@ -2414,7 +2414,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2017-08-03T14:08:16+00:00"
+            "time": "2017-08-03 14:08:16"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2459,7 +2459,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2017-03-04T10:23:55+00:00"
+            "time": "2017-03-04 10:23:55"
         },
         {
             "name": "sebastian/comparator",
@@ -2523,7 +2523,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-08-20T14:03:32+00:00"
+            "time": "2017-08-20 14:03:32"
         },
         {
             "name": "sebastian/diff",
@@ -2575,7 +2575,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-08-03T08:09:46+00:00"
+            "time": "2017-08-03 08:09:46"
         },
         {
             "name": "sebastian/environment",
@@ -2625,7 +2625,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2017-07-01T08:51:00+00:00"
+            "time": "2017-07-01 08:51:00"
         },
         {
             "name": "sebastian/exporter",
@@ -2692,7 +2692,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2017-04-03T13:19:02+00:00"
+            "time": "2017-04-03 13:19:02"
         },
         {
             "name": "sebastian/global-state",
@@ -2743,7 +2743,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2017-04-27T15:39:26+00:00"
+            "time": "2017-04-27 15:39:26"
         },
         {
             "name": "sebastian/object-enumerator",
@@ -2790,7 +2790,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2017-08-03T12:35:26+00:00"
+            "time": "2017-08-03 12:35:26"
         },
         {
             "name": "sebastian/object-reflector",
@@ -2835,7 +2835,7 @@
             ],
             "description": "Allows reflection of object attributes, including inherited and non-public ones",
             "homepage": "https://github.com/sebastianbergmann/object-reflector/",
-            "time": "2017-03-29T09:07:27+00:00"
+            "time": "2017-03-29 09:07:27"
         },
         {
             "name": "sebastian/recursion-context",
@@ -2888,7 +2888,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2017-03-07T15:09:59+00:00"
+            "time": "2017-03-07 15:09:59"
         },
         {
             "name": "sebastian/resource-operations",
@@ -2930,7 +2930,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2016-10-03T07:43:09+00:00"
+            "time": "2016-10-03 07:43:09"
         },
         {
             "name": "sebastian/version",
@@ -2973,7 +2973,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2016-10-03T07:35:21+00:00"
+            "time": "2016-10-03 07:35:21"
         },
         {
             "name": "theseer/tokenizer",
