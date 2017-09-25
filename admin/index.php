@@ -209,23 +209,25 @@ function do_login()
         $closedStatus = hesk_dbFetchAssoc($closedStatusRs);
         // Are we allowed to close tickets in this status?
         if ($closedStatus['Closable'] == 'yes' || $closedStatus['Closable'] == 'sonly') {
-            // Notify customer of closed ticket?
-            if ($hesk_settings['notify_closed']) {
-                // Get list of tickets
-                $result = hesk_dbQuery("SELECT * FROM `" . $hesk_settings['db_pfix'] . "tickets` WHERE `status` = " . $closedStatus['ID'] . " AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
-                if (hesk_dbNumRows($result) > 0) {
-                    global $ticket;
 
-                    // Load required functions?
-                    if (!function_exists('hesk_notifyCustomer')) {
-                        require(HESK_PATH . 'inc/email_functions.inc.php');
-                    }
+            $result = hesk_dbQuery("SELECT * FROM `" . $hesk_settings['db_pfix'] . "tickets` WHERE `status` = " . $closedStatus['ID'] . " AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
+            if (hesk_dbNumRows($result) > 0) {
+                global $ticket;
 
-                    while ($ticket = hesk_dbFetchAssoc($result)) {
-                        $ticket['dt'] = hesk_date($ticket['dt'], true);
-                        $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
-                        $ticket = hesk_ticketToPlain($ticket, 1, 0);
-                        mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_automatically_closed', hesk_date(), array());
+                // Load required functions?
+                if (!function_exists('hesk_notifyCustomer')) {
+                    require(HESK_PATH . 'inc/email_functions.inc.php');
+                }
+
+                while ($ticket = hesk_dbFetchAssoc($result)) {
+                    $ticket['dt'] = hesk_date($ticket['dt'], true);
+                    $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
+                    $ticket = hesk_ticketToPlain($ticket, 1, 0);
+                    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_automatically_closed', hesk_date(), array());
+
+                    // Notify customer of closed ticket?
+                    if ($hesk_settings['notify_closed']) {
+                        // Get list of tickets
                         hesk_notifyCustomer($modsForHesk_settings, 'ticket_closed');
                     }
                 }
@@ -234,7 +236,7 @@ function do_login()
             // Update ticket statuses and history in database if we're allowed to do so
             $defaultCloseRs = hesk_dbQuery('SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsAutocloseOption` = 1');
             $defaultCloseStatus = hesk_dbFetchAssoc($defaultCloseRs);
-            hesk_dbQuery("UPDATE `" . $hesk_settings['db_pfix'] . "tickets` SET `status`=" . intval($defaultCloseStatus['ID']) . ", `closedat`=NOW(), `closedby`='-1' WHERE `status` = '" . $closedStatus['ID'] . "' AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
+            hesk_dbQuery("UPDATE `" . $hesk_settings['db_pfix'] . "tickets` SET `status`=" . intval($defaultCloseStatus['ID']) . ", `closedat`=NOW(), `closedby`='-1' WHERE `status` = " . $closedStatus['ID'] . " AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
         }
     }
 

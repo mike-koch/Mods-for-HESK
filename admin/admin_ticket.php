@@ -509,13 +509,26 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
     }
 
     hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = ' . intval($ticket['id']) . ' WHERE `trackid` = \'' . hesk_dbEscape(hesk_POST('childTrackingId')) . '\'');
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_linked_ticket', hesk_date(),
+        array(
+           0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+           1 => hesk_POST('childTrackingId')
+        ));
     hesk_process_messages(sprintf($hesklang['link_added'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 }
 
 /* Delete child action */
 if (($can_reply || $can_edit) && isset($_GET['deleteChild'])) {
     //-- Delete the relationship
+    $innerTrackingRs = hesk_dbQuery("SELECT `trackid` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `id` = " . hesk_dbEscape($_GET['deleteChild']));
+    $innerTrackingId = hesk_dbFetchAssoc($innerTrackingRs);
+
     hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = NULL WHERE `ID` = ' . hesk_dbEscape($_GET['deleteChild']));
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_unlinked_ticket', hesk_date(),
+        array(
+            0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => $innerTrackingId['trackid']
+        ));
     hesk_process_messages($hesklang['ticket_no_longer_linked'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 
 } elseif (($can_reply || $can_edit) && isset($_GET['deleteParent'])) {
@@ -1830,6 +1843,12 @@ function hesk_printTicketReplies()
             $b_date = strtotime($b['date']);
         }
 
+        if ($a_date === $b_date && $a['SORT_TYPE'] != $b['SORT_TYPE']) {
+            if ($a['SORT_TYPE'] != $b['SORT_TYPE']) {
+                return $a['SORT_TYPE'] == 'REPLY' ? -1 : 1;
+            }
+        }
+
         return $a_date - $b_date;
     });
 
@@ -1938,7 +1957,7 @@ function mfh_print_audit_record($record) {
             $font_icon = 'fa-user-plus';
             break;
         case 'audit_unassigned':
-            $font_icon = 'fa-user-minus';
+            $font_icon = 'fa-user-times';
             break;
         case 'audit_autoassigned':
             $font_icon = 'fa-bolt';
@@ -1991,7 +2010,22 @@ function mfh_print_audit_record($record) {
             $font_icon = 'fa-code-fork';
             break;
         case 'audit_time_worked':
-            $font_icon = 'fa-clock';
+            $font_icon = 'fa fa-clock-o';
+            break;
+        case 'audit_due_date_removed':
+            $font_icon = 'fa fa-calendar-minus-o';
+            break;
+        case 'audit_due_date_changed':
+            $font_icon = 'fa fa-calendar';
+
+            //-- Format the date
+            $record['replacement_values'][1] = date('Y-m-d', strtotime($record['replacement_values'][1]));
+            break;
+        case 'audit_linked_ticket':
+            $font_icon = 'fa fa-link';
+            break;
+        case 'audit_unlinked_ticket':
+            $font_icon = 'fa fa-chain-broken';
             break;
         default:
             $font_icon = 'fa-question-circle';

@@ -2210,6 +2210,10 @@ $hesklang['audit_merged']='%s merged ticket %s with this ticket'; // %s = date, 
 $hesklang['audit_time_worked']='%s updated time worked to %s'; // %s = date, new time worked, user making change
 $hesklang['audit_submitted_by']='%s submitted ticket';
 $hesklang['audit_submitted_via_pop']='Ticket submitted via POP3 fetching'; // thist16
+$hesklang['audit_due_date_removed'] = '%s removed due date';
+$hesklang['audit_due_date_changed'] = '%s changed due date to %s';
+$hesklang['audit_linked_ticket'] = '%s linked ticket %s to this ticket';
+$hesklang['audit_unlinked_ticket'] = '%s unlinked ticket %s';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

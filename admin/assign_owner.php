@@ -53,7 +53,7 @@ $owner = intval(hesk_REQUEST('owner'));
 /* If ID is -1 the ticket will be unassigned */
 if ($owner == -1) {
     $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`=0 WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
-    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_unassigned', date(),
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_unassigned', hesk_date(),
         array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
 
     hesk_process_messages($hesklang['tunasi2'], $_SERVER['PHP_SELF'], 'SUCCESS');

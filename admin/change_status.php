@@ -72,6 +72,8 @@ if ($statusRow['IsClosed']) // Closed
 
     $action = $hesklang['ticket_been'] . ' ' . $hesklang['close'];
     $audit_closed = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    $audit_status = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+        1 => $status_options[$status]);
 
 
     if ($hesk_settings['custopen'] != 1) {
@@ -120,22 +122,22 @@ if ($statusRow['IsClosed']) // Closed
 
 hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='{$status}', `locked`='{$locked}' $closedby_sql  WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
-if ($audit_closed != null) {
-    mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_closed', hesk_date(),
-        $audit_closed);
-}
-
-if ($audit_locked != null) {
-    mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_automatically_locked', hesk_date(),
-        array());
-}
-
-if ($audit_status != null) {
+if ($audit_status !== null) {
     mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_status', hesk_date(),
         $audit_status);
 }
 
-if ($audit_opened != null) {
+if ($audit_closed !== null) {
+    mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_closed', hesk_date(),
+        $audit_closed);
+}
+
+if ($audit_locked !== null) {
+    mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_automatically_locked', hesk_date(),
+        array());
+}
+
+if ($audit_opened !== null) {
     mfh_insert_audit_trail_record($ticket_id, 'TICKET', 'audit_opened', hesk_date(),
         $audit_opened);
 }

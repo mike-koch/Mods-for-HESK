@@ -189,9 +189,9 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
 // Add reply
 $html = $modsForHesk_settings['rich_text_for_tickets'];
 if ($submit_as_customer) {
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($ticket['name'])) . "','" . hesk_dbEscape($message . "<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>") . "',NOW(),'" . hesk_dbEscape($myattachments) . "', '" . $html . "')");
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($ticket['name'])) . "','" . hesk_dbEscape($message . "<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>") . "','" . hesk_dbEscape(hesk_date()) . "','" . hesk_dbEscape($myattachments) . "', '" . $html . "')");
 } else {
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($_SESSION['name'])) . "','" . hesk_dbEscape($message) . "',NOW(),'" . hesk_dbEscape($myattachments) . "','" . intval($_SESSION['id']) . "', '" . $html . "')");
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($_SESSION['name'])) . "','" . hesk_dbEscape($message) . "','" . hesk_dbEscape(hesk_date()) . "','" . hesk_dbEscape($myattachments) . "','" . intval($_SESSION['id']) . "', '" . $html . "')");
 }
 
 /* Track ticket status changes for history */
@@ -252,6 +252,9 @@ if ($ticket['locked']) {
 
         if ($newStatus['IsClosed'] && hesk_checkPermission('can_resolve', 0)) {
             $audit_closed = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+            $audit_status = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+                1 => mfh_getDisplayTextForStatusId($new_status)
+            );
             $sql_status = " , `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . " ";
 
             // Lock the ticket if customers are not allowed to reopen tickets
