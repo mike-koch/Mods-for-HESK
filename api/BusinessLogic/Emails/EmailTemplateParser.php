@@ -243,7 +243,7 @@ class EmailTemplateParser extends \BaseClass {
         $msg = str_replace('%%PRIORITY%%', $priority, $msg);
         $msg = str_replace('%%OWNER%%', $ownerName, $msg);
         $msg = str_replace('%%STATUS%%', $statusName, $msg);
-        $msg = str_replace('%%EMAIL%%', implode(';',$ticket->email), $msg);
+        $msg = str_replace('%%EMAIL%%', implode(';', $ticket->email), $msg);
         $msg = str_replace('%%CREATED%%', $ticket->dateCreated, $msg);
         $msg = str_replace('%%UPDATED%%', $ticket->lastChanged, $msg);
         $msg = str_replace('%%ID%%', $ticket->id, $msg);

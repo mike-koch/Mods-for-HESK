@@ -207,6 +207,8 @@ class TicketGateway extends CommonDao {
         $ipAddress = $ticket->ipAddress !== null
                     && $ticket->ipAddress !== '' ? $ticket->ipAddress : '';
 
+        $emailAddresses = implode(';', $ticket->email);
+
         $tableName = $isEmailVerified ? 'tickets' : 'stage_tickets';
 
         $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . $tableName ."`
@@ -242,7 +244,7 @@ class TicketGateway extends CommonDao {
         (
             '" . hesk_dbEscape($ticket->trackingId) . "',
             '" . hesk_dbEscape($ticket->name) . "',
-            '" . hesk_dbEscape($ticket->email) . "',
+            '" . hesk_dbEscape($emailAddresses) . "',
             '" . intval($ticket->categoryId) . "',
             '" . intval($ticket->priorityId) . "',
             '" . hesk_dbEscape($ticket->subject) . "',

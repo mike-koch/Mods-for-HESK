@@ -164,7 +164,7 @@ class Ticket extends \BaseClass {
     public $name;
 
     /**
-     * @var array|null
+     * @var string[]|null
      */
     public $email;
 
