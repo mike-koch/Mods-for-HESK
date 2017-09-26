@@ -129,7 +129,7 @@ class TicketGateway extends CommonDao {
     function getTicketByTrackingId($trackingId, $heskSettings) {
         $this->init();
 
-        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `trackid` = " . intval($trackingId));
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `trackid` = '" . hesk_dbEscape($trackingId) . "'");
         if (hesk_dbNumRows($rs) === 0) {
             return null;
         }
@@ -138,7 +138,40 @@ class TicketGateway extends CommonDao {
         $linkedTicketsRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `parent` = " . intval($trackingId));
         $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($row['id']) . " ORDER BY `id` ASC");
 
-        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings);
+        $audiTrailRs = hesk_dbQuery("SELECT `audit`.`id`, `audit`.`language_key`, `audit`.`date`,
+              `values`.`replacement_index`, `values`.`replacement_value`
+            FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "audit_trail` AS `audit` 
+            LEFT JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "audit_trail_to_replacement_values` AS `values`
+                ON `audit`.`id` = `values`.`audit_trail_id`
+            WHERE `entity_type` = 'TICKET' AND `entity_id` = " . intval($row['id']));
+        $auditRecords = array();
+
+        /* @var $currentAuditRecord AuditTrail */
+        $currentAuditRecord = null;
+        while ($auditRow = hesk_dbFetchAssoc($audiTrailRs)) {
+            if ($currentAuditRecord == null || $currentAuditRecord->id != $auditRow['id']) {
+                if ($currentAuditRecord != null) {
+                    $auditRecords[] = $currentAuditRecord;
+                }
+                $currentAuditRecord = new AuditTrail();
+                $currentAuditRecord->id = $auditRow['id'];
+                $currentAuditRecord->entityId = $row['id'];
+                $currentAuditRecord->entityType = AuditTrailEntityType::TICKET;
+                $currentAuditRecord->languageKey = $auditRow['language_key'];
+                $currentAuditRecord->date = $auditRow['date'];
+                $currentAuditRecord->replacementValues = array();
+            }
+
+            if ($auditRow['replacement_index'] != null) {
+                $currentAuditRecord->replacementValues[intval($auditRow['replacement_index'])] = $auditRow['replacement_value'];
+            }
+        }
+
+        if ($currentAuditRecord != null) {
+            $auditRecords[] = $currentAuditRecord;
+        }
+
+        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $auditRecords, $heskSettings);
 
         $this->close();
 

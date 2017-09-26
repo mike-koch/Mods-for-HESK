@@ -43,7 +43,10 @@ function internalOrAuthHandler() {
 }
 
 function publicHandler() {
-    //-- No-op
+    global $userContext;
+
+    //-- Create an "anonymous" UserContext
+    $userContext = \BusinessLogic\Security\UserContext::buildAnonymousUser();
 }
 
 function assertApiIsEnabled() {
@@ -188,7 +191,7 @@ Link::all(array(
     '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::clazz(), array(RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::clazz() . '::sort', array(RequestMethod::POST), SecurityHandler::INTERNAL),
     // Tickets
-    '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::clazz(), RequestMethod::all()),
+    '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::clazz(), RequestMethod::all(), SecurityHandler::OPEN),
     // Tickets - Staff
     '/v1/staff/tickets/{i}' => action(\Controllers\Tickets\StaffTicketController::clazz(), RequestMethod::all()),
     // Attachments

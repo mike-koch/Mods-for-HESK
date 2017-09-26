@@ -155,10 +155,12 @@ class TicketCreator extends \BaseClass {
         $ticket->lastReplier = 0;
 
         $this->auditTrailGateway->insertAuditTrailRecord($ticket->id, AuditTrailEntityType::TICKET,
-            'audit_created', DateTimeHelpers::heskDate($heskSettings), array(), $heskSettings);
+            'audit_created', DateTimeHelpers::heskDate($heskSettings), array(
+                0 => $ticket->name
+            ), $heskSettings);
 
         $addressees = new Addressees();
-        $addressees->to = $this->getAddressees($ticket->email);
+        $addressees->to = $ticket->email;
 
         if ($ticketRequest->sendEmailToCustomer && $emailVerified) {
             $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_TICKET, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);
