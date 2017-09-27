@@ -97,6 +97,37 @@ if (!$ticket['owner'] && !$can_view_unassigned) {
     hesk_error($hesklang['ycovtay']);
 }
 
+// Get audit information
+$audit_sort = $hesk_settings['new_top'] ? "ASC" : "DESC";
+$auditRes = hesk_dbQuery("SELECT `audit`.`id`, `audit`.`language_key`, `audit`.`date`,
+      `values`.`replacement_index`, `values`.`replacement_value`
+    FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` AS `audit` 
+    LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail_to_replacement_values` AS `values`
+        ON `audit`.`id` = `values`.`audit_trail_id`
+    WHERE `entity_type` = 'TICKET' AND `entity_id` = " . intval($ticket['id']) . "
+    ORDER BY `audit`.`date` {$audit_sort}");
+$audit_records = array();
+$current_audit_record = null;
+while ($row = hesk_dbFetchAssoc($auditRes)) {
+    if ($current_audit_record == null || $current_audit_record['id'] != $row['id']) {
+        if ($current_audit_record != null) {
+            $audit_records[] = $current_audit_record;
+        }
+        $current_audit_record['id'] = $row['id'];
+        $current_audit_record['language_key'] = $row['language_key'];
+        $current_audit_record['date'] = $row['date'];
+        $current_audit_record['replacement_values'] = array();
+    }
+
+    if ($row['replacement_index'] != null) {
+        $current_audit_record['replacement_values'][intval($row['replacement_index'])] = $row['replacement_value'];
+    }
+}
+
+if ($current_audit_record != null) {
+    $audit_records[] = $current_audit_record;
+}
+
 /* Set last replier name */
 if ($ticket['lastreplier']) {
     if (empty($ticket['repliername'])) {
@@ -439,8 +470,10 @@ if ($hesk_settings['time_worked'] && ($can_reply || $can_edit) && isset($_POST['
     $time_worked = hesk_getTime($h . ':' . $m . ':' . $s);
 
     /* Update database */
-    $revision = sprintf($hesklang['thist14'], hesk_date(), $time_worked, $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `time_worked`='" . hesk_dbEscape($time_worked) . "', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `time_worked`='" . hesk_dbEscape($time_worked) . "' WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_time_worked', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => $time_worked));
 
     /* Show ticket */
     hesk_process_messages($hesklang['twu'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
@@ -476,13 +509,26 @@ if (($can_reply || $can_edit) && isset($_POST['childTrackingId'])) {
     }
 
     hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = ' . intval($ticket['id']) . ' WHERE `trackid` = \'' . hesk_dbEscape(hesk_POST('childTrackingId')) . '\'');
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_linked_ticket', hesk_date(),
+        array(
+           0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+           1 => hesk_POST('childTrackingId')
+        ));
     hesk_process_messages(sprintf($hesklang['link_added'], $_POST['childTrackingId']), 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 }
 
 /* Delete child action */
 if (($can_reply || $can_edit) && isset($_GET['deleteChild'])) {
     //-- Delete the relationship
+    $innerTrackingRs = hesk_dbQuery("SELECT `trackid` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `id` = " . hesk_dbEscape($_GET['deleteChild']));
+    $innerTrackingId = hesk_dbFetchAssoc($innerTrackingRs);
+
     hesk_dbQuery('UPDATE `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'tickets` SET `parent` = NULL WHERE `ID` = ' . hesk_dbEscape($_GET['deleteChild']));
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_unlinked_ticket', hesk_date(),
+        array(
+            0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => $innerTrackingId['trackid']
+        ));
     hesk_process_messages($hesklang['ticket_no_longer_linked'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 
 } elseif (($can_reply || $can_edit) && isset($_GET['deleteParent'])) {
@@ -528,7 +574,6 @@ if (isset($_GET['delatt']) && hesk_token_check()) {
     hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "attachments` WHERE `att_id`='" . intval($att_id) . "'");
 
     /* Update ticket or reply in the database */
-    $revision = sprintf($hesklang['thist12'], hesk_date(), $att['real_name'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
     if ($reply) {
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`='" . intval($reply) . "'");
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($ticket['id']) . "'");
@@ -539,6 +584,9 @@ if (isset($_GET['delatt']) && hesk_token_check()) {
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name'] . '#' . $att['saved_name']) . ",','') WHERE `id`='" . intval($ticket['id']) . "'");
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `attachments`=REPLACE(`attachments`,'" . hesk_dbEscape($att_id . '#' . $att['real_name']) . ",',''), `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($ticket['id']) . "'");
     }
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_attachment_deleted', hesk_date(),
+        array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => $att['real_name']));
 
     hesk_process_messages($hesklang['kb_att_rem'], 'admin_ticket.php?track=' . $trackingID . '&Refresh=' . mt_rand(10000, 99999), 'SUCCESS');
 }
@@ -1605,7 +1653,7 @@ function print_form()
 } // End print_form()
 
 function mfh_print_message() {
-    global $ticket, $hesklang, $hesk_settings, $can_ban_emails, $can_ban_ips, $trackingID, $modsForHesk_settings;
+    global $ticket, $hesklang, $hesk_settings, $can_ban_emails, $can_ban_ips, $can_unban_emails, $can_unban_ips, $trackingID, $modsForHesk_settings;
     ?>
     <li><i class="fa fa-comment bg-red" data-toggle="tooltip" title="<?php echo $hesklang['original_message']; ?>"></i>
         <div class="timeline-item">
@@ -1766,7 +1814,44 @@ function mfh_print_message() {
 
 function hesk_printTicketReplies()
 {
-    global $hesklang, $hesk_settings, $result, $reply;
+    global $hesklang, $hesk_settings, $result, $reply, $audit_records;
+
+    // Sort replies and audit messages. They'll be in the proper order already
+    $combined_records = array();
+    foreach ($audit_records as $audit_record) {
+        $audit_record['SORT_TYPE'] = 'AUDIT_RECORD';
+        $combined_records[] = $audit_record;
+    }
+    while ($reply = hesk_dbFetchAssoc($result)) {
+        $reply['SORT_TYPE'] = 'REPLY';
+        $combined_records[] = $reply;
+    }
+
+    // Re-sort them so they're in order by date
+    usort($combined_records, function ($a, $b) {
+        $a_date = null;
+        $b_date = null;
+        if ($a['SORT_TYPE'] == 'REPLY') {
+            $a_date = strtotime($a['dt']);
+        } else {
+            $a_date = strtotime($a['date']);
+        }
+
+        if ($b['SORT_TYPE'] == 'REPLY') {
+            $b_date = strtotime($b['dt']);
+        } else {
+            $b_date = strtotime($b['date']);
+        }
+
+        if ($a_date === $b_date && $a['SORT_TYPE'] != $b['SORT_TYPE']) {
+            if ($a['SORT_TYPE'] != $b['SORT_TYPE']) {
+                return $a['SORT_TYPE'] == 'REPLY' ? -1 : 1;
+            }
+        }
+
+        return $a_date - $b_date;
+    });
+
 
     echo '<ul class="timeline">';
     if (!$hesk_settings['new_top']) {
@@ -1775,66 +1860,12 @@ function hesk_printTicketReplies()
         echo '<li class="today-top"><i class="fa fa-clock-o bg-gray" data-toggle="tooltip" title="' . $hesklang['timeline_today'] . '"></i></li>';
     }
 
-    while ($reply = hesk_dbFetchAssoc($result)) {
-        $reply['dt'] = hesk_date($reply['dt'], true);
-        ?>
-        <li>
-            <?php if ($reply['staffid']): ?>
-                <i class="fa fa-reply bg-orange" data-toggle="tooltip" title="<?php echo $hesklang['reply_by_staff']; ?>"></i>
-            <?php else: ?>
-                <i class="fa fa-share bg-blue" data-toggle="tooltip" title="<?php echo $hesklang['reply_by_customer']; ?>"></i>
-            <?php endif; ?>
-            <div class="timeline-item">
-                <span class="time"><i class="fa fa-clock-o"></i> <?php echo $reply['dt']; ?></span>
-                <h3 class="timeline-header"><?php echo $reply['name']; ?></h3>
-                <div class="timeline-body">
-                    <div class="row">
-                        <div class="col-md-3 text-right">
-                            <strong><?php echo $hesklang['message_colon']; ?></strong>
-                        </div>
-                        <div class="col-md-9">
-                            <?php
-                            if ($reply['html']) {
-                                echo hesk_html_entity_decode($reply['message']);
-                            } else {
-                                echo $reply['message'];
-                            } ?>
-                        </div>
-                    </div>
-                </div>
-                <?php
-                if ($hesk_settings['attachments']['use'] && strlen($reply['attachments'])):
-                ?>
-                <div class="timeline-footer">
-                    <?php mfh_listAttachments($reply['attachments'], $reply['id'], true); ?>
-                </div>
-                <?php endif; ?>
-                <div class="timeline-footer">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <?php
-                            /* Staff rating */
-                            if ($hesk_settings['rating'] && $reply['staffid']) {
-                                if ($reply['rating'] == 1) {
-                                    echo '<p class="rate">' . $hesklang['rnh'] . '</p>';
-                                } elseif ($reply['rating'] == 5) {
-                                    echo '<p class="rate">' . $hesklang['rh'] . '</p>';
-                                }
-                            }
-                            /* Show "unread reply" message? */
-                            if ($reply['staffid'] && !$reply['read']) {
-                                echo '<p class="rate">' . $hesklang['unread'] . '</p>';
-                            }
-                            ?>
-                        </div>
-                        <div class="col-md-6 text-right">
-                            <?php echo hesk_getAdminButtonsInTicket(); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </li>
-        <?php
+    foreach ($combined_records as $record) {
+        if ($record['SORT_TYPE'] == 'REPLY') {
+            mfh_print_reply($record);
+        } else {
+            mfh_print_audit_record($record);
+        }
     }
 
     if ($hesk_settings['new_top']) {
@@ -1847,6 +1878,171 @@ function hesk_printTicketReplies()
     return;
 
 } // End hesk_printTicketReplies()
+
+function mfh_print_reply($reply) {
+    global $hesklang, $hesk_settings;
+
+    $reply['dt'] = hesk_date($reply['dt'], true);
+    ?>
+    <li>
+        <?php if ($reply['staffid']): ?>
+            <i class="fa fa-reply bg-orange" data-toggle="tooltip" title="<?php echo $hesklang['reply_by_staff']; ?>"></i>
+        <?php else: ?>
+            <i class="fa fa-share bg-blue" data-toggle="tooltip" title="<?php echo $hesklang['reply_by_customer']; ?>"></i>
+        <?php endif; ?>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> <?php echo $reply['dt']; ?></span>
+            <h3 class="timeline-header"><?php echo $reply['name']; ?></h3>
+            <div class="timeline-body">
+                <div class="row">
+                    <div class="col-md-3 text-right">
+                        <strong><?php echo $hesklang['message_colon']; ?></strong>
+                    </div>
+                    <div class="col-md-9">
+                        <?php
+                        if ($reply['html']) {
+                            echo hesk_html_entity_decode($reply['message']);
+                        } else {
+                            echo $reply['message'];
+                        } ?>
+                    </div>
+                </div>
+            </div>
+            <?php
+            if ($hesk_settings['attachments']['use'] && strlen($reply['attachments'])):
+                ?>
+                <div class="timeline-footer">
+                    <?php mfh_listAttachments($reply['attachments'], $reply['id'], true); ?>
+                </div>
+            <?php endif; ?>
+            <div class="timeline-footer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php
+                        /* Staff rating */
+                        if ($hesk_settings['rating'] && $reply['staffid']) {
+                            if ($reply['rating'] == 1) {
+                                echo '<p class="rate">' . $hesklang['rnh'] . '</p>';
+                            } elseif ($reply['rating'] == 5) {
+                                echo '<p class="rate">' . $hesklang['rh'] . '</p>';
+                            }
+                        }
+                        /* Show "unread reply" message? */
+                        if ($reply['staffid'] && !$reply['read']) {
+                            echo '<p class="rate">' . $hesklang['unread'] . '</p>';
+                        }
+                        ?>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <?php echo hesk_getAdminButtonsInTicket(); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+    <?php
+}
+
+function mfh_print_audit_record($record) {
+    global $hesklang;
+
+    $record['date'] = hesk_date($record['date'], true);
+    $font_icon = null;
+    switch ($record['language_key']) {
+        case 'audit_moved_category':
+            $font_icon = 'fa-pie-chart';
+            break;
+        case 'audit_assigned':
+        case 'audit_assigned_self':
+            $font_icon = 'fa-user-plus';
+            break;
+        case 'audit_unassigned':
+            $font_icon = 'fa-user-times';
+            break;
+        case 'audit_autoassigned':
+            $font_icon = 'fa-bolt';
+            break;
+        case 'audit_closed':
+        case 'audit_automatically_closed':
+            $font_icon = 'fa-check-circle';
+            break;
+        case 'audit_opened':
+            $font_icon = 'fa-circle-o';
+            break;
+        case 'audit_locked':
+        case 'audit_automatically_locked':
+            $font_icon = 'fa-lock';
+            break;
+        case 'audit_unlocked':
+            $font_icon = 'fa-unlock-alt';
+            break;
+        case 'audit_created':
+        case 'audit_submitted_by':
+            $font_icon = 'fa-user';
+            break;
+        case 'audit_priority':
+            // The new priority is in arg[1]
+            $priority = $record['replacement_values'][1];
+            if ($priority === 'critical') {
+                $font_icon = 'fa-long-arrow-up';
+            } elseif ($priority === 'high') {
+                $font_icon = 'fa-angle-double-up';
+            } elseif ($priority === 'medium') {
+                $font_icon = 'fa-angle-double-down';
+            } else {
+                $font_icon = 'fa-long-arrow-down';
+            }
+
+            // Now localize the text for display
+            $record['replacement_values'][1] = $hesklang[$priority];
+            break;
+        case 'audit_status':
+            $font_icon = 'fa-exchange';
+            break;
+        case 'audit_submitted_via_piping':
+        case 'audit_submitted_via_pop':
+            $font_icon = 'fa-envelope-o';
+            break;
+        case 'audit_attachment_deleted':
+            $font_icon = 'fa-paperclip';
+            break;
+        case 'audit_merged':
+            $font_icon = 'fa-code-fork';
+            break;
+        case 'audit_time_worked':
+            $font_icon = 'fa fa-clock-o';
+            break;
+        case 'audit_due_date_removed':
+            $font_icon = 'fa fa-calendar-minus-o';
+            break;
+        case 'audit_due_date_changed':
+            $font_icon = 'fa fa-calendar';
+
+            //-- Format the date
+            $record['replacement_values'][1] = date('Y-m-d', strtotime($record['replacement_values'][1]));
+            break;
+        case 'audit_linked_ticket':
+            $font_icon = 'fa fa-link';
+            break;
+        case 'audit_unlinked_ticket':
+            $font_icon = 'fa fa-chain-broken';
+            break;
+        default:
+            $font_icon = 'fa-question-circle';
+            break;
+    }
+    ?>
+    <li>
+        <i class="fa <?php echo $font_icon; ?> bg-gray"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> <?php echo $record['date']; ?></span>
+            <h3 class="timeline-header audit-record">
+                <?php echo vsprintf($hesklang[$record['language_key']], $record['replacement_values']); ?>
+            </h3>
+        </div>
+    </li>
+    <?php
+}
 
 
 function hesk_printReplyForm()

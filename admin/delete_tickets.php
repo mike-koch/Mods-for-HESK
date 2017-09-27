@@ -81,10 +81,10 @@ $i = 0;
 
 // Possible priorities
 $priorities = array(
-    'critical' => array('value' => 0, 'text' => $hesklang['critical'], 'formatted' => '<font class="critical">' . $hesklang['critical'] . '</font>'),
-    'high' => array('value' => 1, 'text' => $hesklang['high'], 'formatted' => '<font class="important">' . $hesklang['high'] . '</font>'),
-    'medium' => array('value' => 2, 'text' => $hesklang['medium'], 'formatted' => '<font class="medium">' . $hesklang['medium'] . '</font>'),
-    'low' => array('value' => 3, 'text' => $hesklang['low'], 'formatted' => $hesklang['low']),
+    'critical' => array('value' => 0, 'lang' => 'critical', 'text' => $hesklang['critical'], 'formatted' => '<font class="critical">' . $hesklang['critical'] . '</font>'),
+    'high' => array('value' => 1, 'lang' => 'high', 'text' => $hesklang['high'], 'formatted' => '<font class="important">' . $hesklang['high'] . '</font>'),
+    'medium' => array('value' => 2, 'lang' => 'medium', 'text' => $hesklang['medium'], 'formatted' => '<font class="medium">' . $hesklang['medium'] . '</font>'),
+    'low' => array('value' => 3, 'lang' => 'low', 'text' => $hesklang['low'], 'formatted' => $hesklang['low']),
 );
 
 // Change priority
@@ -113,8 +113,10 @@ if (array_key_exists($_POST['a'], $priorities)) {
 
         hesk_okCategory($ticket['category']);
 
-        $revision = sprintf($hesklang['thist8'], hesk_date(), $priority['formatted'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `priority`='{$priority['value']}', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`={$this_id}");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `priority`='{$priority['value']}' WHERE `id`={$this_id}");
+        mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_priority', hesk_date(),
+            array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+                1 => $priority['lang']));
 
         $i++;
     }
@@ -132,8 +134,6 @@ elseif ($_POST['a'] == 'delete') {
     if ($hesk_settings['notify_closed']) {
         require(HESK_PATH . 'inc/email_functions.inc.php');
     }
-
-    $revision = sprintf($hesklang['thist3'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
 
     foreach ($_POST['id'] as $this_id) {
         if (is_array($this_id)) {
@@ -222,8 +222,6 @@ else {
     hesk_token_check('POST');
     require(HESK_PATH . 'inc/email_functions.inc.php');
 
-    $revision = sprintf($hesklang['thist3'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-
     foreach ($_POST['id'] as $this_id) {
         if (is_array($this_id)) {
             continue;
@@ -239,7 +237,11 @@ else {
         $closedStatusRS = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE `IsStaffClosedOption` = 1");
         $closedStatus = hesk_dbFetchAssoc($closedStatusRS);
 
-        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='" . $closedStatus['ID'] . "', `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `id`='" . intval($this_id) . "'");
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status`='" . $closedStatus['ID'] . "', `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . " WHERE `id`='" . intval($this_id) . "'");
+
+        mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_closed', hesk_date(),
+            array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
+
         $i++;
 
         // Notify customer of closed ticket?
@@ -283,6 +285,14 @@ function hesk_fullyDeleteTicket()
 
     /* Delete ticket notes */
     hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "notes` WHERE `ticket`='" . intval($ticket['id']) . "'");
+
+    /* Delete audit trail records */
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail_to_replacement_values` 
+        WHERE `audit_trail_id` IN (
+            SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail`
+            WHERE `entity_type` = 'TICKET' AND `entity_id` = " . intval($ticket['id']) . ")");
+    hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` WHERE `entity_type`='TICKET' 
+        AND `entity_id` = " . intval($ticket['id']));
 
     /* Delete ticket reply drafts */
     hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "reply_drafts` WHERE `ticket`=" . intval($ticket['id']));

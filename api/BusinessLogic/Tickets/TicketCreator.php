@@ -2,11 +2,13 @@
 
 namespace BusinessLogic\Tickets;
 
+use BusinessLogic\DateTimeHelpers;
 use BusinessLogic\Emails\Addressees;
 use BusinessLogic\Emails\EmailSenderHelper;
 use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Statuses\DefaultStatusForAction;
+use DataAccess\AuditTrail\AuditTrailGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 use DataAccess\Statuses\StatusGateway;
@@ -56,6 +58,9 @@ class TicketCreator extends \BaseClass {
     /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
     private $modsForHeskSettingsGateway;
 
+    /* @var $auditTrailGateway AuditTrailGateway */
+    private $auditTrailGateway;
+
     function __construct(NewTicketValidator $newTicketValidator,
                          TrackingIdGenerator $trackingIdGenerator,
                          Autoassigner $autoassigner,
@@ -64,7 +69,8 @@ class TicketCreator extends \BaseClass {
                          VerifiedEmailChecker $verifiedEmailChecker,
                          EmailSenderHelper $emailSenderHelper,
                          UserGateway $userGateway,
-                         ModsForHeskSettingsGateway $modsForHeskSettingsGateway) {
+                         ModsForHeskSettingsGateway $modsForHeskSettingsGateway,
+                         AuditTrailGateway $auditTrailGateway) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
         $this->autoassigner = $autoassigner;
@@ -74,6 +80,7 @@ class TicketCreator extends \BaseClass {
         $this->emailSenderHelper = $emailSenderHelper;
         $this->userGateway = $userGateway;
         $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
+        $this->auditTrailGateway = $auditTrailGateway;
     }
 
     /**
@@ -113,7 +120,7 @@ class TicketCreator extends \BaseClass {
 
         // Transform one-to-one properties
         $ticket->name = $ticketRequest->name;
-        $ticket->email = $ticketRequest->email;
+        $ticket->email = $this->getAddressees($ticketRequest->email);
         $ticket->priorityId = $ticketRequest->priority;
         $ticket->categoryId = $ticketRequest->category;
         $ticket->subject = $ticketRequest->subject;
@@ -147,8 +154,13 @@ class TicketCreator extends \BaseClass {
         $ticket->timeWorked = '00:00:00';
         $ticket->lastReplier = 0;
 
+        $this->auditTrailGateway->insertAuditTrailRecord($ticket->id, AuditTrailEntityType::TICKET,
+            'audit_created', DateTimeHelpers::heskDate($heskSettings), array(
+                0 => $ticket->name
+            ), $heskSettings);
+
         $addressees = new Addressees();
-        $addressees->to = $this->getAddressees($ticket->email);
+        $addressees->to = $ticket->email;
 
         if ($ticketRequest->sendEmailToCustomer && $emailVerified) {
             $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_TICKET, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);

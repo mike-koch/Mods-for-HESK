@@ -1146,6 +1146,7 @@ $hesklang['maxpost']='You probably tried to submit more data than this server ac
 
 // --> Ticket history log
 // Unless otherwise specified, first %s will be replaced with date and second with name/username
+// THESE STRINGS ARE DEPRECATED AS OF MODS FOR HESK 3.2.0
 $hesklang['thist1']='<li class="smaller">%s | moved to category %s by %s</li>'; // %s = date, new category, user making change
 $hesklang['thist2']='<li class="smaller">%s | assigned to %s by %s</li>'; // %s = date, assigned user, user making change
 $hesklang['thist3']='<li class="smaller">%s | closed by %s</li>';
@@ -2187,6 +2188,32 @@ $hesklang['can_man_permission_tpl'] = 'Can manage permission groups';
 $hesklang['permission_group_colon'] = 'Permission Group:';
 $hesklang['permission_group'] = 'Permission Group';
 $hesklang['changing_permissions_will_reset_permission_group'] = 'Changing a user\'s categories / features will reset their permission group! Click "Discard Changes" to reset the user\'s categories / features.';
+
+// --> Ticket audit trail
+$hesklang['audit_moved_category']='%s moved ticket to category %s'; // %s = new category, user making change, thist1
+$hesklang['audit_assigned']='%s assigned ticket to %s'; // %s = assigned user, user making change
+$hesklang['audit_assigned_self'] = '%s assigned ticket to themself';
+$hesklang['audit_unassigned'] = '%s unassigned ticket';
+$hesklang['audit_closed']='%s closed ticket'; // thist3
+$hesklang['audit_automatically_closed'] ='Ticket automatically closed';
+$hesklang['audit_opened']='%s opened ticket'; // thist4
+$hesklang['audit_locked']='%s locked ticket'; // thist5
+$hesklang['audit_automatically_locked'] = 'Ticket automatically locked';
+$hesklang['audit_unlocked']='%s unlocked ticket'; // thist6
+$hesklang['audit_created']='%s created ticket';
+$hesklang['audit_priority']='%s changed priority to %s'; // %s = date,new priority, user making change, thist8
+$hesklang['audit_status']='%s changed status to %s'; // %s = date, new status, user making change, thist9
+$hesklang['audit_autoassigned']='%s automatically assigned to ticket'; //thist10
+$hesklang['audit_submitted_via_piping']='Ticket submitted via e-mail piping'; // thist11
+$hesklang['audit_attachment_deleted']='%s deleted attachment %s'; // %s = date, deleted attachment, user making change
+$hesklang['audit_merged']='%s merged ticket %s with this ticket'; // %s = date, merged ticket ID, user making change, thist13
+$hesklang['audit_time_worked']='%s updated time worked to %s'; // %s = date, new time worked, user making change
+$hesklang['audit_submitted_by']='%s submitted ticket';
+$hesklang['audit_submitted_via_pop']='Ticket submitted via POP3 fetching'; // thist16
+$hesklang['audit_due_date_removed'] = '%s removed due date';
+$hesklang['audit_due_date_changed'] = '%s changed due date to %s';
+$hesklang['audit_linked_ticket'] = '%s linked ticket %s to this ticket';
+$hesklang['audit_unlinked_ticket'] = '%s unlinked ticket %s';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

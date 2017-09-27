@@ -351,3 +351,8 @@ div.ticket-info {
     box-shadow: none;
     outline: 0;
 }
+
+.timeline > li > .timeline-item > .timeline-header.audit-record {
+    font-size: 12px;
+    border-bottom: none;
+}

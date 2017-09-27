@@ -194,12 +194,25 @@ function delete_event($id, $hesk_settings) {
 }
 
 function update_ticket_due_date($ticket, $hesk_settings) {
+    $ticket_id_rs = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `trackid` = '" . hesk_dbEscape($ticket['trackid']) . "'");
+    $ticket_id = hesk_dbFetchAssoc($ticket_id_rs);
+
     $due_date = 'NULL';
+    $language_key = 'audit_due_date_removed';
+    $audit_array = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
     if ($ticket['due_date'] != NULL) {
+        $audit_array = array(
+            0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => date('Y-m-d H:i:s', strtotime($ticket['due_date']))
+        );
         $due_date = "'" . date('Y-m-d H:i:s', strtotime($ticket['due_date'])) . "'";
+        $language_key = 'audit_due_date_changed';
     }
     $sql = "UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `due_date` = {$due_date}, `overdue_email_sent` = '0'
         WHERE `trackid` = '" . hesk_dbEscape($ticket['trackid']) . "'";
+
+    mfh_insert_audit_trail_record($ticket_id['id'], 'TICKET', $language_key, hesk_date(),
+        $audit_array);
 
     hesk_dbQuery($sql);
 }
