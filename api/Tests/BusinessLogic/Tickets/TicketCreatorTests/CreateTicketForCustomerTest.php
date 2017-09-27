@@ -18,6 +18,7 @@ use BusinessLogic\Tickets\TrackingIdGenerator;
 use BusinessLogic\Tickets\VerifiedEmailChecker;
 use BusinessLogic\ValidationModel;
 use Core\Constants\Priority;
+use DataAccess\AuditTrail\AuditTrailGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 use DataAccess\Statuses\StatusGateway;
@@ -97,6 +98,9 @@ class CreateTicketTest extends TestCase {
     /* @var $modsForHeskSettings array */
     private $modsForHeskSettings;
 
+    /* @var $auditTrailGateway \PHPUnit_Framework_MockObject_MockObject|AuditTrailGateway */
+    private $auditTrailGateway;
+
     protected function setUp() {
         $this->ticketGateway = $this->createMock(TicketGateway::clazz());
         $this->newTicketValidator = $this->createMock(NewTicketValidator::clazz());
@@ -107,10 +111,11 @@ class CreateTicketTest extends TestCase {
         $this->emailSenderHelper = $this->createMock(EmailSenderHelper::clazz());
         $this->userGateway = $this->createMock(UserGateway::clazz());
         $this->modsForHeskSettingsGateway = $this->createMock(ModsForHeskSettingsGateway::clazz());
+        $this->auditTrailGateway = $this->createMock(AuditTrailGateway::clazz());
 
         $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator,
             $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker,
-            $this->emailSenderHelper, $this->userGateway, $this->modsForHeskSettingsGateway);
+            $this->emailSenderHelper, $this->userGateway, $this->modsForHeskSettingsGateway, $this->auditTrailGateway);
 
         $this->ticketRequest = new CreateTicketByCustomerModel();
         $this->ticketRequest->name = 'Name';
@@ -126,7 +131,8 @@ class CreateTicketTest extends TestCase {
             'require_subject' => 1,
             'require_message' => 1,
             'custom_fields' => array(),
-            'autoassign' => 0
+            'autoassign' => 0,
+            'timeformat' => 'Y-m-d',
         );
         $this->modsForHeskSettings = array(
             'customer_email_verification_required' => false
@@ -222,7 +228,7 @@ class CreateTicketTest extends TestCase {
 
         //-- Assert
         self::assertThat($ticket->ticket->name, self::equalTo($this->ticketRequest->name));
-        self::assertThat($ticket->ticket->email, self::equalTo($this->ticketRequest->email));
+        self::assertThat($ticket->ticket->email[0], self::equalTo($this->ticketRequest->email));
         self::assertThat($ticket->ticket->priorityId, self::equalTo($this->ticketRequest->priority));
         self::assertThat($ticket->ticket->categoryId, self::equalTo($this->ticketRequest->category));
         self::assertThat($ticket->ticket->subject, self::equalTo($this->ticketRequest->subject));
