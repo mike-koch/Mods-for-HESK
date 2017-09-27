@@ -1,6 +1,6 @@
 <?php
 define('IN_SCRIPT', 1);
-define('HESK_PATH', '../../');
+define('HESK_PATH', '../');
 require(HESK_PATH . 'install/install_functions.inc.php');
 require(HESK_PATH . 'hesk_settings.inc.php');
 
@@ -9,13 +9,13 @@ hesk_dbConnect();
 <html>
 <head>
     <title>Mods For HESK Database Validation</title>
-    <link href="../../hesk_style.css?<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>hesk_style.css?<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo $hesk_settings['hesk_version']; ?>"
           type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo $hesk_settings['hesk_version']; ?>"
           type="text/css" rel="stylesheet"/>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../../css/hesk_newStyle.css" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css" type="text/css" rel="stylesheet"/>
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
     <script language="Javascript" type="text/javascript"

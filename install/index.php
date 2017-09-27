@@ -16,6 +16,7 @@ hesk_dbConnect();
     <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css" type="text/css" rel="stylesheet">
     <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css" type="text/css" rel="stylesheet">
+    <link href="<?php echo HESK_PATH; ?>css/colors.css" type="text/css" rel="stylesheet">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
     <script language="Javascript" type="text/javascript"
@@ -28,7 +29,7 @@ hesk_dbConnect();
             src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
     <style>
         body {
-            background: url('install/background.jpg') no-repeat center center fixed;
+            background: url('<?php echo HESK_PATH; ?>install/background.jpg') no-repeat center center fixed;
             background-size: cover;
         }
     </style>
@@ -40,11 +41,24 @@ hesk_dbConnect();
         <div class="login-box-background"></div>
         <div class="login-box-body">
             <div class="login-logo">
+				<img src="<?php echo HESK_PATH; ?>install/logo.png" alt="Mods for HESK logo"><br>
                 Thanks for choosing Mods for HESK.
             </div>
             <h4 class="login-box-msg">
                 Let's get started.
             </h4>
+            <div id="buttons">
+                <div class="btn btn-primary" style="display: none;"><i class="fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;Back</div>
+                <div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tools <span class="caret"></span>
+                </div>
+                <ul class="dropdown-menu">
+                    <li><a href="<?php echo HESK_PATH; ?>install/database-validation.php"><i class="fa fa-check-circle"></i> Database Validator</a></li>
+                    <li><a href="#" data-toggle="modal"
+                           data-target="#uninstallModal"><i class="fa fa-trash"></i> Uninstall Mods for HESK</a></li>
+                </ul>
+                <div class="btn btn-primary pull-right">Next&nbsp;&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></div>
+            </div>
         </div>
     </div>
 </div>
@@ -61,7 +75,7 @@ hesk_dbConnect();
                 <p>Are you sure you want to uninstall Mods for HESK?</p>
             </div>
             <div class="modal-footer">
-                <a class="btn btn-success" href="uninstallModsForHesk.php"><i class="fa fa-check"></i> Yes</a>
+                <a class="btn btn-success" href="<?php echo HESK_PATH; ?>install/uninstallModsForHesk.php"><i class="fa fa-check"></i> Yes</a>
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> No
                 </button>
             </div>
