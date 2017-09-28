@@ -122,7 +122,13 @@ if (hesk_dbNumRows($tableSql) > 0) {
                 </table>
             </div>
             <div data-step="install-or-update" style="display: none">
-                <p>Here we'd actually be doing some things</p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
+                         style="min-width: 2em; width: 100%">
+                        <span class="sr-only">100% Complete</span>
+                        100%
+                    </div>
+                </div>
             </div>
             <?php // END INSTALL SCREENS ?>
             <div id="buttons">

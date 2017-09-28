@@ -7,7 +7,12 @@ var steps = [
     {
         name: 'db-confirm',
         text: 'Confirm the information below',
-        callback: confirmDatabaseInformation
+        callback: undefined
+    },
+    {
+        name: 'install-or-update',
+        text: 'Updating to the latest version...',
+        callback: undefined
     }
 ];
 
@@ -42,8 +47,4 @@ function goToStep(step) {
     }
 
     $('#header-text').text(steps[step].text);
-}
-
-function confirmDatabaseInformation() {
-
 }
