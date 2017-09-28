@@ -14,6 +14,42 @@ We have four possible installation scenarios:
 3. Installed a recent version, but before migrations began - just pull the version # and use the dictionary below.
 4. Migration number present in the settings table. Take that number and run with it.
  */
+
+$tableSql = hesk_dbQuery("SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings'");
+$startingMigrationNumber = 0;
+if (hesk_dbNumRows($tableSql) > 0) {
+    // They have installed at LEAST to version 1.6.0. Just pull the version number OR migration number
+    $migrationNumberSql = hesk_dbQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'lastMigration'");
+    if ($migrationRow = hesk_dbFetchAssoc($migrationNumberSql)) {
+        $startingMigrationNumber = $migrationRow['Value'];
+    } else {
+        $versionSql = hesk_dbQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'modsForHeskVersion'");
+        $versionRow = hesk_dbFetchAssoc($versionSql);
+
+        //TODO Actually map this
+        $startingMigrationNumber = $versionRow['Value'];
+    }
+} else {
+    // migration # => sql for checking
+    $versionChecks = array(
+        // 1.5.0 -> users.active
+        1 => "SHOW COLUMNS FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` LIKE 'active'",
+        // 1.4.1 -> denied_emails
+        2 => "SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_emails'",
+        // 1.4.0 -> denied ips
+        3 => "SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips'",
+        // Pre-1.4.0 but still something -> statuses
+        4 => "SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses'"
+    );
+
+    foreach ($versionChecks as $migrationNumber => $sql) {
+        $rs = hesk_dbQuery($sql);
+        if (hesk_dbNumRows($rs) > 0) {
+            $startingMigrationNumber = $migrationNumber;
+            break;
+        }
+    }
+}
 ?>
 <html>
 <head>
@@ -84,6 +120,9 @@ We have four possible installation scenarios:
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <div data-step="install-or-update" style="display: none">
+                <p>Here we'd actually be doing some things</p>
             </div>
             <?php // END INSTALL SCREENS ?>
             <div id="buttons">
