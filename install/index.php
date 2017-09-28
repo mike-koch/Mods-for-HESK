@@ -5,51 +5,90 @@ require(HESK_PATH . 'install/install_functions.inc.php');
 require(HESK_PATH . 'hesk_settings.inc.php');
 
 hesk_dbConnect();
+
+/*
+We have four possible installation scenarios:
+
+1. Fresh install - the user has never installed Mods for HESK before. Simply start at migration #0.
+2. Installed a really old version - we don't have a previous version to start from.
+3. Installed a recent version, but before migrations began - just pull the version # and use the dictionary below.
+4. Migration number present in the settings table. Take that number and run with it.
+ */
 ?>
 <html>
 <head>
-    <title>Mods For HESK <?php echo MODS_FOR_HESK_NEW_VERSION; ?> Install / Upgrade</title>
-    <link href="<?php echo HESK_PATH; ?>../hesk_style.css?<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet"/>
+    <title>Mods for HESK <?php echo MODS_FOR_HESK_NEW_VERSION; ?> Install / Upgrade</title>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo $hesk_settings['hesk_version']; ?>"
           type="text/css" rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.ccss?v=<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet" />
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css" type="text/css" rel="stylesheet">
     <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css" type="text/css" rel="stylesheet">
     <link href="<?php echo HESK_PATH; ?>css/colors.css" type="text/css" rel="stylesheet">
     <script src="<?php echo HESK_PATH; ?>js/jquery-1.10.2.min.js"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js"></script>
-    <script language="Javascript" type="text/javascript"
-            src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js"></script>
-    <script language="JavaScript" type="text/javascript"
-            src="<?php echo HESK_PATH; ?>install/mods-for-hesk/js/ui-scripts.js"></script>
-    <script language="JavaScript" type="text/javascript"
-            src="<?php echo HESK_PATH; ?>install/mods-for-hesk/js/version-scripts.js"></script>
-    <script language="JavaScript" type="text/javascript"
-            src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js"></script>
+    <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>install/js/install-script.js"></script>
     <style>
-        body {
+        body, .login-box-background {
             background: url('<?php echo HESK_PATH; ?>install/background.jpg') no-repeat center center fixed;
             background-size: cover;
         }
     </style>
 </head>
-<body>
-
+<body class="fixed" style="min-height: initial;">
 <div class="login-box installer-login-box">
     <div class="login-box-container">
         <div class="login-box-background"></div>
         <div class="login-box-body">
             <div class="login-logo">
-				<img src="<?php echo HESK_PATH; ?>install/logo.png" alt="Mods for HESK logo"><br>
-                Thanks for choosing Mods for HESK.
+                <img src="<?php echo HESK_PATH; ?>install/logo.png" alt="Mods for HESK logo"><br>
+                <span id="header-text">Thanks for choosing Mods for HESK.</span>
             </div>
-            <h4 class="login-box-msg">
-                Let's get started.
-            </h4>
+            <?php // BEGIN INSTALL SCREENS ?>
+            <div data-step="intro" class="login-box-msg">
+                <h4>Let's get started.</h4>
+                <p>By continuing, I agree to the terms of the
+                    <a href="http://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="usage-stats" checked>
+                        Submit anonymous usage statistics
+                    </label>
+                </div>
+            </div>
+            <div data-step="db-confirm" style="display: none">
+                <table class="table table-striped" style="background: #fff">
+                    <thead>
+                    <tr>
+                        <th colspan="4">Database Information / File Permissions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Database Host:</td>
+                        <td><?php echo $hesk_settings['db_host']; ?></td>
+                        <td>Database Name:</td>
+                        <td><?php echo $hesk_settings['db_name']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Database User:</td>
+                        <td><?php echo $hesk_settings['db_user']; ?></td>
+                        <td>Database Password:</td>
+                        <td><?php echo $hesk_settings['db_pass']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Database Prefix:</td>
+                        <td><?php echo $hesk_settings['db_pfix']; ?></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <?php // END INSTALL SCREENS ?>
             <div id="buttons">
-                <div class="btn btn-primary" style="display: none;"><i class="fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;Back</div>
-                <div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="btn btn-primary" id="back-button" style="display: none;"><i class="fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;Back</div>
+                <div class="btn btn-default dropdown-toggle" id="tools-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Tools <span class="caret"></span>
                 </div>
                 <ul class="dropdown-menu">
@@ -57,7 +96,7 @@ hesk_dbConnect();
                     <li><a href="#" data-toggle="modal"
                            data-target="#uninstallModal"><i class="fa fa-trash"></i> Uninstall Mods for HESK</a></li>
                 </ul>
-                <div class="btn btn-primary pull-right">Next&nbsp;&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></div>
+                <div class="btn btn-primary pull-right" id="next-button">Next&nbsp;&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></div>
             </div>
         </div>
     </div>
