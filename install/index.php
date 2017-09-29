@@ -83,7 +83,7 @@ if (hesk_dbNumRows($tableSql) > 0) {
             <?php // BEGIN INSTALL SCREENS ?>
             <div data-step="intro" class="login-box-msg">
                 <h4>Let's get started.</h4>
-                <p>By continuing, I agree to the terms of the
+                <p>By continuing, you agree to the terms of the
                     <a href="http://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
                 <div class="checkbox">
                     <label>
@@ -121,14 +121,16 @@ if (hesk_dbNumRows($tableSql) > 0) {
                     </tbody>
                 </table>
             </div>
-            <div data-step="install-or-update" style="display: none">
-                <div class="progress">
+            <div data-step="install-or-update" class="text-center" style="display: none">
+                <i class="fa fa-spin fa-spinner fa-4x"></i>
+                <div class="progress" style="display: none">
                     <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
                          style="min-width: 2em; width: 100%">
                         <span class="sr-only">100% Complete</span>
                         100%
                     </div>
                 </div>
+                <input type="hidden" name="starting-migration-number" value="<?php echo $startingMigrationNumber; ?>">
             </div>
             <?php // END INSTALL SCREENS ?>
             <div id="buttons">
@@ -166,5 +168,6 @@ if (hesk_dbNumRows($tableSql) > 0) {
         </div>
     </div>
 </div>
+<p id="hesk-path-for-js" style="display: none"><?php echo '../../'; ?></p>
 </body>
 </html>
