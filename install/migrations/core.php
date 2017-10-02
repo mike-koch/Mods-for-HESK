@@ -33,7 +33,7 @@ function getAllMigrations() {
         22 => new \v200\RemoveEditInfoFromNotes(),
         23 => new \v200\RemoveDefaultNotifyCustomerEmailPreference(),
         24 => new \v200\AddMissingKeyToTickets(),
-        25 => new \v200\UpdateVersion(),
-
+        25 => new \v200\MigrateIpAndEmailBans(),
+        26 => new \v200\UpdateVersion(),
     );
 }

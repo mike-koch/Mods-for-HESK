@@ -37,60 +37,6 @@ function executeQuery($sql)
     }
 }
 
-function checkForIpOrEmailBans()
-{
-    global $hesk_settings;
-
-    hesk_dbConnect();
-    $banRS = executeQuery("SELECT `ID` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_emails`
-                        UNION ALL SELECT `ID` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips`");
-
-    return hesk_dbNumRows($banRS);
-}
-
-function getUsers()
-{
-    global $hesk_settings;
-
-    hesk_dbConnect();
-    $users = array();
-    $usersRS = executeQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `active` = '1' ORDER BY `name`");
-    while ($row = hesk_dbFetchAssoc($usersRS)) {
-        array_push($users, $row);
-    }
-
-    return $users;
-}
-
-function migrateBans($creator)
-{
-    global $hesk_settings;
-
-    hesk_dbConnect();
-
-    // Insert the email bans
-    $emailBanRS = executeQuery("SELECT `Email` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_emails`");
-    while ($row = hesk_dbFetchAssoc($emailBanRS)) {
-        executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "banned_emails` (`email`, `banned_by`, `dt`)
-                VALUES ('" . hesk_dbEscape($row['Email']) . "', " . $creator . ", NOW())");
-    }
-
-    // Insert the IP bans
-    $ipBanRS = executeQuery("SELECT `RangeStart`, `RangeEnd` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips`");
-    while ($row = hesk_dbFetchAssoc($ipBanRS)) {
-        $ipFrom = long2ip($row['RangeStart']);
-        $ipTo = long2ip($row['RangeEnd']);
-        $ipDisplay = $ipFrom == $ipTo ? $ipFrom : $ipFrom . ' - ' . $ipTo;
-        executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "banned_ips` (`ip_from`, `ip_to`, `ip_display`, `banned_by`, `dt`)
-                VALUES (" . $row['RangeStart'] . ", " . $row['RangeEnd'] . ", '" . $ipDisplay . "', " . $creator . ", NOW())");
-    }
-    // Migration Complete. Drop Tables.
-    executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips`");
-    executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_emails`");
-}
-
-// END Version 2.0.0
-
 // Version 2.0.1
 function execute201Scripts()
 {
