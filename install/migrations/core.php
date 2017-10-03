@@ -35,5 +35,31 @@ function getAllMigrations() {
         24 => new \v200\AddMissingKeyToTickets(),
         25 => new \v200\MigrateIpAndEmailBans(),
         26 => new \v200\UpdateVersion(),
+        //2.0.1
+        27 => new \v201\UpdateVersion(),
+        //2.1.0
+        28 => new \v210\UpdateVersion(),
+        //2.1.1
+        29 => new \v211\FixStageTicketsTable(),
+        30 => new \v211\UpdateVersion(),
+        //2.2.0
+        31 => new \v220\AddIsAutocloseOptionToStatuses(),
+        32 => new \v220\AddClosableColumnToStatuses(),
+        33 => new \v220\UpdateVersion(),
+        //2.2.1
+        34 => new \v221\UpdateVersion(),
+        //2.3.0
+        35 => new \v230\AddIconToServiceMessages(),
+        36 => new \v230\ConsolidateStatusColumns(),
+        37 => new \v230\AddCoordinatesToTickets(),
+        38 => new \v230\AddCategoryManager(),
+        39 => new \v230\MovePermissionsToHeskPrivilegesColumn(),
+        40 => new \v230\UpdateVersion(),
+        //2.3.1
+        41 => new \v231\UpdateVersion(),
+        //2.3.2
+        42 => new \v232\UpdateVersion(),
+        //2.4.0
+        43 => new \v240\CreateQuickHelpSectionsTable(),
     );
 }
