@@ -61,5 +61,18 @@ function getAllMigrations() {
         42 => new \v232\UpdateVersion(),
         //2.4.0
         43 => new \v240\CreateQuickHelpSectionsTable(),
+        44 => new \v240\CreateNewStatusNameTable(),
+        45 => new \v240\AddDownloadCountToAttachments(),
+        46 => new \v240\AddHtmlColumnToTickets(),
+        47 => new \v240\UpdateVersion(),
+        //2.4.1
+        48 => new \v241\UpdateVersion(),
+        //2.4.2
+        49 => new \v242\UpdateVersion(),
+        //2.5.0
+        50 => new \v250\MigrateSettingsToDatabase(),
+        51 => new \v250\AddUserAgentAndScreenResToTickets(),
+        52 => new \v250\AddNavbarTitleUrl(),
+        53 => new \v250\UpdateVersion(),
     );
 }
