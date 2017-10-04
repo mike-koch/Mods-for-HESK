@@ -117,5 +117,18 @@ function getAllMigrations() {
         80 => new UpdateMigration('3.0.5', '3.0.4'),
         81 => new UpdateMigration('3.0.6', '3.0.5'),
         82 => new UpdateMigration('3.0.7', '3.0.6'),
+        //3.1.0
+        83 => new \v310\AddStackTraceToLogs(),
+        84 => new \v310\AddCustomNavElements(),
+        85 => new \v310\AddMoreColorOptionsToCategories(),
+        86 => new \v310\AddNewLoginSettings(),
+        87 => new \v310\AddApiUrlRewriteSetting(),
+        88 => new \v310\ConvertPresetToIndividualColors(),
+        89 => new UpdateMigration('3.1.0', '3.0.7'),
+        //3.1.1
+        90 => new UpdateMigration('3.1.1', '3.1.0'),
+        //3.2.0
+        91 => new \v320\AddDescriptionToCategoriesAndCustomFields(),
+        92 => new \v320\AddAuditTrail(),
     );
 }
