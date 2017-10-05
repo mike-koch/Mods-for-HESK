@@ -76,27 +76,50 @@ function installOrUpdate() {
             console.log(data.lastMigrationNumber);
 
             // Recursive call that will increment by 1 each time
-            //executeMigration(startingMigrationNumber, startingMigrationNumber, data.latestMigrationNumber);
+            executeMigration(startingMigrationNumber, startingMigrationNumber, data.latestMigrationNumber, 'up');
         }
     })
 }
 
-function executeMigration(startingMigrationNumber, migrationNumber, latestMigrationNumber) {
+function executeMigration(startingMigrationNumber, migrationNumber, latestMigrationNumber, direction) {
+    var heskPath = $('p#hesk-path').text();
+
     $.ajax({
-        url: '',
+        url: heskPath + 'install/ajax/process-migration.php',
         method: 'POST',
         data: {
             migrationNumber: migrationNumber,
-            direction: 'up'
+            direction: direction
         },
         success: function(data) {
-            updateProgressBar(migrationNumber, latestMigrationNumber);
-
             if (migrationNumber === latestMigrationNumber) {
-                // done
+                updateProgressBar(migrationNumber, latestMigrationNumber, false, true);
+                console.log('DONE');
             } else {
-                executeMigration(startingMigrationNumber, migrationNumber + 1, latestMigrationNumber);
+                updateProgressBar(migrationNumber, latestMigrationNumber, false, false);
+                var newMigrationNumber = direction === 'up' ? migrationNumber + 1 : migrationNumber - 1;
+                executeMigration(startingMigrationNumber, newMigrationNumber, latestMigrationNumber);
             }
+        },
+        error: function(data) {
+            updateProgressBar(migrationNumber, latestMigrationNumber, true, true);
+            console.error(data);
         }
     })
+}
+
+function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFinished) {
+    var $progressBar = $('#progress-bar');
+
+    if (isError === true) {
+        $progressBar.find('.progress-bar').removeClass('progress-bar-success')
+            .addClass('progress-bar-danger');
+    } else {
+        var percentage = Math.round(migrationNumber / latestMigrationNumber * 100);
+        $progressBar.find('.progress-bar').css('width', percentage + '%');
+    }
+
+    if (isFinished) {
+        $progressBar.find('.progress-bar').removeClass('active');
+    }
 }
