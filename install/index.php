@@ -123,6 +123,7 @@ if (hesk_dbNumRows($tableSql) > 0) {
             </div>
             <div data-step="install-or-update" class="text-center" style="display: none">
                 <i class="fa fa-spin fa-spinner fa-4x"></i>
+                <i class="fa fa-check-circle fa-4x" style="color: green; display: none" id="finished-install"></i>
                 <div id="progress-bar" class="progress" style="display: none">
                     <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
                          style="width: 0">

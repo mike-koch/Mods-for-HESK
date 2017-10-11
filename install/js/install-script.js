@@ -120,6 +120,7 @@ function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFi
     }
 
     if (isFinished) {
-        $progressBar.find('.progress-bar').removeClass('active');
+        $progressBar.find('.progress-bar').hide();
+        $('#finished-install').show();
     }
 }
