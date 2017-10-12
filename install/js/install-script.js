@@ -7,14 +7,21 @@ var steps = [
     {
         name: 'db-confirm',
         text: 'Confirm the information below',
-        backPossible: true,
+        showBack: true,
         callback: undefined
     },
     {
         name: 'install-or-update',
         text: 'Updating to the latest version...',
-        backPossible: false,
+        showBack: false,
+        showNext: false,
         callback: installOrUpdate
+    },
+    {
+        name: 'complete',
+        text: 'Installation / Upgrade Complete',
+        showBack: false,
+        callback: undefined
     }
 ];
 
@@ -41,8 +48,11 @@ function goToStep(step) {
         $('#tools-button').hide();
         $('#back-button').show();
 
-        if (!steps[step].backPossible) {
-            $('#back-button').addClass('disabled').attr('disabled', 'disabled');
+        if (!steps[step].showBack) {
+            $('#back-button').hide();
+        }
+        if (!steps[step].showNext) {
+            $('#next-button').hide();
         }
     }
 
@@ -121,7 +131,6 @@ function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFi
     }
 
     if (isFinished) {
-        $progressBar.hide();
-        $('#finished-install').show();
+        goToStep(steps.length - 1);
     }
 }
