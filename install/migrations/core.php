@@ -1,4 +1,20 @@
 <?php
+set_error_handler(function($errorNumber, $errorMessage, $errorFile, $errorLine) {
+    output("An error occurred: {$errorMessage} in {$errorFile} on {$errorLine}",
+        500,
+        "Content-Type: text/plain");
+});
+
+spl_autoload_register(function ($class) {
+    // USED FOR MIGRATIONS
+    $file = HESK_PATH . 'install/migrations/' . str_replace('\\', '/', $class) . '.php';
+
+    if (file_exists($file)) {
+        require($file);
+    } else {
+        output(array("message" => "{$file} not found!", 500));
+    }
+});
 
 function getAllMigrations() {
     return array(
