@@ -11,7 +11,6 @@ require(HESK_PATH . 'install/migrations/core.php');
 $allMigrations = getAllMigrations();
 $json = file_get_contents('php://input');
 $request = json_decode($json, true);
-var_dump($request);
 
 /* @var $migration AbstractMigration */
 $migration = $allMigrations[$request['migrationNumber']];
