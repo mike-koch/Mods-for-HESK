@@ -21,25 +21,33 @@ if (hesk_dbNumRows($tableSql) > 0) {
     // They have installed at LEAST to version 1.6.0. Just pull the version number OR migration number
     $migrationNumberSql = hesk_dbQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'lastMigration'");
     if ($migrationRow = hesk_dbFetchAssoc($migrationNumberSql)) {
-        $startingMigrationNumber = $migrationRow['Value'];
+        $startingMigrationNumber = intval($migrationRow['Value']) + 1;
     } else {
         $versionSql = hesk_dbQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'modsForHeskVersion'");
         $versionRow = hesk_dbFetchAssoc($versionSql);
 
-        //TODO Actually map this
-        $startingMigrationNumber = $versionRow['Value'];
+        $migration_map = array(
+            // Pre-1.4.0 to 1.5.0 did not have a settings table
+            '1.6.0' => 16, '1.6.1' => 17, '1.7.0' => 21, '2.0.0' => 27, '2.0.1' => 28, '2.1.0' => 29, '2.1.1' => 31,
+            '2.2.0' => 34, '2.2.1' => 35, '2.3.0' => 41, '2.3.1' => 42, '2.3.2' => 43, '2.4.0' => 48, '2.4.1' => 49,
+            '2.4.2' => 50, '2.5.0' => 54, '2.5.1' => 55, '2.5.2' => 56, '2.5.3' => 57, '2.5.4' => 58, '2.5.5' => 59,
+            '2.6.0' => 66, '2.6.1' => 67, '2.6.2' => 69, '2.6.3' => 70, '2.6.4' => 71, '3.0.0' => 75, '3.0.1' => 76,
+            '3.0.2' => 78, '3.0.3' => 79, '3.0.4' => 80, '3.0.5' => 81, '3.0.6' => 82, '3.0.7' => 83, '3.1.0' => 90,
+            '3.1.1' => 91
+        );
+        $startingMigrationNumber = $migration_map[$versionRow['Value']];
     }
 } else {
     // migration # => sql for checking
     $versionChecks = array(
         // 1.5.0 -> users.active
-        1 => "SHOW COLUMNS FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` LIKE 'active'",
+        9 => "SHOW COLUMNS FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` LIKE 'active'",
         // 1.4.1 -> denied_emails
-        2 => "SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_emails'",
+        6 => "SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_emails'",
         // 1.4.0 -> denied ips
-        3 => "SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips'",
+        4 => "SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips'",
         // Pre-1.4.0 but still something -> statuses
-        4 => "SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses'"
+        2 => "SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses'"
     );
 
     foreach ($versionChecks as $migrationNumber => $sql) {

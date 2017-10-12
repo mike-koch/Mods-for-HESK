@@ -60,7 +60,7 @@ function goToStep(step) {
 }
 
 function installOrUpdate() {
-    var startingMigrationNumber = $('input[name="starting-migration-number"]').val();
+    var startingMigrationNumber = parseInt($('input[name="starting-migration-number"]').val());
 
     var heskPath = $('p#hesk-path').text();
 
@@ -73,10 +73,8 @@ function installOrUpdate() {
             $('[data-step="install-or-update"] > .fa-spinner').hide();
             $('[data-step="install-or-update"] > .progress').show();
 
-            console.log(data.lastMigrationNumber);
-
             // Recursive call that will increment by 1 each time
-            executeMigration(startingMigrationNumber, startingMigrationNumber, data.latestMigrationNumber, 'up');
+            executeMigration(startingMigrationNumber, startingMigrationNumber, data.lastMigrationNumber, 'up');
         }
     })
 }
@@ -87,18 +85,21 @@ function executeMigration(startingMigrationNumber, migrationNumber, latestMigrat
     $.ajax({
         url: heskPath + 'install/ajax/process-migration.php',
         method: 'POST',
-        data: {
+        data: JSON.stringify({
             migrationNumber: migrationNumber,
             direction: direction
-        },
+        }),
         success: function(data) {
+            console.log('migrationNumber: ' + migrationNumber);
+            console.log('latestMigrationNumber: ' + latestMigrationNumber);
+            console.log(migrationNumber === latestMigrationNumber);
             if (migrationNumber === latestMigrationNumber) {
                 updateProgressBar(migrationNumber, latestMigrationNumber, false, true);
                 console.log('DONE');
             } else {
                 updateProgressBar(migrationNumber, latestMigrationNumber, false, false);
                 var newMigrationNumber = direction === 'up' ? migrationNumber + 1 : migrationNumber - 1;
-                executeMigration(startingMigrationNumber, newMigrationNumber, latestMigrationNumber);
+                executeMigration(startingMigrationNumber, newMigrationNumber, latestMigrationNumber, direction);
             }
         },
         error: function(data) {
@@ -120,7 +121,7 @@ function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFi
     }
 
     if (isFinished) {
-        $progressBar.find('.progress-bar').hide();
+        $progressBar.hide();
         $('#finished-install').show();
     }
 }
