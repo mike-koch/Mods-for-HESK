@@ -17,9 +17,9 @@ $migration = $allMigrations[$request['migrationNumber']];
 
 hesk_dbConnect();
 if ($request['direction'] === 'up') {
-    //$migration->up($hesk_settings);
+    $migration->up($hesk_settings);
 } elseif ($request['direction'] === 'down') {
-    //$migration->down($hesk_settings);
+    $migration->down($hesk_settings);
 } else {
     output(array("message" => "Invalid direction provided"), 400);
 }
