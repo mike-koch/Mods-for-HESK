@@ -7,7 +7,6 @@ var steps = [
     {
         name: 'db-confirm',
         text: 'Confirm the information below',
-        showBack: true,
         callback: undefined
     },
     {
@@ -47,19 +46,21 @@ function goToStep(step) {
     } else {
         $('#tools-button').hide();
         $('#back-button').show();
-
-        if (!steps[step].showBack) {
-            $('#back-button').hide();
-        }
-        if (!steps[step].showNext) {
-            $('#next-button').hide();
-        }
     }
 
     if (step === steps.length - 1) {
         $('#next-button').hide();
     } else {
         $('#next-button').show();
+    }
+
+    // Back/Next button overrides
+    if (steps[step].showBack !== undefined && !steps[step].showBack) {
+        $('#back-button').hide();
+    }
+    if (steps[step].showNext !== undefined && !steps[step].showNext) {
+        console.log('hiding this');
+        $('#next-button').hide();
     }
 
     $('#header-text').text(steps[step].text);
@@ -80,7 +81,7 @@ function installOrUpdate() {
         success: function(data) {
             data = JSON.parse(data);
 
-            $('[data-step="install-or-update"] > .fa-spinner').hide();
+            $('[data-step="install-or-update"] > #spinner').hide();
             $('[data-step="install-or-update"] > .progress').show();
 
             // Recursive call that will increment by 1 each time

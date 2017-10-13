@@ -130,14 +130,23 @@ if (hesk_dbNumRows($tableSql) > 0) {
                 </table>
             </div>
             <div data-step="install-or-update" class="text-center" style="display: none">
-                <i class="fa fa-spin fa-spinner fa-4x"></i>
-                <i class="fa fa-check-circle fa-4x" style="color: green; display: none" id="finished-install"></i>
+                <div id="spinner">
+                    <i class="fa fa-spin fa-spinner fa-4x"></i>
+                    <h4>Initializing...</h4>
+                </div>
                 <div id="progress-bar" class="progress" style="display: none">
                     <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
                          style="width: 0">
                     </div>
                 </div>
+                <br>
                 <input type="hidden" name="starting-migration-number" value="<?php echo $startingMigrationNumber; ?>">
+            </div>
+            <div data-step="complete" class="text-center" style="display: none">
+                <i class="fa fa-check-circle fa-4x" style="color: green"></i><br><br>
+                <h4>Make sure to delete your <code>/install</code> folder and then proceed to your
+                    <a href="<?php echo $hesk_settings['hesk_url']; ?>">help desk</a>.</h4>
+                <br>
             </div>
             <?php // END INSTALL SCREENS ?>
             <div id="buttons">
