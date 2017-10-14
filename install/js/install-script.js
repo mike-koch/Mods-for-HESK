@@ -113,9 +113,15 @@ function executeMigration(startingMigrationNumber, migrationNumber, latestMigrat
                 executeMigration(startingMigrationNumber, newMigrationNumber, latestMigrationNumber, direction);
             }
         },
-        error: function(data) {
+        error: function(response) {
+            try {
+                message = JSON.parse(response);
+            } catch (e) {
+                message = response.responseText;
+            }
+            $('#error-block').html("An error occurred! (Error Code: " + migrationNumber + ")<br>" + message).show();
             updateProgressBar(migrationNumber, latestMigrationNumber, true, true);
-            console.error(data);
+            console.error(message);
         }
     })
 }
@@ -125,13 +131,14 @@ function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFi
 
     if (isError === true) {
         $progressBar.find('.progress-bar').removeClass('progress-bar-success')
+            .removeClass('active')
             .addClass('progress-bar-danger');
     } else {
         var percentage = Math.round(migrationNumber / latestMigrationNumber * 100);
         $progressBar.find('.progress-bar').css('width', percentage + '%');
     }
 
-    if (isFinished) {
+    if (isFinished && !isError) {
         goToStep(steps.length - 1);
     }
 }

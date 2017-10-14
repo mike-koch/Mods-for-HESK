@@ -16,7 +16,7 @@ We have four possible installation scenarios:
  */
 
 $tableSql = hesk_dbQuery("SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings'");
-$startingMigrationNumber = -1;
+$startingMigrationNumber = 1;
 if (hesk_dbNumRows($tableSql) > 0) {
     // They have installed at LEAST to version 1.6.0. Just pull the version number OR migration number
     $migrationNumberSql = hesk_dbQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'lastMigration'");
@@ -64,7 +64,6 @@ if (hesk_dbNumRows($tableSql) > 0) {
     <title>Mods for HESK <?php echo MODS_FOR_HESK_NEW_VERSION; ?> Install / Upgrade</title>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo $hesk_settings['hesk_version']; ?>"
           type="text/css" rel="stylesheet"/>
-    <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.ccss?v=<?php echo HESK_NEW_VERSION; ?>" type="text/css" rel="stylesheet" />
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css" type="text/css" rel="stylesheet">
     <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css" type="text/css" rel="stylesheet">
@@ -140,6 +139,8 @@ if (hesk_dbNumRows($tableSql) > 0) {
                     </div>
                 </div>
                 <br>
+                <div id="error-block" class="well" style="font-family: 'Courier New', Courier, monospace">
+                </div>
                 <input type="hidden" name="starting-migration-number" value="<?php echo $startingMigrationNumber; ?>">
             </div>
             <div data-step="complete" class="text-center" style="display: none">
@@ -184,6 +185,6 @@ if (hesk_dbNumRows($tableSql) > 0) {
         </div>
     </div>
 </div>
-<p id="hesk-path-for-js" style="display: none"><?php echo '../../'; ?></p>
+<p id="hesk-path" style="display: none"><?php echo HESK_PATH; ?></p>
 </body>
 </html>
