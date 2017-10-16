@@ -106,7 +106,7 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
             console.info('---');
             if (migrationNumber === latestMigrationNumber || (migrationNumber === 1 && direction === 'down')) {
                 updateProgressBar(migrationNumber, latestMigrationNumber, direction === 'down', true);
-                console.log('DONE');
+                console.log('%c Success! ', 'color: white; background-color: green; font-size: 2em');
             } else {
                 updateProgressBar(migrationNumber, latestMigrationNumber, false, false);
                 var newMigrationNumber = direction === 'up' ? migrationNumber + 1 : migrationNumber - 1;
@@ -120,7 +120,15 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
                 message = response.responseText;
             }
             $('#error-block').html("An error occurred! (Error Code: " + migrationNumber + ")<br>" + message).show();
-            updateProgressBar(migrationNumber, latestMigrationNumber, true, true);
+
+            updateProgressBar(migrationNumber, latestMigrationNumber, true, false);
+
+            if (direction === 'up') {
+                // Revert!
+                executeMigration(migrationNumber - 1, 1, 'down');
+            } else {
+                console.error("I even failed to roll back. Yikes! :'(");
+            }
             console.error(message);
         }
     })
@@ -136,8 +144,6 @@ function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFi
         if (isFinished) {
             var $errorBlock = $('#error-block');
             $errorBlock.html($errorBlock.html() + '<br><br>Successfully reverted database to before the installation/update.');
-        } else {
-            executeMigration(migrationNumber - 1, latestMigrationNumber, 'down', true);
         }
     } else {
         var percentage = Math.round(migrationNumber / latestMigrationNumber * 100);
