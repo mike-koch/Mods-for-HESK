@@ -85,12 +85,12 @@ function installOrUpdate() {
             $('[data-step="install-or-update"] > .progress').show();
 
             // Recursive call that will increment by 1 each time
-            executeMigration(startingMigrationNumber, startingMigrationNumber, data.lastMigrationNumber, 'up');
+            executeMigration(startingMigrationNumber, data.lastMigrationNumber, 'up');
         }
     })
 }
 
-function executeMigration(startingMigrationNumber, migrationNumber, latestMigrationNumber, direction) {
+function executeMigration(migrationNumber, latestMigrationNumber, direction) {
     var heskPath = $('p#hesk-path').text();
 
     $.ajax({
@@ -103,14 +103,14 @@ function executeMigration(startingMigrationNumber, migrationNumber, latestMigrat
         success: function(data) {
             console.log('migrationNumber: ' + migrationNumber);
             console.log('latestMigrationNumber: ' + latestMigrationNumber);
-            console.log(migrationNumber === latestMigrationNumber);
-            if (migrationNumber === latestMigrationNumber) {
-                updateProgressBar(migrationNumber, latestMigrationNumber, false, true);
+            console.info('---');
+            if (migrationNumber === latestMigrationNumber || (migrationNumber === 1 && direction === 'down')) {
+                updateProgressBar(migrationNumber, latestMigrationNumber, direction === 'down', true);
                 console.log('DONE');
             } else {
                 updateProgressBar(migrationNumber, latestMigrationNumber, false, false);
                 var newMigrationNumber = direction === 'up' ? migrationNumber + 1 : migrationNumber - 1;
-                executeMigration(startingMigrationNumber, newMigrationNumber, latestMigrationNumber, direction);
+                executeMigration(newMigrationNumber, latestMigrationNumber, direction);
             }
         },
         error: function(response) {
@@ -131,8 +131,14 @@ function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFi
 
     if (isError === true) {
         $progressBar.find('.progress-bar').removeClass('progress-bar-success')
-            .removeClass('active')
             .addClass('progress-bar-danger');
+
+        if (isFinished) {
+            var $errorBlock = $('#error-block');
+            $errorBlock.html($errorBlock.html() + '<br><br>Successfully reverted database to before the installation/update.');
+        } else {
+            executeMigration(migrationNumber - 1, latestMigrationNumber, 'down', true);
+        }
     } else {
         var percentage = Math.round(migrationNumber / latestMigrationNumber * 100);
         $progressBar.find('.progress-bar').css('width', percentage + '%');
