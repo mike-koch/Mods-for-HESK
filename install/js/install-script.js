@@ -125,7 +125,7 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
 
             if (direction === 'up') {
                 // Revert!
-                executeMigration(migrationNumber - 1, 1, 'down');
+                executeMigration(migrationNumber - 1, latestMigrationNumber, 'down');
             } else {
                 console.error("I even failed to roll back. Yikes! :'(");
             }
