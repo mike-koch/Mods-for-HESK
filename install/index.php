@@ -139,7 +139,7 @@ if (hesk_dbNumRows($tableSql) > 0) {
                     </div>
                 </div>
                 <br>
-                <div id="error-block" class="well" style="font-family: 'Courier New', Courier, monospace">
+                <div id="error-block" class="well" style="display: none; font-family: 'Courier New', Courier, monospace">
                 </div>
                 <input type="hidden" name="starting-migration-number" value="<?php echo $startingMigrationNumber; ?>">
             </div>

@@ -7,14 +7,14 @@ class MigrateIpAndEmailBans extends \AbstractMigration {
 
     function up($hesk_settings) {
         // Insert the email bans
-        $emailBanRS = executeQuery("SELECT `Email` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_emails`");
+        $emailBanRS = $this->executeQuery("SELECT `Email` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_emails`");
         while ($row = hesk_dbFetchAssoc($emailBanRS)) {
             $this->executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "banned_emails` (`email`, `banned_by`, `dt`)
                 VALUES ('" . hesk_dbEscape($row['Email']) . "', 1, NOW())");
         }
 
         // Insert the IP bans
-        $ipBanRS = executeQuery("SELECT `RangeStart`, `RangeEnd` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips`");
+        $ipBanRS = $this->executeQuery("SELECT `RangeStart`, `RangeEnd` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips`");
         while ($row = hesk_dbFetchAssoc($ipBanRS)) {
             $ipFrom = long2ip($row['RangeStart']);
             $ipTo = long2ip($row['RangeEnd']);

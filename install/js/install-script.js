@@ -119,7 +119,7 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
             } catch (e) {
                 message = response.responseText;
             }
-            $('#error-block').html("An error occurred! (Error Code: " + migrationNumber + ")<br>" + message).show();
+            $('#error-block').html("<br><br>An error occurred! (Error Code: " + migrationNumber + ")<br>" + message).show();
 
             updateProgressBar(migrationNumber, latestMigrationNumber, true, false);
 

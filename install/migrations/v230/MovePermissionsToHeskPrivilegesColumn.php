@@ -44,7 +44,7 @@ class MovePermissionsToHeskPrivilegesColumn extends \AbstractMigration {
         $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` ADD COLUMN `can_manage_settings` ENUM ('0', '1') NOT NULL DEFAULT '1'");
 
         $this->executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` 
-            SET `can_change_settings` = '0'
+            SET `can_manage_settings` = '0'
             WHERE `heskprivileges` NOT LIKE '%can_man_settings%'");
         $this->executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users`
             SET `can_change_notification_settings` = '0'
