@@ -1,21 +1,19 @@
 <?php
 
-class UpdateMigration extends AbstractUpdatableMigration {
+class LegacyUpdateMigration extends AbstractMigration {
     private $upVersion;
     private $downVersion;
 
-    public function __construct($upVersion, $downVersion, $migrationNumber) {
-        parent::__construct($migrationNumber);
-
+    public function __construct($upVersion, $downVersion) {
         $this->upVersion = $upVersion;
         $this->downVersion = $downVersion;
     }
 
-    function innerUp($hesk_settings) {
+    function up($hesk_settings) {
         $this->updateVersion($this->upVersion, $hesk_settings);
     }
 
-    function innerDown($hesk_settings) {
+    function down($hesk_settings) {
         $this->updateVersion($this->downVersion, $hesk_settings);
     }
 }

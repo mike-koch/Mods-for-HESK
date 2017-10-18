@@ -199,6 +199,11 @@ hesk_dbConnect();
             $all_good = $all_good & run_setting_check('admin_sidebar_font_weight');
             $all_good = $all_good & run_setting_check('admin_sidebar_header_background');
             $all_good = $all_good & run_setting_check('admin_sidebar_header_text');
+            output_header_row('3.2.0');
+            $all_good &= run_table_check('audit_trail');
+            $all_good &= run_table_check('audit_trail_to_replacement_values');
+            $all_good &= run_column_check('categories', 'mfh_description');
+            $all_good &= run_column_check('custom_fields', 'mfh_description');
 
             if ($all_good) {
                 echo "<script>$('#all-good').show()</script>";

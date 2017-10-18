@@ -14,7 +14,7 @@ class ConvertPresetToIndividualColors extends \AbstractMigration {
             $theme = $theme_preset_row['Value'];
         }
 
-        $light_theme = preg_match('/.*-light/g', $theme);
+        $light_theme = preg_match_all('/.*-light/', $theme);
         $navbar = array(
             'background' => '',
             'text' => '#fff',

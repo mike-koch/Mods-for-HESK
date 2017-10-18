@@ -19,6 +19,7 @@ class CreatePermissionTemplates extends \AbstractMigration {
     }
 
     function down($hesk_settings) {
-        // TODO: Implement down() method.
+        $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` DROP COLUMN `permission_template`");
+        $this->executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "permission_templates`");
     }
 }

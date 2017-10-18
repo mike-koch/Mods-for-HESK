@@ -46,8 +46,5 @@ class MigrateIpAndEmailBans extends \AbstractMigration {
         while ($row = hesk_dbFetchAssoc($ips)) {
             $this->executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "denied_ips` (`RangeStart`, `RangeEnd`) VALUES (" . $row['ip_from'] . ", " . $row['ip_to'] . ")");
         }
-
-        $this->executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "banned_ips`");
-        $this->executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "banned_emails`");
     }
 }
