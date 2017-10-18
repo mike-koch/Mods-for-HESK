@@ -19,7 +19,7 @@ $tableSql = hesk_dbQuery("SHOW TABLES LIKE '" . hesk_dbEscape($hesk_settings['db
 $startingMigrationNumber = 1;
 if (hesk_dbNumRows($tableSql) > 0) {
     // They have installed at LEAST to version 1.6.0. Just pull the version number OR migration number
-    $migrationNumberSql = hesk_dbQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'lastMigration'");
+    $migrationNumberSql = hesk_dbQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'migrationNumber'");
     if ($migrationRow = hesk_dbFetchAssoc($migrationNumberSql)) {
         $startingMigrationNumber = intval($migrationRow['Value']) + 1;
     } else {
