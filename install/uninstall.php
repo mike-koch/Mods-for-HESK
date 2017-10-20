@@ -146,28 +146,11 @@ if (hesk_dbNumRows($tableSql) > 0) {
             </div>
             <?php // END INSTALL SCREENS ?>
             <div id="buttons">
+                <a href="<?php echo HESK_PATH; ?>/install/index.php" class="btn btn-default" id="tools-button">
+                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;Back to installer
+                </a>
                 <div class="btn btn-primary" id="back-button" style="display: none;"><i class="fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;Back</div>
                 <div class="btn btn-primary pull-right" id="next-button">Next&nbsp;&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="uninstallModal" tabindex="-1" role="dialog" aria-labelledby="uninstallModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="uninstallModalTitle"><i class="fa fa-trash"></i> Uninstall Mods for HESK
-                </h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to uninstall Mods for HESK?</p>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-success" href="<?php echo HESK_PATH; ?>install/uninstallModsForHesk.php"><i class="fa fa-check"></i> Yes</a>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> No
-                </button>
             </div>
         </div>
     </div>

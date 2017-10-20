@@ -157,30 +157,9 @@ if (hesk_dbNumRows($tableSql) > 0) {
                 </div>
                 <ul class="dropdown-menu">
                     <li><a href="<?php echo HESK_PATH; ?>install/database-validation.php"><i class="fa fa-check-circle"></i> Database Validator</a></li>
-                    <li><a href="#" data-toggle="modal"
-                           data-target="#uninstallModal"><i class="fa fa-trash"></i> Uninstall Mods for HESK</a></li>
+                    <li><a href="<?php echo HESK_PATH; ?>install/uninstall.php"><i class="fa fa-trash"></i> Uninstall Mods for HESK</a></li>
                 </ul>
                 <div class="btn btn-primary pull-right" id="next-button">Next&nbsp;&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="uninstallModal" tabindex="-1" role="dialog" aria-labelledby="uninstallModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="uninstallModalTitle"><i class="fa fa-trash"></i> Uninstall Mods for HESK
-                </h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to uninstall Mods for HESK?</p>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-success" href="<?php echo HESK_PATH; ?>install/uninstallModsForHesk.php"><i class="fa fa-check"></i> Yes</a>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> No
-                </button>
             </div>
         </div>
     </div>

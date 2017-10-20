@@ -81,8 +81,8 @@ function uninstall() {
         success: function(data) {
             data = JSON.parse(data);
 
-            $('[data-step="install-or-update"] > #spinner').hide();
-            $('[data-step="install-or-update"] > .progress').show();
+            $('[data-step="uninstall"] > #spinner').hide();
+            $('[data-step="uninstall"] > .progress').show();
 
             // Recursive call that will increment by 1 each time
             executeMigration(startingMigrationNumber, 1, 'down');
@@ -104,8 +104,8 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
             console.log('migrationNumber: ' + migrationNumber);
             console.log('latestMigrationNumber: ' + latestMigrationNumber);
             console.info('---');
-            if (migrationNumber === latestMigrationNumber || (migrationNumber === 1 && direction === 'down')) {
-                updateProgressBar(migrationNumber, latestMigrationNumber, direction === 'down', true);
+            if (migrationNumber === latestMigrationNumber) {
+                updateProgressBar(migrationNumber, latestMigrationNumber, false, true);
                 console.log('%c Success! ', 'color: white; background-color: green; font-size: 2em');
             } else {
                 updateProgressBar(migrationNumber, latestMigrationNumber, false, false);
@@ -124,12 +124,6 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
 
             updateProgressBar(migrationNumber, latestMigrationNumber, true, false);
 
-            if (direction === 'up') {
-                // Revert!
-                executeMigration(migrationNumber - 1, latestMigrationNumber, 'down');
-            } else {
-                console.error("I even failed to roll back. Yikes! :'(");
-            }
             console.error(message);
         }
     })
