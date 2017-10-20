@@ -87,7 +87,7 @@ if (hesk_dbNumRows($tableSql) > 0) {
             </div>
             <?php // BEGIN INSTALL SCREENS ?>
             <div data-step="intro" class="login-box-msg">
-                <h4>I hoped you wouldn't be here, but let's continue anyway. 😭</h4>
+                <h4>I hoped you wouldn't be here, but let's continue anyway.</h4>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="usage-stats" checked>
@@ -146,7 +146,7 @@ if (hesk_dbNumRows($tableSql) > 0) {
             </div>
             <?php // END INSTALL SCREENS ?>
             <div id="buttons">
-                <a href="<?php echo HESK_PATH; ?>/install/index.php" class="btn btn-default" id="tools-button">
+                <a href="<?php echo HESK_PATH; ?>install/index.php" class="btn btn-default" id="tools-button">
                     <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;Back to installer
                 </a>
                 <div class="btn btn-primary" id="back-button" style="display: none;"><i class="fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;Back</div>

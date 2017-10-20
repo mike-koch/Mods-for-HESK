@@ -85,12 +85,12 @@ function uninstall() {
             $('[data-step="uninstall"] > .progress').show();
 
             // Recursive call that will increment by 1 each time
-            executeMigration(startingMigrationNumber, 1, 'down');
+            executeMigration(startingMigrationNumber, startingMigrationNumber, 1, 'down');
         }
     })
 }
 
-function executeMigration(migrationNumber, latestMigrationNumber, direction) {
+function executeMigration(startingMigrationNumber, migrationNumber, latestMigrationNumber, direction) {
     var heskPath = $('p#hesk-path').text();
 
     $.ajax({
@@ -105,12 +105,12 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
             console.log('latestMigrationNumber: ' + latestMigrationNumber);
             console.info('---');
             if (migrationNumber === latestMigrationNumber) {
-                updateProgressBar(migrationNumber, latestMigrationNumber, false, true);
+                updateProgressBar(startingMigrationNumber, migrationNumber, false, true);
                 console.log('%c Success! ', 'color: white; background-color: green; font-size: 2em');
             } else {
-                updateProgressBar(migrationNumber, latestMigrationNumber, false, false);
+                updateProgressBar(startingMigrationNumber, migrationNumber, false, false);
                 var newMigrationNumber = direction === 'up' ? migrationNumber + 1 : migrationNumber - 1;
-                executeMigration(newMigrationNumber, latestMigrationNumber, direction);
+                executeMigration(startingMigrationNumber, newMigrationNumber, latestMigrationNumber, direction);
             }
         },
         error: function(response) {
@@ -122,14 +122,14 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
             $errorBlock = $('#error-block');
             $errorBlock.html($errorBlock.html() + "<br><br>An error occurred! (Error Code: " + migrationNumber + ")<br>" + message).show();
 
-            updateProgressBar(migrationNumber, latestMigrationNumber, true, false);
+            updateProgressBar(startingMigrationNumber, migrationNumber, true, false);
 
             console.error(message);
         }
     })
 }
 
-function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFinished) {
+function updateProgressBar(startingMigrationNumber, migrationNumber, isError, isFinished) {
     var $progressBar = $('#progress-bar');
 
     if (isError === true) {
@@ -141,7 +141,7 @@ function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFi
             $errorBlock.html($errorBlock.html() + '<br><br>Successfully reverted database to before uninstalling.');
         }
     } else {
-        var percentage = Math.round(migrationNumber / latestMigrationNumber * 100);
+        var percentage = Math.round((startingMigrationNumber - migrationNumber) / startingMigrationNumber * 100);
         $progressBar.find('.progress-bar').css('width', percentage + '%');
     }
 

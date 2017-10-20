@@ -31,7 +31,7 @@ hesk_dbConnect();
     </div>
     <div class="panel panel-success" id="all-good" style="display: none">
         <div class="panel-heading">
-            <h4>w00t!</h4>
+            <h4>Success</h4>
         </div>
         <div class="panel-body text-center">
             <i class="fa fa-check-circle fa-4x" style="color: green"></i><br>
@@ -40,7 +40,7 @@ hesk_dbConnect();
     </div>
     <div class="panel panel-danger" id="not-good" style="display: none">
         <div class="panel-heading">
-            <h4>RIP</h4>
+            <h4>Failure</h4>
         </div>
         <div class="panel-body text-center">
             <i class="fa fa-times-circle fa-4x" style="color: red"></i><br>

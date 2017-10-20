@@ -85,12 +85,12 @@ function installOrUpdate() {
             $('[data-step="install-or-update"] > .progress').show();
 
             // Recursive call that will increment by 1 each time
-            executeMigration(startingMigrationNumber, data.lastMigrationNumber, 'up');
+            executeMigration(startingMigrationNumber, startingMigrationNumber, data.lastMigrationNumber, 'up');
         }
     })
 }
 
-function executeMigration(migrationNumber, latestMigrationNumber, direction) {
+function executeMigration(startingMigrationNumber, migrationNumber, latestMigrationNumber, direction) {
     var heskPath = $('p#hesk-path').text();
 
     $.ajax({
@@ -104,13 +104,13 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
             console.log('migrationNumber: ' + migrationNumber);
             console.log('latestMigrationNumber: ' + latestMigrationNumber);
             console.info('---');
-            if (migrationNumber === latestMigrationNumber || (migrationNumber === 1 && direction === 'down')) {
+            if (migrationNumber === latestMigrationNumber || (migrationNumber === startingMigrationNumber && direction === 'down')) {
                 updateProgressBar(migrationNumber, latestMigrationNumber, direction === 'down', true);
                 console.log('%c Success! ', 'color: white; background-color: green; font-size: 2em');
             } else {
                 updateProgressBar(migrationNumber, latestMigrationNumber, false, false);
                 var newMigrationNumber = direction === 'up' ? migrationNumber + 1 : migrationNumber - 1;
-                executeMigration(newMigrationNumber, latestMigrationNumber, direction);
+                executeMigration(startingMigrationNumber, newMigrationNumber, latestMigrationNumber, direction);
             }
         },
         error: function(response) {
@@ -126,7 +126,7 @@ function executeMigration(migrationNumber, latestMigrationNumber, direction) {
 
             if (direction === 'up') {
                 // Revert!
-                executeMigration(migrationNumber - 1, latestMigrationNumber, 'down');
+                executeMigration(startingMigrationNumber, migrationNumber - 1, latestMigrationNumber, 'down');
             } else {
                 console.error("I even failed to roll back. Yikes! :'(");
             }
