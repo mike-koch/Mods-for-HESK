@@ -140,6 +140,7 @@ function updateProgressBar(migrationNumber, latestMigrationNumber, isError, isFi
 
     if (isError === true) {
         $progressBar.find('.progress-bar').removeClass('progress-bar-success')
+            .removeClass('active')
             .addClass('progress-bar-danger');
 
         if (isFinished) {
