@@ -45,7 +45,7 @@ hesk_dbConnect();
         <div class="panel-body text-center">
             <i class="fa fa-times-circle fa-4x" style="color: red"></i><br>
             <h4>One or more columns / tables are not properly configured in your database. Please open a topic at the
-            <a href="http://developers.phpjunkyard.com/viewforum.php?f=19" target="_blank">PHP Junkyard Forums</a> with this information for assistance.</h4>
+            <a href="https://developers.phpjunkyard.com/viewforum.php?f=19" target="_blank">PHP Junkyard Forums</a> with this information for assistance.</h4>
         </div>
     </div>
     <div class="panel panel-default">
@@ -273,14 +273,14 @@ function run_check($sql) {
 }
 
 function output_result($change_title, $success) {
-    $css_color = 'green';
+    $css_color = 'success';
     $text = '<span data-toggle="tooltip" title="This looks good!"><i class="fa fa-check-circle"></i> Success</span>';
     if (!$success) {
-        $css_color = 'red';
+        $css_color = 'danger';
         $text = '<span data-toggle="tooltip" title="Oh no! Something isn\'t right."><i class="fa fa-times-circle"></i> Failure</span>';
     }
 
-    $formatted_text = sprintf('<tr><td>%s</td><td style="color: %s">%s</td></tr>', $change_title, $css_color, $text);
+    $formatted_text = sprintf('<tr class="'.$css_color.'"><td>%s</td><td style="color: %s">%s</td></tr>', $change_title, $css_color, $text);
 
     echo $formatted_text;
 }
