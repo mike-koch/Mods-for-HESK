@@ -1,7 +1,7 @@
 {
   "name": "mike-koch/Mods-for-HESK",
   "description": "New UI and features for HESK, a free helpdesk solution",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
     {
