@@ -107,12 +107,12 @@ if (HESK_NEW_VERSION != $hesk_settings['hesk_version']) {
                 <h4>Let's get started.</h4>
                 <p>By continuing, you agree to the terms of the
                     <a href="http://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
-                <div class="checkbox">
+                <!--<div class="checkbox">
                     <label>
                         <input type="checkbox" name="usage-stats" checked>
-                        Submit anonymous usage statistics
+                        Submit anonymous usage statistics (<a href="#" data-toggle="modal" data-target="#usage-modal">What's this?</a>)
                     </label>
-                </div>
+                </div>-->
             </div>
             <div data-step="db-confirm" style="display: none">
                 <table class="table table-striped" style="background: #fff">
@@ -181,5 +181,24 @@ if (HESK_NEW_VERSION != $hesk_settings['hesk_version']) {
     </div>
 </div>
 <p id="hesk-path" style="display: none"><?php echo HESK_PATH; ?></p>
+<!--<div class="modal fade" id="usage-modal" tabindex="-1" role="dialog" aria-labelledby="usage-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="usage-label">Submitting Anonymous Usage Statistics</h4>
+            </div>
+            <div class="modal-body">
+                <p>This option will send usage statistics and configuration to Mods for HESK developers.</p>
+                <p>Usage statistics are transmitted using SSL and help us improve future versions of Mods for HESK.</p>
+                <p>All the data is anonymized and no personal or sensitive information is being transmitted.</p>
+                <p>If you have questions, please open a <a href="https://developers.phpjunkyard.com/viewforum.php?f=19" target="_blank" rel="noreferrer">forum topic</a>.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>-->
 </body>
 </html>

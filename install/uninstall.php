@@ -88,12 +88,12 @@ if (hesk_dbNumRows($tableSql) > 0) {
             <?php // BEGIN INSTALL SCREENS ?>
             <div data-step="intro" class="login-box-msg">
                 <h4>I hoped you wouldn't be here, but let's continue anyway.</h4>
-                <div class="checkbox">
+                <!--<div class="checkbox">
                     <label>
                         <input type="checkbox" name="usage-stats" checked>
                         Submit anonymous usage statistics
                     </label>
-                </div>
+                </div>-->
             </div>
             <div data-step="db-confirm" style="display: none">
                 <table class="table table-striped" style="background: #fff">
