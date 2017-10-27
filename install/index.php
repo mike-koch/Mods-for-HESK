@@ -58,6 +58,11 @@ if (hesk_dbNumRows($tableSql) > 0) {
         }
     }
 }
+
+$installMismatch = false;
+if (HESK_NEW_VERSION != $hesk_settings['hesk_version']) {
+    $installMismatch = true;
+}
 ?>
 <html>
 <head>
@@ -85,9 +90,19 @@ if (hesk_dbNumRows($tableSql) > 0) {
         <div class="login-box-body">
             <div class="login-logo">
                 <img src="<?php echo HESK_PATH; ?>install/logo.png" alt="Mods for HESK logo"><br>
-                <span id="header-text">Thanks for choosing Mods for HESK.</span>
+                <span id="header-text">
+                    <?php if ($installMismatch): ?>
+                    HESK Version Mismatch
+                    <?php else: ?>
+                    Thanks for choosing Mods for HESK.
+                    <?php endif; ?>
+                </span>
             </div>
-            <?php // BEGIN INSTALL SCREENS ?>
+            <?php if ($installMismatch): ?>
+            <div class="text-center">
+                <h4>You need to be running HESK 2.7.3 to install Mods for HESK. You currently have HESK <?php echo $hesk_settings['hesk_version']; ?>.</h4>
+            </div>
+            <?php else: // BEGIN INSTALL SCREENS ?>
             <div data-step="intro" class="login-box-msg">
                 <h4>Let's get started.</h4>
                 <p>By continuing, you agree to the terms of the
@@ -161,6 +176,7 @@ if (hesk_dbNumRows($tableSql) > 0) {
                 </ul>
                 <div class="btn btn-primary pull-right" id="next-button">Next&nbsp;&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
