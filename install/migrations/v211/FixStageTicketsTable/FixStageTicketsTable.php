@@ -1,11 +1,10 @@
 <?php
 
-namespace v211;
+namespace v211\FixStageTicketsTable;
 
 class FixStageTicketsTable extends \AbstractMigration {
 
     function up($hesk_settings) {
-        $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets` CHANGE `dt` `dt` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00'");
         $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "stage_tickets`
 					CHANGE `email` `email` VARCHAR( 1000 ) NOT NULL DEFAULT '',
 					CHANGE `ip` `ip` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
