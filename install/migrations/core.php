@@ -175,14 +175,15 @@ function getAllMigrations() {
         126 => new LegacyUpdateMigration('2.6.4', '2.6.3'),
         //3.0.0
         127 => new \v300\MigrateHeskCustomStatuses(),
-        // TODO
-        73 => new \v300\MigrateAutorefreshOption(),
-        74 => new \v300\AddColorSchemeSetting(),
-        75 => new LegacyUpdateMigration('3.0.0', '2.6.4'),
+        128 => new \v300\MigrateAutorefreshOption\UpdateFromOldValue(),
+        129 => new \v300\MigrateAutorefreshOption\DropOldColumn(),
+        130 => new \v300\AddColorSchemeSetting(),
+        131 => new LegacyUpdateMigration('3.0.0', '2.6.4'),
         //3.0.1
-        76 => new LegacyUpdateMigration('3.0.1', '3.0.0'),
+        132 => new LegacyUpdateMigration('3.0.1', '3.0.0'),
         //3.0.2
-        77 => new \v302\AddMissingCustomFields(),
+        // TODO
+        133 => new \v302\AddMissingCustomFields(),
         78 => new LegacyUpdateMigration('3.0.2', '3.0.1'),
         //3.0.3 - 3.0.7
         79 => new LegacyUpdateMigration('3.0.3', '3.0.2'),
