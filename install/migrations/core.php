@@ -124,40 +124,58 @@ function getAllMigrations() {
         //2.4.2
         87 => new LegacyUpdateMigration('2.4.2', '2.4.1'),
         //2.5.0
-        // TODO
-        51 => new \v250\MigrateSettingsToDatabase(),
-        52 => new \v250\AddUserAgentAndScreenResToTickets(),
-        53 => new \v250\AddNavbarTitleUrl(),
-        54 => new LegacyUpdateMigration('2.5.0', '2.4.2'),
+        88 => new \v250\MigrateSettingsToDatabase(),
+        89 => new \v250\AddUserAgentAndScreenResToTickets\AddUserAgentToTickets(),
+        90 => new \v250\AddUserAgentAndScreenResToTickets\AddUserAgentToStageTickets(),
+        91 => new \v250\AddUserAgentAndScreenResToTickets\AddScreenResWidthToTickets(),
+        92 => new \v250\AddUserAgentAndScreenResToTickets\AddScreenResHeightToTickets(),
+        93 => new \v250\AddUserAgentAndScreenResToTickets\AddScreenResWidthToStageTickets(),
+        94 => new \v250\AddUserAgentAndScreenResToTickets\AddScreenResHeightToStageTickets(),
+        95 => new \v250\AddUserAgentAndScreenResToTickets\InsertSetting(),
+        96 => new \v250\AddNavbarTitleUrl(),
+        97 => new LegacyUpdateMigration('2.5.0', '2.4.2'),
         //2.5.1
-        55 => new LegacyUpdateMigration('2.5.1', '2.5.0'),
+        98 => new LegacyUpdateMigration('2.5.1', '2.5.0'),
         //2.5.2
-        56 => new LegacyUpdateMigration('2.5.2', '2.5.1'),
+        99 => new LegacyUpdateMigration('2.5.2', '2.5.1'),
         //2.5.3
-        57 => new LegacyUpdateMigration('2.5.3', '2.5.2'),
+        100 => new LegacyUpdateMigration('2.5.3', '2.5.2'),
         //2.5.4
-        58 => new LegacyUpdateMigration('2.5.4', '2.5.3'),
+        101 => new LegacyUpdateMigration('2.5.4', '2.5.3'),
         //2.5.5
-        59 => new LegacyUpdateMigration('2.5.5', '2.5.4'),
+        102 => new LegacyUpdateMigration('2.5.5', '2.5.4'),
         //2.6.0
-        60 => new \v260\AddApiTables(),
-        61 => new \v260\AddLoggingTable(),
-        62 => new \v260\AddTempAttachmentTable(),
-        63 => new \v260\AddCalendarModule(),
-        64 => new \v260\AddPrimaryKeyToSettings(),
-        65 => new \v260\ConvertStatusPropertiesToInts(),
-        66 => new LegacyUpdateMigration('2.6.0', '2.5.5'),
+        103 => new \v260\AddApiTables\CreateTable(),
+        104 => new \v260\AddApiTables\InsertSetting(),
+        105 => new \v260\AddLoggingTable(),
+        106 => new \v260\AddTempAttachmentTable(),
+        107 => new \v260\AddCalendarModule\CreateCalendarEventTable(),
+        108 => new \v260\AddCalendarModule\CreateCalendarEventReminderTable(),
+        109 => new \v260\AddCalendarModule\AddDueDateColumnToTickets(),
+        110 => new \v260\AddCalendarModule\AddOverdueEmailSentColumnToTickets(),
+        111 => new \v260\AddCalendarModule\AddColorColumnToCategories(),
+        112 => new \v260\AddCalendarModule\AddUsageColumnToCategories(),
+        113 => new \v260\AddCalendarModule\AddNotifyOverdueUnassignedColumnToUsers(),
+        114 => new \v260\AddCalendarModule\AddDefaultCalendarViewToUsers(),
+        115 => new \v260\AddCalendarModule\InsertEnableCalendarSetting(),
+        116 => new \v260\AddCalendarModule\InsertFirstDayOfWeekSetting(),
+        117 => new \v260\AddCalendarModule\InsertDefaultCalendarViewSetting(),
+        118 => new \v260\AddPrimaryKeyToSettings(),
+        119 => new \v260\ConvertStatusPropertiesToInts(),
+        120 => new LegacyUpdateMigration('2.6.0', '2.5.5'),
         //2.6.1
-        67 => new LegacyUpdateMigration('2.6.1', '2.6.0'),
+        121 => new LegacyUpdateMigration('2.6.1', '2.6.0'),
         //2.6.2
-        68 => new \v262\AddMissingColumnsToStageTickets(),
-        69 => new LegacyUpdateMigration('2.6.2', '2.6.1'),
+        122 => new \v262\AddMissingColumnsToStageTickets\AddDueDateColumn(),
+        123 => new \v262\AddMissingColumnsToStageTickets\AddOverdueEmailSentColumn(),
+        124 => new LegacyUpdateMigration('2.6.2', '2.6.1'),
         //2.6.3
-        70 => new LegacyUpdateMigration('2.6.3', '2.6.2'),
+        125 => new LegacyUpdateMigration('2.6.3', '2.6.2'),
         //2.6.4
-        71 => new LegacyUpdateMigration('2.6.4', '2.6.3'),
+        126 => new LegacyUpdateMigration('2.6.4', '2.6.3'),
         //3.0.0
-        72 => new \v300\MigrateHeskCustomStatuses(),
+        127 => new \v300\MigrateHeskCustomStatuses(),
+        // TODO
         73 => new \v300\MigrateAutorefreshOption(),
         74 => new \v300\AddColorSchemeSetting(),
         75 => new LegacyUpdateMigration('3.0.0', '2.6.4'),

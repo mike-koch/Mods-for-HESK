@@ -10,5 +10,6 @@ class AddPrimaryKeyToSettings extends \AbstractMigration {
     }
 
     function down($hesk_settings) {
+        $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` DROP PRIMARY KEY");
     }
 }

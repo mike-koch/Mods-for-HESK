@@ -1,12 +1,11 @@
 <?php
 
-namespace v260;
+namespace v260\AddApiTables;
 
 
-class AddApiTables extends \AbstractMigration {
+class CreateTable extends \AbstractMigration {
 
     function up($hesk_settings) {
-        $this->executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`) VALUES ('public_api', '0')");
         $this->executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "user_api_tokens` (
           `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
           `user_id` INT NOT NULL,
@@ -14,7 +13,6 @@ class AddApiTables extends \AbstractMigration {
     }
 
     function down($hesk_settings) {
-        $this->executeQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'public_api'");
         $this->executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "user_api_tokens`");
     }
 }
