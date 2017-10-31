@@ -1,9 +1,9 @@
 <?php
 
-namespace v240;
+namespace v240\CreateQuickHelpSections;
 
 
-class CreateQuickHelpSectionsTable extends \AbstractMigration {
+class CreateTable extends \AbstractMigration {
 
     function up($hesk_settings) {
         $this->executeQuery("CREATE TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "quick_help_sections` (

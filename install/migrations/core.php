@@ -103,17 +103,28 @@ function getAllMigrations() {
         //2.3.2
         69 => new LegacyUpdateMigration('2.3.2', '2.3.1'),
         //2.4.0
-        70 => new \v240\CreateQuickHelpSectionsTable(),
-        // TODO
-        45 => new \v240\CreateNewStatusNameTable(),
-        46 => new \v240\AddDownloadCountToAttachments(),
-        47 => new \v240\AddHtmlColumnToTickets(),
-        48 => new LegacyUpdateMigration('2.4.0', '2.3.2'),
+        70 => new \v240\CreateQuickHelpSections\CreateTable(),
+        71 => new \v240\CreateQuickHelpSections\InsertCreateTicketRecord(),
+        72 => new \v240\CreateQuickHelpSections\InsertKnowledgebaseRecord(),
+        73 => new \v240\CreateQuickHelpSections\InsertStaffCreateTicketRecord(),
+        74 => new \v240\CreateQuickHelpSections\InsertViewTicketFormRecord(),
+        75 => new \v240\CreateQuickHelpSections\InsertViewTicketRecord(),
+        76 => new \v240\CreateNewStatusNameTable\CreateTextToStatusXrefTable(),
+        77 => new \v240\CreateNewStatusNameTable\AddSortColumnToStatuses(),
+        78 => new \v240\CreateNewStatusNameTable\UpdateSortValues(),
+        79 => new \v240\CreateNewStatusNameTable\InsertTextToStatusXrefValues(),
+        80 => new \v240\AddDownloadCountToAttachments\AddToAttachmentsTable(),
+        81 => new \v240\AddDownloadCountToAttachments\AddToKBAttachmentsTable(),
+        82 => new \v240\AddHtmlColumnToTickets\UpdateTicketsTable(),
+        83 => new \v240\AddHtmlColumnToTickets\UpdateStageTicketsTable(),
+        84 => new \v240\AddHtmlColumnToTickets\UpdateRepliesTable(),
+        85 => new LegacyUpdateMigration('2.4.0', '2.3.2'),
         //2.4.1
-        49 => new LegacyUpdateMigration('2.4.1', '2.4.0'),
+        86 => new LegacyUpdateMigration('2.4.1', '2.4.0'),
         //2.4.2
-        50 => new LegacyUpdateMigration('2.4.2', '2.4.1'),
+        87 => new LegacyUpdateMigration('2.4.2', '2.4.1'),
         //2.5.0
+        // TODO
         51 => new \v250\MigrateSettingsToDatabase(),
         52 => new \v250\AddUserAgentAndScreenResToTickets(),
         53 => new \v250\AddNavbarTitleUrl(),
