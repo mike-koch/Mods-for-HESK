@@ -182,19 +182,19 @@ function getAllMigrations() {
         //3.0.1
         132 => new LegacyUpdateMigration('3.0.1', '3.0.0'),
         //3.0.2
-        // TODO
         133 => new \v302\AddMissingCustomFields(),
-        78 => new LegacyUpdateMigration('3.0.2', '3.0.1'),
+        134 => new LegacyUpdateMigration('3.0.2', '3.0.1'),
         //3.0.3 - 3.0.7
-        79 => new LegacyUpdateMigration('3.0.3', '3.0.2'),
-        80 => new LegacyUpdateMigration('3.0.4', '3.0.3'),
-        81 => new LegacyUpdateMigration('3.0.5', '3.0.4'),
-        82 => new LegacyUpdateMigration('3.0.6', '3.0.5'),
-        83 => new LegacyUpdateMigration('3.0.7', '3.0.6'),
+        135 => new LegacyUpdateMigration('3.0.3', '3.0.2'),
+        136 => new LegacyUpdateMigration('3.0.4', '3.0.3'),
+        137 => new LegacyUpdateMigration('3.0.5', '3.0.4'),
+        138 => new LegacyUpdateMigration('3.0.6', '3.0.5'),
+        139 => new LegacyUpdateMigration('3.0.7', '3.0.6'),
         //3.1.0
-        84 => new \v310\AddStackTraceToLogs(),
-        85 => new \v310\AddCustomNavElements(),
-        86 => new \v310\AddMoreColorOptionsToCategories(),
+        140 => new \v310\AddStackTraceToLogs(),
+        141 => new \v310\AddCustomNavElements\CreateCustomNavElementTable(),
+        142 => new \v310\AddCustomNavElements\CreateCustomNavElementToTextTable(),
+        86 => new \v310\AddForegroundColor(),
         87 => new \v310\AddNewLoginSettings(),
         88 => new \v310\AddApiUrlRewriteSetting(),
         89 => new \v310\ConvertPresetToIndividualColors(),
