@@ -1,13 +1,11 @@
 <?php
 
-namespace v320;
+namespace v320\AddDescriptionToCategoriesAndCustomFields;
 
 
-class AddDescriptionToCategoriesAndCustomFields extends \AbstractMigration {
+class AddDescriptionToCustomFields extends \AbstractMigration {
 
     function up($hesk_settings) {
-        $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories`
-            ADD COLUMN `mfh_description` TEXT");
         $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_fields`
             ADD COLUMN `mfh_description` TEXT");
 
@@ -19,8 +17,6 @@ class AddDescriptionToCategoriesAndCustomFields extends \AbstractMigration {
     }
 
     function down($hesk_settings) {
-        $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories`
-            DROP COLUMN `mfh_description`");
         $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "custom_fields`
             DROP COLUMN `mfh_description`");
 
