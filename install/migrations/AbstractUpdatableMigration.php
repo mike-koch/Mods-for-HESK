@@ -10,7 +10,7 @@ abstract class AbstractUpdatableMigration extends AbstractMigration {
     function up($hesk_settings) {
         $this->innerUp($hesk_settings);
 
-        $this->executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = " . intval($this->migrationNumber) . " 
+        $this->executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '" . intval($this->migrationNumber) . "' 
             WHERE `Key` = 'migrationNumber'");
     }
 
@@ -19,7 +19,7 @@ abstract class AbstractUpdatableMigration extends AbstractMigration {
     function down($hesk_settings) {
         $this->innerDown($hesk_settings);
 
-        $this->executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = " . (intval($this->migrationNumber) - 1) . " 
+        $this->executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` SET `Value` = '" . (intval($this->migrationNumber) - 1) . "' 
             WHERE `Key` = 'migrationNumber'");
     }
 
