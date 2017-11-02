@@ -12,7 +12,7 @@ class DropOldStatusColumn extends AbstractMigration {
     }
 
     function down($hesk_settings) {
-        $ticketsRS = $this->executeQuery("SELECT `id`, `status` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets`;");
+        $ticketsRS = $this->executeQuery("SELECT `id`, `status_int` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets`;");
         while ($currentResult = hesk_dbFetchAssoc($ticketsRS)) {
 
             $this->executeQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `status_int` = '" . intval($currentResult['status']) . "' WHERE `id` = " . $currentResult['id']);

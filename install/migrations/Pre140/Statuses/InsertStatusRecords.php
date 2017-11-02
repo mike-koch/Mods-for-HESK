@@ -28,5 +28,6 @@ class InsertStatusRecords extends \AbstractMigration {
     }
 
     function down($hesk_settings) {
+        $this->executeQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses`");
     }
 }
