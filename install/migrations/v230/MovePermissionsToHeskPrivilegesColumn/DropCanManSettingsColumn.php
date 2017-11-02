@@ -1,6 +1,6 @@
 <?php
 
-namespace v230;
+namespace v230\MovePermissionsToHeskPrivilegesColumn;
 
 
 class DropCanManSettingsColumn extends \AbstractMigration {
