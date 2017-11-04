@@ -59,7 +59,6 @@ function goToStep(step) {
         $('#back-button').hide();
     }
     if (steps[step].showNext !== undefined && !steps[step].showNext) {
-        console.log('hiding this');
         $('#next-button').hide();
     }
 
