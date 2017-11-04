@@ -178,6 +178,11 @@ button.dropdown-submit {
     min-width: 350px;
 }
 
+.installer-login-box {
+    width: 50%;
+    min-width: 350px;
+}
+
 .login-box-container {
     position: relative;
 }

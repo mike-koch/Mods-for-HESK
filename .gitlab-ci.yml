@@ -75,6 +75,7 @@ package:
   script:
     - apt-get update
     - apt-get install zip unzip
+    - cd api
     - composer install --no-dev
     - cd ../ci
     - bash build_zip.sh
