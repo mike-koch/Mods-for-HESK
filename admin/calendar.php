@@ -551,16 +551,18 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
     </div>
 </div>
+<?php
+echo mfh_get_hidden_fields_for_language(array('error_loading_events',
+    'error_deleting_event',
+    'event_deleted',
+    'event_created',
+    'error_creating_event',
+    'event_updated',
+    'error_updating_event',
+    'ticket_due_date_updated',
+    'error_updating_ticket_due_date'));
+?>
 <div style="display: none">
-    <p id="lang_error_loading_events"><?php echo $hesklang['error_loading_events']; ?></p>
-    <p id="lang_error_deleting_event"><?php echo $hesklang['error_deleting_event']; ?></p>
-    <p id="lang_event_deleted"><?php echo $hesklang['event_deleted']; ?></p>
-    <p id="lang_event_created"><?php echo $hesklang['event_created']; ?></p>
-    <p id="lang_error_creating_event"><?php echo $hesklang['error_creating_event']; ?></p>
-    <p id="lang_event_updated"><?php echo $hesklang['event_updated']; ?></p>
-    <p id="lang_error_updating_event"><?php echo $hesklang['error_updating_event']; ?></p>
-    <p id="lang_ticket_due_date_updated"><?php echo $hesklang['ticket_due_date_updated']; ?></p>
-    <p id="lang_error_updating_ticket_due_date"><?php echo $hesklang['error_updating_ticket_due_date']; ?></p>
     <p id="setting_first_day_of_week"><?php echo $modsForHesk_settings['first_day_of_week']; ?></p>
     <p id="setting_default_view">
         <?php
