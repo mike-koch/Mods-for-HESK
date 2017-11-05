@@ -7,8 +7,7 @@
 }
 
 .red,
-.important,
-.critical-priority {
+.important {
     color: red;
 }
 
@@ -41,8 +40,17 @@
     color: #3c8dbc;
 }
 
-.med-low-priority {
+.critical-priority {
+    background-color: #9400d3;
+}
+
+.med-low-priority,
+.medium-priority {
     background-color: #8BB467;
+}
+
+.low-priority {
+    background-color: blue;
 }
 
 .high-priority {
@@ -56,4 +64,12 @@
 
 .gray-on-hover:hover {
     color: grey;
+}
+
+tr.critical-row > td, td.critical-row {
+    background: #f5e6fb;
+}
+
+tr:hover > .critical-row, tr > td.critical-row:hover {
+    background: #edd4f8;
 }

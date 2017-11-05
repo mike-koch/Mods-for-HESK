@@ -3,7 +3,7 @@
 namespace Core\Constants;
 
 
-class Priority {
+class Priority extends \BaseClass {
     const CRITICAL = 0;
     const HIGH = 1;
     const MEDIUM = 2;

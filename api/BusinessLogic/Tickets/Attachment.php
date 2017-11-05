@@ -3,7 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
-class Attachment {
+class Attachment extends \BaseClass {
     /**
      * @var int
      */

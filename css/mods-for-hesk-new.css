@@ -178,6 +178,11 @@ button.dropdown-submit {
     min-width: 350px;
 }
 
+.installer-login-box {
+    width: 50%;
+    min-width: 350px;
+}
+
 .login-box-container {
     position: relative;
 }
@@ -324,4 +329,35 @@ div.ticket-info {
 
 #toast-container > div {
     opacity: 1;
+}
+
+.input-group-addon {
+    padding: 0;
+    border: 0;
+}
+
+.input-group-addon.button > button {
+    border-radius: 0;
+}
+
+.bootstrap-select .btn-default {
+    background-color: #fff;
+    border-radius: 0;
+}
+
+.bootstrap-select .btn-default:hover,
+.bootstrap-select .btn-default:active {
+    background-color: #fff;
+}
+
+.bootstrap-select .btn-default:focus {
+    background-color: #fff;
+    border-color: #3c8dbc;
+    box-shadow: none;
+    outline: 0;
+}
+
+.timeline > li > .timeline-item > .timeline-header.audit-record {
+    font-size: 12px;
+    border-bottom: none;
 }

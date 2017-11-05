@@ -3,7 +3,7 @@
 namespace BusinessLogic;
 
 
-class Validators {
+class Validators extends \BaseClass {
     /**
      * @param string $address - the email address
      * @param array $multiple_emails - true if HESK (or custom field) supports multiple emails

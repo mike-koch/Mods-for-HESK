@@ -1146,6 +1146,7 @@ $hesklang['maxpost']='You probably tried to submit more data than this server ac
 
 // --> Ticket history log
 // Unless otherwise specified, first %s will be replaced with date and second with name/username
+// THESE STRINGS ARE DEPRECATED AS OF MODS FOR HESK 3.2.0
 $hesklang['thist1']='<li class="smaller">%s | moved to category %s by %s</li>'; // %s = date, new category, user making change
 $hesklang['thist2']='<li class="smaller">%s | assigned to %s by %s</li>'; // %s = date, assigned user, user making change
 $hesklang['thist3']='<li class="smaller">%s | closed by %s</li>';
@@ -1835,39 +1836,13 @@ $hesklang['manager'] = 'Manager';
 $hesklang['manager_updated'] = 'Category manager has been updated.';
 $hesklang['can_set_manager'] = 'Can set category managers';
 $hesklang['no_manager'] = 'No manager';
-$hesklang['manage_permission_templates'] = 'Manage Permission Templates';
-$hesklang['manage_permission_templates_help'] = 'Here you can create and edit permission templates. These templates will appear when creating/editing a user.
-Please note that if you change the permission template\'s settings, it will NOT change the permissions of any users that are set to this permission template.';
 $hesklang['number_of_users'] = 'Number of Users';
 $hesklang['actions'] = 'Actions';
-$hesklang['view_permissions_for_this_template'] = 'View/edit permissions for this template';
-$hesklang['permission'] = 'Permission';
-$hesklang['permissions_for_template'] = 'Permissions for template <code>%s</code>'; // %s template name
-$hesklang['template_has_admin_privileges'] = 'Permission template has admin privileges. Click to set as non-admin';
-$hesklang['template_has_no_admin_privileges'] = 'Permission template does not have admin privileges. Click to set as admin';
 $hesklang['staff_cannot_be_admin'] = 'Staff permission group does not have admin access, and cannot be set as an admin';
 $hesklang['admin_cannot_be_staff'] = 'Administrator permission group has admin access, and cannot be set as non-admin';
 $hesklang['template_is_admin_cannot_change'] = 'The permission group currently has admin privileges, so you cannot set specific permissions here.';
-$hesklang['permission_template_updated'] = 'Permission template has been updated!';
-$hesklang['create_new_template'] = 'Create new permission template';
-$hesklang['create_new_template_title'] = 'Create New Permission Template'; // same as create_new_template, but in Title Case
-$hesklang['template_name'] = 'Template name';
-$hesklang['template_name_required'] = 'Template name required.';
 $hesklang['you_must_select_a_category'] = 'You must select at least one category.';
 $hesklang['you_must_select_a_feature'] = 'You must select at least one feature.';
-$hesklang['permission_template_error'] = 'The permission template could not be completed due to the following error(s): %s'; // %s: error list
-$hesklang['template_created'] = 'Permission template successfully created!';
-$hesklang['cannot_delete_admin_or_staff'] = 'The <b>Administrator</b> and <b>Staff</b> permission groups cannot be deleted!';
-$hesklang['no_templates_were_deleted'] = 'No templates were deleted!';
-$hesklang['permission_template_deleted'] = 'Permission template deleted!';
-$hesklang['permission_template_now_admin'] = 'Permission template is now designed as an admin template';
-$hesklang['permission_template_no_longer_admin'] = 'Permission template is no longer designated as an admin template';
-$hesklang['cannot_change_admin_staff'] = 'You cannot change admin/non-admin status for the <b>Administrator</b> and <b>Staff</b> templates!';
-$hesklang['permission_tpl_man'] = 'Manage permission templates'; // Menu link
-$hesklang['permission_templates'] = 'Permission Templates';
-$hesklang['can_man_permission_tpl'] = 'Can manage permission templates';
-$hesklang['permission_template_colon'] = 'Permission Template';
-$hesklang['permission_template'] = 'Permission Template';
 $hesklang['custom'] = 'Custom';
 
 // ADDED OR MODIFIED IN Mods for HESK 2.4.0
@@ -2173,6 +2148,72 @@ $hesklang['url_rewrite_help'] = 'Remove the need to include /index.php in API UR
 $hesklang['url_rewrite_saved'] = 'URL rewrite setting saved!';
 $hesklang['api_settings_saved'] = 'API settings saved!';
 $hesklang['an_error_occurred'] = 'An error occurred. Check the logs for more information';
+
+// Added or modified in Mods for HESK 3.2.0
+$hesklang['error_deleting_category'] = 'An error occurred when trying to delete the category.';
+$hesklang['cat_private'] = 'Private';
+$hesklang['cat_public'] = 'Public';
+$hesklang['cat_name_description'] = 'Name / Description';
+$hesklang['error_sorting_categories'] = 'An error occurred sorting categories!';
+$hesklang['error_retrieving_categories'] = 'An error occurred retrieving categories!';
+$hesklang['error_saving_updating_category'] = 'An error occurred creating / saving the category!';
+$hesklang['description_colon'] = 'Description:'; // Same as 'description', but with a colon (:) afterwards
+$hesklang['copied_to_clipboard'] = 'Copied to clipboard';
+
+// Language for the calendar pages
+// Supported language codes: https://github.com/fullcalendar/fullcalendar/tree/v3.0.1/locale (do not include .js!)
+// If your language is NOT in the supported langauges, leave 'en'
+$hesklang['CALENDAR_LANGUAGE']='en';
+
+
+$hesklang['manage_permission_groups'] = 'Manage Permission Groups';
+$hesklang['manage_permission_groups_help'] = 'Here you can create and edit permission groups. These groups will appear when creating/editing a user. 
+When editing a permission group, all users assigned to this group will also have their permissions updated accordingly.';
+$hesklang['view_permissions_for_this_group'] = 'View/edit permissions for this group';
+$hesklang['permission'] = 'Permission';
+$hesklang['permissions_for_group'] = 'Permissions for group <code>%s</code>'; // %s template name
+$hesklang['permission_group_updated'] = 'Permission group has been updated!';
+$hesklang['create_new_group'] = 'Create new permission group';
+$hesklang['create_new_group_title'] = 'Create New Permission Group'; // same as create_new_template, but in Title Case
+$hesklang['group_name'] = 'Group name';
+$hesklang['group_name_required'] = 'Group name required.';
+$hesklang['permission_group_error'] = 'The permission group could not be saved due to the following error(s): %s'; // %s: error list
+$hesklang['group_created'] = 'Permission group successfully created!';
+$hesklang['cannot_delete_admin_or_staff'] = 'The <b>Administrator</b> and <b>Staff</b> permission groups cannot be deleted!';
+$hesklang['no_groups_were_deleted'] = 'No groups were deleted!';
+$hesklang['permission_group_deleted'] = 'Permission group deleted!';
+$hesklang['manange_permission_groups_menu'] = 'Permission groups'; // Menu link
+$hesklang['permission_groups'] = 'Permission Groups';
+$hesklang['can_man_permission_tpl'] = 'Can manage permission groups';
+$hesklang['permission_group_colon'] = 'Permission Group:';
+$hesklang['permission_group'] = 'Permission Group';
+$hesklang['changing_permissions_will_reset_permission_group'] = 'Changing a user\'s categories / features will reset their permission group! Click "Discard Changes" to reset the user\'s categories / features.';
+
+// --> Ticket audit trail
+$hesklang['audit_moved_category']='%s moved ticket to category %s'; // %s = new category, user making change, thist1
+$hesklang['audit_assigned']='%s assigned ticket to %s'; // %s = assigned user, user making change
+$hesklang['audit_assigned_self'] = '%s assigned ticket to themself';
+$hesklang['audit_unassigned'] = '%s unassigned ticket';
+$hesklang['audit_closed']='%s closed ticket'; // thist3
+$hesklang['audit_automatically_closed'] ='Ticket automatically closed';
+$hesklang['audit_opened']='%s opened ticket'; // thist4
+$hesklang['audit_locked']='%s locked ticket'; // thist5
+$hesklang['audit_automatically_locked'] = 'Ticket automatically locked';
+$hesklang['audit_unlocked']='%s unlocked ticket'; // thist6
+$hesklang['audit_created']='%s created ticket';
+$hesklang['audit_priority']='%s changed priority to %s'; // %s = date,new priority, user making change, thist8
+$hesklang['audit_status']='%s changed status to %s'; // %s = date, new status, user making change, thist9
+$hesklang['audit_autoassigned']='%s automatically assigned to ticket'; //thist10
+$hesklang['audit_submitted_via_piping']='Ticket submitted via e-mail piping'; // thist11
+$hesklang['audit_attachment_deleted']='%s deleted attachment %s'; // %s = date, deleted attachment, user making change
+$hesklang['audit_merged']='%s merged ticket %s with this ticket'; // %s = date, merged ticket ID, user making change, thist13
+$hesklang['audit_time_worked']='%s updated time worked to %s'; // %s = date, new time worked, user making change
+$hesklang['audit_submitted_by']='%s submitted ticket';
+$hesklang['audit_submitted_via_pop']='Ticket submitted via POP3 fetching'; // thist16
+$hesklang['audit_due_date_removed'] = '%s removed due date';
+$hesklang['audit_due_date_changed'] = '%s changed due date to %s';
+$hesklang['audit_linked_ticket'] = '%s linked ticket %s to this ticket';
+$hesklang['audit_unlinked_ticket'] = '%s unlinked ticket %s';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

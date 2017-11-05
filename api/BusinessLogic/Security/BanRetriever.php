@@ -5,13 +5,13 @@ namespace BusinessLogic\Security;
 
 use DataAccess\Security\BanGateway;
 
-class BanRetriever {
+class BanRetriever extends \BaseClass {
     /**
      * @var BanGateway
      */
     private $banGateway;
 
-    function __construct($banGateway) {
+    function __construct(BanGateway $banGateway) {
         $this->banGateway = $banGateway;
     }
 

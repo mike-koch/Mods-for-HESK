@@ -3,7 +3,7 @@
 namespace BusinessLogic\Security;
 
 
-class BannedIp {
+class BannedIp extends \BaseClass {
     /**
      * @var int
      */

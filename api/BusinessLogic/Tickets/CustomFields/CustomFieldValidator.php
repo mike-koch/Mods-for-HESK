@@ -3,7 +3,7 @@
 namespace BusinessLogic\Tickets\CustomFields;
 
 
-class CustomFieldValidator {
+class CustomFieldValidator extends \BaseClass {
     static function isCustomFieldInCategory($customFieldId, $categoryId, $staff, $heskSettings) {
         $customField = $heskSettings['custom_fields']["custom{$customFieldId}"];
 

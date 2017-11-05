@@ -3,7 +3,7 @@
 namespace Core\Constants;
 
 
-class CustomField {
+class CustomField extends \BaseClass {
     const RADIO = 'radio';
     const SELECT = 'select';
     const CHECKBOX = 'checkbox';

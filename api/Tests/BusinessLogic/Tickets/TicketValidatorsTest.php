@@ -18,7 +18,7 @@ class TicketValidatorsTest extends TestCase {
     private $ticketValidator;
 
     protected function setUp() {
-        $this->ticketGateway = $this->createMock(TicketGateway::class);
+        $this->ticketGateway = $this->createMock(TicketGateway::clazz());
         $this->ticketValidator = new TicketValidators($this->ticketGateway);
     }
 

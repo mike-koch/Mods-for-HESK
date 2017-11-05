@@ -3,7 +3,7 @@
 namespace BusinessLogic\Statuses;
 
 
-class DefaultStatusForAction {
+class DefaultStatusForAction extends \BaseClass {
     const NEW_TICKET = "IsNewTicketStatus";
     const CLOSED_STATUS = "IsClosed";
     const CLOSED_BY_CLIENT = "IsClosedByClient";

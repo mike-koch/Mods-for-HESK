@@ -189,15 +189,20 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
 // Add reply
 $html = $modsForHesk_settings['rich_text_for_tickets'];
 if ($submit_as_customer) {
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($ticket['name'])) . "','" . hesk_dbEscape($message . "<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>") . "',NOW(),'" . hesk_dbEscape($myattachments) . "', '" . $html . "')");
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($ticket['name'])) . "','" . hesk_dbEscape($message . "<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>") . "','" . hesk_dbEscape(hesk_date()) . "','" . hesk_dbEscape($myattachments) . "', '" . $html . "')");
 } else {
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($_SESSION['name'])) . "','" . hesk_dbEscape($message) . "',NOW(),'" . hesk_dbEscape($myattachments) . "','" . intval($_SESSION['id']) . "', '" . $html . "')");
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($_SESSION['name'])) . "','" . hesk_dbEscape($message) . "','" . hesk_dbEscape(hesk_date()) . "','" . hesk_dbEscape($myattachments) . "','" . intval($_SESSION['id']) . "', '" . $html . "')");
 }
 
 /* Track ticket status changes for history */
 $revision = '';
 
 /* Change the status of priority? */
+$audit_priority = null;
+$audit_closed = null;
+$audit_status = null;
+$audit_customer_status = null;
+$audit_assigned_self = null;
 if (!empty($_POST['set_priority'])) {
     $priority = intval(hesk_POST('priority'));
     if ($priority < 0 || $priority > 3) {
@@ -211,9 +216,17 @@ if (!empty($_POST['set_priority'])) {
         3 => $hesklang['low']
     );
 
-    $revision = sprintf($hesklang['thist8'], hesk_date(), $options[$priority], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    $plain_options = array(
+        0 => 'critical',
+        1 => 'high',
+        2 => 'medium',
+        3 => 'low'
+    );
 
-    $priority_sql = ",`priority`='$priority', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+    $priority_sql = ",`priority`='$priority' ";
+
+    $audit_priority = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+        1 => $plain_options[$priority]);
 } else {
     $priority_sql = "";
 }
@@ -238,8 +251,11 @@ if ($ticket['locked']) {
         $newStatus = hesk_dbFetchAssoc($newStatusRs);
 
         if ($newStatus['IsClosed'] && hesk_checkPermission('can_resolve', 0)) {
-            $revision = sprintf($hesklang['thist3'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-            $sql_status = " , `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+            $audit_closed = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+            $audit_status = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+                1 => mfh_getDisplayTextForStatusId($new_status)
+            );
+            $sql_status = " , `closedat`=NOW(), `closedby`=" . intval($_SESSION['id']) . " ";
 
             // Lock the ticket if customers are not allowed to reopen tickets
             if ($hesk_settings['custopen'] != 1) {
@@ -247,8 +263,8 @@ if ($ticket['locked']) {
             }
         } else {
             // Ticket isn't being closed, just add the history to the sql query (or tried to close but doesn't have permission)
-            $revision = sprintf($hesklang['thist9'], hesk_date(), $hesklang[$newStatus['Key']], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-            $sql_status = " , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+            $audit_status = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+                1 => mfh_getDisplayTextForStatusId($new_status));
         }
     }
 } // -> Submit as Customer reply
@@ -259,8 +275,8 @@ elseif ($submit_as_customer) {
     $new_status = $customerReplyStatus['ID'];
 
     if ($ticket['status'] != $new_status) {
-        $revision = sprintf($hesklang['thist9'], hesk_date(), $hesklang['wait_reply'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-        $sql_status = " , `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+        $audit_customer_status = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => mfh_getDisplayTextForStatusId($new_status));
     }
 } // -> Default: submit as "Replied by staff"
 else {
@@ -282,8 +298,8 @@ if ($time_worked == '00:00:00') {
 }
 
 if (!empty($_POST['assign_self']) && (hesk_checkPermission('can_assign_self', 0) || (isset($_REQUEST['isManager']) && $_REQUEST['isManager']))) {
-    $revision = sprintf($hesklang['thist2'], hesk_date(), $_SESSION['name'] . ' (' . $_SESSION['user'] . ')', $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
-    $sql .= " , `owner`=" . intval($_SESSION['id']) . ", `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') ";
+    $audit_assigned_self = array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+    $sql .= " , `owner`=" . intval($_SESSION['id']) . " ";
 }
 
 $sql .= " $priority_sql ";
@@ -305,6 +321,29 @@ unset($sql);
 
 /* Update number of replies in the users table */
 hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` SET `replies`=`replies`+1 WHERE `id`='" . intval($_SESSION['id']) . "'");
+
+//-- Insert necessary audit trail records
+if ($audit_priority != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_priority', hesk_date(), $audit_priority);
+}
+
+if ($audit_closed != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_closed', hesk_date(), $audit_closed);
+}
+
+if ($audit_status != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_status', hesk_date(), $audit_status);
+}
+
+if ($audit_customer_status != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_status', hesk_date(),
+        $audit_customer_status);
+}
+
+if ($audit_assigned_self != null) {
+    mfh_insert_audit_trail_record($replyto, 'TICKET', 'audit_assigned_self', hesk_date(), $audit_assigned_self);
+}
+
 
 // --> Prepare reply message
 

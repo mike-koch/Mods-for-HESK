@@ -7,14 +7,14 @@ use BusinessLogic\Attachments\Attachment;
 use BusinessLogic\Attachments\AttachmentRetriever;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 
-class PublicAttachmentController {
+class PublicAttachmentController extends \BaseClass {
     static function getRaw($trackingId, $attachmentId) {
         global $hesk_settings, $applicationContext, $userContext;
 
         self::verifyAttachmentsAreEnabled($hesk_settings);
 
         /* @var $attachmentRetriever AttachmentRetriever */
-        $attachmentRetriever = $applicationContext->get[AttachmentRetriever::class];
+        $attachmentRetriever = $applicationContext->get(AttachmentRetriever::clazz());
 
         $attachment = $attachmentRetriever->getAttachmentContentsForTrackingId($trackingId, $attachmentId, $userContext, $hesk_settings);
 

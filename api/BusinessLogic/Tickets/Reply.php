@@ -9,7 +9,7 @@
 namespace BusinessLogic\Tickets;
 
 
-class Reply {
+class Reply extends \BaseClass {
     /**
      * @var $id int
      */

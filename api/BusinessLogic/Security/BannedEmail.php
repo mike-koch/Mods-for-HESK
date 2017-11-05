@@ -3,7 +3,7 @@
 namespace BusinessLogic\Security;
 
 
-class BannedEmail {
+class BannedEmail extends \BaseClass {
     /**
      * @var int
      */

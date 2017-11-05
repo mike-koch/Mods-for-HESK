@@ -1,32 +1,82 @@
-image: tetraweb/php
-
 stages:
+  - validate
   - test
-  - deploy
+  - package
 
 before_script:
-  - apt-get update
-  - apt-get install zip unzip
-  - cd api
-  - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-  - php composer-setup.php
-  - php -r "unlink('composer-setup.php');"
-  - php composer.phar update
+  - bash ci/docker_install.sh > /dev/null
 
-test:
+validate:7.1:
+  image: php:7.1
+  stage: validate
+  script:
+    - bash ci/php_lint.sh ./
+
+validate:7.0:
+  image: php:7.0
+  stage: validate
+  script:
+    - bash ci/php_lint.sh ./
+
+validate:5.6:
+  image: php:5.6
+  stage: validate
+  script:
+    - bash ci/php_lint.sh ./
+
+validate:5.5:
+  image: php:5.5
+  stage: validate
+  script:
+    - bash ci/php_lint.sh ./
+
+validate:5.4:
+  image: php:5.4
+  stage: validate
+  script:
+    - bash ci/php_lint.sh ./
+
+validate:5.3:
+  image: php:5.3
+  stage: validate
+  script:
+    - bash ci/php_lint.sh ./
+
+test:7.1:
+  image: php:7.1
   stage: test
   script:
-    - composer install
+    - cd api
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php
+    - php -r "unlink('composer-setup.php');"
+    - php composer.phar update
+    - php composer.phar install
     - cd Tests
     - phpunit
 
-deploy:
-  when: manual
-  stage: deploy
+test:7.0:
+  image: php:7.0
+  stage: test
   script:
+    - cd api
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php
+    - php -r "unlink('composer-setup.php');"
+    - php composer.phar update
+    - php composer.phar install
+    - cd Tests
+    - phpunit
+
+package:
+  image: tetraweb/php
+  when: manual
+  stage: package
+  script:
+    - cd api
     - composer install --no-dev
     - cd ../ci
-    - bash build_zip.sh
+    - bash build_release.sh
   artifacts:
     paths:
-      - release.zip
+      - release/

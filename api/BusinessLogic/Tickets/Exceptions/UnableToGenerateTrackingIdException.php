@@ -3,9 +3,7 @@
 namespace BusinessLogic\Tickets\Exceptions;
 
 
-use Exception;
-
-class UnableToGenerateTrackingIdException extends Exception {
+class UnableToGenerateTrackingIdException extends \BaseException {
     public function __construct() {
         parent::__construct("Error generating a unique ticket ID.");
     }

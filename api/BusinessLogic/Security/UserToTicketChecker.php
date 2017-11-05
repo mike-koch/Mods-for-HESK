@@ -6,11 +6,11 @@ namespace BusinessLogic\Security;
 use BusinessLogic\Tickets\Ticket;
 use DataAccess\Security\UserGateway;
 
-class UserToTicketChecker {
+class UserToTicketChecker extends \BaseClass {
     /* @var $userGateway UserGateway */
     private $userGateway;
 
-    function __construct($userGateway) {
+    function __construct(UserGateway $userGateway) {
         $this->userGateway = $userGateway;
     }
 
@@ -32,7 +32,7 @@ class UserToTicketChecker {
         }
 
         $categoryManagerId = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
-        
+
         if ($user->id === $categoryManagerId) {
             return true;
         }

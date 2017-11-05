@@ -283,11 +283,13 @@ if (!$show['show']) {
                     $repliesColumnWidth = 2;
                     echo '<div class="col-md-2 col-sm-12 ticket-cell ';
                     if ($ticket['priority'] == 0) {
-                        echo 'criticalPriority">';
+                        echo 'critical-priority">';
                     } elseif ($ticket['priority'] == 1) {
                         echo 'highPriority">';
-                    } else {
+                    } elseif ($ticket['priority'] == 2) {
                         echo 'medLowPriority">';
+                    } else {
+                        echo 'lowPriority">';
                     }
                     echo '<p class="ticketPropertyTitle">' . $hesklang['priority'] . '</p>';
 

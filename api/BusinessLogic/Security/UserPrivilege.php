@@ -9,9 +9,10 @@
 namespace BusinessLogic\Security;
 
 
-class UserPrivilege {
+class UserPrivilege extends \BaseClass {
     const CAN_VIEW_TICKETS = 'can_view_tickets';
     const CAN_REPLY_TO_TICKETS = 'can_reply_tickets';
     const CAN_EDIT_TICKETS = 'can_edit_tickets';
     const CAN_DELETE_TICKETS = 'can_del_tickets';
+    const CAN_MANAGE_CATEGORIES = 'can_man_cat';
 }

@@ -5,11 +5,11 @@ namespace BusinessLogic\Settings;
 // TODO Test!
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 
-class SettingsRetriever {
+class SettingsRetriever extends \BaseClass {
     /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
     private $modsForHeskSettingsGateway;
 
-    function __construct($modsForHeskSettingsGateway) {
+    function __construct(ModsForHeskSettingsGateway $modsForHeskSettingsGateway) {
         $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
     }
 

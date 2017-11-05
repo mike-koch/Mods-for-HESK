@@ -3,7 +3,7 @@
 namespace DataAccess\Files;
 
 
-class FileWriter {
+class FileWriter extends \BaseClass {
     /**
      * @param $name string - The file name (including extension)
      * @param $folder - The folder name (relative to the ROOT of the helpdesk)
@@ -17,7 +17,7 @@ class FileWriter {
         $fileSize = file_put_contents($location, $contents);
 
         if ($fileSize === false) {
-            throw new \Exception("Failed to save the file!");
+            throw new \BaseException("Failed to save the file!");
         }
 
         return $fileSize;

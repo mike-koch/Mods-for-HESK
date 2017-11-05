@@ -5,11 +5,11 @@ namespace BusinessLogic\Settings;
 
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 
-class ApiChecker {
+class ApiChecker extends \BaseClass {
     /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
     private $modsForHeskSettingsGateway;
 
-    function __construct($modsForHeskSettingsGateway) {
+    function __construct(ModsForHeskSettingsGateway $modsForHeskSettingsGateway) {
         $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
     }
 

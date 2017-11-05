@@ -10,7 +10,7 @@ use BusinessLogic\ValidationModel;
 use Controllers\JsonRetriever;
 
 
-class CustomerTicketController {
+class CustomerTicketController extends \BaseClass {
     function get() {
         global $applicationContext, $hesk_settings;
 
@@ -18,7 +18,7 @@ class CustomerTicketController {
         $emailAddress = isset($_GET['email']) ? $_GET['email'] : null;
 
         /* @var $ticketRetriever TicketRetriever */
-        $ticketRetriever = $applicationContext->get[TicketRetriever::class];
+        $ticketRetriever = $applicationContext->get(TicketRetriever::clazz());
 
         output($ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, $emailAddress, $hesk_settings));
     }
@@ -27,7 +27,7 @@ class CustomerTicketController {
         global $applicationContext, $hesk_settings, $userContext;
 
         /* @var $ticketCreator TicketCreator */
-        $ticketCreator = $applicationContext->get[TicketCreator::class];
+        $ticketCreator = $applicationContext->get(TicketCreator::clazz());
 
         $jsonRequest = JsonRetriever::getJsonData();
 

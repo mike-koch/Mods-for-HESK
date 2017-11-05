@@ -2,7 +2,7 @@
 
 namespace BusinessLogic\Tickets;
 
-class CreateTicketByCustomerModel {
+class CreateTicketByCustomerModel extends \BaseClass {
     /**
      * @var string
      */

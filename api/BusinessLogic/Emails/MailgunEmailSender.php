@@ -7,7 +7,7 @@ use BusinessLogic\Tickets\Attachment;
 use BusinessLogic\Tickets\Ticket;
 use Mailgun\Mailgun;
 
-class MailgunEmailSender implements EmailSender {
+class MailgunEmailSender extends \BaseClass implements EmailSender {
     function sendEmail($emailBuilder, $heskSettings, $modsForHeskSettings, $sendAsHtml) {
         $mailgunArray = array();
 

@@ -5,7 +5,7 @@ namespace BusinessLogic\Emails;
 
 use BusinessLogic\Tickets\Ticket;
 
-class EmailSenderHelper {
+class EmailSenderHelper extends \BaseClass {
     /**
      * @var $emailTemplateParser EmailTemplateParser
      */
@@ -21,7 +21,9 @@ class EmailSenderHelper {
      */
     private $mailgunEmailSender;
 
-    function __construct($emailTemplateParser, $basicEmailSender, $mailgunEmailSender) {
+    function __construct(EmailTemplateParser $emailTemplateParser,
+                         BasicEmailSender $basicEmailSender,
+                         MailgunEmailSender $mailgunEmailSender) {
         $this->emailTemplateParser = $emailTemplateParser;
         $this->basicEmailSender = $basicEmailSender;
         $this->mailgunEmailSender = $mailgunEmailSender;

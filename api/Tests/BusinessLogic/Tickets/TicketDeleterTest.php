@@ -30,9 +30,9 @@ class TicketDeleterTest extends TestCase {
     private $userToTicketChecker;
 
     protected function setUp() {
-        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::class);
-        $this->ticketGateway = $this->createMock(TicketGateway::class);
-        $this->attachmentHandler = $this->createMock(AttachmentHandler::class);
+        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::clazz());
+        $this->ticketGateway = $this->createMock(TicketGateway::clazz());
+        $this->attachmentHandler = $this->createMock(AttachmentHandler::clazz());
 
         $this->ticketDeleter = new TicketDeleter($this->ticketGateway, $this->userToTicketChecker, $this->attachmentHandler);
     }
@@ -43,7 +43,7 @@ class TicketDeleterTest extends TestCase {
         $this->userToTicketChecker->method('isTicketAccessibleToUser')->willReturn(false);
 
         //-- Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(\BaseException::clazz());
         $this->expectExceptionMessage("User does not have access to ticket 1");
 
         //-- Act

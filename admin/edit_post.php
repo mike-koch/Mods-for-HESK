@@ -36,6 +36,7 @@ if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
     hesk_checkPermission('can_view_tickets');
     hesk_checkPermission('can_edit_tickets');
 }
+
 $modsForHesk_settings = mfh_getSettings();
 
 /* Ticket ID */
@@ -64,6 +65,7 @@ if (defined('HESK_DEMO')) {
 if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
     hesk_okCategory($ticket['category']);
 }
+
 
 if (hesk_isREQUEST('reply')) {
     $tmpvar['id'] = intval(hesk_REQUEST('reply')) or die($hesklang['id_not_valid']);
@@ -443,6 +445,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                             echo '<div class="radio"><label><input type="radio" name="' . $k . '" value="' . $option . '" ' . $checked . ' ' . $required_attribute . '> ' . $option . '</label></div>';
                                         }
+                                        if (!empty($v['mfh_description'])) {
+                                            echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                        }
                                         echo '<div class="help-block with-errors"></div></div>
                         </div>';
 
@@ -473,9 +478,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                             echo '<option ' . $selected . '>' . $option . '</option>';
                                         }
-
-                                        echo '</select>
-                                <div class="help-block with-errors"></div>
+                                        if (!empty($v['mfh_description'])) {
+                                            echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                        }
+                                        echo '</select>';
+                                echo '<div class="help-block with-errors"></div>
                             </div>
                         </div>';
                                         break;
@@ -496,6 +503,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                                             echo '<div class="checkbox"><label><input type="checkbox" name="' . $k . '[]" value="' . $option . '" ' . $checked . ' ' . $required_attribute . '> ' . $option . '</label></div>';
                                         }
+                                        if (!empty($v['mfh_description'])) {
+                                            echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                        }
                                         echo '<div class="help-block with-errors"></div>
                             </div>
                         </div>';
@@ -510,8 +520,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group' . $cls . '">
                             <label for="' . $k . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
                             <div class="col-sm-9">
-                                <textarea name="' . $k . '" class="form-control" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>
-                                <div class="help-block with-errors"></div>
+                                <textarea name="' . $k . '" class="form-control" rows="' . intval($v['value']['rows']) . '" cols="' . intval($v['value']['cols']) . '" ' . $required_attribute . '>' . $k_value . '</textarea>';
+                                        if (!empty($v['mfh_description'])) {
+                                            echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                        }
+                                echo '<div class="help-block with-errors"></div>
                             </div>
                         </div>';
                                         break;
@@ -530,8 +543,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group' . $cls . '">
                             <label for="' . $k . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
                             <div class="col-sm-9">
-                                <input type="text" name="' . $k . '" value="' . $k_value . '" class="datepicker form-control" size="10" ' . $required_attribute . '>
-                                <div class="help-block with-errors"></div>
+                                <input type="text" name="' . $k . '" value="' . $k_value . '" class="datepicker form-control" size="10" ' . $required_attribute . '>';
+                                        if (!empty($v['mfh_description'])) {
+                                            echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                        }
+                                echo '<div class="help-block with-errors"></div>
                             </div>
                         </div>';
                                         break;
@@ -546,8 +562,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group' . $cls . '">
                             <label for="' . $k . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
                             <div class="col-sm-9">
-                                <input class="form-control" type="text" name="' . $k . '" id="' . $k . '" value="' . $k_value . '" size="40" ' . $suggest . ' ' . $required_attribute . '>
-                                <div class="help-block with-errors"></div>
+                                <input class="form-control" type="text" name="' . $k . '" id="' . $k . '" value="' . $k_value . '" size="40" ' . $suggest . ' ' . $required_attribute . '>';
+                                        if (!empty($v['mfh_description'])) {
+                                            echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                        }
+                                echo '<div class="help-block with-errors"></div>
                             </div>
                             <div id="' . $k . '_suggestions"></div>
                         </div>
@@ -568,8 +587,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group' . $cls . '">
                             <label for="' . $k . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $required_attribute . '>
-                                <div class="help-block with-errors"></div>
+                                <input type="text" class="form-control" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $required_attribute . '>';
+                                    if (!empty($v['mfh_description'])) {
+                                        echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
+                                    }
+                                echo '<div class="help-block with-errors"></div>
                             </div>
                         </div>
                         ';

@@ -10,7 +10,7 @@ use DataAccess\Attachments\AttachmentGateway;
 use DataAccess\Files\FileReader;
 use DataAccess\Tickets\TicketGateway;
 
-class AttachmentRetriever {
+class AttachmentRetriever extends \BaseClass {
     /* @var $attachmentGateway AttachmentGateway */
     private $attachmentGateway;
 

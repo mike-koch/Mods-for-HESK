@@ -104,6 +104,11 @@ var loadJquery = function()
         $(deactivate).attr('disabled', 'disabled');
     });
 
+    $('.selectpicker').selectpicker({
+        iconBase: 'fa fa-fw',
+        tickIcon: 'fa-check'
+    });
+
     //-- Initialize toastr properties
     toastr.options.progressBar = true;
     toastr.options.closeButton = true;

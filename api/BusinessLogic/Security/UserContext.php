@@ -3,7 +3,7 @@
 namespace BusinessLogic\Security;
 
 
-class UserContext {
+class UserContext extends \BaseClass {
     /* @var $id int */
     public $id;
 
@@ -54,6 +54,21 @@ class UserContext {
 
     /* @var $active bool */
     public $active;
+
+    static function buildAnonymousUser() {
+        $userContext = new UserContext();
+        $userContext->id = -1;
+        $userContext->username = "API - ANONYMOUS USER"; // Usernames can't have spaces, so no one will take this username
+        $userContext->admin = false;
+        $userContext->name = "ANONYMOUS USER";
+        $userContext->email = "anonymous-user@example.com";
+        $userContext->categories = array();
+        $userContext->permissions = array();
+        $userContext->autoAssign = false;
+        $userContext->active = true;
+
+        return $userContext;
+    }
 
     /**
      * Builds a user context based on the current session. **The session must be active!**

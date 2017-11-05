@@ -426,16 +426,16 @@ $modsForHesk_settings = mfh_getSettings();
                             </span>
                             <span class="beta-version orange" style="display: none">
                                 <?php echo $hesklang['beta']; ?>
-                                <a href="https://www.mods-for-hesk.com/versioncheck.php?v=<?php echo $modsForHeskVersion; ?>"
+                                <a href="https://www.mods-for-hesk.com/versioncheck.php?version=<?php echo $modsForHeskVersion; ?>"
                                    target="_blank"><?php echo $hesklang['check4updates']; ?></a>
                             </span>
                             <span class="update-available" style="display: none">
-                                <a class="orange" href="https://www.mods-for-hesk.com/versioncheck.php?version=<?php echo $hesk_settings['hesk_version']; ?>"
+                                <a class="orange" href="https://www.mods-for-hesk.com/versioncheck.php?version=<?php echo $modsForHeskVersion; ?>"
                                    target="_blank">
                                     <?php echo $hesklang['hnw']; ?>
                                 </a>
                             </span>
-                            <a class="response-error" href="https://www.hesk.com/update.php?version=<?php echo $hesk_settings['hesk_version']; ?>"
+                            <a class="response-error" href="https://www.mods-for-hesk.com/versioncheck.php?version=<?php echo $modsForHeskVersion; ?>"
                                target="_blank" style="display: none"><?php echo $hesklang['check4updates']; ?></a>
                         <?php else: ?>
                             - <a

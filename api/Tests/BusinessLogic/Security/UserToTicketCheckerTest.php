@@ -20,7 +20,7 @@ class UserToTicketCheckerTest extends TestCase {
     private $heskSettings;
 
     protected function setUp() {
-        $this->userGateway = $this->createMock(UserGateway::class);
+        $this->userGateway = $this->createMock(UserGateway::clazz());
         $this->userToTicketChecker = new UserToTicketChecker($this->userGateway);
     }
 

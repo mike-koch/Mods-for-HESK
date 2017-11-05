@@ -17,7 +17,7 @@ use DataAccess\Files\FileDeleter;
 use DataAccess\Files\FileWriter;
 use DataAccess\Tickets\TicketGateway;
 
-class AttachmentHandler {
+class AttachmentHandler extends \BaseClass {
     /* @var $ticketGateway TicketGateway */
     private $ticketGateway;
 
@@ -33,7 +33,11 @@ class AttachmentHandler {
     /* @var  $userToTicketChecker UserToTicketChecker */
     private $userToTicketChecker;
 
-    function __construct($ticketGateway, $attachmentGateway, $fileWriter, $userToTicketChecker, $fileDeleter) {
+    function __construct(TicketGateway $ticketGateway,
+                         AttachmentGateway $attachmentGateway,
+                         FileWriter $fileWriter,
+                         UserToTicketChecker $userToTicketChecker,
+                         FileDeleter $fileDeleter) {
         $this->ticketGateway = $ticketGateway;
         $this->attachmentGateway = $attachmentGateway;
         $this->fileWriter = $fileWriter;

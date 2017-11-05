@@ -7,6 +7,7 @@ $(document).ready(function() {
             center: 'title',
             right: 'month,agendaWeek,agendaDay,listWeek'
         },
+        locale: mfhLang.text('CALENDAR_LANGUAGE'),
         editable: true,
         eventLimit: true,
         timeFormat: 'H:mm',

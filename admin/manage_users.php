@@ -214,7 +214,7 @@ if ($action = hesk_REQUEST('a')) {
                     <th><b><i><?php echo $hesklang['name']; ?></i></b></th>
                     <th><b><i><?php echo $hesklang['email']; ?></i></b></th>
                     <th><b><i><?php echo $hesklang['username']; ?></i></b></th>
-                    <th><b><i><?php echo $hesklang['permission_template']; ?></i></b></th>
+                    <th><b><i><?php echo $hesklang['permission_group']; ?></i></b></th>
                     <?php
                     /* Is user rating enabled? */
                     if ($hesk_settings['rating']) {
@@ -591,6 +591,7 @@ function update_user()
         $myuser['notify_overdue_unassigned'] = 0;
     }
 
+
     /* Check for duplicate usernames */
     $res = hesk_dbQuery("SELECT `id`,`isadmin`,`categories`,`heskprivileges` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `user` = '" . hesk_dbEscape($myuser['user']) . "' LIMIT 1");
     if (hesk_dbNumRows($res) == 1) {
@@ -846,6 +847,7 @@ function remove()
 
     // Revoke manager rights
     hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` SET `manager` = 0 WHERE `manager` = " . intval($myuser));
+
 
     /* Un-assign all tickets for this user */
     $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`=0 WHERE `owner`='" . intval($myuser) . "'");

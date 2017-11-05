@@ -3,7 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
-class CreatedTicketModel {
+class CreatedTicketModel extends \BaseClass {
     /* @var $ticket Ticket */
     public $ticket;
 

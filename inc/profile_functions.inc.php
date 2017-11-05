@@ -162,9 +162,10 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
             if (!$is_profile_page) {
                 ?>
                 <div role="tabpanel" class="tab-pane fade" id="permissions">
+                    <?php if ($_SESSION['isadmin']): ?>
                     <div class="form-group">
                         <label for="administrator"
-                               class="col-md-3 control-label"><?php echo $hesklang['permission_template_colon']; ?></label>
+                               class="col-md-3 control-label"><?php echo $hesklang['permission_group']; ?></label>
 
                         <div class="col-md-9">
                             <?php
@@ -181,10 +182,19 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
                             $selected = $_SESSION[$session_array]['permission_template'] == '-1' ? 'selected' : '';
                             echo '<option value="-1" ' . $selected . '>' . htmlspecialchars($hesklang['custom']) . '</option>';
                             echo '</select>';
-                            outputCheckboxJavascript();
                             ?>
                         </div>
                     </div>
+                    <?php elseif ($action == 'edit_user'): ?>
+                        <input type="hidden" name="template"
+                               value="<?php echo $_SESSION[$session_array]['permission_template']; ?>" />
+                        <div id="changed-group-warning" class="alert alert-warning" style="display: none">
+                            <i class="fa fa-exclamation-triangle"></i> <?php echo $hesklang['changing_permissions_will_reset_permission_group']; ?>
+                        </div>
+                    <?php
+                    endif;
+                    outputCheckboxJavascript($action);
+                    ?>
                     <div id="options">
                         <div class="form-group">
                             <label for="categories[]"
@@ -535,7 +545,7 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
     <?php
 } // END hesk_profile_tab()
 
-function outputCheckboxJavascript()
+function outputCheckboxJavascript($action)
 {
     global $hesk_settings, $hesklang;
 
@@ -594,7 +604,9 @@ function outputCheckboxJavascript()
         });
     }
     function setTemplateToCustom() {
-        $('#permission-tpl').val('-1');
+        $('input[name=\"template\"]').val('-1');
+        
+        " . ($action == 'edit_user' ? ($_SESSION['isadmin']  ? '' : "$('#changed-group-warning').show();") : '') . "
     }
     </script>";
 }

@@ -45,10 +45,11 @@ header('X-UA-Compatible: IE=edge');
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/AdminLTE.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/toastr.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/magnific-popup.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
-    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/colors.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/displays.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-select.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <?php if (defined('USE_JQUERY_2')): ?>
         <script src="<?php echo HESK_PATH; ?>js/jquery-2.2.4.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php else: ?>
@@ -75,6 +76,8 @@ header('X-UA-Compatible: IE=edge');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.magnific-popup.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/alerts.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/lang.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/clipboard.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-select.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;
@@ -281,12 +284,12 @@ header('X-UA-Compatible: IE=edge');
     if (defined('MFH_CALENDAR')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
-        <script src="<?php echo HESK_PATH; ?>js/calendar/locale/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/locale-all.js"></script>
     <?php } else if (defined('MFH_CALENDAR_READONLY')) { ?>
         <script src="<?php echo HESK_PATH; ?>js/calendar/moment.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/fullcalendar.min.js"></script>
-        <script src="<?php echo HESK_PATH; ?>js/calendar/locale/<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder'] ?>.js"></script>
+        <script src="<?php echo HESK_PATH; ?>js/calendar/locale-all.js"></script>
         <script src="<?php echo HESK_PATH; ?>js/calendar/mods-for-hesk-calendar-admin-readonly.js"></script>
     <?php
     }
@@ -306,10 +309,12 @@ if (defined('MFH_PAGE_LAYOUT') && MFH_PAGE_LAYOUT == 'TOP_ONLY') {
 unset($onload); ?>" class="<?php echo $layout_tag ?> fixed js">
 
 <?php // GLOBAL JAVASCRIPT IDs ?>
+<p style="display: none" id="hesk-url"><?php echo $hesk_settings['hesk_url']; ?></p>
 <p style="display: none" id="hesk-path"><?php echo HESK_PATH; ?></p>
 <p style="display: none" id="admin-dir"><?php echo $hesk_settings['admin_dir']; ?></p>
 <p style="display: none" id="lang_alert_success"><?php echo $hesklang['alert_success']; ?></p>
 <p style="display: none" id="lang_alert_error"><?php echo $hesklang['alert_error']; ?></p>
+<p style="display: none;" id="lang_CALENDAR_LANGUAGE"><?php echo $hesklang['CALENDAR_LANGUAGE']; ?></p>
 
 <?php
 include(HESK_PATH . 'header.txt');

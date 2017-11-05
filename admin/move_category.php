@@ -70,8 +70,6 @@ if (hesk_dbNumRows($res) != 1) {
 }
 $ticket = hesk_dbFetchAssoc($res);
 
-/* Log that ticket is being moved */
-$history = sprintf($hesklang['thist1'], hesk_date(), $row['name'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
 
 /* Is the ticket assigned to someone? If yes, check that the user has access to category or change to unassigned */
 $need_to_reassign = 0;
@@ -92,18 +90,30 @@ if ($ticket['owner']) {
 }
 
 /* Reassign automatically if possible */
+$autoassign_owner = null;
 if ($need_to_reassign || !$ticket['owner']) {
     $need_to_reassign = 1;
     $autoassign_owner = hesk_autoAssignTicket($category);
     if ($autoassign_owner) {
         $ticket['owner'] = $autoassign_owner['id'];
-        $history .= sprintf($hesklang['thist10'], hesk_date(), $autoassign_owner['name'] . ' (' . $autoassign_owner['user'] . ')');
     } else {
         $ticket['owner'] = 0;
     }
 }
 
-hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `category`='" . intval($category) . "', `owner`='" . intval($ticket['owner']) . "' , `history`=CONCAT(`history`,'" . hesk_dbEscape($history) . "') WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `category`='" . intval($category) . "', `owner`='" . intval($ticket['owner']) . "' WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+
+/* Log that ticket is being moved */
+mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_moved_category', hesk_date(), array(
+    0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+    1 => $row['name']
+));
+
+if ($autoassign_owner) {
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_autoassigned', hesk_date(), array(
+        0 => $autoassign_owner['name'] . ' (' . $autoassign_owner['user'] . ')'
+    ));
+}
 
 $ticket['category'] = $category;
 

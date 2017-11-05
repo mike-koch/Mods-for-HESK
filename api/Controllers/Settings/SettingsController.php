@@ -5,13 +5,13 @@ namespace Controllers\Settings;
 
 use BusinessLogic\Settings\SettingsRetriever;
 
-class SettingsController {
+class SettingsController extends \BaseClass {
     function get() {
-        global $applicationContext, $hesk_settings, $modsForHesk_settings;
+        global $applicationContext, $hesk_settings;
 
         /* @var $settingsRetriever SettingsRetriever */
-        $settingsRetriever = $applicationContext->get[SettingsRetriever::class];
+        $settingsRetriever = $applicationContext->get(SettingsRetriever::clazz());
 
-        output($settingsRetriever->getAllSettings($hesk_settings, $modsForHesk_settings));
+        output($settingsRetriever->getAllSettings($hesk_settings));
     }
 }

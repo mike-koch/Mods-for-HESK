@@ -8,7 +8,6 @@ admin/archive.php
 admin/custom_statuses.php
 admin/email_templates.php
 admin/generate_spam_question.php
-admin/priority.php
 admin/test_connection.php
 attachments/index.htm
 cache/

@@ -10,7 +10,7 @@ use BusinessLogic\ValidationModel;
 use BusinessLogic\Validators;
 use Core\Constants\CustomField;
 
-class NewTicketValidator {
+class NewTicketValidator extends \BaseClass {
     /**
      * @var $categoryRetriever CategoryRetriever
      */
@@ -24,7 +24,9 @@ class NewTicketValidator {
      */
     private $ticketValidators;
 
-    function __construct($categoryRetriever, $banRetriever, $ticketValidators) {
+    function __construct(CategoryRetriever $categoryRetriever,
+                         BanRetriever $banRetriever,
+                         TicketValidators $ticketValidators) {
         $this->categoryRetriever = $categoryRetriever;
         $this->banRetriever = $banRetriever;
         $this->ticketValidators = $ticketValidators;

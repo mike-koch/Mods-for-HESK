@@ -3,7 +3,7 @@
 namespace BusinessLogic\Attachments;
 
 
-class CreateAttachmentModel {
+class CreateAttachmentModel extends \BaseClass {
     /* @var $savedName string */
     public $savedName;
 

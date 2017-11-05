@@ -5,7 +5,7 @@ namespace DataAccess\Files;
 
 use BusinessLogic\Exceptions\ApiFriendlyException;
 
-class FileReader {
+class FileReader extends \BaseClass {
     /**
      * @param $name string - The file name (including extension)
      * @param $folder - The folder name (relative to the ROOT of the helpdesk)
@@ -23,7 +23,7 @@ class FileReader {
         $fileContents = file_get_contents($location);
 
         if ($fileContents === false) {
-            throw new \Exception("Failed to read the file!");
+            throw new \BaseException("Failed to read the file!");
         }
 
         return $fileContents;

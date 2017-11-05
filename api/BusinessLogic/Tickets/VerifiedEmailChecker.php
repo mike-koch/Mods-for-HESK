@@ -11,13 +11,13 @@ namespace BusinessLogic\Tickets;
 
 use DataAccess\Tickets\VerifiedEmailGateway;
 
-class VerifiedEmailChecker {
+class VerifiedEmailChecker extends \BaseClass {
     /**
      * @var $verifiedEmailGateway VerifiedEmailGateway
      */
     private $verifiedEmailGateway;
 
-    function __construct($verifiedEmailGateway) {
+    function __construct(VerifiedEmailGateway $verifiedEmailGateway) {
         $this->verifiedEmailGateway = $verifiedEmailGateway;
     }
 

@@ -5,6 +5,8 @@ namespace DataAccess\Tickets;
 
 use BusinessLogic\Attachments\AttachmentType;
 use BusinessLogic\Tickets\Attachment;
+use BusinessLogic\Tickets\AuditTrail;
+use BusinessLogic\Tickets\AuditTrailEntityType;
 use BusinessLogic\Tickets\Ticket;
 use BusinessLogic\Tickets\TicketGatewayGeneratedFields;
 use DataAccess\CommonDao;
@@ -29,7 +31,42 @@ class TicketGateway extends CommonDao {
 
         $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($id) . " ORDER BY `id` ASC");
 
-        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings);
+        $auditTrailRs = hesk_dbQuery("SELECT `audit`.`id`, `audit`.`language_key`, `audit`.`date`,
+              `values`.`replacement_index`, `values`.`replacement_value`
+            FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "audit_trail` AS `audit` 
+            LEFT JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "audit_trail_to_replacement_values` AS `values`
+                ON `audit`.`id` = `values`.`audit_trail_id`
+            WHERE `entity_type` = 'TICKET' AND `entity_id` = " . intval($id) . "
+            ORDER BY `audit`.`date` ASC");
+
+        $auditRecords = array();
+
+        /* @var $currentAuditRecord AuditTrail|null */
+        $currentAuditRecord = null;
+        while ($auditRow = hesk_dbFetchAssoc($auditTrailRs)) {
+            if ($currentAuditRecord == null || $currentAuditRecord->id != $auditRow['id']) {
+                if ($currentAuditRecord != null) {
+                    $auditRecords[] = $currentAuditRecord;
+                }
+                $currentAuditRecord = new AuditTrail();
+                $currentAuditRecord->id = $auditRow['id'];
+                $currentAuditRecord->entityId = $id;
+                $currentAuditRecord->entityType = AuditTrailEntityType::TICKET;
+                $currentAuditRecord->languageKey = $auditRow['language_key'];
+                $currentAuditRecord->date = $auditRow['date'];
+                $currentAuditRecord->replacementValues = array();
+            }
+
+            if ($auditRow['replacement_index'] != null) {
+                $currentAuditRecord->replacementValues[intval($auditRow['replacement_index'])] = $auditRow['replacement_value'];
+            }
+        }
+
+        if ($currentAuditRecord != null) {
+            $auditRecords[] = $currentAuditRecord;
+        }
+
+        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $auditRecords, $heskSettings);
 
         $this->close();
 
@@ -92,7 +129,7 @@ class TicketGateway extends CommonDao {
     function getTicketByTrackingId($trackingId, $heskSettings) {
         $this->init();
 
-        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `trackid` = " . intval($trackingId));
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `trackid` = '" . hesk_dbEscape($trackingId) . "'");
         if (hesk_dbNumRows($rs) === 0) {
             return null;
         }
@@ -101,7 +138,40 @@ class TicketGateway extends CommonDao {
         $linkedTicketsRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` WHERE `parent` = " . intval($trackingId));
         $repliesRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto` = " . intval($row['id']) . " ORDER BY `id` ASC");
 
-        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $heskSettings);
+        $audiTrailRs = hesk_dbQuery("SELECT `audit`.`id`, `audit`.`language_key`, `audit`.`date`,
+              `values`.`replacement_index`, `values`.`replacement_value`
+            FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "audit_trail` AS `audit` 
+            LEFT JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "audit_trail_to_replacement_values` AS `values`
+                ON `audit`.`id` = `values`.`audit_trail_id`
+            WHERE `entity_type` = 'TICKET' AND `entity_id` = " . intval($row['id']));
+        $auditRecords = array();
+
+        /* @var $currentAuditRecord AuditTrail */
+        $currentAuditRecord = null;
+        while ($auditRow = hesk_dbFetchAssoc($audiTrailRs)) {
+            if ($currentAuditRecord == null || $currentAuditRecord->id != $auditRow['id']) {
+                if ($currentAuditRecord != null) {
+                    $auditRecords[] = $currentAuditRecord;
+                }
+                $currentAuditRecord = new AuditTrail();
+                $currentAuditRecord->id = $auditRow['id'];
+                $currentAuditRecord->entityId = $row['id'];
+                $currentAuditRecord->entityType = AuditTrailEntityType::TICKET;
+                $currentAuditRecord->languageKey = $auditRow['language_key'];
+                $currentAuditRecord->date = $auditRow['date'];
+                $currentAuditRecord->replacementValues = array();
+            }
+
+            if ($auditRow['replacement_index'] != null) {
+                $currentAuditRecord->replacementValues[intval($auditRow['replacement_index'])] = $auditRow['replacement_value'];
+            }
+        }
+
+        if ($currentAuditRecord != null) {
+            $auditRecords[] = $currentAuditRecord;
+        }
+
+        $ticket = Ticket::fromDatabaseRow($row, $linkedTicketsRs, $repliesRs, $auditRecords, $heskSettings);
 
         $this->close();
 
@@ -170,6 +240,8 @@ class TicketGateway extends CommonDao {
         $ipAddress = $ticket->ipAddress !== null
                     && $ticket->ipAddress !== '' ? $ticket->ipAddress : '';
 
+        $emailAddresses = implode(';', $ticket->email);
+
         $tableName = $isEmailVerified ? 'tickets' : 'stage_tickets';
 
         $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . $tableName ."`
@@ -205,7 +277,7 @@ class TicketGateway extends CommonDao {
         (
             '" . hesk_dbEscape($ticket->trackingId) . "',
             '" . hesk_dbEscape($ticket->name) . "',
-            '" . hesk_dbEscape($ticket->email) . "',
+            '" . hesk_dbEscape($emailAddresses) . "',
             '" . intval($ticket->categoryId) . "',
             '" . intval($ticket->priorityId) . "',
             '" . hesk_dbEscape($ticket->subject) . "',
@@ -355,6 +427,16 @@ class TicketGateway extends CommonDao {
                 `html` = " . ($ticket->usesHtml ? 1 : 0) . ",
                 {$customSql}
             WHERE `id` = " . intval($ticket->id));
+
+        $this->close();
+    }
+
+    function moveTicketsToDefaultCategory($oldCategoryId, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets`
+            SET `category` = 1
+            WHERE `category` = " . intval($oldCategoryId));
 
         $this->close();
     }

@@ -2,7 +2,7 @@
 
 namespace BusinessLogic\Categories;
 
-class Category {
+class Category extends \BaseClass {
     /**
      * @var int The Categories ID
      */
@@ -60,4 +60,14 @@ class Category {
      * @var bool Indication if the user has access to the Categories
      */
     public $accessible;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var int
+     */
+    public $numberOfTickets;
 }

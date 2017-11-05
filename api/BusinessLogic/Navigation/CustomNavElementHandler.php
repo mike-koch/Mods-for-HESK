@@ -6,11 +6,11 @@ namespace BusinessLogic\Navigation;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 use DataAccess\Navigation\CustomNavElementGateway;
 
-class CustomNavElementHandler {
+class CustomNavElementHandler extends \BaseClass {
     /* @var $customNavElementGateway CustomNavElementGateway */
     private $customNavElementGateway;
 
-    function __construct($customNavElementGateway) {
+    function __construct(CustomNavElementGateway $customNavElementGateway) {
         $this->customNavElementGateway = $customNavElementGateway;
     }
 

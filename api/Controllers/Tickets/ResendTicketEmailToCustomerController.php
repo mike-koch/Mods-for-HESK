@@ -19,15 +19,15 @@ class ResendTicketEmailToCustomerController extends InternalApiController {
         $this->checkForInternalUseOnly();
 
         /* @var $ticketRetriever TicketRetriever */
-        $ticketRetriever = $applicationContext->get[TicketRetriever::class];
+        $ticketRetriever = $applicationContext->get(TicketRetriever::clazz());
         $ticket = $ticketRetriever->getTicketById($ticketId, $hesk_settings, $userContext);
 
         /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
-        $modsForHeskSettingsGateway = $applicationContext->get[ModsForHeskSettingsGateway::class];
+        $modsForHeskSettingsGateway = $applicationContext->get(ModsForHeskSettingsGateway::clazz());
         $modsForHeskSettings = $modsForHeskSettingsGateway->getAllSettings($hesk_settings);
 
         /* @var $emailSender EmailSenderHelper */
-        $emailSender = $applicationContext->get[EmailSenderHelper::class];
+        $emailSender = $applicationContext->get(EmailSenderHelper::clazz());
 
         $language = $ticket->language;
 

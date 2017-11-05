@@ -229,8 +229,8 @@ if ($total > 0) {
             // Prepare ticket priority
             switch ($ticket['priority']) {
                 case 0:
-                    $ticket['priority'] = '<span style="color: red; font-size:1.3em" class="fa fa-fw fa-long-arrow-up" data-toggle="tooltip" data-placement="top" title="' . $hesklang['critical'] . '"></span>';
-                    $color = 'danger';
+                    $ticket['priority'] = '<span style="font-size:1.3em" class="fa fa-fw fa-long-arrow-up critical" data-toggle="tooltip" data-placement="top" title="' . $hesklang['critical'] . '"></span>';
+                    $color = 'critical-row';
                     break;
                 case 1:
                     $ticket['priority'] = '<span style="color: orange; font-size:1.3em" class="fa fa-fw fa-angle-double-up" data-toggle="tooltip" data-placement="top" title="' . $hesklang['high'] . '"></span>';

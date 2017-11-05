@@ -201,7 +201,10 @@ function hesk_mergeTickets($merge_these, $merge_into)
         hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` WHERE `id`='" . intval($row['id']) . "'");
 
         /* Log that ticket has been merged */
-        $history .= sprintf($hesklang['thist13'], hesk_date(), $row['trackid'], $_SESSION['name'] . ' (' . $_SESSION['user'] . ')');
+        mfh_insert_audit_trail_record($merge_into, 'TICKET', 'audit_merged', hesk_date(), array(
+            0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')',
+            1 => $row['trackid']
+        ));
 
         /* Add old ticket ID to target ticket "merged" field */
         $merged .= '#' . $row['trackid'];
@@ -234,7 +237,7 @@ function hesk_mergeTickets($merge_these, $merge_into)
     }
 
     /* Update history (log) and merged IDs of target ticket */
-    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET $replies_sql `time_worked`=ADDTIME(`time_worked`, '" . hesk_dbEscape($sec_worked) . "'), `merged`=CONCAT(`merged`,'" . hesk_dbEscape($merged . '#') . "'), `history`=CONCAT(`history`,'" . hesk_dbEscape($history) . "') WHERE `id`='" . intval($merge_into) . "'");
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET $replies_sql `time_worked`=ADDTIME(`time_worked`, '" . hesk_dbEscape($sec_worked) . "'), `merged`=CONCAT(`merged`,'" . hesk_dbEscape($merged . '#') . "') WHERE `id`='" . intval($merge_into) . "'");
 
     return true;
 
@@ -419,14 +422,17 @@ function hesk_autoLogin($noredirect = 0)
     hesk_setcookie('hesk_p', "$hash", strtotime('+1 year'));
 
     /* Close any old tickets here so Cron jobs aren't necessary */
-    if ($hesk_settings['autoclose']) {
-        $revision = sprintf($hesklang['thist3'], hesk_date(), $hesklang['auto']);
+    $closedStatusRs = hesk_dbQuery('SELECT `ID`, `Closable` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsDefaultStaffReplyStatus` = 1');
+    $closedStatus = hesk_dbFetchAssoc($closedStatusRs);
+    // Are we allowed to close tickets in this status?
+    if (($closedStatus['Closable'] == 'yes' || $closedStatus['Closable'] == 'sonly') && $hesk_settings['autoclose']) {
         $dt = date('Y-m-d H:i:s', time() - $hesk_settings['autoclose'] * 86400);
 
         // Notify customer of closed ticket?
         if ($hesk_settings['notify_closed']) {
             // Get list of tickets
-            $result = hesk_dbQuery("SELECT * FROM `" . $hesk_settings['db_pfix'] . "tickets` WHERE `status` = '2' AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
+            $result = hesk_dbQuery("SELECT * FROM `" . $hesk_settings['db_pfix'] . "tickets` WHERE `status` = " . $closedStatus['ID'] . " AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
+
             if (hesk_dbNumRows($result) > 0) {
                 global $ticket;
 
@@ -439,6 +445,7 @@ function hesk_autoLogin($noredirect = 0)
                     $ticket['dt'] = hesk_date($ticket['dt'], true);
                     $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
                     $ticket = hesk_ticketToPlain($ticket, 1, 0);
+                    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_automatically_closed', hesk_date());
                     $modsForHesk_settings = mfh_getSettings();
                     hesk_notifyCustomer($modsForHesk_settings, 'ticket_closed');
                 }
@@ -446,7 +453,9 @@ function hesk_autoLogin($noredirect = 0)
         }
 
         // Update ticket statuses and history in database
-        hesk_dbQuery("UPDATE `" . $hesk_settings['db_pfix'] . "tickets` SET `status`='3', `closedat`=NOW(), `closedby`='-1', `history`=CONCAT(`history`,'" . hesk_dbEscape($revision) . "') WHERE `status` = '2' AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
+        $defaultCloseRs = hesk_dbQuery('SELECT `ID` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'statuses` WHERE `IsAutocloseOption` = 1');
+        $defaultCloseStatus = hesk_dbFetchAssoc($defaultCloseRs);
+        hesk_dbQuery("UPDATE `" . $hesk_settings['db_pfix'] . "tickets` SET `status`= " . $defaultCloseStatus['ID'] . ", `closedat`=NOW(), `closedby`='-1' WHERE `status` = " . $closedStatus['ID'] . " AND `lastchange` <= '" . hesk_dbEscape($dt) . "' ");
     }
 
     /* If session expired while a HESK page is open just continue using it, don't redirect */

@@ -21,8 +21,8 @@ class TicketRetrieverTest extends TestCase {
     private $heskSettings;
 
     protected function setUp() {
-        $this->ticketGateway = $this->createMock(TicketGateway::class);
-        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::class);
+        $this->ticketGateway = $this->createMock(TicketGateway::clazz());
+        $this->userToTicketChecker = $this->createMock(UserToTicketChecker::clazz());
         $this->heskSettings = array('email_view_ticket' => 0);
 
         $this->ticketRetriever = new TicketRetriever($this->ticketGateway, $this->userToTicketChecker);
@@ -65,7 +65,7 @@ class TicketRetrieverTest extends TestCase {
         $this->ticketGateway->method('getTicketByTrackingId')->with($trackingId, $this->heskSettings)->willReturn($ticket);
 
         //-- Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(\BaseException::clazz());
         $this->expectExceptionMessage("Email 'email@example.com' entered in for ticket '12345' does not match!");
 
         //-- Act

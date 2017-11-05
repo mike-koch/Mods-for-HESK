@@ -3,7 +3,7 @@
 namespace BusinessLogic\Statuses;
 
 
-class Closable {
+class Closable extends \BaseClass {
     const YES = "yes";
     const STAFF_ONLY = "sonly";
     const CUSTOMERS_ONLY = "conly";

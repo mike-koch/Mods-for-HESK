@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mkoch
- * Date: 2/28/2017
- * Time: 9:36 PM
- */
 
 namespace BusinessLogic\Emails;
 
 
-class ParsedEmailProperties {
+class ParsedEmailProperties extends \BaseClass {
     function __construct($subject, $message, $htmlMessage) {
         $this->subject = $subject;
         $this->message = $message;

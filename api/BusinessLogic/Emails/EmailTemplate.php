@@ -3,7 +3,7 @@
 namespace BusinessLogic\Emails;
 
 
-class EmailTemplate {
+class EmailTemplate extends \BaseClass {
     /**
      * @var $languageKey string
      */

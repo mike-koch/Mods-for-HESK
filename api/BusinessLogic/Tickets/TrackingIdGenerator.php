@@ -6,13 +6,13 @@ namespace BusinessLogic\Tickets;
 use BusinessLogic\Tickets\Exceptions\UnableToGenerateTrackingIdException;
 use DataAccess\Tickets\TicketGateway;
 
-class TrackingIdGenerator {
+class TrackingIdGenerator extends \BaseClass {
     /**
      * @var $ticketGateway TicketGateway
      */
     private $ticketGateway;
 
-    function __construct($ticketGateway) {
+    function __construct(TicketGateway $ticketGateway) {
         $this->ticketGateway = $ticketGateway;
     }
 
