@@ -54,16 +54,12 @@ header('X-UA-Compatible: IE=edge');
     <meta name="theme-color" content="<?php echo '#414a5c'; ?>">
     <link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-          rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <?php if ($modsForHesk_settings['use_bootstrap_theme'] != 0) { ?>
-    <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-          rel="stylesheet" />
+    <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet" />
     <?php } ?>
-    <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-          rel="stylesheet"/>
-    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css"
-          rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css">
@@ -83,10 +79,8 @@ header('X-UA-Compatible: IE=edge');
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>hesk_javascript.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/dropzone.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script language="Javascript" type="text/javascript"
-            src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script language="JavaScript" type="text/javascript"
-            src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-clockpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-fontawesome-4.3.0.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
