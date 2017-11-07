@@ -18,7 +18,9 @@
     "php-http/guzzle6-adapter": "^1.1",
     "php-http/message": "^1.5",
     "php-http/curl-client": "^1.7",
-    "guzzlehttp/psr7": "^1.3",
+    "mike-koch/psr7": "1.4.2.1",
+    "mike-koch/promises": "1.3.1.1",
+    "mike-koch/guzzle": "6.3.0.2",
     "mike-koch/php-di": "4.4.11",
     "doctrine/annotations": "1.2"
   }
