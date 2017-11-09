@@ -687,21 +687,7 @@ function new_sm()
         exit;
     }
 
-    // Get the latest service message order
-    $res = hesk_dbQuery("SELECT `order` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages` ORDER BY `order` DESC LIMIT 1");
-    $row = hesk_dbFetchRow($res);
-    $my_order = intval($row[0]) + 10;
 
-    // Insert service message into database
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages` (`author`,`title`,`message`,`style`,`type`,`order`, `icon`) VALUES (
-    '" . intval($_SESSION['id']) . "',
-    '" . hesk_dbEscape($title) . "',
-    '" . hesk_dbEscape($message) . "',
-    '{$style}',
-    '{$type}',
-    '{$my_order}',
-    '{$icon}'
-    )");
 
     $_SESSION['smord'] = hesk_dbInsertID();
     hesk_process_messages($hesklang['sm_added'], 'service_messages.php', 'SUCCESS');
