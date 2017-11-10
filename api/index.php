@@ -202,6 +202,8 @@ Link::all(array(
     '/v1/statuses' => action(\Controllers\Statuses\StatusController::clazz(), RequestMethod::all()),
     // Settings
     '/v1/settings' => action(\Controllers\Settings\SettingsController::clazz(), RequestMethod::all()),
+    // Service Messages
+    '/v1/service-messages' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(), array(RequestMethod::POST)),
 
     /* Internal use only routes */
     // Resend email response
