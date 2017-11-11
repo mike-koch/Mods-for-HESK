@@ -28,6 +28,7 @@ class ServiceMessagesController extends \BaseClass {
     private function buildElementModel($data, $userContext) {
         $serviceMessage = new ServiceMessage();
         $serviceMessage->createdBy = $userContext->id;
+        $serviceMessage->title = $data['title'];
         $serviceMessage->icon = $data['icon'];
         $serviceMessage->message = $data['message'];
         $serviceMessage->published = $data['published'];

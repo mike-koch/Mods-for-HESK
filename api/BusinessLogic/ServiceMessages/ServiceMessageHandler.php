@@ -19,6 +19,26 @@ class ServiceMessageHandler extends \BaseClass {
     function createServiceMessage($serviceMessage, $heskSettings) {
         $this->validate($serviceMessage);
 
+        if ($serviceMessage->icon === null) {
+            switch ($serviceMessage->style) {
+                case ServiceMessageStyle::NONE:
+                    $serviceMessage->icon = '';
+                    break;
+                case ServiceMessageStyle::INFO:
+                    $serviceMessage->icon = 'fa fa-comment';
+                    break;
+                case ServiceMessageStyle::NOTICE:
+                    $serviceMessage->icon = 'fa fa-exclamation-triangle';
+                    break;
+                case ServiceMessageStyle::ERROR:
+                    $serviceMessage->icon = 'fa fa-times-circle';
+                    break;
+                case ServiceMessageStyle::SUCCESS:
+                    $serviceMessage->icon = 'fa fa-check-circle';
+                    break;
+            }
+        }
+
         return $this->serviceMessageGateway->createServiceMessage($serviceMessage, $heskSettings);
     }
 
@@ -30,9 +50,6 @@ class ServiceMessageHandler extends \BaseClass {
         $validationModel = new ValidationModel();
         if ($serviceMessage->createdBy < 1) {
             $validationModel->errorKeys[] = 'MISSING_CREATOR';
-        }
-        if ($serviceMessage->icon === null || trim($serviceMessage->icon) === '') {
-            $validationModel->errorKeys[] = 'MISSING_ICON';
         }
         if ($serviceMessage->message === null || trim($serviceMessage->message) === '') {
             $validationModel->errorKeys[] = 'MISSING_MESSAGE';

@@ -185,7 +185,8 @@ function hesk_service_message($sm)
     ?>
     <div class="<?php echo $style; ?>">
         <?php echo $faIcon == '' ? '' : '<i class="' . $faIcon . '"></i> '; ?>
-        <b><?php echo $sm['title']; ?></b><?php echo $sm['message']; ?>
+        <b><?php echo $sm['title']; ?></b><br>
+        <?php echo $sm['message']; ?>
     </div>
     <br/>
     <?php
