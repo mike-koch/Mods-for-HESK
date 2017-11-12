@@ -42,13 +42,44 @@ class ServiceMessageHandler extends \BaseClass {
         return $this->serviceMessageGateway->createServiceMessage($serviceMessage, $heskSettings);
     }
 
+    function getServiceMessages($heskSettings) {
+        return $this->serviceMessageGateway->getServiceMessages($heskSettings);
+    }
+
+    function editServiceMessage($serviceMessage, $heskSettings) {
+        $this->validate($serviceMessage, false);
+
+        if ($serviceMessage->icon === null) {
+            switch ($serviceMessage->style) {
+                case ServiceMessageStyle::NONE:
+                    $serviceMessage->icon = '';
+                    break;
+                case ServiceMessageStyle::INFO:
+                    $serviceMessage->icon = 'fa fa-comment';
+                    break;
+                case ServiceMessageStyle::NOTICE:
+                    $serviceMessage->icon = 'fa fa-exclamation-triangle';
+                    break;
+                case ServiceMessageStyle::ERROR:
+                    $serviceMessage->icon = 'fa fa-times-circle';
+                    break;
+                case ServiceMessageStyle::SUCCESS:
+                    $serviceMessage->icon = 'fa fa-check-circle';
+                    break;
+            }
+        }
+
+        return $this->serviceMessageGateway->updateServiceMessage($serviceMessage, $heskSettings);
+    }
+
     /**
      * @param $serviceMessage ServiceMessage
+     * @param bool $isNew
      * @throws ValidationException
      */
-    private function validate($serviceMessage) {
+    private function validate($serviceMessage, $isNew = true) {
         $validationModel = new ValidationModel();
-        if ($serviceMessage->createdBy < 1) {
+        if ($isNew && $serviceMessage->createdBy < 1) {
             $validationModel->errorKeys[] = 'MISSING_CREATOR';
         }
         if ($serviceMessage->message === null || trim($serviceMessage->message) === '') {

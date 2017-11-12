@@ -8,6 +8,15 @@ use BusinessLogic\ServiceMessages\ServiceMessageHandler;
 use Controllers\JsonRetriever;
 
 class ServiceMessagesController extends \BaseClass {
+    function get() {
+        global $applicationContext, $hesk_settings;
+
+        /* @var $handler ServiceMessageHandler */
+        $handler = $applicationContext->get(ServiceMessageHandler::clazz());
+
+        return output($handler->getServiceMessages($hesk_settings));
+    }
+
     function post() {
         global $applicationContext, $userContext, $hesk_settings;
 
@@ -20,14 +29,35 @@ class ServiceMessagesController extends \BaseClass {
         return output($element, 201);
     }
 
+    function put() {
+        global $applicationContext, $hesk_settings;
+
+        /* @var $handler ServiceMessageHandler */
+        $handler = $applicationContext->get(ServiceMessageHandler::clazz());
+
+        $data = JsonRetriever::getJsonData();
+        $element = $handler->editServiceMessage($this->buildElementModel($data, null, false), $hesk_settings);
+
+        return output($element);
+    }
+
     /**
      * @param $data array
      * @param $userContext UserContext
      * @return ServiceMessage
      */
-    private function buildElementModel($data, $userContext) {
+    private function buildElementModel($data, $userContext, $creating = true) {
         $serviceMessage = new ServiceMessage();
-        $serviceMessage->createdBy = $userContext->id;
+
+        if (!$creating) {
+            $serviceMessage->id = $data['id'];
+            $serviceMessage->order = $data['order'];
+        }
+
+        if ($creating) {
+            $serviceMessage->createdBy = $userContext->id;
+        }
+
         $serviceMessage->title = $data['title'];
         $serviceMessage->icon = $data['icon'];
         $serviceMessage->message = $data['message'];

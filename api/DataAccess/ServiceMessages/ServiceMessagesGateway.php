@@ -42,7 +42,59 @@ class ServiceMessagesGateway extends CommonDao {
             WHERE `id` = " . intval($serviceMessage->id));
         $row = hesk_dbFetchAssoc($rs);
         $serviceMessage->dateCreated = $row['dt'];
-        $serviceMessage->order = $row['order'];
+        $serviceMessage->order = intval($row['order']);
+
+        $this->close();
+
+        return $serviceMessage;
+    }
+
+    function getServiceMessages($heskSettings) {
+        $this->init();
+
+        $serviceMessages = array();
+
+        $rs = hesk_dbQuery("SELECT * FROM `". hesk_dbEscape($heskSettings['db_pfix']) . "service_messages` ORDER BY `id`");
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            $serviceMessage = new ServiceMessage();
+            $serviceMessage->id = $row['id'];
+            $serviceMessage->published = intval($row['type']) !== 1;
+            $serviceMessage->createdBy = intval($row['author']);
+            $serviceMessage->order = intval($row['order']);
+            $serviceMessage->dateCreated = $row['dt'];
+            $serviceMessage->title = $row['title'];
+            $serviceMessage->message = $row['message'];
+            $serviceMessage->style = ServiceMessageStyle::getStyleById($row['style']);
+            $serviceMessage->icon = $row['icon'];
+            $serviceMessages[] = $serviceMessage;
+        }
+
+        $this->close();
+
+        return $serviceMessages;
+    }
+
+    function updateServiceMessage($serviceMessage, $heskSettings) {
+        $this->init();
+
+        $style = ServiceMessageStyle::getIdForStyle($serviceMessage->style);
+        $type = $serviceMessage->published ? 0 : 1;
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "service_messages`
+            SET `title` = '" . hesk_dbEscape($serviceMessage->title) . "', 
+                `message` = '" . hesk_dbEscape($serviceMessage->message) . "', 
+                `style` = '" . intval($style) . "', 
+                `type` = " . intval($type) . ",
+                `icon` = '" . hesk_dbEscape($serviceMessage->icon) . "'
+            WHERE `id` = " . intval($serviceMessage->id));
+
+        $otherFieldsRs = hesk_dbQuery("SELECT `dt`, `author`, `order` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "service_messages`
+            WHERE `id` = " . intval($serviceMessage->id));
+        $otherFields = hesk_dbFetchAssoc($otherFieldsRs);
+
+        $serviceMessage->order = intval($otherFields['order']);
+        $serviceMessage->createdBy = intval($otherFields['author']);
+        $serviceMessage->dateCreated = $otherFields['dt'];
 
         $this->close();
 

@@ -203,7 +203,7 @@ Link::all(array(
     // Settings
     '/v1/settings' => action(\Controllers\Settings\SettingsController::clazz(), RequestMethod::all()),
     // Service Messages
-    '/v1/service-messages' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(), array(RequestMethod::POST)),
+    '/v1/service-messages' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(), array(RequestMethod::GET, RequestMethod::POST, RequestMethod::PUT)),
 
     /* Internal use only routes */
     // Resend email response
