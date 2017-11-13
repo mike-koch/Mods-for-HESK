@@ -57,6 +57,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         </div>
         <div class="box-body">
             <div class="row">
+                <div class="col-md-12 text-right">
+                    <button id="create-button" class="btn btn-success">
+                        <i class="fa fa-plus-circle"></i>&nbsp;
+                        <?php echo $hesklang['create_new']; ?>
+                    </button>
+                </div>
                 <div class="col-sm-12">
                     <?php
 
@@ -96,163 +102,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <tbody id="table-body">
                         </tbody>
                     </table>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4><a name="new_article"></a><?php echo hesk_SESSION('edit_sm') ? $hesklang['edit_sm'] : $hesklang['new_sm']; ?></h4>
-                        </div>
-                        <div class="panel-body">
-                            <form action="service_messages.php" method="post" name="form1" role="form" class="form-horizontal" data-toggle="validator">
-                                <div class="form-group">
-                                    <label for="style"
-                                           class="col-md-2 control-label"><?php echo $hesklang['sm_style']; ?></label>
-
-                                    <div class="col-md-2">
-                                        <div class="radio alert pad-5" style="box-shadow: none; border-radius: 4px;">
-                                            <label>
-                                                <input type="radio" name="style" value="0" onclick="setIcon('')"
-                                                    <?php if (!isset($_SESSION['new_sm']['style']) || (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 0)) {
-                                                        echo 'checked';
-                                                    } ?>>
-                                                <?php echo $hesklang['sm_none']; ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="radio alert alert-success pad-5">
-                                            <label style="margin-top: -5px">
-                                                <input type="radio" name="style" value="1"
-                                                       onclick="setIcon('fa fa-check-circle')"
-                                                    <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 1) {
-                                                        echo 'checked';
-                                                    } ?>>
-                                                <?php echo $hesklang['sm_success']; ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="radio alert alert-info pad-5" onclick="setIcon('fa fa-comment')">
-                                            <label style="margin-top: -5px">
-                                                <input type="radio" name="style" value="2"
-                                                    <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 2) {
-                                                        echo 'checked';
-                                                    } ?>>
-                                                <?php echo $hesklang['sm_info']; ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="radio alert alert-warning pad-5"
-                                             onclick="setIcon('fa fa-exclamation-triangle')">
-                                            <label style="margin-top: -5px">
-                                                <input type="radio" name="style" value="3"
-                                                    <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 3) {
-                                                        echo 'checked';
-                                                    } ?>>
-                                                <?php echo $hesklang['sm_notice']; ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="radio alert alert-danger pad-5" onclick="setIcon('fa fa-times-circle')">
-                                            <label style="margin-top: -5px">
-                                                <input type="radio" name="style" value="4"
-                                                    <?php if (isset($_SESSION['new_sm']['style']) && $_SESSION['new_sm']['style'] == 4) {
-                                                        echo 'checked';
-                                                    } ?> >
-                                                <?php echo $hesklang['sm_error']; ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="icon" class="col-md-2 control-label"><?php echo $hesklang['sm_icon']; ?></label>
-                                    <?php
-                                    $icon = '';
-                                    if (isset($_SESSION['new_sm']['icon'])) {
-                                        $icon = $_SESSION['new_sm']['icon'];
-                                    }
-                                    ?>
-                                    <div class="col-md-10">
-                                        <p style="display:none" id="no-icon"><?php echo $hesklang['sm_no_icon']; ?></p>
-
-                                        <p style="display:none" id="search-icon"><?php echo $hesklang['sm_search_icon']; ?></p>
-
-                                        <p style="display:none"
-                                           id="footer-icon"><?php echo $hesklang['sm_iconpicker_footer_label']; ?></p>
-
-                                        <div name="icon" class="btn btn-default iconpicker-container" data-toggle="iconpicker"
-                                             data-icon="<?php echo $icon; ?>"></div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="type" class="col-md-2 control-label"><?php echo $hesklang['sm_type']; ?></label>
-
-                                    <div class="col-md-2">
-                                        <div class="radio pad-5">
-                                            <label>
-                                                <input type="radio" name="type" value="0"
-                                                    <?php if (!isset($_SESSION['new_sm']['type']) || (isset($_SESSION['new_sm']['type']) && $_SESSION['new_sm']['type'] == 0)) {
-                                                        echo 'checked';
-                                                    } ?> >
-                                                <?php echo $hesklang['sm_published']; ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="radio pad-5">
-                                            <label>
-                                                <input type="radio" name="type" value="1"
-                                                    <?php if (isset($_SESSION['new_sm']['type']) && $_SESSION['new_sm']['type'] == 1) {
-                                                        echo 'checked';
-                                                    } ?> >
-                                                <?php echo $hesklang['sm_draft']; ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="title"
-                                           class="col-md-2 control-label"><?php echo $hesklang['sm_mtitle']; ?></label>
-
-                                    <div class="col-md-10">
-                                        <input class="form-control"
-                                               placeholder="<?php echo htmlspecialchars($hesklang['sm_mtitle']); ?>"
-                                               type="text" name="title" size="70" maxlength="255"
-                                            <?php if (isset($_SESSION['new_sm']['title'])) {
-                                                echo 'value="' . $_SESSION['new_sm']['title'] . '"';
-                                            } ?> data-error="<?php echo htmlspecialchars($hesklang['sm_e_title']); ?>" required>
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="message"
-                                           class="col-md-2 control-label"><?php echo $hesklang['sm_msg']; ?></label>
-
-                                    <div class="col-md-10">
-                                    <textarea placeholder="<?php echo htmlspecialchars($hesklang['sm_msg']); ?>"
-                                              class="form-control" name="message" rows="25" cols="70" id="content">
-                                        <?php if (isset($_SESSION['new_sm']['message'])) {
-                                            echo $_SESSION['new_sm']['message'];
-                                        } ?>
-                                    </textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <?php echo isset($_SESSION['edit_sm']) ? '<input type="hidden" name="a" value="save_sm" /><input type="hidden" name="id" value="' . intval($_SESSION['new_sm']['id']) . '" />' : '<input type="hidden" name="a" value="new_sm" />'; ?>
-                                    <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
-
-                                    <div class="col-md-10 col-md-offset-2">
-                                        <div class="btn-group" role="group">
-                                            <input type="submit" name="sm_save" value="<?php echo $hesklang['sm_save']; ?>"
-                                                   class="btn btn-primary">
-                                            <input type="submit" name="sm_preview"
-                                                   value="<?php echo $hesklang['sm_preview']; ?>" class="btn btn-default">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -262,10 +111,156 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     </div>
 </section>
 </div>
+<div class="modal fade" id="service-message-modal" tabindex="-1" role="dialog" style="overflow: hidden">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <span id="edit-label"><?php echo $hesklang['edit_sm']; ?></span>
+                    <span id="create-label"><?php echo $hesklang['new_sm']; ?></span>
+                </h4>
+            </div>
+            <form id="manage-category" class="form-horizontal" data-toggle="validator" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row" style="padding-bottom: 10px;">
+                            <label for="style"
+                                   class="col-md-2 control-label"><?php echo $hesklang['sm_style']; ?></label>
+
+                            <div class="col-md-3">
+                                <div class="radio alert pad-5" style="box-shadow: none; border-radius: 4px;">
+                                    <label>
+                                        <input type="radio" name="style" value="0" onclick="setIcon('')">
+                                        <?php echo $hesklang['sm_none']; ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="radio alert alert-success pad-5">
+                                    <label style="margin-top: -5px">
+                                        <input type="radio" name="style" value="1" onclick="setIcon('fa fa-check-circle')">
+                                        <?php echo $hesklang['sm_success']; ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="radio alert alert-info pad-5" onclick="setIcon('fa fa-comment')">
+                                    <label style="margin-top: -5px">
+                                        <input type="radio" name="style" value="2">
+                                        <?php echo $hesklang['sm_info']; ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 col-md-offset-2">
+                                <div class="radio alert alert-warning pad-5">
+                                    <label style="margin-top: -5px">
+                                        <input type="radio" name="style" value="3"
+                                               onclick="setIcon('fa fa-exclamation-triangle')">
+                                        <?php echo $hesklang['sm_notice']; ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="radio alert alert-danger pad-5">
+                                    <label style="margin-top: -5px">
+                                        <input type="radio" name="style" value="4" onclick="setIcon('fa fa-times-circle')">
+                                        <?php echo $hesklang['sm_error']; ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="icon" class="col-md-2 control-label"><?php echo $hesklang['sm_icon']; ?></label>
+                        <div class="col-md-10">
+                            <p style="display:none" id="no-icon"><?php echo $hesklang['sm_no_icon']; ?></p>
+
+                            <p style="display:none" id="search-icon"><?php echo $hesklang['sm_search_icon']; ?></p>
+
+                            <p style="display:none"
+                               id="footer-icon"><?php echo $hesklang['sm_iconpicker_footer_label']; ?></p>
+
+                            <div name="icon" class="btn btn-default iconpicker-container" data-toggle="iconpicker"
+                                 data-search="false" data-icon=""></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="type" class="col-md-2 control-label"><?php echo $hesklang['sm_type']; ?></label>
+
+                        <div class="col-md-2">
+                            <div class="radio pad-5">
+                                <label>
+                                    <input type="radio" name="type" value="0">
+                                    <?php echo $hesklang['sm_published']; ?>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="radio pad-5">
+                                <label>
+                                    <input type="radio" name="type" value="1">
+                                    <?php echo $hesklang['sm_draft']; ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="title"
+                               class="col-md-2 control-label"><?php echo $hesklang['sm_mtitle']; ?></label>
+                        <div class="col-md-10">
+                            <input class="form-control"
+                                   placeholder="<?php echo htmlspecialchars($hesklang['sm_mtitle']); ?>"
+                                   type="text" name="title" size="70" maxlength="255"
+                                   data-error="<?php echo htmlspecialchars($hesklang['sm_e_title']); ?>" required>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message"
+                               class="col-md-2 control-label"><?php echo $hesklang['sm_msg']; ?></label>
+
+                        <div class="col-md-10">
+                            <textarea placeholder="<?php echo htmlspecialchars($hesklang['sm_msg']); ?>"
+                                      class="form-control" name="message" rows="25" cols="70" id="content"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10 col-md-offset-2">
+                            <div class="btn-group" role="group">
+                                <input type="submit" name="sm_save" value="<?php echo $hesklang['sm_save']; ?>"
+                                       class="btn btn-primary">
+                                <input type="submit" name="sm_preview"
+                                       value="<?php echo $hesklang['sm_preview']; ?>" class="btn btn-default">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id">
+                    <input type="hidden" name="cat-order">
+                    <div id="action-buttons" class="btn-group">
+                        <button type="button" class="btn btn-default cancel-button cancel-callback" data-dismiss="modal">
+                            <i class="fa fa-times-circle"></i>
+                            <span><?php echo $hesklang['cancel']; ?></span>
+                        </button>
+                        <button type="submit" class="btn btn-success save-button">
+                            <i class="fa fa-check-circle"></i>
+                            <span><?php echo $hesklang['save']; ?></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?php
 echo mfh_get_hidden_fields_for_language(array(
     'sm_published',
     'sm_draft',
+    'no_sm',
 ));
 
 echo '<script>var users = [];';

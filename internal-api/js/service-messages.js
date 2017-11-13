@@ -3,7 +3,6 @@ var serviceMessages = [];
 $(document).ready(function() {
     loadTable();
     bindEditModal();
-    bindModalCancelCallback();
     bindFormSubmit();
     bindDeleteButton();
     bindCreateModal();
@@ -24,7 +23,7 @@ function loadTable() {
             $tableBody.html('');
 
             if (data.length === 0) {
-                // TODO "No Service Messages Found"
+                $tableBody.append('<tr><td colspan="4">' + mfhLang.text('no_sm') + '</td></tr>');
                 $('#overlay').hide();
                 return;
             }
@@ -63,15 +62,10 @@ function loadTable() {
             }
         },
         error: function(data) {
-            mfhAlert.errorWithLog(mfhLang.text('error_retrieving_categories'), data.responseJSON);
+            mfhAlert.errorWithLog(mfhLang.text('error_retrieving_sm'), data.responseJSON);
             console.error(data);
         },
         complete: function() {
-            refreshBackgroundVolatileItems();
-            $('[data-toggle="popover"]').popover({
-                trigger: 'hover',
-                container: 'body'
-            });
             $('#overlay').hide();
         }
     });
@@ -184,46 +178,16 @@ function bindEditModal() {
 
 function bindCreateModal() {
     $('#create-button').click(function() {
-        var $modal = $('#category-modal');
-        $modal.find('#edit-label').hide();
-        $modal.find('#create-label').show();
-
-        $modal.find('input[name="name"]').val('');
-        $modal.find('select[name="priority"]').val(3); // Low priority
-        $modal.find('select[name="usage"]').val(0); // Tickets and events
-        $modal.find('input[name="id"]').val(-1);
-        $modal.find('textarea[name="description"]').val('');
-        $modal.find('input[name="cat-order"]').val('');
-        $modal.find('input[name="type"][value="0"]').prop('checked', 'checked');
-        $modal.find('input[name="autoassign"][value="0"]').prop('checked', 'checked');
-        $modal.find('input[name="display-border"][value="0"]')
-            .prop('checked', 'checked');
-
-        var colorpickerOptions = {
-            format: 'hex',
-            color: '#fff'
-        };
-        $modal.find('input[name="background-color"]')
-            .colorpicker(colorpickerOptions).end().modal('show');
-        $modal.find('input[name="background-color"]').val('');
-        $modal.find('input[name="foreground-color"]')
-            .colorpicker(colorpickerOptions).end().modal('show');
-        $modal.find('input[name="foreground-color"]').val('');
+        var $modal = $('#service-message-modal');
+        $modal.find('#edit-label').hide().end()
+            .find('#create-label').show().end()
+            .find('input[name="style"][value="0"]').prop('checked', 'checked').end() // "None" style
+            .find('input[name="type"][value="0"]').prop('checked', 'checked').end() // Published
+            .find('input[name="title"]').val('').end();
+        setIcon('');
+        tinyMCE.get('content').setContent('');
 
         $modal.modal('show');
-    });
-}
-
-function bindModalCancelCallback() {
-    $('.cancel-callback').click(function() {
-        var $editCategoryModal = $('#category-modal');
-
-        $editCategoryModal.find('input[name="background-color"]').val('').colorpicker('destroy').end();
-        $editCategoryModal.find('input[name="foreground-color"]').val('').colorpicker('destroy').end();
-        $editCategoryModal.find('input[name="display-border"][value="1"]').prop('checked');
-        $editCategoryModal.find('input[name="display-border"][value="0"]').prop('checked');
-        $editCategoryModal.find('input[name="autoassign"][value="1"]').prop('checked');
-        $editCategoryModal.find('input[name="autoassign"][value="0"]').prop('checked');
     });
 }
 

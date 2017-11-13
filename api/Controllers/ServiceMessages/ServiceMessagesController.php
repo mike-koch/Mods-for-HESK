@@ -6,7 +6,6 @@ use BusinessLogic\Security\UserContext;
 use BusinessLogic\ServiceMessages\ServiceMessage;
 use BusinessLogic\ServiceMessages\ServiceMessageHandler;
 use Controllers\JsonRetriever;
-use Symfony\Component\EventDispatcher\Tests\Service;
 
 class ServiceMessagesController extends \BaseClass {
     function get() {
