@@ -5,6 +5,7 @@ namespace BusinessLogic\ServiceMessages;
 
 // TODO Test
 use BusinessLogic\Exceptions\ValidationException;
+use BusinessLogic\Navigation\Direction;
 use BusinessLogic\ValidationModel;
 use DataAccess\ServiceMessages\ServiceMessagesGateway;
 
@@ -17,7 +18,7 @@ class ServiceMessageHandler extends \BaseClass {
     }
 
     function createServiceMessage($serviceMessage, $heskSettings) {
-        $this->validate($serviceMessage);
+        $this->validate($serviceMessage, $heskSettings);
 
         if ($serviceMessage->icon === null) {
             switch ($serviceMessage->style) {
@@ -47,7 +48,7 @@ class ServiceMessageHandler extends \BaseClass {
     }
 
     function editServiceMessage($serviceMessage, $heskSettings) {
-        $this->validate($serviceMessage, false);
+        $this->validate($serviceMessage, $heskSettings, false);
 
         if ($serviceMessage->icon === null) {
             switch ($serviceMessage->style) {
@@ -72,19 +73,52 @@ class ServiceMessageHandler extends \BaseClass {
         return $this->serviceMessageGateway->updateServiceMessage($serviceMessage, $heskSettings);
     }
 
+    function deleteServiceMessage($id, $heskSettings) {
+        $this->serviceMessageGateway->deleteServiceMessage($id, $heskSettings);
+    }
+
+    function sortServiceMessage($id, $direction, $heskSettings) {
+        $serviceMessages = $this->serviceMessageGateway->getServiceMessages($heskSettings);
+        $serviceMessage = null;
+        foreach ($serviceMessages as $innerServiceMessage) {
+            if ($innerServiceMessage->id === intval($id)) {
+                $serviceMessage = $innerServiceMessage;
+                break;
+            }
+        }
+
+        if ($serviceMessage === null) {
+            throw new \BaseException("Could not find category with ID {$id}!");
+        }
+
+        if ($direction === Direction::UP) {
+            $serviceMessage->order -= 15;
+        } else {
+            $serviceMessage->order += 15;
+        }
+
+        $this->serviceMessageGateway->updateServiceMessage($serviceMessage, $heskSettings);
+        $this->serviceMessageGateway->resortAllServiceMessages($heskSettings);
+    }
+
     /**
      * @param $serviceMessage ServiceMessage
      * @param bool $isNew
      * @throws ValidationException
      */
-    private function validate($serviceMessage, $isNew = true) {
+    private function validate($serviceMessage, $heskSettings, $isNew = true) {
         $validationModel = new ValidationModel();
         if ($isNew && $serviceMessage->createdBy < 1) {
             $validationModel->errorKeys[] = 'MISSING_CREATOR';
         }
+
         if ($serviceMessage->message === null || trim($serviceMessage->message) === '') {
             $validationModel->errorKeys[] = 'MISSING_MESSAGE';
+        } else {
+            $htmlPurifier = new \HeskHTMLPurifier($heskSettings['cache_dir']);
+            $serviceMessage->message = $htmlPurifier->heskPurify($serviceMessage->message);
         }
+
         if ($serviceMessage->title === null || trim($serviceMessage->title) === '') {
             $validationModel->errorKeys[] = 'MISSING_TITLE';
         }

@@ -6,6 +6,7 @@ use BusinessLogic\Security\UserContext;
 use BusinessLogic\ServiceMessages\ServiceMessage;
 use BusinessLogic\ServiceMessages\ServiceMessageHandler;
 use Controllers\JsonRetriever;
+use Symfony\Component\EventDispatcher\Tests\Service;
 
 class ServiceMessagesController extends \BaseClass {
     function get() {
@@ -39,6 +40,17 @@ class ServiceMessagesController extends \BaseClass {
         $element = $handler->editServiceMessage($this->buildElementModel($data, null, false), $hesk_settings);
 
         return output($element);
+    }
+
+    function delete($id) {
+        global $applicationContext, $hesk_settings;
+
+        /* @var $handler ServiceMessageHandler */
+        $handler = $applicationContext->get(ServiceMessageHandler::clazz());
+
+        $handler->deleteServiceMessage($id, $hesk_settings);
+
+        return http_response_code(204);
     }
 
     /**

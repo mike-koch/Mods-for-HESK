@@ -203,7 +203,15 @@ Link::all(array(
     // Settings
     '/v1/settings' => action(\Controllers\Settings\SettingsController::clazz(), RequestMethod::all()),
     // Service Messages
-    '/v1/service-messages' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(), array(RequestMethod::GET, RequestMethod::POST, RequestMethod::PUT)),
+    '/v1/service-messages' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
+        array(RequestMethod::GET, RequestMethod::POST, RequestMethod::PUT),
+        SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/service-messages/{i}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
+        array(RequestMethod::DELETE),
+        SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/service-messages/{i}/sort/{s}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz() . '::sort',
+        array(RequestMethod::POST),
+        SecurityHandler::INTERNAL),
 
     /* Internal use only routes */
     // Resend email response

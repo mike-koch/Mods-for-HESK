@@ -3,7 +3,6 @@
 namespace DataAccess\ServiceMessages;
 
 
-use BusinessLogic\DateTimeHelpers;
 use BusinessLogic\ServiceMessages\ServiceMessage;
 use BusinessLogic\ServiceMessages\ServiceMessageStyle;
 use DataAccess\CommonDao;
@@ -49,6 +48,10 @@ class ServiceMessagesGateway extends CommonDao {
         return $serviceMessage;
     }
 
+    /**
+     * @param $heskSettings
+     * @return ServiceMessage[]
+     */
     function getServiceMessages($heskSettings) {
         $this->init();
 
@@ -99,5 +102,32 @@ class ServiceMessagesGateway extends CommonDao {
         $this->close();
 
         return $serviceMessage;
+    }
+
+    function deleteServiceMessage($id, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "service_messages`
+            WHERE `id` = " . intval($id));
+
+        $this->close();
+    }
+
+    function resortAllServiceMessages($heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT `id` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "service_messages`
+            ORDER BY `order` ASC");
+
+        $sortValue = 10;
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "service_messages`
+                SET `order` = " . intval($sortValue) . "
+                WHERE `id` = " . intval($row['id']));
+
+            $sortValue += 10;
+        }
+
+        $this->close();
     }
 }
