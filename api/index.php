@@ -204,12 +204,12 @@ Link::all(array(
     '/v1/settings' => action(\Controllers\Settings\SettingsController::clazz(), RequestMethod::all()),
     // Service Messages
     '/v1/service-messages' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
-        array(RequestMethod::GET, RequestMethod::POST, RequestMethod::PUT),
+        array(RequestMethod::GET, RequestMethod::POST),
         SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1/service-messages/{i}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
-        array(RequestMethod::DELETE),
+        array(RequestMethod::PUT, RequestMethod::DELETE),
         SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1/service-messages/{i}/sort/{s}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz() . '::sort',
+    '/v1-internal/service-messages/{i}/sort/{s}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz() . '::sort',
         array(RequestMethod::POST),
         SecurityHandler::INTERNAL),
 

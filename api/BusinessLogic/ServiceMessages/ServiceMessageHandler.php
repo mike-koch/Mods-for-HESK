@@ -81,14 +81,14 @@ class ServiceMessageHandler extends \BaseClass {
         $serviceMessages = $this->serviceMessageGateway->getServiceMessages($heskSettings);
         $serviceMessage = null;
         foreach ($serviceMessages as $innerServiceMessage) {
-            if ($innerServiceMessage->id === intval($id)) {
+            if (intval($innerServiceMessage->id) === intval($id)) {
                 $serviceMessage = $innerServiceMessage;
                 break;
             }
         }
 
         if ($serviceMessage === null) {
-            throw new \BaseException("Could not find category with ID {$id}!");
+            throw new \BaseException("Could not find service message with ID {$id}!");
         }
 
         if ($direction === Direction::UP) {

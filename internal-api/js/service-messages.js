@@ -14,6 +14,7 @@ $(document).ready(function() {
     bindDeleteButton();
     bindCreateModal();
     bindSortButtons();
+    bindPreview();
 });
 
 
@@ -215,19 +216,16 @@ function bindFormSubmit() {
             },
             data: JSON.stringify(data),
             success: function(data) {
-                var format = undefined;
-                if (categoryId === -1) {
-                    format = mfhLang.html('cat_name_added');
-                    mfhAlert.success(format.replace('%s', data.name));
+                if (serviceMessageId === -1) {
+                    mfhAlert.success(mfhLang.text('sm_added'));
                 } else {
-                    format = mfhLang.html('category_updated');
-                    mfhAlert.success(format.replace('%s', data.name));
+                    mfhAlert.success(mfhLang.text('sm_mdf'));
                 }
                 $modal.modal('hide');
                 loadTable();
             },
             error: function(data) {
-                mfhAlert.errorWithLog(mfhLang.text('error_saving_updating_category'), data.responseJSON);
+                mfhAlert.errorWithLog(mfhLang.text('error_saving_updating_sm'), data.responseJSON);
                 console.error(data);
             },
             complete: function(data) {
@@ -243,42 +241,25 @@ function bindDeleteButton() {
         $('#overlay').show();
 
         var heskUrl = $('p#hesk-path').text();
-        var element = categories[$(this).parent().parent().find('[data-property="id"]').text()];
+        var element = serviceMessages[$(this).parent().parent().find('[data-property="id"]').data('value')];
 
         $.ajax({
             method: 'POST',
-            url: heskUrl + 'api/index.php/v1/categories/' + element.id,
+            url: heskUrl + 'api/index.php/v1/service-messages/' + element.id,
             headers: {
                 'X-Internal-Call': true,
                 'X-HTTP-Method-Override': 'DELETE'
             },
             success: function() {
-                mfhAlert.success(mfhLang.text('cat_removed'));
+                mfhAlert.success(mfhLang.text('sm_deleted'));
                 loadTable();
             },
             error: function(data) {
                 $('#overlay').hide();
-                mfhAlert.errorWithLog(mfhLang.text('error_deleting_category'), data.responseJSON);
+                mfhAlert.errorWithLog(mfhLang.text('error_deleting_sm'), data.responseJSON);
                 console.error(data);
             }
         });
-    });
-}
-
-function bindGenerateLinkModal() {
-    var $modal = $('#generate-link-modal');
-
-    $modal.find('.input-group-addon').click(function() {
-        clipboard.copy($modal.find('input[type="text"]').val());
-        mfhAlert.success(mfhLang.text('copied_to_clipboard'));
-    });
-
-    $(document).on('click', '[data-property="generate-link"] i.fa-code', function () {
-        var heskUrl = $('p#hesk-url').text();
-
-        var url = heskUrl + '/index.php?a=add&catid=' + $(this).parent().data('category-id');
-
-        $modal.find('input[type="text"]').val(url).end().modal('show');
     });
 }
 
@@ -287,11 +268,11 @@ function bindSortButtons() {
         $('#overlay').show();
         var heskUrl = $('p#hesk-path').text();
         var direction = $(this).data('direction');
-        var element = categories[$(this).parent().parent().parent().find('[data-property="id"]').text()];
+        var element = serviceMessages[$(this).parent().parent().parent().find('[data-property="id"]').data('value')];
 
         $.ajax({
             method: 'POST',
-            url: heskUrl + 'api/index.php/v1-internal/categories/' + element.id + '/sort/' + direction,
+            url: heskUrl + 'api/index.php/v1-internal/service-messages/' + element.id + '/sort/' + direction,
             headers: { 'X-Internal-Call': true },
             success: function() {
                 loadTable();
@@ -302,5 +283,21 @@ function bindSortButtons() {
                 $('#overlay').hide();
             }
         })
+    });
+}
+
+function bindPreview() {
+    $('#preview-button').click(function() {
+        var $modal = $('#service-message-modal');
+        var data = {
+            icon: $modal.find('input[name="icon"]').val(),
+            title: $modal.find('input[name="title"]').val(),
+            message: tinyMCE.get('content').getContent(),
+            published: $modal.find('input[name="type"]:checked').val() === "0",
+            style: styles[$modal.find('input[name="style"]:checked').val()],
+            order: $modal.find('input[name="order"]').val()
+        };
+
+        getServiceMessagePreview(data.icon, data.title, data.message, data.style);
     });
 }

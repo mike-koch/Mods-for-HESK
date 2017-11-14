@@ -29,14 +29,16 @@ class ServiceMessagesController extends \BaseClass {
         return output($element, 201);
     }
 
-    function put() {
+    function put($id) {
         global $applicationContext, $hesk_settings;
 
         /* @var $handler ServiceMessageHandler */
         $handler = $applicationContext->get(ServiceMessageHandler::clazz());
 
         $data = JsonRetriever::getJsonData();
-        $element = $handler->editServiceMessage($this->buildElementModel($data, null, false), $hesk_settings);
+        $serviceMessage = $this->buildElementModel($data, null, false);
+        $serviceMessage->id = $id;
+        $element = $handler->editServiceMessage($serviceMessage, $hesk_settings);
 
         return output($element);
     }
@@ -61,7 +63,6 @@ class ServiceMessagesController extends \BaseClass {
         $serviceMessage = new ServiceMessage();
 
         if (!$creating) {
-            $serviceMessage->id = $data['id'];
             $serviceMessage->order = $data['order'];
         }
 
@@ -76,5 +77,14 @@ class ServiceMessagesController extends \BaseClass {
         $serviceMessage->style = $data['style'];
 
         return $serviceMessage;
+    }
+
+    static function sort($id, $direction) {
+        global $applicationContext, $hesk_settings;
+
+        /* @var $handler ServiceMessageHandler */
+        $handler = $applicationContext->get(ServiceMessageHandler::clazz());
+
+        $handler->sortServiceMessage(intval($id), $direction, $hesk_settings);
     }
 }

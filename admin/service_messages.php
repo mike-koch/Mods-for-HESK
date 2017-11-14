@@ -247,6 +247,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <i class="fa fa-times-circle"></i>
                             <span><?php echo $hesklang['cancel']; ?></span>
                         </button>
+                        <button type="button" class="btn btn-primary preview-button">
+                            <i class="fa fa-search"></i>
+                            <span><?php echo $hesklang['sm_preview']; ?></span>
+                        </button>
                         <button type="submit" class="btn btn-success save-button">
                             <i class="fa fa-check-circle"></i>
                             <span><?php echo $hesklang['save']; ?></span>
@@ -262,6 +266,13 @@ echo mfh_get_hidden_fields_for_language(array(
     'sm_published',
     'sm_draft',
     'no_sm',
+    'sm_added',
+    'sm_mdf',
+    'error_saving_updating_sm',
+    'sm_deleted',
+    'error_deleting_sm',
+    'error_sorting_categories',
+    'error_retrieving_sm',
 ));
 
 echo '<script>var users = [];';

@@ -57,7 +57,7 @@ class ServiceMessagesGateway extends CommonDao {
 
         $serviceMessages = array();
 
-        $rs = hesk_dbQuery("SELECT * FROM `". hesk_dbEscape($heskSettings['db_pfix']) . "service_messages` ORDER BY `id`");
+        $rs = hesk_dbQuery("SELECT * FROM `". hesk_dbEscape($heskSettings['db_pfix']) . "service_messages` ORDER BY `order`");
         while ($row = hesk_dbFetchAssoc($rs)) {
             $serviceMessage = new ServiceMessage();
             $serviceMessage->id = $row['id'];
@@ -88,14 +88,14 @@ class ServiceMessagesGateway extends CommonDao {
                 `message` = '" . hesk_dbEscape($serviceMessage->message) . "', 
                 `style` = '" . intval($style) . "', 
                 `type` = " . intval($type) . ",
-                `icon` = '" . hesk_dbEscape($serviceMessage->icon) . "'
+                `icon` = '" . hesk_dbEscape($serviceMessage->icon) . "',
+                `order` = " . intval($serviceMessage->order) . "
             WHERE `id` = " . intval($serviceMessage->id));
 
         $otherFieldsRs = hesk_dbQuery("SELECT `dt`, `author`, `order` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "service_messages`
             WHERE `id` = " . intval($serviceMessage->id));
         $otherFields = hesk_dbFetchAssoc($otherFieldsRs);
 
-        $serviceMessage->order = intval($otherFields['order']);
         $serviceMessage->createdBy = intval($otherFields['author']);
         $serviceMessage->dateCreated = $otherFields['dt'];
 

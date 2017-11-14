@@ -2217,6 +2217,9 @@ $hesklang['audit_unlinked_ticket'] = '%s unlinked ticket %s';
 
 // Added or modified in Mods for HESK 3.3.0
 $hesklang['error_retrieving_sm'] = 'An error occurred retrieving service messages!';
+$hesklang['error_saving_updating_sm'] = 'An error occurred creating / saving the service message!';
+$hesklang['error_deleting_sm'] = 'An error occurred when trying to delete the service message.';
+$hesklang['error_sorting_sm'] = 'An error occurred sorting service messages!';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
