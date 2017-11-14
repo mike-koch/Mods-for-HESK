@@ -1,5 +1,12 @@
 var serviceMessages = [];
 
+var g_styles = [];
+g_styles["ERROR"] = 4;
+g_styles["NOTICE"] = 3;
+g_styles["INFO"] = 2;
+g_styles["SUCCESS"] = 1;
+g_styles["NONE"] = 0;
+
 $(document).ready(function() {
     loadTable();
     bindEditModal();
@@ -33,7 +40,7 @@ function loadTable() {
             $.each(data, function() {
                 var $template = $($('#service-message-template').html());
 
-                $template.find('span[data-property="id"]').attr('data-value', this.id);
+                $template.find('[data-property="id"]').attr('data-value', this.id);
                 $template.find('span[data-property="title"]').html(
                     getFormattedTitle(this.icon, this.title, this.style));
                 $template.find('span[data-property="author"]').text(users[this.createdBy].name);
@@ -127,50 +134,21 @@ function getServiceMessagePreview(icon, title, message, style) {
 
 function bindEditModal() {
     $(document).on('click', '[data-action="edit"]', function() {
-        var element = categories[$(this).parent().parent().find('[data-property="id"]').text()];
-        var $modal = $('#category-modal');
+        console.log(serviceMessages);
+        var element = serviceMessages[$(this).parent().parent().find('[data-property="id"]').data('value')];
+        var $modal = $('#service-message-modal');
 
         $modal.find('#edit-label').show();
         $modal.find('#create-label').hide();
 
-        $modal.find('input[name="name"]').val(element.name).end()
-            .find('select[name="priority"]').val(element.priority).end()
-            .find('select[name="manager"]').val(element.manager === null ? 0 : element.manager).end()
+        $modal.find('input[name="style"][value="' + (g_styles[element.style]) + '"]').prop('checked', 'checked').end()
+            .find('input[name="type"][value="' + (element.published ? 0 : 1) + '"]')
+                .prop('checked', 'checked').end()
+            .find('input[name="title"]').val(element.title).end()
             .find('input[name="id"]').val(element.id).end()
-            .find('select[name="usage"]').val(element.usage).end()
-            .find('input[name="display-border"][value="' + (element.displayBorder ? 1 : 0) + '"]')
-            .prop('checked', 'checked').end();
-
-        var backgroundColor = element.backgroundColor;
-        var foregroundColor = element.foregroundColor;
-        var colorpickerOptions = {
-            format: 'hex',
-            color: backgroundColor
-        };
-        $modal.find('input[name="background-color"]')
-            .colorpicker(colorpickerOptions).end().modal('show');
-
-        colorpickerOptions = {
-            format: 'hex'
-        };
-        if (foregroundColor != '' && foregroundColor !== 'AUTO') {
-            colorpickerOptions.color = foregroundColor;
-        }
-
-        $modal.find('input[name="foreground-color"]')
-            .colorpicker(colorpickerOptions).end().modal('show');
-
-        if (foregroundColor === '' || foregroundColor === 'AUTO') {
-            $modal.find('input[name="foreground-color"]').colorpicker('setValue', '#fff');
-            $modal.find('input[name="foreground-color"]').val('');
-        }
-
-        $modal.find('input[name="cat-order"]').val(element.catOrder);
-        $modal.find('input[name="autoassign"][value="' + (element.autoAssign ? 1 : 0) + '"]')
-            .prop('checked', 'checked');
-        $modal.find('input[name="type"][value="' + (element.type ? 1 : 0) + '"]')
-            .prop('checked', 'checked');
-        $modal.find('textarea[name="description"]').val(element.description === null ? '' : element.description);
+            .find('input[name="order"]').val(element.order).end();
+        setIcon(element.icon);
+        tinyMCE.get('content').setContent(element.message);
 
         $modal.modal('show');
     });
@@ -183,7 +161,9 @@ function bindCreateModal() {
             .find('#create-label').show().end()
             .find('input[name="style"][value="0"]').prop('checked', 'checked').end() // "None" style
             .find('input[name="type"][value="0"]').prop('checked', 'checked').end() // Published
-            .find('input[name="title"]').val('').end();
+            .find('input[name="title"]').val('').end()
+            .find('input[name="id"]').val(-1).end()
+            .find('input[name="order"]').val('').end();
         setIcon('');
         tinyMCE.get('content').setContent('');
 
@@ -192,34 +172,34 @@ function bindCreateModal() {
 }
 
 function bindFormSubmit() {
-    $('form#manage-category').submit(function(e) {
+    $('form#service-message').submit(function(e) {
         e.preventDefault();
         var heskUrl = $('p#hesk-path').text();
 
-        var $modal = $('#category-modal');
+        var $modal = $('#service-message-modal');
 
-        var foregroundColor = $modal.find('input[name="foreground-color"]').val();
-        var manager = parseInt($modal.find('select[name="manager"]').val());
+        var styles = [];
+        styles[0] = "NONE";
+        styles[1] = "SUCCESS";
+        styles[2] = "INFO";
+        styles[3] = "NOTICE";
+        styles[4] = "ERROR";
+
         var data = {
-            autoassign: $modal.find('input[name="autoassign"]').val() === 'true',
-            backgroundColor: $modal.find('input[name="background-color"]').val(),
-            description: $modal.find('textarea[name="description"]').val(),
-            displayBorder: $modal.find('input[name="display-border"]:checked').val() === '1',
-            foregroundColor: foregroundColor === '' ? 'AUTO' : foregroundColor,
-            name: $modal.find('input[name="name"]').val(),
-            priority: parseInt($modal.find('select[name="priority"]').val()),
-            manager: manager === 0 ? null : manager,
-            type: parseInt($modal.find('input[name="type"]:checked').val()),
-            usage: parseInt($modal.find('select[name="usage"]').val()),
-            catOrder: parseInt($modal.find('input[name="cat-order"]').val())
+            icon: $modal.find('input[name="icon"]').val(),
+            title: $modal.find('input[name="title"]').val(),
+            message: tinyMCE.get('content').getContent(),
+            published: $modal.find('input[name="type"]:checked').val() === "0",
+            style: styles[$modal.find('input[name="style"]:checked').val()],
+            order: $modal.find('input[name="order"]').val()
         };
 
-        var url = heskUrl + 'api/index.php/v1/categories/';
+        var url = heskUrl + 'api/index.php/v1/service-messages/';
         var method = 'POST';
 
-        var categoryId = parseInt($modal.find('input[name="id"]').val());
-        if (categoryId !== -1) {
-            url += categoryId;
+        var serviceMessageId = parseInt($modal.find('input[name="id"]').val());
+        if (serviceMessageId !== -1) {
+            url += serviceMessageId;
             method = 'PUT';
         }
 

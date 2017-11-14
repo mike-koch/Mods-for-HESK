@@ -93,6 +93,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th style="display: none"><?php echo $hesklang['id']; ?></th>
                             <th><?php echo $hesklang['sm_mtitle']; ?></th>
                             <th><?php echo $hesklang['sm_author']; ?></th>
                             <th><?php echo $hesklang['sm_type']; ?></th>
@@ -121,7 +122,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     <span id="create-label"><?php echo $hesklang['new_sm']; ?></span>
                 </h4>
             </div>
-            <form id="manage-category" class="form-horizontal" data-toggle="validator" method="post">
+            <form id="service-message" class="form-horizontal" data-toggle="validator" method="post">
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="row" style="padding-bottom: 10px;">
@@ -224,7 +225,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                         <div class="col-md-10">
                             <textarea placeholder="<?php echo htmlspecialchars($hesklang['sm_msg']); ?>"
-                                      class="form-control" name="message" rows="25" cols="70" id="content"></textarea>
+                                      class="form-control" name="message" id="content"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -240,7 +241,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id">
-                    <input type="hidden" name="cat-order">
+                    <input type="hidden" name="order">
                     <div id="action-buttons" class="btn-group">
                         <button type="button" class="btn btn-default cancel-button cancel-callback" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>
@@ -293,7 +294,8 @@ echo '</script>';
     ?>
 </script>
 <script type="text/html" id="service-message-template">
-<tr data-property="id" data-value="x">
+<tr>
+    <td style="display: none"><span data-property="id" data-value="x"></span></td>
     <td><span data-property="title"></span></td>
     <td><span data-property="author"></span></td>
     <td><span data-property="type"></span></td>
