@@ -46,7 +46,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         <div class="box-header with-border">
             <h1 class="box-title">
                 <?php echo $hesklang['manage_service_messages']; ?> <a href="javascript:void(0)"
-                                                          onclick="alert('<?php echo hesk_makeJsString($hesklang['sm_intro']); ?>')"><i
+                                                          onclick="swal('', '<?php echo hesk_makeJsString($hesklang['sm_intro']); ?>', 'info'); return false;"><i
                             class="fa fa-question-circle settingsquestionmark"></i></a>
             </h1>
             <div class="box-tools pull-right">
