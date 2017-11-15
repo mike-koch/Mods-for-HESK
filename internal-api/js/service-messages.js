@@ -135,9 +135,9 @@ function getServiceMessagePreview(icon, title, message, style) {
 
 function bindEditModal() {
     $(document).on('click', '[data-action="edit"]', function() {
-        console.log(serviceMessages);
         var element = serviceMessages[$(this).parent().parent().find('[data-property="id"]').data('value')];
         var $modal = $('#service-message-modal');
+        $modal.find('#preview-pane').html('');
 
         $modal.find('#edit-label').show();
         $modal.find('#create-label').hide();
@@ -164,7 +164,8 @@ function bindCreateModal() {
             .find('input[name="type"][value="0"]').prop('checked', 'checked').end() // Published
             .find('input[name="title"]').val('').end()
             .find('input[name="id"]').val(-1).end()
-            .find('input[name="order"]').val('').end();
+            .find('input[name="order"]').val('').end()
+            .find('#preview-pane').html('').end();
         setIcon('');
         tinyMCE.get('content').setContent('');
 
@@ -287,7 +288,14 @@ function bindSortButtons() {
 }
 
 function bindPreview() {
-    $('#preview-button').click(function() {
+    $('.preview-button').click(function() {
+        var styles = [];
+        styles[0] = "NONE";
+        styles[1] = "SUCCESS";
+        styles[2] = "INFO";
+        styles[3] = "NOTICE";
+        styles[4] = "ERROR";
+
         var $modal = $('#service-message-modal');
         var data = {
             icon: $modal.find('input[name="icon"]').val(),
@@ -298,6 +306,7 @@ function bindPreview() {
             order: $modal.find('input[name="order"]').val()
         };
 
-        getServiceMessagePreview(data.icon, data.title, data.message, data.style);
+        var preview = getServiceMessagePreview(data.icon, data.title, data.message, data.style);
+        $('#preview-pane').html(preview);
     });
 }

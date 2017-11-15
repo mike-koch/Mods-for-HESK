@@ -228,16 +228,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                       class="form-control" name="message" id="content"></textarea>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-10 col-md-offset-2">
-                            <div class="btn-group" role="group">
-                                <input type="submit" name="sm_save" value="<?php echo $hesklang['sm_save']; ?>"
-                                       class="btn btn-primary">
-                                <input type="submit" name="sm_preview"
-                                       value="<?php echo $hesklang['sm_preview']; ?>" class="btn btn-default">
-                            </div>
-                        </div>
-                    </div>
+                    <div id="preview-pane"></div>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id">
