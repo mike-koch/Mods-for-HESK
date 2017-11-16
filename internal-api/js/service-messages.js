@@ -149,7 +149,13 @@ function bindEditModal() {
             .find('input[name="id"]').val(element.id).end()
             .find('input[name="order"]').val(element.order).end();
         setIcon(element.icon);
-        tinyMCE.get('content').setContent(element.message);
+
+        if ($('input[name="kb_wysiwyg"]').val() === "1") {
+            tinyMCE.get('content').setContent(element.message);
+        } else {
+            $('textarea[name="message"]').val(element.message);
+        }
+
 
         $modal.modal('show');
     });
@@ -167,7 +173,12 @@ function bindCreateModal() {
             .find('input[name="order"]').val('').end()
             .find('#preview-pane').html('').end();
         setIcon('');
-        tinyMCE.get('content').setContent('');
+
+        if ($('input[name="kb_wysiwyg"]').val() === "1") {
+            tinyMCE.get('content').setContent('');
+        } else {
+            $('textarea[name="message"]').val('');
+        }
 
         $modal.modal('show');
     });
@@ -190,7 +201,7 @@ function bindFormSubmit() {
         var data = {
             icon: $modal.find('input[name="icon"]').val(),
             title: $modal.find('input[name="title"]').val(),
-            message: tinyMCE.get('content').getContent(),
+            message: getMessage(),
             published: $modal.find('input[name="type"]:checked').val() === "0",
             style: styles[$modal.find('input[name="style"]:checked').val()],
             order: $modal.find('input[name="order"]').val()
@@ -300,7 +311,7 @@ function bindPreview() {
         var data = {
             icon: $modal.find('input[name="icon"]').val(),
             title: $modal.find('input[name="title"]').val(),
-            message: tinyMCE.get('content').getContent(),
+            message: getMessage(),
             published: $modal.find('input[name="type"]:checked').val() === "0",
             style: styles[$modal.find('input[name="style"]:checked').val()],
             order: $modal.find('input[name="order"]').val()
@@ -309,4 +320,12 @@ function bindPreview() {
         var preview = getServiceMessagePreview(data.icon, data.title, data.message, data.style);
         $('#preview-pane').html(preview);
     });
+}
+
+function getMessage() {
+    if ($('input[name="kb_wysiwyg"]').val() === "1") {
+        return tinyMCE.get('content').getContent();
+    }
+
+    return $('textarea[name="message"]').val();
 }

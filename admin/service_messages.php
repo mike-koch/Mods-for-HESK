@@ -45,9 +45,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">
-                <?php echo $hesklang['manage_service_messages']; ?> <a href="javascript:void(0)"
-                                                          onclick="swal('', '<?php echo hesk_makeJsString($hesklang['sm_intro']); ?>', 'info'); return false;"><i
-                            class="fa fa-question-circle settingsquestionmark"></i></a>
+                <?php echo $hesklang['manage_service_messages']; ?>
+                <i class="fa fa-question-circle settingsquestionmark" data-toggle="tooltip"
+                   title="<?php echo hesk_makeJsString($hesklang['sm_intro']); ?>"
+                    data-placement="bottom"></i>
             </h1>
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -87,6 +88,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 theme_advanced_resizing: true
                             });
                         </script>
+                        <input type="hidden" name="kb_wysiwyg" value="1">
+                        <?php
+                    } else {
+                        ?>
+                        <input type="hidden" name="kb_wysiwyg" value="0">
                         <?php
                     }
                     ?>
