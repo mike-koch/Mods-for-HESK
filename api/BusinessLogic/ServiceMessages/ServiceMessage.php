@@ -30,4 +30,7 @@ class ServiceMessage extends \BaseClass {
 
     /* @var $icon string */
     public $icon;
+
+    /* @var $locations string[] */
+    public $locations;
 }

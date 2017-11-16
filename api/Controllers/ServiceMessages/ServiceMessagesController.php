@@ -2,6 +2,7 @@
 
 namespace Controllers\ServiceMessages;
 
+use BusinessLogic\Helpers;
 use BusinessLogic\Security\UserContext;
 use BusinessLogic\ServiceMessages\ServiceMessage;
 use BusinessLogic\ServiceMessages\ServiceMessageHandler;
@@ -70,11 +71,19 @@ class ServiceMessagesController extends \BaseClass {
             $serviceMessage->createdBy = $userContext->id;
         }
 
-        $serviceMessage->title = $data['title'];
-        $serviceMessage->icon = $data['icon'];
-        $serviceMessage->message = $data['message'];
-        $serviceMessage->published = $data['published'];
-        $serviceMessage->style = $data['style'];
+        $serviceMessage->title = Helpers::safeArrayGet($data, 'title');
+        $serviceMessage->icon = Helpers::safeArrayGet($data, 'icon');
+        $serviceMessage->message = Helpers::safeArrayGet($data, 'message');
+        $serviceMessage->published = Helpers::safeArrayGet($data, 'published');
+        $serviceMessage->style = Helpers::safeArrayGet($data, 'style');
+
+        $jsonLocations = Helpers::safeArrayGet($data, 'locations');
+
+        if ($jsonLocations !== null && !empty($jsonLocations)) {
+            foreach ($jsonLocations as $key => $value) {
+                $serviceMessage->locations[] = $value;
+            }
+        }
 
         return $serviceMessage;
     }

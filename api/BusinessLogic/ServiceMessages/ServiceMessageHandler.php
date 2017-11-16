@@ -130,6 +130,17 @@ class ServiceMessageHandler extends \BaseClass {
         } catch (\Exception $e) {
             $validationModel->errorKeys[] = 'INVALID_STYLE';
         }
+        if ($serviceMessage->locations === null || count($serviceMessage->locations) === 0) {
+            $validationModel->errorKeys[] = 'MISSING_LOCATIONS';
+        } else {
+            $locations = ServiceMessageLocation::getAll();
+            foreach ($serviceMessage->locations as $location) {
+                if (!in_array($location, $locations)) {
+                    $validationModel->errorKeys[] = 'INVALID_LOCATION';
+                    break;
+                }
+            }
+        }
 
         if (count($validationModel->errorKeys) > 0) {
             // Validation failed

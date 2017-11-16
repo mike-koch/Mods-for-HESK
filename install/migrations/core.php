@@ -216,5 +216,7 @@ function getAllMigrations() {
         //3.2.1 - 3.2.2
         160 => new UpdateMigration('3.2.1', '3.2.0', 160),
         161 => new UpdateMigration('3.2.2', '3.2.1', 161),
+        // 3.3.0
+        162 => new \v330\CreateServiceMessageToLocationTable(162),
     );
 }
