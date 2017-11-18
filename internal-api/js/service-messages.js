@@ -137,7 +137,8 @@ function bindEditModal() {
     $(document).on('click', '[data-action="edit"]', function() {
         var element = serviceMessages[$(this).parent().parent().find('[data-property="id"]').data('value')];
         var $modal = $('#service-message-modal');
-        $modal.find('#preview-pane').html('');
+        $modal.find('#preview-pane').html('').end()
+            .find('input[name="location[]"]').prop('checked', false);
 
         $modal.find('#edit-label').show();
         $modal.find('#create-label').hide();
@@ -149,6 +150,10 @@ function bindEditModal() {
             .find('input[name="id"]').val(element.id).end()
             .find('input[name="order"]').val(element.order).end();
         setIcon(element.icon);
+
+        $.each(element.locations, function() {
+            $modal.find('input[name="location[]"][value="' + this + '"]').prop('checked', 'checked');
+        });
 
         if ($('input[name="kb_wysiwyg"]').val() === "1") {
             tinyMCE.get('content').setContent(element.message);
@@ -171,7 +176,8 @@ function bindCreateModal() {
             .find('input[name="title"]').val('').end()
             .find('input[name="id"]').val(-1).end()
             .find('input[name="order"]').val('').end()
-            .find('#preview-pane').html('').end();
+            .find('#preview-pane').html('').end()
+            .find('input[name="location[]"]').prop('checked', false);
         setIcon('');
 
         if ($('input[name="kb_wysiwyg"]').val() === "1") {
@@ -198,13 +204,21 @@ function bindFormSubmit() {
         styles[3] = "NOTICE";
         styles[4] = "ERROR";
 
+        var domLocations = $modal.find('input[name="location[]"]:checked');
+
+        var locations = [];
+        $.each(domLocations, function() {
+            locations.push($(this).val());
+        });
+
         var data = {
             icon: $modal.find('input[name="icon"]').val(),
             title: $modal.find('input[name="title"]').val(),
             message: getMessage(),
             published: $modal.find('input[name="type"]:checked').val() === "0",
             style: styles[$modal.find('input[name="style"]:checked').val()],
-            order: $modal.find('input[name="order"]').val()
+            order: $modal.find('input[name="order"]').val(),
+            locations: locations
         };
 
         var url = heskUrl + 'api/index.php/v1/service-messages/';

@@ -215,6 +215,48 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="location" class="col-md-2 control-label">[!] Location</label>
+                        <div class="col-sm-4" style="margin-left:20px">
+                            <h5 style="text-decoration: underline;">Customer Pages</h5>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="CUSTOMER_HOME"> Homepage
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="CUSTOMER_KB_HOME"> Knowledgebase Home
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="CUSTOMER_VIEW_KB_ARTICLE"> View Knowledgebase Article
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="CUSTOMER_SUBMIT_TICKET"> Submit Ticket
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="CUSTOMER_VIEW_TICKET"> View Ticket
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="margin-left:20px">
+                            <h5 style="text-decoration: underline;">Staff Pages</h5>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="STAFF_LOGIN"> Login Page
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="STAFF_HOME"> Homepage
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="STAFF_KB_HOME"> Knowledgebase Home
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="STAFF_VIEW_KB_ARTICLE"> View Knowledgebase Article
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="STAFF_SUBMIT_TICKET"> Submit Ticket
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="location[]" value="STAFF_VIEW_TICKET"> View Ticket
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="title"
                                class="col-md-2 control-label"><?php echo $hesklang['sm_mtitle']; ?></label>
                         <div class="col-md-10">
