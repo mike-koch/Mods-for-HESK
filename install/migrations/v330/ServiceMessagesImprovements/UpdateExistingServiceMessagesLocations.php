@@ -1,6 +1,6 @@
 <?php
 
-namespace v330;
+namespace v330\ServiceMessagesImprovements;
 
 
 use BusinessLogic\ServiceMessages\ServiceMessageLocation;

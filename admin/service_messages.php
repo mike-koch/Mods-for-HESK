@@ -130,150 +130,202 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
             <form id="service-message" class="form-horizontal" data-toggle="validator" method="post">
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div class="row" style="padding-bottom: 10px;">
-                            <label for="style"
-                                   class="col-md-2 control-label"><?php echo $hesklang['sm_style']; ?></label>
-
-                            <div class="col-md-3">
-                                <div class="radio alert pad-5" style="box-shadow: none; border-radius: 4px;">
-                                    <label>
-                                        <input type="radio" name="style" value="0" onclick="setIcon('')">
-                                        <?php echo $hesklang['sm_none']; ?>
-                                    </label>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#contents" role="tab" data-toggle="tab">Contents</a></li>
+                        <li role="presentation"><a href="#properties" role="tab" data-toggle="tab">Properties</a></li>
+                    </ul><br>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="contents">
+                            <div class="form-group">
+                                <label for="title"
+                                       class="col-md-2 control-label"><?php echo $hesklang['sm_mtitle']; ?></label>
+                                <div class="col-md-10">
+                                    <input class="form-control"
+                                           placeholder="<?php echo htmlspecialchars($hesklang['sm_mtitle']); ?>"
+                                           type="text" name="title" size="70" maxlength="255"
+                                           data-error="<?php echo htmlspecialchars($hesklang['sm_e_title']); ?>" required>
+                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="radio alert alert-success pad-5">
-                                    <label style="margin-top: -5px">
-                                        <input type="radio" name="style" value="1" onclick="setIcon('fa fa-check-circle')">
-                                        <?php echo $hesklang['sm_success']; ?>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="radio alert alert-info pad-5" onclick="setIcon('fa fa-comment')">
-                                    <label style="margin-top: -5px">
-                                        <input type="radio" name="style" value="2">
-                                        <?php echo $hesklang['sm_info']; ?>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3 col-md-offset-2">
-                                <div class="radio alert alert-warning pad-5">
-                                    <label style="margin-top: -5px">
-                                        <input type="radio" name="style" value="3"
-                                               onclick="setIcon('fa fa-exclamation-triangle')">
-                                        <?php echo $hesklang['sm_notice']; ?>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="radio alert alert-danger pad-5">
-                                    <label style="margin-top: -5px">
-                                        <input type="radio" name="style" value="4" onclick="setIcon('fa fa-times-circle')">
-                                        <?php echo $hesklang['sm_error']; ?>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="icon" class="col-md-2 control-label"><?php echo $hesklang['sm_icon']; ?></label>
-                        <div class="col-md-10">
-                            <p style="display:none" id="no-icon"><?php echo $hesklang['sm_no_icon']; ?></p>
+                            <div class="form-group">
+                                <label for="message"
+                                       class="col-md-2 control-label"><?php echo $hesklang['sm_msg']; ?></label>
 
-                            <p style="display:none" id="search-icon"><?php echo $hesklang['sm_search_icon']; ?></p>
-
-                            <p style="display:none"
-                               id="footer-icon"><?php echo $hesklang['sm_iconpicker_footer_label']; ?></p>
-
-                            <div name="icon" class="btn btn-default iconpicker-container" data-toggle="iconpicker"
-                                 data-search="false" data-icon=""></div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="type" class="col-md-2 control-label"><?php echo $hesklang['sm_type']; ?></label>
-
-                        <div class="col-md-2">
-                            <div class="radio pad-5">
-                                <label>
-                                    <input type="radio" name="type" value="0">
-                                    <?php echo $hesklang['sm_published']; ?>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="radio pad-5">
-                                <label>
-                                    <input type="radio" name="type" value="1">
-                                    <?php echo $hesklang['sm_draft']; ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="location" class="col-md-2 control-label">[!] Location</label>
-                        <div class="col-sm-4" style="margin-left:20px">
-                            <h5 style="text-decoration: underline;">Customer Pages</h5>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="CUSTOMER_HOME"> Homepage
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="CUSTOMER_KB_HOME"> Knowledgebase Home
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="CUSTOMER_VIEW_KB_ARTICLE"> View Knowledgebase Article
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="CUSTOMER_SUBMIT_TICKET"> Submit Ticket
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="CUSTOMER_VIEW_TICKET"> View Ticket
-                            </div>
-                        </div>
-                        <div class="col-sm-4" style="margin-left:20px">
-                            <h5 style="text-decoration: underline;">Staff Pages</h5>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="STAFF_LOGIN"> Login Page
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="STAFF_HOME"> Homepage
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="STAFF_KB_HOME"> Knowledgebase Home
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="STAFF_VIEW_KB_ARTICLE"> View Knowledgebase Article
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="STAFF_SUBMIT_TICKET"> Submit Ticket
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="location[]" value="STAFF_VIEW_TICKET"> View Ticket
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="title"
-                               class="col-md-2 control-label"><?php echo $hesklang['sm_mtitle']; ?></label>
-                        <div class="col-md-10">
-                            <input class="form-control"
-                                   placeholder="<?php echo htmlspecialchars($hesklang['sm_mtitle']); ?>"
-                                   type="text" name="title" size="70" maxlength="255"
-                                   data-error="<?php echo htmlspecialchars($hesklang['sm_e_title']); ?>" required>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="message"
-                               class="col-md-2 control-label"><?php echo $hesklang['sm_msg']; ?></label>
-
-                        <div class="col-md-10">
+                                <div class="col-md-10">
                             <textarea placeholder="<?php echo htmlspecialchars($hesklang['sm_msg']); ?>"
                                       class="form-control" name="message" id="content"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="properties">
+                            <div class="form-group">
+                                <label for="language" class="col-md-2 control-label">
+                                    <?php echo $hesklang['lgs']; ?>
+                                </label>
+                                <div class="col-md-10">
+                                    <select name="language" class="form-control">
+                                        <option value="ALL"><?php echo $hesklang['all']; ?></option>
+                                        <?php foreach($hesk_settings['languages'] as $name => $info): ?>
+                                        <option value="<?php echo $info['folder']; ?>">
+                                            <?php echo $name; ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row" style="padding-bottom: 10px;">
+                                    <label for="style"
+                                           class="col-md-2 control-label"><?php echo $hesklang['sm_style']; ?></label>
+
+                                    <div class="col-md-3">
+                                        <div class="radio alert pad-5" style="box-shadow: none; border-radius: 4px;">
+                                            <label>
+                                                <input type="radio" name="style" value="0" onclick="setIcon('')">
+                                                <?php echo $hesklang['sm_none']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="radio alert alert-success pad-5">
+                                            <label style="margin-top: -5px">
+                                                <input type="radio" name="style" value="1" onclick="setIcon('fa fa-check-circle')">
+                                                <?php echo $hesklang['sm_success']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="radio alert alert-info pad-5" onclick="setIcon('fa fa-comment')">
+                                            <label style="margin-top: -5px">
+                                                <input type="radio" name="style" value="2">
+                                                <?php echo $hesklang['sm_info']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 col-md-offset-2">
+                                        <div class="radio alert alert-warning pad-5">
+                                            <label style="margin-top: -5px">
+                                                <input type="radio" name="style" value="3"
+                                                       onclick="setIcon('fa fa-exclamation-triangle')">
+                                                <?php echo $hesklang['sm_notice']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="radio alert alert-danger pad-5">
+                                            <label style="margin-top: -5px">
+                                                <input type="radio" name="style" value="4" onclick="setIcon('fa fa-times-circle')">
+                                                <?php echo $hesklang['sm_error']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="icon" class="col-md-2 control-label"><?php echo $hesklang['sm_icon']; ?></label>
+                                <div class="col-md-10">
+                                    <p style="display:none" id="no-icon"><?php echo $hesklang['sm_no_icon']; ?></p>
+
+                                    <p style="display:none" id="search-icon"><?php echo $hesklang['sm_search_icon']; ?></p>
+
+                                    <p style="display:none"
+                                       id="footer-icon"><?php echo $hesklang['sm_iconpicker_footer_label']; ?></p>
+
+                                    <div name="icon" class="btn btn-default iconpicker-container" data-toggle="iconpicker"
+                                         data-search="false" data-icon=""></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="type" class="col-md-2 control-label"><?php echo $hesklang['sm_type']; ?></label>
+
+                                <div class="col-md-2">
+                                    <div class="radio pad-5">
+                                        <label>
+                                            <input type="radio" name="type" value="0">
+                                            <?php echo $hesklang['sm_published']; ?>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="radio pad-5">
+                                        <label>
+                                            <input type="radio" name="type" value="1">
+                                            <?php echo $hesklang['sm_draft']; ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location" class="col-md-2 control-label">[!] Location</label>
+                                <div class="col-sm-4" style="margin-left:20px">
+                                    <h5 style="text-decoration: underline;">Customer Pages</h5>
+                                    <div class="btn-group btn-group-sm">
+                                        <div data-select-all="customer-location" class="btn btn-default">
+                                            Select All
+                                        </div>
+                                        <div data-deselect-all="customer-location" class="btn btn-default">
+                                            Deselect All
+                                        </div>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="customer-location" type="checkbox"
+                                               name="location[]" value="CUSTOMER_HOME"> Homepage
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="customer-location" type="checkbox"
+                                               name="location[]" value="CUSTOMER_KB_HOME"> Knowledgebase Home
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="customer-location" type="checkbox"
+                                               name="location[]" value="CUSTOMER_VIEW_KB_ARTICLE"> View Knowledgebase Article
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="customer-location" type="checkbox"
+                                               name="location[]" value="CUSTOMER_SUBMIT_TICKET"> Submit Ticket
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="customer-location" type="checkbox"
+                                               name="location[]" value="CUSTOMER_VIEW_TICKET"> View Ticket
+                                    </div>
+                                </div>
+                                <div class="col-sm-4" style="margin-left:20px">
+                                    <h5 style="text-decoration: underline;">Staff Pages</h5>
+                                    <div class="btn-group btn-group-sm">
+                                        <div data-select-all="staff-location" class="btn btn-default">
+                                            Select All
+                                        </div>
+                                        <div data-deselect-all="staff-location" class="btn btn-default">
+                                            Deselect All
+                                        </div>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="staff-location" type="checkbox"
+                                               name="location[]" value="STAFF_LOGIN"> Login Page
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="staff-location" type="checkbox"
+                                               name="location[]" value="STAFF_HOME"> Homepage
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="staff-location" type="checkbox"
+                                               name="location[]" value="STAFF_KB_HOME"> Knowledgebase Home
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="staff-location" type="checkbox"
+                                               name="location[]" value="STAFF_VIEW_KB_ARTICLE"> View Knowledgebase Article
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="staff-location" type="checkbox"
+                                               name="location[]" value="STAFF_SUBMIT_TICKET"> Submit Ticket
+                                    </div>
+                                    <div class="checkbox">
+                                        <input data-select-target="staff-location" type="checkbox"
+                                               name="location[]" value="STAFF_VIEW_TICKET"> View Ticket
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="preview-pane"></div>
