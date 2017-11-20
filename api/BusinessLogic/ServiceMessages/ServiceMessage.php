@@ -33,4 +33,7 @@ class ServiceMessage extends \BaseClass {
 
     /* @var $locations string[] */
     public $locations;
+
+    /* @var $language string */
+    public $language;
 }

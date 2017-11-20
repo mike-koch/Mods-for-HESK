@@ -76,6 +76,7 @@ class ServiceMessagesController extends \BaseClass {
         $serviceMessage->message = Helpers::safeArrayGet($data, 'message');
         $serviceMessage->published = Helpers::safeArrayGet($data, 'published');
         $serviceMessage->style = Helpers::safeArrayGet($data, 'style');
+        $serviceMessage->language = Helpers::safeArrayGet($data, 'language');
 
         $jsonLocations = Helpers::safeArrayGet($data, 'locations');
 

@@ -102,6 +102,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <th style="display: none"><?php echo $hesklang['id']; ?></th>
                             <th><?php echo $hesklang['sm_mtitle']; ?></th>
                             <th><?php echo $hesklang['sm_author']; ?></th>
+                            <th><?php echo $hesklang['lgs']; ?></th>
                             <th><?php echo $hesklang['sm_type']; ?></th>
                             <th><?php echo $hesklang['opt']; ?></th>
                         </tr>
@@ -131,11 +132,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <form id="service-message" class="form-horizontal" data-toggle="validator" method="post">
                 <div class="modal-body">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#contents" role="tab" data-toggle="tab">Contents</a></li>
+                        <li role="presentation" class="active"><a href="#sm-contents" role="tab" data-toggle="tab">Contents</a></li>
                         <li role="presentation"><a href="#properties" role="tab" data-toggle="tab">Properties</a></li>
                     </ul><br>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="contents">
+                        <div role="tabpanel" class="tab-pane active" id="sm-contents">
                             <div class="form-group">
                                 <label for="title"
                                        class="col-md-2 control-label"><?php echo $hesklang['sm_mtitle']; ?></label>
@@ -364,6 +365,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'error_deleting_sm',
     'error_sorting_categories',
     'error_retrieving_sm',
+    'all',
 ));
 
 echo '<script>var users = [];';
@@ -375,6 +377,11 @@ while ($row = hesk_dbFetchAssoc($usersRs)) {
         id: ".$row['id'].",
         name: '".$row['name']."'
     }\n";
+}
+echo "
+var languages = [];\n";
+foreach ($hesk_settings['languages'] as $key => $value) {
+    echo "languages[" . json_encode($value['folder']) . "] = " . json_encode($key) . ";\n";
 }
 echo '</script>';
 ?>
@@ -400,6 +407,7 @@ echo '</script>';
     <td style="display: none"><span data-property="id" data-value="x"></span></td>
     <td><span data-property="title"></span></td>
     <td><span data-property="author"></span></td>
+    <td><span data-property="language"></span></td>
     <td><span data-property="type"></span></td>
     <td>
         <span class="sort-arrows">

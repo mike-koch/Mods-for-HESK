@@ -24,14 +24,15 @@ class ServiceMessagesGateway extends CommonDao {
         $type = $serviceMessage->published ? 0 : 1;
 
         // Insert service message into database
-        hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "service_messages` (`author`,`title`,`message`,`style`,`type`,`order`, `icon`) VALUES (
+        hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "service_messages` (`author`,`title`,`message`,`style`,`type`,`order`, `icon`, `mfh_language`) VALUES (
             '" . intval($serviceMessage->createdBy) . "',
             '" . hesk_dbEscape($serviceMessage->title) . "',
             '" . hesk_dbEscape($serviceMessage->message) . "',
             '" . hesk_dbEscape($style) . "',
             '{$type}',
             '{$myOrder}',
-            '" . hesk_dbEscape($serviceMessage->icon) . "'
+            '" . hesk_dbEscape($serviceMessage->icon) . "',
+            '" . hesk_dbEscape($serviceMessage->language) . "',
             )");
 
         $serviceMessage->id = hesk_dbInsertID();
@@ -74,6 +75,7 @@ class ServiceMessagesGateway extends CommonDao {
             $serviceMessage->message = $row['message'];
             $serviceMessage->style = ServiceMessageStyle::getStyleById($row['style']);
             $serviceMessage->icon = $row['icon'];
+            $serviceMessage->language = $row['mfh_language'];
             $serviceMessage->locations = array();
 
             $locationsRs = hesk_dbQuery("SELECT `location` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_service_message_to_location`
@@ -102,7 +104,8 @@ class ServiceMessagesGateway extends CommonDao {
                 `style` = '" . intval($style) . "', 
                 `type` = " . intval($type) . ",
                 `icon` = '" . hesk_dbEscape($serviceMessage->icon) . "',
-                `order` = " . intval($serviceMessage->order) . "
+                `order` = " . intval($serviceMessage->order) . ",
+                `mfh_language` = '" . hesk_dbEscape($serviceMessage->language) . "'
             WHERE `id` = " . intval($serviceMessage->id));
 
         hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_service_message_to_location`

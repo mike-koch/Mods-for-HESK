@@ -118,6 +118,20 @@ class ServiceMessageHandler extends \BaseClass {
             $htmlPurifier = new \HeskHTMLPurifier($heskSettings['cache_dir']);
             $serviceMessage->message = $htmlPurifier->heskPurify($serviceMessage->message);
         }
+        if ($serviceMessage->language === null || trim($serviceMessage->language) === '') {
+            $validationModel->errorKeys[] = 'MISSING_LANGUAGE';
+        }
+
+        $languageFound = false;
+        foreach ($heskSettings['languages'] as $key => $value) {
+            if ($value['folder'] === $serviceMessage->language || $serviceMessage->language === 'ALL') {
+                $languageFound = true;
+                break;
+            }
+        }
+        if (!$languageFound) {
+            $validationModel->errorKeys[] = 'LANGUAGE_NOT_INSTALLED';
+        }
 
         if ($serviceMessage->title === null || trim($serviceMessage->title) === '') {
             $validationModel->errorKeys[] = 'MISSING_TITLE';

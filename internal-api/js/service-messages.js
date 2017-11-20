@@ -50,6 +50,9 @@ function loadTable() {
                 } else {
                     $template.find('span[data-property="type"]').text(mfhLang.text('sm_draft'));
                 }
+                $template.find('[data-property="language"]').text(this.language === 'ALL' ?
+                    mfhLang.text('all') :
+                    languages[this.language]);
 
                 $tableBody.append($template);
 
@@ -148,7 +151,8 @@ function bindEditModal() {
                 .prop('checked', 'checked').end()
             .find('input[name="title"]').val(element.title).end()
             .find('input[name="id"]').val(element.id).end()
-            .find('input[name="order"]').val(element.order).end();
+            .find('input[name="order"]').val(element.order).end()
+            .find('select[name="language"]').val(element.language).end();
         setIcon(element.icon);
 
         $.each(element.locations, function() {
@@ -160,6 +164,11 @@ function bindEditModal() {
         } else {
             $('textarea[name="message"]').val(element.message);
         }
+
+        $('.tab-pane#sm-contents').addClass('active');
+        $('.tab-pane#properties').removeClass('active');
+        $('.nav-tabs > li').removeClass('active');
+        $('.nav-tabs > li:first').addClass('active');
 
 
         $modal.modal('show');
@@ -177,7 +186,8 @@ function bindCreateModal() {
             .find('input[name="id"]').val(-1).end()
             .find('input[name="order"]').val('').end()
             .find('#preview-pane').html('').end()
-            .find('input[name="location[]"]').prop('checked', false);
+            .find('input[name="location[]"]').prop('checked', false)
+            .find('select[name="language"]').val('ALL');
         setIcon('');
 
         if ($('input[name="kb_wysiwyg"]').val() === "1") {
@@ -185,6 +195,11 @@ function bindCreateModal() {
         } else {
             $('textarea[name="message"]').val('');
         }
+
+        $('.tab-pane#sm-contents').addClass('active');
+        $('.tab-pane#properties').removeClass('active');
+        $('.nav-tabs > li').removeClass('active');
+        $('.nav-tabs > li:first').addClass('active');
 
         $modal.modal('show');
     });
@@ -218,6 +233,7 @@ function bindFormSubmit() {
             published: $modal.find('input[name="type"]:checked').val() === "0",
             style: styles[$modal.find('input[name="style"]:checked').val()],
             order: $modal.find('input[name="order"]').val(),
+            language: $modal.find('select[name="language"]').val(),
             locations: locations
         };
 
