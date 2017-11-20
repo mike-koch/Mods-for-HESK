@@ -1561,7 +1561,7 @@ function hesk_getAdminButtons($category_id)
 
 function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
 {
-    global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
+    global $hesk_settings, $hesklang, $ticket, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
 
     $options = $reply ? '' : '<div class="pull-right">';
 
@@ -1934,7 +1934,7 @@ function mfh_print_reply($reply) {
                         ?>
                     </div>
                     <div class="col-md-6 text-right">
-                        <?php echo hesk_getAdminButtonsInTicket(); ?>
+                        <?php echo hesk_getAdminButtonsInTicket($reply); ?>
                     </div>
                 </div>
             </div>
