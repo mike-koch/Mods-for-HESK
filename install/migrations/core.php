@@ -213,8 +213,9 @@ function getAllMigrations() {
         157 => new \v320\AddAuditTrail\CreateAuditTrailToReplacementValuesTable(),
         158 => new \v320\AddMigrationSetting(),
         159 => new UpdateMigration('3.2.0', '3.1.1', 159),
-        //3.2.1 - 3.2.2
+        //3.2.1 - 3.2.3
         160 => new UpdateMigration('3.2.1', '3.2.0', 160),
         161 => new UpdateMigration('3.2.2', '3.2.1', 161),
+        162 => new UpdateMigration('3.2.3', '3.2.2', 162),
     );
 }
