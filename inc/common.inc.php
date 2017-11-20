@@ -2160,6 +2160,10 @@ function mfh_get_hidden_fields_for_language($keys) {
 function mfh_insert_audit_trail_record($entity_id, $entity_type, $language_key, $date, $replacement_values = array()) {
     global $hesk_settings;
 
+    $oldTimeFormat = $hesk_settings['timeformat'];
+    $hesk_settings['timeformat'] = 'Y-m-d H:i:s';
+    $date = hesk_date();
+
     hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` (`entity_id`, `entity_type`, 
         `language_key`, `date`) VALUES (" . intval($entity_id) . ", '" . hesk_dbEscape($entity_type) . "',
             '" . hesk_dbEscape($language_key) . "', '" . hesk_dbEscape($date) . "')");
@@ -2171,6 +2175,8 @@ function mfh_insert_audit_trail_record($entity_id, $entity_type, $language_key, 
             (`audit_trail_id`, `replacement_index`, `replacement_value`) VALUES (" . intval($audit_id) . ", 
                 " . intval($replacement_index) . ", '" . hesk_dbEscape($replacement_value) . "')");
     }
+
+    $hesk_settings['timeformat'] = $oldTimeFormat;
 
     return $audit_id;
 }
