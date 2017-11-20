@@ -512,10 +512,10 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
         $headers .= "MIME-Version: 1.0\n";
         $headers .= "From: $hesk_settings[from_header]\n";
         if (count($cc) > 0) {
-            $headers .= "Cc: " . implode(',', $cc);
+            $headers .= "Cc: " . implode(',', $cc) . "\n";
         }
         if (count($bcc) > 0) {
-            $headers .= "Bcc: " . implode(',', $bcc);
+            $headers .= "Bcc: " . implode(',', $bcc) . "\n";
         }
         $headers .= "Reply-To: $hesk_settings[from_header]\n";
         $headers .= "Return-Path: $hesk_settings[webmaster_mail]\n";
