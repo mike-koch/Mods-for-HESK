@@ -252,12 +252,7 @@ class EmailTemplateParser extends \BaseClass {
         $lastReplyBy = '';
         // Get the last reply by
         if (!empty($ticket->lastReplier)) {
-            if (!empty($ticket->lastReplier)) {
-                $lastReplyBy = $hesklang['staff'];
-            } else {
-                $lastReplyUser = $this->userGateway->getUserById($ticket->lastReplier, $heskSettings);
-                $lastReplyBy = $lastReplyUser !== null ? $lastReplyUser->name : $hesklang['unas'];
-            }
+            $lastReplyBy = $ticket->lastReplier;
         } else {
             $lastReplyBy = $ticket->name;
         }

@@ -368,7 +368,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <label for="subject" class="col-sm-3 control-label"><?php echo $hesklang['subject'] . $required; ?></label>
 
                             <div class="col-sm-9">
-                                <input class="form-control" type="text" name="subject" size="40" maxlength="40"
+                                <input class="form-control" type="text" name="subject" size="40" maxlength="70"
                                        value="<?php echo $ticket['subject']; ?>"
                                        placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"/>
                             </div>
@@ -380,7 +380,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             </label>
 
                             <div class="col-sm-9">
-                                <input class="form-control" type="text" name="name" size="40" maxlength="30"
+                                <input class="form-control" type="text" name="name" size="40" maxlength="50"
                                        value="<?php echo $ticket['name']; ?>"
                                        placeholder="<?php echo htmlspecialchars($hesklang['name']); ?>"
                                        data-error="<?php echo $hesklang['this_field_is_required']; ?>"
