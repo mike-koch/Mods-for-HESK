@@ -294,6 +294,15 @@ $sql .= $submit_as_customer ? "`lastreplier`='0', `replierid`='0' " : "`lastrepl
 if ($time_worked == '00:00:00') {
     $sql .= ", `lastchange` = NOW() ";
 } else {
+    $parts = explode(':', $ticket['time_worked']);
+    $seconds = ($parts[0] * 3600) + ($parts[1] * 60) + $parts[2];
+
+    $parts = explode(':', $time_worked);
+    $seconds += ($parts[0] * 3600) + ($parts[1] * 60) + $parts[2];
+
+    require(HESK_PATH . 'inc/reporting_functions.inc.php');
+    $ticket['time_worked'] = hesk_SecondsToHHMMSS($seconds);
+
     $sql .= ",`time_worked` = ADDTIME(`time_worked`,'" . hesk_dbEscape($time_worked) . "') ";
 }
 
@@ -363,7 +372,9 @@ $info = array(
     'dt' => hesk_date($ticket['dt'], true),
     'lastchange' => hesk_date($ticket['lastchange'], true),
     'id' => $ticket['id'],
-    'language' => $ticket['language']
+    'language' => $ticket['language'],
+    'time_worked'   => $ticket['time_worked'],
+    'last_reply_by'	=> ($submit_as_customer ? $ticket['name'] : $_SESSION['name']),
 );
 
 // 2. Add custom fields to the array

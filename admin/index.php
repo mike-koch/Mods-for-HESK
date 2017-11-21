@@ -158,7 +158,7 @@ function do_login()
         exit();
     }
 
-    $pass_enc = hesk_Pass2Hash($_SESSION['pass'] . strtolower($user) . $_SESSION['pass']);
+    $pass_enc = hesk_Pass2Hash($_SESSION['pass'].hesk_mb_strtolower($user).$_SESSION['pass']);
 
     /* Check if default password */
     if ($_SESSION['pass'] == '499d74967b28a841c98bb4baaabaad699ff3c079') {
@@ -330,7 +330,7 @@ function print_login()
                             <select class="form-control" name="user">
                                 <?php
                                 while ($row = hesk_dbFetchAssoc($res)):
-                                    $sel = (strtolower($savedUser) == strtolower($row['user'])) ? 'selected' : '';
+                                    $sel = (hesk_mb_strtolower($savedUser) == hesk_mb_strtolower($row['user'])) ? 'selected="selected"' : '';
                                     ?>
                                     <option value="<?php echo $row['user']; ?>" <?php echo $sel; ?>>
                                         <?php echo $row['user']; ?>

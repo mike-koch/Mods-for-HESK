@@ -334,7 +334,7 @@ function hesk_activeSessionValidate($username, $password_hash, $tag)
     list($salt, $hash) = explode('|', $tag, 2);
 
     // Make sure the hash matches existing username and password
-    if ($hash == sha1($salt . strtolower($username) . $password_hash)) {
+    if ($hash == sha1($salt . hesk_mb_strtolower($username) . $password_hash) ) {
         return true;
     }
 
@@ -345,7 +345,7 @@ function hesk_activeSessionValidate($username, $password_hash, $tag)
 function hesk_activeSessionCreateTag($username, $password_hash)
 {
     $salt = uniqid(mt_rand(), true);
-    return $salt . '|' . sha1($salt . strtolower($username) . $password_hash);
+    return $salt . '|' . sha1($salt . hesk_mb_strtolower($username) . $password_hash);
 } // END hesk_activeSessionCreateTag()
 
 
@@ -383,7 +383,7 @@ function hesk_autoLogin($noredirect = 0)
     $res = hesk_dbFetchAssoc($result);
 
     /* Check password */
-    if ($hash != hesk_Pass2Hash($res['pass'] . strtolower($user) . $res['pass'])) {
+    if ($hash != hesk_Pass2Hash($res['pass'] . hesk_mb_strtolower($user) . $res['pass']) ) {
         hesk_setcookie('hesk_username', '');
         hesk_setcookie('hesk_p', '');
         header('Location: '.$url);

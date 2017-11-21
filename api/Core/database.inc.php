@@ -97,7 +97,7 @@ function hesk_dbEscape($in)
 
 function hesk_dbLike($in)
 {
-	return str_replace( array('_', '%'), array('\\\\_', '\\\\%'), $in);
+    return str_replace( array('_', '%', '\\'), array('\\\\_', '\\\\%', '\\\\'), $in); // '
 } // END hesk_dbLike()
 
 

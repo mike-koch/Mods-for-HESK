@@ -357,6 +357,10 @@ function hesk_isREQUEST($in)
     return isset($_GET[$in]) || isset($_POST[$in]) ? true : false;
 } // END hesk_isREQUEST()
 
+function hesk_mb_strtolower($in) {
+    return function_exists('mb_strtolower') ? mb_strtolower($in) : strtolower($in);
+} // END hesk_mb_strtolower()
+
 
 function hesk_htmlspecialchars_decode($in)
 {
@@ -835,7 +839,39 @@ function hesk_getCategoryName($id)
     $hesk_settings['category_data'][$id]['name'] = hesk_dbResult($res, 0, 0);
 
     return $hesk_settings['category_data'][$id]['name'];
-} // END hesk_getOwnerName()
+} // END hesk_getCategoryName()
+
+function hesk_getReplierName($ticket) {
+    global $hesk_settings, $hesklang;
+
+    // Already have this info?
+    if (isset($ticket['last_reply_by'])) {
+        return $ticket['last_reply_by'];
+    }
+
+    // Last reply by staff
+    if ( ! empty($ticket['lastreplier'])) {
+        // We don't know who from staff so just send "Staff"
+        if (empty($ticket['replierid'])) {
+            return $hesklang['staff'];
+        }
+
+        // Get the name using another function
+        $replier = hesk_getOwnerName($ticket['replierid']);
+
+        // If replier comes back as "unassigned", default to "Staff"
+        if ($replier == $hesklang['unas']) {
+            return $hesklang['staff'];
+        }
+
+        return $replier;
+    }
+
+    // Last reply by customer
+    return $ticket['name'];
+
+} // END hesk_getReplierName()
+
 
 
 function hesk_getOwnerName($id)

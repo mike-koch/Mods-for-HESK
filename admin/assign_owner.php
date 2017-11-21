@@ -129,13 +129,14 @@ $info = array(
     'trackid' => $ticket['trackid'],
     'status' => $ticket['status'],
     'name' => $ticket['name'],
-    'lastreplier' => $ticket['lastreplier'],
     'subject' => $ticket['subject'],
     'message' => $ticket['message'],
     'attachments' => $ticket['attachments'],
     'dt' => hesk_date($ticket['dt'], true),
     'lastchange' => hesk_date($ticket['lastchange'], true),
     'id' => $ticket['id'],
+    'time_worked'   => $ticket['time_worked'],
+    'last_reply_by' => hesk_getReplierName($ticket),
 );
 
 // 2. Add custom fields to the array

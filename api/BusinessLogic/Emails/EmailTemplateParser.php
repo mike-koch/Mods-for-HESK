@@ -247,6 +247,22 @@ class EmailTemplateParser extends \BaseClass {
         $msg = str_replace('%%CREATED%%', $ticket->dateCreated, $msg);
         $msg = str_replace('%%UPDATED%%', $ticket->lastChanged, $msg);
         $msg = str_replace('%%ID%%', $ticket->id, $msg);
+        $msg = str_replace('%%TIME_WORKED%%', $ticket->timeWorked, $msg);
+
+        $lastReplyBy = '';
+        // Get the last reply by
+        if (!empty($ticket->lastReplier)) {
+            if (!empty($ticket->lastReplier)) {
+                $lastReplyBy = $hesklang['staff'];
+            } else {
+                $lastReplyUser = $this->userGateway->getUserById($ticket->lastReplier, $heskSettings);
+                $lastReplyBy = $lastReplyUser !== null ? $lastReplyUser->name : $hesklang['unas'];
+            }
+        } else {
+            $lastReplyBy = $ticket->name;
+        }
+
+        $msg = str_replace('%%LAST_REPLY_BY%%', $lastReplyBy, $msg);
 
         /* All custom fields */
         for ($i=1; $i<=50; $i++) {

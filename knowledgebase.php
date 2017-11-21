@@ -286,8 +286,8 @@ if (!$show['show']) {
             if ($hesk_settings['kb_rating'] && strpos(hesk_COOKIE('hesk_kb_rate'), 'a' . $artid . '%') === false) {
                 echo '
 	    <div id="rating" class="rate" align="right">&nbsp;<br />' . $hesklang['rart'] . '
-			<a href="Javascript:void(0)" onclick="Javascript:window.location=\'knowledgebase.php?rating=5&amp;id=' . $article['id'] . '\'" rel="nofollow">' . strtolower($hesklang['yes']) . '</a> /
-	        <a href="Javascript:void(0)" onclick="Javascript:window.location=\'knowledgebase.php?rating=1&amp;id=' . $article['id'] . '\'" rel="nofollow">' . strtolower($hesklang['no']) . '</a>
+			<a href="Javascript:void(0)" onclick="Javascript:window.location=\'knowledgebase.php?rating=5&amp;id=' . $article['id'] . '\'" rel="nofollow">' . hesk_mb_strtolower($hesklang['yes']) . '</a> /
+	        <a href="Javascript:void(0)" onclick="Javascript:window.location=\'knowledgebase.php?rating=1&amp;id=' . $article['id'] . '\'" rel="nofollow">' . hesk_mb_strtolower($hesklang['no']) . '</a>
 	    </div>
         ';
             }

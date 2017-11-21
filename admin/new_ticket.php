@@ -244,7 +244,7 @@ $show_quick_help = $show['show'];
                             class="important">*</span></label>
 
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="name" size="40" maxlength="30"
+                        <input type="text" class="form-control" name="name" size="40" maxlength="50"
                                value="<?php if (isset($_SESSION['as_name'])) {
                                    echo stripslashes(hesk_input($_SESSION['as_name']));
                                } else if (isset($_GET['name'])) {
@@ -700,7 +700,7 @@ $show_quick_help = $show['show'];
                         ?>
                     </label>
                     <div class="col-sm-9">
-                        <span id="HeskSub"><input class="form-control" type="text" name="subject" id="subject" size="40" maxlength="40"
+                        <span id="HeskSub"><input class="form-control" type="text" name="subject" id="subject" size="40" maxlength="70"
                           value="<?php if (isset($_SESSION['as_subject']) || isset($_GET['subject'])) {
                               echo stripslashes(hesk_input($_SESSION['as_subject']));
                           } ?>" placeholder="<?php echo htmlspecialchars($hesklang['subject']); ?>"
