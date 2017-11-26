@@ -374,7 +374,7 @@ echo '</script>';
                         <div class="input-group">
                             <input type="text" id="link" class="form-control white-readonly"
                                    title="<?php echo $hesklang['genl']; ?>" readonly>
-                            <div class="input-group-addon button" data-toggle="tooltip" title="Copy to clipboard"
+                            <div class="generate-link-button input-group-addon button" data-toggle="tooltip" title="Copy to clipboard"
                                 style="padding:0; border: none">
                                 <button class="btn btn-primary">
                                     <i class="fa fa-files-o"></i>

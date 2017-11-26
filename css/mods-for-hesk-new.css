@@ -331,12 +331,12 @@ div.ticket-info {
     opacity: 1;
 }
 
-.input-group-addon {
+.generate-link-button {
     padding: 0;
     border: 0;
 }
 
-.input-group-addon.button > button {
+.generate-link-button.button > button {
     border-radius: 0;
 }
 
