@@ -1828,7 +1828,7 @@ function hesk_printTicketReplies()
     }
 
     // Re-sort them so they're in order by date
-    usort($combined_records, function ($a, $b) {
+    usort($combined_records, function ($a, $b) use (&$hesk_settings) {
         $a_date = null;
         $b_date = null;
         if ($a['SORT_TYPE'] == 'REPLY') {
@@ -1844,12 +1844,14 @@ function hesk_printTicketReplies()
         }
 
         if ($a_date === $b_date && $a['SORT_TYPE'] != $b['SORT_TYPE']) {
-            if ($a['SORT_TYPE'] != $b['SORT_TYPE']) {
-                return $a['SORT_TYPE'] == 'REPLY' ? -1 : 1;
+            if ($hesk_settings['new_top']) {
+                return $a['SORT_TYPE'] == 'REPLY' ? 1 : -1;
             }
+
+            return $a['SORT_TYPE'] == 'REPLY' ? -1 : 1;
         }
 
-        return $a_date - $b_date;
+        return $hesk_settings['new_top'] ? $b_date - $a_date : $a_date - $b_date;
     });
 
 
