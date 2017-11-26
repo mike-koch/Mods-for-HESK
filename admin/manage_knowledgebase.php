@@ -900,7 +900,7 @@ function import_article()
 		$_SESSION['new_article'] = array(
 		'html' => 0,
 		'subject' => $ticket['subject'],
-		'content' => hesk_msgToPlain($ticket['message']),
+            'content' => hesk_msgToPlain($ticket['message'], 0, 0),
 		);
     }
 
@@ -915,9 +915,13 @@ function import_article()
         }
         else
         {
-	        $_SESSION['new_article']['content'] .= "\n\n" . hesk_msgToPlain($reply['message']);
+            $_SESSION['new_article']['content'] .= "\n\n" . hesk_msgToPlain($reply['message'], 0, 0);
         }
     }
+
+    // Make sure everything is extra slashed as stripslashes will be called later
+    $_SESSION['new_article']['subject'] = addslashes($_SESSION['new_article']['subject']);
+    $_SESSION['new_article']['content'] = addslashes($_SESSION['new_article']['content']);
 
     hesk_process_messages($hesklang['import'],'NOREDIRECT','NOTICE');
 

@@ -129,7 +129,7 @@ function hesk_newTicket($ticket, $isVerified = true)
         'trackid' => $ticket['trackid'],
         'status' => $ticket['status'],
         'name' => $ticket['name'],
-        'lastreplier' => $ticket['name'],
+        'last_reply_by' => $ticket['name'],
         'subject' => $ticket['subject'],
         'message' => $ticket['message'],
         'attachments' => $ticket['attachments'],
@@ -138,7 +138,8 @@ function hesk_newTicket($ticket, $isVerified = true)
         'id' => hesk_dbInsertID(),
         'language' => $language,
         'html' => $ticket['html'],
-        'due_date' => $ticket['due_date']
+        'due_date' => $ticket['due_date'],
+        'time_worked' => '00:00:00',
     );
 
     // Add custom fields to the array

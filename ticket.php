@@ -722,8 +722,8 @@ function hesk_printCustomerTicketReplies()
                             echo '
 					            <div id="rating' . $reply['id'] . '" class="rate">
 					            ' . $hesklang['r'] . '
-					            <a href="Javascript:void(0)" onclick="Javascript:hesk_rate(\'rate.php?rating=5&amp;id=' . $reply['id'] . '&amp;track=' . $trackingID . '\',\'rating' . $reply['id'] . '\')">' . strtolower($hesklang['yes']) . '</a> /
-					            <a href="Javascript:void(0)" onclick="Javascript:hesk_rate(\'rate.php?rating=1&amp;id=' . $reply['id'] . '&amp;track=' . $trackingID . '\',\'rating' . $reply['id'] . '\')">' . strtolower($hesklang['no']) . '</a>
+					            <a href="Javascript:void(0)" onclick="Javascript:hesk_rate(\'rate.php?rating=5&amp;id=' . $reply['id'] . '&amp;track=' . $trackingID . '\',\'rating' . $reply['id'] . '\')">' . hesk_mb_strtolower($hesklang['yes']) . '</a> /
+					            <a href="Javascript:void(0)" onclick="Javascript:hesk_rate(\'rate.php?rating=1&amp;id=' . $reply['id'] . '&amp;track=' . $trackingID . '\',\'rating' . $reply['id'] . '\')">' . hesk_mb_strtolower($hesklang['no']) . '</a>
 					            </div>
 					            ';
                         }

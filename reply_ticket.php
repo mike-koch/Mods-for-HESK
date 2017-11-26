@@ -206,13 +206,14 @@ $info = array(
     'trackid' => $ticket['trackid'],
     'status' => $ticket['status'],
     'name' => $ticket['name'],
-    'lastreplier' => $ticket['name'],
     'subject' => $ticket['subject'],
     'message' => stripslashes($message),
     'attachments' => $myattachments,
     'dt' => hesk_date($ticket['dt'], true),
     'lastchange' => hesk_date($ticket['lastchange'], true),
     'id' => $ticket['id'],
+    'time_worked'   => $ticket['time_worked'],
+    'last_reply_by' => $ticket['name'],
 );
 
 // 2. Add custom fields to the array

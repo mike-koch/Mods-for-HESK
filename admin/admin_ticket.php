@@ -423,13 +423,14 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST')) {
                 'trackid' => $ticket['trackid'],
                 'status' => $ticket['status'],
                 'name' => $_SESSION['name'],
-                'lastreplier' => $ticket['lastreplier'],
                 'subject' => $ticket['subject'],
                 'message' => stripslashes($msg),
                 'dt' => hesk_date($ticket['dt'], true),
                 'lastchange' => hesk_date($ticket['lastchange'], true),
                 'attachments' => $myattachments,
                 'id' => $ticket['id'],
+                'time_worked'   => $ticket['time_worked'],
+                'last_reply_by' => $ticket['repliername'],
             );
 
             // 2. Add custom fields to the array
