@@ -347,7 +347,7 @@ function hesk_encodeUTF8($in, $encoding)
             return utf8_encode($in);
             break;
         default:
-            return iconv($encoding, 'UTF-8', $in);
+            return function_exists('iconv') ? iconv($encoding, 'UTF-8', $in) : utf8_encode($in);
             break;
     }
 } // END hesk_encodeUTF8()

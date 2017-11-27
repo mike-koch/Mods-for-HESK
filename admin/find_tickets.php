@@ -145,21 +145,21 @@ LEFT(`message`, 400) AS `message`,
                                 $sql .= " ( `trackid` = '" . hesk_dbEscape($q) . "' OR `merged` LIKE '%#" . hesk_dbEscape($q) . "#%' ) ";
                                 break;
                             case 'name':
-                                $sql .= "`name` LIKE '%" . hesk_dbEscape($q) . "%' COLLATE '" . hesk_dbCollate() . "' ";
+                                $sql  .= "`name` LIKE '%".hesk_dbEscape( hesk_dbLike($q) )."%' COLLATE '" . hesk_dbCollate() . "' ";
                                 break;
                             case 'email':
                                 $sql .= "`email` LIKE '%" . hesk_dbEscape($q) . "%' ";
                                 break;
                             case 'subject':
-                                $sql .= "`subject` LIKE '%" . hesk_dbEscape($q) . "%' COLLATE '" . hesk_dbCollate() . "' ";
+                                $sql  .= "`subject` LIKE '%".hesk_dbEscape( hesk_dbLike($q) )."%' COLLATE '" . hesk_dbCollate() . "' ";
                                 break;
                             case 'message':
-                                $sql .= " ( `message` LIKE '%" . hesk_dbEscape($q) . "%' COLLATE '" . hesk_dbCollate() . "'
+                                $sql  .= " ( `message` LIKE '%".hesk_dbEscape( hesk_dbLike($q) )."%' COLLATE '" . hesk_dbCollate() . "'
             		OR
                     `id` IN (
             		SELECT DISTINCT `replyto`
                 	FROM   `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies`
-                	WHERE  `message` LIKE '%" . hesk_dbEscape($q) . "%' COLLATE '" . hesk_dbCollate() . "' )
+                	WHERE  `message` LIKE '%".hesk_dbEscape( hesk_dbLike($q) )."%' COLLATE '" . hesk_dbCollate() . "' )
                     )
                     ";
                                 break;
@@ -170,7 +170,7 @@ LEFT(`message`, 400) AS `message`,
                                 $sql .= "`id` IN (
             		SELECT DISTINCT `ticket`
                 	FROM   `" . hesk_dbEscape($hesk_settings['db_pfix']) . "notes`
-                	WHERE  `message` LIKE '%" . hesk_dbEscape($q) . "%' COLLATE '" . hesk_dbCollate() . "' )
+                	WHERE  `message` LIKE '%".hesk_dbEscape( hesk_dbLike($q) )."%' COLLATE '" . hesk_dbCollate() . "' )
                 	";
                                 break;
                             default:
@@ -219,6 +219,9 @@ LEFT(`message`, 400) AS `message`,
                     // That's all the SQL we need for count
                     $sql_count .= $sql;
                     $sql = $sql_final . $sql;
+
+                    // Strip extra slashes
+                    $q = stripslashes($q);
 
                     /* Prepare variables used in search and forms */
                     require_once(HESK_PATH . 'inc/prepare_ticket_search.inc.php');

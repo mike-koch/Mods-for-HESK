@@ -423,13 +423,14 @@ if (isset($_POST['notemsg']) && hesk_token_check('POST')) {
                 'trackid' => $ticket['trackid'],
                 'status' => $ticket['status'],
                 'name' => $_SESSION['name'],
-                'lastreplier' => $ticket['lastreplier'],
                 'subject' => $ticket['subject'],
                 'message' => stripslashes($msg),
                 'dt' => hesk_date($ticket['dt'], true),
                 'lastchange' => hesk_date($ticket['lastchange'], true),
                 'attachments' => $myattachments,
                 'id' => $ticket['id'],
+                'time_worked'   => $ticket['time_worked'],
+                'last_reply_by' => $ticket['repliername'],
             );
 
             // 2. Add custom fields to the array
@@ -1561,7 +1562,7 @@ function hesk_getAdminButtons($category_id)
 
 function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
 {
-    global $hesk_settings, $hesklang, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
+    global $hesk_settings, $hesklang, $ticket, $trackingID, $can_edit, $can_archive, $can_delete, $isManager;
 
     $options = $reply ? '' : '<div class="pull-right">';
 
@@ -1828,7 +1829,7 @@ function hesk_printTicketReplies()
     }
 
     // Re-sort them so they're in order by date
-    usort($combined_records, function ($a, $b) {
+    usort($combined_records, function ($a, $b) use (&$hesk_settings) {
         $a_date = null;
         $b_date = null;
         if ($a['SORT_TYPE'] == 'REPLY') {
@@ -1844,12 +1845,14 @@ function hesk_printTicketReplies()
         }
 
         if ($a_date === $b_date && $a['SORT_TYPE'] != $b['SORT_TYPE']) {
-            if ($a['SORT_TYPE'] != $b['SORT_TYPE']) {
-                return $a['SORT_TYPE'] == 'REPLY' ? -1 : 1;
+            if ($hesk_settings['new_top']) {
+                return $a['SORT_TYPE'] == 'REPLY' ? 1 : -1;
             }
+
+            return $a['SORT_TYPE'] == 'REPLY' ? -1 : 1;
         }
 
-        return $a_date - $b_date;
+        return $hesk_settings['new_top'] ? $b_date - $a_date : $a_date - $b_date;
     });
 
 
@@ -1934,7 +1937,7 @@ function mfh_print_reply($reply) {
                         ?>
                     </div>
                     <div class="col-md-6 text-right">
-                        <?php echo hesk_getAdminButtonsInTicket(); ?>
+                        <?php echo hesk_getAdminButtonsInTicket($reply); ?>
                     </div>
                 </div>
             </div>

@@ -1,8 +1,9 @@
 <p>Dear %%NAME%%,</p>
-<p>Our staff has just replied to your ticket "%%SUBJECT%%".</p>
-<p>You can view the ticket here:</p>
+<p>We have just replied to your ticket "%%SUBJECT%%".</p>
+<p>To read the message, submit a reply and view details, please visit:</p>
 %%TRACK_URL%%
 <br><br>
+<p>If the above link is not clickable, try copying and pasting it into the address bar of your web browser.</p>
 <p>Sincerely,</p>
 %%SITE_TITLE%%
 <br>

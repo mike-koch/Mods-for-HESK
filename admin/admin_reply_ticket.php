@@ -189,9 +189,9 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
 // Add reply
 $html = $modsForHesk_settings['rich_text_for_tickets'];
 if ($submit_as_customer) {
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($ticket['name'])) . "','" . hesk_dbEscape($message . "<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>") . "','" . hesk_dbEscape(hesk_date()) . "','" . hesk_dbEscape($myattachments) . "', '" . $html . "')");
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($ticket['name'])) . "','" . hesk_dbEscape($message . "<br /><br /><i>{$hesklang['creb']} {$_SESSION['name']}</i>") . "', NOW(),'" . hesk_dbEscape($myattachments) . "', '" . $html . "')");
 } else {
-    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($_SESSION['name'])) . "','" . hesk_dbEscape($message) . "','" . hesk_dbEscape(hesk_date()) . "','" . hesk_dbEscape($myattachments) . "','" . intval($_SESSION['id']) . "', '" . $html . "')");
+    hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` (`replyto`,`name`,`message`,`dt`,`attachments`,`staffid`,`html`) VALUES ('" . intval($replyto) . "','" . hesk_dbEscape(addslashes($_SESSION['name'])) . "','" . hesk_dbEscape($message) . "', NOW(),'" . hesk_dbEscape($myattachments) . "','" . intval($_SESSION['id']) . "', '" . $html . "')");
 }
 
 /* Track ticket status changes for history */
@@ -294,6 +294,15 @@ $sql .= $submit_as_customer ? "`lastreplier`='0', `replierid`='0' " : "`lastrepl
 if ($time_worked == '00:00:00') {
     $sql .= ", `lastchange` = NOW() ";
 } else {
+    $parts = explode(':', $ticket['time_worked']);
+    $seconds = ($parts[0] * 3600) + ($parts[1] * 60) + $parts[2];
+
+    $parts = explode(':', $time_worked);
+    $seconds += ($parts[0] * 3600) + ($parts[1] * 60) + $parts[2];
+
+    require(HESK_PATH . 'inc/reporting_functions.inc.php');
+    $ticket['time_worked'] = hesk_SecondsToHHMMSS($seconds);
+
     $sql .= ",`time_worked` = ADDTIME(`time_worked`,'" . hesk_dbEscape($time_worked) . "') ";
 }
 
@@ -363,7 +372,9 @@ $info = array(
     'dt' => hesk_date($ticket['dt'], true),
     'lastchange' => hesk_date($ticket['lastchange'], true),
     'id' => $ticket['id'],
-    'language' => $ticket['language']
+    'language' => $ticket['language'],
+    'time_worked'   => $ticket['time_worked'],
+    'last_reply_by'	=> ($submit_as_customer ? $ticket['name'] : $_SESSION['name']),
 );
 
 // 2. Add custom fields to the array

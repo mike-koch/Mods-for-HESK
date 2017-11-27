@@ -62,6 +62,7 @@ $set['noreply_mail'] = hesk_validateEmail(hesk_POST('s_noreply_mail'), $hesklang
 $set['noreply_name'] = hesk_input(hesk_POST('s_noreply_name'));
 $set['noreply_name'] = str_replace(array('\\&quot;', '&lt;', '&gt;'), '', $set['noreply_name']);
 $set['noreply_name'] = trim(preg_replace('/\s{2,}/', ' ', $set['noreply_name']));
+$set['noreply_name']    = preg_replace("/\n|\r|\t|%0A|%0D|%08|%09/", '', $set['noreply_name']);
 
 /* --> Language settings */
 $set['can_sel_lang'] = empty($_POST['s_can_sel_lang']) ? 0 : 1;

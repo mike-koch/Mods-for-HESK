@@ -213,12 +213,14 @@ function getAllMigrations() {
         157 => new \v320\AddAuditTrail\CreateAuditTrailToReplacementValuesTable(),
         158 => new \v320\AddMigrationSetting(),
         159 => new UpdateMigration('3.2.0', '3.1.1', 159),
-        //3.2.1 - 3.2.2
+        //3.2.1 - 3.2.3
         160 => new UpdateMigration('3.2.1', '3.2.0', 160),
         161 => new UpdateMigration('3.2.2', '3.2.1', 161),
+        162 => new UpdateMigration('3.2.3', '3.2.2', 162),
+        163 => new UpdateMigration('3.2.4', '3.2.3', 163),
         // 3.3.0
-        162 => new \v330\ServiceMessagesImprovements\CreateServiceMessageToLocationTable(162),
-        163 => new \v330\ServiceMessagesImprovements\UpdateExistingServiceMessagesLocations(163),
-        164 => new \v330\ServiceMessagesImprovements\AddLanguageColumnToServiceMessages(164),
+        164 => new \v330\ServiceMessagesImprovements\CreateServiceMessageToLocationTable(164),
+        165 => new \v330\ServiceMessagesImprovements\UpdateExistingServiceMessagesLocations(165),
+        166 => new \v330\ServiceMessagesImprovements\AddLanguageColumnToServiceMessages(166),
     );
 }

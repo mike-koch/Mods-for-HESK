@@ -41,6 +41,10 @@ class ResendTicketEmailToCustomerController extends InternalApiController {
 
         $reply = null;
         $emailTemplate = EmailTemplateRetriever::NEW_TICKET;
+
+        // Use 0 for new tickets
+        $ticket->lastReplier = 0;
+
         if (isset($_GET['replyId'])) {
             $replyId = $_GET['replyId'];
             $emailTemplate = EmailTemplateRetriever::NEW_REPLY_BY_STAFF;
