@@ -32,7 +32,7 @@ class ServiceMessagesGateway extends CommonDao {
             '{$type}',
             '{$myOrder}',
             '" . hesk_dbEscape($serviceMessage->icon) . "',
-            '" . hesk_dbEscape($serviceMessage->language) . "',
+            '" . hesk_dbEscape($serviceMessage->language) . "'
             )");
 
         $serviceMessage->id = hesk_dbInsertID();
@@ -102,7 +102,7 @@ class ServiceMessagesGateway extends CommonDao {
             SET `title` = '" . hesk_dbEscape($serviceMessage->title) . "', 
                 `message` = '" . hesk_dbEscape($serviceMessage->message) . "', 
                 `style` = '" . intval($style) . "', 
-                `type` = " . intval($type) . ",
+                `type` = '{$type}',
                 `icon` = '" . hesk_dbEscape($serviceMessage->icon) . "',
                 `order` = " . intval($serviceMessage->order) . ",
                 `mfh_language` = '" . hesk_dbEscape($serviceMessage->language) . "'
