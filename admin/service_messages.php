@@ -259,71 +259,71 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="location" class="col-md-2 control-label">[!] Location</label>
+                                <label for="location" class="col-md-2 control-label"><?php echo $hesklang['sm_location']; ?></label>
                                 <div class="col-sm-4" style="margin-left:20px">
-                                    <h5 style="text-decoration: underline;">Customer Pages</h5>
+                                    <h5 style="text-decoration: underline;"><?php echo $hesklang['sm_customer_pages']; ?></h5>
                                     <div class="btn-group btn-group-sm">
                                         <div data-select-all="customer-location" class="btn btn-default">
-                                            Select All
+                                            <?php echo $hesklang['select_all_title_case']; ?>
                                         </div>
                                         <div data-deselect-all="customer-location" class="btn btn-default">
-                                            Deselect All
+                                            <?php echo $hesklang['deselect_all_title_case']; ?>
                                         </div>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="customer-location" type="checkbox"
-                                               name="location[]" value="CUSTOMER_HOME"> Homepage
+                                               name="location[]" value="CUSTOMER_HOME"> <?php echo $hesklang['sm_homepage']; ?>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="customer-location" type="checkbox"
-                                               name="location[]" value="CUSTOMER_KB_HOME"> Knowledgebase Home
+                                               name="location[]" value="CUSTOMER_KB_HOME"> <?php echo $hesklang['sm_kb_home']; ?>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="customer-location" type="checkbox"
-                                               name="location[]" value="CUSTOMER_VIEW_KB_ARTICLE"> View Knowledgebase Article
+                                               name="location[]" value="CUSTOMER_VIEW_KB_ARTICLE"> <?php echo $hesklang['sm_view_kb_article']; ?>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="customer-location" type="checkbox"
-                                               name="location[]" value="CUSTOMER_SUBMIT_TICKET"> Submit Ticket
+                                               name="location[]" value="CUSTOMER_SUBMIT_TICKET"> <?php echo $hesklang['sm_submit_ticket']; ?>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="customer-location" type="checkbox"
-                                               name="location[]" value="CUSTOMER_VIEW_TICKET"> View Ticket
+                                               name="location[]" value="CUSTOMER_VIEW_TICKET"> <?php echo $hesklang['sm_view_ticket']; ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-4" style="margin-left:20px">
-                                    <h5 style="text-decoration: underline;">Staff Pages</h5>
+                                    <h5 style="text-decoration: underline;"><?php echo $hesklang['sm_staff_pages']; ?></h5>
                                     <div class="btn-group btn-group-sm">
                                         <div data-select-all="staff-location" class="btn btn-default">
-                                            Select All
+                                            <?php echo $hesklang['select_all_title_case']; ?>
                                         </div>
                                         <div data-deselect-all="staff-location" class="btn btn-default">
-                                            Deselect All
+                                            <?php echo $hesklang['deselect_all_title_case']; ?>
                                         </div>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="staff-location" type="checkbox"
-                                               name="location[]" value="STAFF_LOGIN"> Login Page
+                                               name="location[]" value="STAFF_LOGIN"> <?php echo $hesklang['sm_login_page']; ?>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="staff-location" type="checkbox"
-                                               name="location[]" value="STAFF_HOME"> Homepage
+                                               name="location[]" value="STAFF_HOME"> <?php echo $hesklang['sm_homepage']; ?>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="staff-location" type="checkbox"
-                                               name="location[]" value="STAFF_KB_HOME"> Knowledgebase Home
+                                               name="location[]" value="STAFF_KB_HOME"> <?php echo $hesklang['sm_kb_home']; ?>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="staff-location" type="checkbox"
-                                               name="location[]" value="STAFF_VIEW_KB_ARTICLE"> View Knowledgebase Article
+                                               name="location[]" value="STAFF_VIEW_KB_ARTICLE"> <?php echo $hesklang['sm_view_kb_article']; ?>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="staff-location" type="checkbox"
-                                               name="location[]" value="STAFF_SUBMIT_TICKET"> Submit Ticket
+                                               name="location[]" value="STAFF_SUBMIT_TICKET"> <?php echo $hesklang['sm_submit_ticket']; ?>
                                     </div>
                                     <div class="checkbox">
                                         <input data-select-target="staff-location" type="checkbox"
-                                               name="location[]" value="STAFF_VIEW_TICKET"> View Ticket
+                                               name="location[]" value="STAFF_VIEW_TICKET"> <?php echo $hesklang['sm_view_ticket']; ?>
                                     </div>
                                 </div>
                             </div>
