@@ -50,11 +50,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                    title="<?php echo hesk_makeJsString($hesklang['sm_intro']); ?>"
                     data-placement="bottom"></i>
             </h1>
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                </button>
-            </div>
         </div>
         <div class="box-body">
             <div class="row">
@@ -274,6 +269,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <input data-select-target="customer-location" type="checkbox"
                                                name="location[]" value="CUSTOMER_HOME"> <?php echo $hesklang['sm_homepage']; ?>
                                     </div>
+                                    <?php if ($hesk_settings['kb_enable'] > 0): ?>
                                     <div class="checkbox">
                                         <input data-select-target="customer-location" type="checkbox"
                                                name="location[]" value="CUSTOMER_KB_HOME"> <?php echo $hesklang['sm_kb_home']; ?>
@@ -282,6 +278,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <input data-select-target="customer-location" type="checkbox"
                                                name="location[]" value="CUSTOMER_VIEW_KB_ARTICLE"> <?php echo $hesklang['sm_view_kb_article']; ?>
                                     </div>
+                                    <?php endif; if ($hesk_settings['kb_enable'] != 2): ?>
                                     <div class="checkbox">
                                         <input data-select-target="customer-location" type="checkbox"
                                                name="location[]" value="CUSTOMER_SUBMIT_TICKET"> <?php echo $hesklang['sm_submit_ticket']; ?>
@@ -290,6 +287,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <input data-select-target="customer-location" type="checkbox"
                                                name="location[]" value="CUSTOMER_VIEW_TICKET"> <?php echo $hesklang['sm_view_ticket']; ?>
                                     </div>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="col-sm-4" style="margin-left:20px">
                                     <h5 style="text-decoration: underline;"><?php echo $hesklang['sm_staff_pages']; ?></h5>
@@ -309,6 +307,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <input data-select-target="staff-location" type="checkbox"
                                                name="location[]" value="STAFF_HOME"> <?php echo $hesklang['sm_homepage']; ?>
                                     </div>
+                                    <?php if ($hesk_settings['kb_enable'] > 0): ?>
                                     <div class="checkbox">
                                         <input data-select-target="staff-location" type="checkbox"
                                                name="location[]" value="STAFF_KB_HOME"> <?php echo $hesklang['sm_kb_home']; ?>
@@ -317,6 +316,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <input data-select-target="staff-location" type="checkbox"
                                                name="location[]" value="STAFF_VIEW_KB_ARTICLE"> <?php echo $hesklang['sm_view_kb_article']; ?>
                                     </div>
+                                    <?php endif; if ($hesk_settings['kb_enable'] != 2): ?>
                                     <div class="checkbox">
                                         <input data-select-target="staff-location" type="checkbox"
                                                name="location[]" value="STAFF_SUBMIT_TICKET"> <?php echo $hesklang['sm_submit_ticket']; ?>
@@ -325,6 +325,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                         <input data-select-target="staff-location" type="checkbox"
                                                name="location[]" value="STAFF_VIEW_TICKET"> <?php echo $hesklang['sm_view_ticket']; ?>
                                     </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
