@@ -278,6 +278,12 @@ function print_login()
                 <?php
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
+
+                // Service messages
+                $service_messages = mfh_get_service_messages('STAFF_LOGIN');
+                foreach ($service_messages as $sm) {
+                    hesk_service_message($sm);
+                }
                 ?>
             </div>
             <div class="login-logo">

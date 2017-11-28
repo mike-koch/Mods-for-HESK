@@ -215,6 +215,13 @@ if (!$show['show']) {
     <?php endif; ?>
     <div class="<?php echo $columnWidth; ?>">
         <?php
+        // Service messages
+        $service_messages = mfh_get_service_messages('CUSTOMER_VIEW_TICKET');
+        foreach ($service_messages as $sm) {
+            hesk_service_message($sm);
+        }
+
+
         /* This will handle error, success and notice messages */
         hesk_handle_messages();
 
@@ -478,6 +485,12 @@ function print_form()
         <?php endif; ?>
         <div class="<?php echo $columnWidth; ?>">
             <?php
+            // Service messages
+            $service_messages = mfh_get_service_messages('CUSTOMER_VIEW_TICKET');
+            foreach ($service_messages as $sm) {
+                hesk_service_message($sm);
+            }
+
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
             ?>

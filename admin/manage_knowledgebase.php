@@ -270,6 +270,12 @@ if (!isset($_SESSION['hide']['treemenu']))
         <?php
         show_subnav();
 
+        // Service messages
+        $service_messages = mfh_get_service_messages('STAFF_KB_HOME');
+        foreach ($service_messages as $sm) {
+            hesk_service_message($sm);
+        }
+
         // Show a notice if total public articles is less than 5
         if ($total_articles < 5)
         {
