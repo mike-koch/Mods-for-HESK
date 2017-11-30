@@ -357,6 +357,10 @@ function hesk_isREQUEST($in)
     return isset($_GET[$in]) || isset($_POST[$in]) ? true : false;
 } // END hesk_isREQUEST()
 
+function hesk_mb_strtolower($in) {
+    return function_exists('mb_strtolower') ? mb_strtolower($in) : strtolower($in);
+} // END hesk_mb_strtolower()
+
 
 function hesk_htmlspecialchars_decode($in)
 {
@@ -835,7 +839,39 @@ function hesk_getCategoryName($id)
     $hesk_settings['category_data'][$id]['name'] = hesk_dbResult($res, 0, 0);
 
     return $hesk_settings['category_data'][$id]['name'];
-} // END hesk_getOwnerName()
+} // END hesk_getCategoryName()
+
+function hesk_getReplierName($ticket) {
+    global $hesk_settings, $hesklang;
+
+    // Already have this info?
+    if (isset($ticket['last_reply_by'])) {
+        return $ticket['last_reply_by'];
+    }
+
+    // Last reply by staff
+    if ( ! empty($ticket['lastreplier'])) {
+        // We don't know who from staff so just send "Staff"
+        if (empty($ticket['replierid'])) {
+            return $hesklang['staff'];
+        }
+
+        // Get the name using another function
+        $replier = hesk_getOwnerName($ticket['replierid']);
+
+        // If replier comes back as "unassigned", default to "Staff"
+        if ($replier == $hesklang['unas']) {
+            return $hesklang['staff'];
+        }
+
+        return $replier;
+    }
+
+    // Last reply by customer
+    return $ticket['name'];
+
+} // END hesk_getReplierName()
+
 
 
 function hesk_getOwnerName($id)
@@ -2160,6 +2196,10 @@ function mfh_get_hidden_fields_for_language($keys) {
 function mfh_insert_audit_trail_record($entity_id, $entity_type, $language_key, $date, $replacement_values = array()) {
     global $hesk_settings;
 
+    $oldTimeFormat = $hesk_settings['timeformat'];
+    $hesk_settings['timeformat'] = 'Y-m-d H:i:s';
+    $date = hesk_date();
+
     hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` (`entity_id`, `entity_type`, 
         `language_key`, `date`) VALUES (" . intval($entity_id) . ", '" . hesk_dbEscape($entity_type) . "',
             '" . hesk_dbEscape($language_key) . "', '" . hesk_dbEscape($date) . "')");
@@ -2171,6 +2211,8 @@ function mfh_insert_audit_trail_record($entity_id, $entity_type, $language_key, 
             (`audit_trail_id`, `replacement_index`, `replacement_value`) VALUES (" . intval($audit_id) . ", 
                 " . intval($replacement_index) . ", '" . hesk_dbEscape($replacement_value) . "')");
     }
+
+    $hesk_settings['timeformat'] = $oldTimeFormat;
 
     return $audit_id;
 }

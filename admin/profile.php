@@ -166,7 +166,7 @@ function update_profile()
     $hesk_error_buffer = '';
 
     $_SESSION['new']['name'] = hesk_input(hesk_POST('name')) or $hesk_error_buffer .= '<li>' . $hesklang['enter_your_name'] . '</li>';
-    $_SESSION['new']['email'] = hesk_validateEmail(hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer = '<li>' . $hesklang['enter_valid_email'] . '</li>';
+    $_SESSION['new']['email'] = hesk_validateEmail( hesk_POST('email'), 'ERR', 0) or $hesk_error_buffer .= '<li>' . $hesklang['enter_valid_email'] . '</li>';
     $_SESSION['new']['signature'] = hesk_input(hesk_POST('signature'));
 
     /* Signature */

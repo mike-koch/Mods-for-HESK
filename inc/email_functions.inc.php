@@ -418,15 +418,21 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
         return true;
     }
 
+    // Stop if we find anything suspicious in the headers
+    if ( preg_match("/\n|\r|\t|%0A|%0D|%08|%09/", $to . $subject) ) {
+        return false;
+    }
+
+
     // Encode subject to UTF-8
-    $subject = "=?UTF-8?B?" . base64_encode(hesk_html_entity_decode($subject)) . "?=";
+    $subject = hesk_encodeIfNotAscii( hesk_html_entity_decode($subject) );
 
     // Auto-generate URLs for HTML-formatted emails
     $htmlMessage = hesk_makeURL($htmlMessage, '', false);
 
     // Setup "name <email>" for headers
     if ($hesk_settings['noreply_name']) {
-        $hesk_settings['from_header'] = "=?UTF-8?B?" . base64_encode(hesk_html_entity_decode($hesk_settings['noreply_name'])) . "?= <" . $hesk_settings['noreply_mail'] . ">";
+        $hesk_settings['from_header'] = hesk_encodeIfNotAscii( hesk_html_entity_decode($hesk_settings['noreply_name']) ) . " <" . $hesk_settings['noreply_mail'] . ">";
     } else {
         $hesk_settings['from_header'] = $hesk_settings['noreply_mail'];
     }
@@ -505,6 +511,10 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
     //-- Close the email
     $message .= "--" . $innerboundary . "--";
 
+    // Remove duplicate recipients
+    $to_arr = array_unique(explode(',', $to));
+    $to = implode(',', $to_arr);
+
     // Use PHP's mail function
     if (!$hesk_settings['smtp']) {
         // Set additional headers
@@ -512,10 +522,10 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
         $headers .= "MIME-Version: 1.0\n";
         $headers .= "From: $hesk_settings[from_header]\n";
         if (count($cc) > 0) {
-            $headers .= "Cc: " . implode(',', $cc);
+            $headers .= "Cc: " . implode(',', $cc) . "\n";
         }
         if (count($bcc) > 0) {
-            $headers .= "Bcc: " . implode(',', $bcc);
+            $headers .= "Bcc: " . implode(',', $bcc) . "\n";
         }
         $headers .= "Reply-To: $hesk_settings[from_header]\n";
         $headers .= "Return-Path: $hesk_settings[webmaster_mail]\n";
@@ -552,8 +562,6 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
     ob_start();
 
     // Send the e-mail using SMTP
-    $to_arr = explode(',', $to);
-
     $headersArray = array(
         "From: $hesk_settings[from_header]",
         "To: $to",
@@ -728,6 +736,16 @@ function hesk_getEmailMessage($eml_file, $ticket, $modsForHesk_settings, $is_adm
 
 } // END hesk_getEmailMessage
 
+function hesk_encodeIfNotAscii($str) {
+    // Match anything outside of ASCII range
+    if (preg_match('/[^\x00-\x7F]/', $str)) {
+        return "=?UTF-8?B?" . base64_encode($str) . "?=";
+    }
+
+    return $str;
+} // END hesk_encodeIfNotAscii()
+
+
 function hesk_doesTemplateHaveTag($eml_file, $tag, $modsForHesk_settings)
 {
     global $hesk_settings;
@@ -795,7 +813,7 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     $trackingURL .= '?track=' . $ticket['trackid'] . ($is_admin ? '' : $hesk_settings['e_param']) . '&Refresh=' . rand(10000, 99999);
 
     /* Set category title */
-    $ticket['category'] = hesk_msgToPlain(hesk_getCategoryName($ticket['category']), 1);
+    $ticket['category'] = hesk_msgToPlain(hesk_getCategoryName($ticket['category']), 1, 0);
 
     /* Set priority title */
     switch ($ticket['priority']) {
@@ -821,6 +839,12 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     $row = hesk_dbFetchAssoc($statusRs);
     $ticket['status'] = $row['text'];
 
+    // Get name of the person who posted the last message
+    if ( ! isset($ticket['last_reply_by'])) {
+        $ticket['last_reply_by'] = hesk_getReplierName($ticket);
+    }
+
+
     /* Replace all special tags */
     $msg = str_replace('%%NAME%%', $ticket['name'], $msg);
     $msg = str_replace('%%SUBJECT%%', $ticket['subject'], $msg);
@@ -836,6 +860,8 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     $msg = str_replace('%%CREATED%%', $ticket['dt'], $msg);
     $msg = str_replace('%%UPDATED%%', $ticket['lastchange'], $msg);
     $msg = str_replace('%%ID%%', $ticket['id'], $msg);
+    $msg = str_replace('%%TIME_WORKED%%',  $ticket['time_worked']   ,$msg);
+    $msg = str_replace('%%LAST_REPLY_BY%%',$ticket['last_reply_by'] ,$msg);
 
     /* All custom fields */
     for ($i=1; $i<=50; $i++) {

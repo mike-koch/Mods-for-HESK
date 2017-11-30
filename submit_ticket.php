@@ -73,7 +73,7 @@ if ($hesk_settings['question_use']) {
 
     if (strlen($question) == 0) {
         $hesk_error_buffer['question'] = $hesklang['q_miss'];
-    } elseif (strtolower($question) != strtolower($hesk_settings['question_ans'])) {
+    } elseif (hesk_mb_strtolower($question) != hesk_mb_strtolower($hesk_settings['question_ans'])) {
         $hesk_error_buffer['question'] = $hesklang['q_wrng'];
     } else {
         $_SESSION['c_question'] = $question;

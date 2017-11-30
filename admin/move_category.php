@@ -59,7 +59,7 @@ if (!$row['autoassign']) {
 $category_ok = hesk_okCategory($category, 0);
 
 // Is user allowed to move tickets to this category?
-if (!$category_ok && !hesk_checkPermission('can_submit_any_cat', 0)) {
+if ( ! $category_ok && ! hesk_checkPermission('can_change_cat', 0) ) {
     hesk_process_messages($hesklang['noauth_move'],'admin_main.php');
 }
 
@@ -128,13 +128,13 @@ $info = array(
     'trackid' => $ticket['trackid'],
     'status' => $ticket['status'],
     'name' => $ticket['name'],
-    'lastreplier' => $ticket['lastreplier'],
     'subject' => $ticket['subject'],
     'message' => $ticket['message'],
     'attachments' => $ticket['attachments'],
     'dt' => hesk_date($ticket['dt'], true),
     'lastchange' => hesk_date($ticket['lastchange'], true),
-    'id' => $ticket['id'],
+    'id' => $ticket['id'],'time_worked'   => $ticket['time_worked'],
+    'last_reply_by' => hesk_getReplierName($ticket),
 );
 
 // 2. Add custom fields to the array

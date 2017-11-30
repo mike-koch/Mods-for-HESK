@@ -340,7 +340,7 @@ function print_add_ticket()
                             class="important">*</span></label>
 
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="name" name="name" size="40" maxlength="30"
+                        <input type="text" class="form-control" id="name" name="name" size="40" maxlength="50"
                                value="<?php if (isset($_SESSION['c_name'])) {
                                    echo stripslashes(hesk_input($_SESSION['c_name']));
                                } ?>" <?php if (in_array('name', $_SESSION['iserror'])) {
@@ -711,7 +711,7 @@ function print_add_ticket()
 
                             <div class="col-sm-9">
                                 <input type="text" id="subject" class="form-control" name="subject" size="40"
-                                       maxlength="40"
+                                       maxlength="70"
                                        value="<?php if (isset($_SESSION['c_subject'])) {
                                            echo stripslashes(hesk_input($_SESSION['c_subject']));
                                        } ?>" <?php if (in_array('subject', $_SESSION['iserror'])) {

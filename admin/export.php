@@ -697,7 +697,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 (<?php echo $hesklang['m' . date('n')]; ?>)
                             </option>
                             <option value="4" <?php echo $selected['time'][4]; ?>><?php echo $hesklang['r4']; ?>
-                                (<?php echo $hesklang['m' . date('n', mktime(0, 0, 0, date('m') - 1, date('d'), date('Y')))]; ?>
+                                (<?php echo $hesklang['m' . date('n', mktime(0, 0, 0, date('m') - 1, 1, date('Y')))]; ?>
                                 )
                             </option>
                             <option value="5" <?php echo $selected['time'][5]; ?>><?php echo $hesklang['r5']; ?></option>

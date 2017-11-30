@@ -3,6 +3,8 @@
 namespace BusinessLogic\Security;
 
 
+use BusinessLogic\Helpers;
+
 class UserContext extends \BaseClass {
     /* @var $id int */
     public $id;
@@ -79,7 +81,7 @@ class UserContext extends \BaseClass {
         $userContext = new UserContext();
         $userContext->id = intval($dataRow['id']);
         $userContext->username = $dataRow['user'];
-        $userContext->admin = boolval($dataRow['isadmin']);
+        $userContext->admin = Helpers::boolval($dataRow['isadmin']);
         $userContext->name = $dataRow['name'];
         $userContext->email = $dataRow['email'];
         $userContext->signature = $dataRow['signature'];
@@ -90,34 +92,34 @@ class UserContext extends \BaseClass {
             $userContext->categories = explode(',', $dataRow['categories']);
         }
         $userContext->permissions = explode(',', $dataRow['heskprivileges']);
-        $userContext->autoAssign = boolval($dataRow['autoassign']);
+        $userContext->autoAssign = Helpers::boolval($dataRow['autoassign']);
         $userContext->ratingNegative = intval($dataRow['ratingneg']);
         $userContext->ratingPositive = intval($dataRow['ratingpos']);
         $userContext->rating = floatval($dataRow['rating']);
         $userContext->totalNumberOfReplies = intval($dataRow['replies']);
-        $userContext->active = boolval($dataRow['active']);
+        $userContext->active = Helpers::boolval($dataRow['active']);
 
         $preferences = new UserContextPreferences();
         $preferences->afterReply = intval($dataRow['afterreply']);
-        $preferences->autoStartTimeWorked = boolval($dataRow['autostart']);
+        $preferences->autoStartTimeWorked = Helpers::boolval($dataRow['autostart']);
         $preferences->autoreload = intval($dataRow['autoreload']);
-        $preferences->defaultNotifyCustomerNewTicket = boolval($dataRow['notify_customer_new']);
-        $preferences->defaultNotifyCustomerReply = boolval($dataRow['notify_customer_reply']);
-        $preferences->showSuggestedKnowledgebaseArticles = boolval($dataRow['show_suggested']);
+        $preferences->defaultNotifyCustomerNewTicket = Helpers::boolval($dataRow['notify_customer_new']);
+        $preferences->defaultNotifyCustomerReply = Helpers::boolval($dataRow['notify_customer_reply']);
+        $preferences->showSuggestedKnowledgebaseArticles = Helpers::boolval($dataRow['show_suggested']);
         $preferences->defaultCalendarView = intval($dataRow['default_calendar_view']);
         $preferences->defaultTicketView = $dataRow['default_list'];
         $userContext->preferences = $preferences;
 
         $notifications = new UserContextNotifications();
-        $notifications->newUnassigned = boolval($dataRow['notify_new_unassigned']);
-        $notifications->newAssignedToMe = boolval($dataRow['notify_new_my']);
-        $notifications->replyUnassigned = boolval($dataRow['notify_reply_unassigned']);
-        $notifications->replyToMe = boolval($dataRow['notify_reply_my']);
-        $notifications->ticketAssignedToMe = boolval($dataRow['notify_assigned']);
-        $notifications->privateMessage = boolval($dataRow['notify_pm']);
-        $notifications->noteOnTicketAssignedToMe = boolval($dataRow['notify_note']);
-        $notifications->noteOnTicketNotAssignedToMe = boolval($dataRow['notify_note_unassigned']);
-        $notifications->overdueTicketUnassigned = boolval($dataRow['notify_overdue_unassigned']);
+        $notifications->newUnassigned = Helpers::boolval($dataRow['notify_new_unassigned']);
+        $notifications->newAssignedToMe = Helpers::boolval($dataRow['notify_new_my']);
+        $notifications->replyUnassigned = Helpers::boolval($dataRow['notify_reply_unassigned']);
+        $notifications->replyToMe = Helpers::boolval($dataRow['notify_reply_my']);
+        $notifications->ticketAssignedToMe = Helpers::boolval($dataRow['notify_assigned']);
+        $notifications->privateMessage = Helpers::boolval($dataRow['notify_pm']);
+        $notifications->noteOnTicketAssignedToMe = Helpers::boolval($dataRow['notify_note']);
+        $notifications->noteOnTicketNotAssignedToMe = Helpers::boolval($dataRow['notify_note_unassigned']);
+        $notifications->overdueTicketUnassigned = Helpers::boolval($dataRow['notify_overdue_unassigned']);
         $userContext->notificationSettings = $notifications;
 
         return $userContext;

@@ -26,4 +26,8 @@ class Helpers extends \BaseClass {
             ? $array[$key]
             : null;
     }
+
+    static function boolval($val) {
+        return $val == true;
+    }
 }
