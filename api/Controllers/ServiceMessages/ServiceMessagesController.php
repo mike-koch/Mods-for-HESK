@@ -2,15 +2,30 @@
 
 namespace Controllers\ServiceMessages;
 
+use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Helpers;
 use BusinessLogic\Security\UserContext;
+use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\ServiceMessages\ServiceMessage;
 use BusinessLogic\ServiceMessages\ServiceMessageHandler;
+use Controllers\ControllerWithSecurity;
 use Controllers\JsonRetriever;
 
 class ServiceMessagesController extends \BaseClass {
+    /**
+     * @param $userContext UserContext
+     * @throws ApiFriendlyException
+     */
+    function checkSecurity($userContext) {
+        if (!in_array(UserPrivilege::CAN_MANAGE_SERVICE_MESSAGES, $userContext->permissions)) {
+            throw new ApiFriendlyException("User does not have permission to access the following URI: " . $_SERVER['REQUEST_URI'], "Access Forbidden", 403);
+        }
+    }
+    
     function get() {
-        global $applicationContext, $hesk_settings;
+        global $applicationContext, $hesk_settings, $userContext;
+
+        $this->checkSecurity($userContext);
 
         /* @var $handler ServiceMessageHandler */
         $handler = $applicationContext->get(ServiceMessageHandler::clazz());

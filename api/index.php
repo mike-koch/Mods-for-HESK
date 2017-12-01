@@ -105,7 +105,7 @@ function exceptionHandler($exception) {
         /* @var $castedException \BusinessLogic\Exceptions\ApiFriendlyException */
         $castedException = $exception;
 
-        print_error($castedException->title, $castedException->getMessage(), $castedException->httpResponseCode);
+        print_error($castedException->title, $castedException->getMessage(), null, $castedException->httpResponseCode);
     } elseif (exceptionIsOfType($exception, \Core\Exceptions\SQLException::clazz())) {
         /* @var $castedException \Core\Exceptions\SQLException */
         $castedException = $exception;

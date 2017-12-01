@@ -7,7 +7,11 @@ function print_error($title, $message, $logId = null, $response_code = 500) {
     $error['type'] = 'ERROR';
     $error['title'] = $title;
     $error['message'] = $message;
-    $error['logId'] = $logId;
+
+    if ($logId !== null) {
+        $error['logId'] = $logId;
+    }
+
 
     print output($error, $response_code);
     return;
