@@ -15,4 +15,5 @@ class UserPrivilege extends \BaseClass {
     const CAN_EDIT_TICKETS = 'can_edit_tickets';
     const CAN_DELETE_TICKETS = 'can_del_tickets';
     const CAN_MANAGE_CATEGORIES = 'can_man_cat';
+    const CAN_MANAGE_SERVICE_MESSAGES = 'can_service_msg';
 }

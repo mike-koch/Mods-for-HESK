@@ -218,5 +218,9 @@ function getAllMigrations() {
         161 => new UpdateMigration('3.2.2', '3.2.1', 161),
         162 => new UpdateMigration('3.2.3', '3.2.2', 162),
         163 => new UpdateMigration('3.2.4', '3.2.3', 163),
+        // 3.3.0
+        164 => new \v330\ServiceMessagesImprovements\CreateServiceMessageToLocationTable(164),
+        165 => new \v330\ServiceMessagesImprovements\UpdateExistingServiceMessagesLocations(165),
+        166 => new \v330\ServiceMessagesImprovements\AddLanguageColumnToServiceMessages(166),
     );
 }
