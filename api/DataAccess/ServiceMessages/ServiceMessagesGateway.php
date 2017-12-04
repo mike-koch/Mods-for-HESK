@@ -3,7 +3,9 @@
 namespace DataAccess\ServiceMessages;
 
 
+use BusinessLogic\ServiceMessages\GetServiceMessagesFilter;
 use BusinessLogic\ServiceMessages\ServiceMessage;
+use BusinessLogic\ServiceMessages\ServiceMessageLocation;
 use BusinessLogic\ServiceMessages\ServiceMessageStyle;
 use DataAccess\CommonDao;
 
@@ -56,14 +58,29 @@ class ServiceMessagesGateway extends CommonDao {
 
     /**
      * @param $heskSettings
+     * @param $searchFilter GetServiceMessagesFilter
      * @return ServiceMessage[]
      */
-    function getServiceMessages($heskSettings) {
+    function getServiceMessages($heskSettings, $searchFilter) {
         $this->init();
 
         $serviceMessages = array();
 
-        $rs = hesk_dbQuery("SELECT * FROM `". hesk_dbEscape($heskSettings['db_pfix']) . "service_messages` ORDER BY `order`");
+        $sql = "SELECT DISTINCT `service_messages`.* FROM `". hesk_dbEscape($heskSettings['db_pfix']) . "service_messages` AS `service_messages` ";
+
+        if (!$searchFilter->includeStaffServiceMessages) {
+            $sql .= "INNER JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_service_message_to_location` AS `location`
+                ON `location`.`service_message_id` = `service_messages`.`id` AND `location`.`location` LIKE 'CUSTOMER%' ";
+        }
+
+        if (!$searchFilter->includeDrafts) {
+            $sql .= "WHERE `type` = '0' ";
+        }
+
+        $sql .= "ORDER BY `order`";
+
+
+        $rs = hesk_dbQuery($sql);
         while ($row = hesk_dbFetchAssoc($rs)) {
             $serviceMessage = new ServiceMessage();
             $serviceMessage->id = $row['id'];
@@ -78,8 +95,14 @@ class ServiceMessagesGateway extends CommonDao {
             $serviceMessage->language = $row['mfh_language'];
             $serviceMessage->locations = array();
 
-            $locationsRs = hesk_dbQuery("SELECT `location` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_service_message_to_location`
-                WHERE `service_message_id` = " . intval($serviceMessage->id));
+            $locationSql = "SELECT `location` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_service_message_to_location`
+                WHERE `service_message_id` = " . intval($serviceMessage->id);
+
+            if (!$searchFilter->includeStaffServiceMessages) {
+                $locationSql .= " AND `location` LIKE 'CUSTOMER%'";
+            }
+
+            $locationsRs = hesk_dbQuery($locationSql);
             while ($innerRow = hesk_dbFetchAssoc($locationsRs)) {
                 $serviceMessage->locations[] = $innerRow['location'];
             }

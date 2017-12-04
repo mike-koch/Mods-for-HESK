@@ -43,8 +43,8 @@ class ServiceMessageHandler extends \BaseClass {
         return $this->serviceMessageGateway->createServiceMessage($serviceMessage, $heskSettings);
     }
 
-    function getServiceMessages($heskSettings) {
-        return $this->serviceMessageGateway->getServiceMessages($heskSettings);
+    function getServiceMessages($heskSettings, $searchFilter) {
+        return $this->serviceMessageGateway->getServiceMessages($heskSettings, $searchFilter);
     }
 
     function editServiceMessage($serviceMessage, $heskSettings) {
@@ -78,7 +78,7 @@ class ServiceMessageHandler extends \BaseClass {
     }
 
     function sortServiceMessage($id, $direction, $heskSettings) {
-        $serviceMessages = $this->serviceMessageGateway->getServiceMessages($heskSettings);
+        $serviceMessages = $this->serviceMessageGateway->getServiceMessages($heskSettings, new GetServiceMessagesFilter());
         $serviceMessage = null;
         foreach ($serviceMessages as $innerServiceMessage) {
             if (intval($innerServiceMessage->id) === intval($id)) {
@@ -129,7 +129,7 @@ class ServiceMessageHandler extends \BaseClass {
                 break;
             }
         }
-        if (!$languageFound) {
+        if (!$languageFound && !in_array('MISSING_LANGUAGE', $validationModel->errorKeys)) {
             $validationModel->errorKeys[] = 'LANGUAGE_NOT_INSTALLED';
         }
 

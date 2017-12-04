@@ -57,6 +57,10 @@ class UserContext extends \BaseClass {
     /* @var $active bool */
     public $active;
 
+    function isAnonymousUser() {
+        return $this->id === -1;
+    }
+
     static function buildAnonymousUser() {
         $userContext = new UserContext();
         $userContext->id = -1;

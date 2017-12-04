@@ -45,8 +45,15 @@ function internalOrAuthHandler() {
 function publicHandler() {
     global $userContext;
 
-    //-- Create an "anonymous" UserContext
-    $userContext = \BusinessLogic\Security\UserContext::buildAnonymousUser();
+    // Check if we passed in a X-Auth-Token or X-Internal-Call header. Those take priority
+    if (\BusinessLogic\Helpers::getHeader('X-INTERNAL-CALL') === 'true') {
+        internalHandler();
+    } elseif (\BusinessLogic\Helpers::getHeader('X-AUTH-TOKEN') !== null) {
+        authTokenHandler();
+    } else {
+        //-- Create an "anonymous" UserContext
+        $userContext = \BusinessLogic\Security\UserContext::buildAnonymousUser();
+    }
 }
 
 function assertApiIsEnabled() {
@@ -205,7 +212,7 @@ Link::all(array(
     // Service Messages
     '/v1/service-messages' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
         array(RequestMethod::GET, RequestMethod::POST),
-        SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+        SecurityHandler::OPEN),
     '/v1/service-messages/{i}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
         array(RequestMethod::PUT, RequestMethod::DELETE),
         SecurityHandler::INTERNAL_OR_AUTH_TOKEN),

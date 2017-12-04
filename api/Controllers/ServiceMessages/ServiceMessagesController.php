@@ -6,6 +6,7 @@ use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Helpers;
 use BusinessLogic\Security\UserContext;
 use BusinessLogic\Security\UserPrivilege;
+use BusinessLogic\ServiceMessages\GetServiceMessagesFilter;
 use BusinessLogic\ServiceMessages\ServiceMessage;
 use BusinessLogic\ServiceMessages\ServiceMessageHandler;
 use Controllers\ControllerWithSecurity;
@@ -17,24 +18,40 @@ class ServiceMessagesController extends \BaseClass {
      * @throws ApiFriendlyException
      */
     function checkSecurity($userContext) {
-        if (!in_array(UserPrivilege::CAN_MANAGE_SERVICE_MESSAGES, $userContext->permissions)) {
+        if (!$userContext->admin && !in_array(UserPrivilege::CAN_MANAGE_SERVICE_MESSAGES, $userContext->permissions)) {
+            throw new ApiFriendlyException("User does not have permission to access the following URI: " . $_SERVER['REQUEST_URI'], "Access Forbidden", 403);
+        }
+    }
+
+    static function staticCheckSecurity($userContext) {
+        if (!$userContext->admin && !in_array(UserPrivilege::CAN_MANAGE_SERVICE_MESSAGES, $userContext->permissions)) {
             throw new ApiFriendlyException("User does not have permission to access the following URI: " . $_SERVER['REQUEST_URI'], "Access Forbidden", 403);
         }
     }
     
     function get() {
+        /* @var $userContext UserContext */
+        /* @var $hesk_settings array */
         global $applicationContext, $hesk_settings, $userContext;
 
-        $this->checkSecurity($userContext);
+        $searchFilter = new GetServiceMessagesFilter();
+        if ($userContext->isAnonymousUser()) {
+            $searchFilter->includeDrafts = false;
+            $searchFilter->includeStaffServiceMessages = false;
+        } elseif (!$userContext->admin && !in_array(UserPrivilege::CAN_MANAGE_SERVICE_MESSAGES, $userContext->permissions)) {
+            $searchFilter->includeDrafts = false;
+        }
 
         /* @var $handler ServiceMessageHandler */
         $handler = $applicationContext->get(ServiceMessageHandler::clazz());
 
-        return output($handler->getServiceMessages($hesk_settings));
+        return output($handler->getServiceMessages($hesk_settings, $searchFilter));
     }
 
     function post() {
         global $applicationContext, $userContext, $hesk_settings;
+
+        $this->checkSecurity($userContext);
 
         /* @var $handler ServiceMessageHandler */
         $handler = $applicationContext->get(ServiceMessageHandler::clazz());
@@ -46,7 +63,9 @@ class ServiceMessagesController extends \BaseClass {
     }
 
     function put($id) {
-        global $applicationContext, $hesk_settings;
+        global $applicationContext, $hesk_settings, $userContext;
+
+        $this->checkSecurity($userContext);
 
         /* @var $handler ServiceMessageHandler */
         $handler = $applicationContext->get(ServiceMessageHandler::clazz());
@@ -60,7 +79,9 @@ class ServiceMessagesController extends \BaseClass {
     }
 
     function delete($id) {
-        global $applicationContext, $hesk_settings;
+        global $applicationContext, $hesk_settings, $userContext;
+
+        $this->checkSecurity($userContext);
 
         /* @var $handler ServiceMessageHandler */
         $handler = $applicationContext->get(ServiceMessageHandler::clazz());
@@ -79,7 +100,7 @@ class ServiceMessagesController extends \BaseClass {
         $serviceMessage = new ServiceMessage();
 
         if (!$creating) {
-            $serviceMessage->order = $data['order'];
+            $serviceMessage->order = Helpers::safeArrayGet($data, 'order');
         }
 
         if ($creating) {
@@ -105,7 +126,10 @@ class ServiceMessagesController extends \BaseClass {
     }
 
     static function sort($id, $direction) {
-        global $applicationContext, $hesk_settings;
+        /* @var $userContext UserContext */
+        global $applicationContext, $hesk_settings, $userContext;
+
+        self::staticCheckSecurity($userContext);
 
         /* @var $handler ServiceMessageHandler */
         $handler = $applicationContext->get(ServiceMessageHandler::clazz());
