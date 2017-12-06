@@ -218,5 +218,6 @@ function getAllMigrations() {
         161 => new UpdateMigration('3.2.2', '3.2.1', 161),
         162 => new UpdateMigration('3.2.3', '3.2.2', 162),
         163 => new UpdateMigration('3.2.4', '3.2.3', 163),
+        164 => new UpdateMigration('3.2.5', '3.2.4', 164),
     );
 }
