@@ -100,7 +100,7 @@ if (HESK_NEW_VERSION != $hesk_settings['hesk_version']) {
             </div>
             <?php if ($installMismatch): ?>
             <div class="text-center">
-                <h4>You need to be running HESK 2.7.3 to install Mods for HESK. You currently have HESK <?php echo $hesk_settings['hesk_version']; ?>.</h4>
+                <h4>You need to be running HESK <?php echo HESK_NEW_VERSION; ?> to install Mods for HESK. You currently have HESK <?php echo $hesk_settings['hesk_version']; ?>.</h4>
             </div>
             <?php else: // BEGIN INSTALL SCREENS ?>
             <div data-step="intro" class="login-box-msg">
