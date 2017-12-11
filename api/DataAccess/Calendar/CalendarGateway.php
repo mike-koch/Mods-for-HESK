@@ -86,10 +86,38 @@ class CalendarGateway extends CommonDao {
                 AND (`owner` = " . $searchEventsFilter->reminderUserId;
 
             if ($searchEventsFilter->includeUnassignedTickets) {
-                $sql .= "";
+                $sql .= " OR `owner` = 0 ";
+            }
+
+            if ($searchEventsFilter->includeTicketsAssignedToOthers) {
+                $sql .= " OR `owner` NOT IN (0, " . $searchEventsFilter->reminderUserId . ") ";
             }
 
             $sql .= ")";
+
+            if (!empty($searchEventsFilter->categories)) {
+                $categoriesAsString = implode(',', $searchEventsFilter->categories);
+                $sql .= " AND `events`.`category` IN (" . $categoriesAsString . ")";
+            }
+
+            $rs = hesk_dbQuery($sql);
+            while ($row = hesk_dbFetchAssoc($rs)) {
+                $event = new TicketEvent();
+                $event->trackingId = $row['trackid'];
+                $event->subject = $row['subject'];
+                $event->title = $row['subject'];
+                $event->startTime = $row['due_date'];
+                $event->url = $heskSettings['hesk_url'] . '/' . $heskSettings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
+                $event->categoryId = $row['category'];
+                $event->categoryName = $row['category_name'];
+                $event->backgroundColor = $row['background_color'];
+                $event->foregroundColor = $row['foreground_color'];
+                $event->displayBorder = $row['display_border'];
+                $event->owner = $row['owner_name'];
+                $event->priority = $row['priority'];
+
+                $events[] = $event;
+            }
         }
 
         $this->close();
