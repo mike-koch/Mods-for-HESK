@@ -4,10 +4,12 @@ namespace DataAccess\Calendar;
 
 
 use BusinessLogic\Calendar\CalendarEvent;
+use BusinessLogic\Calendar\ReminderUnit;
 use BusinessLogic\Calendar\SearchEventsFilter;
 use BusinessLogic\Calendar\TicketEvent;
 use BusinessLogic\Security\UserContext;
 use BusinessLogic\Security\UserPrivilege;
+use Core\Constants\Priority;
 use DataAccess\CommonDao;
 
 class CalendarGateway extends CommonDao {
@@ -20,13 +22,15 @@ class CalendarGateway extends CommonDao {
     public function getEventsForStaff($startTime, $endTime, $searchEventsFilter, $heskSettings) {
         $this->init();
 
+        $events = array();
+
         $startTimeSql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($startTime) . " / 1000), @@session.time_zone, '+00:00')";
         $endTimeSql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($endTime) . " / 1000), @@session.time_zone, '+00:00')";
 
         // EVENTS
         $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`background_color` AS `background_color`,
                     `categories`.`foreground_color` AS `foreground_color`, `categories`.`display_border_outline` AS `display_border`,
-                    `reminders`.`amount` AS `reminder_value`, `reminder`.`unit` AS `reminder_unit`
+                    `reminders`.`amount` AS `reminder_value`, `reminders`.`unit` AS `reminder_unit`
                 FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event` AS `events`
                 INNER JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` AS `categories`
                     ON `events`.`category` = `categories`.`id`
@@ -52,13 +56,13 @@ class CalendarGateway extends CommonDao {
             $event->title = $row['name'];
             $event->location = $row['location'];
             $event->comments = $row['comments'];
-            $event->categoryId = $row['category'];
+            $event->categoryId = intval($row['category']);
             $event->categoryName = $row['category_name'];
             $event->backgroundColor = $row['background_color'];
             $event->foregroundColor = $row['foreground_color'];
-            $event->displayBorder = $row['display_border'];
-            $event->reminderValue = $row['reminder_value'];
-            $event->reminderUnits = $row['reminder_unit'];
+            $event->displayBorder = $row['display_border'] === '1';
+            $event->reminderValue = $row['reminder_value'] === null ? null : floatval($row['reminder_value']);
+            $event->reminderUnits = $row['reminder_unit'] === null ? null : ReminderUnit::getByValue($row['reminder_unit']);
 
             $events[] = $event;
         }
@@ -80,8 +84,8 @@ class CalendarGateway extends CommonDao {
                     AND `categories`.`usage` <> 2
                 LEFT JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` AS `owner`
                     ON `tickets`.`owner` = `owner`.`id`
-                WHERE `due_date` >= {$startTimeSql})
-                AND `due_date` <= {$endTimeSql})
+                WHERE `due_date` >= {$startTimeSql}
+                AND `due_date` <= {$endTimeSql}
                 AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) 
                 AND (`owner` = " . $searchEventsFilter->reminderUserId;
 
@@ -107,20 +111,22 @@ class CalendarGateway extends CommonDao {
                 $event->subject = $row['subject'];
                 $event->title = $row['subject'];
                 $event->startTime = $row['due_date'];
-                $event->url = $heskSettings['hesk_url'] . '/' . $heskSettings['admin_dir'] . '/admin_ticket.php?track=' . $event['trackingId'];
-                $event->categoryId = $row['category'];
+                $event->url = $heskSettings['hesk_url'] . '/' . $heskSettings['admin_dir'] . '/admin_ticket.php?track=' . $event->trackingId;
+                $event->categoryId = intval($row['category']);
                 $event->categoryName = $row['category_name'];
                 $event->backgroundColor = $row['background_color'];
                 $event->foregroundColor = $row['foreground_color'];
-                $event->displayBorder = $row['display_border'];
+                $event->displayBorder = $row['display_border'] === '0';
                 $event->owner = $row['owner_name'];
-                $event->priority = $row['priority'];
+                $event->priority = Priority::getByValue($row['priority']);
 
                 $events[] = $event;
             }
         }
 
         $this->close();
+
+        return $events;
     }
 
     /**

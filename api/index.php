@@ -202,6 +202,8 @@ Link::all(array(
     '/v1/statuses' => action(\Controllers\Statuses\StatusController::clazz(), RequestMethod::all()),
     // Settings
     '/v1/settings' => action(\Controllers\Settings\SettingsController::clazz(), RequestMethod::all()),
+    // Calendar
+    '/v1/calendar/events/staff' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::GET), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
 
     /* Internal use only routes */
     // Resend email response
