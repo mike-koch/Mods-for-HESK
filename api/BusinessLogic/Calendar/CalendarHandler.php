@@ -15,4 +15,8 @@ class CalendarHandler extends \BaseClass {
     public function getEventsForStaff($startTime, $endTime, $searchEventsFilter, $heskSettings) {
         return $this->calendarGateway->getEventsForStaff($startTime, $endTime, $searchEventsFilter, $heskSettings);
     }
+
+    public function updateEvent($calendarEvent, $userContext, $heskSettings) {
+        $this->calendarGateway->updateEvent($calendarEvent, $userContext, $heskSettings);
+    }
 }

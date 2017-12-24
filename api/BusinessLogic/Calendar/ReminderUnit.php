@@ -23,4 +23,19 @@ class ReminderUnit {
                 return 'UNKNOWN';
         }
     }
+
+    static function getByName($name) {
+        switch ($name) {
+            case 'MINUTE':
+                return self::MINUTE;
+            case 'HOUR':
+                return self::HOUR;
+            case 'DAY':
+                return self::DAY;
+            case 'WEEK':
+                return self::WEEK;
+            default:
+                return null;
+        }
+    }
 }

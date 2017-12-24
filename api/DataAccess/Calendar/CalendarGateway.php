@@ -8,6 +8,7 @@ use BusinessLogic\Calendar\CalendarEvent;
 use BusinessLogic\Calendar\ReminderUnit;
 use BusinessLogic\Calendar\SearchEventsFilter;
 use BusinessLogic\Calendar\TicketEvent;
+use BusinessLogic\Security\UserContext;
 use Core\Constants\Priority;
 use DataAccess\CommonDao;
 
@@ -127,5 +128,33 @@ class CalendarGateway extends CommonDao {
         $this->close();
 
         return $events;
+    }
+
+    /**
+     * @param $event CalendarEvent
+     * @param $userContext UserContext
+     * @param $heskSettings array
+     */
+    public function updateEvent($event, $userContext, $heskSettings) {
+        $this->init();
+
+        $sql = "UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event` SET `start` = '" . hesk_dbEscape($event->startTime)
+            . "', `end` = '" . hesk_dbEscape($event->endTime) . "', `all_day` = '" . ($event->allDay ? 1 : 0) . "', `name` = '"
+            . hesk_dbEscape(addslashes($event->title)) . "', `location` = '" . hesk_dbEscape(addslashes($event->location)) . "', `comments` = '"
+            . hesk_dbEscape(addslashes($event->comments)) . "', `category` = " . intval($event->categoryId) . " WHERE `id` = " . intval($event->id);
+
+        if ($event->reminderValue != null) {
+            $delete_sql = "DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event_reminder` WHERE `event_id` = " . intval($event->id)
+                . " AND `user_id` = " . intval($userContext->id);
+            hesk_dbQuery($delete_sql);
+            $insert_sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event_reminder` (`user_id`, `event_id`,
+        `amount`, `unit`) VALUES (" . intval($userContext->id) . ", " . intval($event->id) . ", " . intval($event->reminderValue) . ",
+        " . intval($event->reminderUnits) . ")";
+            hesk_dbQuery($insert_sql);
+        }
+
+        hesk_dbQuery($sql);
+
+        $this->close();
     }
 }

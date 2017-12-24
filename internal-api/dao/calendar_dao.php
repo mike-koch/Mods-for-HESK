@@ -154,30 +154,7 @@ function update_event($event, $hesk_settings) {
         print_error('Access Denied', 'You cannot edit an event in this category');
     }
 
-    $event['start'] = date('Y-m-d H:i:s', strtotime($event['start']));
-    $event['end'] = date('Y-m-d H:i:s', strtotime($event['end']));
-    if ($event['create_ticket_date'] != null) {
-        $event['create_ticket_date'] = date('Y-m-d H:i:s', strtotime($event['create_ticket_date']));
-    }
-    $event['all_day'] = $event['all_day'] ? 1 : 0;
-    $event['assign_to'] = $event['assign_to'] != null ? intval($event['assign_to']) : 'NULL';
 
-    $sql = "UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event` SET `start` = '" . hesk_dbEscape($event['start'])
-        . "', `end` = '" . hesk_dbEscape($event['end']) . "', `all_day` = '" . hesk_dbEscape($event['all_day']) . "', `name` = '"
-        . hesk_dbEscape(addslashes($event['title'])) . "', `location` = '" . hesk_dbEscape(addslashes($event['location'])) . "', `comments` = '"
-        . hesk_dbEscape(addslashes($event['comments'])) . "', `category` = " . intval($event['category']) . " WHERE `id` = " . intval($event['id']);
-
-    if ($event['reminder_amount'] != null) {
-        $delete_sql = "DELETE FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` WHERE `event_id` = " . intval($event['id'])
-            . " AND `user_id` = " . intval($event['reminder_user']);
-        hesk_dbQuery($delete_sql);
-        $insert_sql = "INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "calendar_event_reminder` (`user_id`, `event_id`,
-        `amount`, `unit`) VALUES (" . intval($event['reminder_user']) . ", " . intval($event['id']) . ", " . intval($event['reminder_amount']) . ",
-        " . intval($event['reminder_units']) . ")";
-        hesk_dbQuery($insert_sql);
-    }
-
-    hesk_dbQuery($sql);
 }
 
 function delete_event($id, $hesk_settings) {

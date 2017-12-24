@@ -3,12 +3,16 @@
 namespace Controllers\Calendar;
 
 
+use BusinessLogic\Calendar\CalendarEvent;
 use BusinessLogic\Calendar\CalendarHandler;
+use BusinessLogic\Calendar\ReminderUnit;
 use BusinessLogic\Calendar\SearchEventsFilter;
 use BusinessLogic\Exceptions\ValidationException;
+use BusinessLogic\Helpers;
 use BusinessLogic\Security\UserContext;
 use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\ValidationModel;
+use Controllers\JsonRetriever;
 
 class CalendarController extends \BaseClass {
     function get() {
@@ -37,5 +41,37 @@ class CalendarController extends \BaseClass {
         $events = $calendarHandler->getEventsForStaff($startTime, $endTime, $searchEventsFilter, $hesk_settings);
 
         return output($events);
+    }
+
+    function put($id) {
+        /* @var $userContext UserContext */
+        global $applicationContext, $hesk_settings, $userContext;
+
+        $json = JsonRetriever::getJsonData();
+
+        $event = $this->transformJson($json);
+
+        /* @var $calendarHandler CalendarHandler */
+        $calendarHandler = $applicationContext->get(CalendarHandler::clazz());
+
+        return output($calendarHandler->updateEvent($event, $userContext, $hesk_settings));
+    }
+
+    private function transformJson($json, $creating = false) {
+        $event = new CalendarEvent();
+
+        if ($creating) {
+            $event->id = Helpers::safeArrayGet($json, 'id');
+        }
+
+        $event->startTime = date('Y-m-d H:i:s', Helpers::safeArrayGet($json, 'startTime'));
+        $event->endTime = date('Y-m-d H:i:s', Helpers::safeArrayGet($json, 'endTime'));
+        $event->allDay = Helpers::safeArrayGet($json, 'allDay') === 'true';
+        $event->title = Helpers::safeArrayGet($json, 'title');
+        $event->location = Helpers::safeArrayGet($json, 'location');
+        $event->comments = Helpers::safeArrayGet($json, 'comments');
+        $event->categoryId = Helpers::safeArrayGet($json, 'categoryId');
+        $event->reminderValue = Helpers::safeArrayGet($json, 'reminderValue');
+        $event->reminderUnits = ReminderUnit::getByName(Helpers::safeArrayGet($json, 'reminderUnits'));
     }
 }
