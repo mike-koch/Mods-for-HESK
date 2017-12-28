@@ -11,22 +11,18 @@ use BusinessLogic\Calendar\TicketEvent;
 use BusinessLogic\Security\UserContext;
 use Core\Constants\Priority;
 use DataAccess\CommonDao;
+use DataAccess\Logging\LoggingGateway;
 
 class CalendarGateway extends CommonDao {
     /**
-     * @param $startTime int
-     * @param $endTime int
      * @param $searchEventsFilter SearchEventsFilter
      * @param $heskSettings array
      * @return AbstractEvent[]
      */
-    public function getEventsForStaff($startTime, $endTime, $searchEventsFilter, $heskSettings) {
+    public function getEventsForStaff($searchEventsFilter, $heskSettings) {
         $this->init();
 
         $events = array();
-
-        $startTimeSql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($startTime) . " / 1000), @@session.time_zone, '+00:00')";
-        $endTimeSql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($endTime) . " / 1000), @@session.time_zone, '+00:00')";
 
         // EVENTS
         $sql = "SELECT `events`.*, `categories`.`name` AS `category_name`, `categories`.`background_color` AS `background_color`,
@@ -38,9 +34,21 @@ class CalendarGateway extends CommonDao {
                 LEFT JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event_reminder` AS `reminders`
                     ON `reminders`.`user_id` = " . intval($searchEventsFilter->reminderUserId) . "
                     AND `reminders`.`event_id` = `events`.`id`
-                WHERE NOT (`end` < {$startTimeSql} OR `start` > {$endTimeSql})
+                WHERE 1=1";
+
+        if ($searchEventsFilter->startTime !== null && $searchEventsFilter->endTime !== null) {
+            $startTimeSql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($searchEventsFilter->startTime) . " / 1000), @@session.time_zone, '+00:00')";
+            $endTimeSql = "CONVERT_TZ(FROM_UNIXTIME(" . hesk_dbEscape($searchEventsFilter->endTime) . " / 1000), @@session.time_zone, '+00:00')";
+
+
+            $sql .= " AND NOT (`end` < {$startTimeSql} OR `start` > {$endTimeSql})
                     AND `categories`.`usage` <> 1
                     AND `categories`.`type` = '0'";
+        }
+
+        if ($searchEventsFilter->eventId !== null) {
+            $sql .= " AND `events`.`id` = " . intval($searchEventsFilter->eventId);
+        }
 
         if (!empty($searchEventsFilter->categories)) {
             $categoriesAsString = implode(',', $searchEventsFilter->categories);
@@ -134,6 +142,33 @@ class CalendarGateway extends CommonDao {
      * @param $event CalendarEvent
      * @param $userContext UserContext
      * @param $heskSettings array
+     * @return CalendarEvent
+     */
+    public function createEvent($event, $userContext, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event` (`start`, `end`, `all_day`, `name`,
+            `location`, `comments`, `category`) VALUES ('" . hesk_dbEscape($event->startTime) . "', '" . hesk_dbEscape($event->endTime) . "',
+                '" . ($event->allDay ? 1 : 0) . "', '" . hesk_dbEscape(addslashes($event->title)) . "',
+                '" . hesk_dbEscape(addslashes($event->location)) . "', '". hesk_dbEscape(addslashes($event->comments)) . "', " . intval($event->categoryId) . ")");
+
+        $event->id = hesk_dbInsertID();
+
+        if ($event->reminderValue !== null) {
+            hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event_reminder` (`user_id`, `event_id`,
+                `amount`, `unit`) VALUES (" . intval($userContext->id) . ", " . intval($event->id) . ", " . intval($event->reminderValue) . ",
+                " . intval($event->reminderUnits) . ")");
+        }
+
+        $this->close();
+
+        return $event;
+    }
+
+    /**
+     * @param $event CalendarEvent
+     * @param $userContext UserContext
+     * @param $heskSettings array
      */
     public function updateEvent($event, $userContext, $heskSettings) {
         $this->init();
@@ -143,7 +178,7 @@ class CalendarGateway extends CommonDao {
             . hesk_dbEscape(addslashes($event->title)) . "', `location` = '" . hesk_dbEscape(addslashes($event->location)) . "', `comments` = '"
             . hesk_dbEscape(addslashes($event->comments)) . "', `category` = " . intval($event->categoryId) . " WHERE `id` = " . intval($event->id);
 
-        if ($event->reminderValue != null) {
+        if ($event->reminderValue !== null) {
             $delete_sql = "DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event_reminder` WHERE `event_id` = " . intval($event->id)
                 . " AND `user_id` = " . intval($userContext->id);
             hesk_dbQuery($delete_sql);

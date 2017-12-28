@@ -282,10 +282,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                                 <div class="col-sm-4">
                                     <select name="reminder-unit" class="form-control">
-                                        <option value="0"><?php echo $hesklang['event_min_before_event']; ?></option>
-                                        <option value="1"><?php echo $hesklang['event_hours_before_event']; ?></option>
-                                        <option value="2"><?php echo $hesklang['event_days_before_event']; ?></option>
-                                        <option value="3"><?php echo $hesklang['event_weeks_before_event']; ?></option>
+                                        <option value="MINUTE"><?php echo $hesklang['event_min_before_event']; ?></option>
+                                        <option value="HOUR"><?php echo $hesklang['event_hours_before_event']; ?></option>
+                                        <option value="DAY"><?php echo $hesklang['event_days_before_event']; ?></option>
+                                        <option value="WEEK"><?php echo $hesklang['event_weeks_before_event']; ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -453,10 +453,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                                 <div class="col-sm-4">
                                     <select name="reminder-unit" class="form-control">
-                                        <option value="0"><?php echo $hesklang['event_min_before_event']; ?></option>
-                                        <option value="1"><?php echo $hesklang['event_hours_before_event']; ?></option>
-                                        <option value="2"><?php echo $hesklang['event_days_before_event']; ?></option>
-                                        <option value="3"><?php echo $hesklang['event_weeks_before_event']; ?></option>
+                                        <option value="MINUTE"><?php echo $hesklang['event_min_before_event']; ?></option>
+                                        <option value="HOUR"><?php echo $hesklang['event_hours_before_event']; ?></option>
+                                        <option value="DAY"><?php echo $hesklang['event_days_before_event']; ?></option>
+                                        <option value="WEEK"><?php echo $hesklang['event_weeks_before_event']; ?></option>
                                     </select>
                                 </div>
                             </div>

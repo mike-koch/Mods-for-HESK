@@ -32,18 +32,20 @@ class CalendarController extends \BaseClass {
         $calendarHandler = $applicationContext->get(CalendarHandler::clazz());
 
         $searchEventsFilter = new SearchEventsFilter();
+        $searchEventsFilter->startTime = $startTime;
+        $searchEventsFilter->endTime = $endTime;
         $searchEventsFilter->reminderUserId = $userContext->id;
         $searchEventsFilter->includeTicketsAssignedToOthers = in_array(UserPrivilege::CAN_VIEW_ASSIGNED_TO_OTHER, $userContext->permissions);
         $searchEventsFilter->includeUnassignedTickets = in_array(UserPrivilege::CAN_VIEW_UNASSIGNED, $userContext->permissions);
         $searchEventsFilter->includeTickets = true;
         $searchEventsFilter->categories = $userContext->admin ? null : $userContext->categories;
 
-        $events = $calendarHandler->getEventsForStaff($startTime, $endTime, $searchEventsFilter, $hesk_settings);
+        $events = $calendarHandler->getEventsForStaff($searchEventsFilter, $hesk_settings);
 
         return output($events);
     }
 
-    function put($id) {
+    function post() {
         /* @var $userContext UserContext */
         global $applicationContext, $hesk_settings, $userContext;
 
@@ -53,25 +55,36 @@ class CalendarController extends \BaseClass {
 
         /* @var $calendarHandler CalendarHandler */
         $calendarHandler = $applicationContext->get(CalendarHandler::clazz());
+    }
+
+    function put($id) {
+        /* @var $userContext UserContext */
+        global $applicationContext, $hesk_settings, $userContext;
+
+        $json = JsonRetriever::getJsonData();
+
+        $event = $this->transformJson($json, $id);
+
+        /* @var $calendarHandler CalendarHandler */
+        $calendarHandler = $applicationContext->get(CalendarHandler::clazz());
 
         return output($calendarHandler->updateEvent($event, $userContext, $hesk_settings));
     }
 
-    private function transformJson($json, $creating = false) {
+    private function transformJson($json, $id = null) {
         $event = new CalendarEvent();
 
-        if ($creating) {
-            $event->id = Helpers::safeArrayGet($json, 'id');
-        }
-
-        $event->startTime = date('Y-m-d H:i:s', Helpers::safeArrayGet($json, 'startTime'));
-        $event->endTime = date('Y-m-d H:i:s', Helpers::safeArrayGet($json, 'endTime'));
-        $event->allDay = Helpers::safeArrayGet($json, 'allDay') === 'true';
+        $event->id = $id;
+        $event->startTime = date('Y-m-d H:i:s', strtotime(Helpers::safeArrayGet($json, 'startTime')));
+        $event->endTime = date('Y-m-d H:i:s', strtotime(Helpers::safeArrayGet($json, 'endTime')));
+        $event->allDay = Helpers::safeArrayGet($json, 'allDay');
         $event->title = Helpers::safeArrayGet($json, 'title');
         $event->location = Helpers::safeArrayGet($json, 'location');
         $event->comments = Helpers::safeArrayGet($json, 'comments');
         $event->categoryId = Helpers::safeArrayGet($json, 'categoryId');
         $event->reminderValue = Helpers::safeArrayGet($json, 'reminderValue');
         $event->reminderUnits = ReminderUnit::getByName(Helpers::safeArrayGet($json, 'reminderUnits'));
+
+        return $event;
     }
 }

@@ -4,6 +4,15 @@ namespace BusinessLogic\Calendar;
 
 
 class SearchEventsFilter {
+    /* @var $startTime int|null */
+    public $startTime;
+
+    /* @var $endTime int|null */
+    public $endTime;
+
+    /* @var $id int|null */
+    public $eventId;
+
     /* @var $categories int[]|null */
     public $categories;
 

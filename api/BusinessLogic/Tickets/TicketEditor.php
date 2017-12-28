@@ -135,4 +135,25 @@ class TicketEditor extends \BaseClass {
             throw new ValidationException($validationModel);
         }
     }
+
+    /**
+     * @param $id int
+     * @param $dueDate string
+     * @param $userContext UserContext
+     * @param $heskSettings array
+     * @throws ApiFriendlyException If ticket does not exist or if the user cannot edit the ticket
+     */
+    function updateDueDate($id, $dueDate, $userContext, $heskSettings) {
+        $ticket = $this->ticketGateway->getTicketById($id, $heskSettings);
+
+        if ($ticket === null) {
+            throw new ApiFriendlyException("Please enter a valid ticket ID.", "Ticket Not Found!", 400);
+        }
+
+        if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS))) {
+            throw new ApiFriendlyException("User " . $userContext->id . " does not have permission to edit ticket " . $id, "Access Denied", 403);
+        }
+
+        // TODO Do it
+    }
 }

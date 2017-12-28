@@ -204,7 +204,6 @@ $(document).ready(function() {
             allDay: allDay,
             comments: $createForm.find('textarea[name="comments"]').val(),
             categoryId: $createForm.find('select[name="category"]').val(),
-            action: 'create',
             type: 'CALENDAR',
             backgroundColor: $createForm.find('select[name="category"] :selected').attr('data-background-color'),
             foregroundColor: $createForm.find('select[name="category"] :selected').attr('data-foreground-color'),
@@ -216,8 +215,10 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: data,
+            url: heskPath + 'api/v1/calendar/events/staff',
+            data: JSON.stringify(data),
+            contentType: 'json',
+            headers: { 'X-Internal-Call': true },
             success: function(id) {
                 addToCalendar(id, data, $('#lang_event_created').text());
                 $('#create-event-modal').modal('hide');
@@ -245,7 +246,6 @@ $(document).ready(function() {
         }
 
         var data = {
-            id: $form.find('input[name="id"]').val(),
             title: $form.find('input[name="name"]').val(),
             location: $form.find('input[name="location"]').val(),
             startTime: moment(start).format(dateFormat),
@@ -257,15 +257,19 @@ $(document).ready(function() {
             foregroundColor: $form.find('select[name="category"] :selected').attr('data-foreground-color'),
             displayBorder: $form.find('select[name="category"] :selected').attr('data-display-border'),
             categoryName: $form.find('select[name="category"] :selected').text().trim(),
-            action: 'update',
             reminderValue: $form.find('input[name="reminder-value"]').val(),
             reminderUnits: $form.find('select[name="reminder-unit"]').val()
         };
 
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: data,
+            url: heskPath + 'api/v1/calendar/events/staff/' + $form.find('input[name="id"]').val(),
+            data: JSON.stringify(data),
+            contentType: 'json',
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'PUT'
+            },
             success: function() {
                 removeFromCalendar(data.id);
                 addToCalendar(data.id, data, $('#lang_event_updated').text());
@@ -291,7 +295,7 @@ function removeFromCalendar(id) {
 }
 
 function buildEvent(id, dbObject) {
-    if (dbObject.type == 'TICKET') {
+    if (dbObject.type === 'TICKET') {
         return {
             title: dbObject.title,
             subject: dbObject.subject,
