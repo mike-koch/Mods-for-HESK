@@ -3,6 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\DateTimeHelpers;
 use BusinessLogic\Exceptions\AccessViolationException;
 use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Exceptions\ValidationException;
@@ -13,6 +14,7 @@ use BusinessLogic\Tickets\CustomFields\CustomFieldValidator;
 use BusinessLogic\ValidationModel;
 use BusinessLogic\Validators;
 use Core\Constants\CustomField;
+use DataAccess\AuditTrail\AuditTrailGateway;
 use DataAccess\Tickets\TicketGateway;
 
 class TicketEditor extends \BaseClass {
@@ -22,10 +24,15 @@ class TicketEditor extends \BaseClass {
     /* @var $userToTicketChecker UserToTicketChecker */
     private $userToTicketChecker;
 
+    /* @var $auditTrailGateway AuditTrailGateway */
+    private $auditTrailGateway;
+
     function __construct(TicketGateway $ticketGateway,
-                         UserToTicketChecker $userToTicketChecker) {
+                         UserToTicketChecker $userToTicketChecker,
+                         AuditTrailGateway $auditTrailGateway) {
         $this->ticketGateway = $ticketGateway;
         $this->userToTicketChecker = $userToTicketChecker;
+        $this->auditTrailGateway = $auditTrailGateway;
     }
 
 
@@ -141,19 +148,61 @@ class TicketEditor extends \BaseClass {
      * @param $dueDate string
      * @param $userContext UserContext
      * @param $heskSettings array
-     * @throws ApiFriendlyException If ticket does not exist or if the user cannot edit the ticket
+     * @return Ticket The updated ticket
      */
     function updateDueDate($id, $dueDate, $userContext, $heskSettings) {
         $ticket = $this->ticketGateway->getTicketById($id, $heskSettings);
 
+        $this->validateDueDate($ticket, $dueDate, $userContext, $heskSettings);
+
+        $this->ticketGateway->updateTicketDueDate($ticket->id, $dueDate, $heskSettings);
+
+        $event = AuditTrailEvent::DUE_DATE_REMOVED;
+        $replacementValues = array(0 => $userContext->name . ' (' . $userContext->username . ')');
+        if ($dueDate !== null) {
+            $event = AuditTrailEvent::DUE_DATE_CHANGED;
+            $replacementValues = array(
+                0 => $userContext->name . ' (' . $userContext->username . ')',
+                1 => date('Y-m-d H:i:s', strtotime($dueDate))
+            );
+        }
+
+        $this->auditTrailGateway->insertAuditTrailRecord($ticket->id,
+            AuditTrailEntityType::TICKET,
+            $event,
+            DateTimeHelpers::heskDate($heskSettings),
+            $replacementValues,
+            $heskSettings);
+
+        $ticket->dueDate = $dueDate;
+
+        return $ticket;
+    }
+
+    /**
+     * @param $ticket Ticket
+     * @param $dueDate string
+     * @param $userContext UserContext
+     * @param $heskSettings array
+     * @throws ValidationException When validation fails
+     */
+    private function validateDueDate($ticket, $dueDate, $userContext, $heskSettings) {
+        $validationModel = new ValidationModel();
+
         if ($ticket === null) {
-            throw new ApiFriendlyException("Please enter a valid ticket ID.", "Ticket Not Found!", 400);
+            $validationModel->errorKeys[] = 'TICKET_MUST_EXIST_FOR_ID';
         }
 
         if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS))) {
-            throw new ApiFriendlyException("User " . $userContext->id . " does not have permission to edit ticket " . $id, "Access Denied", 403);
+            $validationModel->errorKeys[] = 'TICKET_MUST_BE_ACCESSIBLE_TO_USER';
         }
 
-        // TODO Do it
+        if ($dueDate === false) {
+            $validationModel->errorKeys[] = 'DUE_DATE_MUST_BE_IN_VALID_FORMAT';
+        }
+
+        if (count($validationModel->errorKeys) > 0) {
+            throw new ValidationException($validationModel);
+        }
     }
 }

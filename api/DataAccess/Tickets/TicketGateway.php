@@ -440,4 +440,18 @@ class TicketGateway extends CommonDao {
 
         $this->close();
     }
+
+    function updateTicketDueDate($id, $dueDate, $heskSettings) {
+        $this->init();
+
+        $sqlDueDate = 'NULL';
+        if ($dueDate != NULL) {
+            $sqlDueDate = "'" . date('Y-m-d H:i:s', strtotime($dueDate)) . "'";
+        }
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` SET `due_date` = {$sqlDueDate}
+            WHERE `id` = " . intval($id));
+
+        $this->close();
+    }
 }
