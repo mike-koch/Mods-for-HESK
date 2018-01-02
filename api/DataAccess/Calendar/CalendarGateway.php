@@ -8,6 +8,7 @@ use BusinessLogic\Calendar\CalendarEvent;
 use BusinessLogic\Calendar\ReminderUnit;
 use BusinessLogic\Calendar\SearchEventsFilter;
 use BusinessLogic\Calendar\TicketEvent;
+use BusinessLogic\Helpers;
 use BusinessLogic\Security\UserContext;
 use Core\Constants\Priority;
 use DataAccess\CommonDao;
@@ -61,15 +62,15 @@ class CalendarGateway extends CommonDao {
             $event->id = intval($row['id']);
             $event->startTime = $row['start'];
             $event->endTime = $row['end'];
-            $event->allDay = $row['all_day'] ? true : false;
+            $event->allDay = Helpers::boolval($row['all_day']);
             $event->title = $row['name'];
             $event->location = $row['location'];
             $event->comments = $row['comments'];
             $event->categoryId = intval($row['category']);
-            $event->categoryName = $row['category_name'];
+            $event->categoryName = Helpers::heskHtmlSpecialCharsDecode($row['category_name']);
             $event->backgroundColor = $row['background_color'];
             $event->foregroundColor = $row['foreground_color'];
-            $event->displayBorder = $row['display_border'] === '1';
+            $event->displayBorder = Helpers::boolval($row['display_border']);
             $event->reminderValue = $row['reminder_value'] === null ? null : floatval($row['reminder_value']);
             $event->reminderUnits = $row['reminder_unit'] === null ? null : ReminderUnit::getByValue($row['reminder_unit']);
 
@@ -83,7 +84,7 @@ class CalendarGateway extends CommonDao {
             $currentDate = hesk_date();
             $heskSettings['timeformat'] = $oldTimeSetting;
 
-            $sql = "SELECT `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`background_color` AS `background_color`, 
+            $sql = "SELECT `tickets`.`id` AS `id`, `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`background_color` AS `background_color`, 
                 `categories`.`foreground_color` AS `foreground_color`, `categories`.`display_border_outline` AS `display_border`,
                   CASE WHEN `due_date` < '{$currentDate}' THEN 1 ELSE 0 END AS `overdue`, `owner`.`name` AS `owner_name`, `tickets`.`owner` AS `owner_id`,
                    `tickets`.`priority` AS `priority`
@@ -116,16 +117,17 @@ class CalendarGateway extends CommonDao {
             $rs = hesk_dbQuery($sql);
             while ($row = hesk_dbFetchAssoc($rs)) {
                 $event = new TicketEvent();
+                $event->id = intval($row['id']);
                 $event->trackingId = $row['trackid'];
                 $event->subject = $row['subject'];
                 $event->title = $row['subject'];
                 $event->startTime = $row['due_date'];
                 $event->url = $heskSettings['hesk_url'] . '/' . $heskSettings['admin_dir'] . '/admin_ticket.php?track=' . $event->trackingId;
                 $event->categoryId = intval($row['category']);
-                $event->categoryName = $row['category_name'];
+                $event->categoryName = Helpers::heskHtmlSpecialCharsDecode($row['category_name']);
                 $event->backgroundColor = $row['background_color'];
                 $event->foregroundColor = $row['foreground_color'];
-                $event->displayBorder = $row['display_border'] === '0';
+                $event->displayBorder = Helpers::boolval($row['display_border']);
                 $event->owner = $row['owner_name'];
                 $event->priority = Priority::getByValue($row['priority']);
 

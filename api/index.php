@@ -194,6 +194,7 @@ Link::all(array(
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::clazz(), RequestMethod::all(), SecurityHandler::OPEN),
     // Tickets - Staff
     '/v1/staff/tickets/{i}' => action(\Controllers\Tickets\StaffTicketController::clazz(), RequestMethod::all()),
+    '/v1/staff/tickets/{i}/due-date' => action(\Controllers\Tickets\StaffTicketController::clazz() . '::updateDueDate', array(RequestMethod::PATCH), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     // Attachments
     '/v1/tickets/{a}/attachments/{i}' => action(\Controllers\Attachments\PublicAttachmentController::clazz() . '::getRaw', RequestMethod::all()),
     '/v1/staff/tickets/{i}/attachments' => action(\Controllers\Attachments\StaffTicketAttachmentsController::clazz(), RequestMethod::all()),

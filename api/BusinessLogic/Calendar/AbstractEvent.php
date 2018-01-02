@@ -4,6 +4,8 @@ namespace BusinessLogic\Calendar;
 
 
 class AbstractEvent {
+    public $id;
+
     public $startTime;
 
     public $title;

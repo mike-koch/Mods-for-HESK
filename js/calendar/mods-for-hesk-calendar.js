@@ -482,15 +482,19 @@ function updateCategoryVisibility() {
 
 function respondToDragAndDrop(event, delta, revertFunc) {
     var heskPath = $('p#hesk-path').text();
+
     if (event.type === 'TICKET') {
+        var uri = 'api/v1/staff/tickets/' + event.id + '/due-date';
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: {
-                trackingId: event.trackingId,
-                action: 'update-ticket',
-                dueDate: event.start.format('YYYY-MM-DD')
+            url: heskPath + uri,
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'PATCH'
             },
+            data: JSON.stringify({
+                dueDate: event.start.format('YYYY-MM-DD')
+            }),
             success: function() {
                 event.fontIconMarkup = getIcon({
                     startTime: event.start
@@ -519,7 +523,6 @@ function respondToDragAndDrop(event, delta, revertFunc) {
             end += ' ' + event.end.format('HH:mm:ss');
         }
         var data = {
-            id: event.id,
             title: event.title,
             location: event.location,
             startTime: start,
@@ -533,8 +536,12 @@ function respondToDragAndDrop(event, delta, revertFunc) {
         };
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: data,
+            url: heskPath + 'api/v1/calendar/events/staff/' + event.id,
+            data: JSON.stringify(data),
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'PUT'
+            },
             success: function() {
                 mfhAlert.success(mfhLang.text('event_updated'));
             },

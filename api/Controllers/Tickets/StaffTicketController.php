@@ -53,7 +53,11 @@ class StaffTicketController extends \BaseClass {
         /* @var $ticketEditor TicketEditor */
         $ticketEditor = $applicationContext->get(TicketEditor::clazz());
 
+        $json = JsonRetriever::getJsonData();
 
+        $dueDate = date('Y-m-d H:i:s', strtotime(Helpers::safeArrayGet($json, 'dueDate')));
+
+        $ticketEditor->updateDueDate($id, $dueDate, $userContext, $hesk_settings);
     }
 
     private function getEditTicketModel($id, $jsonRequest) {

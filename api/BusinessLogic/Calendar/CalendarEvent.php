@@ -4,8 +4,6 @@ namespace BusinessLogic\Calendar;
 
 
 class CalendarEvent extends AbstractEvent {
-    public $id;
-
     public $type = 'CALENDAR';
 
     public $endTime;
