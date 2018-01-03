@@ -52,16 +52,7 @@ $(document).ready(function() {
             var $contents = $(contents);
 
             var format = 'dddd, MMMM Do YYYY';
-            var endDate = event.end == null ? event.start : event.end;
-
-            if (event.allDay) {
-                endDate = event.end.clone();
-                endDate.add(-1, 'days');
-            }
-
-            if (!event.allDay && event.type !== 'TICKET') {
-                format += ', HH:mm';
-            }
+            var endDate = event.end === null ? event.start : event.end;
 
             if (event.type === 'TICKET') {
                 contents = $('.ticket-popover-template').html();
@@ -77,6 +68,13 @@ $(document).ready(function() {
                     .find('.popover-category span').text(event.categoryName).end()
                     .find('.popover-priority span').text(event.priority);
             } else {
+                if (event.allDay) {
+                    endDate = event.end.clone();
+                    endDate.add(-1, 'days');
+                } else {
+                    format += ', HH:mm';
+                }
+
                 if (event.location === '') {
                     $contents.find('.popover-location').hide();
                 }
@@ -196,6 +194,9 @@ $(document).ready(function() {
             dateFormat = 'YYYY-MM-DD HH:mm:ss';
         }
 
+        var reminderValue = $createForm.find('input[name="reminder-value"]').val();
+        var reminderUnits = $createForm.find('select[name="reminder-unit"]').val();
+
         var data = {
             title: $createForm.find('input[name="name"]').val(),
             location: $createForm.find('input[name="location"]').val(),
@@ -209,8 +210,8 @@ $(document).ready(function() {
             foregroundColor: $createForm.find('select[name="category"] :selected').attr('data-foreground-color'),
             displayBorder: $createForm.find('select[name="category"] :selected').attr('data-display-border'),
             categoryName: $createForm.find('select[name="category"] :selected').text().trim(),
-            reminderValue: $createForm.find('input[name="reminder-value"]').val(),
-            reminderUnits: $createForm.find('select[name="reminder-unit"]').val()
+            reminderValue: reminderValue === "" ? null : reminderValue,
+            reminderUnits: reminderValue === "" ? null : reminderUnits
         };
 
         $.ajax({
@@ -245,25 +246,29 @@ $(document).ready(function() {
             dateFormat = 'YYYY-MM-DD HH:mm:ss';
         }
 
+        var reminderValue = $createForm.find('input[name="reminder-value"]').val();
+        var reminderUnits = $createForm.find('select[name="reminder-unit"]').val();
+
         var data = {
+            id: $form.find('input[name="id"]').val(),
             title: $form.find('input[name="name"]').val(),
             location: $form.find('input[name="location"]').val(),
             startTime: moment(start).format(dateFormat),
             endTime: moment(end).format(dateFormat),
             allDay: allDay,
             comments: $form.find('textarea[name="comments"]').val(),
-            categoryId: $form.find('select[name="category"]').val(),
+            categoryId: parseInt($form.find('select[name="category"]').val()),
             backgroundColor: $form.find('select[name="category"] :selected').attr('data-background-color'),
             foregroundColor: $form.find('select[name="category"] :selected').attr('data-foreground-color'),
             displayBorder: $form.find('select[name="category"] :selected').attr('data-display-border'),
             categoryName: $form.find('select[name="category"] :selected').text().trim(),
-            reminderValue: $form.find('input[name="reminder-value"]').val(),
-            reminderUnits: $form.find('select[name="reminder-unit"]').val()
+            reminderValue: reminderValue === "" ? null : reminderValue,
+            reminderUnits: reminderValue === "" ? null : reminderUnits
         };
 
         $.ajax({
             method: 'POST',
-            url: heskPath + 'api/v1/calendar/events/staff/' + $form.find('input[name="id"]').val(),
+            url: heskPath + 'api/v1/calendar/events/staff/' + data.id,
             data: JSON.stringify(data),
             contentType: 'json',
             headers: {
@@ -297,6 +302,7 @@ function removeFromCalendar(id) {
 function buildEvent(id, dbObject) {
     if (dbObject.type === 'TICKET') {
         return {
+            id: id,
             title: dbObject.title,
             subject: dbObject.subject,
             trackingId: dbObject.trackingId,
@@ -384,7 +390,7 @@ function displayCreateModal(date, viewName) {
         .find('input[name="location"]').val('').end()
         .find('textarea[name="comments"]').val('').end()
         .find('select[name="category"]').val($form.find('select[name="category"] option:first-child').val()).end()
-        .find('select[name="reminder-unit"]').val(0).end()
+        .find('select[name="reminder-unit"]').val("MINUTE").end()
         .find('input[name="reminder-value"]').val('').end();
 
     var $modal = $('#create-event-modal');
@@ -534,9 +540,11 @@ function respondToDragAndDrop(event, delta, revertFunc) {
             reminderValue: event.reminderValue,
             reminderUnits: event.reminderUnits
         };
+
+        var url = heskPath + 'api/v1/calendar/events/staff/' + event.id;
         $.ajax({
             method: 'POST',
-            url: heskPath + 'api/v1/calendar/events/staff/' + event.id,
+            url: url,
             data: JSON.stringify(data),
             headers: {
                 'X-Internal-Call': true,

@@ -55,6 +55,8 @@ class CalendarController extends \BaseClass {
 
         /* @var $calendarHandler CalendarHandler */
         $calendarHandler = $applicationContext->get(CalendarHandler::clazz());
+
+        return output($calendarHandler->createEvent($event, $userContext, $hesk_settings));
     }
 
     function put($id) {

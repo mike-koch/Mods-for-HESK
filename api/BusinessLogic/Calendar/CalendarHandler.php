@@ -44,6 +44,18 @@ class CalendarHandler extends \BaseClass {
 
 
     public function createEvent($calendarEvent, $userContext, $heskSettings) {
-        return $this->calendarGateway->createEvent($calendarEvent, $userContext, $heskSettings);
+        $this->calendarGateway->createEvent($calendarEvent, $userContext, $heskSettings);
+
+        $eventFilter = new SearchEventsFilter();
+        $eventFilter->eventId = $calendarEvent->id;
+        $eventFilter->reminderUserId = $userContext->id;
+
+        $events = $this->calendarGateway->getEventsForStaff($eventFilter, $heskSettings);
+
+        if (count($events) !== 1) {
+            throw new \Exception("Expected exactly 1 event, found: " . count($events));
+        }
+
+        return $events[0];
     }
 }

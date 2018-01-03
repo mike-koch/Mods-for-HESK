@@ -163,8 +163,6 @@ class CalendarGateway extends CommonDao {
         }
 
         $this->close();
-
-        return $event;
     }
 
     /**
