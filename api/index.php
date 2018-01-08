@@ -205,7 +205,7 @@ Link::all(array(
     '/v1/settings' => action(\Controllers\Settings\SettingsController::clazz(), RequestMethod::all()),
     // Calendar
     '/v1/calendar/events/staff' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::GET, RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1/calendar/events/staff/{i}' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::PUT), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/calendar/events/staff/{i}' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
 
     /* Internal use only routes */
     // Resend email response

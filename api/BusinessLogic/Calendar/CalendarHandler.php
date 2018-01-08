@@ -3,10 +3,8 @@
 namespace BusinessLogic\Calendar;
 
 
-use BusinessLogic\Exceptions\ApiFriendlyException;
 use BusinessLogic\Security\UserContext;
 use DataAccess\Calendar\CalendarGateway;
-use PHPUnit\Runner\Exception;
 
 class CalendarHandler extends \BaseClass {
     private $calendarGateway;
@@ -57,5 +55,9 @@ class CalendarHandler extends \BaseClass {
         }
 
         return $events[0];
+    }
+
+    public function deleteEvent($id, $userContext, $heskSettings) {
+        $this->calendarGateway->deleteEvent($id, $userContext, $heskSettings);
     }
 }

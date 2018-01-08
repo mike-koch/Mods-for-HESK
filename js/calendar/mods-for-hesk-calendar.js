@@ -16,7 +16,7 @@ $(document).ready(function() {
         defaultView: $('#setting_default_view').text().trim(),
         events: function(start, end, timezone, callback) {
             $.ajax({
-                url: heskPath + 'api/v1/calendar/events/staff?start=' + start + '&end=' + end,
+                url: heskPath + 'api/index.php/v1/calendar/events/staff?start=' + start + '&end=' + end,
                 method: 'GET',
                 dataType: 'json',
                 headers: { 'X-Internal-Call': true },
@@ -160,17 +160,15 @@ $(document).ready(function() {
     $editForm.find('#delete-button').click(function() {
         var id = $editForm.find('input[name="id"]').val();
 
-        var data = {
-            id: id,
-            action: 'delete'
-        };
-
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: data,
+            url: heskPath + 'api/index.php/v1/calendar/events/staff/' + id,
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'DELETE'
+            },
             success: function() {
-                removeFromCalendar(data.id);
+                removeFromCalendar(id);
                 mfhAlert.success(mfhLang.text('event_deleted'));
                 $('#edit-event-modal').modal('hide');
             },
@@ -216,7 +214,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: heskPath + 'api/v1/calendar/events/staff',
+            url: heskPath + 'api/index.php/v1/calendar/events/staff',
             data: JSON.stringify(data),
             contentType: 'json',
             headers: { 'X-Internal-Call': true },
@@ -268,7 +266,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: heskPath + 'api/v1/calendar/events/staff/' + data.id,
+            url: heskPath + 'api/index.php/v1/calendar/events/staff/' + data.id,
             data: JSON.stringify(data),
             contentType: 'json',
             headers: {
@@ -490,7 +488,7 @@ function respondToDragAndDrop(event, delta, revertFunc) {
     var heskPath = $('p#hesk-path').text();
 
     if (event.type === 'TICKET') {
-        var uri = 'api/v1/staff/tickets/' + event.id + '/due-date';
+        var uri = 'api/index.php/v1/staff/tickets/' + event.id + '/due-date';
         $.ajax({
             method: 'POST',
             url: heskPath + uri,
@@ -541,7 +539,7 @@ function respondToDragAndDrop(event, delta, revertFunc) {
             reminderUnits: event.reminderUnits
         };
 
-        var url = heskPath + 'api/v1/calendar/events/staff/' + event.id;
+        var url = heskPath + 'api/index.php/v1/calendar/events/staff/' + event.id;
         $.ajax({
             method: 'POST',
             url: url,

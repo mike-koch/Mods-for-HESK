@@ -192,4 +192,20 @@ class CalendarGateway extends CommonDao {
 
         $this->close();
     }
+
+    /**
+     * @param $id int
+     * @param $userContext UserContext
+     * @param $heskSettings array
+     */
+    public function deleteEvent($id, $userContext, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event_reminder`
+            WHERE `event_id` = " . intval($id) . " AND `user_id` = " . intval($userContext->id));
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "calendar_event`
+            WHERE `id` = " . intval($id));
+
+        $this->close();
+    }
 }

@@ -73,6 +73,18 @@ class CalendarController extends \BaseClass {
         return output($calendarHandler->updateEvent($event, $userContext, $hesk_settings));
     }
 
+    function delete($id) {
+        /* @var $userContext UserContext */
+        global $applicationContext, $hesk_settings, $userContext;
+
+        /* @var $calendarHandler CalendarHandler */
+        $calendarHandler = $applicationContext->get(CalendarHandler::clazz());
+
+        $calendarHandler->deleteEvent($id, $userContext, $hesk_settings);
+
+        return http_response_code(204);
+    }
+
     private function transformJson($json, $id = null) {
         $event = new CalendarEvent();
 
