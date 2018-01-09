@@ -7,12 +7,14 @@ use BusinessLogic\Calendar\CalendarEvent;
 use BusinessLogic\Calendar\CalendarHandler;
 use BusinessLogic\Calendar\ReminderUnit;
 use BusinessLogic\Calendar\SearchEventsFilter;
+use BusinessLogic\Categories\CategoryHandler;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Helpers;
 use BusinessLogic\Security\UserContext;
 use BusinessLogic\Security\UserPrivilege;
 use BusinessLogic\ValidationModel;
 use Controllers\JsonRetriever;
+use DataAccess\Settings\ModsForHeskSettingsGateway;
 
 class CalendarController extends \BaseClass {
     function get() {
@@ -35,10 +37,27 @@ class CalendarController extends \BaseClass {
         $searchEventsFilter->startTime = $startTime;
         $searchEventsFilter->endTime = $endTime;
         $searchEventsFilter->reminderUserId = $userContext->id;
-        $searchEventsFilter->includeTicketsAssignedToOthers = in_array(UserPrivilege::CAN_VIEW_ASSIGNED_TO_OTHER, $userContext->permissions);
-        $searchEventsFilter->includeUnassignedTickets = in_array(UserPrivilege::CAN_VIEW_UNASSIGNED, $userContext->permissions);
-        $searchEventsFilter->includeTickets = true;
-        $searchEventsFilter->categories = $userContext->admin ? null : $userContext->categories;
+
+        if ($userContext->isAnonymousUser()) {
+            $searchEventsFilter->includeTicketsAssignedToOthers = false;
+            $searchEventsFilter->includeUnassignedTickets = false;
+            $searchEventsFilter->includeTickets = false;
+
+            /* @var $categoryHandler CategoryHandler */
+            $categoryHandler = $applicationContext->get(CategoryHandler::clazz());
+
+            $publicCategories = $categoryHandler->getPublicCategories($hesk_settings);
+            $ids = array();
+            foreach ($publicCategories as $category) {
+                $ids[] = $category->id;
+            }
+            $searchEventsFilter->categories = $ids;
+        } else {
+            $searchEventsFilter->includeTicketsAssignedToOthers = in_array(UserPrivilege::CAN_VIEW_ASSIGNED_TO_OTHER, $userContext->permissions);
+            $searchEventsFilter->includeUnassignedTickets = in_array(UserPrivilege::CAN_VIEW_UNASSIGNED, $userContext->permissions);
+            $searchEventsFilter->includeTickets = true;
+            $searchEventsFilter->categories = $userContext->admin ? null : $userContext->categories;
+        }
 
         $events = $calendarHandler->getEventsForStaff($searchEventsFilter, $hesk_settings);
 

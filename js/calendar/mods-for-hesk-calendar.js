@@ -218,8 +218,8 @@ $(document).ready(function() {
             data: JSON.stringify(data),
             contentType: 'json',
             headers: { 'X-Internal-Call': true },
-            success: function(id) {
-                addToCalendar(id, data, $('#lang_event_created').text());
+            success: function(createdEvent) {
+                addToCalendar(createdEvent.id, data, $('#lang_event_created').text());
                 $('#create-event-modal').modal('hide');
                 updateCategoryVisibility();
             },

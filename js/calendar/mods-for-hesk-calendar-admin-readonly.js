@@ -16,9 +16,10 @@ $(document).ready(function() {
         defaultView: $('#setting_default_view').text().trim(),
         events: function(start, end, timezone, callback) {
             $.ajax({
-                url: heskPath + 'internal-api/admin/calendar/?start=' + start + '&end=' + end,
+                url: heskPath + 'api/index.php/v1/calendar/events/staff?start=' + start + '&end=' + end,
                 method: 'GET',
                 dataType: 'json',
+                headers: { 'X-Internal-Call': true },
                 success: function(data) {
                     var events = [];
                     $(data).each(function() {

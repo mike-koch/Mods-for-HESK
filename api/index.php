@@ -204,6 +204,7 @@ Link::all(array(
     // Settings
     '/v1/settings' => action(\Controllers\Settings\SettingsController::clazz(), RequestMethod::all()),
     // Calendar
+    '/v1/calendar/events' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::GET), SecurityHandler::OPEN),
     '/v1/calendar/events/staff' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::GET, RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1/calendar/events/staff/{i}' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
 

@@ -43,8 +43,7 @@ class CalendarGateway extends CommonDao {
 
 
             $sql .= " AND NOT (`end` < {$startTimeSql} OR `start` > {$endTimeSql})
-                    AND `categories`.`usage` <> 1
-                    AND `categories`.`type` = '0'";
+                    AND `categories`.`usage` <> 1";
         }
 
         if ($searchEventsFilter->eventId !== null) {

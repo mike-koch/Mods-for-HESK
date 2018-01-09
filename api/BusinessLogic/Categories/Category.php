@@ -22,7 +22,7 @@ class Category extends \BaseClass {
     public $autoAssign;
 
     /**
-     * @var int The type of Categories (1 = Private, 2 = Public)
+     * @var int The type of Categories (1 = Private, 0 = Public)
      */
     public $type;
 
