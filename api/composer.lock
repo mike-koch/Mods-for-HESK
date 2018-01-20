@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "271633d6be53dff4f327e318b49a049f",
+    "content-hash": "cba4f6a9b461d9050bd4095da7c79aea",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -689,50 +689,6 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
-        },
-        {
-            "name": "rlanvin/php-rrule",
-            "version": "v1.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rlanvin/php-rrule.git",
-                "reference": "c543bda87d2f8b6c490210f1a6e2bf0d79162a4a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rlanvin/php-rrule/zipball/c543bda87d2f8b6c490210f1a6e2bf0d79162a4a",
-                "reference": "c543bda87d2f8b6c490210f1a6e2bf0d79162a4a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "<6"
-            },
-            "suggest": {
-                "ext-intl": "Intl extension is needed for humanReadable()"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "RRule\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Lightweight and fast recurrence rules for PHP (RFC 5545)",
-            "homepage": "https://github.com/rlanvin/php-rrule",
-            "keywords": [
-                "date",
-                "ical",
-                "recurrence",
-                "recurring",
-                "rrule"
-            ],
-            "time": "2017-10-11T12:23:40+00:00"
         },
         {
             "name": "symfony/event-dispatcher",

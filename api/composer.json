@@ -17,7 +17,6 @@
     "phpmailer/phpmailer": "^5.2",
     "mailgun/mailgun-php": "1.7.2",
     "mike-koch/php-di": "4.4.11",
-    "doctrine/annotations": "1.2",
-    "rlanvin/php-rrule": "1.6.0"
+    "doctrine/annotations": "1.2"
   }
 }
