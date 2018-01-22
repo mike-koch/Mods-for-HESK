@@ -62,7 +62,8 @@ $(document).ready(function() {
                     .find('.popover-owner span').text(event.owner).end()
                     .find('.popover-subject span').text(event.subject).end()
                     .find('.popover-category span').text(event.categoryName).end()
-                    .find('.popover-priority span').text(event.priority);
+                    .find('.popover-priority span').text(event.priority)
+                    .find('.popover-status span').text(event.status).end();
             } else {
                 if (event.location === '') {
                     $contents.find('.popover-location').hide();
@@ -125,7 +126,13 @@ $(document).ready(function() {
 });
 
 function buildEvent(id, dbObject) {
-    if (dbObject.type == 'TICKET') {
+    var priorities = [];
+    priorities['CRITICAL'] = mfhLang.text('critical');
+    priorities['HIGH'] = mfhLang.text('high');
+    priorities['MEDIUM'] = mfhLang.text('medium');
+    priorities['LOW'] = mfhLang.text('low');
+
+    if (dbObject.type === 'TICKET') {
         return {
             title: dbObject.title,
             subject: dbObject.subject,
@@ -141,8 +148,9 @@ function buildEvent(id, dbObject) {
             categoryName: dbObject.categoryName,
             className: 'category-' + dbObject.categoryId,
             owner: dbObject.owner,
-            priority: dbObject.priority,
-            fontIconMarkup: getIcon(dbObject)
+            priority: priorities[dbObject.priority],
+            fontIconMarkup: getIcon(dbObject),
+            status: dbObject.status
         };
     }
     

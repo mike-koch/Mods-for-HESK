@@ -86,13 +86,16 @@ class CalendarGateway extends CommonDao {
             $sql = "SELECT `tickets`.`id` AS `id`, `trackid`, `subject`, `due_date`, `category`, `categories`.`name` AS `category_name`, `categories`.`background_color` AS `background_color`, 
                 `categories`.`foreground_color` AS `foreground_color`, `categories`.`display_border_outline` AS `display_border`,
                   CASE WHEN `due_date` < '{$currentDate}' THEN 1 ELSE 0 END AS `overdue`, `owner`.`name` AS `owner_name`, `tickets`.`owner` AS `owner_id`,
-                   `tickets`.`priority` AS `priority`
+                   `tickets`.`priority` AS `priority`, `text_to_status_xref`.`text` AS `status_name`
                 FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` AS `tickets`
                 INNER JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` AS `categories`
                     ON `categories`.`id` = `tickets`.`category`
                     AND `categories`.`usage` <> 2
                 LEFT JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` AS `owner`
                     ON `tickets`.`owner` = `owner`.`id`
+                LEFT JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "text_to_status_xref` AS `text_to_status_xref`
+                    ON `tickets`.`status` = `text_to_status_xref`.`status_id`
+                    AND `text_to_status_xref`.`language` = '" . hesk_dbEscape($heskSettings['language']) . "'
                 WHERE `due_date` >= {$startTimeSql}
                 AND `due_date` <= {$endTimeSql}
                 AND `status` IN (SELECT `id` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "statuses` WHERE `IsClosed` = 0) 
@@ -129,6 +132,7 @@ class CalendarGateway extends CommonDao {
                 $event->displayBorder = Helpers::boolval($row['display_border']);
                 $event->owner = $row['owner_name'];
                 $event->priority = Priority::getByValue($row['priority']);
+                $event->status = $row['status_name'];
 
                 $events[] = $event;
             }

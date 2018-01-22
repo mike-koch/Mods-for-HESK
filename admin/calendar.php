@@ -545,6 +545,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <strong><?php echo $hesklang['category']; ?></strong>
             <span></span>
         </div>
+        <div class="popover-status">
+            <strong><?php echo $hesklang['status']; ?></strong>
+            <span></span>
+        </div>
         <div class="popover-priority">
             <strong><?php echo $hesklang['priority']; ?></strong>
             <span></span>
@@ -560,7 +564,11 @@ echo mfh_get_hidden_fields_for_language(array('error_loading_events',
     'event_updated',
     'error_updating_event',
     'ticket_due_date_updated',
-    'error_updating_ticket_due_date'));
+    'error_updating_ticket_due_date',
+    'critical',
+    'high',
+    'medium',
+    'low'));
 ?>
 <div style="display: none">
     <p id="setting_first_day_of_week"><?php echo $modsForHesk_settings['first_day_of_week']; ?></p>

@@ -15,4 +15,6 @@ class TicketEvent extends AbstractEvent {
     public $owner;
 
     public $priority;
+
+    public $status;
 }

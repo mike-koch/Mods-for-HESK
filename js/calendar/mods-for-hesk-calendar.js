@@ -66,7 +66,8 @@ $(document).ready(function() {
                     .find('.popover-owner span').text(event.owner).end()
                     .find('.popover-subject span').text(event.subject).end()
                     .find('.popover-category span').text(event.categoryName).end()
-                    .find('.popover-priority span').text(event.priority);
+                    .find('.popover-priority span').text(event.priority).end()
+                    .find('.popover-status span').text(event.status).end();
             } else {
                 if (event.allDay) {
                     endDate = event.end.clone();
@@ -298,6 +299,13 @@ function removeFromCalendar(id) {
 }
 
 function buildEvent(id, dbObject) {
+    var priorities = [];
+    priorities['CRITICAL'] = mfhLang.text('critical');
+    priorities['HIGH'] = mfhLang.text('high');
+    priorities['MEDIUM'] = mfhLang.text('medium');
+    priorities['LOW'] = mfhLang.text('low');
+
+
     if (dbObject.type === 'TICKET') {
         return {
             id: id,
@@ -315,8 +323,9 @@ function buildEvent(id, dbObject) {
             categoryName: dbObject.categoryName,
             className: 'category-' + dbObject.categoryId,
             owner: dbObject.owner,
-            priority: dbObject.priority,
-            fontIconMarkup: getIcon(dbObject)
+            priority: priorities[dbObject.priority],
+            fontIconMarkup: getIcon(dbObject),
+            status: dbObject.status
         };
     }
 

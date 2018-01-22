@@ -5,6 +5,7 @@ namespace Controllers\Calendar;
 
 use BusinessLogic\Calendar\CalendarEvent;
 use BusinessLogic\Calendar\CalendarHandler;
+use BusinessLogic\Calendar\RecurringRule;
 use BusinessLogic\Calendar\ReminderUnit;
 use BusinessLogic\Calendar\SearchEventsFilter;
 use BusinessLogic\Categories\CategoryHandler;
@@ -16,6 +17,7 @@ use BusinessLogic\ValidationModel;
 use Controllers\JsonRetriever;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 use RRule\RRule;
+use RRule\RSet;
 
 class CalendarController extends \BaseClass {
     function get() {
@@ -118,7 +120,6 @@ class CalendarController extends \BaseClass {
         $event->categoryId = Helpers::safeArrayGet($json, 'categoryId');
         $event->reminderValue = Helpers::safeArrayGet($json, 'reminderValue');
         $event->reminderUnits = ReminderUnit::getByName(Helpers::safeArrayGet($json, 'reminderUnits'));
-        $event->recurringRule = Helpers::safeArrayGet($json, 'recurringRule');
 
         return $event;
     }

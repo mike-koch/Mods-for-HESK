@@ -18,6 +18,4 @@ class CalendarEvent extends AbstractEvent {
     public $reminderValue;
 
     public $reminderUnits;
-
-    public $recurringRule;
 }
