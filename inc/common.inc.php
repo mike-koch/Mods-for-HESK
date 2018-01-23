@@ -1643,7 +1643,7 @@ function hesk_input($in, $error = 0, $redirect_to = '', $force_slashes = 0, $max
 
     // Check length
     if ($max_length) {
-        $in = substr($in, 0, $max_length);
+        $in = mb_substr($in, 0, $max_length, "utf-8");
     }
 
     // Return processed value
