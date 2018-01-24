@@ -76,23 +76,24 @@ class CalendarGateway extends CommonDao {
             $event->reminderUnits = $row['reminder_unit'] === null ? null : ReminderUnit::getByValue($row['reminder_unit']);
 
             $auditTrailSql = "SELECT `at`.`id` AS `id`, `at`.`entity_id`, `at`.`language_key`, `at`.`date`,
-                    `values`.`replacement_index`, `values`.`replacement_values` 
+                    `values`.`replacement_index`, `values`.`replacement_value` 
                 FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "audit_trail` AS `at`
                 INNER JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "audit_trail_to_replacement_values` AS `values`
                     ON `at`.`id` = `values`.`audit_trail_id`
                 WHERE `entity_id` = " . intval($event->id) . "
                     AND `entity_type` = '" . AuditTrailEntityType::CALENDAR_EVENT . "'";
-            $auditTrailRs = hesk_dbFetchAssoc($auditTrailSql);
+            $auditTrailRs = hesk_dbQuery($auditTrailSql);
+            /* @var $auditTrailEntry AuditTrail */
             $auditTrailEntry = null;
-            while ($row = hesk_dbFetchAssoc($rs)) {
-                if ($auditTrailEntry == null || intval($auditTrailEntry['id']) !== intval($row['id'])) {
+            while ($row = hesk_dbFetchAssoc($auditTrailRs)) {
+                if ($auditTrailEntry == null || intval($auditTrailEntry->id) !== intval($row['id'])) {
                     if ($auditTrailEntry !== null) {
-                        //$audit_records[] = $auditTrailEntry;
+                        $event->auditTrail[] = $auditTrailEntry;
                     }
 
                     $auditTrailEntry = new AuditTrail();
-                    $auditTrailEntry->id = $row['id'];
-                    $auditTrailEntry->entityId = $row['entity_id'];
+                    $auditTrailEntry->id = intval($row['id']);
+                    $auditTrailEntry->entityId = intval($row['entity_id']);
                     $auditTrailEntry->entityType = AuditTrailEntityType::CALENDAR_EVENT;
                     $auditTrailEntry->languageKey = $row['language_key'];
                     $auditTrailEntry->date = $row['date'];
@@ -102,7 +103,7 @@ class CalendarGateway extends CommonDao {
             }
 
             if ($auditTrailEntry !== null) {
-                //$event->auditTrail[] = $audiTrailEntry;
+                $event->auditTrail[] = $auditTrailEntry;
             }
 
             $events[] = $event;

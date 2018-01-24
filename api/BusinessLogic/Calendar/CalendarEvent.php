@@ -3,6 +3,8 @@
 namespace BusinessLogic\Calendar;
 
 
+use BusinessLogic\Tickets\AuditTrail;
+
 class CalendarEvent extends AbstractEvent {
     public $type = 'CALENDAR';
 
@@ -18,4 +20,7 @@ class CalendarEvent extends AbstractEvent {
     public $reminderValue;
 
     public $reminderUnits;
+
+    /* @var $auditTrail AuditTrail[] */
+    public $auditTrail = array();
 }
