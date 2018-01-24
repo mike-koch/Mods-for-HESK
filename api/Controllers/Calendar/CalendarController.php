@@ -69,6 +69,7 @@ class CalendarController extends \BaseClass {
 
     function post() {
         /* @var $userContext UserContext */
+        /* @var $hesk_settings array */
         global $applicationContext, $hesk_settings, $userContext;
 
         $json = JsonRetriever::getJsonData();
@@ -78,7 +79,7 @@ class CalendarController extends \BaseClass {
         /* @var $calendarHandler CalendarHandler */
         $calendarHandler = $applicationContext->get(CalendarHandler::clazz());
 
-        return output($calendarHandler->createEvent($event, $userContext, $hesk_settings));
+        return output($calendarHandler->createEvent($event, $userContext, $hesk_settings), 201);
     }
 
     function put($id) {
