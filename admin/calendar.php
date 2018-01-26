@@ -334,11 +334,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
             <form id="edit-form" class="form-horizontal" data-toggle="validator">
                 <div class="modal-body">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#edit-contents" aria-controls="home" role="tab" data-toggle="tab">Information [!]</a></li>
-                        <li role="presentation"><a href="#edit-history" aria-controls="profile" role="tab" data-toggle="tab">History [!]</a></li>
+                    <ul class="nav nav-tabs" role="tablist" id="edit-modal-tabs">
+                        <li role="presentation" class="active"><a href="#edit-contents" aria-controls="home" role="tab" data-toggle="tab"><?php echo $hesklang['information']; ?></a></li>
+                        <li role="presentation"><a href="#edit-history" aria-controls="profile" role="tab" data-toggle="tab"><?php echo $hesklang['thist']; ?></a></li>
                     </ul>
-                    <div class="tab-content">
+                    <div class="tab-content" id="information-tab">
                         <div role="tabpanel" class="tab-pane active" id="edit-contents">
                             <br>
                             <div class="row">
@@ -490,18 +490,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Date[!]</th>
-                                    <th>Description[!]</th>
+                                    <th><?php echo $hesklang['date']; ?></th>
+                                    <th><?php echo $hesklang['description']; ?></th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td>2018-01-24</td>
-                                    <td>Description</td>
-                                </tr>
-                                </tbody>
+                                <tbody id="history-table"></tbody>
                             </table>
-                            <p>Fill this in</p>
                         </div>
                     </div>
                 </div>
@@ -595,7 +589,9 @@ echo mfh_get_hidden_fields_for_language(array('error_loading_events',
     'critical',
     'high',
     'medium',
-    'low'));
+    'low',
+    'audit_event_created',
+    'audit_event_updated'));
 ?>
 <div style="display: none">
     <p id="setting_first_day_of_week"><?php echo $modsForHesk_settings['first_day_of_week']; ?></p>
@@ -610,6 +606,12 @@ echo mfh_get_hidden_fields_for_language(array('error_loading_events',
         ?>
     </p>
 </div>
+<script type="text/html" id="audit-trail-template">
+<tr>
+    <td data-property="date"></td>
+    <td data-property="description"></td>
+</tr>
+</script>
 <?php
 
 require_once(HESK_PATH . 'inc/footer.inc.php');

@@ -14,7 +14,6 @@ use BusinessLogic\Tickets\AuditTrail;
 use BusinessLogic\Tickets\AuditTrailEntityType;
 use Core\Constants\Priority;
 use DataAccess\CommonDao;
-use DataAccess\Logging\LoggingGateway;
 
 class CalendarGateway extends CommonDao {
     /**

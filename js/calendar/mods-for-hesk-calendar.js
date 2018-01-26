@@ -262,7 +262,7 @@ $(document).ready(function() {
             displayBorder: $form.find('select[name="category"] :selected').attr('data-display-border'),
             categoryName: $form.find('select[name="category"] :selected').text().trim(),
             reminderValue: reminderValue === "" ? null : reminderValue,
-            reminderUnits: reminderValue === "" ? null : reminderUnits
+            reminderUnits: reminderValue === "" ? null : reminderUnits,
         };
 
         $.ajax({
@@ -274,7 +274,8 @@ $(document).ready(function() {
                 'X-Internal-Call': true,
                 'X-HTTP-Method-Override': 'PUT'
             },
-            success: function() {
+            success: function(updatedEvent) {
+                data.auditTrail = updatedEvent.auditTrail;
                 removeFromCalendar(data.id);
                 addToCalendar(data.id, data, $('#lang_event_updated').text());
                 $('#edit-event-modal').modal('hide');
@@ -352,7 +353,8 @@ function buildEvent(id, dbObject) {
         borderColor: parseInt(dbObject.displayBorder) === 1 ? dbObject.foregroundColor : dbObject.backgroundColor,
         reminderValue: dbObject.reminderValue == null ? '' : dbObject.reminderValue,
         reminderUnits: dbObject.reminderUnits,
-        fontIconMarkup: '<i class="fa fa-calendar"></i>'
+        fontIconMarkup: '<i class="fa fa-calendar"></i>',
+        auditTrail: dbObject.auditTrail
     };
 }
 
@@ -472,6 +474,24 @@ function displayEditModal(date) {
 
     $form.find('select[name="category"] option[value="' + date.categoryId + '"]').prop('selected', true);
 
+    var $auditTrail = $('#edit-history');
+    if (date.auditTrail.length === 0) {
+        $('.nav-tabs[role="tablist"]').hide();
+    } else {
+        $('.nav-tabs[role="tablist"]').show();
+
+        var $historyTable = $('#history-table');
+        $historyTable.html('');
+        $.each(date.auditTrail, function() {
+            var $template = $($('#audit-trail-template').html());
+            $template.find('[data-property="date"]').text(this.date).end()
+                .find('[data-property="description"]').text(vsprintf(mfhLang.text(this.languageKey), this.replacementValues));
+
+            $historyTable.append($template);
+        });
+    }
+    $('#edit-modal-tabs').find('a:first').tab('show');
+
     $('#edit-event-modal').modal('show');
 }
 
@@ -536,6 +556,7 @@ function respondToDragAndDrop(event, delta, revertFunc) {
             end += ' ' + event.end.format('HH:mm:ss');
         }
         var data = {
+            id: event.id,
             title: event.title,
             location: event.location,
             startTime: start,
@@ -557,8 +578,9 @@ function respondToDragAndDrop(event, delta, revertFunc) {
                 'X-Internal-Call': true,
                 'X-HTTP-Method-Override': 'PUT'
             },
-            success: function() {
-                mfhAlert.success(mfhLang.text('event_updated'));
+            success: function(updatedEvent) {
+                removeFromCalendar(updatedEvent.id);
+                addToCalendar(updatedEvent.id, updatedEvent, $('#lang_event_updated').text());
             },
             error: function() {
                 mfhAlert.error(mfhLang.text('error_updating_event'));

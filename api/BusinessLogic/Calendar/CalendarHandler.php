@@ -33,6 +33,12 @@ class CalendarHandler extends \BaseClass {
     public function updateEvent($calendarEvent, $userContext, $heskSettings) {
         $this->calendarGateway->updateEvent($calendarEvent, $userContext, $heskSettings);
 
+        $this->auditTrailGateway->insertAuditTrailRecord($calendarEvent->id,
+            AuditTrailEntityType::CALENDAR_EVENT,
+            'audit_event_updated',
+            DateTimeHelpers::heskDate($heskSettings),
+            array(0 => $userContext->name . ' (' . $userContext->username . ')'), $heskSettings);
+
         $eventFilter = new SearchEventsFilter();
         $eventFilter->eventId = $calendarEvent->id;
         $eventFilter->reminderUserId = $userContext->id;
@@ -44,12 +50,6 @@ class CalendarHandler extends \BaseClass {
         }
 
         $event = $events[0];
-
-        $this->auditTrailGateway->insertAuditTrailRecord($event->id,
-            AuditTrailEntityType::CALENDAR_EVENT,
-            'audit_event_updated',
-            DateTimeHelpers::heskDate($heskSettings),
-            array(0 => $userContext->name . ' (' . $userContext->username . ')'), $heskSettings);
 
         return $event;
     }
