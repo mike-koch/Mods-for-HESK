@@ -2220,6 +2220,87 @@ $modsForHesk_settings = mfh_getSettings();
                         </select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="business-hours" class="col-sm-4 col-xs-12 control-label">
+                        Business Hours
+                        <?php /*echo $hesklang['business_hours']; */?>
+                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                           title="<?php echo $hesklang['business_hours']; ?>"
+                           data-content="<?php echo $hesklang['business_hours_help']; ?>"></i>
+                    </label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="table-reponsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <th>Sunday</th>
+                                    <th>Monday</th>
+                                    <th>Tuesday</th>
+                                    <th>Wednesday</th>
+                                    <th>Thursday</th>
+                                    <th>Friday</th>
+                                    <th>Saturday</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        From
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        To
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
