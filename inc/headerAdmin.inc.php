@@ -78,6 +78,7 @@ header('X-UA-Compatible: IE=edge');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/lang.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/clipboard.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-select.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/sprintf.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <?php
     if (defined('EXTRA_JS')) {
         echo EXTRA_JS;

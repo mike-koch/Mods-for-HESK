@@ -201,6 +201,7 @@ Link::all(array(
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::clazz(), RequestMethod::all(), SecurityHandler::OPEN),
     // Tickets - Staff
     '/v1/staff/tickets/{i}' => action(\Controllers\Tickets\StaffTicketController::clazz(), RequestMethod::all()),
+    '/v1/staff/tickets/{i}/due-date' => action(\Controllers\Tickets\StaffTicketController::clazz() . '::updateDueDate', array(RequestMethod::PATCH), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     // Attachments
     '/v1/tickets/{a}/attachments/{i}' => action(\Controllers\Attachments\PublicAttachmentController::clazz() . '::getRaw', RequestMethod::all()),
     '/v1/staff/tickets/{i}/attachments' => action(\Controllers\Attachments\StaffTicketAttachmentsController::clazz(), RequestMethod::all()),
@@ -209,6 +210,10 @@ Link::all(array(
     '/v1/statuses' => action(\Controllers\Statuses\StatusController::clazz(), RequestMethod::all()),
     // Settings
     '/v1/settings' => action(\Controllers\Settings\SettingsController::clazz(), RequestMethod::all()),
+    // Calendar
+    '/v1/calendar/events' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::GET), SecurityHandler::OPEN),
+    '/v1/calendar/events/staff' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::GET, RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/calendar/events/staff/{i}' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     // Service Messages
     '/v1/service-messages' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
         array(RequestMethod::GET, RequestMethod::POST),

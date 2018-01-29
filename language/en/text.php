@@ -2215,6 +2215,8 @@ $hesklang['audit_linked_ticket'] = '%s linked ticket %s to this ticket';
 $hesklang['audit_unlinked_ticket'] = '%s unlinked ticket %s';
 
 // Added or modified in Mods for HESK 3.3.0
+$hesklang['audit_event_created'] = '%s created event';
+$hesklang['audit_event_updated'] = '%s updated event';
 $hesklang['error_retrieving_sm'] = 'An error occurred retrieving service messages!';
 $hesklang['error_saving_updating_sm'] = 'An error occurred creating / saving the service message!';
 $hesklang['error_deleting_sm'] = 'An error occurred when trying to delete the service message.';

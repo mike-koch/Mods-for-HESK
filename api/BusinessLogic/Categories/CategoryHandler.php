@@ -187,4 +187,17 @@ class CategoryHandler extends \BaseClass {
         $this->categoryGateway->updateCategory($category, $heskSettings);
         $this->categoryGateway->resortAllCategories($heskSettings);
     }
+
+    function getPublicCategories($heskSettings) {
+        $allCategories = $this->categoryGateway->getAllCategories($heskSettings, $this->modsForHeskSettingsGateway->getAllSettings($heskSettings));
+
+        $publicCategories = array();
+        foreach ($allCategories as $category) {
+            if ($category->type === 0) {
+                $publicCategories[] = $category;
+            }
+        }
+
+        return $publicCategories;
+    }
 }

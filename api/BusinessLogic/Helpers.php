@@ -30,4 +30,8 @@ class Helpers extends \BaseClass {
     static function boolval($val) {
         return $val == true;
     }
+
+    static function heskHtmlSpecialCharsDecode($in) {
+        return str_replace(array('&amp;', '&lt;', '&gt;', '&quot;'), array('&', '<', '>', '"'), $in);
+    }
 }

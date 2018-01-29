@@ -282,10 +282,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                 </div>
                                 <div class="col-sm-4">
                                     <select name="reminder-unit" class="form-control">
-                                        <option value="0"><?php echo $hesklang['event_min_before_event']; ?></option>
-                                        <option value="1"><?php echo $hesklang['event_hours_before_event']; ?></option>
-                                        <option value="2"><?php echo $hesklang['event_days_before_event']; ?></option>
-                                        <option value="3"><?php echo $hesklang['event_weeks_before_event']; ?></option>
+                                        <option value="MINUTE"><?php echo $hesklang['event_min_before_event']; ?></option>
+                                        <option value="HOUR"><?php echo $hesklang['event_hours_before_event']; ?></option>
+                                        <option value="DAY"><?php echo $hesklang['event_days_before_event']; ?></option>
+                                        <option value="WEEK"><?php echo $hesklang['event_weeks_before_event']; ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -334,147 +334,168 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             </div>
             <form id="edit-form" class="form-horizontal" data-toggle="validator">
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="name" class="col-sm-3 control-label">
-                                    <?php echo $hesklang['event_title']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark"
-                                       data-toggle="tooltip"
-                                       title="<?php echo htmlspecialchars($hesklang['event_title_tooltip']); ?>"></i></label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="name" class="form-control"
-                                           placeholder="<?php echo htmlspecialchars($hesklang['event_title']); ?>"
-                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                           required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="location" class="col-sm-3 control-label">
-                                    <?php echo $hesklang['event_location']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark"
-                                       data-toggle="tooltip"
-                                       title="<?php echo htmlspecialchars($hesklang['event_location_tooltip']); ?>"></i>
-                                </label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="location" class="form-control"
-                                           placeholder="<?php echo htmlspecialchars($hesklang['event_location']); ?>">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="category" class="col-sm-3 control-label">
-                                    <?php echo $hesklang['category']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark"
-                                       data-toggle="tooltip"
-                                       title="<?php echo htmlspecialchars($hesklang['event_category_tooltip']); ?>"></i>
-                                </label>
-                                <div class="col-sm-9">
-                                    <select name="category" class="form-control"
-                                            pattern="[0-9]+"
-                                            data-error="<?php echo htmlspecialchars($hesklang['sel_app_cat']); ?>" required>
-                                        <?php
-                                        if ($hesk_settings['select_cat']) {
-                                            echo '<option value="">'.$hesklang['select'].'</option>';
-                                        }
-                                        foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category['id']; ?>" data-background-color="<?php echo htmlspecialchars($category['background_color']); ?>"
-                                                    data-foreground-color="<?php echo htmlspecialchars($category['foreground_color']); ?>"
-                                                    data-display-border="<?php echo htmlspecialchars($category['display_border_outline']); ?>">
-                                                <?php echo $category['name']; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="start-date" class="col-sm-6 control-label">
-                                    <?php echo $hesklang['event_start']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark"
-                                       data-toggle="tooltip"
-                                       title="<?php echo htmlspecialchars($hesklang['event_start_tooltip']); ?>"></i>
-                                </label>
-                                <div class="col-sm-6">
-                                    <input type="text" name="start-date" class="form-control datepicker"
-                                           placeholder="<?php echo htmlspecialchars($hesklang['event_start_date']); ?>"
-                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                           required>
-                                    <input type="text" name="start-time" class="form-control clockpicker"
-                                           placeholder="<?php echo htmlspecialchars($hesklang['event_start_time']); ?>"
-                                           data-placement="left" data-align="top" data-autoclose="true">
-                                    <div class="help-block with-errors"></div>
-
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="all-day"> <?php echo $hesklang['event_all_day']; ?>
+                    <ul class="nav nav-tabs" role="tablist" id="edit-modal-tabs">
+                        <li role="presentation" class="active"><a href="#edit-contents" aria-controls="home" role="tab" data-toggle="tab"><?php echo $hesklang['information']; ?></a></li>
+                        <li role="presentation"><a href="#edit-history" aria-controls="profile" role="tab" data-toggle="tab"><?php echo $hesklang['thist']; ?></a></li>
+                    </ul>
+                    <div class="tab-content" id="information-tab">
+                        <div role="tabpanel" class="tab-pane active" id="edit-contents">
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="name" class="col-sm-3 control-label">
+                                            <?php echo $hesklang['event_title']; ?>
+                                            <i class="fa fa-question-circle settingsquestionmark"
+                                               data-toggle="tooltip"
+                                               title="<?php echo htmlspecialchars($hesklang['event_title_tooltip']); ?>"></i></label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="name" class="form-control"
+                                                   placeholder="<?php echo htmlspecialchars($hesklang['event_title']); ?>"
+                                                   data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                                   required>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="location" class="col-sm-3 control-label">
+                                            <?php echo $hesklang['event_location']; ?>
+                                            <i class="fa fa-question-circle settingsquestionmark"
+                                               data-toggle="tooltip"
+                                               title="<?php echo htmlspecialchars($hesklang['event_location_tooltip']); ?>"></i>
                                         </label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="location" class="form-control"
+                                                   placeholder="<?php echo htmlspecialchars($hesklang['event_location']); ?>">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="category" class="col-sm-3 control-label">
+                                            <?php echo $hesklang['category']; ?>
+                                            <i class="fa fa-question-circle settingsquestionmark"
+                                               data-toggle="tooltip"
+                                               title="<?php echo htmlspecialchars($hesklang['event_category_tooltip']); ?>"></i>
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <select name="category" class="form-control"
+                                                    pattern="[0-9]+"
+                                                    data-error="<?php echo htmlspecialchars($hesklang['sel_app_cat']); ?>" required>
+                                                <?php
+                                                if ($hesk_settings['select_cat']) {
+                                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                                }
+                                                foreach ($categories as $category): ?>
+                                                    <option value="<?php echo $category['id']; ?>" data-background-color="<?php echo htmlspecialchars($category['background_color']); ?>"
+                                                            data-foreground-color="<?php echo htmlspecialchars($category['foreground_color']); ?>"
+                                                            data-display-border="<?php echo htmlspecialchars($category['display_border_outline']); ?>">
+                                                        <?php echo $category['name']; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="start-date" class="col-sm-6 control-label">
+                                            <?php echo $hesklang['event_start']; ?>
+                                            <i class="fa fa-question-circle settingsquestionmark"
+                                               data-toggle="tooltip"
+                                               title="<?php echo htmlspecialchars($hesklang['event_start_tooltip']); ?>"></i>
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <input type="text" name="start-date" class="form-control datepicker"
+                                                   placeholder="<?php echo htmlspecialchars($hesklang['event_start_date']); ?>"
+                                                   data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                                   required>
+                                            <input type="text" name="start-time" class="form-control clockpicker"
+                                                   placeholder="<?php echo htmlspecialchars($hesklang['event_start_time']); ?>"
+                                                   data-placement="left" data-align="top" data-autoclose="true">
+                                            <div class="help-block with-errors"></div>
+
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="all-day"> <?php echo $hesklang['event_all_day']; ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="end-date" class="col-sm-6 control-label">
+                                            <?php echo $hesklang['event_end']; ?>
+                                            <i class="fa fa-question-circle settingsquestionmark"
+                                               data-toggle="tooltip"
+                                               title="<?php echo htmlspecialchars($hesklang['event_end_tooltip']); ?>"></i>
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <input type="text" name="end-date" class="form-control datepicker"
+                                                   placeholder="<?php echo htmlspecialchars($hesklang['event_end_date']); ?>"
+                                                   data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
+                                                   required>
+                                            <input type="text" name="end-time" class="form-control clockpicker"
+                                                   data-placement="left" data-align="top" data-autoclose="true"
+                                                   placeholder="<?php echo htmlspecialchars($hesklang['event_end_time']); ?>">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="reminder" class="col-sm-3 control-label">
+                                            <?php echo $hesklang['event_reminder']; ?>
+                                            <i class="fa fa-question-circle settingsquestionmark"
+                                               data-toggle="tooltip"
+                                               title="<?php echo htmlspecialchars($hesklang['event_reminder_tooltip']); ?>"></i>
+                                        </label>
+                                        <div class="col-sm-2">
+                                            <input type="text" name="reminder-value" class="form-control" placeholder="#">
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select name="reminder-unit" class="form-control">
+                                                <option value="MINUTE"><?php echo $hesklang['event_min_before_event']; ?></option>
+                                                <option value="HOUR"><?php echo $hesklang['event_hours_before_event']; ?></option>
+                                                <option value="DAY"><?php echo $hesklang['event_days_before_event']; ?></option>
+                                                <option value="WEEK"><?php echo $hesklang['event_weeks_before_event']; ?></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="comments" class="col-sm-3 control-label">
+                                            <?php echo $hesklang['event_comments']; ?>
+                                            <i class="fa fa-question-circle settingsquestionmark"
+                                               data-toggle="tooltip"
+                                               title="<?php echo htmlspecialchars($hesklang['event_comments_tooltip']); ?>"></i>
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <textarea name="comments" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['event_comments']); ?>"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="end-date" class="col-sm-6 control-label">
-                                    <?php echo $hesklang['event_end']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark"
-                                       data-toggle="tooltip"
-                                       title="<?php echo htmlspecialchars($hesklang['event_end_tooltip']); ?>"></i>
-                                </label>
-                                <div class="col-sm-6">
-                                    <input type="text" name="end-date" class="form-control datepicker"
-                                           placeholder="<?php echo htmlspecialchars($hesklang['event_end_date']); ?>"
-                                           data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
-                                           required>
-                                    <input type="text" name="end-time" class="form-control clockpicker"
-                                           data-placement="left" data-align="top" data-autoclose="true"
-                                           placeholder="<?php echo htmlspecialchars($hesklang['event_end_time']); ?>">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="reminder" class="col-sm-3 control-label">
-                                    <?php echo $hesklang['event_reminder']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark"
-                                       data-toggle="tooltip"
-                                       title="<?php echo htmlspecialchars($hesklang['event_reminder_tooltip']); ?>"></i>
-                                </label>
-                                <div class="col-sm-2">
-                                    <input type="text" name="reminder-value" class="form-control" placeholder="#">
-                                </div>
-                                <div class="col-sm-4">
-                                    <select name="reminder-unit" class="form-control">
-                                        <option value="0"><?php echo $hesklang['event_min_before_event']; ?></option>
-                                        <option value="1"><?php echo $hesklang['event_hours_before_event']; ?></option>
-                                        <option value="2"><?php echo $hesklang['event_days_before_event']; ?></option>
-                                        <option value="3"><?php echo $hesklang['event_weeks_before_event']; ?></option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="comments" class="col-sm-3 control-label">
-                                    <?php echo $hesklang['event_comments']; ?>
-                                    <i class="fa fa-question-circle settingsquestionmark"
-                                       data-toggle="tooltip"
-                                       title="<?php echo htmlspecialchars($hesklang['event_comments_tooltip']); ?>"></i>
-                                </label>
-                                <div class="col-sm-9">
-                                    <textarea name="comments" class="form-control" placeholder="<?php echo htmlspecialchars($hesklang['event_comments']); ?>"></textarea>
-                                </div>
-                            </div>
+                        <div role="tabpanel" class="tab-pane" id="edit-history">
+                            <br>
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th><?php echo $hesklang['date']; ?></th>
+                                    <th><?php echo $hesklang['description']; ?></th>
+                                </tr>
+                                </thead>
+                                <tbody id="history-table"></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -545,22 +566,34 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <strong><?php echo $hesklang['category']; ?></strong>
             <span></span>
         </div>
+        <div class="popover-status">
+            <strong><?php echo $hesklang['status']; ?></strong>
+            <span></span>
+        </div>
         <div class="popover-priority">
             <strong><?php echo $hesklang['priority']; ?></strong>
             <span></span>
         </div>
     </div>
 </div>
+<?php
+echo mfh_get_hidden_fields_for_language(array('error_loading_events',
+    'error_deleting_event',
+    'event_deleted',
+    'event_created',
+    'error_creating_event',
+    'event_updated',
+    'error_updating_event',
+    'ticket_due_date_updated',
+    'error_updating_ticket_due_date',
+    'critical',
+    'high',
+    'medium',
+    'low',
+    'audit_event_created',
+    'audit_event_updated'));
+?>
 <div style="display: none">
-    <p id="lang_error_loading_events"><?php echo $hesklang['error_loading_events']; ?></p>
-    <p id="lang_error_deleting_event"><?php echo $hesklang['error_deleting_event']; ?></p>
-    <p id="lang_event_deleted"><?php echo $hesklang['event_deleted']; ?></p>
-    <p id="lang_event_created"><?php echo $hesklang['event_created']; ?></p>
-    <p id="lang_error_creating_event"><?php echo $hesklang['error_creating_event']; ?></p>
-    <p id="lang_event_updated"><?php echo $hesklang['event_updated']; ?></p>
-    <p id="lang_error_updating_event"><?php echo $hesklang['error_updating_event']; ?></p>
-    <p id="lang_ticket_due_date_updated"><?php echo $hesklang['ticket_due_date_updated']; ?></p>
-    <p id="lang_error_updating_ticket_due_date"><?php echo $hesklang['error_updating_ticket_due_date']; ?></p>
     <p id="setting_first_day_of_week"><?php echo $modsForHesk_settings['first_day_of_week']; ?></p>
     <p id="setting_default_view">
         <?php
@@ -573,6 +606,12 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
         ?>
     </p>
 </div>
+<script type="text/html" id="audit-trail-template">
+<tr>
+    <td data-property="date"></td>
+    <td data-property="description"></td>
+</tr>
+</script>
 <?php
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
