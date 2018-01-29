@@ -2217,6 +2217,19 @@ $hesklang['audit_unlinked_ticket'] = '%s unlinked ticket %s';
 // Added or modified in Mods for HESK 3.3.0
 $hesklang['audit_event_created'] = '%s created event';
 $hesklang['audit_event_updated'] = '%s updated event';
+$hesklang['error_retrieving_sm'] = 'An error occurred retrieving service messages!';
+$hesklang['error_saving_updating_sm'] = 'An error occurred creating / saving the service message!';
+$hesklang['error_deleting_sm'] = 'An error occurred when trying to delete the service message.';
+$hesklang['error_sorting_sm'] = 'An error occurred sorting service messages!';
+$hesklang['sm_location'] = 'Location'; // Location for service messages
+$hesklang['sm_customer_pages'] = 'Customer Pages';
+$hesklang['sm_staff_pages'] = 'Staff Pages';
+$hesklang['sm_homepage'] = 'Homepage';
+$hesklang['sm_kb_home'] = 'Knowledgebase Home';
+$hesklang['sm_view_kb_article'] = 'View Knowledgebase Article';
+$hesklang['sm_submit_ticket'] = 'Submit Ticket';
+$hesklang['sm_view_ticket'] = 'View Ticket';
+$hesklang['sm_login_page'] = 'Login Page';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

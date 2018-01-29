@@ -58,7 +58,7 @@ class UserContext extends \BaseClass {
     public $active;
 
     function isAnonymousUser() {
-        return $this->username === "API - ANONYMOUS USER";
+        return $this->id === -1;
     }
 
     static function buildAnonymousUser() {

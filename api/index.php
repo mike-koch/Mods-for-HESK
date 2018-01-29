@@ -45,8 +45,15 @@ function internalOrAuthHandler() {
 function publicHandler() {
     global $userContext;
 
-    //-- Create an "anonymous" UserContext
-    $userContext = \BusinessLogic\Security\UserContext::buildAnonymousUser();
+    // Check if we passed in a X-Auth-Token or X-Internal-Call header. Those take priority
+    if (\BusinessLogic\Helpers::getHeader('X-INTERNAL-CALL') === 'true') {
+        internalHandler();
+    } elseif (\BusinessLogic\Helpers::getHeader('X-AUTH-TOKEN') !== null) {
+        authTokenHandler();
+    } else {
+        //-- Create an "anonymous" UserContext
+        $userContext = \BusinessLogic\Security\UserContext::buildAnonymousUser();
+    }
 }
 
 function assertApiIsEnabled() {
@@ -105,7 +112,7 @@ function exceptionHandler($exception) {
         /* @var $castedException \BusinessLogic\Exceptions\ApiFriendlyException */
         $castedException = $exception;
 
-        print_error($castedException->title, $castedException->getMessage(), $castedException->httpResponseCode);
+        print_error($castedException->title, $castedException->getMessage(), null, $castedException->httpResponseCode);
     } elseif (exceptionIsOfType($exception, \Core\Exceptions\SQLException::clazz())) {
         /* @var $castedException \Core\Exceptions\SQLException */
         $castedException = $exception;
@@ -207,6 +214,16 @@ Link::all(array(
     '/v1/calendar/events' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::GET), SecurityHandler::OPEN),
     '/v1/calendar/events/staff' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::GET, RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1/calendar/events/staff/{i}' => action(\Controllers\Calendar\CalendarController::clazz(), array(RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    // Service Messages
+    '/v1/service-messages' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
+        array(RequestMethod::GET, RequestMethod::POST),
+        SecurityHandler::OPEN),
+    '/v1/service-messages/{i}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
+        array(RequestMethod::PUT, RequestMethod::DELETE),
+        SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1-internal/service-messages/{i}/sort/{s}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz() . '::sort',
+        array(RequestMethod::POST),
+        SecurityHandler::INTERNAL),
 
     /* Internal use only routes */
     // Resend email response

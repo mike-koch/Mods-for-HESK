@@ -121,7 +121,9 @@ function hesk_kb_header($kb_link, $catid=1)
     </ol>
 	<?php
 		show_subnav('view', $catid);
+        echo '<div style="margin-left:40px;margin-right:40px">';
 		hesk_kbSearchLarge(1);
+        echo '</div>';
 } // END hesk_kb_header()
 
 
@@ -214,7 +216,15 @@ function hesk_show_kb_article($artid)
 
 ?>
 <div class="content-wrapper">
-	<?php hesk_kb_header($hesk_settings['kb_link'], $article['catid']); ?>
+	<?php
+    hesk_kb_header($hesk_settings['kb_link'], $article['catid']);
+    echo '<div style="margin-left:40px;margin-right:40px">';
+    $service_messages = mfh_get_service_messages('STAFF_VIEW_KB_ARTICLE');
+    foreach ($service_messages as $sm) {
+        hesk_service_message($sm);
+    }
+    echo '</div>';
+    ?>
 	<section class="content">
 		<div class="box">
 			<div class="box-header with-border">
@@ -397,6 +407,13 @@ function hesk_show_kb_category($catid, $is_search = 0) {
 	{
 		/* Print header */
 		hesk_kb_header($hesk_settings['kb_link'], $catid);
+
+        echo '<div style="margin-left:40px;margin-right:40px">';
+        $service_messages = mfh_get_service_messages('STAFF_KB_HOME');
+        foreach ($service_messages as $sm) {
+            hesk_service_message($sm);
+        }
+        echo '</div>';
 	} ?>
 	<section class="content">
 		<?php if ($thiscat['parent']): ?>

@@ -185,11 +185,33 @@ function hesk_service_message($sm)
     ?>
     <div class="<?php echo $style; ?>">
         <?php echo $faIcon == '' ? '' : '<i class="' . $faIcon . '"></i> '; ?>
-        <b><?php echo $sm['title']; ?></b><?php echo $sm['message']; ?>
+        <b><?php echo $sm['title']; ?></b><br>
+        <?php echo $sm['message']; ?>
     </div>
     <br/>
     <?php
 } // END hesk_service_message()
+
+function mfh_get_service_messages($location) {
+    global $hesk_settings;
+
+    $language = $hesk_settings['languages'][$hesk_settings['language']]['folder'];
+
+    $res = hesk_dbQuery('SELECT `title`, `message`, `style`, `icon` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` AS `sm`
+        INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix'])  . "mfh_service_message_to_location` AS `location`
+            ON `sm`.`id` = `location`.`service_message_id`
+            AND `location`.`location` = '" . hesk_dbEscape($location) . "'
+            AND `sm`.`mfh_language` IN ('ALL', '" . hesk_dbEscape($language) . "')
+        WHERE `type`='0' 
+        ORDER BY `order` ASC");
+
+    $sm = array();
+    while ($row = hesk_dbFetchAssoc($res)) {
+        $sm[] = $row;
+    }
+
+    return $sm;
+}
 
 
 function hesk_isBannedIP($ip)

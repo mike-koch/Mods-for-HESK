@@ -939,6 +939,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
 
+    $service_messages = mfh_get_service_messages('STAFF_VIEW_TICKET');
+    foreach ($service_messages as $sm) {
+        hesk_service_message($sm);
+    }
+
     // Prepare special custom fields
     foreach ($hesk_settings['custom_fields'] as $k=>$v) {
         if ($v['use'] && hesk_is_custom_field_in_category($k, $ticket['category']) ) {

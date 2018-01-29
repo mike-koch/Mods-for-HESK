@@ -54,7 +54,15 @@ else {
 ?>
 <div class="content-wrapper">
     <section class="content">
-    <?php hesk_handle_messages(); ?>
+    <?php
+    // Service messages
+    $service_messages = mfh_get_service_messages('STAFF_HOME');
+    foreach ($service_messages as $sm) {
+        hesk_service_message($sm);
+    }
+
+    hesk_handle_messages();
+    ?>
     <div class="box">
         <div class="box-header with-border">
             <h1 class="box-title">

@@ -17,4 +17,5 @@ class UserPrivilege extends \BaseClass {
     const CAN_MANAGE_CATEGORIES = 'can_man_cat';
     const CAN_VIEW_ASSIGNED_TO_OTHER = 'can_view_ass_others';
     const CAN_VIEW_UNASSIGNED = 'can_view_unassigned';
+    const CAN_MANAGE_SERVICE_MESSAGES = 'can_service_msg';
 }
