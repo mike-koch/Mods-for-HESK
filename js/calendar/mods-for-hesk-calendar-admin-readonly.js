@@ -12,6 +12,43 @@ $(document).ready(function() {
         eventLimit: true,
         timeFormat: 'H:mm',
         axisFormat: 'H:mm',
+        businessHours: [
+            {
+                dow: [0],
+                start: $('#business_hours_0_start').text(),
+                end: $('#business_hours_0_end').text()
+            },
+            {
+                dow: [1],
+                start: $('#business_hours_1_start').text(),
+                end: $('#business_hours_1_end').text()
+            },
+            {
+                dow: [2],
+                start: $('#business_hours_2_start').text(),
+                end: $('#business_hours_2_end').text()
+            },
+            {
+                dow: [3],
+                start: $('#business_hours_3_start').text(),
+                end: $('#business_hours_3_end').text()
+            },
+            {
+                dow: [4],
+                start: $('#business_hours_4_start').text(),
+                end: $('#business_hours_4_end').text()
+            },
+            {
+                dow: [5],
+                start: $('#business_hours_5_start').text(),
+                end: $('#business_hours_5_end').text()
+            },
+            {
+                dow: [6],
+                start: $('#business_hours_6_start').text(),
+                end: $('#business_hours_6_end').text()
+            }
+        ],
         firstDay: $('#setting_first_day_of_week').text(),
         defaultView: $('#setting_default_view').text().trim(),
         events: function(start, end, timezone, callback) {

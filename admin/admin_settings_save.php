@@ -514,6 +514,13 @@ $set['admin_sidebar_text_hover'] = hesk_input(hesk_POST('admin-sidebar-text-hove
 
 $set['login_background_type'] = hesk_input(hesk_POST('login-background'));
 $set['login_box_header'] = hesk_input(hesk_POST('login-box-header'));
+$set['business_hours_sunday'] = hesk_POST_array('business-hours-sunday');
+$set['business_hours_monday'] = hesk_POST_array('business-hours-monday');
+$set['business_hours_tuesday'] = hesk_POST_array('business-hours-tuesday');
+$set['business_hours_wednesday'] = hesk_POST_array('business-hours-wednesday');
+$set['business_hours_thursday'] = hesk_POST_array('business-hours-thursday');
+$set['business_hours_friday'] = hesk_POST_array('business-hours-friday');
+$set['business_hours_saturday'] = hesk_POST_array('business-hours-saturday');
 
 $changedBackground = false;
 $loadedAttachmentFuncs = false;
@@ -666,6 +673,29 @@ mfh_updateSetting('login_box_header', $set['login_box_header'], true);
 if ($changedLoginImage) {
     mfh_updateSetting('login_box_header_image', $set['login_box_header_image'], true);
 }
+
+// Update business hours
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours` 
+    SET `start_time` = '" . hesk_dbEscape($set['business_hours_sunday'][0]) . "', 
+        `end_time` = '" . hesk_dbEscape($set['business_hours_sunday'][1]) . "' WHERE `day_of_week` = " . intval(0));
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours` 
+    SET `start_time` = '" . hesk_dbEscape($set['business_hours_monday'][0]) . "', 
+        `end_time` = '" . hesk_dbEscape($set['business_hours_monday'][1]) . "' WHERE `day_of_week` = " . intval(1));
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours` 
+    SET `start_time` = '" . hesk_dbEscape($set['business_hours_tuesday'][0]) . "', 
+        `end_time` = '" . hesk_dbEscape($set['business_hours_tuesday'][1]) . "' WHERE `day_of_week` = " . intval(2));
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours` 
+    SET `start_time` = '" . hesk_dbEscape($set['business_hours_wednesday'][0]) . "', 
+        `end_time` = '" . hesk_dbEscape($set['business_hours_wednesday'][1]) . "' WHERE `day_of_week` = " . intval(3));
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours` 
+    SET `start_time` = '" . hesk_dbEscape($set['business_hours_thursday'][0]) . "', 
+        `end_time` = '" . hesk_dbEscape($set['business_hours_thursday'][1]) . "' WHERE `day_of_week` = " . intval(4));
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours` 
+    SET `start_time` = '" . hesk_dbEscape($set['business_hours_friday'][0]) . "', 
+        `end_time` = '" . hesk_dbEscape($set['business_hours_friday'][1]) . "' WHERE `day_of_week` = " . intval(5));
+hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours` 
+    SET `start_time` = '" . hesk_dbEscape($set['business_hours_saturday'][0]) . "', 
+        `end_time` = '" . hesk_dbEscape($set['business_hours_saturday'][1]) . "' WHERE `day_of_week` = " . intval(6));
 
 // Prepare settings file and save it
 $settings_file_content = '<?php

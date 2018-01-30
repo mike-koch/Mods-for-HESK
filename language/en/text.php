@@ -2230,6 +2230,9 @@ $hesklang['sm_view_kb_article'] = 'View Knowledgebase Article';
 $hesklang['sm_submit_ticket'] = 'Submit Ticket';
 $hesklang['sm_view_ticket'] = 'View Ticket';
 $hesklang['sm_login_page'] = 'Login Page';
+$hesklang['business_hours'] = 'Business Hours';
+$hesklang['business_hours_help'] = 'Set business hours for the calendar. There is no functional change by setting this, 
+but times outside of the defined business hours will have a darker gray background for increased visibility.';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

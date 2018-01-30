@@ -605,6 +605,13 @@ echo mfh_get_hidden_fields_for_language(array('error_loading_events',
         echo $view_array[$_SESSION['default_calendar_view']];
         ?>
     </p>
+    <?php
+    $businessHoursRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours`");
+    while ($row = hesk_dbFetchAssoc($businessHoursRs)):
+    ?>
+        <p id="business_hours_<?php echo $row['day_of_week']; ?>_start"><?php echo $row['start_time']; ?></p>
+        <p id="business_hours_<?php echo $row['day_of_week']; ?>_end"><?php echo $row['end_time']; ?></p>
+    <?php endwhile; ?>
 </div>
 <script type="text/html" id="audit-trail-template">
 <tr>
