@@ -2233,6 +2233,8 @@ $hesklang['sm_login_page'] = 'Login Page';
 $hesklang['business_hours'] = 'Business Hours';
 $hesklang['business_hours_help'] = 'Set business hours for the calendar. There is no functional change by setting this, 
 but times outside of the defined business hours will have a darker gray background for increased visibility.';
+$hesklang['show_event_start_time'] = 'Show event start time in title';
+$hesklang['show_event_start_time_help'] = 'Always show the start time on event titles (unless the event is an all-day event).';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

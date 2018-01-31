@@ -222,5 +222,8 @@ function getAllMigrations() {
         164 => new \v330\ServiceMessagesImprovements\CreateServiceMessageToLocationTable(164),
         165 => new \v330\ServiceMessagesImprovements\UpdateExistingServiceMessagesLocations(165),
         166 => new \v330\ServiceMessagesImprovements\AddLanguageColumnToServiceMessages(166),
+        167 => new \v330\CalendarImprovements\AddBusinessHoursTable(167),
+        168 => new \v330\CalendarImprovements\InsertDefaultBusinessHours(168),
+        169 => new \v330\CalendarImprovements\AddShowStartTimeSetting(169),
     );
 }

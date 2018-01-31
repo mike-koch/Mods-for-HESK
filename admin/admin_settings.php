@@ -2220,6 +2220,22 @@ $modsForHesk_settings = mfh_getSettings();
                         </select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="show-start-time" class="col-sm-4 col-xs-12 control-label">
+                        <?php echo $hesklang['show_event_start_time']; ?>
+                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                           title="<?php echo $hesklang['show_event_start_time']; ?>"
+                           data-content="<?php echo $hesklang['show_event_start_time_help']; ?>"></i>
+                    </label>
+                    <div class="col-sm-8 form-inline">
+                        <?php
+                        $on = $modsForHesk_settings['calendar_show_start_time'] == 'true' ? 'checked="checked"' : '';
+                        $off = $modsForHesk_settings['calendar_show_start_time'] == 'false' ? 'checked="checked"' : '';
+                        echo '
+                        <div class="radio"><label><input type="radio" name="calendar-show-start-time" value="true" ' . $on . ' /> ' . $hesklang['yes'] . '</label></div><br>
+                        <div class="radio"><label><input type="radio" name="calendar-show-start-time" value="false" ' . $off . ' /> ' . $hesklang['no'] . '</label></div><br>'; ?>
+                    </div>
+                </div>
                 <h4 class="bold">
                     <?php echo $hesklang['business_hours']; ?>
                     <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"

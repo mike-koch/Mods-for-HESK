@@ -12,6 +12,7 @@ $(document).ready(function() {
         eventLimit: true,
         timeFormat: 'H:mm',
         axisFormat: 'H:mm',
+        displayEventTime: $('#setting_show_start_time').text() === 'true',
         businessHours: [
             {
                 dow: [0],

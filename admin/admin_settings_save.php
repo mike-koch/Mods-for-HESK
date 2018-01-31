@@ -480,6 +480,7 @@ $set['navbar_title_url'] = hesk_POST('navbar_title_url');
 $set['enable_calendar'] = hesk_checkMinMax(intval(hesk_POST('enable_calendar')), 0, 2, 2);
 $set['first_day_of_week'] = hesk_POST('first-day-of-week', 0);
 $set['default_view'] = hesk_POST('default-view', 'month');
+$set['calendar_show_start_time'] = hesk_POST('calendar-show-start-time', 'true');
 
 if ($set['customer-email-verification-required']) {
     //-- Don't allow multiple emails if verification is required
@@ -662,6 +663,7 @@ mfh_updateSetting('use_mailgun', $set['use_mailgun'], false);
 mfh_updateSetting('enable_calendar', $set['enable_calendar'], false);
 mfh_updateSetting('first_day_of_week', $set['first_day_of_week'], false);
 mfh_updateSetting('default_calendar_view', $set['default_view'], true);
+mfh_updateSetting('calendar_show_start_time', $set['calendar_show_start_time'], true);
 mfh_updateSetting('admin_color_scheme', $set['admin_color_scheme'], true);
 
 mfh_updateSetting('login_background_type', $set['login_background_type'], true);

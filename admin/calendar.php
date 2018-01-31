@@ -605,6 +605,7 @@ echo mfh_get_hidden_fields_for_language(array('error_loading_events',
         echo $view_array[$_SESSION['default_calendar_view']];
         ?>
     </p>
+    <p id="setting_show_start_time"><?php echo $modsForHesk_settings['calendar_show_start_time']; ?></p>
     <?php
     $businessHoursRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours`");
     while ($row = hesk_dbFetchAssoc($businessHoursRs)):
