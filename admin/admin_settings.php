@@ -3373,6 +3373,27 @@ $modsForHesk_settings = mfh_getSettings();
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="show_number_merged" class="col-sm-4 control-label">
+                          <span class="label label-primary"
+                                data-toggle="tooltip"
+                                title="<?php echo $hesklang['added_in_mods_for_hesk'] ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                        <?php echo $hesklang['highlight_ticket_rows_based_on_priority']; ?>
+                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                           title="<?php echo $hesklang['highlight_ticket_rows_based_on_priority']; ?>"
+                           data-content="<?php echo $hesklang['highlight_ticket_rows_based_on_priority_help']; ?>"></i>
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       name="highlight_ticket_rows_based_on_priority" <?php if ($modsForHesk_settings['highlight_ticket_rows_based_on_priority']) {
+                                    echo 'checked';
+                                } ?>> <?php echo $hesklang['highlight_ticket_rows_based_on_priority_descr']; ?>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="s_submittedformat" class="col-sm-4 control-label"><?php echo $hesklang['sdf']; ?> <a
                             href="Javascript:void(0)"
                             onclick="Javascript:hesk_window('<?php echo $help_folder; ?>ticket_list.html#2','400','500')"><i
