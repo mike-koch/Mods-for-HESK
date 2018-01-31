@@ -458,6 +458,7 @@ $set['use_bootstrap_theme'] = empty($_POST['use_bootstrap_theme']) ? 0 : 1;
 $set['new_kb_article_visibility'] = hesk_checkMinMax(intval(hesk_POST('new_kb_article_visibility')), 0, 2, 2);
 $set['mfh_attachments'] = empty($_POST['email_attachments']) ? 0 : 1;
 $set['show_number_merged'] = empty($_POST['show_number_merged']) ? 0 : 1;
+$set['highlight_ticket_rows_based_on_priority'] = empty($_POST['highlight_ticket_rows_based_on_priority']) ? 0 : 1;
 $set['request_location'] = empty($_POST['request_location']) ? 0 : 1;
 $set['category_order_column'] = empty($_POST['category_order_column']) ? 'cat_order' : 'name';
 
@@ -621,6 +622,7 @@ mfh_updateSetting('use_bootstrap_theme', $set['use_bootstrap_theme']);
 mfh_updateSetting('new_kb_article_visibility', $set['new_kb_article_visibility']);
 mfh_updateSetting('attachments', $set['mfh_attachments']);
 mfh_updateSetting('show_number_merged', $set['show_number_merged']);
+mfh_updateSetting('highlight_ticket_rows_based_on_priority', $set['highlight_ticket_rows_based_on_priority']);
 mfh_updateSetting('request_location', $set['request_location']);
 mfh_updateSetting('category_order_column', $set['category_order_column'], true);
 mfh_updateSetting('rich_text_for_tickets', $set['rich_text_for_tickets']);

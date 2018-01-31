@@ -2235,6 +2235,9 @@ $hesklang['business_hours_help'] = 'Set business hours for the calendar. There i
 but times outside of the defined business hours will have a darker gray background for increased visibility.';
 $hesklang['show_event_start_time'] = 'Show event start time in title';
 $hesklang['show_event_start_time_help'] = 'Always show the start time on event titles (unless the event is an all-day event).';
+$hesklang['highlight_ticket_rows_based_on_priority'] = 'Highlight ticket rows based on priority';
+$hesklang['highlight_ticket_rows_based_on_priority_help'] = 'If enabled, each ticket on the tickets page will be highlighted based on priority. If disabled, only * Critical * and High priority tickets will be highlighted.';
+$hesklang['highlight_ticket_rows_based_on_priority_descr'] = 'Highlight all ticket rows based on priority';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

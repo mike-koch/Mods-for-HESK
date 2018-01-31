@@ -238,9 +238,11 @@ if ($total > 0) {
                     break;
                 case 2:
                     $ticket['priority'] = '<span style="color: green; font-size:1.3em" class="fa fa-fw fa-angle-double-down" data-toggle="tooltip" data-placement="top" title="' . $hesklang['medium'] . '"></span>';
+                    $color = $modsForHesk_settings['highlight_ticket_rows_based_on_priority'] ? 'success' : '';
                     break;
                 default:
                     $ticket['priority'] = '<span style="color: blue; font-size:1.3em" class="fa fa-fw fa-long-arrow-down" data-toggle="tooltip" data-placement="top" title="' . $hesklang['low'] . '"></span>';
+                    $color = $modsForHesk_settings['highlight_ticket_rows_based_on_priority'] ? 'info' : '';
             }
 
             // Set message (needed for row title)
