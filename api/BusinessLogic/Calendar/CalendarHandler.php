@@ -89,4 +89,8 @@ class CalendarHandler extends \BaseClass {
     public function deleteEvent($id, $userContext, $heskSettings) {
         $this->calendarGateway->deleteEvent($id, $userContext, $heskSettings);
     }
+
+    public function getBusinessHours($heskSettings) {
+        return $this->calendarGateway->getBusinessHours($heskSettings);
+    }
 }

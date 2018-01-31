@@ -124,4 +124,12 @@ class CalendarController extends \BaseClass {
 
         return $event;
     }
+
+    static function getBusinessHours() {
+        global $applicationContext, $hesk_settings;
+
+        $calendarHandler = $applicationContext->get(CalendarHandler::clazz());
+
+        return output($calendarHandler->getBusinessHours($hesk_settings));
+    }
 }
