@@ -2220,6 +2220,106 @@ $modsForHesk_settings = mfh_getSettings();
                         </select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="show-start-time" class="col-sm-4 col-xs-12 control-label">
+                        <?php echo $hesklang['show_event_start_time']; ?>
+                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                           title="<?php echo $hesklang['show_event_start_time']; ?>"
+                           data-content="<?php echo $hesklang['show_event_start_time_help']; ?>"></i>
+                    </label>
+                    <div class="col-sm-8 form-inline">
+                        <?php
+                        $on = $modsForHesk_settings['calendar_show_start_time'] == 'true' ? 'checked="checked"' : '';
+                        $off = $modsForHesk_settings['calendar_show_start_time'] == 'false' ? 'checked="checked"' : '';
+                        echo '
+                        <div class="radio"><label><input type="radio" name="calendar-show-start-time" value="true" ' . $on . ' /> ' . $hesklang['yes'] . '</label></div><br>
+                        <div class="radio"><label><input type="radio" name="calendar-show-start-time" value="false" ' . $off . ' /> ' . $hesklang['no'] . '</label></div><br>'; ?>
+                    </div>
+                </div>
+                <h4 class="bold">
+                    <?php echo $hesklang['business_hours']; ?>
+                    <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                           title="<?php echo $hesklang['business_hours']; ?>"
+                       data-content="<?php echo $hesklang['business_hours_help']; ?>"></i>
+                </h4>
+                <?php
+                $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours`");
+                $business_hours = array();
+                while ($row = hesk_dbFetchAssoc($rs)) {
+                    $business_hours[intval($row['day_of_week'])]['start'] = $row['start_time'];
+                    $business_hours[intval($row['day_of_week'])]['end'] = $row['end_time'];
+                }
+                ?>
+                <div class="form-group">
+                    <label for="business-hours-sunday" class="col-sm-4 col-xs-12 control-label">
+                        <?php echo $hesklang['d0']; ?>
+                    </label>
+                    <div class="col-sm-8 col-xs-12 form-inline">
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-sunday[0]" value="<?php echo $business_hours[0]['start']; ?>">
+                        <?php echo $hesklang['to']; ?>
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-sunday[1]" value="<?php echo $business_hours[0]['end']; ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="business-hours-monday" class="col-sm-4 col-xs-12 control-label">
+                        <?php echo $hesklang['d1']; ?>
+                    </label>
+                    <div class="col-sm-8 col-xs-12 form-inline">
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-monday[0]" value="<?php echo $business_hours[1]['start']; ?>">
+                        <?php echo $hesklang['to']; ?>
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-monday[1]" value="<?php echo $business_hours[1]['end']; ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="business-hours-tuesday" class="col-sm-4 col-xs-12 control-label">
+                        <?php echo $hesklang['d2']; ?>
+                    </label>
+                    <div class="col-sm-8 col-xs-12 form-inline">
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-tuesday[0]" value="<?php echo $business_hours[2]['start']; ?>">
+                        <?php echo $hesklang['to']; ?>
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-tuesday[1]" value="<?php echo $business_hours[2]['end']; ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="business-hours-wednesday" class="col-sm-4 col-xs-12 control-label">
+                        <?php echo $hesklang['d3']; ?>
+                    </label>
+                    <div class="col-sm-8 col-xs-12 form-inline">
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-wednesday[0]" value="<?php echo $business_hours[3]['start']; ?>">
+                        <?php echo $hesklang['to']; ?>
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-wednesday[1]" value="<?php echo $business_hours[3]['end']; ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="business-hours-thursday" class="col-sm-4 col-xs-12 control-label">
+                        <?php echo $hesklang['d4']; ?>
+                    </label>
+                    <div class="col-sm-8 col-xs-12 form-inline">
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-thursday[0]" value="<?php echo $business_hours[4]['start']; ?>">
+                        <?php echo $hesklang['to']; ?>
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-thursday[1]" value="<?php echo $business_hours[4]['end']; ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="business-hours-friday" class="col-sm-4 col-xs-12 control-label">
+                        <?php echo $hesklang['d5']; ?>
+                    </label>
+                    <div class="col-sm-8 col-xs-12 form-inline">
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-friday[0]" value="<?php echo $business_hours[5]['start']; ?>">
+                        <?php echo $hesklang['to']; ?>
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-friday[1]" value="<?php echo $business_hours[5]['end']; ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="business-hours-saturday" class="col-sm-4 col-xs-12 control-label">
+                        <?php echo $hesklang['d6']; ?>
+                    </label>
+                    <div class="col-sm-8 col-xs-12 form-inline">
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-saturday[0]" value="<?php echo $business_hours[6]['start']; ?>">
+                        <?php echo $hesklang['to']; ?>
+                        <input type="text" class="form-control clockpicker" data-autoclose="true" name="business-hours-saturday[1]" value="<?php echo $business_hours[6]['end']; ?>">
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -206,6 +206,8 @@ hesk_dbConnect();
             $all_good &= run_column_check('categories', 'mfh_description');
             $all_good &= run_column_check('custom_fields', 'mfh_description');
             $all_good &= run_setting_check('migrationNumber');
+            output_header_row('3.3.0');
+            $all_good &= run_table_check('mfh_calendar_business_hours');
 
             if ($all_good) {
                 echo "<script>$('#all-good').show()</script>";

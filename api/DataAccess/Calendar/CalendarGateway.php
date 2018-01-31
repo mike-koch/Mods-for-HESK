@@ -4,6 +4,7 @@ namespace DataAccess\Calendar;
 
 
 use BusinessLogic\Calendar\AbstractEvent;
+use BusinessLogic\Calendar\BusinessHours;
 use BusinessLogic\Calendar\CalendarEvent;
 use BusinessLogic\Calendar\ReminderUnit;
 use BusinessLogic\Calendar\SearchEventsFilter;
@@ -242,5 +243,24 @@ class CalendarGateway extends CommonDao {
             WHERE `id` = " . intval($id));
 
         $this->close();
+    }
+
+    public function getBusinessHours($heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_calendar_business_hours`");
+        $businessHours = array();
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            $businessHour = new BusinessHours();
+            $businessHour->dayOfWeek = intval($row['day_of_week']);
+            $businessHour->startTime = $row['start_time'];
+            $businessHour->endTime = $row['end_time'];
+
+            $businessHours[] = $businessHour;
+        }
+
+        $this->close();
+
+        return $businessHours;
     }
 }
