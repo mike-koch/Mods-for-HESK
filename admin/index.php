@@ -475,6 +475,9 @@ function print_login()
                     </div>
                 </div>
             </form>
+            <a class="btn btn-default" href="<?php echo $hesk_settings['hesk_url']; ?>">
+                <i class="fa fa-chevron-left"></i> <?php echo $hesklang['back']; ?>
+            </a>
         </div>
     </div>
 </div>

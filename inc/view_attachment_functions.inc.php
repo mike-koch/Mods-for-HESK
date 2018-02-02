@@ -281,7 +281,6 @@ function display_dropzone_field($url, $id = 'filedrop', $max_files_override = -1
         paramName: 'attachment',
         url: '" . $url . "',
         parallelUploads: ".$max_files.",
-        uploadMultiple: true,
         maxFiles: ".$max_files.",
         acceptedFiles: ".json_encode($acceptedFiles).",
         maxFilesize: ".$size.", // MB
