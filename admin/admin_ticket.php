@@ -1193,9 +1193,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                             echo '
                                     <a href="../download_attachment.php?att_id=' . $att_id . '&amp;track=' . $trackingID . '">
-                                        <i class="fa fa-paperclip" style="font-size:16px;" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['dnl'] . ' ' . $att_name . '"></i>
+                                        <i class="fa fa-paperclip" style="font-size:16px;" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['dnl'] . '"></i>
                                     </a>
-                                    <a href="../download_attachment.php?att_id=' . $att_id . '&amp;track=' . $trackingID . '">' . $att_name . '</a><br />
+                                    <a href="../download_attachment.php?att_id=' . $att_id . '&amp;track=' . $trackingID . '">' . $att_name . ' (' . mfh_getAttachmentFileSize($att_id) . ')' . '</a><br />
                                 ';
                         }
                     }
