@@ -2131,6 +2131,31 @@ function mfh_getNumberOfDownloadsForAttachment($att_id, $table = 'attachments')
     return $rec['download_count'];
 }
 
+function mfh_getAttachmentFileSize($att_id, $table = 'attachments') {
+    global $hesk_settings;
+
+    $res = hesk_dbQuery('SELECT `size` FROM `' . hesk_dbEscape($hesk_settings['db_pfix'] . $table) . "` WHERE `att_id` = " . intval($att_id));
+    $rec = hesk_dbFetchAssoc($res);
+    return human_filesize($rec['size']);
+}
+
+function human_filesize($bytes, $decimals = 2) {
+    global $hesklang;
+
+    $sz = 'BKMGTP';
+    $factor = floor((strlen($bytes) - 1) / 3);
+
+    if ($factor < strlen($sz)) {
+        $factorName = @$sz[$factor];
+        if ($factorName !== 'B') {
+            $factorName .= 'B';
+        }
+
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . $factorName;
+    }
+    return $hesklang['unknown'];
+}
+
 function mfh_getSettings()
 {
     global $hesk_settings;
