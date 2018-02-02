@@ -375,6 +375,16 @@ if ($total > 0) {
                 echo '<td class="' . $color . '">' . $ticket['time_worked'] . '</td>';
             }
 
+            // Print due date
+            if (hesk_show_column('due_date')) {
+                $due_date = $hesklang['none'];
+                if ($ticket['due_date'] != null) {
+                    $due_date = hesk_date($ticket['due_date'], false, true, false);
+                }
+
+                echo '<td class="' . $color . '">' . ($ticket['due_date'] == null ? 'NONE' : date('Y-m-d', $due_date)) . '</td>';
+            }
+
             // Print custom fields
             foreach ($hesk_settings['custom_fields'] as $key => $value) {
                 if ($value['use'] && hesk_show_column($key)) {
