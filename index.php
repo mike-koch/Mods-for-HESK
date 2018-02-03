@@ -898,10 +898,10 @@ function print_add_ticket()
 
                                     echo '<option '.$selected.'>'.$option.'</option>';
                                 }
+                                echo '</select>';
                                 if (!empty($v['mfh_description'])) {
                                     echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
                                 }
-                                echo '</select>';
                             echo '<div class="help-block with-errors"></div>
                         </div>
                     </div>';
