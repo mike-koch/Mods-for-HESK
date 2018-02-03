@@ -176,8 +176,8 @@ function getAllMigrations() {
         //3.0.0
         127 => new \v300\MigrateHeskCustomStatuses(),
         128 => new \v300\MigrateAutorefreshOption\UpdateFromOldValue(),
-        129 => new \v300\MigrateAutorefreshOption\DropOldColumn(),
-        130 => new \v300\AddColorSchemeSetting(),
+        129 => new \v300\AddColorSchemeSetting(),
+        130 => new \v300\MigrateAutorefreshOption\DropOldColumn(),
         131 => new LegacyUpdateMigration('3.0.0', '2.6.4'),
         //3.0.1
         132 => new LegacyUpdateMigration('3.0.1', '3.0.0'),
