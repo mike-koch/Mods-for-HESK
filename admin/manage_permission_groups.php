@@ -185,11 +185,23 @@ function createEditModal($template, $features, $categories)
                                                 <?php
                                                 $checked = '';
                                                 if (in_array($category['id'], $enabledCategories)) {
-                                                    $checked = 'checked';
-                                                } ?>
+                                                    $checked = 'checked ';
+                                                }
+                                                if ((!hesk_SESSION('isadmin') &&
+                                                    !in_array($category['id'], $_SESSION['categories'])) ||
+                                                    $template['categories'] === 'ALL') {
+                                                    $disabled = ' disabled';
+                                                }?>
+                                                <?php if (in_array($category['id'], $_SESSION['categories'])): ?>
                                                 <input type="checkbox" name="categories[]"
-                                                       value="<?php echo $category['id']; ?>" <?php echo $checked . $disabled; ?>>
-                                                <?php echo $category['name']; ?>
+                                                       value="<?php echo $category['id']; ?>" <?php echo $checked . ' ' . $disabled; ?>>
+                                                <?php
+                                                    echo $category['name'];
+                                                endif;
+                                                if ($disabled != '' && $checked != ''): ?>
+                                                    <input type="hidden" name="categories[]"
+                                                           value="<?php echo $category['id']; ?>" <?php echo $checked; ?>>
+                                                <?php endif; ?>
                                             </label>
                                         </div>
                                     <?php endforeach; ?>
@@ -201,19 +213,33 @@ function createEditModal($template, $features, $categories)
 
                                 <div class="footerWithBorder blankSpace"></div>
                                 <div class="form-group">
-                                    <?php foreach ($features as $feature): ?>
+                                    <?php
+                                    $hiddenFields = '';
+                                    foreach ($features as $feature): ?>
+                                        <?php
+                                        $checked = '';
+                                        if (in_array($feature, $enabledFeatures)) {
+                                            $checked = 'checked ';
+                                        }
+                                        if ((!hesk_SESSION('isadmin') &&
+                                                !strpos($_SESSION['heskprivileges'], $feature) !== false) ||
+                                            $template['heskprivileges'] === 'ALL') {
+                                            $disabled = ' disabled';
+                                        }
+                                        if ($disabled != '' && $checked != ''):
+                                            $hiddenFields .= '<input type="hidden" name="features[]"
+                                                   value="' . $feature . '" ' . $checked . '>';
+                                        elseif (strpos($_SESSION['heskprivileges'], $feature) !== false):  ?>
                                         <div class="checkbox">
-                                            <label><?php
-                                                $checked = '';
-                                                if (in_array($feature, $enabledFeatures)) {
-                                                    $checked = 'checked';
-                                                } ?>
+                                            <label>
                                                 <input type="checkbox" name="features[]"
                                                        value="<?php echo $feature; ?>" <?php echo $checked . $disabled; ?>>
                                                 <?php echo $hesklang[$feature]; ?>
                                             </label>
                                         </div>
-                                    <?php endforeach; ?>
+                                        <?php endif;
+                                        endforeach;
+                                        echo $hiddenFields; ?>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
