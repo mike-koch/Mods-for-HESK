@@ -21,7 +21,7 @@ if (hesk_dbNumRows($tableSql) > 0) {
     // They have installed at LEAST to version 1.6.0. Just pull the version number OR migration number
     $migrationNumberSql = hesk_dbQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'migrationNumber'");
     if ($migrationRow = hesk_dbFetchAssoc($migrationNumberSql)) {
-        $startingValidationNumber = intval($migrationRow['Value']) + 1;
+        $startingValidationNumber = intval($migrationRow['Value']);
     } else {
         $versionSql = hesk_dbQuery("SELECT `Value` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = 'modsForHeskVersion'");
         $versionRow = hesk_dbFetchAssoc($versionSql);
@@ -79,12 +79,11 @@ if (hesk_dbNumRows($tableSql) > 0) {
 <div class="container">
     <div class="page-header">
         <h1>Mods for HESK Database Validation</h1>
-        <p>The database validation tool will check your database setup to ensure that everything is set up correctly.
-        As of this time, the database validator assumes you are running the latest version of Mods for HESK (<?php echo MODS_FOR_HESK_NEW_VERSION; ?>)</p>
+        <p>The database validation tool will check your database setup to ensure that everything is set up correctly.</p>
     </div>
     <div class="panel panel-success" id="all-good" style="display: none">
         <div class="panel-heading">
-            <h4>Success</h4>
+            <h4><i class="fa fa-check-circle"></i> Success</h4>
         </div>
         <div class="panel-body text-center">
             <i class="fa fa-check-circle fa-4x" style="color: green"></i><br>
@@ -99,6 +98,14 @@ if (hesk_dbNumRows($tableSql) > 0) {
             <i class="fa fa-times-circle fa-4x" style="color: red"></i><br>
             <h4>One or more columns / tables are not properly configured in your database. Please open a topic at the
             <a href="https://developers.phpjunkyard.com/viewforum.php?f=19" target="_blank">PHP Junkyard Forums</a> with this information for assistance.</h4>
+        </div>
+    </div>
+    <div class="panel panel-warning" id="some-skipped" style="display: none">
+        <div class="panel-heading">
+            <h4><i class="fa fa-exclamation-triangle"></i> Some Checks Skipped</h4>
+        </div>
+        <div class="panel-body">
+            You are not running the latest version of Mods for HESK, so some checks have been skipped.
         </div>
     </div>
     <div class="panel panel-default">
@@ -219,55 +226,86 @@ if (hesk_dbNumRows($tableSql) > 0) {
             $validations[] = run_column_check('categories', 'usage', 112);
             $validations[] = run_column_check('users', 'notify_overdue_unassigned', 113);
             $validations[] = run_column_check('users', 'default_calendar_view', 114);
+            $validations[] = run_setting_check('enable_calendar', 115);
+            $validations[] = run_setting_check('first_day_of_week', 116);
+            $validations[] = run_setting_check('default_calendar_view', 117);
             output_header_row('2.6.2');
-            $validations[] = run_column_check('stage_tickets', 'due_date');
-            $validations[] = run_column_check('stage_tickets', 'overdue_email_sent');
+            $validations[] = run_column_check('stage_tickets', 'due_date', 122);
+            $validations[] = run_column_check('stage_tickets', 'overdue_email_sent', 123);
             output_header_row('3.1.0');
-            $validations[] = run_column_check('categories', 'background_color');
-            $validations[] = run_column_check('categories', 'foreground_color');
-            $validations[] = run_column_check('categories', 'display_border_outline');
-            $validations[] = run_column_check('logging', 'stack_trace');
-            $validations[] = run_table_check('custom_nav_element');
-            $validations[] = run_column_check('custom_nav_element', 'id');
-            $validations[] = run_column_check('custom_nav_element', 'image_url');
-            $validations[] = run_column_check('custom_nav_element', 'font_icon');
-            $validations[] = run_column_check('custom_nav_element', 'place');
-            $validations[] = run_column_check('custom_nav_element', 'url');
-            $validations[] = run_column_check('custom_nav_element', 'sort');
-            $validations[] = run_table_check('custom_nav_element_to_text');
-            $validations[] = run_column_check('custom_nav_element_to_text', 'id');
-            $validations[] = run_column_check('custom_nav_element_to_text', 'nav_element_id');
-            $validations[] = run_column_check('custom_nav_element_to_text', 'language');
-            $validations[] = run_column_check('custom_nav_element_to_text', 'text');
-            $validations[] = run_column_check('custom_nav_element_to_text', 'subtext');
-            $validations[] = run_setting_check('admin_navbar_background');
-            $validations[] = run_setting_check('admin_navbar_background_hover');
-            $validations[] = run_setting_check('admin_navbar_text');
-            $validations[] = run_setting_check('admin_navbar_text_hover');
-            $validations[] = run_setting_check('admin_navbar_brand_background');
-            $validations[] = run_setting_check('admin_navbar_brand_background_hover');
-            $validations[] = run_setting_check('admin_navbar_brand_text');
-            $validations[] = run_setting_check('admin_navbar_brand_text_hover');
-            $validations[] = run_setting_check('admin_sidebar_background');
-            $validations[] = run_setting_check('admin_sidebar_background_hover');
-            $validations[] = run_setting_check('admin_sidebar_text');
-            $validations[] = run_setting_check('admin_sidebar_text_hover');
-            $validations[] = run_setting_check('admin_sidebar_font_weight');
-            $validations[] = run_setting_check('admin_sidebar_header_background');
-            $validations[] = run_setting_check('admin_sidebar_header_text');
+            $validations[] = run_column_check('logging', 'stack_trace', 140);
+            $validations[] = run_column_check('categories', 'background_color', 145);
+            $validations[] = run_column_check('categories', 'foreground_color', 143);
+            $validations[] = run_column_check('categories', 'display_border_outline', 144);
+            $validations[] = run_table_check('custom_nav_element', 141);
+            $validations[] = run_column_check('custom_nav_element', 'id', 141);
+            $validations[] = run_column_check('custom_nav_element', 'image_url', 141);
+            $validations[] = run_column_check('custom_nav_element', 'font_icon', 141);
+            $validations[] = run_column_check('custom_nav_element', 'place', 141);
+            $validations[] = run_column_check('custom_nav_element', 'url', 141);
+            $validations[] = run_column_check('custom_nav_element', 'sort', 141);
+            $validations[] = run_table_check('custom_nav_element_to_text', 142);
+            $validations[] = run_column_check('custom_nav_element_to_text', 'id', 142);
+            $validations[] = run_column_check('custom_nav_element_to_text', 'nav_element_id', 142);
+            $validations[] = run_column_check('custom_nav_element_to_text', 'language', 142);
+            $validations[] = run_column_check('custom_nav_element_to_text', 'text', 142);
+            $validations[] = run_column_check('custom_nav_element_to_text', 'subtext', 142);
+            $validations[] = run_setting_check('admin_navbar_background', 151);
+            $validations[] = run_setting_check('admin_navbar_background_hover', 151);
+            $validations[] = run_setting_check('admin_navbar_text', 151);
+            $validations[] = run_setting_check('admin_navbar_text_hover', 151);
+            $validations[] = run_setting_check('admin_navbar_brand_background', 151);
+            $validations[] = run_setting_check('admin_navbar_brand_background_hover', 151);
+            $validations[] = run_setting_check('admin_navbar_brand_text', 151);
+            $validations[] = run_setting_check('admin_navbar_brand_text_hover', 151);
+            $validations[] = run_setting_check('admin_sidebar_background', 151);
+            $validations[] = run_setting_check('admin_sidebar_background_hover', 151);
+            $validations[] = run_setting_check('admin_sidebar_text', 151);
+            $validations[] = run_setting_check('admin_sidebar_text_hover', 151);
+            $validations[] = run_setting_check('admin_sidebar_font_weight', 151);
+            $validations[] = run_setting_check('admin_sidebar_header_background', 151);
+            $validations[] = run_setting_check('admin_sidebar_header_text', 151);
+            $validations[] = run_setting_check('login_background_type', 146);
+            $validations[] = run_setting_check('login_background', 147);
+            $validations[] = run_setting_check('login_box_header', 148);
+            $validations[] = run_setting_check('login_box_header_image', 149);
+            $validations[] = run_setting_check('api_url_rewrite', 150);
             output_header_row('3.2.0');
-            $validations[] = run_table_check('audit_trail');
-            $validations[] = run_table_check('audit_trail_to_replacement_values');
-            $validations[] = run_column_check('categories', 'mfh_description');
-            $validations[] = run_column_check('custom_fields', 'mfh_description');
-            $validations[] = run_setting_check('migrationNumber');
+            $validations[] = run_table_check('audit_trail', 156);
+            $validations[] = run_table_check('audit_trail_to_replacement_values', 157);
+            $validations[] = run_column_check('categories', 'mfh_description', 154);
+            $validations[] = run_column_check('custom_fields', 'mfh_description', 155);
+            $validations[] = run_setting_check('migrationNumber', 158);
             output_header_row('3.3.0');
-            $validations[] = run_table_check('mfh_calendar_business_hours');
+            $validations[] = run_table_check('mfh_service_message_to_location', 164);
+            $validations[] = run_column_check('mfh_service_message_to_location', 'service_message_id', 164);
+            $validations[] = run_column_check('mfh_service_message_to_location', 'location', 164);
+            $validations[] = run_column_check('service_messages', 'mfh_language', 166);
+            $validations[] = run_table_check('mfh_calendar_business_hours', 167);
+            $validations[] = run_setting_check('calendar_show_start_time', 169);
+            $validations[] = run_setting_check('calendar_show_start_time', 999);
 
-            if ($checks) {
+            $passed = false;
+            $failed = false;
+            $skipped = false;
+            foreach ($validations as $validation) {
+                if ($validation === 'SKIPPED') {
+                    $skipped = true;
+                } elseif ($validation === 'FAIL') {
+                    $failed = true;
+                } else if ($validation === 'PASS') {
+                    $passed = true;
+                }
+            }
+
+            if ($passed && !$failed) {
                 echo "<script>$('#all-good').show()</script>";
-            } else {
+            } elseif ($failed) {
                 echo "<script>$('#not-good').show()</script>";
+            }
+
+            if ($skipped) {
+                echo "<script>$('#some-skipped').show()</script>";
             }
             ?>
             </tbody>
@@ -283,13 +321,13 @@ function run_setting_check($setting_name, $minimumValidationNumber) {
     if ($startingValidationNumber < $minimumValidationNumber) {
         $checks = 'SKIPPED';
     } else {
-        $res = run_check("SELECT 1 FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = '{$setting_name}'");
-        $checks = hesk_dbNumRows($res) > 0;
+        $res = run_check("SELECT 1 FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` WHERE `Key` = '{$setting_name}'", false);
+        $checks = hesk_dbNumRows($res) > 0 ? 'PASS' : 'FAIL';
     }
 
     output_result('<b>Setting Exists</b>: ' . $setting_name, $checks);
 
-    return $checks !== false;
+    return $checks;
 }
 
 function run_table_check($table_name, $minimumValidationNumber) {
@@ -320,10 +358,10 @@ function run_column_check($table_name, $column_name, $minimumValidationNumber) {
             $checks);
     }
 
-    return $checks !== false;
+    return $checks;
 }
 
-function run_check($sql) {
+function run_check($sql, $returnString = true) {
     global $hesk_last_query;
     global $hesk_db_link;
     if (function_exists('mysqli_connect')) {
@@ -332,14 +370,23 @@ function run_check($sql) {
         }
         $hesk_last_query = $sql;
 
-        return @mysqli_query($hesk_db_link, $sql) ? 'PASS' : 'FAIL';
+        if ($returnString) {
+            return @mysqli_query($hesk_db_link, $sql) ? 'PASS' : 'FAIL';
+        } else {
+            return @mysqli_query($hesk_db_link, $sql);
+        }
+
     } else {
         if (!$hesk_db_link && !hesk_dbConnect()) {
             return false;
         }
         $hesk_last_query = $sql;
 
-        return $res = @mysql_query($sql, $hesk_db_link) ? 'PASS' : 'FAIL';
+        if ($returnString) {
+            return $res = @mysql_query($sql, $hesk_db_link) ? 'PASS' : 'FAIL';
+        } else {
+            return $res = @mysql_query($sql, $hesk_db_link);
+        }
     }
 }
 
@@ -355,8 +402,11 @@ function output_result($change_title, $status) {
             break;
         case 'SKIPPED':
             $css_color = 'default';
-            $text = '<span data-toggle="tooltip" title="Skipped - You are not running a new enough version of Mods for HESK."><i class="fa-minus-circle"></i> Skipped</span>';
+            $text = '<span data-toggle="tooltip" title="Skipped - You are not running a new enough version of Mods for HESK."><i class="fa fa-minus-circle"></i> Skipped</span>';
             break;
+        default:
+            $css_color = 'danger';
+            $text = 'WTF?! ' . $status;
     }
 
     $formatted_text = sprintf('<tr class="'.$css_color.'"><td>%s</td><td style="color: %s">%s</td></tr>', $change_title, $css_color, $text);
