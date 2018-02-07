@@ -2238,6 +2238,7 @@ $hesklang['show_event_start_time_help'] = 'Always show the start time on event t
 $hesklang['highlight_ticket_rows_based_on_priority'] = 'Highlight ticket rows based on priority';
 $hesklang['highlight_ticket_rows_based_on_priority_help'] = 'If enabled, each ticket on the tickets page will be highlighted based on priority. If disabled, only * Critical * and High priority tickets will be highlighted.';
 $hesklang['highlight_ticket_rows_based_on_priority_descr'] = 'Highlight all ticket rows based on priority';
+$hesklang['protected_group'] = 'This is a protected group; you cannot change accessible categories / features.';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
