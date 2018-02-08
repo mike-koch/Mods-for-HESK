@@ -365,7 +365,6 @@ function save()
         WHERE `id` = " . intval($templateId));
     $row = hesk_dbFetchAssoc($res);
 
-
     // Add 'can ban emails' if 'can unban emails' is set (but not added). Same with 'can ban ips'
     $catArray = hesk_POST_array('categories');
     $featArray = hesk_POST_array('features');
@@ -379,6 +378,41 @@ function save()
     $categories = implode(',', $catArray);
     $features = implode(',', $featArray);
     $name = hesk_POST('name');
+
+    // Only allow users to add what they are allowed to add
+    // Admins can handle anything
+    if (!$_SESSION['isadmin']) {
+        // Update categories based on user visibility
+        $originalCategories = explode(',', $row['categories']);
+        $newCategories = array();
+        foreach ($originalCategories as $innerCategory) {
+            if (in_array($innerCategory, $catArray) && in_array($innerCategory, $_SESSION['categories'])) {
+                $newCategories[] = $innerCategory;
+            } elseif (!in_array($innerCategory, $catArray) && !in_array($innerCategory, $_SESSION['categories'])) {
+                // The user can't modify this, so keep it in
+                $newCategories[] = $innerCategory;
+            }
+            // If neither, the user removed it.
+        }
+
+        // Update features based on user visibility
+        $originalFeatures = explode(',', $row['features']);
+        $newFeatures = array();
+        foreach ($originalFeatures as $innerFeature) {
+            if (in_array($innerFeature, $featArray) && strpos($_SESSION['heskprivileges'], $innerFeature) !== false) {
+                $newFeatures[] = $innerFeature;
+            } elseif (!in_array($innerFeature, $featArray) && strpos($_SESSION['heskprivileges'], $innerFeature) === false) {
+                // The user can't modify this, so keep it in
+                $newFeatures[] = $innerFeature;
+            }
+            // If neither, the user removed it.
+        }
+
+        $categories = implode(',', $newCategories);
+        $features = implode(',', $newFeatures);
+    }
+
+
 
     hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "permission_templates`
         SET `categories` = '" . hesk_dbEscape($categories) . "', `heskprivileges` = '" . hesk_dbEscape($features) . "',
