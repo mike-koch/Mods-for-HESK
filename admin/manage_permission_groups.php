@@ -198,7 +198,7 @@ function createEditModal($template, $features, $categories)
                                             $disabled = ' disabled';
                                         }?>
 
-                                        <?php if (in_array($category['id'], $_SESSION['categories']) || $checked): ?>
+                                        <?php if ($_SESSION['isadmin'] || in_array($category['id'], $_SESSION['categories']) || $checked): ?>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="categories[]"
@@ -231,7 +231,7 @@ function createEditModal($template, $features, $categories)
                                             $template['heskprivileges'] === 'ALL') {
                                             $disabled = ' disabled';
                                         }
-                                        if (strpos($_SESSION['heskprivileges'], $feature) !== false || $checked):  ?>
+                                        if ($_SESSION['isadmin'] || strpos($_SESSION['heskprivileges'], $feature) !== false || $checked):  ?>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="features[]"
@@ -299,7 +299,7 @@ function buildCreateModal($features, $categories)
                                 <div class="form-group">
                                     <?php
                                     foreach ($categories as $category):
-                                        if (in_array($category['id'], $_SESSION['categories']) || hesk_SESSION('isadmin')): ?>
+                                        if (hesk_SESSION('isadmin') || in_array($category['id'], $_SESSION['categories'])): ?>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="categories[]"
@@ -396,7 +396,7 @@ function save()
         }
 
         // Update features based on user visibility
-        $originalFeatures = explode(',', $row['features']);
+        $originalFeatures = explode(',', $row['heskprivileges']);
         $newFeatures = array();
         foreach ($originalFeatures as $innerFeature) {
             if (in_array($innerFeature, $featArray) && strpos($_SESSION['heskprivileges'], $innerFeature) !== false) {
