@@ -80,14 +80,19 @@ while ($row = hesk_dbFetchAssoc($res)) {
             </div>
         </div>
         <div class="box-body">
-            <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success nu-floatRight">
-                <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new_group']; ?>
-            </a>
+            <div class="text-right">
+                <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success nu-floatRight">
+                    <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new']; ?>
+                </a>
+            </div>
+
             <table class="table table-striped">
                 <thead>
-                <th><?php echo $hesklang['name']; ?></th>
-                <th><?php echo $hesklang['number_of_users']; ?></th>
-                <th><?php echo $hesklang['actions']; ?></th>
+                <tr>
+                    <th><?php echo $hesklang['name']; ?></th>
+                    <th><?php echo $hesklang['number_of_users']; ?></th>
+                    <th><?php echo $hesklang['actions']; ?></th>
+                </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($templates as $row): ?>
@@ -96,13 +101,13 @@ while ($row = hesk_dbFetchAssoc($res)) {
                         <td><?php echo getNumberOfUsersWithPermissionGroup($row['id']); ?></td>
                         <td>
                             <a href="#" data-toggle="modal" data-target="#modal-template-<?php echo $row['id'] ?>">
-                                <i class="fa fa-pencil icon-link" data-toggle="tooltip"
+                                <i class="fa fa-fw fa-pencil icon-link orange" data-toggle="tooltip"
                                    title="<?php echo $hesklang['view_permissions_for_this_group'] ?>"></i></a>
                             <?php
                             if ($row['id'] != 1 && $row['id'] != 2):
                                 ?>
                                 <a href="manage_permission_groups.php?a=delete&amp;id=<?php echo $row['id']; ?>">
-                                    <i class="fa fa-times icon-link red" data-toggle="tooltip"
+                                    <i class="fa fa-fw fa-times icon-link red" data-toggle="tooltip"
                                        title="<?php echo $hesklang['delete']; ?>"></i></a>
                             <?php endif; ?>
                         </td>
