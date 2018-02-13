@@ -40,27 +40,6 @@ $priorities = array(
     0 => array('value' => 0, 'text' => $hesklang['critical'], 'formatted' => '<span class="critical">' . $hesklang['critical'] . '</span>'),
 );
 
-/* What should we do? */
-if ($action = hesk_REQUEST('a')) {
-    if ($action == 'linkcode') {
-        generate_link_code();
-    } elseif (defined('HESK_DEMO')) {
-        hesk_process_messages($hesklang['ddemo'], 'manage_categories.php', 'NOTICE');
-    } elseif ($action == 'new') {
-        new_cat();
-    } elseif ($action == 'remove') {
-        remove();
-    } elseif ($action == 'order') {
-        order_cat();
-    } elseif ($action == 'autoassign') {
-        toggle_autoassign();
-    } elseif ($action == 'type') {
-        toggle_type();
-    } elseif ($action == 'edit') {
-        update_category();
-    }
-}
-
 $modsForHesk_settings = mfh_getSettings();
 
 /* Print header */
@@ -81,11 +60,6 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     }
     //-->
 </script>
-
-<?php
-$orderBy = $modsForHesk_settings['category_order_column'];
-$res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` ORDER BY `" . $orderBy . "` ASC");
-?>
 <div class="content-wrapper">
     <section class="content">
         <div class="box">
@@ -103,9 +77,6 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             </div>
             <div class="box-body">
                 <?php
-                /* This will handle error, success and notice messages */
-                hesk_handle_messages();
-
                 if ($hesk_settings['cust_urgency']) {
                     hesk_show_notice($hesklang['cat_pri_info'] . ' ' . $hesklang['cpri']);
                 }

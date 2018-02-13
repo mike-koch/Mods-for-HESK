@@ -8,6 +8,11 @@ class Category extends \BaseClass {
      */
     public $id;
 
+    /**
+     * @var int The parent ID
+     */
+    public $parentId;
+
     /* @var $name string */
     public $name;
 
