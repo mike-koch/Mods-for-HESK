@@ -225,5 +225,6 @@ function getAllMigrations() {
         167 => new \v330\CalendarImprovements\AddBusinessHoursTable(167),
         168 => new \v330\CalendarImprovements\InsertDefaultBusinessHours(168),
         169 => new \v330\CalendarImprovements\AddShowStartTimeSetting(169),
+        170 => new \v330\AddParentIdToCategory(170),
     );
 }

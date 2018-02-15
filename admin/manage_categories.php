@@ -16,7 +16,9 @@ define('HESK_PATH', '../');
 define('VALIDATOR', 1);
 define('PAGE_TITLE', 'ADMIN_CATEGORIES');
 define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
-define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/manage-categories.js"></script>');
+define('EXTRA_JS', '
+    <script src="'.HESK_PATH.'js/jstree.min.js"></script>
+    <script src="'.HESK_PATH.'internal-api/js/manage-categories.js"></script>');
 
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
@@ -89,6 +91,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </button>
                     </div>
                     <div class="col-md-12">
+                        <div id="category-tree">
+                            <?php // Tree rendered here via JS ?>
+                        </div>
+
                         <table class="table table-striped">
                             <thead>
                             <tr>
@@ -110,9 +116,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     </div>
                 </div>
             </div>
-            <div class="overlay" id="overlay">
+            <!--<div class="overlay" id="overlay">
                 <i class="fa fa-spinner fa-spin"></i>
-            </div>
+            </div>-->
         </div>
     </section>
 </div>

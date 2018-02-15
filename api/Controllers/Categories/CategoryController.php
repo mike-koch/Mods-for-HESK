@@ -35,6 +35,27 @@ class CategoryController extends \BaseClass {
         return $categoryRetriever->getAllCategories($hesk_settings, $userContext);
     }
 
+    static function getForTree() {
+        global $hesk_settings, $applicationContext, $userContext;
+
+        /* @var $categoryRetriever CategoryRetriever */
+        $categoryRetriever = $applicationContext->get(CategoryRetriever::clazz());
+
+        /* @var $categories Category[] */
+        $categories = $categoryRetriever->getAllCategories($hesk_settings, $userContext);
+
+        $transformed = array();
+        foreach ($categories as $category) {
+            $cat = array();
+            $cat['id'] = $category->id;
+            $cat['text'] = $category->name;
+            $cat['parent'] = $category->parentId === null ? '#' : $category->parentId;
+            $transformed[] = $cat;
+        }
+
+        return output($transformed);
+    }
+
     function post() {
         global $hesk_settings, $userContext, $applicationContext;
 

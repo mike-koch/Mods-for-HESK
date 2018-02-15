@@ -1,7 +1,9 @@
 var categories = [];
 
 $(document).ready(function() {
-    loadTable();
+    loadTree();
+
+    //loadTable();
     bindEditModal();
     bindModalCancelCallback();
     bindFormSubmit();
@@ -10,6 +12,23 @@ $(document).ready(function() {
     bindGenerateLinkModal();
     bindSortButtons();
 });
+
+function loadTree() {
+    var heskUrl = $('p#hesk-path').text();
+    $('div#category-tree').jstree({
+        plugins: ["dnd", "search",
+            "state", "types", "wholerow"],
+        core: {
+            animation: 0,
+            check_callback: true,
+            data: {
+                url: heskUrl + 'api/index.php/v1/categories/tree',
+                headers: { 'X-Internal-Call': true }
+            }
+        }//,
+        //grid
+    });
+}
 
 
 function loadTable() {

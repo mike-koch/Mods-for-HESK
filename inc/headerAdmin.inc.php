@@ -49,6 +49,7 @@ header('X-UA-Compatible: IE=edge');
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/positions.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/displays.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/bootstrap-select.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>js/themes/default/style.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/mods-for-hesk-new.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <?php if (defined('USE_JQUERY_2')): ?>
         <script src="<?php echo HESK_PATH; ?>js/jquery-2.2.4.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>

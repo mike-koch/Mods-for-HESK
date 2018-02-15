@@ -194,6 +194,7 @@ Link::before('globalBefore');
 Link::all(array(
     // Categories
     '/v1/categories/all' => action(\Controllers\Categories\CategoryController::clazz() . '::printAllCategories', array(RequestMethod::GET), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/categories/tree' => action(\Controllers\Categories\CategoryController::clazz() . '::getForTree', array(RequestMethod::GET), SecurityHandler::INTERNAL),
     '/v1/categories' => action(\Controllers\Categories\CategoryController::clazz(), array(RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::clazz(), array(RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::clazz() . '::sort', array(RequestMethod::POST), SecurityHandler::INTERNAL),
