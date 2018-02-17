@@ -18,6 +18,7 @@ define('PAGE_TITLE', 'ADMIN_CATEGORIES');
 define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 define('EXTRA_JS', '
     <script src="'.HESK_PATH.'js/jstree.min.js"></script>
+    <script src="'.HESK_PATH.'js/jstreegrid.js"></script>
     <script src="'.HESK_PATH.'internal-api/js/manage-categories.js"></script>');
 
 /* Get all the required files and functions */
@@ -91,7 +92,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </button>
                     </div>
                     <div class="col-md-12">
-                        <div id="category-tree">
+                        <div id="category-tree" style="min-width: 100%">
                             <?php // Tree rendered here via JS ?>
                         </div>
 

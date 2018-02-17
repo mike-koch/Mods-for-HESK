@@ -16,8 +16,7 @@ $(document).ready(function() {
 function loadTree() {
     var heskUrl = $('p#hesk-path').text();
     $('div#category-tree').jstree({
-        plugins: ["dnd", "search",
-            "state", "types", "wholerow"],
+        plugins: ["dnd", "state", "types", "wholerow", "grid"],
         core: {
             animation: 0,
             check_callback: true,
@@ -25,8 +24,78 @@ function loadTree() {
                 url: heskUrl + 'api/index.php/v1/categories/tree',
                 headers: { 'X-Internal-Call': true }
             }
-        }//,
-        //grid
+        },
+        grid: {
+            width: '100%',
+            columns: [
+                { header: "Category name" },
+                {
+                    header: "Visibility",
+                    value: function(node) {
+                        if (node.data.type === 1) {
+                            return '<i style="padding-right: 8px;" class="fa fa-fw fa-lock icon-link gray"></i>' +
+                                '            <span>Private</span>';
+                        }
+
+                        return '<i style="padding-right: 8px;" class="fa fa-fw fa-unlock-alt icon-link blue"></i>\n' +
+                            '            <span>Public</span>';
+                    }
+                },
+                {
+                    header: "Auto-assign",
+                    value: function(node) {
+                        if (node.data.autoAssign) {
+                            return '<i class="fa fa-fw fa-bolt icon-link orange"></i>' +
+                                '<span>Enabled</span>';
+                        }
+
+                        return '<i class="fa fa-fw fa-bolt icon-link gray"></i>' +
+                            '<span>Disabled</span>';
+                    }
+                },
+                {
+                    header: "Priority",
+                    value: function(node) {
+                        if (node.data.priority === 0) {
+                            // Critical
+                            return '<span class="critical">' + mfhLang.text('critical')  + '</span>';
+                        } else if (node.data.priority === 1) {
+                            // High
+                            return '<span class="important">' + mfhLang.text('high')  + '</span>';
+                        } else if (node.data.priority === 2) {
+                            // Medium
+                            return '<span class="medium">' + mfhLang.text('medium')  + '</span>';
+                        } else {
+                            // Low
+                            return '<span class="normal">' + mfhLang.text('low')  + '</span>';
+                        }
+                    }
+                },
+                {
+                    header: "Tickets",
+                    value: function(node) {
+                        var linkPattern = $('input[name="show-tickets-path"]').val();
+                        return '<a data-property="number-of-tickets" href="'+linkPattern.replace('{0}', node.id)+'">' +
+                            node.data.numberOfTickets +
+                            '</a>';
+                    }
+                },
+                {
+                    header: "Graph",
+                    value: function(node) {
+                        var percentText = mfhLang.text('perat');
+                        var percentage = Math.round(node.data.numberOfTickets / node.data.totalNumberOfTickets * 100);
+                        return '<div class="progress" style="width: 160px; margin-bottom: 0" title="' + (percentText.replace('%s', percentage + '%')) + '" data-toggle="tooltip">' +
+                                    '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="' + percentage + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + percentage + '%">' +
+                                    '</div>' +
+                                '</div>';
+                    }
+                },
+                { header: "Manager", value: "manager" },
+                { header: "Usage", value: "usage" },
+                { header: "Options" }
+            ]
+        }
     });
 }
 

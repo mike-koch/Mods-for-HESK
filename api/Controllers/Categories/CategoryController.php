@@ -3,6 +3,8 @@
 namespace Controllers\Categories;
 
 use BusinessLogic\Categories\Category;
+use BusinessLogic\Categories\CategoryForTree;
+use BusinessLogic\Categories\CategoryForTreeData;
 use BusinessLogic\Categories\CategoryHandler;
 use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Exceptions\ApiFriendlyException;
@@ -45,11 +47,31 @@ class CategoryController extends \BaseClass {
         $categories = $categoryRetriever->getAllCategories($hesk_settings, $userContext);
 
         $transformed = array();
+
+        $totalNumberOfTickets = 0;
         foreach ($categories as $category) {
-            $cat = array();
-            $cat['id'] = $category->id;
-            $cat['text'] = $category->name;
-            $cat['parent'] = $category->parentId === null ? '#' : $category->parentId;
+            $totalNumberOfTickets += $category->numberOfTickets;
+        }
+
+        foreach ($categories as $category) {
+            $cat = new CategoryForTree();
+            $data = new CategoryForTreeData();
+            $cat->id = $category->id;
+            $cat->text = $category->name;
+            $cat->parent = $category->parentId === null ? '#' : $category->parentId;
+            $data->numberOfTickets = $category->numberOfTickets;
+            $data->totalNumberOfTickets = $totalNumberOfTickets;
+            $data->description = $category->description;
+            $data->manager = $category->manager;
+            $data->priority = $category->priority;
+            $data->displayBorder = $category->displayBorder;
+            $data->autoAssign = $category->autoAssign;
+            $data->foregroundColor = $category->foregroundColor;
+            $data->backgroundColor = $category->backgroundColor;
+            $data->type = $category->type;
+            $data->usage = $category->usage;
+            $cat->data = $data;
+
             $transformed[] = $cat;
         }
 
