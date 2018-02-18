@@ -91,9 +91,64 @@ function loadTree() {
                                 '</div>';
                     }
                 },
-                { header: "Manager", value: "manager" },
-                { header: "Usage", value: "usage" },
-                { header: "Options" }
+                {
+                    header: "Manager",
+                    value: function(node) {
+                        if (node.data.manager === null) {
+                            return mfhLang.text('no_manager');
+                        } else {
+                            return users[node.data.manager].name;
+                        }
+                    }
+                },
+                {
+                    header: "Usage",
+                    value: function(node) {
+                        if (node.data.usage === 1) {
+                            // Tickets only
+                            return '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="' + mfhLang.text('tickets') + '"></i><i class="fa fa-fw"></i>'
+                        } else if (node.data.usage === 2) {
+                            // Events only
+                            return '<i class="fa fa-fw"></i><i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="' + mfhLang.text('events') + '"></i>';
+                        } else {
+                            return '<i class="fa fa-fw fa-ticket icon-link" data-toggle="tooltip" title="' + mfhLang.text('tickets') + '"></i>' +
+                                '<i class="fa fa-fw fa-calendar icon-link" data-toggle="tooltip" title="' + mfhLang.text('events') + '"></i>';
+                        }
+                    }
+                },
+                {
+                    header: "Options",
+                    value: function(node) {
+                        var returnStr = '';
+                        if (node.data.type === 1) {
+                            returnStr += '<a data-property="generate-link" data-category-id="' + node.id + '" href="#">' +
+                                '<i class="fa fa-fw icon-link fa-ban red" data-toggle="tooltip" data-placement="top" title="' + mfhLang.text('cpric') + '"></i>' +
+                                '</a>';
+                        } else {
+                            returnStr += '<a data-property="generate-link" data-category-id="' + node.id + '" href="#">' +
+                                '<i class="fa fa-fw icon-link fa-code green" data-toggle="tooltip" data-placement="top" title="' + mfhLang.text('geco') + '"></i>' +
+                                '</a>';
+                        }
+
+                        returnStr +=
+                            '<span class="sort-arrows">' +
+                                '<a href="#" data-action="sort" data-direction="up">' +
+                                    '<i class="fa fa-fw fa-arrow-up icon-link green" data-toggle="tooltip" title="' + mfhLang.text('move_up') + '"></i>' +
+                                '</a>' +
+                                '<a href="#" data-action="sort" data-direction="down">' +
+                                    '<i class="fa fa-fw fa-arrow-down icon-link green" data-toggle="tooltip" title="' + mfhLang.text('move_dn') + '"></i>' +
+                                '</a>' +
+                            '</span>' +
+                            '<a href="#" data-action="edit">' +
+                                '<i class="fa fa-fw fa-pencil icon-link orange" data-toggle="tooltip" title="' + mfhLang.text('edit') + '"></i>' +
+                            '</a>' +
+                            '<a href="#" data-action="delete">' +
+                                '<i class="fa fa-fw fa-times icon-link red" data-toggle="tooltip" title="' + mfhLang.text('delete') + '"></i>' +
+                            '</a>';
+
+                        return returnStr;
+                    }
+                }
             ]
         }
     });
