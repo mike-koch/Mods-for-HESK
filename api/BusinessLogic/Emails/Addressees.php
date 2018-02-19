@@ -12,10 +12,10 @@ class Addressees extends \BaseClass {
     /**
      * @var $cc string[]|null
      */
-    public $cc;
+    public $cc = array();
 
     /**
      * @var $bcc string[]|null
      */
-    public $bcc;
+    public $bcc = array();
 }

@@ -543,41 +543,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 																<?php echo $hesklang['bcc']; ?>
 															</label>
 														</div>
-                                                        <script>
-                                                            $('input[name="email_type"]').change(function() {
-                                                                if ($('input[name="email_type"]:checked').val() === 'none') {
-                                                                    $('#emails_to_receive').hide();
-                                                                } else {
-                                                                    $('#emails_to_receive').show();
-                                                                }
-                                                            });
-                                                        </script>
 													</div>
 												</div>
-                                                <div class="form-group" id="emails_to_receive" style="display: <?php if ($address_type === 'none') {echo 'none';} else {echo 'block';} ?>">
-                                                    <label for="staff_or_customer" class="col-sm-4 control-label">
-                                                        <?php echo $hesklang['emails_to_receive']; ?>
-                                                    </label>
-                                                    <div class="col-sm-8">
-                                                        <?php
-                                                        $emails_to_receive = empty($value['emails_to_receive']) ? array() : $value['emails_to_receive'];
-                                                        ?>
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input type="checkbox" name="emails_to_receive[]" value="STAFF"
-                                                                       <?php if (in_array('STAFF', $emails_to_receive)) {echo 'checked';} ?>>
-                                                                <?php echo $hesklang['emails_sent_to_staff']; ?>
-                                                            </label>
-                                                        </div>
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input type="checkbox" name="emails_to_receive[]" value="CUSTOMER"
-                                                                    <?php if (in_array('CUSTOMER', $emails_to_receive)) {echo 'checked';} ?>>
-                                                                <?php echo $hesklang['emails_sent_to_customer']; ?>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
 											</div>
 
 											<div id="hidden" style="display:<?php echo ($type == 'hidden') ? 'block' : 'none' ?>">
@@ -1285,8 +1252,7 @@ function cf_validate()
 		case 'email':
 			$cf['email_multi'] = hesk_POST('email_multi') ? 1 : 0;
 			$cf['email_type'] = hesk_POST('email_type', 'none');
-			$cf['emails_to_receive'] = $cf['email_type'] === 'none' ? array() : hesk_POST_array('emails_to_receive', array());
-			$cf['value'] = array('multiple' => $cf['email_multi'], 'email_type' => $cf['email_type'], 'emails_to_receive' => $cf['emails_to_receive']);
+			$cf['value'] = array('multiple' => $cf['email_multi'], 'email_type' => $cf['email_type']);
 			break;
 
 		case 'hidden':
