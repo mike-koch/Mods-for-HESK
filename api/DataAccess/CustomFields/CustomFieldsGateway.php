@@ -14,7 +14,7 @@ class CustomFieldsGateway extends CommonDao {
             $customField = new CustomField();
             $customField->id = $row['id'];
             $names = json_decode($row['name'], true);
-            $customField->name = (isset($names[$hesk_settings['language']])) ? $names[$heskSettings['language']] : reset($names);
+            $customField->name = (isset($names[$heskSettings['language']])) ? $names[$heskSettings['language']] : reset($names);
             $customField->type = $row['type'];
             $customField->properties = json_decode($row['value'], true);
 
