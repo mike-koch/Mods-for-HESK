@@ -519,7 +519,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 														<?php echo $hesklang['email_custom_field_label']; ?>
 													</label>
 													<div class="col-sm-8">
-														<?php $address_type = empty($value['email_type']) ? 'none' : $value['email_type']; ?>
+														<?php
+                                                        $address_type = empty($value['email_type']) ? 'none' : $value['email_type'];
+                                                        ?>
 														<div class="radio">
 															<label>
 																<input type="radio" name="email_type" value="none"
