@@ -173,7 +173,7 @@ if (!$show['show']) {
             define('HESK_NO_ROBOTS', 1);
 
             /* Print header */
-            $hesk_settings['tmp_title'] = $hesklang['sr'] . ': ' . substr(hesk_htmlspecialchars(stripslashes($query)), 0, 20);
+            $hesk_settings['tmp_title'] = $hesklang['sr'] . ': ' . hesk_mb_substr(hesk_htmlspecialchars(stripslashes($query)),0,20);
             require_once(HESK_PATH . 'inc/header.inc.php');
             hesk_kb_header($hesk_settings['kb_link']);
 

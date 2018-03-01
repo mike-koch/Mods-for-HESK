@@ -19,7 +19,7 @@ class Validators extends \BaseClass {
             $address = str_replace(';', ',', $address);
 
             /* Check if addresses are valid */
-            $all = explode(',', $address);
+            $all = array_unique(explode(',',$address));
             foreach ($all as $k => $v) {
                 if (!self::isValidEmail($v)) {
                     unset($all[$k]);

@@ -66,7 +66,7 @@ function hesk_load_custom_fields($category=0, $use_cache=1)
 
         // Name for display in ticket list; punctuation removed and shortened
         $row['title'] = hesk_remove_punctuation($row['name']);
-        $row['title'] = strlen($row['title']) > 30 ?  substr($row['title'], 0, 30) . '...' : $row['title'];
+        $row['title'] = hesk_mb_strlen($row['title']) > 30 ?  hesk_mb_substr($row['title'], 0, 30) . '...' : $row['title'];
 
         // A version with forced punctuation
         $row['name:'] = in_array(substr($row['name'], -1), array(':', '?', '!', '.') ) ? $row['name'] : $row['name'] . ':';

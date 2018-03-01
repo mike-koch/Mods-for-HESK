@@ -57,14 +57,14 @@ $can_view_unassigned = hesk_checkPermission('can_view_unassigned', 0);
 $category_options = '';
 if (isset($hesk_settings['categories']) && count($hesk_settings['categories'])) {
     foreach ($hesk_settings['categories'] as $row['id'] => $row['name']) {
-        $row['name'] = (strlen($row['name']) > 30) ? substr($row['name'], 0, 30) . '...' : $row['name'];
+        $row['name'] = (hesk_mb_strlen($row['name']) > 30) ? hesk_mb_substr($row['name'],0,30) . '...' : $row['name'];
         $selected = ($row['id'] == $category) ? 'selected="selected"' : '';
         $category_options .= '<option value="' . $row['id'] . '" ' . $selected . '>' . $row['name'] . '</option>';
     }
 } else {
     $res2 = hesk_dbQuery('SELECT `id`, `name` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` WHERE ' . hesk_myCategories('id') . ' ORDER BY `cat_order` ASC');
     while ($row = hesk_dbFetchAssoc($res2)) {
-        $row['name'] = (strlen($row['name']) > 30) ? substr($row['name'], 0, 30) . '...' : $row['name'];
+        $row['name'] = (hesk_mb_strlen($row['name']) > 30) ? hesk_mb_substr($row['name'],0,30) . '...' : $row['name'];
         $selected = ($row['id'] == $category) ? 'selected="selected"' : '';
         $category_options .= '<option value="' . $row['id'] . '" ' . $selected . '>' . $row['name'] . '</option>';
     }
@@ -436,7 +436,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                                     $v['name'] = $hesklang[$v['name']];
                                                 }
 
-                                                $v['name'] = (strlen($v['name']) > 30) ? substr($v['name'], 0, 30) . '...' : $v['name'];
+                                                $v['name'] = (hesk_mb_strlen($v['name']) > 30) ? hesk_mb_substr($v['name'],0,30) . '...' : $v['name'];
                                                 echo '<option style="background: #ffffff" value="' . $k . '" ' . $selected . '>' . $v['name'] . '</option>';
                                             }
                                         }

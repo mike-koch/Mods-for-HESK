@@ -65,7 +65,7 @@ $is_form = hesk_SESSION('t_form');
 $trackingID = hesk_cleanID('', hesk_SESSION('t_track'));
 
 /* Email required to view ticket? */
-$my_email = hesk_getCustomerEmail(1, 't_email');
+$my_email = hesk_getCustomerEmail(1, 't_email', 1);
 
 /* Remember email address? */
 $do_remember = strlen($do_remember) || strlen(hesk_SESSION('t_remember')) ? ' checked="checked" ' : '';
