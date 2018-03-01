@@ -577,9 +577,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     case 'hidden':
                                     case 'readonly':
                                     default:
-                                        if (strlen($k_value) != 0) {
-                                            $v['value']['default_value'] = $k_value;
-                                        }
+                                        $k_value = hesk_msgToPlain($k_value,0,0);
 
                                         $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
@@ -587,7 +585,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group' . $cls . '">
                             <label for="' . $k . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $required_attribute . '>';
+                                <input type="text" class="form-control" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $k_value . '" ' . $required_attribute . '>';
                                     if (!empty($v['mfh_description'])) {
                                         echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
                                     }
