@@ -246,7 +246,7 @@ if ($total > 0) {
             }
 
             // Set message (needed for row title)
-            $ticket['message'] = $first_line . substr(strip_tags($ticket['message']), 0, 200) . '...';
+            $ticket['message'] = $first_line . hesk_mb_substr(strip_tags($ticket['message']),0,200).'...';
 
             // Start ticket row
             echo '

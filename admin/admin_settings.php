@@ -93,19 +93,20 @@ if ($hesk_settings['attachments']['use'] && !defined('HESK_DEMO')) {
     $tmp = @ini_get('upload_max_filesize');
     if ($tmp) {
         $last = strtoupper(substr($tmp, -1));
+        $number = substr($tmp, 0, -1);
 
         switch ($last) {
             case 'K':
-                $tmp = $tmp * 1024;
+                $tmp = $number * 1024;
                 break;
             case 'M':
-                $tmp = $tmp * 1048576;
+                $tmp = $number * 1048576;
                 break;
             case 'G':
-                $tmp = $tmp * 1073741824;
+                $tmp = $number * 1073741824;
                 break;
             default:
-                $tmp = $tmp;
+                $tmp = $number;
         }
 
         if ($tmp < $hesk_settings['attachments']['max_size']) {
@@ -117,19 +118,20 @@ if ($hesk_settings['attachments']['use'] && !defined('HESK_DEMO')) {
     $tmp = @ini_get('post_max_size');
     if ($tmp) {
         $last = strtoupper(substr($tmp, -1));
+        $number = substr($tmp, 0, -1);
 
         switch ($last) {
             case 'K':
-                $tmp = $tmp * 1024;
+                $tmp = $number * 1024;
                 break;
             case 'M':
-                $tmp = $tmp * 1048576;
+                $tmp = $number * 1048576;
                 break;
             case 'G':
-                $tmp = $tmp * 1073741824;
+                $tmp = $number * 1073741824;
                 break;
             default:
-                $tmp = $tmp;
+                $tmp = $number;
         }
 
         if ($tmp < ($hesk_settings['attachments']['max_size'] * $hesk_settings['attachments']['max_number'] + 524288)) {
@@ -3508,13 +3510,13 @@ $modsForHesk_settings = mfh_getSettings();
 
                 <h4 class="bold"><?php echo $hesklang['other']; ?></h4>
                 <div class="form-group">
-                    <label for="s_ip_whois" class="col-sm-4 control-label"><?php echo $hesklang['ip_whois']; ?> <a
+                    <label for="s_ip_whois_url" class="col-sm-4 control-label"><?php echo $hesklang['ip_whois']; ?> <a
                             href="Javascript:void(0)"
                             onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#61','400','500')"><i
                                 class="fa fa-question-circle settingsquestionmark"></i></a></label>
 
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" name="s_ip_whois" size="40" maxlength="255"
+                        <input type="text" class="form-control" name="s_ip_whois_url" size="40" maxlength="255"
                                value="<?php echo $hesk_settings['ip_whois']; ?>"/>
                     </div>
                 </div>

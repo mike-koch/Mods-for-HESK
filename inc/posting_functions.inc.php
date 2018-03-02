@@ -23,7 +23,7 @@ function hesk_newTicket($ticket, $isVerified = true)
     global $hesk_settings, $hesklang, $hesk_db_link;
 
     // Generate a subject if necessary
-    if (strlen($ticket['subject']) < 1)
+    if (hesk_mb_strlen($ticket['subject']) < 1)
     {
         $ticket['subject'] = sprintf($hesklang['default_subject'], $ticket['name']);
     }

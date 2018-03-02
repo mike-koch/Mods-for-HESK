@@ -513,6 +513,7 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
 
     // Remove duplicate recipients
     $to_arr = array_unique(explode(',', $to));
+    $to_arr = array_values($to_arr);
     $to = implode(',', $to_arr);
 
     // Use PHP's mail function
