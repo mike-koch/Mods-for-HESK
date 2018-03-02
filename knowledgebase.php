@@ -173,7 +173,7 @@ if (!$show['show']) {
             define('HESK_NO_ROBOTS', 1);
 
             /* Print header */
-            $hesk_settings['tmp_title'] = $hesklang['sr'] . ': ' . substr(hesk_htmlspecialchars(stripslashes($query)), 0, 20);
+            $hesk_settings['tmp_title'] = $hesklang['sr'] . ': ' . hesk_mb_substr(hesk_htmlspecialchars(stripslashes($query)),0,20);
             require_once(HESK_PATH . 'inc/header.inc.php');
             hesk_kb_header($hesk_settings['kb_link']);
 
@@ -253,6 +253,13 @@ if (!$show['show']) {
             $hesk_settings['tmp_title'] = $article['subject'];
             require_once(HESK_PATH . 'inc/header.inc.php');
             hesk_kb_header($hesk_settings['kb_link']);
+
+
+            // Service messages
+            $service_messages = mfh_get_service_messages('CUSTOMER_VIEW_KB_ARTICLE');
+            foreach ($service_messages as $sm) {
+                hesk_service_message($sm);
+            }
 
             // Update views by 1 - exclude known bots and reloads because of ratings
             if (!isset($_GET['rated']) && !hesk_detect_bots()) {
@@ -406,11 +413,11 @@ if (!$show['show']) {
                 hesk_kb_header($hesk_settings['kb_link']);
             }
 
-            // If we are in "Knowledgebase only" mode show system messages
-            if ($catid == 1 && hesk_check_kb_only(false)) {
+            // Display service messages on the default category
+            if ($catid == 1) {
                 // Service messages
-                $res = hesk_dbQuery('SELECT `title`, `message`, `style` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages` WHERE `type`='0' ORDER BY `order` ASC");
-                while ($sm = hesk_dbFetchAssoc($res)) {
+                $service_messages = mfh_get_service_messages('CUSTOMER_KB_HOME');
+                foreach ($service_messages as $sm) {
                     hesk_service_message($sm);
                 }
             }

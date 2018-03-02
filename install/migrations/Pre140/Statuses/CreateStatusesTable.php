@@ -23,6 +23,9 @@ class CreateStatusesTable extends \AbstractMigration {
     }
 
     function down($hesk_settings) {
-        $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD COLUMN `status_int` INT NOT NULL AFTER `status`;");
+        // We no longer need to do this thanks to HESK 2.7.0
+        //$this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` ADD COLUMN `status_int` INT NOT NULL AFTER `status`;");
+        // Moved from migration #1
+        $this->executeQuery("DROP TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses`");
     }
 }

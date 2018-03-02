@@ -12,13 +12,52 @@ $(document).ready(function() {
         eventLimit: true,
         timeFormat: 'H:mm',
         axisFormat: 'H:mm',
+        displayEventTime: $('#setting_show_start_time').text(),
+        businessHours: [
+            {
+                dow: [0],
+                start: $('#business_hours_0_start').text(),
+                end: $('#business_hours_0_end').text()
+            },
+            {
+                dow: [1],
+                start: $('#business_hours_1_start').text(),
+                end: $('#business_hours_1_end').text()
+            },
+            {
+                dow: [2],
+                start: $('#business_hours_2_start').text(),
+                end: $('#business_hours_2_end').text()
+            },
+            {
+                dow: [3],
+                start: $('#business_hours_3_start').text(),
+                end: $('#business_hours_3_end').text()
+            },
+            {
+                dow: [4],
+                start: $('#business_hours_4_start').text(),
+                end: $('#business_hours_4_end').text()
+            },
+            {
+                dow: [5],
+                start: $('#business_hours_5_start').text(),
+                end: $('#business_hours_5_end').text()
+            },
+            {
+                dow: [6],
+                start: $('#business_hours_6_start').text(),
+                end: $('#business_hours_6_end').text()
+            }
+        ],
         firstDay: $('#setting_first_day_of_week').text(),
         defaultView: $('#setting_default_view').text().trim(),
         events: function(start, end, timezone, callback) {
             $.ajax({
-                url: heskPath + 'internal-api/admin/calendar/?start=' + start + '&end=' + end,
+                url: heskPath + 'api/index.php/v1/calendar/events/staff?start=' + start + '&end=' + end,
                 method: 'GET',
                 dataType: 'json',
+                headers: { 'X-Internal-Call': true },
                 success: function(data) {
                     var events = [];
                     $(data).each(function() {
@@ -61,7 +100,8 @@ $(document).ready(function() {
                     .find('.popover-owner span').text(event.owner).end()
                     .find('.popover-subject span').text(event.subject).end()
                     .find('.popover-category span').text(event.categoryName).end()
-                    .find('.popover-priority span').text(event.priority);
+                    .find('.popover-priority span').text(event.priority)
+                    .find('.popover-status span').text(event.status).end();
             } else {
                 if (event.location === '') {
                     $contents.find('.popover-location').hide();
@@ -124,7 +164,13 @@ $(document).ready(function() {
 });
 
 function buildEvent(id, dbObject) {
-    if (dbObject.type == 'TICKET') {
+    var priorities = [];
+    priorities['CRITICAL'] = mfhLang.text('critical');
+    priorities['HIGH'] = mfhLang.text('high');
+    priorities['MEDIUM'] = mfhLang.text('medium');
+    priorities['LOW'] = mfhLang.text('low');
+
+    if (dbObject.type === 'TICKET') {
         return {
             title: dbObject.title,
             subject: dbObject.subject,
@@ -140,8 +186,9 @@ function buildEvent(id, dbObject) {
             categoryName: dbObject.categoryName,
             className: 'category-' + dbObject.categoryId,
             owner: dbObject.owner,
-            priority: dbObject.priority,
-            fontIconMarkup: getIcon(dbObject)
+            priority: priorities[dbObject.priority],
+            fontIconMarkup: getIcon(dbObject),
+            status: dbObject.status
         };
     }
     

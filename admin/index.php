@@ -278,6 +278,12 @@ function print_login()
                 <?php
                 /* This will handle error, success and notice messages */
                 hesk_handle_messages();
+
+                // Service messages
+                $service_messages = mfh_get_service_messages('STAFF_LOGIN');
+                foreach ($service_messages as $sm) {
+                    hesk_service_message($sm);
+                }
                 ?>
             </div>
             <div class="login-logo">
@@ -469,6 +475,9 @@ function print_login()
                     </div>
                 </div>
             </form>
+            <a class="btn btn-default" href="<?php echo $hesk_settings['hesk_url']; ?>">
+                <i class="fa fa-chevron-left"></i> <?php echo $hesklang['back']; ?>
+            </a>
         </div>
     </div>
 </div>

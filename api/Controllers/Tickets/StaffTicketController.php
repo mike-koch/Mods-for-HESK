@@ -4,6 +4,7 @@ namespace Controllers\Tickets;
 
 
 use BusinessLogic\Helpers;
+use BusinessLogic\Security\UserContext;
 use BusinessLogic\Tickets\EditTicketModel;
 use BusinessLogic\Tickets\TicketDeleter;
 use BusinessLogic\Tickets\TicketEditor;
@@ -43,6 +44,20 @@ class StaffTicketController extends \BaseClass {
 
         http_response_code(204);
         return;
+    }
+
+    static function updateDueDate($id) {
+        /* @var $userContext UserContext */
+        global $applicationContext, $userContext, $hesk_settings;
+
+        /* @var $ticketEditor TicketEditor */
+        $ticketEditor = $applicationContext->get(TicketEditor::clazz());
+
+        $json = JsonRetriever::getJsonData();
+
+        $dueDate = date('Y-m-d H:i:s', strtotime(Helpers::safeArrayGet($json, 'dueDate')));
+
+        $ticketEditor->updateDueDate($id, $dueDate, $userContext, $hesk_settings);
     }
 
     private function getEditTicketModel($id, $jsonRequest) {

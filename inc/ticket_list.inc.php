@@ -238,13 +238,15 @@ if ($total > 0) {
                     break;
                 case 2:
                     $ticket['priority'] = '<span style="color: green; font-size:1.3em" class="fa fa-fw fa-angle-double-down" data-toggle="tooltip" data-placement="top" title="' . $hesklang['medium'] . '"></span>';
+                    $color = $modsForHesk_settings['highlight_ticket_rows_based_on_priority'] ? 'success' : '';
                     break;
                 default:
                     $ticket['priority'] = '<span style="color: blue; font-size:1.3em" class="fa fa-fw fa-long-arrow-down" data-toggle="tooltip" data-placement="top" title="' . $hesklang['low'] . '"></span>';
+                    $color = $modsForHesk_settings['highlight_ticket_rows_based_on_priority'] ? 'info' : '';
             }
 
             // Set message (needed for row title)
-            $ticket['message'] = $first_line . substr(strip_tags($ticket['message']), 0, 200) . '...';
+            $ticket['message'] = $first_line . hesk_mb_substr(strip_tags($ticket['message']),0,200).'...';
 
             // Start ticket row
             echo '
@@ -371,6 +373,16 @@ if ($total > 0) {
             // Print time worked
             if (hesk_show_column('time_worked')) {
                 echo '<td class="' . $color . '">' . $ticket['time_worked'] . '</td>';
+            }
+
+            // Print due date
+            if (hesk_show_column('due_date')) {
+                $due_date = $hesklang['none'];
+                if ($ticket['due_date'] != null) {
+                    $due_date = hesk_date($ticket['due_date'], false, true, false);
+                }
+
+                echo '<td class="' . $color . '">' . ($ticket['due_date'] == null ? 'NONE' : date('Y-m-d', $due_date)) . '</td>';
             }
 
             // Print custom fields

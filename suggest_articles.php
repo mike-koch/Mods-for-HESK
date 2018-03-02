@@ -59,8 +59,8 @@ if (hesk_isREQUEST('p')) {
             }
 
             $txt = strip_tags($article['content']);
-            if (strlen($txt) > $hesk_settings['kb_substrart']) {
-                $txt = substr($txt, 0, $hesk_settings['kb_substrart']) . '...';
+            if (hesk_mb_strlen($txt) > $hesk_settings['kb_substrart']) {
+                $txt = hesk_mb_substr($txt, 0, $hesk_settings['kb_substrart']).'...';
             }
 
             echo '

@@ -12,6 +12,7 @@ require_once(__DIR__ . '/Core/output.php');
 require_once(__DIR__ . '/../hesk_settings.inc.php');
 require_once(__DIR__ . '/http_response_code.php');
 require_once(__DIR__ . '/../inc/admin_functions.inc.php');
+require_once(__DIR__ . '/../inc/htmlpurifier/HeskHTMLPurifier.php');
 
 hesk_load_api_database_functions();
 

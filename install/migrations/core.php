@@ -176,8 +176,8 @@ function getAllMigrations() {
         //3.0.0
         127 => new \v300\MigrateHeskCustomStatuses(),
         128 => new \v300\MigrateAutorefreshOption\UpdateFromOldValue(),
-        129 => new \v300\MigrateAutorefreshOption\DropOldColumn(),
-        130 => new \v300\AddColorSchemeSetting(),
+        129 => new \v300\AddColorSchemeSetting(),
+        130 => new \v300\MigrateAutorefreshOption\DropOldColumn(),
         131 => new LegacyUpdateMigration('3.0.0', '2.6.4'),
         //3.0.1
         132 => new LegacyUpdateMigration('3.0.1', '3.0.0'),
@@ -219,5 +219,13 @@ function getAllMigrations() {
         162 => new UpdateMigration('3.2.3', '3.2.2', 162),
         163 => new UpdateMigration('3.2.4', '3.2.3', 163),
         164 => new UpdateMigration('3.2.5', '3.2.4', 164),
+        // 3.3.0
+        165 => new \v330\ServiceMessagesImprovements\CreateServiceMessageToLocationTable(165),
+        166 => new \v330\ServiceMessagesImprovements\UpdateExistingServiceMessagesLocations(166),
+        167 => new \v330\ServiceMessagesImprovements\AddLanguageColumnToServiceMessages(167),
+        168 => new \v330\CalendarImprovements\AddBusinessHoursTable(168),
+        169 => new \v330\CalendarImprovements\InsertDefaultBusinessHours(169),
+        170 => new \v330\CalendarImprovements\AddShowStartTimeSetting(170),
+        171 => new UpdateMigration('3.3.0', '3.2.5', 171),
     );
 }

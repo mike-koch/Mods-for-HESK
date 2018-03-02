@@ -53,7 +53,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                     ?>
                     <li <?php echo $active; ?>>
                         <a href="admin_main.php">
-                            <i class="fa fa-home" <?php echo $iconDisplay; ?>></i> <span><?php echo $hesklang['main_page']; ?></span>
+                            <i class="fa fa-ticket" <?php echo $iconDisplay; ?>></i> <span><?php echo $hesklang['tickets']; ?></span>
                         </a>
                     </li>
                     <?php

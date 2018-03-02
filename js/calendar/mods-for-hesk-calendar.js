@@ -12,13 +12,52 @@ $(document).ready(function() {
         eventLimit: true,
         timeFormat: 'H:mm',
         axisFormat: 'H:mm',
+        displayEventTime: $('#setting_show_start_time').text() === 'true',
+        businessHours: [
+            {
+                dow: [0],
+                start: $('#business_hours_0_start').text(),
+                end: $('#business_hours_0_end').text()
+            },
+            {
+                dow: [1],
+                start: $('#business_hours_1_start').text(),
+                end: $('#business_hours_1_end').text()
+            },
+            {
+                dow: [2],
+                start: $('#business_hours_2_start').text(),
+                end: $('#business_hours_2_end').text()
+            },
+            {
+                dow: [3],
+                start: $('#business_hours_3_start').text(),
+                end: $('#business_hours_3_end').text()
+            },
+            {
+                dow: [4],
+                start: $('#business_hours_4_start').text(),
+                end: $('#business_hours_4_end').text()
+            },
+            {
+                dow: [5],
+                start: $('#business_hours_5_start').text(),
+                end: $('#business_hours_5_end').text()
+            },
+            {
+                dow: [6],
+                start: $('#business_hours_6_start').text(),
+                end: $('#business_hours_6_end').text()
+            }
+        ],
         firstDay: $('#setting_first_day_of_week').text(),
         defaultView: $('#setting_default_view').text().trim(),
         events: function(start, end, timezone, callback) {
             $.ajax({
-                url: heskPath + 'internal-api/admin/calendar/?start=' + start + '&end=' + end,
+                url: heskPath + 'api/index.php/v1/calendar/events/staff?start=' + start + '&end=' + end,
                 method: 'GET',
                 dataType: 'json',
+                headers: { 'X-Internal-Call': true },
                 success: function(data) {
                     var events = [];
                     $(data).each(function() {
@@ -51,16 +90,7 @@ $(document).ready(function() {
             var $contents = $(contents);
 
             var format = 'dddd, MMMM Do YYYY';
-            var endDate = event.end == null ? event.start : event.end;
-
-            if (event.allDay) {
-                endDate = event.end.clone();
-                endDate.add(-1, 'days');
-            }
-
-            if (!event.allDay && event.type !== 'TICKET') {
-                format += ', HH:mm';
-            }
+            var endDate = event.end === null ? event.start : event.end;
 
             if (event.type === 'TICKET') {
                 contents = $('.ticket-popover-template').html();
@@ -74,8 +104,16 @@ $(document).ready(function() {
                     .find('.popover-owner span').text(event.owner).end()
                     .find('.popover-subject span').text(event.subject).end()
                     .find('.popover-category span').text(event.categoryName).end()
-                    .find('.popover-priority span').text(event.priority);
+                    .find('.popover-priority span').text(event.priority).end()
+                    .find('.popover-status span').text(event.status).end();
             } else {
+                if (event.allDay) {
+                    endDate = event.end.clone();
+                    endDate.add(-1, 'days');
+                } else {
+                    format += ', HH:mm';
+                }
+
                 if (event.location === '') {
                     $contents.find('.popover-location').hide();
                 }
@@ -90,7 +128,7 @@ $(document).ready(function() {
             var $eventMarkup = $(this);
 
             var eventTitle = event.title;
-            if (event.fontIconMarkup != undefined) {
+            if (event.fontIconMarkup !== undefined) {
                 eventTitle = event.fontIconMarkup + '&nbsp;' + eventTitle;
             }
 
@@ -161,17 +199,15 @@ $(document).ready(function() {
     $editForm.find('#delete-button').click(function() {
         var id = $editForm.find('input[name="id"]').val();
 
-        var data = {
-            id: id,
-            action: 'delete'
-        };
-
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: data,
+            url: heskPath + 'api/index.php/v1/calendar/events/staff/' + id,
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'DELETE'
+            },
             success: function() {
-                removeFromCalendar(data.id);
+                removeFromCalendar(id);
                 mfhAlert.success(mfhLang.text('event_deleted'));
                 $('#edit-event-modal').modal('hide');
             },
@@ -195,6 +231,9 @@ $(document).ready(function() {
             dateFormat = 'YYYY-MM-DD HH:mm:ss';
         }
 
+        var reminderValue = $createForm.find('input[name="reminder-value"]').val();
+        var reminderUnits = $createForm.find('select[name="reminder-unit"]').val();
+
         var data = {
             title: $createForm.find('input[name="name"]').val(),
             location: $createForm.find('input[name="location"]').val(),
@@ -203,22 +242,23 @@ $(document).ready(function() {
             allDay: allDay,
             comments: $createForm.find('textarea[name="comments"]').val(),
             categoryId: $createForm.find('select[name="category"]').val(),
-            action: 'create',
             type: 'CALENDAR',
             backgroundColor: $createForm.find('select[name="category"] :selected').attr('data-background-color'),
             foregroundColor: $createForm.find('select[name="category"] :selected').attr('data-foreground-color'),
             displayBorder: $createForm.find('select[name="category"] :selected').attr('data-display-border'),
             categoryName: $createForm.find('select[name="category"] :selected').text().trim(),
-            reminderValue: $createForm.find('input[name="reminder-value"]').val(),
-            reminderUnits: $createForm.find('select[name="reminder-unit"]').val()
+            reminderValue: reminderValue === "" ? null : reminderValue,
+            reminderUnits: reminderValue === "" ? null : reminderUnits
         };
 
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: data,
-            success: function(id) {
-                addToCalendar(id, data, $('#lang_event_created').text());
+            url: heskPath + 'api/index.php/v1/calendar/events/staff',
+            data: JSON.stringify(data),
+            contentType: 'json',
+            headers: { 'X-Internal-Call': true },
+            success: function(createdEvent) {
+                addToCalendar(createdEvent.id, data, $('#lang_event_created').text());
                 $('#create-event-modal').modal('hide');
                 updateCategoryVisibility();
             },
@@ -243,6 +283,9 @@ $(document).ready(function() {
             dateFormat = 'YYYY-MM-DD HH:mm:ss';
         }
 
+        var reminderValue = $createForm.find('input[name="reminder-value"]').val();
+        var reminderUnits = $createForm.find('select[name="reminder-unit"]').val();
+
         var data = {
             id: $form.find('input[name="id"]').val(),
             title: $form.find('input[name="name"]').val(),
@@ -251,21 +294,26 @@ $(document).ready(function() {
             endTime: moment(end).format(dateFormat),
             allDay: allDay,
             comments: $form.find('textarea[name="comments"]').val(),
-            categoryId: $form.find('select[name="category"]').val(),
+            categoryId: parseInt($form.find('select[name="category"]').val()),
             backgroundColor: $form.find('select[name="category"] :selected').attr('data-background-color'),
             foregroundColor: $form.find('select[name="category"] :selected').attr('data-foreground-color'),
             displayBorder: $form.find('select[name="category"] :selected').attr('data-display-border'),
             categoryName: $form.find('select[name="category"] :selected').text().trim(),
-            action: 'update',
-            reminderValue: $form.find('input[name="reminder-value"]').val(),
-            reminderUnits: $form.find('select[name="reminder-unit"]').val()
+            reminderValue: reminderValue === "" ? null : reminderValue,
+            reminderUnits: reminderValue === "" ? null : reminderUnits,
         };
 
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: data,
-            success: function() {
+            url: heskPath + 'api/index.php/v1/calendar/events/staff/' + data.id,
+            data: JSON.stringify(data),
+            contentType: 'json',
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'PUT'
+            },
+            success: function(updatedEvent) {
+                data.auditTrail = updatedEvent.auditTrail;
                 removeFromCalendar(data.id);
                 addToCalendar(data.id, data, $('#lang_event_updated').text());
                 $('#edit-event-modal').modal('hide');
@@ -290,8 +338,16 @@ function removeFromCalendar(id) {
 }
 
 function buildEvent(id, dbObject) {
-    if (dbObject.type == 'TICKET') {
+    var priorities = [];
+    priorities['CRITICAL'] = mfhLang.text('critical');
+    priorities['HIGH'] = mfhLang.text('high');
+    priorities['MEDIUM'] = mfhLang.text('medium');
+    priorities['LOW'] = mfhLang.text('low');
+
+
+    if (dbObject.type === 'TICKET') {
         return {
+            id: id,
             title: dbObject.title,
             subject: dbObject.subject,
             trackingId: dbObject.trackingId,
@@ -306,8 +362,9 @@ function buildEvent(id, dbObject) {
             categoryName: dbObject.categoryName,
             className: 'category-' + dbObject.categoryId,
             owner: dbObject.owner,
-            priority: dbObject.priority,
-            fontIconMarkup: getIcon(dbObject)
+            priority: priorities[dbObject.priority],
+            fontIconMarkup: getIcon(dbObject),
+            status: dbObject.status
         };
     }
 
@@ -334,7 +391,8 @@ function buildEvent(id, dbObject) {
         borderColor: parseInt(dbObject.displayBorder) === 1 ? dbObject.foregroundColor : dbObject.backgroundColor,
         reminderValue: dbObject.reminderValue == null ? '' : dbObject.reminderValue,
         reminderUnits: dbObject.reminderUnits,
-        fontIconMarkup: '<i class="fa fa-calendar"></i>'
+        fontIconMarkup: '<i class="fa fa-calendar"></i>',
+        auditTrail: dbObject.auditTrail
     };
 }
 
@@ -379,7 +437,7 @@ function displayCreateModal(date, viewName) {
         .find('input[name="location"]').val('').end()
         .find('textarea[name="comments"]').val('').end()
         .find('select[name="category"]').val($form.find('select[name="category"] option:first-child').val()).end()
-        .find('select[name="reminder-unit"]').val(0).end()
+        .find('select[name="reminder-unit"]').val("MINUTE").end()
         .find('input[name="reminder-value"]').val('').end();
 
     var $modal = $('#create-event-modal');
@@ -454,6 +512,24 @@ function displayEditModal(date) {
 
     $form.find('select[name="category"] option[value="' + date.categoryId + '"]').prop('selected', true);
 
+    var $auditTrail = $('#edit-history');
+    if (date.auditTrail.length === 0) {
+        $('.nav-tabs[role="tablist"]').hide();
+    } else {
+        $('.nav-tabs[role="tablist"]').show();
+
+        var $historyTable = $('#history-table');
+        $historyTable.html('');
+        $.each(date.auditTrail, function() {
+            var $template = $($('#audit-trail-template').html());
+            $template.find('[data-property="date"]').text(this.date).end()
+                .find('[data-property="description"]').text(vsprintf(mfhLang.text(this.languageKey), this.replacementValues));
+
+            $historyTable.append($template);
+        });
+    }
+    $('#edit-modal-tabs').find('a:first').tab('show');
+
     $('#edit-event-modal').modal('show');
 }
 
@@ -477,15 +553,19 @@ function updateCategoryVisibility() {
 
 function respondToDragAndDrop(event, delta, revertFunc) {
     var heskPath = $('p#hesk-path').text();
+
     if (event.type === 'TICKET') {
+        var uri = 'api/index.php/v1/staff/tickets/' + event.id + '/due-date';
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: {
-                trackingId: event.trackingId,
-                action: 'update-ticket',
-                dueDate: event.start.format('YYYY-MM-DD')
+            url: heskPath + uri,
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'PATCH'
             },
+            data: JSON.stringify({
+                dueDate: event.start.format('YYYY-MM-DD')
+            }),
             success: function() {
                 event.fontIconMarkup = getIcon({
                     startTime: event.start
@@ -526,12 +606,19 @@ function respondToDragAndDrop(event, delta, revertFunc) {
             reminderValue: event.reminderValue,
             reminderUnits: event.reminderUnits
         };
+
+        var url = heskPath + 'api/index.php/v1/calendar/events/staff/' + event.id;
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: data,
-            success: function() {
-                mfhAlert.success(mfhLang.text('event_updated'));
+            url: url,
+            data: JSON.stringify(data),
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'PUT'
+            },
+            success: function(updatedEvent) {
+                removeFromCalendar(updatedEvent.id);
+                addToCalendar(updatedEvent.id, updatedEvent, $('#lang_event_updated').text());
             },
             error: function() {
                 mfhAlert.error(mfhLang.text('error_updating_event'));

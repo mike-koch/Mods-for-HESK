@@ -9,6 +9,7 @@ use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Statuses\DefaultStatusForAction;
 use DataAccess\AuditTrail\AuditTrailGateway;
+use DataAccess\CustomFields\CustomFieldsGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 use DataAccess\Statuses\StatusGateway;
@@ -61,6 +62,9 @@ class TicketCreator extends \BaseClass {
     /* @var $auditTrailGateway AuditTrailGateway */
     private $auditTrailGateway;
 
+    /* @var $customFieldsGateway CustomFieldsGateway */
+    private $customFieldsGateway;
+
     function __construct(NewTicketValidator $newTicketValidator,
                          TrackingIdGenerator $trackingIdGenerator,
                          Autoassigner $autoassigner,
@@ -70,7 +74,8 @@ class TicketCreator extends \BaseClass {
                          EmailSenderHelper $emailSenderHelper,
                          UserGateway $userGateway,
                          ModsForHeskSettingsGateway $modsForHeskSettingsGateway,
-                         AuditTrailGateway $auditTrailGateway) {
+                         AuditTrailGateway $auditTrailGateway,
+                         CustomFieldsGateway $customFieldsGateway) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
         $this->autoassigner = $autoassigner;
@@ -81,6 +86,7 @@ class TicketCreator extends \BaseClass {
         $this->userGateway = $userGateway;
         $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
         $this->auditTrailGateway = $auditTrailGateway;
+        $this->customFieldsGateway = $customFieldsGateway;
     }
 
     /**
@@ -161,6 +167,19 @@ class TicketCreator extends \BaseClass {
 
         $addressees = new Addressees();
         $addressees->to = $ticket->email;
+
+        foreach ($ticket->customFields as $key => $value) {
+            $customField = $this->customFieldsGateway->getCustomField($key, $heskSettings);
+            if ($customField !== null &&
+                $customField->type === 'email' &&
+                $customField->properties['email_type'] !== 'none') {
+                if ($customField->properties['email_type'] === 'cc') {
+                    $addressees->cc[] = $value;
+                } elseif ($customField->properties['email_type'] === 'bcc') {
+                    $addressees->bcc[] = $value;
+                }
+            }
+        }
 
         if ($ticketRequest->sendEmailToCustomer && $emailVerified) {
             $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_TICKET, $ticketRequest->language, $addressees, $ticket, $heskSettings, $modsForHeskSettings);

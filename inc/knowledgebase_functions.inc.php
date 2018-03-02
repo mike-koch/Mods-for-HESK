@@ -26,12 +26,12 @@ function hesk_kbArticleContentPreview($txt)
     $txt = strip_tags($txt);
 
     // If text is larger than article preview length, shorten it
-    if (strlen($txt) > $hesk_settings['kb_substrart']) {
+    if (hesk_mb_strlen($txt) > $hesk_settings['kb_substrart']) {
         // The quick but not 100% accurate way (number of chars displayed may be lower than the limit)
-        return substr($txt, 0, $hesk_settings['kb_substrart']) . '...';
+        return hesk_mb_substr($txt, 0, $hesk_settings['kb_substrart']) . '...';
 
         // If you want a more accurate, but also slower way, use this instead
-        // return hesk_htmlentities( substr( hesk_html_entity_decode($txt), 0, $hesk_settings['kb_substrart'] ) ) . '...';
+        // return hesk_htmlentities( hesk_mb_substr( hesk_html_entity_decode($txt), 0, $hesk_settings['kb_substrart'] ) ) . '...';
     }
 
     return $txt;

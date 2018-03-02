@@ -577,9 +577,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     case 'hidden':
                                     case 'readonly':
                                     default:
-                                        if (strlen($k_value) != 0) {
-                                            $v['value']['default_value'] = $k_value;
-                                        }
+                                        $k_value = hesk_msgToPlain($k_value,0,0);
 
                                         $cls = in_array($k, $_SESSION['iserror']) ? ' isError' : '';
 
@@ -587,7 +585,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <div class="form-group' . $cls . '">
                             <label for="' . $k . '" class="col-sm-3 control-label">' . $v['name'] . ' ' . $v['req'] . '</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $v['value']['default_value'] . '" ' . $required_attribute . '>';
+                                <input type="text" class="form-control" name="' . $k . '" size="40" maxlength="' . intval($v['value']['max_length']) . '" value="' . $k_value . '" ' . $required_attribute . '>';
                                     if (!empty($v['mfh_description'])) {
                                         echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
                                     }
@@ -646,16 +644,20 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     }
                     ?>
                 </div>
-                <div class="form-group" style="text-align: center">
-                    <?php
-                    $html = $ticket['html'] ? 1 : 0;
-                    ?>
-                    <input type="hidden" name="html" value="<?php echo $html; ?>">
-                    <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-default">
-                    <?php if (isset($_REQUEST['isManager']) && $_REQUEST['isManager']): ?>
-                        <input type="hidden" name="isManager" value="1">
-                    <?php endif; ?>
-                    <a class="btn btn-default" href="javascript:history.go(-1)"><?php echo $hesklang['back']; ?></a>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <?php
+                        $html = $ticket['html'] ? 1 : 0;
+                        ?>
+                        <input type="hidden" name="html" value="<?php echo $html; ?>">
+                        <div class="btn-group">
+                            <input type="submit" value="<?php echo $hesklang['save_changes']; ?>" class="btn btn-primary">
+                            <a class="btn btn-default" href="javascript:history.go(-1)"><?php echo $hesklang['back']; ?></a>
+                        </div>
+                        <?php if (isset($_REQUEST['isManager']) && $_REQUEST['isManager']): ?>
+                            <input type="hidden" name="isManager" value="1">
+                        <?php endif; ?>
+                    </div>
                 </div>
             </form>
         </div>

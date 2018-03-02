@@ -157,6 +157,11 @@ $show_quick_help = $show['show'];
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
 
+    $service_messages = mfh_get_service_messages('STAFF_SUBMIT_TICKET');
+    foreach ($service_messages as $sm) {
+        hesk_service_message($sm);
+    }
+
     if ($show_quick_help): ?>
     <div class="box">
         <div class="box-header with-border">

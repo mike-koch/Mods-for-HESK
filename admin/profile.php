@@ -170,7 +170,7 @@ function update_profile()
     $_SESSION['new']['signature'] = hesk_input(hesk_POST('signature'));
 
     /* Signature */
-    if (strlen($_SESSION['new']['signature']) > 1000) {
+    if (hesk_mb_strlen($_SESSION['new']['signature']) > 1000) {
         $hesk_error_buffer .= '<li>' . $hesklang['signature_long'] . '</li>';
     }
 

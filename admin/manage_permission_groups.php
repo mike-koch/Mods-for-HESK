@@ -80,14 +80,19 @@ while ($row = hesk_dbFetchAssoc($res)) {
             </div>
         </div>
         <div class="box-body">
-            <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success nu-floatRight">
-                <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new_group']; ?>
-            </a>
+            <div class="text-right">
+                <a href="#" data-toggle="modal" data-target="#modal-template-new" class="btn btn-success nu-floatRight">
+                    <i class="fa fa-plus-circle"></i> <?php echo $hesklang['create_new']; ?>
+                </a>
+            </div>
+
             <table class="table table-striped">
                 <thead>
-                <th><?php echo $hesklang['name']; ?></th>
-                <th><?php echo $hesklang['number_of_users']; ?></th>
-                <th><?php echo $hesklang['actions']; ?></th>
+                <tr>
+                    <th><?php echo $hesklang['name']; ?></th>
+                    <th><?php echo $hesklang['number_of_users']; ?></th>
+                    <th><?php echo $hesklang['actions']; ?></th>
+                </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($templates as $row): ?>
@@ -96,13 +101,13 @@ while ($row = hesk_dbFetchAssoc($res)) {
                         <td><?php echo getNumberOfUsersWithPermissionGroup($row['id']); ?></td>
                         <td>
                             <a href="#" data-toggle="modal" data-target="#modal-template-<?php echo $row['id'] ?>">
-                                <i class="fa fa-pencil icon-link" data-toggle="tooltip"
+                                <i class="fa fa-fw fa-pencil icon-link orange" data-toggle="tooltip"
                                    title="<?php echo $hesklang['view_permissions_for_this_group'] ?>"></i></a>
                             <?php
                             if ($row['id'] != 1 && $row['id'] != 2):
                                 ?>
                                 <a href="manage_permission_groups.php?a=delete&amp;id=<?php echo $row['id']; ?>">
-                                    <i class="fa fa-times icon-link red" data-toggle="tooltip"
+                                    <i class="fa fa-fw fa-times icon-link red" data-toggle="tooltip"
                                        title="<?php echo $hesklang['delete']; ?>"></i></a>
                             <?php endif; ?>
                         </td>
@@ -137,11 +142,9 @@ function createEditModal($template, $features, $categories)
 {
     global $hesklang;
 
-    $disabled = 'checked="checked" disabled';
     $enabledFeatures = array();
     $enabledCategories = array();
-    if ($template['heskprivileges'] != 'ALL') {
-        $disabled = '';
+    if ($template['heskprivileges'] !== 'ALL') {
         $enabledFeatures = explode(',', $template['heskprivileges']);
         $enabledCategories = explode(',', $template['categories']);
     }
@@ -157,6 +160,12 @@ function createEditModal($template, $features, $categories)
                         <h4 class="modal-title"><?php echo sprintf($hesklang['permissions_for_group'], $template['name']); ?></h4>
                     </div>
                     <div class="modal-body">
+                        <?php if ($template['id'] == 1): ?>
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i>
+                                <?php echo $hesklang['protected_group']; ?>
+                            </div>
+                        <?php endif; ?>
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-sm-2">
@@ -179,20 +188,32 @@ function createEditModal($template, $features, $categories)
 
                                 <div class="footerWithBorder blankSpace"></div>
                                 <div class="form-group">
-                                    <?php foreach ($categories as $category): ?>
+                                    <?php
+                                    foreach ($categories as $category): ?>
+                                        <?php
+                                        $checked = '';
+                                        $disabled = '';
+                                        if (in_array($category['id'], $enabledCategories) ||
+                                            $template['categories'] == 'ALL') {
+                                            $checked = 'checked ';
+                                        }
+                                        if ((!hesk_SESSION('isadmin') &&
+                                                !in_array($category['id'], $_SESSION['categories'])) ||
+                                            $template['categories'] === 'ALL') {
+                                            $disabled = ' disabled';
+                                        }?>
+
+                                        <?php if ($_SESSION['isadmin'] || in_array($category['id'], $_SESSION['categories']) || $checked): ?>
                                         <div class="checkbox">
                                             <label>
-                                                <?php
-                                                $checked = '';
-                                                if (in_array($category['id'], $enabledCategories)) {
-                                                    $checked = 'checked';
-                                                } ?>
                                                 <input type="checkbox" name="categories[]"
-                                                       value="<?php echo $category['id']; ?>" <?php echo $checked . $disabled; ?>>
+                                                       value="<?php echo $category['id']; ?>" <?php echo $checked . ' ' . $disabled; ?>>
                                                 <?php echo $category['name']; ?>
                                             </label>
                                         </div>
-                                    <?php endforeach; ?>
+                                        <?php
+                                        endif;
+                                    endforeach; ?>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -201,19 +222,30 @@ function createEditModal($template, $features, $categories)
 
                                 <div class="footerWithBorder blankSpace"></div>
                                 <div class="form-group">
-                                    <?php foreach ($features as $feature): ?>
+                                    <?php
+                                    foreach ($features as $feature): ?>
+                                        <?php
+                                        $checked = '';
+                                        $disabled = '';
+                                        if (in_array($feature, $enabledFeatures) ||
+                                            $template['heskprivileges'] === 'ALL') {
+                                            $checked = 'checked ';
+                                        }
+                                        if ((!hesk_SESSION('isadmin') &&
+                                                strpos($_SESSION['heskprivileges'], $feature) === false) ||
+                                            $template['heskprivileges'] === 'ALL') {
+                                            $disabled = ' disabled';
+                                        }
+                                        if ($_SESSION['isadmin'] || strpos($_SESSION['heskprivileges'], $feature) !== false || $checked):  ?>
                                         <div class="checkbox">
-                                            <label><?php
-                                                $checked = '';
-                                                if (in_array($feature, $enabledFeatures)) {
-                                                    $checked = 'checked';
-                                                } ?>
+                                            <label>
                                                 <input type="checkbox" name="features[]"
                                                        value="<?php echo $feature; ?>" <?php echo $checked . $disabled; ?>>
                                                 <?php echo $hesklang[$feature]; ?>
                                             </label>
                                         </div>
-                                    <?php endforeach; ?>
+                                        <?php endif;
+                                        endforeach; ?>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -270,7 +302,9 @@ function buildCreateModal($features, $categories)
 
                                 <div class="footerWithBorder blankSpace"></div>
                                 <div class="form-group">
-                                    <?php foreach ($categories as $category): ?>
+                                    <?php
+                                    foreach ($categories as $category):
+                                        if (hesk_SESSION('isadmin') || in_array($category['id'], $_SESSION['categories'])): ?>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="categories[]"
@@ -280,7 +314,7 @@ function buildCreateModal($features, $categories)
                                                 <?php echo $category['name']; ?>
                                             </label>
                                         </div>
-                                    <?php endforeach; ?>
+                                    <?php endif; endforeach; ?>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -289,7 +323,9 @@ function buildCreateModal($features, $categories)
 
                                 <div class="footerWithBorder blankSpace"></div>
                                 <div class="form-group">
-                                    <?php foreach ($features as $feature): ?>
+                                    <?php foreach ($features as $feature):
+                                        if (strpos($_SESSION['heskprivileges'], $feature) !== false || hesk_SESSION('isadmin')):
+                                        ?>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="features[]"
@@ -299,7 +335,7 @@ function buildCreateModal($features, $categories)
                                                 <?php echo $hesklang[$feature]; ?>
                                             </label>
                                         </div>
-                                    <?php endforeach; ?>
+                                    <?php endif; endforeach; ?>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -334,7 +370,6 @@ function save()
         WHERE `id` = " . intval($templateId));
     $row = hesk_dbFetchAssoc($res);
 
-
     // Add 'can ban emails' if 'can unban emails' is set (but not added). Same with 'can ban ips'
     $catArray = hesk_POST_array('categories');
     $featArray = hesk_POST_array('features');
@@ -348,6 +383,41 @@ function save()
     $categories = implode(',', $catArray);
     $features = implode(',', $featArray);
     $name = hesk_POST('name');
+
+    // Only allow users to add what they are allowed to add
+    // Admins can handle anything
+    if (!$_SESSION['isadmin']) {
+        // Update categories based on user visibility
+        $originalCategories = explode(',', $row['categories']);
+        $newCategories = array();
+        foreach ($originalCategories as $innerCategory) {
+            if (in_array($innerCategory, $catArray) && in_array($innerCategory, $_SESSION['categories'])) {
+                $newCategories[] = $innerCategory;
+            } elseif (!in_array($innerCategory, $catArray) && !in_array($innerCategory, $_SESSION['categories'])) {
+                // The user can't modify this, so keep it in
+                $newCategories[] = $innerCategory;
+            }
+            // If neither, the user removed it.
+        }
+
+        // Update features based on user visibility
+        $originalFeatures = explode(',', $row['heskprivileges']);
+        $newFeatures = array();
+        foreach ($originalFeatures as $innerFeature) {
+            if (in_array($innerFeature, $featArray) && strpos($_SESSION['heskprivileges'], $innerFeature) !== false) {
+                $newFeatures[] = $innerFeature;
+            } elseif (!in_array($innerFeature, $featArray) && strpos($_SESSION['heskprivileges'], $innerFeature) === false) {
+                // The user can't modify this, so keep it in
+                $newFeatures[] = $innerFeature;
+            }
+            // If neither, the user removed it.
+        }
+
+        $categories = implode(',', $newCategories);
+        $features = implode(',', $newFeatures);
+    }
+
+
 
     hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "permission_templates`
         SET `categories` = '" . hesk_dbEscape($categories) . "', `heskprivileges` = '" . hesk_dbEscape($features) . "',

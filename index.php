@@ -79,7 +79,6 @@ function print_select_category($number_of_categories)
     ?>
 
     <div style="text-align: center">
-
         <h3><?php echo $hesklang['select_category_text']; ?></h3>
 
         <div class="select_category">
@@ -322,6 +321,13 @@ function print_add_ticket()
             <h2><?php hesk_showTopBar($hesklang['submit_ticket']); ?></h2>
             <small><?php echo $hesklang['use_form_below']; ?></small>
             <div class="blankSpace"></div>
+            <?php
+            // Service messages
+            $service_messages = mfh_get_service_messages('CUSTOMER_SUBMIT_TICKET');
+            foreach ($service_messages as $sm) {
+                hesk_service_message($sm);
+            }
+            ?>
 
             <div align="left" class="h3"><?php echo $hesklang['add_ticket_general_information']; ?></div>
             <div class="footerWithBorder"></div>
@@ -892,10 +898,10 @@ function print_add_ticket()
 
                                     echo '<option '.$selected.'>'.$option.'</option>';
                                 }
+                                echo '</select>';
                                 if (!empty($v['mfh_description'])) {
                                     echo '<div class="help-block">' . $v['mfh_description'] . '</div>';
                                 }
-                                echo '</select>';
                             echo '<div class="help-block with-errors"></div>
                         </div>
                     </div>';
@@ -1315,15 +1321,13 @@ function print_start()
 </ol>
     <?php
     // Service messages
-    $res = hesk_dbQuery('SELECT `title`, `message`, `style`, `icon` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` WHERE `type`='0' ORDER BY `order` ASC");
-    if (hesk_dbNumRows($res) > 0)
-    {
+    $service_messages = mfh_get_service_messages('CUSTOMER_HOME');
+    if (count($service_messages) > 0) {
     ?>
     <div class="row">
         <div class="col-md-12">
             <?php
-            while ($sm=hesk_dbFetchAssoc($res))
-            {
+            foreach ($service_messages as $sm) {
                 hesk_service_message($sm);
             }
             ?>

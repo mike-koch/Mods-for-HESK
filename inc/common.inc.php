@@ -185,11 +185,33 @@ function hesk_service_message($sm)
     ?>
     <div class="<?php echo $style; ?>">
         <?php echo $faIcon == '' ? '' : '<i class="' . $faIcon . '"></i> '; ?>
-        <b><?php echo $sm['title']; ?></b><?php echo $sm['message']; ?>
+        <b><?php echo $sm['title']; ?></b><br>
+        <?php echo $sm['message']; ?>
     </div>
     <br/>
     <?php
 } // END hesk_service_message()
+
+function mfh_get_service_messages($location) {
+    global $hesk_settings;
+
+    $language = $hesk_settings['languages'][$hesk_settings['language']]['folder'];
+
+    $res = hesk_dbQuery('SELECT `title`, `message`, `style`, `icon` FROM `'.hesk_dbEscape($hesk_settings['db_pfix'])."service_messages` AS `sm`
+        INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix'])  . "mfh_service_message_to_location` AS `location`
+            ON `sm`.`id` = `location`.`service_message_id`
+            AND `location`.`location` = '" . hesk_dbEscape($location) . "'
+            AND `sm`.`mfh_language` IN ('ALL', '" . hesk_dbEscape($language) . "')
+        WHERE `type`='0' 
+        ORDER BY `order` ASC");
+
+    $sm = array();
+    while ($row = hesk_dbFetchAssoc($res)) {
+        $sm[] = $row;
+    }
+
+    return $sm;
+}
 
 
 function hesk_isBannedIP($ip)
@@ -357,6 +379,16 @@ function hesk_isREQUEST($in)
     return isset($_GET[$in]) || isset($_POST[$in]) ? true : false;
 } // END hesk_isREQUEST()
 
+function hesk_mb_substr($in, $start, $length)
+{
+   return function_exists('mb_substr') ? mb_substr($in, $start, $length, 'UTF-8') : substr($in, $start, $length);
+} // END hesk_mb_substr()
+
+function hesk_mb_strlen($in)
+{
+   return function_exists('mb_strlen') ? mb_strlen($in, 'UTF-8') : strlen($in);
+} // END hesk_mb_strlen()
+
 function hesk_mb_strtolower($in) {
     return function_exists('mb_strtolower') ? mb_strtolower($in) : strtolower($in);
 } // END hesk_mb_strtolower()
@@ -455,7 +487,7 @@ function hesk_verifyEmailMatch($trackingID, $my_email = 0, $ticket_email = 0, $e
 } // END hesk_verifyEmailMatch()
 
 
-function hesk_getCustomerEmail($can_remember = 0, $field = '')
+function hesk_getCustomerEmail($can_remember = 0, $field = '', $force_only_one = 0)
 {
     global $hesk_settings, $hesklang;
 
@@ -493,6 +525,11 @@ function hesk_getCustomerEmail($can_remember = 0, $field = '')
 
     // Remove unwanted side-effects
     $my_email = hesk_emailCleanup($my_email);
+
+    // Force only one email address? Use the first one.
+    if ($force_only_one) {
+        $my_email = strtok($my_email, ',');
+    }
 
     $hesk_settings['e_param'] = '&e=' . rawurlencode($my_email);
     $hesk_settings['e_query'] = '&amp;e=' . rawurlencode($my_email);
@@ -1643,7 +1680,7 @@ function hesk_input($in, $error = 0, $redirect_to = '', $force_slashes = 0, $max
 
     // Check length
     if ($max_length) {
-        $in = substr($in, 0, $max_length);
+        $in = hesk_mb_substr($in, 0, $max_length);
     }
 
     // Return processed value
@@ -1663,7 +1700,7 @@ function hesk_validateEmail($address, $error, $required = 1)
         $address = str_replace(';', ',', $address);
 
         /* Check if addresses are valid */
-        $all = explode(',', $address);
+        $all = array_unique(explode(',',$address));
         foreach ($all as $k => $v) {
             if (!hesk_isValidEmail($v)) {
                 unset($all[$k]);
@@ -1777,7 +1814,7 @@ function hesk_session_start()
         return true;
     } else {
         global $hesk_settings, $hesklang;
-        hesk_error("$hesklang[no_session] $hesklang[contact_webmaster] $hesk_settings[webmaster_mail]");
+        hesk_error("$hesklang[no_session] $hesklang[contact_webmsater] $hesk_settings[webmaster_mail]");
     }
 
 } // END hesk_session_start()
@@ -2107,6 +2144,31 @@ function mfh_getNumberOfDownloadsForAttachment($att_id, $table = 'attachments')
     $res = hesk_dbQuery('SELECT `download_count` FROM `' . hesk_dbEscape($hesk_settings['db_pfix'] . $table) . "` WHERE `att_id` = " . intval($att_id));
     $rec = hesk_dbFetchAssoc($res);
     return $rec['download_count'];
+}
+
+function mfh_getAttachmentFileSize($att_id, $table = 'attachments') {
+    global $hesk_settings;
+
+    $res = hesk_dbQuery('SELECT `size` FROM `' . hesk_dbEscape($hesk_settings['db_pfix'] . $table) . "` WHERE `att_id` = " . intval($att_id));
+    $rec = hesk_dbFetchAssoc($res);
+    return human_filesize($rec['size']);
+}
+
+function human_filesize($bytes, $decimals = 2) {
+    global $hesklang;
+
+    $sz = 'BKMGTP';
+    $factor = floor((strlen($bytes) - 1) / 3);
+
+    if ($factor < strlen($sz)) {
+        $factorName = @$sz[$factor];
+        if ($factorName !== 'B') {
+            $factorName .= 'B';
+        }
+
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . $factorName;
+    }
+    return $hesklang['unknown'];
 }
 
 function mfh_getSettings()

@@ -32,7 +32,7 @@ $modsForHesk_settings = mfh_getSettings();
 
 /* List of staff */
 $admins = array();
-$res = hesk_dbQuery("SELECT `id`,`name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` ORDER BY `name` ASC");
+$res = hesk_dbQuery("SELECT `id`,`name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` WHERE `active` = '1' ORDER BY `name` ASC");
 while ($row = hesk_dbFetchAssoc($res)) {
     $admins[$row['id']] = $row['name'];
 }

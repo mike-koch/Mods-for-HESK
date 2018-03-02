@@ -32,6 +32,7 @@ $hesk_settings['possible_ticket_list'] = array(
     'staffreplies' => $hesklang['replies'] . ' (' . $hesklang['staff'] . ')',
     'lastreplier' => $hesklang['last_replier'],
     'time_worked' => $hesklang['ts'],
+    'due_date' => $hesklang['due_date'],
 );
 
 define('HESK_NO_ROBOTS', true);

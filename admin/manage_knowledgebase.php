@@ -212,7 +212,8 @@ while (count($kb_cat) > 0)
 
             if (isset($node[$up]))
             {
-	            $node[$my] = &$node[$up]->addItem(new HTML_TreeNode(array('hesk_selected' => $selected, 'text' => $text, 'text_short' => $text_short, 'menu_icons' => $menu_icons, 'hesk_catid' => $cat['id'], 'hesk_select' => 'option'.$j, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'expanded' => true)));
+                $HTML_TreeNode[$my] = new HTML_TreeNode(array('hesk_selected' => $selected, 'text' => $text, 'text_short' => $text_short, 'menu_icons' => $menu_icons, 'hesk_catid' => $cat['id'], 'hesk_select' => 'option'.$j, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'expanded' => true));
+                $node[$my] = &$node[$up]->addItem($HTML_TreeNode[$my]);
             }
             else
             {
@@ -242,8 +243,11 @@ while (count($kb_cat) > 0)
 $menu->addItem($node[1]);
 
 // Create the presentation class
-$treeMenu = & ref_new(new HTML_TreeMenu_DHTML($menu, array('images' => '../img', 'defaultClass' => 'treeMenuDefault', 'isDynamic' => true)));
-$listBox  = & ref_new(new HTML_TreeMenu_Listbox($menu));
+$HTML_TreeMenu_DHTML = new HTML_TreeMenu_DHTML($menu, array('images' => '../img', 'defaultClass' => 'treeMenuDefault', 'isDynamic' => true));
+$treeMenu = & ref_new($HTML_TreeMenu_DHTML);
+
+$HTML_TreeMenu_Listbox = new HTML_TreeMenu_Listbox($menu);
+$listBox  = & ref_new($HTML_TreeMenu_Listbox);
 
 /* Hide new article and new category forms by default */
 if (!isset($_SESSION['hide']))
@@ -269,6 +273,12 @@ if (!isset($_SESSION['hide']['treemenu']))
         </h2>
         <?php
         show_subnav();
+
+        // Service messages
+        $service_messages = mfh_get_service_messages('STAFF_KB_HOME');
+        foreach ($service_messages as $sm) {
+            hesk_service_message($sm);
+        }
 
         // Show a notice if total public articles is less than 5
         if ($total_articles < 5)
@@ -1347,7 +1357,8 @@ function edit_article()
 
 	            if (isset($node[$up]))
 	            {
-		            $node[$my] = &$node[$up]->addItem(new HTML_TreeNode(array('hesk_parent' => $this_cat['parent'], 'text' => 'Text', 'text_short' => $text_short, 'hesk_catid' => $cat['id'], 'hesk_select' => 'option'.$j, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'expanded' => true)));
+                    $HTML_TreeNode[$my] = new HTML_TreeNode(array('hesk_parent' => $this_cat['parent'], 'text' => 'Text', 'text_short' => $text_short, 'hesk_catid' => $cat['id'], 'hesk_select' => 'option'.$j, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'expanded' => true));
+                    $node[$my] = &$node[$up]->addItem($HTML_TreeNode[$my]);
 	            }
 	            else
 	            {
@@ -1377,7 +1388,8 @@ function edit_article()
 	$menu->addItem($node[1]);
 
 	// Create the presentation class
-	$listBox  = & ref_new(new HTML_TreeMenu_Listbox($menu));
+    $HTML_TreeMenu_Listbox = new HTML_TreeMenu_Listbox($menu);
+    $listBox  = & ref_new($HTML_TreeMenu_Listbox);
 
 	/* Print header */
 	require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
@@ -1604,6 +1616,9 @@ function manage_category() {
 
 	    foreach ($kb_cat as $k=>$cat)
 	    {
+	        if ($cat['id'] == $catid) {
+	            continue;
+            }
 
 	    	if (in_array($cat['parent'],$thislevel))
 	        {
@@ -1616,7 +1631,8 @@ function manage_category() {
 
 	            if (isset($node[$up]))
 	            {
-		            $node[$my] = &$node[$up]->addItem(new HTML_TreeNode(array('hesk_parent' => $this_cat['parent'], 'text' => 'Text', 'text_short' => $text_short, 'hesk_catid' => $cat['id'], 'hesk_select' => 'option'.$j, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'expanded' => true)));
+                    $HTML_TreeNode[$my] = new HTML_TreeNode(array('hesk_parent' => $this_cat['parent'], 'text' => 'Text', 'text_short' => $text_short, 'hesk_catid' => $cat['id'], 'hesk_select' => 'option'.$j, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'expanded' => true));
+                    $node[$my] = &$node[$up]->addItem($HTML_TreeNode[$my]);
 	            }
 	            else
 	            {
@@ -1646,7 +1662,8 @@ function manage_category() {
 	$menu->addItem($node[1]);
 
 	// Create the presentation class
-	$listBox  = & ref_new(new HTML_TreeMenu_Listbox($menu));
+    $HTML_TreeMenu_Listbox = new HTML_TreeMenu_Listbox($menu);
+    $listBox  = & ref_new($HTML_TreeMenu_Listbox);
 
 	/* Print header */
 	require_once(HESK_PATH . 'inc/headerAdmin.inc.php');

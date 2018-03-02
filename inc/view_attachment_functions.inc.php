@@ -24,6 +24,7 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
     if ($is_staff) {
         echo '<th>' . $hesklang['download_count'] . '</th>';
     }
+    echo '<th>' . 'File size' . '</th>';
     echo '<th>' . $hesklang['action'] . '</th>
         </tr>
         </thead>';
@@ -72,6 +73,7 @@ function mfh_listAttachments($attachments = '', $reply = 0, $is_staff)
         if ($is_staff) {
             echo '<td>' . mfh_getNumberOfDownloadsForAttachment($att_id) . '</td>';
         }
+        echo '<td>' . mfh_getAttachmentFileSize($att_id) . '</td>';
         echo '<td>
                 <div class="btn-group">';
         /* Can edit and delete tickets? */
@@ -279,7 +281,6 @@ function display_dropzone_field($url, $id = 'filedrop', $max_files_override = -1
         paramName: 'attachment',
         url: '" . $url . "',
         parallelUploads: ".$max_files.",
-        uploadMultiple: true,
         maxFiles: ".$max_files.",
         acceptedFiles: ".json_encode($acceptedFiles).",
         maxFilesize: ".$size.", // MB

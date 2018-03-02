@@ -939,6 +939,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
 
+    $service_messages = mfh_get_service_messages('STAFF_VIEW_TICKET');
+    foreach ($service_messages as $sm) {
+        hesk_service_message($sm);
+    }
+
     // Prepare special custom fields
     foreach ($hesk_settings['custom_fields'] as $k=>$v) {
         if ($v['use'] && hesk_is_custom_field_in_category($k, $ticket['category']) ) {
@@ -1188,9 +1193,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                             echo '
                                     <a href="../download_attachment.php?att_id=' . $att_id . '&amp;track=' . $trackingID . '">
-                                        <i class="fa fa-paperclip" style="font-size:16px;" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['dnl'] . ' ' . $att_name . '"></i>
+                                        <i class="fa fa-paperclip" style="font-size:16px;" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['dnl'] . '"></i>
                                     </a>
-                                    <a href="../download_attachment.php?att_id=' . $att_id . '&amp;track=' . $trackingID . '">' . $att_name . '</a><br />
+                                    <a href="../download_attachment.php?att_id=' . $att_id . '&amp;track=' . $trackingID . '">' . $att_name . ' (' . mfh_getAttachmentFileSize($att_id) . ')' . '</a><br />
                                 ';
                         }
                     }

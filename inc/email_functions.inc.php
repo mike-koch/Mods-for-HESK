@@ -50,20 +50,19 @@ function hesk_notifyCustomerForVerifyEmail($email_template = 'verify_email', $ac
     $ccEmails = array();
     $bccEmails = array();
 
-    //TODO Update the email custom field to handle this properly
-    /*foreach ($hesk_settings['custom_fields'] as $k => $v) {
+    foreach ($hesk_settings['custom_fields'] as $k => $v) {
         if ($v['use']) {
             if ($v['type'] == 'email' && !empty($ticket[$k])) {
-                if ($v['value'] == 'cc') {
+                if ($v['value']['email_type'] == 'cc') {
                     $emails = explode(',', $ticket[$k]);
                     array_push($ccEmails, $emails);
-                } elseif ($v['value'] == 'bcc') {
+                } elseif ($v['value']['email_type'] == 'bcc') {
                     $emails = explode(',', $ticket[$k]);
                     array_push($bccEmails, $emails);
                 }
             }
         }
-    }*/
+    }
 
     hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, $ccEmails, $bccEmails, $hasMessage);
 }
@@ -95,18 +94,19 @@ function hesk_notifyCustomer($modsForHesk_settings, $email_template = 'new_ticke
     $ccEmails = array();
     $bccEmails = array();
 
-    //TODO Update the email custom field to handle this properly
-    /*foreach ($hesk_settings['custom_fields'] as $k => $v) {
+    foreach ($hesk_settings['custom_fields'] as $k => $v) {
         if ($v['use']) {
-            if ($v['type'] == 'email' && !empty($ticket[$k])) {
-                if ($v['value'] == 'cc') {
-                    array_push($ccEmails, $ticket[$k]);
-                } elseif ($v['value'] == 'bcc') {
-                    array_push($bccEmails, $ticket[$k]);
+            if ($v['type'] == 'email' && !empty($ticket[$k]) && isset($v['value']['emails_to_receive'])) {
+                if ($v['value']['email_type'] == 'cc') {
+                    $emails = explode(',', $ticket[$k]);
+                    array_push($ccEmails, $emails);
+                } elseif ($v['value']['email_type'] == 'bcc') {
+                    $emails = explode(',', $ticket[$k]);
+                    array_push($bccEmails, $emails);
                 }
             }
         }
-    }*/
+    }
 
     // Send e-mail
     hesk_mail($ticket['email'], $subject, $message, $htmlMessage, $modsForHesk_settings, $ccEmails, $bccEmails, $hasMessage);
@@ -513,6 +513,7 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
 
     // Remove duplicate recipients
     $to_arr = array_unique(explode(',', $to));
+    $to_arr = array_values($to_arr);
     $to = implode(',', $to_arr);
 
     // Use PHP's mail function
