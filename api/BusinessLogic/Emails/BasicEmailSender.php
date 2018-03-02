@@ -10,10 +10,9 @@ use PHPMailer;
 class BasicEmailSender extends \BaseClass implements EmailSender {
 
     function sendEmail($emailBuilder, $heskSettings, $modsForHeskSettings, $sendAsHtml) {
-        foreach ($emailBuilder->to as $to) {
-            if (preg_match("/\n|\r|\t|%0A|%0D|%08|%09/", $to . $emailBuilder->subject)) {
-                return false;
-            }
+        $toEmails = implode(',', $emailBuilder->to);
+        if (preg_match("/\n|\r|\t|%0A|%0D|%08|%09/", $toEmails . $emailBuilder->subject)) {
+            return false;
         }
 
         $mailer = new PHPMailer();
