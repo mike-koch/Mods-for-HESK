@@ -5,10 +5,12 @@ namespace BusinessLogic\Emails;
 
 use BusinessLogic\Exceptions\EmailTemplateNotFoundException;
 use BusinessLogic\Exceptions\InvalidEmailTemplateException;
+use BusinessLogic\Security\UserContext;
 use BusinessLogic\Statuses\DefaultStatusForAction;
 use BusinessLogic\Tickets\Ticket;
 use Core\Constants\Priority;
 use DataAccess\Categories\CategoryGateway;
+use DataAccess\Logging\LoggingGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Statuses\StatusGateway;
 
@@ -34,14 +36,21 @@ class EmailTemplateParser extends \BaseClass {
      */
     private $emailTemplateRetriever;
 
+    /**
+     * @var $logger LoggingGateway
+     */
+    private $logger;
+
     function __construct(StatusGateway $statusGateway,
                          CategoryGateway $categoryGateway,
                          UserGateway $userGateway,
-                         EmailTemplateRetriever $emailTemplateRetriever) {
+                         EmailTemplateRetriever $emailTemplateRetriever,
+                         LoggingGateway $loggingGateway) {
         $this->statusGateway = $statusGateway;
         $this->categoryGateway = $categoryGateway;
         $this->userGateway = $userGateway;
         $this->emailTemplateRetriever = $emailTemplateRetriever;
+        $this->logger = $loggingGateway;
     }
 
     /**
@@ -129,7 +138,17 @@ class EmailTemplateParser extends \BaseClass {
 
         // Status name and category name
         $defaultStatus = $this->statusGateway->getStatusForDefaultAction(DefaultStatusForAction::NEW_TICKET, $heskSettings);
-        $statusName = $defaultStatus->localizedNames[$language];
+
+        if (key_exists($language, $defaultStatus->localizedNames)) {
+            $statusName = $defaultStatus->localizedNames[$language];
+        } elseif (key_exists('English', $defaultStatus->localizedNames)) {
+            $statusName = $defaultStatus->localizedNames['English'];
+            $this->logger->logWarning('EmailTemplateParser', "No localized status found for status '{$defaultStatus->id}' and language '{$language}'. Defaulted to English.", "", new UserContext(), $heskSettings);
+        } else {
+            $statusName = "[ERROR: No localized status found for status '{$defaultStatus->id}']";
+            $this->logger->logError('EmailTemplateParser', "No localized status found for status '{$defaultStatus->id}'", "",  new UserContext(), $heskSettings);
+        }
+
         $categories = $this->categoryGateway->getAllCategories($heskSettings, $modsForHeskSettings);
         $category = null;
         foreach ($categories as $innerCategory) {
