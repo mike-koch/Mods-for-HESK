@@ -116,6 +116,7 @@ class CreateTicketTest extends TestCase {
         $this->userGateway = $this->createMock(UserGateway::clazz());
         $this->modsForHeskSettingsGateway = $this->createMock(ModsForHeskSettingsGateway::clazz());
         $this->auditTrailGateway = $this->createMock(AuditTrailGateway::clazz());
+        $this->customFieldsGateway = $this->createMock(CustomFieldsGateway::clazz());
 
         $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator,
             $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker,
