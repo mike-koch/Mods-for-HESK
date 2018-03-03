@@ -226,6 +226,7 @@ function getAllMigrations() {
         168 => new \v330\CalendarImprovements\AddBusinessHoursTable(168),
         169 => new \v330\CalendarImprovements\InsertDefaultBusinessHours(169),
         170 => new \v330\CalendarImprovements\AddShowStartTimeSetting(170),
-        171 => new UpdateMigration('3.3.0', '3.2.5', 171),
+        171 => new \v330\AddHighlightTicketRowsSetting(171),
+        172 => new UpdateMigration('3.3.0', '3.2.5', 172),
     );
 }
