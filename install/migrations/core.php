@@ -228,5 +228,6 @@ function getAllMigrations() {
         170 => new \v330\CalendarImprovements\AddShowStartTimeSetting(170),
         171 => new \v330\AddHighlightTicketRowsSetting(171),
         172 => new UpdateMigration('3.3.0', '3.2.5', 172),
+        173 => new UpdateMigration('3.3.1', '3.3.0', 173),
     );
 }

@@ -127,8 +127,8 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
             <form id="service-message" class="form-horizontal" data-toggle="validator" method="post">
                 <div class="modal-body">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#sm-contents" role="tab" data-toggle="tab">Contents</a></li>
-                        <li role="presentation"><a href="#properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation" class="active"><a href="#sm-contents" role="tab" data-toggle="tab"><?php echo $hesklang['kb_content']; ?></a></li>
+                        <li role="presentation"><a href="#properties" role="tab" data-toggle="tab"><?php echo $hesklang['properties']; ?></a></li>
                     </ul><br>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="sm-contents">

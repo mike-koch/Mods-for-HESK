@@ -10,6 +10,7 @@ use BusinessLogic\Tickets\TicketDeleter;
 use BusinessLogic\Tickets\TicketEditor;
 use BusinessLogic\Tickets\TicketRetriever;
 use Controllers\JsonRetriever;
+use Symfony\Component\Console\Helper\Helper;
 
 class StaffTicketController extends \BaseClass {
     function get($id) {
@@ -55,7 +56,14 @@ class StaffTicketController extends \BaseClass {
 
         $json = JsonRetriever::getJsonData();
 
-        $dueDate = date('Y-m-d H:i:s', strtotime(Helpers::safeArrayGet($json, 'dueDate')));
+        $newDueDate = Helpers::safeArrayGet($json, 'dueDate');
+
+        if ($newDueDate !== null) {
+            $dueDate = date('Y-m-d H:i:s', strtotime(Helpers::safeArrayGet($json, 'dueDate')));
+        } else {
+            $dueDate = null;
+        }
+
 
         $ticketEditor->updateDueDate($id, $dueDate, $userContext, $hesk_settings);
     }
