@@ -454,4 +454,34 @@ class TicketGateway extends CommonDao {
 
         $this->close();
     }
+
+    function areRepliesBeingFlooded($id, $ip, $heskSettings) {
+        $this->init();
+
+        $result = false;
+        $res = hesk_dbQuery("SELECT `staffid` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "replies` WHERE `replyto`='{$id}' AND `dt` > DATE_SUB(NOW(), INTERVAL 10 MINUTE) ORDER BY `id` ASC");
+        if (hesk_dbNumRows($res) > 0) {
+            $sequential_customer_replies = 0;
+            while ($tmp = hesk_dbFetchAssoc($res)) {
+                $sequential_customer_replies = $tmp['staffid'] ? 0 : $sequential_customer_replies + 1;
+            }
+
+            if ($sequential_customer_replies > 10) {
+                hesk_dbQuery("INSERT INTO `".hesk_dbEscape($heskSettings['db_pfix'])."logins` (`ip`, `number`) VALUES ('".hesk_dbEscape($ip)."', ".intval($heskSettings['attempt_limit'] + 1).")");
+                $result = true;
+            }
+        }
+
+        $this->close();
+
+        return $result;
+    }
+
+    function updateMetadataForReply($id, $status, $heskSettings) {
+        $this->init();
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "tickets` SET `lastchange`=NOW(), `status`='{$status}', `replies`=`replies`+1, `lastreplier`='0' WHERE `id`='{$id}'");
+
+        $this->close();
+    }
 }
