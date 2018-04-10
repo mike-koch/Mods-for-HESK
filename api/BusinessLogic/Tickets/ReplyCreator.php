@@ -3,6 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\Emails\Addressees;
 use BusinessLogic\Emails\EmailSenderHelper;
 use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Exceptions\ApiFriendlyException;
@@ -19,7 +20,7 @@ use DataAccess\Statuses\StatusGateway;
 use DataAccess\Tickets\ReplyGateway;
 use DataAccess\Tickets\TicketGateway;
 
-class ReplyCreator {
+class ReplyCreator extends \BaseClass {
     private $statusGateway;
     private $ticketGateway;
     private $emailSenderHelper;
@@ -48,11 +49,10 @@ class ReplyCreator {
      * @param $replyRequest CreateReplyRequest
      * @param $heskSettings array
      * @param $modsForHeskSettings array
-     * @param $userContext UserContext
      * @throws ApiFriendlyException
      * @throws \Exception
      */
-    function createReplyByCustomer($replyRequest, $heskSettings, $modsForHeskSettings, $userContext) {
+    function createReplyByCustomer($replyRequest, $heskSettings, $modsForHeskSettings) {
         $ticket = $this->ticketGateway->getTicketByTrackingId($replyRequest->trackingId, $heskSettings);
 
         if ($ticket === null) {
@@ -61,9 +61,19 @@ class ReplyCreator {
         }
 
         $validationModel = new ValidationModel();
-        if (!strlen($replyRequest->replyMessage)) {
+        if ($replyRequest->replyMessage === null || trim($replyRequest->replyMessage) === '') {
             $validationModel->errorKeys[] = 'MESSAGE_REQUIRED';
+        }
 
+        if ($heskSettings['email_view_ticket']) {
+            if ($replyRequest->emailAddress === null || trim($replyRequest->emailAddress) === '') {
+                $validationModel->errorKeys[] = 'EMAIL_REQUIRED';
+            } elseif (!in_array($replyRequest->emailAddress, $ticket->email)) {
+                $validationModel->errorKeys[] = 'EMAIL_NOT_FOUND_ON_TICKET';
+            }
+        }
+
+        if (count($validationModel->errorKeys) > 0) {
             throw new ValidationException($validationModel);
         }
 
@@ -96,11 +106,40 @@ class ReplyCreator {
         }
 
         $this->ticketGateway->updateMetadataForReply($ticket->id, $ticket->statusId, $heskSettings);
-        $this->replyGateway->insertReply($ticket->id, $ticket->name, $replyRequest->replyMessage, $replyRequest->hasHtml, $heskSettings);
+        $createdReply = $this->replyGateway->insertReply($ticket->id, $ticket->name, $replyRequest->replyMessage, $replyRequest->hasHtml, $heskSettings);
 
         //-- Changing the ticket message to the reply's
         $ticket->message = $replyRequest->replyMessage;
 
-        // TODO Send the email.
+        $addressees = new Addressees();
+        if ($ticket->ownerId !== null && $ticket->ownerId !== 0) {
+            $owner = $this->userGateway->getUserById($ticket->ownerId, $heskSettings);
+
+            if ($owner->notificationSettings->replyToMe) {
+                $addressees->to[] = $owner->email;
+                $language = $owner->language === null ? $heskSettings['language'] : $owner->language;
+                $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_REPLY_BY_CUSTOMER,
+                    $language,
+                    $addressees,
+                    $ticket,
+                    $heskSettings,
+                    $modsForHeskSettings);
+            }
+        } else {
+            $users = $this->userGateway->getUsersForUnassignedReplyNotification($heskSettings);
+            foreach ($users as $user) {
+                $addressees->to[] = $user->email;
+                $language = $user->language === null ? $heskSettings['language'] : $user->language;
+
+                $this->emailSenderHelper->sendEmailForTicket(EmailTemplateRetriever::NEW_REPLY_BY_CUSTOMER,
+                    $language,
+                    $addressees,
+                    $ticket,
+                    $heskSettings,
+                    $modsForHeskSettings);
+            }
+        }
+
+        return $createdReply;
     }
 }

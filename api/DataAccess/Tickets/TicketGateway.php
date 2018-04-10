@@ -312,8 +312,8 @@ class TicketGateway extends CommonDao {
 
         $generatedFields = new TicketGatewayGeneratedFields();
         $generatedFields->id = $id;
-        $generatedFields->dateCreated = $row['dt'];
-        $generatedFields->dateModified = $row['lastchange'];
+        $generatedFields->dateCreated = hesk_date($row['dt'], true);
+        $generatedFields->dateModified = hesk_date($row['lastchange'], true);
 
         $this->close();
 
