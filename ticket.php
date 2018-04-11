@@ -602,7 +602,7 @@ function print_form()
 
 function hesk_printCustomerReplyForm($reopen = 0)
 {
-    global $hesklang, $hesk_settings, $trackingID, $my_email, $modsForHesk_settings;
+    global $hesklang, $hesk_settings, $trackingID, $my_email, $modsForHesk_settings, $ticket;
 
     // Already printed?
     if (defined('REPLY_FORM')) {
@@ -676,6 +676,8 @@ function hesk_printCustomerReplyForm($reopen = 0)
         ?>
         <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
         <input type="hidden" name="orig_track" value="<?php echo $trackingID; ?>"/>
+        <input type="hidden" name="html" value="<?php echo $modsForHesk_settings['rich_text_for_tickets_for_customers']; ?>">
+        <input type="hidden" name="ticket_id" value="<?php echo $ticket['id']; ?>" />
         <?php
         if ($hesk_settings['email_view_ticket']) {
             echo '<input type="hidden" name="e" value="' . $my_email . '" />';
