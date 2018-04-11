@@ -18,11 +18,11 @@ class MailgunEmailSender extends \BaseClass implements EmailSender {
 
         $mailgunArray['to'] = implode(',', $emailBuilder->to);
 
-        if ($emailBuilder->cc !== null) {
+        if ($emailBuilder->cc !== null && count($emailBuilder->cc) > 0) {
             $mailgunArray['cc'] = implode(',', $emailBuilder->cc);
         }
 
-        if ($emailBuilder->bcc !== null) {
+        if ($emailBuilder->bcc !== null && count($emailBuilder->bcc) > 0) {
             $mailgunArray['bcc'] = implode(',', $emailBuilder->bcc);
         }
 
@@ -55,7 +55,9 @@ class MailgunEmailSender extends \BaseClass implements EmailSender {
     }
 
     private function sendMessage($mailgunArray, $attachments, $modsForHeskSettings) {
-        $messageClient = new Mailgun($modsForHeskSettings['mailgun_api_key']);
+        $ssl = !defined('NO_MAILGUN_SSL');
+
+        $messageClient = new Mailgun($modsForHeskSettings['mailgun_api_key'], 'api.mailgun.net', 'v2', $ssl);
 
         $mailgunAttachments = array();
         if (count($attachments) > 0) {
