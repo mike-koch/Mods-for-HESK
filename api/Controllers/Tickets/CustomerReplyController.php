@@ -23,6 +23,10 @@ class CustomerReplyController extends \BaseClass {
         $createReplyByCustomerModel->hasHtml = Helpers::safeArrayGet($jsonRequest, 'html');
         $createReplyByCustomerModel->ipAddress = Helpers::safeArrayGet($jsonRequest, 'ip');
 
+        if ($createReplyByCustomerModel->ipAddress === null) {
+            $createReplyByCustomerModel->ipAddress = hesk_getClientIP();
+        }
+
         /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
         $modsForHeskSettingsGateway = $applicationContext->get(ModsForHeskSettingsGateway::clazz());
         $modsForHesk_settings = $modsForHeskSettingsGateway->getAllSettings($hesk_settings);
