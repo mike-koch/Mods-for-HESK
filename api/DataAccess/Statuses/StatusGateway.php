@@ -53,4 +53,22 @@ class StatusGateway extends CommonDao {
 
         return $statuses;
     }
+
+    function getStatusById($id, $heskSettings) {
+        $this->init();
+
+        $metaRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "statuses` WHERE `ID` = " . $id);
+
+        $status = null;
+        if ($row = hesk_dbFetchAssoc($metaRs)) {
+            $languageRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "text_to_status_xref`
+                WHERE `status_id` = " . intval($row['ID']));
+
+            $status = Status::fromDatabase($row, $languageRs);
+        }
+
+        $this->close();
+
+        return $status;
+    }
 }

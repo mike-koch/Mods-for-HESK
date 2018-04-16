@@ -1350,6 +1350,10 @@ function hesk_returnLanguage()
         die('Count not load a valid language file.');
     }
 
+    // Load Mods for HESK language strings
+    $language_file = HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/text-mfh.php';
+    require($language_file);
+
     // Load a custom text file if available
     $language_file = HESK_PATH . 'language/' . $hesk_settings['languages'][$hesk_settings['language']]['folder'] . '/custom-text.php';
     if (file_exists($language_file)) {
