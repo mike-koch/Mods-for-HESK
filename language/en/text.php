@@ -2239,6 +2239,9 @@ $hesklang['highlight_ticket_rows_based_on_priority'] = 'Highlight ticket rows ba
 $hesklang['highlight_ticket_rows_based_on_priority_help'] = 'If enabled, each ticket on the tickets page will be highlighted based on priority. If disabled, only * Critical * and High priority tickets will be highlighted.';
 $hesklang['highlight_ticket_rows_based_on_priority_descr'] = 'Highlight all ticket rows based on priority';
 $hesklang['protected_group'] = 'This is a protected group; you cannot change accessible categories / features.';
+$hesklang['emails_to_receive'] = 'Emails to receive';
+$hesklang['emails_sent_to_staff'] = 'Emails sent to staff';
+$hesklang['emails_sent_to_customer'] = 'Emails sent to customer';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

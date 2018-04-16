@@ -11,7 +11,7 @@ class CommonDao extends \BaseClass {
      */
     function init() {
         if (!function_exists('hesk_dbConnect')) {
-            throw new Exception('Database not loaded!');
+            throw new \BaseException('Database not loaded!');
         }
         hesk_dbConnect();
     }

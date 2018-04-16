@@ -104,10 +104,10 @@ function executeMigration(startingMigrationNumber, migrationNumber, latestMigrat
             console.log('latestMigrationNumber: ' + latestMigrationNumber);
             console.info('---');
             if (migrationNumber === latestMigrationNumber || (migrationNumber === startingMigrationNumber && direction === 'down')) {
-                updateProgressBar(migrationNumber, latestMigrationNumber, direction === 'down', true);
+                updateProgressBar(migrationNumber - startingMigrationNumber, latestMigrationNumber - startingMigrationNumber, direction === 'down', true);
                 console.log('%c Success! ', 'color: white; background-color: green; font-size: 2em');
             } else {
-                updateProgressBar(migrationNumber, latestMigrationNumber, false, false);
+                updateProgressBar(migrationNumber - startingMigrationNumber, latestMigrationNumber - startingMigrationNumber, false, false);
                 var newMigrationNumber = direction === 'up' ? migrationNumber + 1 : migrationNumber - 1;
                 executeMigration(startingMigrationNumber, newMigrationNumber, latestMigrationNumber, direction);
             }
@@ -121,7 +121,7 @@ function executeMigration(startingMigrationNumber, migrationNumber, latestMigrat
             $errorBlock = $('#error-block');
             $errorBlock.html($errorBlock.html() + "<br><br>An error occurred! (Error Code: " + migrationNumber + ")<br>" + message).show();
 
-            updateProgressBar(migrationNumber, latestMigrationNumber, true, false);
+            updateProgressBar(migrationNumber - startingMigrationNumber, latestMigrationNumber - startingMigrationNumber, true, false);
 
             if (direction === 'up') {
                 // Revert!

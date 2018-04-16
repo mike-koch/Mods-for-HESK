@@ -20,14 +20,17 @@ $(document).ready(function() {
 
     $editableDueDateContainer.find('#submit').click(function() {
         var newDueDate = $editableDueDateContainer.find('input[type="text"][name="due-date"]').val();
+        var ticketId = $('input[type="hidden"][name="orig_id"]').val();
         $.ajax({
             method: 'POST',
-            url: heskPath + 'internal-api/admin/calendar/',
-            data: {
-                trackingId: $('input[type="hidden"][name="track"]').val(),
-                action: 'update-ticket',
-                dueDate: newDueDate
+            url: heskPath + 'api/v1/staff/tickets/' + ticketId + '/due-date',
+            headers: {
+                'X-Internal-Call': true,
+                'X-HTTP-Method-Override': 'PATCH'
             },
+            data: JSON.stringify({
+                dueDate: newDueDate === '' ? null : newDueDate
+            }),
             success: function() {
                 mfhAlert.success(mfhLang.text('ticket_due_date_updated'));
                 $readonlyDueDateContainer.find('span#due-date').text(newDueDate == '' ? $('#lang_none').text() : newDueDate);

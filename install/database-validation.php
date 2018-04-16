@@ -277,13 +277,12 @@ if (hesk_dbNumRows($tableSql) > 0) {
             $validations[] = run_column_check('custom_fields', 'mfh_description', 155);
             $validations[] = run_setting_check('migrationNumber', 158);
             output_header_row('3.3.0');
-            $validations[] = run_table_check('mfh_service_message_to_location', 164);
-            $validations[] = run_column_check('mfh_service_message_to_location', 'service_message_id', 164);
-            $validations[] = run_column_check('mfh_service_message_to_location', 'location', 164);
-            $validations[] = run_column_check('service_messages', 'mfh_language', 166);
-            $validations[] = run_table_check('mfh_calendar_business_hours', 167);
-            $validations[] = run_setting_check('calendar_show_start_time', 169);
-            $validations[] = run_setting_check('calendar_show_start_time', 999);
+            $validations[] = run_table_check('mfh_service_message_to_location', 165);
+            $validations[] = run_column_check('mfh_service_message_to_location', 'service_message_id', 165);
+            $validations[] = run_column_check('mfh_service_message_to_location', 'location', 165);
+            $validations[] = run_column_check('service_messages', 'mfh_language', 167);
+            $validations[] = run_table_check('mfh_calendar_business_hours', 168);
+            $validations[] = run_setting_check('calendar_show_start_time', 170);
 
             $passed = false;
             $failed = false;

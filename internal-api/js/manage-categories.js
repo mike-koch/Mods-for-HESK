@@ -411,7 +411,7 @@ function bindFormSubmit() {
         var foregroundColor = $modal.find('input[name="foreground-color"]').val();
         var manager = parseInt($modal.find('select[name="manager"]').val());
         var data = {
-            autoassign: $modal.find('input[name="autoassign"]').val() === 'true',
+            autoassign: $modal.find('input[name="autoassign"]:checked').val() === '1',
             backgroundColor: $modal.find('input[name="background-color"]').val(),
             description: $modal.find('textarea[name="description"]').val(),
             displayBorder: $modal.find('input[name="display-border"]:checked').val() === '1',

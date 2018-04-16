@@ -195,7 +195,7 @@ header('X-UA-Compatible: IE=edge');
     /* If page requires WYSIWYG editor include TinyMCE Javascript */
     if (defined('WYSIWYG') && $hesk_settings['kb_wysiwyg']) {
         ?>
-        <script type="text/javascript" src="<?php echo HESK_PATH; ?>inc/tiny_mce/3.5.11/tiny_mce.js"></script>
+        <script type="text/javascript" src="<?php echo HESK_PATH; ?>inc/tiny_mce/3.5.12/tiny_mce.js"></script>
         <?php
     }
 

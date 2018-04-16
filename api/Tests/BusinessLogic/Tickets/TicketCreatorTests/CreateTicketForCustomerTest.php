@@ -19,6 +19,7 @@ use BusinessLogic\Tickets\VerifiedEmailChecker;
 use BusinessLogic\ValidationModel;
 use Core\Constants\Priority;
 use DataAccess\AuditTrail\AuditTrailGateway;
+use DataAccess\CustomFields\CustomFieldsGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
 use DataAccess\Statuses\StatusGateway;
@@ -101,6 +102,9 @@ class CreateTicketTest extends TestCase {
     /* @var $auditTrailGateway \PHPUnit_Framework_MockObject_MockObject|AuditTrailGateway */
     private $auditTrailGateway;
 
+    /* @var $customFieldsGateway \PHPUnit_Framework_MockObject_MockObject|CustomFieldsGateway */
+    private $customFieldsGateway;
+
     protected function setUp() {
         $this->ticketGateway = $this->createMock(TicketGateway::clazz());
         $this->newTicketValidator = $this->createMock(NewTicketValidator::clazz());
@@ -112,10 +116,11 @@ class CreateTicketTest extends TestCase {
         $this->userGateway = $this->createMock(UserGateway::clazz());
         $this->modsForHeskSettingsGateway = $this->createMock(ModsForHeskSettingsGateway::clazz());
         $this->auditTrailGateway = $this->createMock(AuditTrailGateway::clazz());
+        $this->customFieldsGateway = $this->createMock(CustomFieldsGateway::clazz());
 
         $this->ticketCreator = new TicketCreator($this->newTicketValidator, $this->trackingIdGenerator,
             $this->autoassigner, $this->statusGateway, $this->ticketGateway, $this->verifiedEmailChecker,
-            $this->emailSenderHelper, $this->userGateway, $this->modsForHeskSettingsGateway, $this->auditTrailGateway);
+            $this->emailSenderHelper, $this->userGateway, $this->modsForHeskSettingsGateway, $this->auditTrailGateway, $this->customFieldsGateway);
 
         $this->ticketRequest = new CreateTicketByCustomerModel();
         $this->ticketRequest->name = 'Name';

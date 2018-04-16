@@ -366,7 +366,7 @@ function hesk_stripQuotedText($message)
     foreach ($hesk_settings['languages'] as $language => $settings) {
         if (($found = strpos($message, $settings['hr'])) !== false) {
             // "Reply above this line" tag found, strip quoted reply
-            $message = substr($message, 0, $found);
+            $message = hesk_mb_substr($message, 0, $found);
             $message .= "\n" . $hesklang['qrr'];
 
             // Set language to the detected language

@@ -736,7 +736,7 @@ function hesk_validateUserInfo($pass_required = 1, $redirect_to = './manage_user
         }
     }
 
-    if (strlen($myuser['signature']) > 1000) {
+    if (hesk_mb_strlen($myuser['signature']) > 1000) {
         $hesk_error_buffer .= '<li>' . $hesklang['signature_long'] . '</li>';
     }
 

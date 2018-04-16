@@ -120,11 +120,11 @@ echo mfh_get_hidden_fields_for_language(array(
     <p id="setting_default_view"><?php echo $modsForHesk_settings['default_calendar_view']; ?></p>
     <p id="setting_first_day_of_week"><?php echo $modsForHesk_settings['first_day_of_week']; ?></p>
     <p id="setting_show_start_time"><?php echo $modsForHesk_settings['calendar_show_start_time']; ?></p>
+    <?php
+    $businessHoursRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours`");
+    while ($row = hesk_dbFetchAssoc($businessHoursRs)):
+        ?>
+        <p id="business_hours_<?php echo $row['day_of_week']; ?>_start"><?php echo $row['start_time']; ?></p>
+        <p id="business_hours_<?php echo $row['day_of_week']; ?>_end"><?php echo $row['end_time']; ?></p>
+    <?php endwhile; ?>
 </div>
-<?php
-$businessHoursRs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_calendar_business_hours`");
-while ($row = hesk_dbFetchAssoc($businessHoursRs)):
-    ?>
-    <p id="business_hours_<?php echo $row['day_of_week']; ?>_start"><?php echo $row['start_time']; ?></p>
-    <p id="business_hours_<?php echo $row['day_of_week']; ?>_end"><?php echo $row['end_time']; ?></p>
-<?php endwhile; ?>

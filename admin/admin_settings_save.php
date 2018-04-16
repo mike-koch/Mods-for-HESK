@@ -425,7 +425,7 @@ $set['daylight'] = empty($_POST['s_daylight']) ? 0 : 1;
 $set['timeformat'] = hesk_input(hesk_POST('s_timeformat')) or $set['timeformat'] = 'Y-m-d H:i:s';
 
 /* --> Other */
-$set['ip_whois'] = hesk_input(hesk_POST('s_ip_whois', 'http://whois.domaintools.com/{IP}'));
+$set['ip_whois'] = hesk_input(hesk_POST('s_ip_whois_url', 'http://whois.domaintools.com/{IP}'));
 
 // If no {IP} tag append it to the end
 if (strlen($set['ip_whois']) == 0) {

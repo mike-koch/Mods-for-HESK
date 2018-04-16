@@ -218,13 +218,16 @@ function getAllMigrations() {
         161 => new UpdateMigration('3.2.2', '3.2.1', 161),
         162 => new UpdateMigration('3.2.3', '3.2.2', 162),
         163 => new UpdateMigration('3.2.4', '3.2.3', 163),
+        164 => new UpdateMigration('3.2.5', '3.2.4', 164),
         // 3.3.0
-        164 => new \v330\ServiceMessagesImprovements\CreateServiceMessageToLocationTable(164),
-        165 => new \v330\ServiceMessagesImprovements\UpdateExistingServiceMessagesLocations(165),
-        166 => new \v330\ServiceMessagesImprovements\AddLanguageColumnToServiceMessages(166),
-        167 => new \v330\CalendarImprovements\AddBusinessHoursTable(167),
-        168 => new \v330\CalendarImprovements\InsertDefaultBusinessHours(168),
-        169 => new \v330\CalendarImprovements\AddShowStartTimeSetting(169),
-        170 => new \v330\AddParentIdToCategory(170),
+        165 => new \v330\ServiceMessagesImprovements\CreateServiceMessageToLocationTable(165),
+        166 => new \v330\ServiceMessagesImprovements\UpdateExistingServiceMessagesLocations(166),
+        167 => new \v330\ServiceMessagesImprovements\AddLanguageColumnToServiceMessages(167),
+        168 => new \v330\CalendarImprovements\AddBusinessHoursTable(168),
+        169 => new \v330\CalendarImprovements\InsertDefaultBusinessHours(169),
+        170 => new \v330\CalendarImprovements\AddShowStartTimeSetting(170),
+        171 => new \v330\AddHighlightTicketRowsSetting(171),
+        172 => new UpdateMigration('3.3.0', '3.2.5', 172),
+        173 => new UpdateMigration('3.3.1', '3.3.0', 173),
     );
 }
