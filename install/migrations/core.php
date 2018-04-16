@@ -229,5 +229,9 @@ function getAllMigrations() {
         171 => new \v330\AddHighlightTicketRowsSetting(171),
         172 => new UpdateMigration('3.3.0', '3.2.5', 172),
         173 => new UpdateMigration('3.3.1', '3.3.0', 173),
+        // 3.4.0
+        174 => new \v340\CreateCategoryGroupsTable(174),
+        175 => new \v340\CreateCategoryGroupsI18nTable(175),
+        176 => new \v340\AddCategoryGroupIdToCategory(176),
     );
 }
