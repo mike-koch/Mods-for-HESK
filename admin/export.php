@@ -37,8 +37,10 @@ $modsForHesk_settings = mfh_getSettings();
 $delete = hesk_GET('delete');
 if (strlen($delete) && preg_match('/^hesk_export_[0-9_\-]+$/', $delete)) {
     hesk_unlink(HESK_PATH.$hesk_settings['cache_dir'].'/'.$delete.'.zip');
-    hesk_process_messages($hesklang['fd'], 'export.php','SUCCESS');
+    hesk_process_messages($hesklang['fd'], hesk_verifyGoto(),'SUCCESS');
 }
+
+// TODO CONTINUE FROM HERE IN THE DIFF
 
 // Set default values
 define('CALENDAR', 1);
