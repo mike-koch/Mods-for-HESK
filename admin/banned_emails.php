@@ -200,7 +200,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     if ($can_unban) {
                                         echo '
                             <td class="' . $color . ' text-left">
-                                <a href="banned_emails.php?a=unban&amp;id=' . $ban['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();">
+                                <a name="Unban '.$ban['email'].'" href="banned_emails.php?a=unban&amp;id=' . $ban['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();">
                                     <i class="fa fa-times red font-size-16p" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['delban'] . '"></i>
                                 </a>
                             </td>
