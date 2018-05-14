@@ -3449,53 +3449,28 @@ $modsForHesk_settings = mfh_getSettings();
             <div class="box-body">
                 <h4 class="bold"><?php echo $hesklang['dat']; ?></h4>
                 <div class="form-group">
-                    <label for="servertime" class="col-sm-4 control-label"><?php echo $hesklang['server_time']; ?>
-                        <a href="Javascript:void(0)"
-                           onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#18','400','500')"><i
-                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                    <label for="s_timezone" class="col-sm-4 control-label"><?php echo $hesklang['TZ']; ?> <a
+                                href="Javascript:void(0)"
+                                onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#63','400','500')"><i
+                                    class="fa fa-question-circle settingsquestionmark"></i></a></label>
 
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?php echo $hesklang['csrt'] . ' <span id="servertime">' . $server_time . '</span>'; ?></p>
-                        <script language="javascript" type="text/javascript"><!--
-                            startTime();
-                            //-->
-                        </script>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-2 col-sm-offset-4">
-                            <input type="text" class="form-control" name="s_diff_hours" size="5" maxlength="3"
-                                   value="<?php echo $hesk_settings['diff_hours']; ?>"/>
-                        </div>
-                        <div class="col-sm-6 pad-right-0">
-                            <p class="form-control-static"><?php echo $hesklang['t_h']; ?></p>
-                        </div>
-                    </div>
-                    <div class="row pad-right-0">
-                        <div class="col-sm-2 col-sm-offset-4">
-                            <input type="text" class="form-control" name="s_diff_minutes" size="5" maxlength="3"
-                                   value="<?php echo $hesk_settings['diff_minutes']; ?>"/>
-                        </div>
-                        <div class="col-sm-6 pad-right-0">
-                            <p class="form-control-static"><?php echo $hesklang['t_m']; ?></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="s_daylight" class="col-sm-4 control-label"><?php echo $hesklang['day']; ?> <a
-                            href="Javascript:void(0)"
-                            onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#19','400','500')"><i
-                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
-
-                    <div class="col-sm-8 form-inline">
                         <?php
-                        $on = $hesk_settings['daylight'] ? 'checked="checked"' : '';
-                        $off = $hesk_settings['daylight'] ? '' : 'checked="checked"';
-                        echo '
-                        <div class="radio"><label><input type="radio" name="s_daylight" value="0" ' . $off . ' /> ' . $hesklang['off'] . '</label></div>&nbsp;&nbsp;&nbsp;
-                        <div class="radio"><label><input type="radio" name="s_daylight" value="1" ' . $on . ' /> ' . $hesklang['on'] . '</label></div>';
+                        // Get list of supported timezones
+                        $timezone_list = hesk_generate_timezone_list();
+
+                        // Do we need to localize month names?
+                        if ($hesk_settings['language'] != 'English') {
+                            $timezone_list = hesk_translate_timezone_list($timezone_list);
+                        }
                         ?>
+                        <select class="form-control" name="s_timezone">
+                            <?php foreach ($timezone_list as $timezone => $description): ?>
+                                <option value="<?php echo $timezone; ?>" <?php if ($hesk_settings['timezone'] == $timezone) {echo 'selected';} ?>>
+                                    <?php echo $description; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
