@@ -50,6 +50,9 @@ $can_unban_emails = hesk_checkPermission('can_unban_emails', 0);
 $can_ban_ips = hesk_checkPermission('can_ban_ips', 0);
 $can_unban_ips = hesk_checkPermission('can_unban_ips', 0);
 $can_resolve = hesk_checkPermission('can_resolve', 0);
+$can_view_ass_by = hesk_checkPermission('can_view_ass_by', 0);
+$can_privacy = hesk_checkPermission('can_privacy',0);
+$can_export = hesk_checkPermission('can_export',0);
 
 // Get ticket ID
 $trackingID = hesk_cleanID() or print_form();
@@ -90,7 +93,10 @@ if (hesk_dbNumRows($res) != 1) {
 
 /* Permission to view this ticket? */
 if ($ticket['owner'] && $ticket['owner'] != $_SESSION['id'] && !hesk_checkPermission('can_view_ass_others', 0)) {
-    hesk_error($hesklang['ycvtao']);
+    // Maybe this user is allowed to view tickets he/she assigned?
+    if (!$can_view_ass_by || $ticket['assignedby'] != $_SESSION['id']) {
+        hesk_error($hesklang['ycvtao']);
+    }
 }
 
 if (!$ticket['owner'] && !$can_view_unassigned) {
@@ -163,7 +169,10 @@ if ($isManager) {
     $can_unban_emails =
     $can_ban_ips =
     $can_unban_ips =
-    $can_resolve = true;
+    $can_resolve =
+    $can_view_ass_by =
+    $can_privacy =
+    $can_export = true;
 }
 
 /* Is this user allowed to view tickets inside this category? */
@@ -1321,7 +1330,7 @@ require_once(HESK_PATH . 'inc/footer.inc.php');
 
 function hesk_getAdminButtons($category_id)
 {
-    global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $can_resolve, $isManager;
+    global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $can_resolve, $can_privacy, $can_export, $isManager;
 
     $options = '';
 
@@ -1329,12 +1338,12 @@ function hesk_getAdminButtons($category_id)
     if ($can_edit) {
         $tmp = $reply ? '&amp;reply=' . $reply['id'] : '';
         $mgr = $isManager ? '&amp;isManager=true' : '';
-        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['edit'] . '</a> ';
+        $options .= '<a id="editticket" title="'.$hesklang['edtt'].'" class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['edit'] . '</a> ';
     }
 
 
     /* Print ticket button */
-    $options .= '<a class="btn btn-default" href="../print.php?track=' . $trackingID . '"><i class="fa fa-print"></i> ' . $hesklang['printer_friendly'] . '</a> ';
+    $options .= '<a class="btn btn-default" title="'.$hesklang['printer_friendly'].'" href="../print.php?track=' . $trackingID . '"><i class="fa fa-print"></i> ' . $hesklang['printer_friendly'] . '</a> ';
 
     /* Copy ticket button */
     $strippedName = strip_tags($ticket['name']);
@@ -1489,7 +1498,7 @@ function hesk_getAdminButtons($category_id)
     /* Lock ticket button */
     if ($can_resolve) {
         $template =
-            '<div class="col-md-6 col-sm-12"><a class="button-link" href="lock.php?track=' . $trackingID . '&amp;locked=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '">
+            '<div class="col-md-6 col-sm-12"><a id="%s" title="%s" class="button-link" href="lock.php?track=' . $trackingID . '&amp;locked=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h4>
@@ -1499,14 +1508,14 @@ function hesk_getAdminButtons($category_id)
                 </div>
             </a></div>';
         $dropdown .= $ticket['locked']
-            ? sprintf($template, 0, 'unlock', $hesklang['tul'])
-            : sprintf($template, 1, 'lock', $hesklang['tlo']);
+            ? sprintf($template, 'unlock', $hesklang['tul'], 0, 'unlock', $hesklang['tul'])
+            : sprintf($template, 'lock', $hesklang['tlo'], 1, 'lock', $hesklang['tlo']);
     }
 
     /* Tag ticket button */
     if ($can_archive) {
         $template =
-            '<div class="col-md-6 col-sm-12"><a class="button-link" href="archive.php?track=' . $trackingID . '&amp;archived=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '">
+            '<div class="col-md-6 col-sm-12"><a id="%s" title="%s" class="button-link" href="archive.php?track=' . $trackingID . '&amp;archived=%s&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h4>
@@ -1517,18 +1526,51 @@ function hesk_getAdminButtons($category_id)
             </a></div>';
 
         $dropdown .= $ticket['archive']
-            ? sprintf($template, 0, $hesklang['remove_archive'])
-            : sprintf($template, 1, $hesklang['add_archive']);
+            ? sprintf($template, 'untag', $hesklang['remove_archive'], 0, $hesklang['remove_archive'])
+            : sprintf($template, 'tag', $hesklang['add_archive'], 1, $hesklang['add_archive']);
     }
 
     /* Import to knowledgebase button */
     if ($hesk_settings['kb_enable'] && hesk_checkPermission('can_man_kb', 0)) {
         $dropdown .=
-            '<div class="col-md-6 col-sm-12"><a href="manage_knowledgebase.php?a=import_article&amp;track=' . $trackingID . '" class="button-link">
+            '<div class="col-md-6 col-sm-12"><a id="addtoknow" title="'.$hesklang['import_kb'].'" href="manage_knowledgebase.php?a=import_article&amp;track=' . $trackingID . '" class="button-link">
                 <div class="panel panel-default">
                         <div class="panel-body">
                             <h4>
                                 <i class="fa fa-lightbulb-o fa-fw"></i> ' . $hesklang['import_kb'] . '
+                            </h4>
+                        </div>
+                    </div>
+                </a></div>';
+    }
+
+    // Export ticket
+    if ($can_export) {
+        $dropdown .=
+            '<div class="col-md-6 col-sm-12">
+                <a id="exportticket" href="export_ticket.php?track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'" 
+                    title="'.$hesklang['btn_export'].'" class="button-link">
+                <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>
+                                <i class="fa fa-download fa-fw"></i> '.$hesklang['btn_export'].'
+                            </h4>
+                        </div>
+                    </div>
+                </a></div>';
+    }
+
+    // Anonymize ticket
+    if ($can_privacy) {
+        $dropdown .=
+            '<div class="col-md-6 col-sm-12">
+                <a id="exportticket" href="anonymize_ticket.php?track='.$trackingID.'&amp;Refresh='.mt_rand(10000,99999).'&amp;token='.hesk_token_echo(0).'"
+                    onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['confirm_anony']).'?\\n\\n'.hesk_makeJsString($hesklang['privacy_anon_info']).'\');"
+                    title="'.$hesklang['confirm_anony'].'" class="button-link">
+                <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>
+                                <i class="fa fa-shield fa-fw"></i> '.$hesklang['btn_anony'].'
                             </h4>
                         </div>
                     </div>
@@ -1540,11 +1582,11 @@ function hesk_getAdminButtons($category_id)
         if ($reply) {
             $url = 'admin_ticket.php';
             $tmp = 'delete_post=' . $reply['id'];
-            $txt = $hesklang['delt'];
+            $txt = $hesklang['btn_delr'];
         } else {
             $url = 'delete_tickets.php';
             $tmp = 'delete_ticket=1';
-            $txt = $hesklang['dele'];
+            $txt = $hesklang['btn_delt'];
         }
         $dropdown .=
             '<div class="col-md-6 col-sm-12"><a class="button-link" href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . hesk_makeJsString($txt) . '?\');">
@@ -1600,13 +1642,13 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
         if ($reply) {
             $url = 'admin_ticket.php';
             $tmp = 'delete_post=' . $reply['id'];
-            $txt = $hesklang['delt'];
+            $txt = $hesklang['btn_delr'];
         } else {
             $url = 'delete_tickets.php';
             $tmp = 'delete_ticket=1';
-            $txt = $hesklang['dele'];
+            $txt = $hesklang['btn_delt'];
         }
-        $options .= '<a class="btn btn-default" href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . $txt . '?\');"><i class="fa fa-times red"></i> ' . $txt . '</a> ';
+        $options .= '<a id="deleteticket" class="btn btn-default" href="' . $url . '?track=' . $trackingID . '&amp;' . $tmp . '&amp;Refresh=' . mt_rand(10000, 99999) . '&amp;token=' . hesk_token_echo(0) . '" onclick="return hesk_confirmExecute(\'' . $txt . '?\');"><i class="fa fa-times red"></i> ' . $txt . '</a> ';
     }
 
     /* Return generated HTML */
@@ -2347,6 +2389,7 @@ function hesk_printCanned()
             myMsg = myMsg.replace(/%%HESK_TRACKID%%/g, '<?php echo hesk_jsString($ticket['trackid']); ?>');
             myMsg = myMsg.replace(/%%HESK_TRACK_ID%%/g, '<?php echo hesk_jsString($ticket['trackid']); ?>');
             myMsg = myMsg.replace(/%%HESK_NAME%%/g, '<?php echo hesk_jsString($ticket['name']); ?>');
+            myMsg = myMsg.replace(/%%HESK_FIRST_NAME%%/g, '<?php echo hesk_jsString(hesk_full_name_to_first_name($ticket['name'])); ?>');
             myMsg = myMsg.replace(/%%HESK_EMAIL%%/g, '<?php echo hesk_jsString($ticket['email']); ?>');
             myMsg = myMsg.replace(/%%HESK_OWNER%%/g, '<?php echo hesk_jsString( isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] : ''); ?>');
 
