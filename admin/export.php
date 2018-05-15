@@ -300,7 +300,8 @@ while ($row = hesk_dbFetchAssoc($res2)) {
 
 // Generate export file
 if (isset($_GET['w'])) {
-    // We'll need HH:MM:SS format for hesk_date() here
+    /*
+     * // We'll need HH:MM:SS format for hesk_date() here
     $hesk_settings['timeformat'] = 'H:i:s';
 
     // Get staff names
@@ -323,7 +324,7 @@ if (isset($_GET['w'])) {
 		if (!file_exists($export_dir.'index.htm')) {
 			@file_put_contents($export_dir.'index.htm', '');
 		}
-	
+
         // Cleanup old files
         hesk_purge_cache('export', 86400);
     } else {
@@ -637,6 +638,10 @@ if (isset($_GET['w'])) {
     else {
         hesk_unlink($save_to);
     }
+     */
+
+    require_once(HESK_PATH . 'inc/export_functions.inc.php');
+    list($success_msg, $tickets_exported) = hesk_export_to_XML($sql);
 }
 
 /* Print header */
