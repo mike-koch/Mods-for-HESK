@@ -185,9 +185,9 @@ while (count($kb_cat) > 0)
 
 			// Generate KB menu icons
 			$menu_icons =
-			'<a href="manage_knowledgebase.php?a=add_article&amp;catid='.$my.'" onclick="document.getElementById(\'option'.$j.'\').selected=true;return true;"><i class="fa fa-plus font-size-16p green" ></i></a>  '
-			.'<a href="manage_knowledgebase.php?a=add_category&amp;parent='.$my.'" onclick="document.getElementById(\'option'.$j.'_2\').selected=true;return true;"><i class="fa fa-caret-right font-size-16p blue"></i></a>  '
-			.'<a href="manage_knowledgebase.php?a=manage_cat&amp;catid='.$my.'"><i class="fa fa-gear font-size-16p gray"></i></a> '
+			'<a name="Add article to '.$cat['name'].'" href="manage_knowledgebase.php?a=add_article&amp;catid='.$my.'" onclick="document.getElementById(\'option'.$j.'\').selected=true;return true;"><i class="fa fa-plus font-size-16p green" ></i></a>  '
+			.'<a name="Add sub to '.$cat['name'].'" href="manage_knowledgebase.php?a=add_category&amp;parent='.$my.'" onclick="document.getElementById(\'option'.$j.'_2\').selected=true;return true;"><i class="fa fa-caret-right font-size-16p blue"></i></a>  '
+			.'<a name="Manage '.$cat['name'].'" href="manage_knowledgebase.php?a=manage_cat&amp;catid='.$my.'"><i class="fa fa-gear font-size-16p gray"></i></a> '
 			;
 
 			// Can this category be moved up?
@@ -1884,10 +1884,10 @@ function manage_category() {
                                                 echo '<img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;vertical-align:text-bottom;" /> <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;vertical-align:text-bottom;" />';
                                             }
                                             ?>
-                                            <a href="manage_knowledgebase.php?a=sticky&amp;s=<?php echo $article['sticky'] ? 0 : 1 ?>&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;token=<?php hesk_token_echo(); ?>"><i class="glyphicon glyphicon-pushpin icon-link" style="color:<?php if ( ! $article['sticky']) {echo 'gray';} else {echo 'red';} ?>" data-toggle="tooltip" data-placement="top" title="<?php if (!$article['sticky']) {echo $hesklang['stickyon'];} else {echo $hesklang['stickyoff'];} ?>"></i></a>
+                                            <a name="Sticky <?php echo $article['subject']; ?>" href="manage_knowledgebase.php?a=sticky&amp;s=<?php echo $article['sticky'] ? 0 : 1 ?>&amp;id=<?php echo $article['id']; ?>&amp;catid=<?php echo $catid; ?>&amp;token=<?php hesk_token_echo(); ?>"><i class="glyphicon glyphicon-pushpin icon-link" style="color:<?php if ( ! $article['sticky']) {echo 'gray';} else {echo 'red';} ?>" data-toggle="tooltip" data-placement="top" title="<?php if (!$article['sticky']) {echo $hesklang['stickyon'];} else {echo $hesklang['stickyoff'];} ?>"></i></a>
                                             <a href="knowledgebase_private.php?article=<?php echo $article['id']; ?>&amp;back=1<?php if ($article['type'] == 2) {echo '&amp;draft=1';} ?>" target="_blank"><i class="fa fa-file-o icon-link" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['viewart'] ?>"></i></a>
-                                            <a href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>"><i class="fa fa-pencil" style="color:orange;font-size:16px" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['edit'] ?>"></i></a>
-                                            <a href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['delete'] ?>"></i></a>&nbsp;</td>
+                                            <a name="Edit <?php echo $article['subject']; ?>" href="manage_knowledgebase.php?a=edit_article&amp;id=<?php echo $article['id']; ?>"><i class="fa fa-pencil" style="color:orange;font-size:16px" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['edit'] ?>"></i></a>
+                                            <a name="Delete <?php echo $article['subject']; ?>" href="manage_knowledgebase.php?a=remove_article&amp;id=<?php echo $article['id']; ?>&amp;token=<?php hesk_token_echo(); ?>" onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_art']); ?>');"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="<?php echo $hesklang['delete'] ?>"></i></a>&nbsp;</td>
                                     </tr>
                                     <?php
                                     $j++;
