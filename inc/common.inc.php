@@ -2092,6 +2092,7 @@ function hesk_getFeatureArray()
         'can_assign_others',    /* User can assign tickets to other staff members */
         'can_view_unassigned',    /* User can view unassigned tickets */
         'can_view_ass_others',    /* User can view tickets that are assigned to other staff */
+        'can_view_ass_by',       /* User can view tickets he/she assigned to others */
         'can_run_reports',        /* User can run reports and see statistics (only allowed categories and self) */
         'can_run_reports_full', /* User can run reports and see statistics (unrestricted) */
         'can_export',            /* User can export own tickets to Excel */
@@ -2100,6 +2101,7 @@ function hesk_getFeatureArray()
         'can_unban_emails',        /* User can delete email address bans. Also enables "can_ban_emails" */
         'can_ban_ips',            /* User can ban IP addresses */
         'can_unban_ips',        /* User can delete IP bans. Also enables "can_ban_ips" */
+        'can_privacy',          /* User can use privacy tools (Anonymize tickets) */
         'can_service_msg',        /* User can manage service messages shown in customer interface */
         'can_email_tpl',    /* User can manage email templates */
         'can_man_ticket_statuses', /* User can manage ticket statuses */
