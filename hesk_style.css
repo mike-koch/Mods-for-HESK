@@ -812,3 +812,81 @@ select.multiple {
 	font-size: 12px;
 	height: auto;
 }
+
+/* New styles in HESK version 2.8 */
+
+#hesk_nav{
+	list-style:none;
+	float:right;
+	/* Bring the nav above everything else--uncomment if needed.
+	position:relative;
+	z-index:5;
+	*/
+	margin: 0px;
+}
+
+#hesk_nav li{
+	float:left;
+	margin-right:4px;
+	position:relative;
+}
+
+#hesk_nav a{
+	display:block;
+	background-color:#ffffff;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	border:1px solid #dcdcdc;
+	cursor:pointer;
+	color:#666666;
+	font-size:12px;
+	padding:4px 10px;
+	text-decoration:none;
+}
+#hesk_nav a:hover{
+	color: red;
+	background:#f6f6f6;
+}
+
+/*--- DROPDOWN ---*/
+#hesk_nav ul{
+	background:#fff; /* Adding a background makes the dropdown work properly in IE7+. Make this as close to your page's background as possible (i.e. white page == white background). */
+	background:rgba(255,255,255,0); /* But! Let's make the background fully transparent where we can, we don't actually want to see it if we can help it... */
+	list-style:none;
+	position:absolute;
+	left:-9999px; /* Hide off-screen when not needed (this is more accessible than display:none;) */
+	z-index:5;
+	padding-left: 0px;
+	padding-top: 2px;
+}
+#hesk_nav ul li{
+	padding-top:1px; /* Introducing a padding between the li and the a give the illusion spaced items */
+	float:none;
+}
+#hesk_nav ul a{
+	white-space:nowrap; /* Stop text wrapping and creating multi-line dropdown items */
+	padding:8px 14px;
+}
+#hesk_nav li:hover ul{ /* Display the dropdown on hover */
+	left:auto; /* Bring back on-screen when needed */
+	text-align:left;
+	right:0;
+	margin-right:-10px;
+}
+#hesk_nav li:hover a{ /* These create persistent hover states, meaning the top-most link stays 'hovered' even when your cursor has moved down the list. */
+	background:#f6f6f6;
+	text-decoration:none;
+}
+
+#hesk_nav li:hover ul a{
+	background:#ffffff;
+	text-decoration:none;
+}
+
+#hesk_nav li:hover ul a{ /* The persistent hover state does however create a global style for links even before they're hovered. Here we undo these effects. */
+	text-decoration:none;
+}
+#hesk_nav li:hover ul li a:hover{ /* Here we define the most explicit hover states--what happens when you hover each individual link. */
+	background:#f6f6f6;
+}
