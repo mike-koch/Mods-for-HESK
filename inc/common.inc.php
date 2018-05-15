@@ -2039,14 +2039,6 @@ function hesk_dateToString($dt, $returnName = 1, $returnTime = 0, $returnMonth =
         if (MYSQL_TIME_DIFF != 0) {
             $dt += MYSQL_TIME_DIFF;
         }
-
-        // Add HESK set time difference
-        $dt += 3600 * $hesk_settings['diff_hours'] + 60 * $hesk_settings['diff_minutes'];
-
-        // Daylight saving?
-        if ($hesk_settings['daylight'] && date('I', $dt)) {
-            $dt += 3600;
-        }
     }
 
     list($y, $m, $n, $d, $G, $i, $s) = explode('-', date('Y-n-j-w-G-i-s', $dt));
