@@ -40,8 +40,6 @@ if (strlen($delete) && preg_match('/^hesk_export_[0-9_\-]+$/', $delete)) {
     hesk_process_messages($hesklang['fd'], hesk_verifyGoto(),'SUCCESS');
 }
 
-// TODO CONTINUE FROM HERE IN THE DIFF
-
 // Set default values
 define('CALENDAR', 1);
 define('MAIN_PAGE', 1);
