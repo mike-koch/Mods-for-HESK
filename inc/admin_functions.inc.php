@@ -659,6 +659,39 @@ function hesk_jsString($str)
     return preg_replace($from, $to, $str);
 } // END hesk_jsString()
 
+function hesk_myOwnership() {
+    if (!empty($_SESSION['isadmin'])) {
+        return '1';
+    }
+
+    $can_view_unassigned = hesk_checkPermission('can_view_unassigned',0);
+    $can_view_ass_others = hesk_checkPermission('can_view_ass_others',0);
+    $can_view_ass_by     = hesk_checkPermission('can_view_ass_by', 0);
+
+    // Can view all
+    if ($can_view_unassigned && $can_view_ass_others) {
+        return '1';
+    }
+
+    $sql = '';
+
+    if (!$can_view_unassigned && ! $can_view_ass_others) {
+        $sql .= "`owner`=" . intval($_SESSION['id']);
+    } elseif (!$can_view_unassigned) {
+        $sql .= "`owner` != 0 ";
+    } elseif ( ! $can_view_ass_others) {
+        $sql .= "`owner` IN (0, " . intval($_SESSION['id']) . ") ";
+    }
+
+    // Include tickets he/she assigned to others?
+    if ($can_view_ass_by) {
+        return "(" . $sql . " OR `assignedby`=" . intval($_SESSION['id']) . ")";
+    }
+
+    return $sql;
+
+} // END hesk_myOwnership()
+
 
 function hesk_myCategories($what = 'category')
 {
