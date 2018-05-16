@@ -782,6 +782,7 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
         $msg = str_replace('%%TRACK_URL%%', $trackingURL, $msg);
         $msg = str_replace('%%SITE_TITLE%%', $hesk_settings['site_title'], $msg);
         $msg = str_replace('%%SITE_URL%%', $hesk_settings['site_url'], $msg);
+        $msg = str_replace('%%FIRST_NAME%%',hesk_full_name_to_first_name($ticket['name']),$msg);
 
         if (isset($ticket['message'])) {
             // If HTML is enabled, let's unescape everything, and call html2text.
@@ -863,6 +864,7 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     $msg = str_replace('%%ID%%', $ticket['id'], $msg);
     $msg = str_replace('%%TIME_WORKED%%',  $ticket['time_worked']   ,$msg);
     $msg = str_replace('%%LAST_REPLY_BY%%',$ticket['last_reply_by'] ,$msg);
+    $msg = str_replace('%%FIRST_NAME%%',hesk_full_name_to_first_name($ticket['name']),$msg);
 
     /* All custom fields */
     for ($i=1; $i<=50; $i++) {
