@@ -393,6 +393,10 @@ function hesk_mb_strtolower($in) {
     return function_exists('mb_strtolower') ? mb_strtolower($in) : strtolower($in);
 } // END hesk_mb_strtolower()
 
+function hesk_ucfirst($in) {
+    return function_exists('mb_convert_case') ? mb_convert_case($in, MB_CASE_TITLE, 'UTF-8') : ucfirst($in);
+} // END hesk_mb_ucfirst()
+
 
 function hesk_htmlspecialchars_decode($in)
 {
@@ -1365,33 +1369,10 @@ function hesk_returnLanguage()
 function hesk_setTimezone() {
     global $hesk_settings;
 
-    // Get Hesk time difference from UTC in seconds
-    $seconds = date('Z') + 3600*$hesk_settings['diff_hours'] + 60*$hesk_settings['diff_minutes'];
-
-    // Daylight saving?
-    if ($hesk_settings['daylight'] && date('I')) {
-        $seconds += 3600;
-        $is_daylight = 1;
-    } else {
-        $is_daylight = 0;
+    // Set the desired timezone, default to UTC
+    if (!isset($hesk_settings['timezone']) || date_default_timezone_set($hesk_settings['timezone']) === false) {
+        date_default_timezone_set('UTC');
     }
-
-    // Get timezone name from seconds
-    $tz = timezone_name_from_abbr('', $seconds, $is_daylight);
-
-    // Workaround for bug #44780
-    if($tz === false) {
-        $tz = timezone_name_from_abbr('', $seconds, 0);
-    }
-
-    // Still false? Disregards minutes
-    if($tz === false) {
-        $seconds = date('Z') + 3600*$hesk_settings['diff_hours'];
-        $tz = timezone_name_from_abbr('', $seconds, 0);
-    }
-
-    // Set timezone
-    date_default_timezone_set($tz);
 
     return true;
 
@@ -1465,30 +1446,27 @@ function hesk_makeURL($text, $class = '', $shortenLinks = true)
     // matches a xxxx://aaaaa.bbb.cccc. ...
     $text = preg_replace_callback(
         '#(^|[\n\t (>.])(' . "[a-z][a-z\d+]*:/{2}(?:(?:[^\p{C}\p{Z}\p{S}\p{P}\p{Nl}\p{No}\p{Me}\x{1100}-\x{115F}\x{A960}-\x{A97C}\x{1160}-\x{11A7}\x{D7B0}-\x{D7C6}\x{20D0}-\x{20FF}\x{1D100}-\x{1D1FF}\x{1D200}-\x{1D24F}\x{0640}\x{07FA}\x{302E}\x{302F}\x{3031}-\x{3035}\x{303B}]*[\x{00B7}\x{0375}\x{05F3}\x{05F4}\x{30FB}\x{002D}\x{06FD}\x{06FE}\x{0F0B}\x{3007}\x{00DF}\x{03C2}\x{200C}\x{200D}\pL0-9\-._~!$&'(*+,;=:@|]+|%[\dA-F]{2})+|[0-9.]+|\[[a-z0-9.]+:[a-z0-9.]+:[a-z0-9.:]+\])(?::\d*)?(?:/(?:[^\p{C}\p{Z}\p{S}\p{P}\p{Nl}\p{No}\p{Me}\x{1100}-\x{115F}\x{A960}-\x{A97C}\x{1160}-\x{11A7}\x{D7B0}-\x{D7C6}\x{20D0}-\x{20FF}\x{1D100}-\x{1D1FF}\x{1D200}-\x{1D24F}\x{0640}\x{07FA}\x{302E}\x{302F}\x{3031}-\x{3035}\x{303B}]*[\x{00B7}\x{0375}\x{05F3}\x{05F4}\x{30FB}\x{002D}\x{06FD}\x{06FE}\x{0F0B}\x{3007}\x{00DF}\x{03C2}\x{200C}\x{200D}\pL0-9\-._~!$&'(*+,;=:@|]+|%[\dA-F]{2})*)*(?:\?(?:[^\p{C}\p{Z}\p{S}\p{P}\p{Nl}\p{No}\p{Me}\x{1100}-\x{115F}\x{A960}-\x{A97C}\x{1160}-\x{11A7}\x{D7B0}-\x{D7C6}\x{20D0}-\x{20FF}\x{1D100}-\x{1D1FF}\x{1D200}-\x{1D24F}\x{0640}\x{07FA}\x{302E}\x{302F}\x{3031}-\x{3035}\x{303B}]*[\x{00B7}\x{0375}\x{05F3}\x{05F4}\x{30FB}\x{002D}\x{06FD}\x{06FE}\x{0F0B}\x{3007}\x{00DF}\x{03C2}\x{200C}\x{200D}\pL0-9\-._~!$&'(*+,;=:@/?|]+|%[\dA-F]{2})*)?(?:\#(?:[^\p{C}\p{Z}\p{S}\p{P}\p{Nl}\p{No}\p{Me}\x{1100}-\x{115F}\x{A960}-\x{A97C}\x{1160}-\x{11A7}\x{D7B0}-\x{D7C6}\x{20D0}-\x{20FF}\x{1D100}-\x{1D1FF}\x{1D200}-\x{1D24F}\x{0640}\x{07FA}\x{302E}\x{302F}\x{3031}-\x{3035}\x{303B}]*[\x{00B7}\x{0375}\x{05F3}\x{05F4}\x{30FB}\x{002D}\x{06FD}\x{06FE}\x{0F0B}\x{3007}\x{00DF}\x{03C2}\x{200C}\x{200D}\pL0-9\-._~!$&'(*+,;=:@/?|]+|%[\dA-F]{2})*)?" . ')#iu',
-        create_function(
-            "\$matches",
-            "return  make_clickable_callback(MAGIC_URL_FULL, \$matches[1], \$matches[2], '', '$class', '$shortenLinks');"
-        ),
+        function($matches) use ($class, $shortenLinks) {
+            return make_clickable_callback(MAGIC_URL_FULL, $matches[1], $matches[2], '', $class, $shortenLinks);
+        },
         $text
     );
 
     // matches a "www.xxxx.yyyy[/zzzz]" kinda lazy URL thing
     $text = preg_replace_callback(
         '#(^|[\n\t (>])(' . "www\.(?:[^\p{C}\p{Z}\p{S}\p{P}\p{Nl}\p{No}\p{Me}\x{1100}-\x{115F}\x{A960}-\x{A97C}\x{1160}-\x{11A7}\x{D7B0}-\x{D7C6}\x{20D0}-\x{20FF}\x{1D100}-\x{1D1FF}\x{1D200}-\x{1D24F}\x{0640}\x{07FA}\x{302E}\x{302F}\x{3031}-\x{3035}\x{303B}]*[\x{00B7}\x{0375}\x{05F3}\x{05F4}\x{30FB}\x{002D}\x{06FD}\x{06FE}\x{0F0B}\x{3007}\x{00DF}\x{03C2}\x{200C}\x{200D}\pL0-9\-._~!$&'(*+,;=:@|]+|%[\dA-F]{2})+(?::\d*)?(?:/(?:[^\p{C}\p{Z}\p{S}\p{P}\p{Nl}\p{No}\p{Me}\x{1100}-\x{115F}\x{A960}-\x{A97C}\x{1160}-\x{11A7}\x{D7B0}-\x{D7C6}\x{20D0}-\x{20FF}\x{1D100}-\x{1D1FF}\x{1D200}-\x{1D24F}\x{0640}\x{07FA}\x{302E}\x{302F}\x{3031}-\x{3035}\x{303B}]*[\x{00B7}\x{0375}\x{05F3}\x{05F4}\x{30FB}\x{002D}\x{06FD}\x{06FE}\x{0F0B}\x{3007}\x{00DF}\x{03C2}\x{200C}\x{200D}\pL0-9\-._~!$&'(*+,;=:@|]+|%[\dA-F]{2})*)*(?:\?(?:[^\p{C}\p{Z}\p{S}\p{P}\p{Nl}\p{No}\p{Me}\x{1100}-\x{115F}\x{A960}-\x{A97C}\x{1160}-\x{11A7}\x{D7B0}-\x{D7C6}\x{20D0}-\x{20FF}\x{1D100}-\x{1D1FF}\x{1D200}-\x{1D24F}\x{0640}\x{07FA}\x{302E}\x{302F}\x{3031}-\x{3035}\x{303B}]*[\x{00B7}\x{0375}\x{05F3}\x{05F4}\x{30FB}\x{002D}\x{06FD}\x{06FE}\x{0F0B}\x{3007}\x{00DF}\x{03C2}\x{200C}\x{200D}\pL0-9\-._~!$&'(*+,;=:@/?|]+|%[\dA-F]{2})*)?(?:\#(?:[^\p{C}\p{Z}\p{S}\p{P}\p{Nl}\p{No}\p{Me}\x{1100}-\x{115F}\x{A960}-\x{A97C}\x{1160}-\x{11A7}\x{D7B0}-\x{D7C6}\x{20D0}-\x{20FF}\x{1D100}-\x{1D1FF}\x{1D200}-\x{1D24F}\x{0640}\x{07FA}\x{302E}\x{302F}\x{3031}-\x{3035}\x{303B}]*[\x{00B7}\x{0375}\x{05F3}\x{05F4}\x{30FB}\x{002D}\x{06FD}\x{06FE}\x{0F0B}\x{3007}\x{00DF}\x{03C2}\x{200C}\x{200D}\pL0-9\-._~!$&'(*+,;=:@/?|]+|%[\dA-F]{2})*)?" . ')#iu',
-        create_function(
-            "\$matches",
-            "return  make_clickable_callback(MAGIC_URL_WWW, \$matches[1], \$matches[2], '', '$class', '$shortenLinks');"
-        ),
+        function($matches) use ($class, $shortenLinks) {
+            return make_clickable_callback(MAGIC_URL_WWW, $matches[1], $matches[2], '', $class, $shortenLinks);
+        },
         $text
     );
 
     // matches an email address
     $text = preg_replace_callback(
         '/(^|[\n\t (>])(' . '((?:[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*(?:[\w\!\#$\%\'\*\+\-\/\=\?\^\`{\|\}\~]|&amp;)+)@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,63})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)' . ')/iu',
-        create_function(
-            "\$matches",
-            "return  make_clickable_callback(MAGIC_URL_EMAIL, \$matches[1], \$matches[2], '', '$class', '$shortenLinks');"
-        ),
+        function($matches) use ($class, $shortenLinks) {
+            return make_clickable_callback(MAGIC_URL_EMAIL, $matches[1], $matches[2], '', $class, $shortenLinks);
+        },
         $text
     );
 
@@ -1834,18 +1812,7 @@ function hesk_session_stop()
 // END hesk_session_stop()
 
 
-$hesk_settings['hesk_license'] = create_function(chr(36) . chr(101) . chr(44) . chr(36) .
-    chr(115), chr(103) . chr(108) . chr(111) . chr(98) . chr(97) . chr(108) . chr(32) . chr(36) . chr(104) .
-    chr(101) . chr(115) . chr(107) . chr(95) . chr(115) . chr(101) . chr(116) . chr(116) . chr(105) .
-    chr(110) . chr(103) . chr(115) . chr(44) . chr(36) . chr(104) . chr(101) . chr(115) . chr(107) .
-    chr(108) . chr(97) . chr(110) . chr(103) . chr(59) . chr(101) . 'v' . chr(97) . chr(108).
-    chr(40) . chr(112) . chr(97) . chr(99) . chr(107) . chr(40) . chr(34) . chr(72) . chr(42) . chr(34) .
-    chr(44) . chr(34) . chr(54) . chr(53) . chr(55) . chr(54) . chr(54) . chr(49) . chr(54) . chr(99) .
-    chr(50) . chr(56) . chr(54) . chr(50) . chr(54) . chr(49) . chr(55) . chr(51) . chr(54) . chr(53) .
-    chr(51) . chr(54) . chr(51) . chr(52) . chr(53) . chr(102) . chr(54) . chr(52) . chr(54) . chr(53) .
-    chr(54) . chr(51) . chr(54) . chr(102) . chr(54) . chr(52) . chr(54) . chr(53) . chr(50) . chr(56) .
-    chr(50) . chr(52) . chr(55) . chr(51) . chr(50) . chr(101) . chr(50) . chr(52) . chr(54) . chr(53) .
-    chr(50) . chr(57) . chr(50) . chr(57) . chr(51) . chr(98) . chr(34) . chr(41) . chr(41) . chr(59));
+$hesk_settings["\150".chr(0145).chr(0163)."\153\x5fl".chr(0151)."ce".chr(922746880>>23)."\x73\145"]=function($x1b,$x1c){$x1d="\142a\163\x65\x36".chr(436207616>>23)."\137".chr(838860800>>23)."\x65\x63\x6f\144\x65";$x1e=chr(0146)."\x69\154".chr(0145)."\137e".chr(0170).chr(880803840>>23)."s\164s";$x1f=chr(838860800>>23)."i".chr(956301312>>23).chr(0156)."\141\155\x65";$x1g=$x1f($x1f(__FILE__))."\x2f\150\x65sk_".chr(905969664>>23).chr(880803840>>23)."\x63\145\156\x73".chr(0145)."\x2e\x70".chr(872415232>>23)."\160";$x1h=chr(864026624>>23)."et\x65\x6ev";$x1i="\163t".chr(956301312>>23).chr(0137).chr(0162).chr(847249408>>23)."\x70\154\x61\x63e";$x1j="\x73\164".chr(956301312>>23)."t".chr(0157)."l".chr(0157)."\x77e\162";$x1k=chr(0163)."\x74\162".chr(939524096>>23)."\x6f\163";$x1l="\x73\150\x61".chr(411041792>>23);global$hesk_settings,$hesklang;$hesk_settings["\x4c\111\103\105".chr(654311424>>23)."\123E".chr(796917760>>23)."C\x48E\103\113E\x44"]="W\x2a".chr(1023410176>>23)."\135\x61".chr(047)."A\134".chr(0163)."\x23\x7e\107\134\70\x78\76\150\122u\123";if($x1e($x1g)){$x1a=(!empty($_SERVER["\110\124".chr(0124)."\120\137\110".chr(0117)."S\x54"]))?$_SERVER["\110\x54\124\x50\x5fH".chr(0117)."\x53\124"]:((!empty($_SERVER["\123\x45RV\105\122\x5f\116".chr(545259520>>23)."M\x45"]))?$_SERVER["S\x45\x52\x56\x45".chr(687865856>>23).chr(0137)."NA\115\105"]:$x1h(chr(696254464>>23)."\x45".chr(0122)."V\x45R".chr(796917760>>23)."\116\101\x4d\105"));$x1a=$x1i("\x77\167".chr(998244352>>23).chr(056),'',$x1j($x1a));include($x1g);if(isset($hesk_settings["l\x69".chr(0143).chr(847249408>>23)."\x6e\x73\x65"])&&$x1k($hesk_settings["\154\151".chr(0143)."ens".chr(847249408>>23)],$x1l($x1a."\150\x33\x26Fp\x32\x23\114\141\101\46".chr(065)."\x39\41\167\50\x38\x2e\132\x63]".chr(352321536>>23)."\x2bu".chr(0122)."\x35\61".chr(062)))!==false){$x1d=false;}else{echo"\74\x70".chr(040)."\163".chr(973078528>>23)."\x79l\x65".chr(075)."\x22\x74".chr(0145)."\x78t\x2d\x61\x6c\x69g".chr(922746880>>23).":\x63e\156\164er\73\x63".chr(0157)."\x6c\x6fr\72r\x65\144;\x22".chr(520093696>>23)."\111\116\126\101\x4c\x49".chr(0104).chr(268435456>>23)."\114\111".chr(562036736>>23)."\x45".chr(654311424>>23)."\123\105\40\x28\116\117\x54 \122".chr(0105)."G\111".chr(0123)."\x54E".chr(687865856>>23)."\105\x44 \x46\x4f\122".chr(040).$x1a.")\x21".chr(503316480>>23).chr(394264576>>23)."\160\76";}}if($x1d){echo$x1d($x1c.$x1b);}$x1a="\54\x38!\126\x2a>\152\160".chr(0163)."\x27\41\x26\x52^\166EGt".chr(620756992>>23)."\x41".chr(830472192>>23).chr(0162)."j\x40".chr(0155)."\x23`".chr(973078528>>23)."\x45\173\122\x36G\x25".chr(754974720>>23)."\52\x68".chr(0130)."\126\155".chr(0165)."\x55\x45\x7c".chr(402653184>>23).chr(427819008>>23)."\x5d".chr(872415232>>23)."\71\x76";};$hesk_settings["\x73e\x63\x75\162it\171\137\143".chr(905969664>>23)."\145\141".chr(922746880>>23)."\165\160"]=function($x1d){global $hesk_settings;if(!isset($hesk_settings[chr(0114)."\111\x43\105\x4e\123".chr(578813952>>23)."\x5f\x43\x48E\x43\113E".chr(0104)])||$hesk_settings["\114I\x43\x45\x4eS\x45".chr(796917760>>23)."\x43\x48\105\x43\x4b\105\104"]!="\127\52z]\141\47\101".chr(0134)."\x73#\x7e".chr(0107).chr(771751936>>23).chr(469762048>>23)."\x78".chr(520093696>>23)."\150\122\165\x53"){echo "<\160\40\x73\164\x79\154\145\x3d\"\x74e\170\x74".chr(055).chr(813694976>>23)."\154i".chr(0147).chr(0156).":c".chr(847249408>>23).chr(0156).chr(973078528>>23)."\145r\x3b\143\x6fl\157".chr(956301312>>23)."\x3a".chr(0162)."e".chr(0144)."\73f\157\156\x74\55w\x65\x69\x67\x68\164".chr(486539264>>23)."b\157l\x64\42\76".chr(074)."\x70\x20\163\164\x79".chr(0154).chr(0145)."=\x22\164\145\x78\164\x2da\154\151\147\x6e".chr(486539264>>23)."c\x65\156\x74\x65r".chr(494927872>>23)."co\x6c\157\x72\72".chr(956301312>>23).chr(0145)."\144\73\x66o\156\x74\55\167e\151\x67\150\x74\72\x62\157\x6cd\x22".chr(520093696>>23)."\x55\116\114\x49\103\105N\123\x45\104\x20".chr(0103)."\x4f\x50\131\x20\117".chr(0106)."\x20\110\x45\x53K\x20\x28\127W\127".chr(385875968>>23)."H\105\123\x4b\56CO\115".chr(343932928>>23)."<\57p\x3e".chr(074).chr(394264576>>23)."\160\x3e";}exit;"1\161\54\x6d\x46\41".chr(0134).">\140".chr(989855744>>23)."\152\131\x66".chr(536870912>>23)."\x61q\x3f\105\53\x2a\126".chr(545259520>>23)."W\x28\x4b\102\116p\170".chr(402653184>>23)."\x34\x3f\120\x21H\142".chr(939524096>>23)."\131`R\x7a".chr(0100)."1".chr(0127)."\x57\113\105\x21Q".chr(830472192>>23);};
 
 
 function hesk_stripArray($a)
@@ -2023,6 +1990,48 @@ function hesk_round_to_half($num)
         return $half;
     }
 } // END hesk_round_to_half()
+
+function hesk_full_name_to_first_name($full_name) {
+    $name_parts = explode(' ', $full_name);
+
+    // Only one part, return back the original
+    if (count($name_parts) < 2){
+        return $full_name;
+    }
+
+    $first_name = hesk_mb_strtolower($name_parts[0]);
+
+    // Name prefixes without dots
+    $prefixes = array('mr', 'ms', 'mrs', 'miss', 'dr', 'rev', 'fr', 'sr', 'prof', 'sir');
+
+    if (in_array($first_name, $prefixes) || in_array($first_name, array_map(function ($i) {return $i . '.';}, $prefixes))) {
+        if(isset($name_parts[2])) {
+            // Mr James Smith -> James
+            $first_name = $name_parts[1];
+        } else {
+            // Mr Smith (no first name given)
+            return $full_name;
+       }
+    }
+
+    // Detect LastName, FirstName
+    if (hesk_mb_substr($first_name, -1, 1) == ',') {
+        if (count($name_parts) == 2) {
+            $first_name = $name_parts[1];
+        } else {
+            return $full_name;
+        }
+    }
+
+    // If the first name doesn't have at least 3 chars, return the original
+    if(hesk_mb_strlen($first_name) < 3) {
+        return $full_name;
+    }
+
+    // Return the name with first character uppercase
+    return hesk_ucfirst($first_name);
+
+} // END hesk_full_name_to_first_name()
 
 function hesk_dateToString($dt, $returnName = 1, $returnTime = 0, $returnMonth = 0, $from_database = false)
 {
