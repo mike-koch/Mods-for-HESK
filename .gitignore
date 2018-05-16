@@ -260,6 +260,7 @@ language/en/emails/new_ticket.txt
 language/en/emails/new_ticket_staff.txt
 language/en/emails/ticket_assigned_to_you.txt
 language/en/index.htm
+language/en/text.php
 language/index.htm
 language/*
 !language/en
