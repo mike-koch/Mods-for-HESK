@@ -16,11 +16,15 @@ if (!defined('IN_SCRIPT')) {
 }
 
 /* List of staff */
-if (!isset($admins)) {
-    $admins = array();
-    $res2 = hesk_dbQuery("SELECT `id`,`name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` ORDER BY `name` ASC");
-    while ($row = hesk_dbFetchAssoc($res2)) {
-        $admins[$row['id']] = $row['name'];
+// List of staff and check their permissions
+$admins = array();
+$can_assign_to = array();
+$res2 = hesk_dbQuery("SELECT `id`,`name`,`isadmin`,`heskprivileges` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `name` ASC");
+while ($row = hesk_dbFetchAssoc($res2)) {
+    $admins[$row['id']] = $row['name'];
+
+    if ($row['isadmin'] || strpos($row['heskprivileges'], 'can_view_tickets') !== false) {
+        $can_assign_to[$row['id']] = $row['name'];
     }
 }
 
@@ -430,6 +434,9 @@ if ($total > 0) {
                             <option value="untag"><?php echo $hesklang['remove_archive_quick']; ?></option>
                             <?php
                         }
+                        ?>
+                        <option value="print"><?php echo $hesklang['print_selected']; ?></option>
+                        <?php
 
                         if (!defined('HESK_DEMO')) {
 
@@ -438,6 +445,17 @@ if ($total > 0) {
                                 <option value="merge"><?php echo $hesklang['mer_selected']; ?></option>
                                 <?php
                             }
+                            if ( hesk_checkPermission('can_export', 0) ) {
+                            ?>
+                                <option value="export"><?php echo $hesklang['export_selected']; ?></option>
+                            <?php
+                            }
+                            if ( hesk_checkPermission('can_privacy', 0) ) {
+                            ?>
+                                <option value="anonymize"><?php echo $hesklang['anon_selected']; ?></option>
+                            <?php
+                            }
+
                             if (hesk_checkPermission('can_del_tickets', 0)) {
                                 ?>
                                 <option value="delete"><?php echo $hesklang['del_selected']; ?></option>
@@ -449,6 +467,25 @@ if ($total > 0) {
                     </select>
                     <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>"/>
                     <input class="btn btn-default" type="submit" value="<?php echo $hesklang['execute']; ?>"/>
+
+                    <?php
+                    if (hesk_checkPermission('can_assign_others',0)) {
+                    ?>
+                    <br />&nbsp;<br />
+                    <?php echo $hesklang['assign_selected']; ?>
+                    <select name="owner">
+                        <option value="" selected="selected"><?php echo $hesklang['select']; ?></option>
+                        <option value="-1"> &gt; <?php echo $hesklang['unas']; ?> &lt; </option>
+                        <?php
+                            foreach ($can_assign_to as $k=>$v) {
+                                echo '<option value="'.$k.'">'.$v.'</option>';
+                            }
+                        ?>
+                    </select>
+                    <input class="btn btn-default" type="submit" name="assign" value="<?php echo $hesklang['assi']; ?>">
+                    <?php
+                    }
+                    ?>
                 </td>
             </tr>
         </table>
