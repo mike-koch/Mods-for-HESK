@@ -52,6 +52,7 @@ if (!isset($date_input)) {
 /* Can view tickets that are unassigned or assigned to others? */
 $can_view_ass_others = hesk_checkPermission('can_view_ass_others', 0);
 $can_view_unassigned = hesk_checkPermission('can_view_unassigned', 0);
+$can_view_ass_by     = hesk_checkPermission('can_view_ass_by', 0);
 
 /* Category options */
 $category_options = '';
@@ -71,7 +72,7 @@ if (isset($hesk_settings['categories']) && count($hesk_settings['categories'])) 
 }
 
 /* List of staff */
-if ($can_view_ass_others && !isset($admins)) {
+if (($can_view_ass_others || $can_view_ass_by) && ! isset($admins)) {
     $admins = array();
     $res2 = hesk_dbQuery("SELECT `id`,`name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` ORDER BY `name` ASC");
     while ($row = hesk_dbFetchAssoc($res2)) {
@@ -134,7 +135,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
 
                         <div id="topSubmit" style="display:<?php echo $more ? 'none' : 'block'; ?>">
                             <div class="btn-group">
-                                <input class="btn btn-default" type="submit"
+                                <input class="btn btn-default" id="showtickets" type="submit"
                                        value="<?php echo $hesklang['show_tickets']; ?>"/>
                                 <a class="btn btn-default" href="javascript:void(0)"
                                    onclick="Javascript:hesk_toggleLayerDisplay('divShow');Javascript:hesk_toggleLayerDisplay('topSubmit');document.showt.more.value='1';"><?php echo $hesklang['mopt']; ?></a>
@@ -208,7 +209,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                                 </td>
                                                 <td width="33%" class="alignTop">
                                                     <?php
-                                                    if ($can_view_ass_others) {
+                                                    if ($can_view_ass_others || $can_view_ass_by) {
                                                         ?>
                                                         <label><input type="checkbox" name="s_ot"
                                                                       value="1" <?php if ($s_ot[1]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_ot']; ?>
@@ -277,7 +278,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                                             echo 'checked="checked"';
                                                         } ?> /> <?php echo $hesklang['dg']; ?></label></td>
                                                 <td width="33%"><?php
-                                                    if ($can_view_unassigned || $can_view_ass_others) {
+                                                    if ($can_view_unassigned || $can_view_ass_others || $can_view_ass_by) {
                                                         ?>
                                                         <label><input type="radio" name="g"
                                                                       value="owner" <?php if ($group == 'owner') {
@@ -444,6 +445,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                         <option style="background: #ffffff" value="notes" <?php if ($what == 'notes') {
                                             echo 'selected="selected"';
                                         } ?> ><?php echo $hesklang['notes']; ?></option>
+                                        <option value="ip" <?php if ($what=='ip') {echo 'selected="selected"';} ?> ><?php echo $hesklang['IP_addr']; ?></option>
                                     </select>
                                 </td>
                             </tr>
@@ -451,9 +453,9 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
 
                         <div id="topSubmit2" style="display:<?php echo $more2 ? 'none' : 'block'; ?>">
                             <div class="btn-group">
-                                <input class="btn btn-default" type="submit"
+                                <input class="btn btn-default" id="findticket" type="submit"
                                        value="<?php echo $hesklang['find_ticket']; ?>"/>
-                                <a class="btn btn-default" href="javascript:void(0)"
+                                <a id="moreoptions2" class="btn btn-default" href="javascript:void(0)"
                                    onclick="Javascript:hesk_toggleLayerDisplay('divShow2');Javascript:hesk_toggleLayerDisplay('topSubmit2');document.findby.more2.value='1';"><?php echo $hesklang['mopt']; ?></a>
                             </div>
                         </div>
@@ -467,19 +469,19 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                     <td class="alignMiddle" width="20%"><b><?php echo $hesklang['category']; ?></b>:
                                         &nbsp; </td>
                                     <td class="alignMiddle" width="80%">
-                                        <select class="form-control" name="category">
+                                        <select class="form-control" name="category" id="categoryfind">
                                             <option value="0"><?php echo $hesklang['any_cat']; ?></option>
                                             <?php echo $category_options; ?>
                                         </select>
                                     </td>
                                 </tr>
                                 <?php
-                                if ($can_view_ass_others) {
+                                if ($can_view_ass_others || $can_view_ass_by) {
                                     ?>
                                     <tr>
                                         <td class="alignMiddle"><b><?php echo $hesklang['owner']; ?></b>: &nbsp; </td>
                                         <td class="alignMiddle">
-                                            <select class="form-control" name="owner">
+                                            <select id="ownerfind" class="form-control" name="owner">
                                                 <option value="0"><?php echo $hesklang['anyown']; ?></option>
                                                 <?php
                                                 foreach ($admins as $staff_id => $staff_name) {
@@ -497,7 +499,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                     <td class="alignMiddle">
                                         <div class="col-md-3" style="padding-left: 0px"><input class="form-control datepicker"
                                                                                                type="text" name="dt"
-                                                                                               id="dt"
+                                                                                               id="date"
                                                                                                size="10" <?php if ($date_input) {
                                                 echo 'value="' . $date_input . '"';
                                             } ?> /></div>
@@ -506,14 +508,14 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                 <tr>
                                     <td class="alignTop"><b><?php echo $hesklang['s_incl']; ?></b>: &nbsp; </td>
                                     <td>
-                                        <label><input type="checkbox" name="s_my"
+                                        <label><input type="checkbox" id="find_s_my" name="s_my"
                                                       value="1" <?php if ($s_my[2]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_my']; ?>
                                         </label>
                                         <?php
-                                        if ($can_view_ass_others) {
+                                        if ($can_view_ass_others || $can_view_ass_by) {
                                             ?>
                                             <br/>
-                                            <label><input type="checkbox" name="s_ot"
+                                            <label><input type="checkbox" id="find_s_ot" name="s_ot"
                                                           value="1" <?php if ($s_ot[2]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_ot']; ?>
                                             </label>
                                             <?php
@@ -522,14 +524,14 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                         if ($can_view_unassigned) {
                                             ?>
                                             <br/>
-                                            <label><input type="checkbox" name="s_un"
+                                            <label><input type="checkbox" id="find_s_un" name="s_un"
                                                           value="1" <?php if ($s_un[2]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['s_un']; ?>
                                             </label>
                                             <?php
                                         }
                                         ?>
                                         <br/>
-                                        <label><input type="checkbox" name="archive"
+                                        <label><input type="checkbox" id="find_archive" name="archive"
                                                       value="1" <?php if ($archive[2]) echo 'checked="checked"'; ?> /> <?php echo $hesklang['disp_only_archived']; ?>
                                         </label>
                                     </td>
@@ -546,7 +548,7 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                 </tr>
                             </table>
                             <div class="btn-group">
-                                <input class="btn btn-default" type="submit"
+                                <input class="btn btn-default" id="findticket2" type="submit"
                                        value="<?php echo $hesklang['find_ticket']; ?>"/>
                                 <a class="btn btn-default" href="javascript:void(0)"
                                    onclick="Javascript:hesk_toggleLayerDisplay('divShow2');Javascript:hesk_toggleLayerDisplay('topSubmit2');document.findby.more2.value='0';"><?php echo $hesklang['lopt']; ?></a>
