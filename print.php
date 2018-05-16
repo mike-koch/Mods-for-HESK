@@ -124,8 +124,8 @@ $modsForHesk_settings = mfh_getSettings();
 <body onload="window.print()">
 
 <?php
-
-/* Ticket priority */
+/*
+// Ticket priority
 switch ($ticket['priority']) {
     case 0:
         $ticket['priority'] = '<b>' . $hesklang['critical'] . '</b>';
@@ -140,7 +140,7 @@ switch ($ticket['priority']) {
         $ticket['priority'] = $hesklang['low'];
 }
 
-/* Set last replier name */
+// Set last replier name
 if ($ticket['lastreplier']) {
     if (empty($ticket['repliername'])) {
         $ticket['repliername'] = $hesklang['staff'];
@@ -149,7 +149,7 @@ if ($ticket['lastreplier']) {
     $ticket['repliername'] = $ticket['name'];
 }
 
-/* Other variables that need processing */
+// Other variables that need processing
 $ticket['dt'] = hesk_date($ticket['dt'], true);
 $ticket['lastchange'] = hesk_date($ticket['lastchange'], true);
 $random = mt_rand(10000, 99999);
@@ -215,11 +215,11 @@ foreach ($hesk_settings['custom_fields'] as $k => $v) {
                 $ticket[$k] = hesk_custom_date_display_format($ticket[$k], $v['value']['date_format']);
                 break;
         }
-        ?>
-        <td bgcolor="#EEE"><b><?php echo $v['name']; ?>:</b></td>
-        <td bgcolor="#DDD"><?php echo hesk_unhortenUrl($ticket[$k]); ?></td>
-        <?php
-        $num_cols++;
+        */?><!--
+        <td bgcolor="#EEE"><b><?php /*echo $v['name']; */?>:</b></td>
+        <td bgcolor="#DDD"><?php /*echo hesk_unhortenUrl($ticket[$k]); */?></td>
+        --><?php
+/*        $num_cols++;
     }
 }
 
@@ -259,7 +259,8 @@ while ($reply = hesk_dbFetchAssoc($res)) {
 }
 
 // Print "end of ticket" message
-echo $hesklang['end_ticket'];
+echo $hesklang['end_ticket'];*/
+require_once(HESK_PATH . 'inc/print_template.inc.php');
 ?>
 
 </body>
