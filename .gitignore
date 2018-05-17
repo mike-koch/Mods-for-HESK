@@ -8,6 +8,7 @@ admin/archive.php
 admin/custom_statuses.php
 admin/email_templates.php
 admin/generate_spam_question.php
+admin/resend_notification.php
 admin/test_connection.php
 attachments/index.htm
 cache/
@@ -19,6 +20,7 @@ header.txt
 hesk_settings.inc.php
 img/add_article.png
 img/add_category.png
+img/anonymize.png
 img/article_text.png
 img/autoassign_off.png
 img/autoassign_on.png
@@ -34,8 +36,10 @@ img/delete.png
 img/delete_off.png
 img/delete_ticket.png
 img/edit.png
+img/email.png
 img/error.png
 img/existingticket.png
+img/export.png
 img/flag_critical.png
 img/flag_high.png
 img/flag_low.png
@@ -81,6 +85,7 @@ img/lock.png
 img/login.png
 img/mail.png
 img/manage.png
+img/menu.png
 img/minus.gif
 img/minusbottom.gif
 img/minustop.gif
