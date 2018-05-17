@@ -362,7 +362,6 @@ elseif ($_POST['a']=='export') {
     $sql .= " AND " . hesk_myOwnership();
 
     require_once(HESK_PATH . 'inc/custom_fields.inc.php');
-    require_once(HESK_PATH . 'inc/statuses.inc.php');
     require(HESK_PATH . 'inc/export_functions.inc.php');
 
     list($success_msg, $tickets_exported) = hesk_export_to_XML($sql, true);
@@ -413,9 +412,6 @@ elseif ($_POST['a']=='print') {
 
     // Load custom fields
     require_once(HESK_PATH . 'inc/custom_fields.inc.php');
-
-    // Load statuses
-    require_once(HESK_PATH . 'inc/statuses.inc.php');
 
 	// List of staff
 	if (!isset($admins)) {

@@ -136,6 +136,7 @@ class TicketCreator extends \BaseClass {
         if ($heskSettings['autoassign'] && $category->autoAssign) {
             $autoassignOwner = $this->autoassigner->getNextUserForTicket($ticketRequest->category, $heskSettings);
             $ticket->ownerId = $autoassignOwner === null ? null : $autoassignOwner->id;
+            $ticket->assignedBy = -1;
         }
 
         // Transform one-to-one properties

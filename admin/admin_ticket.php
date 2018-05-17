@@ -1568,7 +1568,7 @@ function hesk_getAdminButtons($category_id)
                     onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['confirm_anony']).'?\\n\\n'.hesk_makeJsString($hesklang['privacy_anon_info']).'\');"
                     title="'.$hesklang['confirm_anony'].'" class="button-link">
                 <div class="panel panel-default">
-                        <div class="panel-body">
+                        <div class="panel-body warning">
                             <h4>
                                 <i class="fa fa-shield fa-fw"></i> '.$hesklang['btn_anony'].'
                             </h4>

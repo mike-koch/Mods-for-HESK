@@ -212,6 +212,15 @@ class TicketGateway extends CommonDao {
         $customWhere = '';
         $customWhat  = '';
 
+        // Need to insert "addigned by" value?
+        if ($ticket->assignedBy !== null) {
+            $abWhere = ', `assignedby` ';
+            $abWhat  = ', ' . intval($ticket->assignedBy);
+        } else {
+            $abWhere = '';
+            $abWhat  = '';
+        }
+
         for ($i=1; $i<=50; $i++)
         {
             $customWhere .= ", `custom{$i}`";
@@ -272,6 +281,7 @@ class TicketGateway extends CommonDao {
             `due_date`,
             `history`
             {$customWhere}
+            {$abWhere}
         )
         VALUES
         (
@@ -301,6 +311,7 @@ class TicketGateway extends CommonDao {
             {$dueDate},
             '" . hesk_dbEscape($ticket->auditTrailHtml) . "'
             {$customWhat}
+            {$abWhat}
         )
         ";
 
