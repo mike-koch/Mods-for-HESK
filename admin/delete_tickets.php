@@ -114,10 +114,8 @@ if ( isset($_POST['assign']) && $_POST['assign'] == $hesklang['assi']) {
 
             $this_id = intval($this_id) or hesk_error($hesklang['id_not_valid']);
 
-            // TODO Should we reset the assignedby?
-            $res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `owner`=0 WHERE `id`={$this_id} LIMIT 1");
-            mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_assigned', hesk_date(), array(0 => $hesklang['unas'],
-                1 => $_SESSION['name'].' ('.$_SESSION['user'].')'));
+            $res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `owner`=0, `assignedby`=NULL WHERE `id`={$this_id} LIMIT 1");
+            mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_unassigned', hesk_date(), array(0 => $_SESSION['name'].' ('.$_SESSION['user'].')'));
 
             $end_message[] = sprintf($hesklang['assign_2'], $this_id);
             $i++;
@@ -154,8 +152,7 @@ if ( isset($_POST['assign']) && $_POST['assign'] == $hesklang['assi']) {
             continue;
 		}
 		if ($owner_data['isadmin'] || in_array($ticket['category'],$owner_data['categories'])) {
-		    // TODO Should we set the assignedby?
-            hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `owner`={$owner} WHERE `id`={$this_id} LIMIT 1");
+            hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `owner`={$owner}, `assignedby`=".intval($_SESSION['id'])." WHERE `id`={$this_id} LIMIT 1");
             mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_assigned', hesk_date(), array(0 => $owner_data['name'].' ('.$owner_data['user'].')',
                 1 => $_SESSION['name'].' ('.$_SESSION['user'].')'));
 
@@ -195,7 +192,7 @@ if ( isset($_POST['assign']) && $_POST['assign'] == $hesklang['assi']) {
 
             /* Notify the new owner? */
             if ($ticket['owner'] != intval($_SESSION['id'])) {
-                hesk_notifyAssignedStaff(false, 'ticket_assigned_to_you');
+                hesk_notifyAssignedStaff(false, 'ticket_assigned_to_you', $modsForHesk_settings);
             }
 		} else {
             $end_message[] = sprintf($hesklang['assign_5'], $ticket['trackid'], $owner_data['name']);
