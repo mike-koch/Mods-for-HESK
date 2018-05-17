@@ -473,7 +473,7 @@ if ($total > 0) {
                     ?>
                     <br />&nbsp;<br />
                     <?php echo $hesklang['assign_selected']; ?>
-                    <select name="owner">
+                    <select name="owner" class="form-control">
                         <option value="" selected="selected"><?php echo $hesklang['select']; ?></option>
                         <option value="-1"> &gt; <?php echo $hesklang['unas']; ?> &lt; </option>
                         <?php

@@ -81,87 +81,6 @@ if (defined('HESK_DEMO')) {
     $hesk_settings['imap_password']		= $hesklang['hdemo'];
 }
 
-// Check file attachment limits
-if ($hesk_settings['attachments']['use'] && !defined('HESK_DEMO')) {
-    // Check number of attachments per post
-    if (version_compare(phpversion(), '5.2.12', '>=') && @ini_get('max_file_uploads') && @ini_get('max_file_uploads') < $hesk_settings['attachments']['max_number']) {
-        hesk_show_notice($hesklang['fatte1']);
-    }
-
-    // Check max attachment size
-    $tmp = @ini_get('upload_max_filesize');
-    if ($tmp) {
-        $last = strtoupper(substr($tmp, -1));
-        $number = substr($tmp, 0, -1);
-
-        switch ($last) {
-            case 'K':
-                $tmp = $number * 1024;
-                break;
-            case 'M':
-                $tmp = $number * 1048576;
-                break;
-            case 'G':
-                $tmp = $number * 1073741824;
-                break;
-            default:
-                $tmp = $number;
-        }
-
-        if ($tmp < $hesk_settings['attachments']['max_size']) {
-            hesk_show_notice($hesklang['fatte2']);
-        }
-    }
-
-    // Check max post size
-    $tmp = @ini_get('post_max_size');
-    if ($tmp) {
-        $last = strtoupper(substr($tmp, -1));
-        $number = substr($tmp, 0, -1);
-
-        switch ($last) {
-            case 'K':
-                $tmp = $number * 1024;
-                break;
-            case 'M':
-                $tmp = $number * 1048576;
-                break;
-            case 'G':
-                $tmp = $number * 1073741824;
-                break;
-            default:
-                $tmp = $number;
-        }
-
-        if ($tmp < ($hesk_settings['attachments']['max_size'] * $hesk_settings['attachments']['max_number'] + 524288)) {
-            hesk_show_notice($hesklang['fatte3']);
-        }
-    }
-
-    // If SMTP server is used, "From email" should match SMTP username
-    if ($hesk_settings['smtp'] && strtolower($hesk_settings['smtp_user']) != strtolower($hesk_settings['noreply_mail']) && hesk_validateEmail($hesk_settings['smtp_user'], 'ERR', 0)) {
-        hesk_show_notice(sprintf($hesklang['from_warning'], $hesklang['email_noreply'], $hesklang['tab_1'], $hesk_settings['smtp_user']));
-    }
-
-    // If POP3 fetching is active, no user should have the same email address
-    if ($hesk_settings['pop3'] && hesk_validateEmail($hesk_settings['pop3_user'], 'ERR', 0)) {
-        $res = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `email` LIKE '".hesk_dbEscape($hesk_settings['pop3_user'])."'");
-
-        if (hesk_dbNumRows($res) > 0) {
-            hesk_show_notice(sprintf($hesklang['pop3_warning'], hesk_dbResult($res,0,0), $hesk_settings['pop3_user']) . "<br /><br />" . $hesklang['fetch_warning'], $hesklang['warn']);
-        }
-    }
-
-    // If IMAP fetching is active, no user should have the same email address
-    if ($hesk_settings['imap'] && hesk_validateEmail($hesk_settings['imap_user'], 'ERR', 0)) {
-        $res = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `email` LIKE '".hesk_dbEscape($hesk_settings['imap_user'])."'");
-
-        if (hesk_dbNumRows($res) > 0) {
-            hesk_show_notice(sprintf($hesklang['imap_warning'], hesk_dbResult($res,0,0), $hesk_settings['imap_user']) . "<br /><br />" . $hesklang['fetch_warning'], $hesklang['warn']);
-        }
-    }
-}
-
 
 $hesklang['err_custname'] = addslashes($hesklang['err_custname']);
 
@@ -335,6 +254,87 @@ $modsForHesk_settings = mfh_getSettings();
     <?php
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
+
+    // Check file attachment limits
+    if ($hesk_settings['attachments']['use'] && !defined('HESK_DEMO')) {
+        // Check number of attachments per post
+        if (version_compare(phpversion(), '5.2.12', '>=') && @ini_get('max_file_uploads') && @ini_get('max_file_uploads') < $hesk_settings['attachments']['max_number']) {
+            hesk_show_notice($hesklang['fatte1']);
+        }
+
+        // Check max attachment size
+        $tmp = @ini_get('upload_max_filesize');
+        if ($tmp) {
+            $last = strtoupper(substr($tmp, -1));
+            $number = substr($tmp, 0, -1);
+
+            switch ($last) {
+                case 'K':
+                    $tmp = $number * 1024;
+                    break;
+                case 'M':
+                    $tmp = $number * 1048576;
+                    break;
+                case 'G':
+                    $tmp = $number * 1073741824;
+                    break;
+                default:
+                    $tmp = $number;
+            }
+
+            if ($tmp < $hesk_settings['attachments']['max_size']) {
+                hesk_show_notice($hesklang['fatte2']);
+            }
+        }
+
+        // Check max post size
+        $tmp = @ini_get('post_max_size');
+        if ($tmp) {
+            $last = strtoupper(substr($tmp, -1));
+            $number = substr($tmp, 0, -1);
+
+            switch ($last) {
+                case 'K':
+                    $tmp = $number * 1024;
+                    break;
+                case 'M':
+                    $tmp = $number * 1048576;
+                    break;
+                case 'G':
+                    $tmp = $number * 1073741824;
+                    break;
+                default:
+                    $tmp = $number;
+            }
+
+            if ($tmp < ($hesk_settings['attachments']['max_size'] * $hesk_settings['attachments']['max_number'] + 524288)) {
+                hesk_show_notice($hesklang['fatte3']);
+            }
+        }
+
+        // If SMTP server is used, "From email" should match SMTP username
+        if ($hesk_settings['smtp'] && strtolower($hesk_settings['smtp_user']) != strtolower($hesk_settings['noreply_mail']) && hesk_validateEmail($hesk_settings['smtp_user'], 'ERR', 0)) {
+            hesk_show_notice(sprintf($hesklang['from_warning'], $hesklang['email_noreply'], $hesklang['tab_1'], $hesk_settings['smtp_user']));
+        }
+
+        // If POP3 fetching is active, no user should have the same email address
+        if ($hesk_settings['pop3'] && hesk_validateEmail($hesk_settings['pop3_user'], 'ERR', 0)) {
+            $res = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `email` LIKE '".hesk_dbEscape($hesk_settings['pop3_user'])."'");
+
+            if (hesk_dbNumRows($res) > 0) {
+                hesk_show_notice(sprintf($hesklang['pop3_warning'], hesk_dbResult($res,0,0), $hesk_settings['pop3_user']) . "<br /><br />" . $hesklang['fetch_warning'], $hesklang['warn']);
+            }
+        }
+
+        // If IMAP fetching is active, no user should have the same email address
+        if ($hesk_settings['imap'] && hesk_validateEmail($hesk_settings['imap_user'], 'ERR', 0)) {
+            $res = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `email` LIKE '".hesk_dbEscape($hesk_settings['imap_user'])."'");
+
+            if (hesk_dbNumRows($res) > 0) {
+                hesk_show_notice(sprintf($hesklang['imap_warning'], hesk_dbResult($res,0,0), $hesk_settings['imap_user']) . "<br /><br />" . $hesklang['fetch_warning'], $hesklang['warn']);
+            }
+        }
+    }
     ?>
     <div class="box">
         <div class="box-header with-border">
