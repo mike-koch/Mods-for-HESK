@@ -2051,6 +2051,7 @@ function mfh_print_audit_record($record) {
             break;
         case 'audit_submitted_via_piping':
         case 'audit_submitted_via_pop':
+        case 'audit_submitted_via_imap':
             $font_icon = 'fa-envelope-o';
             break;
         case 'audit_attachment_deleted':

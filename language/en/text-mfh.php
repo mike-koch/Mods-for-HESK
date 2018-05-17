@@ -688,6 +688,7 @@ $hesklang['audit_anonymized'] = '%s anonymized ticket';
 $hesklang['location_unavailable_6'] = "This ticket was anonymized, so location information has been removed.";
 $hesklang['anon_user_agent'] = '[User Agent]';
 $hesklang['anon_screen_resolution'] = '0';
+$hesklang['audit_submitted_via_imap']='Ticket submitted via IMAP fetching';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
