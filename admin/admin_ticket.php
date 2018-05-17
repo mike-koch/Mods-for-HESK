@@ -1338,12 +1338,12 @@ function hesk_getAdminButtons($category_id)
     if ($can_edit) {
         $tmp = $reply ? '&amp;reply=' . $reply['id'] : '';
         $mgr = $isManager ? '&amp;isManager=true' : '';
-        $options .= '<a id="editticket" title="'.$hesklang['edtt'].'" class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['edit'] . '</a> ';
+        $options .= '<a id="editticket" title="'.$hesklang['edtt'].'" class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['btn_edit'] . '</a> ';
     }
 
 
     /* Print ticket button */
-    $options .= '<a class="btn btn-default" title="'.$hesklang['printer_friendly'].'" href="../print.php?track=' . $trackingID . '"><i class="fa fa-print"></i> ' . $hesklang['printer_friendly'] . '</a> ';
+    $options .= '<a class="btn btn-default" title="'.$hesklang['printer_friendly'].'" href="../print.php?track=' . $trackingID . '"><i class="fa fa-print"></i> ' . $hesklang['btn_print'] . '</a> ';
 
     /* Copy ticket button */
     $strippedName = strip_tags($ticket['name']);
@@ -1508,8 +1508,8 @@ function hesk_getAdminButtons($category_id)
                 </div>
             </a></div>';
         $dropdown .= $ticket['locked']
-            ? sprintf($template, 'unlock', $hesklang['tul'], 0, 'unlock', $hesklang['tul'])
-            : sprintf($template, 'lock', $hesklang['tlo'], 1, 'lock', $hesklang['tlo']);
+            ? sprintf($template, 'unlock', $hesklang['tul'] . ' - ' . $hesklang['isloc'], 0, 'unlock', $hesklang['btn_unlock'])
+            : sprintf($template, 'lock', $hesklang['tlo'] . ' - ' . $hesklang['isloc'], 1, 'lock', $hesklang['btn_lock']);
     }
 
     /* Tag ticket button */
@@ -1526,8 +1526,8 @@ function hesk_getAdminButtons($category_id)
             </a></div>';
 
         $dropdown .= $ticket['archive']
-            ? sprintf($template, 'untag', $hesklang['remove_archive'], 0, $hesklang['remove_archive'])
-            : sprintf($template, 'tag', $hesklang['add_archive'], 1, $hesklang['add_archive']);
+            ? sprintf($template, 'untag', $hesklang['remove_archive'], 0, $hesklang['btn_untag'])
+            : sprintf($template, 'tag', $hesklang['add_archive'], 1, $hesklang['btn_tag']);
     }
 
     /* Import to knowledgebase button */
@@ -1537,7 +1537,7 @@ function hesk_getAdminButtons($category_id)
                 <div class="panel panel-default">
                         <div class="panel-body">
                             <h4>
-                                <i class="fa fa-lightbulb-o fa-fw"></i> ' . $hesklang['import_kb'] . '
+                                <i class="fa fa-lightbulb-o fa-fw"></i> ' . $hesklang['btn_import_kb'] . '
                             </h4>
                         </div>
                     </div>
@@ -1633,7 +1633,7 @@ function hesk_getAdminButtonsInTicket($reply = 0, $white = 1)
     if ($can_edit) {
         $tmp = $reply ? '&amp;reply=' . $reply['id'] : '';
         $mgr = $isManager ? '&amp;isManager=true' : '';
-        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['edtt'] . '</a> ';
+        $options .= '<a class="btn btn-default" href="edit_post.php?track=' . $trackingID . $tmp . $mgr . '"><i class="fa fa-pencil orange"></i> ' . $hesklang['btn_edit'] . '</a> ';
     }
 
 

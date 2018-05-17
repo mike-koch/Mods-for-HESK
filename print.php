@@ -125,8 +125,6 @@ $modsForHesk_settings = mfh_getSettings();
 
 <?php
 
-// Print "end of ticket" message
-echo $hesklang['end_ticket'];
 require_once(HESK_PATH . 'inc/print_template.inc.php');
 ?>
 
