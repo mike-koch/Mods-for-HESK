@@ -683,5 +683,11 @@ $hesklang['emails_to_receive'] = 'Emails to receive';
 $hesklang['emails_sent_to_staff'] = 'Emails sent to staff';
 $hesklang['emails_sent_to_customer'] = 'Emails sent to customer';
 
+// Added or modified in Mods for HESK 4.0.0
+$hesklang['audit_anonymized'] = '%s anonymized ticket';
+$hesklang['location_unavailable_6'] = "This ticket was anonymized, so location information has been removed.";
+$hesklang['anon_user_agent'] = '[User Agent]';
+$hesklang['anon_screen_resolution'] = '0';
+
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

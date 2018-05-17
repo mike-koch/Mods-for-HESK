@@ -2077,6 +2077,9 @@ function mfh_print_audit_record($record) {
         case 'audit_unlinked_ticket':
             $font_icon = 'fa fa-chain-broken';
             break;
+        case 'audit_anonymized':
+            $font_icon = 'fa fa-shield';
+            break;
         default:
             $font_icon = 'fa-question-circle';
             break;

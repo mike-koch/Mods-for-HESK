@@ -2286,6 +2286,21 @@ function mfh_insert_audit_trail_record($entity_id, $entity_type, $language_key, 
     return $audit_id;
 }
 
+function mfh_anonymize_audit_trail_records($entity_id, $entity_type, $ticket_name) {
+    global $hesk_settings, $hesklang;
+
+    hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail_to_replacement_values`
+        SET `replacement_value` = REPLACE(`replacement_value`, '" . hesk_dbEscape($ticket_name) . "', '" . hesk_dbEscape($hesklang['anon_name']) . "')
+        WHERE `audit_trail_id` IN (
+            SELECT `id` 
+            FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "audit_trail` 
+            WHERE `entity_id` = " . intval($entity_id) . "
+            AND `entity_type` = '" . hesk_dbEscape($entity_type) . "')");
+    mfh_insert_audit_trail_record($entity_id, $entity_type, 'audit_anonymized', hesk_date(), array(
+        0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'
+    ));
+}
+
 function mfh_can_customer_change_status($status)
 {
     global $hesk_settings;
