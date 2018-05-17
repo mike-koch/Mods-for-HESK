@@ -329,7 +329,7 @@ function getSpecialTagMap()
     $map['%%OWNER%%'] = $hesklang['ticket_owner'];
     $map['%%PRIORITY%%'] = $hesklang['ticket_priority'];
     $map['%%STATUS%%'] = $hesklang['ticket_status'];
-    $map['%%LAST_REPLY_BY%%'] = $hesklang['last_reply_by'];
+    $map['%%LAST_REPLY_BY%%'] = $hesklang['last_replier'];
     $map['%%TIME_WORKED%%'] = $hesklang['ts'];
 
     $i = 1;
