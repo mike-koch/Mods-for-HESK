@@ -184,4 +184,61 @@ class Helpers extends \BaseClass {
 
         return $html;
     } // END make_clickable_callback()
+
+    static function fullNameToFirstName($full_name) {
+        $name_parts = explode(' ', $full_name);
+
+        // Only one part, return back the original
+        if (count($name_parts) < 2){
+            return $full_name;
+        }
+
+        $first_name = self::heskMbStrToLower($name_parts[0]);
+
+        // Name prefixes without dots
+        $prefixes = array('mr', 'ms', 'mrs', 'miss', 'dr', 'rev', 'fr', 'sr', 'prof', 'sir');
+
+        if (in_array($first_name, $prefixes) || in_array($first_name, array_map(function ($i) {return $i . '.';}, $prefixes))) {
+            if(isset($name_parts[2])) {
+                // Mr James Smith -> James
+                $first_name = $name_parts[1];
+            } else {
+                // Mr Smith (no first name given)
+                return $full_name;
+            }
+        }
+
+        // Detect LastName, FirstName
+        if (self::heskMbSubstr($first_name, -1, 1) == ',') {
+            if (count($name_parts) == 2) {
+                $first_name = $name_parts[1];
+            } else {
+                return $full_name;
+            }
+        }
+
+        // If the first name doesn't have at least 3 chars, return the original
+        if(self::heskMbStrlen($first_name) < 3) {
+            return $full_name;
+        }
+
+        // Return the name with first character uppercase
+        return self::heskUcfirst($first_name);
+    }
+
+    static function heskMbStrToLower($in) {
+        return function_exists('mb_strtolower') ? mb_strtolower($in) : strtolower($in);
+    }
+
+    static function heskMbStrlen($in) {
+        return function_exists('mb_strlen') ? mb_strlen($in, 'UTF-8') : strlen($in);
+    }
+
+    static function heskMbSubstr($in, $start, $length) {
+        return function_exists('mb_substr') ? mb_substr($in, $start, $length, 'UTF-8') : substr($in, $start, $length);
+    }
+
+    static function heskUcfirst($in) {
+        return function_exists('mb_convert_case') ? mb_convert_case($in, MB_CASE_TITLE, 'UTF-8') : ucfirst($in);
+    }
 }

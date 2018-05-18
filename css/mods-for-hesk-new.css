@@ -242,6 +242,15 @@ button.dropdown-submit {
     background-color: #ffcccc;
 }
 
+.button-link .warning {
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+ }
+
+ .button-link .warning:hover {
+    background-color: #faf2cc;
+ }
+
 .timeline-header {
     background: #ddd;
     border-left: solid 1px #ddd;

@@ -419,9 +419,10 @@ $set['updatedformat'] = hesk_checkMinMax(intval(hesk_POST('s_updatedformat')), 0
 /*** MISC ***/
 
 /* --> Date & Time */
-$set['diff_hours'] = floatval(hesk_POST('s_diff_hours', 0));
-$set['diff_minutes'] = floatval(hesk_POST('s_diff_minutes', 0));
-$set['daylight'] = empty($_POST['s_daylight']) ? 0 : 1;
+$set['timezone'] = hesk_input(hesk_POST('s_timezone'));
+if (!in_array($set['timezone'], timezone_identifiers_list())) {
+    $set['timezone'] = 'UTC';
+}
 $set['timeformat'] = hesk_input(hesk_POST('s_timeformat')) or $set['timeformat'] = 'Y-m-d H:i:s';
 
 /* --> Other */
@@ -881,9 +882,7 @@ $hesk_settings[\'updatedformat\']=' . $set['updatedformat'] . ';
 // ==> MISC
 
 // --> Date & Time
-$hesk_settings[\'diff_hours\']=' . $set['diff_hours'] . ';
-$hesk_settings[\'diff_minutes\']=' . $set['diff_minutes'] . ';
-$hesk_settings[\'daylight\']=' . $set['daylight'] . ';
+$hesk_settings[\'timezone\']=\'' . $set['timezone'] . '\';
 $hesk_settings[\'timeformat\']=\'' . $set['timeformat'] . '\';
 
 // --> Other

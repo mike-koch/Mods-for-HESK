@@ -161,7 +161,38 @@ if ($action = hesk_REQUEST('a')) {
     ?>
 <div class="content-wrapper">
     <section class="content">
-    <?php hesk_handle_messages(); ?>
+    <?php
+    hesk_handle_messages();
+
+    // If POP3 fetching is active, no user should have the same email address
+    if ($hesk_settings['pop3'] && hesk_validateEmail($hesk_settings['pop3_user'], 'ERR', 0)) {
+        $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `email` LIKE '".hesk_dbEscape($hesk_settings['pop3_user'])."'");
+
+        if (hesk_dbNumRows($res) > 0) {
+            while ($myuser = hesk_dbFetchAssoc($res)) {
+                if (compare_user_permissions($myuser['id'], $myuser['isadmin'], explode(',', $myuser['categories']) , explode(',', $myuser['heskprivileges']))) {
+                    hesk_show_notice(sprintf($hesklang['pop3_warning'], $myuser['name'], $hesk_settings['pop3_user']) . "<br /><br />" . $hesklang['fetch_warning'], $hesklang['warn']);
+                    break;
+                }
+            }
+        }
+    }
+
+    // If IMAP fetching is active, no user should have the same email address
+    if ($hesk_settings['imap'] && hesk_validateEmail($hesk_settings['imap_user'], 'ERR', 0)) {
+        $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `email` LIKE '".hesk_dbEscape($hesk_settings['imap_user'])."'");
+
+        if (hesk_dbNumRows($res) > 0) {
+            while ($myuser = hesk_dbFetchAssoc($res)) {
+                if (compare_user_permissions($myuser['id'], $myuser['isadmin'], explode(',', $myuser['categories']) , explode(',', $myuser['heskprivileges']))) {
+                    hesk_show_notice(sprintf($hesklang['imap_warning'], $myuser['name'], $hesk_settings['imap_user']) . "<br /><br />" . $hesklang['fetch_warning'], $hesklang['warn']);
+                    break;
+                }
+            }
+        }
+    }
+
+    ?>
     <script language="Javascript" type="text/javascript"><!--
         function confirm_delete() {
             if (confirm('<?php echo addslashes($hesklang['sure_remove_user']); ?>')) {
@@ -261,11 +292,11 @@ if ($action = hesk_REQUEST('a')) {
 
                     /* To edit yourself go to "Profile" page, not here. */
                     if ($myuser['id'] == $_SESSION['id']) {
-                        $edit_code = '<a href="profile.php"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
+                        $edit_code = '<a name="Edit '.$myuser['user'].'" href="profile.php"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
                     } elseif ($myuser['id'] == 1) {
                         $edit_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                     } else {
-                        $edit_code = '<a href="manage_users.php?a=edit&amp;id=' . $myuser['id'] . '"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
+                        $edit_code = '<a name="Edit '.$myuser['user'].'" href="manage_users.php?a=edit&amp;id=' . $myuser['id'] . '"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
                     }
 
                     if ($myuser['isadmin']) {
@@ -278,15 +309,15 @@ if ($action = hesk_REQUEST('a')) {
                     if ($myuser['id'] == 1 || $myuser['id'] == $_SESSION['id']) {
                         $remove_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                     } else {
-                        $remove_code = ' <a href="manage_users.php?a=remove&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete'] . '"></i></a>';
+                        $remove_code = ' <a name="Delete '.$myuser['user'].'" href="manage_users.php?a=remove&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete'] . '"></i></a>';
                     }
 
                     /* Is auto assign enabled? */
                     if ($hesk_settings['autoassign']) {
                         if ($myuser['autoassign']) {
-                            $autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaon'] . '"></i></a>';
+                            $autoassign_code = '<a name="Unassign '.$myuser['user'].'" href="manage_users.php?a=autoassign&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaon'] . '"></i></a>';
                         } else {
-                            $autoassign_code = '<a href="manage_users.php?a=autoassign&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaoff'] . '"></i></a>';
+                            $autoassign_code = '<a name="Assign '.$myuser['user'].'" href="manage_users.php?a=autoassign&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaoff'] . '"></i></a>';
                         }
                     } else {
                         $autoassign_code = '';

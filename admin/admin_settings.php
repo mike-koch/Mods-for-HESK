@@ -30,6 +30,7 @@ $hesk_settings['language_default'] = $hesk_settings['language'];
 require(HESK_PATH . 'inc/common.inc.php');
 $hesk_settings['language'] = $hesk_settings['language_default'];
 require(HESK_PATH . 'inc/admin_functions.inc.php');
+require(HESK_PATH . 'inc/setup_functions.inc.php');
 require(HESK_PATH . 'inc/mail_functions.inc.php');
 hesk_load_database_functions();
 
@@ -53,8 +54,6 @@ $help_folder = '../language/' . $hesk_settings['languages'][$hesk_settings['lang
 
 $enable_save_settings = 0;
 $enable_use_attachments = 0;
-
-$server_time = date('H:i', strtotime(hesk_date()));
 
 // Print header
 require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
@@ -80,64 +79,6 @@ if (defined('HESK_DEMO')) {
     $hesk_settings['imap_host_name']	= $hesklang['hdemo'];
     $hesk_settings['imap_user']			= $hesklang['hdemo'];
     $hesk_settings['imap_password']		= $hesklang['hdemo'];
-}
-
-// Check file attachment limits
-if ($hesk_settings['attachments']['use'] && !defined('HESK_DEMO')) {
-    // Check number of attachments per post
-    if (version_compare(phpversion(), '5.2.12', '>=') && @ini_get('max_file_uploads') && @ini_get('max_file_uploads') < $hesk_settings['attachments']['max_number']) {
-        hesk_show_notice($hesklang['fatte1']);
-    }
-
-    // Check max attachment size
-    $tmp = @ini_get('upload_max_filesize');
-    if ($tmp) {
-        $last = strtoupper(substr($tmp, -1));
-        $number = substr($tmp, 0, -1);
-
-        switch ($last) {
-            case 'K':
-                $tmp = $number * 1024;
-                break;
-            case 'M':
-                $tmp = $number * 1048576;
-                break;
-            case 'G':
-                $tmp = $number * 1073741824;
-                break;
-            default:
-                $tmp = $number;
-        }
-
-        if ($tmp < $hesk_settings['attachments']['max_size']) {
-            hesk_show_notice($hesklang['fatte2']);
-        }
-    }
-
-    // Check max post size
-    $tmp = @ini_get('post_max_size');
-    if ($tmp) {
-        $last = strtoupper(substr($tmp, -1));
-        $number = substr($tmp, 0, -1);
-
-        switch ($last) {
-            case 'K':
-                $tmp = $number * 1024;
-                break;
-            case 'M':
-                $tmp = $number * 1048576;
-                break;
-            case 'G':
-                $tmp = $number * 1073741824;
-                break;
-            default:
-                $tmp = $number;
-        }
-
-        if ($tmp < ($hesk_settings['attachments']['max_size'] * $hesk_settings['attachments']['max_number'] + 524288)) {
-            hesk_show_notice($hesklang['fatte3']);
-        }
-    }
 }
 
 
@@ -250,32 +191,6 @@ $modsForHesk_settings = mfh_getSettings();
         }
     };
 
-    var server_time = "<?php echo $server_time; ?>";
-    var today = new Date();
-    today.setHours(server_time.substr(0, server_time.indexOf(":")));
-    today.setMinutes(server_time.substr(server_time.indexOf(":") + 1));
-
-    function startTime() {
-        var h = today.getHours();
-        var m = today.getMinutes();
-        var s = today.getSeconds();
-
-        h = checkTime(h);
-        m = checkTime(m);
-
-        document.getElementById('servertime').innerHTML = h + ":" + m;
-        s = s + 1;
-        today.setSeconds(s);
-        t = setTimeout(function() { startTime(); },1000);
-    }
-
-    function checkTime(i) {
-        if (i < 10) {
-            i = "0" + i;
-        }
-        return i;
-    }
-
     function checkRequiredEmail(field) {
         if (document.getElementById('s_require_email_0').checked && document.getElementById('s_email_view_ticket').checked) {
             if (field == 's_require_email_0' && confirm('<?php echo addslashes($hesklang['re_confirm1']); ?>')) {
@@ -339,6 +254,87 @@ $modsForHesk_settings = mfh_getSettings();
     <?php
     /* This will handle error, success and notice messages */
     hesk_handle_messages();
+
+    // Check file attachment limits
+    if ($hesk_settings['attachments']['use'] && !defined('HESK_DEMO')) {
+        // Check number of attachments per post
+        if (version_compare(phpversion(), '5.2.12', '>=') && @ini_get('max_file_uploads') && @ini_get('max_file_uploads') < $hesk_settings['attachments']['max_number']) {
+            hesk_show_notice($hesklang['fatte1']);
+        }
+
+        // Check max attachment size
+        $tmp = @ini_get('upload_max_filesize');
+        if ($tmp) {
+            $last = strtoupper(substr($tmp, -1));
+            $number = substr($tmp, 0, -1);
+
+            switch ($last) {
+                case 'K':
+                    $tmp = $number * 1024;
+                    break;
+                case 'M':
+                    $tmp = $number * 1048576;
+                    break;
+                case 'G':
+                    $tmp = $number * 1073741824;
+                    break;
+                default:
+                    $tmp = $number;
+            }
+
+            if ($tmp < $hesk_settings['attachments']['max_size']) {
+                hesk_show_notice($hesklang['fatte2']);
+            }
+        }
+
+        // Check max post size
+        $tmp = @ini_get('post_max_size');
+        if ($tmp) {
+            $last = strtoupper(substr($tmp, -1));
+            $number = substr($tmp, 0, -1);
+
+            switch ($last) {
+                case 'K':
+                    $tmp = $number * 1024;
+                    break;
+                case 'M':
+                    $tmp = $number * 1048576;
+                    break;
+                case 'G':
+                    $tmp = $number * 1073741824;
+                    break;
+                default:
+                    $tmp = $number;
+            }
+
+            if ($tmp < ($hesk_settings['attachments']['max_size'] * $hesk_settings['attachments']['max_number'] + 524288)) {
+                hesk_show_notice($hesklang['fatte3']);
+            }
+        }
+
+        // If SMTP server is used, "From email" should match SMTP username
+        if ($hesk_settings['smtp'] && strtolower($hesk_settings['smtp_user']) != strtolower($hesk_settings['noreply_mail']) && hesk_validateEmail($hesk_settings['smtp_user'], 'ERR', 0)) {
+            hesk_show_notice(sprintf($hesklang['from_warning'], $hesklang['email_noreply'], $hesklang['tab_1'], $hesk_settings['smtp_user']));
+        }
+
+        // If POP3 fetching is active, no user should have the same email address
+        if ($hesk_settings['pop3'] && hesk_validateEmail($hesk_settings['pop3_user'], 'ERR', 0)) {
+            $res = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `email` LIKE '".hesk_dbEscape($hesk_settings['pop3_user'])."'");
+
+            if (hesk_dbNumRows($res) > 0) {
+                hesk_show_notice(sprintf($hesklang['pop3_warning'], hesk_dbResult($res,0,0), $hesk_settings['pop3_user']) . "<br /><br />" . $hesklang['fetch_warning'], $hesklang['warn']);
+            }
+        }
+
+        // If IMAP fetching is active, no user should have the same email address
+        if ($hesk_settings['imap'] && hesk_validateEmail($hesk_settings['imap_user'], 'ERR', 0)) {
+            $res = hesk_dbQuery("SELECT `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `email` LIKE '".hesk_dbEscape($hesk_settings['imap_user'])."'");
+
+            if (hesk_dbNumRows($res) > 0) {
+                hesk_show_notice(sprintf($hesklang['imap_warning'], hesk_dbResult($res,0,0), $hesk_settings['imap_user']) . "<br /><br />" . $hesklang['fetch_warning'], $hesklang['warn']);
+            }
+        }
+    }
     ?>
     <div class="box">
         <div class="box-header with-border">
@@ -1495,14 +1491,14 @@ $modsForHesk_settings = mfh_getSettings();
                             <br/>
 
                             <div class="radio"><label><input type="radio" name="s_recaptcha_use" value="2"
-                                                             onclick="javascript:hesk_toggleLayer('recaptcha','block')" <?php echo $on2; ?> /> <?php echo $hesklang['sir2']; ?>
+                                                             onclick="javascript:hesk_toggleLayer('recaptcha','block')" <?php echo $on2; ?> /> <?php echo $hesklang['recaptcha']; ?>
                                 </label> <a href="Javascript:void(0)"
                                             onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#64','400','500')"><i
                                         class="fa fa-question-circle settingsquestionmark"></i></a></div>
                             <br/>
 
                             <div class="radio"><label><input type="radio" name="s_recaptcha_use" value="1"
-                                                             onclick="javascript:hesk_toggleLayer('recaptcha','block')" <?php echo $on; ?> /> <?php echo $hesklang['sir']; ?>
+                                                             onclick="javascript:hesk_toggleLayer('recaptcha','block')" <?php echo $on; ?> /> <?php echo $hesklang['sir3']; ?>
                                 </label> <a href="Javascript:void(0)"
                                             onclick="Javascript:hesk_window('<?php echo $help_folder; ?>helpdesk.html#64','400','500')"><i
                                         class="fa fa-question-circle settingsquestionmark"></i></a></div>
@@ -2862,10 +2858,17 @@ $modsForHesk_settings = mfh_getSettings();
                             $onload_status = ' disabled ';
                         }
 
-                        echo '
+                        // Is IMAP extension loaded?
+                        if ( ! function_exists('imap_open')) {
+                            echo '<i>'. $hesklang['disabled'] . '</i> - ' . $hesklang['imap_not'];
+                            $onload_div = 'none';
+                        } else {
+                            echo '
                         <div class="radio"><label><input type="radio" name="s_imap" value="0" onclick="hesk_attach_disable(new Array(\'i0\',\'i1\',\'i2\',\'i3\',\'i4\',\'i5\',\'i6\',\'i7\',\'i8\',\'i9\'))" onchange="hesk_toggleLayerDisplay(\'imap_settings\');" ' . $off . '> ' . $hesklang['off'] . '</label></div>&nbsp;&nbsp;&nbsp;
                         <div class="radio"><label><input type="radio" name="s_imap" value="1" onclick="hesk_attach_enable(new Array(\'i0\',\'i1\',\'i2\',\'i3\',\'i4\',\'i5\',\'i6\',\'i7\',\'i8\',\'i9\'))" onchange="hesk_toggleLayerDisplay(\'imap_settings\');"  ' . $on . '> ' . $hesklang['on'] . '</label></div>';
+                        }
                         ?>
+                        <input type="hidden" name="tmp_imap_job_wait" value="<?php echo $hesk_settings['imap_job_wait']; ?>" />
                         <input type="hidden" name="tmp_imap_host_name" value="<?php echo $hesk_settings['imap_host_name']; ?>">
                         <input type="hidden" name="tmp_imap_host_port" value="<?php echo $hesk_settings['imap_host_port']; ?>">
                         <input type="hidden" name="tmp_imap_user" value="<?php echo $hesk_settings['imap_user']; ?>">
@@ -3446,53 +3449,28 @@ $modsForHesk_settings = mfh_getSettings();
             <div class="box-body">
                 <h4 class="bold"><?php echo $hesklang['dat']; ?></h4>
                 <div class="form-group">
-                    <label for="servertime" class="col-sm-4 control-label"><?php echo $hesklang['server_time']; ?>
-                        <a href="Javascript:void(0)"
-                           onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#18','400','500')"><i
-                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
+                    <label for="s_timezone" class="col-sm-4 control-label"><?php echo $hesklang['TZ']; ?> <a
+                                href="Javascript:void(0)"
+                                onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#63','400','500')"><i
+                                    class="fa fa-question-circle settingsquestionmark"></i></a></label>
 
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?php echo $hesklang['csrt'] . ' <span id="servertime">' . $server_time . '</span>'; ?></p>
-                        <script language="javascript" type="text/javascript"><!--
-                            startTime();
-                            //-->
-                        </script>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-2 col-sm-offset-4">
-                            <input type="text" class="form-control" name="s_diff_hours" size="5" maxlength="3"
-                                   value="<?php echo $hesk_settings['diff_hours']; ?>"/>
-                        </div>
-                        <div class="col-sm-6 pad-right-0">
-                            <p class="form-control-static"><?php echo $hesklang['t_h']; ?></p>
-                        </div>
-                    </div>
-                    <div class="row pad-right-0">
-                        <div class="col-sm-2 col-sm-offset-4">
-                            <input type="text" class="form-control" name="s_diff_minutes" size="5" maxlength="3"
-                                   value="<?php echo $hesk_settings['diff_minutes']; ?>"/>
-                        </div>
-                        <div class="col-sm-6 pad-right-0">
-                            <p class="form-control-static"><?php echo $hesklang['t_m']; ?></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="s_daylight" class="col-sm-4 control-label"><?php echo $hesklang['day']; ?> <a
-                            href="Javascript:void(0)"
-                            onclick="Javascript:hesk_window('<?php echo $help_folder; ?>misc.html#19','400','500')"><i
-                                class="fa fa-question-circle settingsquestionmark"></i></a></label>
-
-                    <div class="col-sm-8 form-inline">
                         <?php
-                        $on = $hesk_settings['daylight'] ? 'checked="checked"' : '';
-                        $off = $hesk_settings['daylight'] ? '' : 'checked="checked"';
-                        echo '
-                        <div class="radio"><label><input type="radio" name="s_daylight" value="0" ' . $off . ' /> ' . $hesklang['off'] . '</label></div>&nbsp;&nbsp;&nbsp;
-                        <div class="radio"><label><input type="radio" name="s_daylight" value="1" ' . $on . ' /> ' . $hesklang['on'] . '</label></div>';
+                        // Get list of supported timezones
+                        $timezone_list = hesk_generate_timezone_list();
+
+                        // Do we need to localize month names?
+                        if ($hesk_settings['language'] != 'English') {
+                            $timezone_list = hesk_translate_timezone_list($timezone_list);
+                        }
                         ?>
+                        <select class="form-control" name="s_timezone">
+                            <?php foreach ($timezone_list as $timezone => $description): ?>
+                                <option value="<?php echo $timezone; ?>" <?php if ($hesk_settings['timezone'] == $timezone) {echo 'selected';} ?>>
+                                    <?php echo $description; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">

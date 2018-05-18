@@ -278,12 +278,12 @@ function getTemplateMarkup($template, $languageCode, $html = false)
     $templateUrl = urlencode($template);
     $languageCodeUrl = urlencode($languageCode);
     if ($html) {
-        $markup = '<a href="manage_email_templates.php?action=edit&template=' . $templateUrl . '&language=' . $languageCodeUrl . '&html=true">';
+        $markup = '<a name="Edit '.$templateUrl.'" href="manage_email_templates.php?action=edit&template=' . $templateUrl . '&language=' . $languageCodeUrl . '&html=true">';
         $markup .= '<i class="fa fa-html5 font-size-150" data-toggle="tooltip" title="' . $hesklang['edit_html_template'] . '"></i>';
         $markup .= '</a>';
         return $markup;
     } else {
-        $markup = '<a href="manage_email_templates.php?action=edit&template=' . $templateUrl . '&language=' . $languageCodeUrl . '&html=false">';
+        $markup = '<a name="Edit '.$templateUrl.'" href="manage_email_templates.php?action=edit&template=' . $templateUrl . '&language=' . $languageCodeUrl . '&html=false">';
         $markup .= '<i class="fa fa-file-text-o font-size-150" data-toggle="tooltip" title="' . $hesklang['edit_plain_text_template'] . '"></i>';
         $markup .= '</a>';
         return $markup;
@@ -314,6 +314,7 @@ function getSpecialTagMap()
 
     $map = array();
     $map['%%NAME%%'] = $hesklang['customer_name'];
+    $map['%%FIRST_NAME%%'] = $hesklang['fname'];
     $map['%%EMAIL%%'] = $hesklang['customer_email'];
     $map['%%SUBJECT%%'] = $hesklang['ticket_subject'];
     $map['%%MESSAGE%%'] = $hesklang['ticket_message'];
@@ -328,7 +329,7 @@ function getSpecialTagMap()
     $map['%%OWNER%%'] = $hesklang['ticket_owner'];
     $map['%%PRIORITY%%'] = $hesklang['ticket_priority'];
     $map['%%STATUS%%'] = $hesklang['ticket_status'];
-    $map['%%LAST_REPLY_BY%%'] = $hesklang['last_reply_by'];
+    $map['%%LAST_REPLY_BY%%'] = $hesklang['last_replier'];
     $map['%%TIME_WORKED%%'] = $hesklang['ts'];
 
     $i = 1;

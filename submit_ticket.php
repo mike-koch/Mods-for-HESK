@@ -82,23 +82,8 @@ if ($hesk_settings['question_use']) {
 
 // Check anti-SPAM image
 if ($hesk_settings['secimg_use'] && !isset($_SESSION['img_verified'])) {
-    // Using ReCaptcha?
-    if ($hesk_settings['recaptcha_use'] == 1) {
-        require(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
-
-        $resp = recaptcha_check_answer($hesk_settings['recaptcha_private_key'],
-            hesk_getClientIP(),
-            hesk_POST('recaptcha_challenge_field', ''),
-            hesk_POST('recaptcha_response_field', '')
-        );
-        if ($resp->is_valid) {
-            $_SESSION['img_verified'] = true;
-        } else {
-            $hesk_error_buffer['mysecnum'] = $hesklang['recaptcha_error'];
-        }
-
-    } // Using ReCaptcha API v2?
-    elseif ($hesk_settings['recaptcha_use'] == 2) {
+    // Using reCAPTCHA?
+    if ($hesk_settings['recaptcha_use']) {
         require(HESK_PATH . 'inc/recaptcha/recaptchalib_v2.php');
 
         $resp = null;
@@ -410,6 +395,7 @@ $tmpvar['owner'] = 0;
 $autoassign_owner = hesk_autoAssignTicket($tmpvar['category']);
 if ($autoassign_owner) {
     $tmpvar['owner'] = $autoassign_owner['id'];
+    $tmpvar['assignedby'] = -1;
 }
 
 // Insert attachments
@@ -462,7 +448,7 @@ if ($createTicket) {
     $ticket = hesk_newTicket($tmpvar);
 
     mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_submitted_by', hesk_date(),
-        array(0 => $tmpvar['name']));
+        array(0 => $hesklang['customer']));
 
     if ($autoassign_owner) {
         mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_autoassigned', hesk_date(),

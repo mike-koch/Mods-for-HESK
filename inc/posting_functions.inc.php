@@ -58,6 +58,16 @@ function hesk_newTicket($ticket, $isVerified = true)
         $custom_what  .= ", '" . (isset($ticket['custom'.$i]) ? hesk_dbEscape($ticket['custom'.$i]) : '') . "'";
     }
 
+    // Need to insert "addigned by" value?
+    if (isset($ticket['assignedby'])) {
+        $ab_where = ', `assignedby` ';
+        $ab_what  = ', ' . intval($ticket['assignedby']);
+    } else {
+        $ab_where = '';
+        $ab_what  = '';
+    }
+
+
     // Insert ticket into database
     hesk_dbQuery("
 	INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . $tableName . "`
@@ -88,6 +98,7 @@ function hesk_newTicket($ticket, $isVerified = true)
 		`due_date`,
 		`history`
 		{$custom_where}
+		{$ab_where}
 	)
 	VALUES
 	(
@@ -117,6 +128,7 @@ function hesk_newTicket($ticket, $isVerified = true)
 		{$due_date},
 		''
 		{$custom_what}
+		{$ab_what}
 	)
 	");
 

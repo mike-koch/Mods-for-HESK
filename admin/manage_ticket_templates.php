@@ -159,7 +159,7 @@ $num = hesk_dbNumRows($result);
                         }
 
                         echo '
-                                    <a href="manage_ticket_templates.php?a=remove&amp;id=' . $mysaved['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['delete'] . '"></i></a></td>
+                                    <a name="'.$mysaved['title'].'" href="manage_ticket_templates.php?a=remove&amp;id=' . $mysaved['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" data-original-title="' . $hesklang['delete'] . '"></i></a></td>
                                     </tr>
                                     ';
                     } // End while
