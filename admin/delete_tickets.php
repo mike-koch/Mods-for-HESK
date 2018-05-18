@@ -153,8 +153,8 @@ if ( isset($_POST['assign']) && $_POST['assign'] == $hesklang['assi']) {
 		}
 		if ($owner_data['isadmin'] || in_array($ticket['category'],$owner_data['categories'])) {
             hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `owner`={$owner}, `assignedby`=".intval($_SESSION['id'])." WHERE `id`={$this_id} LIMIT 1");
-            mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_assigned', hesk_date(), array(0 => $owner_data['name'].' ('.$owner_data['user'].')',
-                1 => $_SESSION['name'].' ('.$_SESSION['user'].')'));
+            mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_assigned', hesk_date(), array(0 => $_SESSION['name'].' ('.$_SESSION['user'].')',
+                1 => $owner_data['name'].' ('.$owner_data['user'].')'));
 
             $end_message[] = sprintf($hesklang['assign_4'], $ticket['trackid'], $owner_data['name']);
             $num_assigned++;
@@ -463,7 +463,10 @@ elseif ($_POST['a']=='print') {
         }
 
         $this_id = intval($this_id) or hesk_error($hesklang['id_not_valid']);
-        $result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `id`='".intval($this_id)."' LIMIT 1");
+        $result = hesk_dbQuery("SELECT `t1`.* , `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`Key` AS `statusKey`, `t2`.name AS `repliername`
+					FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `t1` LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `t2` ON `t1`.`replierid` = `t2`.`id`
+					INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` AS `ticketStatus` ON `t1`.`status` = `ticketStatus`.`ID`
+					WHERE `t1`.`id`='{$this_id}' LIMIT 1");
         if (hesk_dbNumRows($result) != 1) {
             continue;
         }

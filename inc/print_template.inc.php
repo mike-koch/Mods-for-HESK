@@ -50,7 +50,7 @@ echo '
 <table border="1" bordercolor="#FFFFFF" cellspacing="0" cellpadding="2" width="100%">
 
 <tr>
-	<td bgcolor="#EEE"><b>' . $hesklang['trackID'] . ':</b></td><td bgcolor="#DDD">' . $trackingID . '</td>
+	<td bgcolor="#EEE"><b>' . $hesklang['trackID'] . ':</b></td><td bgcolor="#DDD">' . $ticket['trackid'] . '</td>
 	<td bgcolor="#EEE"><b>' . $hesklang['ticket_status'] . ':</b></td><td bgcolor="#DDD">' . $hesklang[$ticket['statusKey']] . '</td>
 	<td bgcolor="#EEE"><b>' . $hesklang['created_on'] . ':</b></td><td bgcolor="#DDD">' . $ticket['dt'] . '</td>
 </tr>
@@ -148,4 +148,4 @@ while ($reply = hesk_dbFetchAssoc($res)) {
 }
 
 // Print "end of ticket" message
-echo '<span style="page-break-after: always;">' . $hesklang['end_ticket'] . "</span>";
+echo '<div style="page-break-after: always">' . $hesklang['end_ticket'] . "</div>";
