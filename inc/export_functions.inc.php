@@ -30,6 +30,17 @@ function hesk_export_to_XML($sql, $export_selected = false)
         $admins[$row['id']] = $row['name'];
     }
 
+    // Get category names
+    if ( ! isset($my_cat))
+    {
+        $my_cat = array();
+        $res2 = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE " . hesk_myCategories('id') . " ORDER BY `cat_order` ASC");
+        while ($row=hesk_dbFetchAssoc($res2))
+        {
+            $my_cat[$row['id']] = hesk_msgToPlain($row['name'], 1);
+        }
+    }
+
     // This will be the export directory
     $export_dir = HESK_PATH.$hesk_settings['cache_dir'].'/';
 
