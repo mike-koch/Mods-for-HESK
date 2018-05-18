@@ -36,9 +36,9 @@ class UserToTicketChecker extends \BaseClass {
             return false;
         }
 
-        $categoryManagerId = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
+        $categoryManager = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
 
-        if ($user->id === $categoryManagerId) {
+        if ($categoryManager !== null && $user->id === $categoryManager->id) {
             return true;
         }
 

@@ -757,9 +757,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     ?>
                                 </span>
                             </b><br>
+                            <?php if ($can_edit): ?>
                             <button class="btn btn-default btn-sm" id="change-button">
                                 <?php echo $hesklang['chg']; ?>
                             </button>
+                            <?php endif; ?>
                         </div>
                         <div id="editable-due-date" style="display: none">
                             <span class="form-group">
