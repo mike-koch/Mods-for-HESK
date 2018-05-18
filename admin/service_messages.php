@@ -367,6 +367,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'error_sorting_categories',
     'error_retrieving_sm',
     'all',
+    'e_udel',
 ));
 
 echo '<script>var users = [];';
