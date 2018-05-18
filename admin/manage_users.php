@@ -42,6 +42,9 @@ $calendar_view_array = array(
 );
 $default_view = $calendar_view_array[$modsForHesk_settings['default_calendar_view']];
 
+$staff_permission_template_rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "permission_templates` WHERE `id` = 2");
+$staff_permission_template = hesk_dbFetchAssoc($staff_permission_template_rs);
+
 /* Set default values */
 $default_userdata = array(
 
@@ -58,11 +61,14 @@ $default_userdata = array(
     // Permissions
     'isadmin' => 1,
     'active' => 1,
-    'categories' => array('1'),
-    'features' => array('can_view_tickets', 'can_reply_tickets', 'can_change_cat', 'can_assign_self', 'can_view_unassigned', 'can_view_online'),
+    'categories' => explode(',', $staff_permission_template['categories']),
+    'features' => explode(',', $staff_permission_template['heskprivileges']),
 
     // Preferences
     'afterreply' => 0,
+
+    // Permission template
+    'permission_template' => 2,
 
     // Defaults
     'autostart' => 1,
