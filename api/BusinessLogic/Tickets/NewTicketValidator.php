@@ -64,7 +64,7 @@ class NewTicketValidator extends \BaseClass {
                     break;
                 }
             }
-            
+
             if (!$categoryExists) {
                 $validationModel->errorKeys[] = 'CATEGORY_DOES_NOT_EXIST';
             }
