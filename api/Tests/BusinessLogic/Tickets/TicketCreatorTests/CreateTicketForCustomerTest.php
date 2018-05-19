@@ -160,6 +160,8 @@ class CreateTicketTest extends TestCase {
         $status->id = 1;
         $this->statusGateway->method('getStatusForDefaultAction')
             ->willReturn($status);
+        $this->categoryGateway->method('getAllCategories')
+            ->willReturn(array());
     }
 
     function testItSavesTheTicketToTheDatabase() {
