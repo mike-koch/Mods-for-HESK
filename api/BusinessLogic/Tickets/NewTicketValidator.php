@@ -3,6 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\Categories\Category;
 use BusinessLogic\Categories\CategoryRetriever;
 use BusinessLogic\Security\BanRetriever;
 use BusinessLogic\Tickets\CustomFields\CustomFieldValidator;
@@ -54,7 +55,16 @@ class NewTicketValidator extends \BaseClass {
         if ($categoryId < 1) {
             $validationModel->errorKeys[] = 'NO_CATEGORY';
         } else {
-            $categoryExists = array_key_exists($categoryId, $this->categoryRetriever->getAllCategories($heskSettings, $userContext));
+            $allCategories = $this->categoryRetriever->getAllCategories($heskSettings, $userContext);
+            $categoryExists = false;
+            foreach ($allCategories as $category) {
+                /* @var $category Category */
+                if ($categoryId === $category->id) {
+                    $categoryExists = true;
+                    break;
+                }
+            }
+            
             if (!$categoryExists) {
                 $validationModel->errorKeys[] = 'CATEGORY_DOES_NOT_EXIST';
             }
