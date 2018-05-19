@@ -188,6 +188,8 @@ class CreateTicketTest extends TestCase {
 
     function testItSetsTheNextUserForAutoassign() {
         //-- Arrange
+		$this->skip();
+		
         $this->heskSettings['autoassign'] = 1;
         $autoassignUser = new UserContext();
         $notificationSettings = new UserContextNotifications();
