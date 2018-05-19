@@ -95,7 +95,7 @@ class UserToTicketCheckerTest extends TestCase {
 
     function testItReturnsTrueWhenTheUserDoesNotHaveEditPermissionsButIsTheCategoryManager() {
         //-- Arrange
-		$this->skip();
+		$this->markTestSkipped();
 		
         $user = new UserContext();
         $user->admin = false;
