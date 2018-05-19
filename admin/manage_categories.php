@@ -477,6 +477,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'geco',
     'cpric',
     'no_manager',
+    'e_udel',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
