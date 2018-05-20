@@ -267,8 +267,6 @@ language/en/emails/ticket_assigned_to_you.txt
 language/en/index.htm
 language/en/text.php
 language/index.htm
-language/*
-!language/en
 print_sec_img.php
 rate.php
 readme.html
