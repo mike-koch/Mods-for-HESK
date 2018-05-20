@@ -229,5 +229,7 @@ function getAllMigrations() {
         171 => new \v330\AddHighlightTicketRowsSetting(171),
         172 => new UpdateMigration('3.3.0', '3.2.5', 172),
         173 => new UpdateMigration('3.3.1', '3.3.0', 173),
+        // 2018.1.0
+        174 => new UpdateMigration('2018.1.0', '3.3.1', 174),
     );
 }
