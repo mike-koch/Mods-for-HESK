@@ -27,13 +27,18 @@ class UserToTicketChecker extends \BaseClass {
             return true;
         }
 
+        if (in_array(UserPrivilege::CAN_VIEW_ASSIGNED_BY_ME, $user->permissions) &&
+            $ticket->assignedBy === $user->id) {
+            return true;
+        }
+
         if (!in_array($ticket->categoryId, $user->categories)) {
             return false;
         }
 
-        $categoryManagerId = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
+        $categoryManager = $this->userGateway->getManagerForCategory($ticket->categoryId, $heskSettings);
 
-        if ($user->id === $categoryManagerId) {
+        if ($categoryManager !== null && $user->id === $categoryManager->id) {
             return true;
         }
 

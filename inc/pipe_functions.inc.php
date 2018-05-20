@@ -27,7 +27,7 @@ require(HESK_PATH . 'inc/mail/email_parser.php');
 
 /*** FUNCTIONS ***/
 
-function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority = -1)
+function hesk_email2ticket($results, $protocol = 0, $set_category = 1, $set_priority = -1)
 {
     global $hesk_settings, $hesklang, $hesk_db_link, $ticket;
 
@@ -269,7 +269,27 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 
     // Auto assign tickets if aplicable
     $tmpvar['owner'] = 0;
-    $tmpvar['openedby'] = $pop3 ? -2 : -1;
+
+    // What protocol did we use to submit the ticket?
+    switch ($protocol) {
+        // POP3 fetching
+        case 1:
+            $audit_key = 'audit_submitted_via_pop';
+            $tmpvar['openedby'] = -2;
+            break;
+
+        // IMAP fetching
+        case 2:
+            $audit_key = 'audit_submitted_via_imap';
+            $tmpvar['openedby'] = -3;
+            break;
+
+        // Email piping
+        default:
+            $audit_key = 'audit_submitted_via_piping';
+            $tmpvar['openedby'] = -1;
+    }
+
 
     $autoassign_owner = hesk_autoAssignTicket($tmpvar['category']);
 
@@ -277,6 +297,7 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
 
     if ($autoassign_owner) {
         $tmpvar['owner'] = $autoassign_owner['id'];
+        $tmpvar['assignedby'] = -1;
     }
 
     // Custom fields will be empty as there is no reliable way of detecting them
@@ -295,7 +316,7 @@ function hesk_email2ticket($results, $pop3 = 0, $set_category = 1, $set_priority
     // Insert ticket to database
     $ticket = hesk_newTicket($tmpvar);
 
-    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', ($pop3 ? 'audit_submitted_via_pop' : 'audit_submitted_via_piping'), hesk_date());
+    mfh_insert_audit_trail_record($ticket['id'], 'TICKET', $audit_key, hesk_date());
 
     if ($autoassign_owner) {
         mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_autoassigned', hesk_date(),

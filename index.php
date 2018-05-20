@@ -244,7 +244,7 @@ function print_add_ticket()
     hesk_cleanSessionVars('already_submitted');
 
     // Tell header to load reCaptcha API if needed
-    if ($hesk_settings['recaptcha_use'] == 2) {
+    if ($hesk_settings['recaptcha_use']) {
         define('RECAPTCHA', 1);
     }
 
@@ -339,6 +339,7 @@ function print_add_ticket()
             }
             ?>
             <form class="form-horizontal" role="form" method="post" action="submit_ticket.php?submit=1" name="form1"
+                  id="form1"
                   enctype="multipart/form-data" <?php echo $onsubmit; ?>>
                 <!-- Contact info -->
                 <div class="form-group">
@@ -1099,7 +1100,7 @@ function print_add_ticket()
                     <?php
                 }
 
-                if ($hesk_settings['secimg_use'])
+                if ($hesk_settings['secimg_use'] && $hesk_settings['recaptcha_use'] != 1)
                 {
                 ?>
                 <div class="form-group">
@@ -1109,36 +1110,8 @@ function print_add_ticket()
                     // SPAM prevention verified for this session
                     if (isset($_SESSION['img_verified'])) {
                         echo '<img src="' . HESK_PATH . 'img/success.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" /> ' . $hesklang['vrfy'];
-                    } // Not verified yet, should we use Recaptcha?
-                    elseif ($hesk_settings['recaptcha_use'] == 1) {
-                        ?>
-                        <script type="text/javascript">
-                            var RecaptchaOptions = {
-                                theme: '<?php echo ( isset($_SESSION['iserror']) && in_array('mysecnum',$_SESSION['iserror']) ) ? 'red' : 'white'; ?>',
-                                custom_translations: {
-                                    visual_challenge: "<?php echo hesk_slashJS($hesklang['visual_challenge']); ?>",
-                                    audio_challenge: "<?php echo hesk_slashJS($hesklang['audio_challenge']); ?>",
-                                    refresh_btn: "<?php echo hesk_slashJS($hesklang['refresh_btn']); ?>",
-                                    instructions_visual: "<?php echo hesk_slashJS($hesklang['instructions_visual']); ?>",
-                                    instructions_context: "<?php echo hesk_slashJS($hesklang['instructions_context']); ?>",
-                                    instructions_audio: "<?php echo hesk_slashJS($hesklang['instructions_audio']); ?>",
-                                    help_btn: "<?php echo hesk_slashJS($hesklang['help_btn']); ?>",
-                                    play_again: "<?php echo hesk_slashJS($hesklang['play_again']); ?>",
-                                    cant_hear_this: "<?php echo hesk_slashJS($hesklang['cant_hear_this']); ?>",
-                                    incorrect_try_again: "<?php echo hesk_slashJS($hesklang['incorrect_try_again']); ?>",
-                                    image_alt_text: "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>"
-                                }
-                            };
-                        </script>
-                        <div class="col-md-9">
-                            <?php
-                            require(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
-                            echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, true);
-                            ?>
-                        </div>
-                    <?php
                     }
-                    // Use reCaptcha API v2?
+                    // Use reCaptcha v2?
                     elseif ($hesk_settings['recaptcha_use'] == 2)
                     {
                     ?>
@@ -1215,7 +1188,7 @@ function print_add_ticket()
                                 <input type="hidden" id="screen-resolution-height" name="screen_resolution_height">
                                 <input type="hidden" id="screen-resolution-width" name="screen_resolution_width">
                                 <input type="submit" value="<?php echo $hesklang['sub_ticket']; ?>"
-                                       class="btn btn-default">
+                                       class="btn btn-default" id="recaptcha-submit">
                             </div>
                         </div>
                         <script>
@@ -1234,7 +1207,7 @@ function print_add_ticket()
                                 <input type="hidden" id="screen-resolution-height" name="screen_resolution_height">
                                 <input type="hidden" id="screen-resolution-width" name="screen_resolution_width">
                                 <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
-                                <input class="btn btn-default" type="submit"
+                                <input class="btn btn-default" type="submit" id="recaptcha-submit"
                                        value="<?php echo $hesklang['sub_ticket']; ?>">
                                 <script>
                                     $('#screen-resolution-height').prop('value', screen.height);
@@ -1262,6 +1235,16 @@ function print_add_ticket()
                     "<?php echo addslashes($hesklang['select_at_least_one_value']); ?>");
             </script>
         </div>
+
+        <?php
+        // Use Invisible reCAPTCHA?
+        if ($hesk_settings['secimg_use'] && $hesk_settings['recaptcha_use'] == 1 && ! isset($_SESSION['img_verified'])) {
+        ?>
+            <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>" data-bind="recaptcha-submit" data-callback="recaptcha_submitForm"></div>
+        <?php
+        }
+        ?>
+
     </form>
     <?php if ($columnWidth == 'col-md-10 col-md-offset-1'): ?>
     <div class="col-md-1">&nbsp;</div></div>

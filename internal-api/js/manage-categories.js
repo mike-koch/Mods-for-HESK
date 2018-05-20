@@ -122,7 +122,8 @@ function loadTable() {
                 if (this.manager === null) {
                     $template.find('[data-property="manager"]').text(mfhLang.text('no_manager'));
                 } else {
-                    $template.find('[data-property="manager"]').text(users[this.manager].name);
+                    var managerName = users[this.manager] === undefined ? mfhLang.text('e_udel') : users[this.manager].name;
+                    $template.find('[data-property="manager"]').text(managerName);
                 }
 
                 if (this.id === 1) {
@@ -190,7 +191,7 @@ function bindEditModal() {
         colorpickerOptions = {
             format: 'hex'
         };
-        if (foregroundColor != '' && foregroundColor !== 'AUTO') {
+        if (foregroundColor !== '' && foregroundColor !== 'AUTO') {
             colorpickerOptions.color = foregroundColor;
         }
 
@@ -246,16 +247,18 @@ function bindCreateModal() {
 }
 
 function bindModalCancelCallback() {
-    $('.cancel-callback').click(function() {
-        var $editCategoryModal = $('#category-modal');
+    $('.cancel-callback').click(resetModal);
+}
 
-        $editCategoryModal.find('input[name="background-color"]').val('').colorpicker('destroy').end();
-        $editCategoryModal.find('input[name="foreground-color"]').val('').colorpicker('destroy').end();
-        $editCategoryModal.find('input[name="display-border"][value="1"]').prop('checked');
-        $editCategoryModal.find('input[name="display-border"][value="0"]').prop('checked');
-        $editCategoryModal.find('input[name="autoassign"][value="1"]').prop('checked');
-        $editCategoryModal.find('input[name="autoassign"][value="0"]').prop('checked');
-    });
+function resetModal() {
+    var $editCategoryModal = $('#category-modal');
+
+    $editCategoryModal.find('input[name="background-color"]').val('').colorpicker('destroy').end();
+    $editCategoryModal.find('input[name="foreground-color"]').val('').colorpicker('destroy').end();
+    $editCategoryModal.find('input[name="display-border"][value="1"]').prop('checked');
+    $editCategoryModal.find('input[name="display-border"][value="0"]').prop('checked');
+    $editCategoryModal.find('input[name="autoassign"][value="1"]').prop('checked');
+    $editCategoryModal.find('input[name="autoassign"][value="0"]').prop('checked');
 }
 
 function bindFormSubmit() {
@@ -310,6 +313,7 @@ function bindFormSubmit() {
                     format = mfhLang.html('category_updated');
                     mfhAlert.success(format.replace('%s', data.name));
                 }
+                resetModal();
                 $modal.modal('hide');
                 loadTable();
             },

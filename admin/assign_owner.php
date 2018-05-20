@@ -52,7 +52,7 @@ $owner = intval(hesk_REQUEST('owner'));
 
 /* If ID is -1 the ticket will be unassigned */
 if ($owner == -1) {
-    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`=0 WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`=0, `assignedby`=NULL WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
     mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_unassigned', hesk_date(),
         array(0 => $_SESSION['name'] . ' (' . $_SESSION['user'] . ')'));
 
@@ -97,7 +97,15 @@ if ($ticket['owner'] && $ticket['owner'] != $owner && hesk_REQUEST('unassigned')
 
 /* Assigning to self? */
 if ($can_assign_others || ($owner == $_SESSION['id'] && $can_assign_self)) {
-    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`={$owner} WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
+    $assignedby = intval(hesk_SESSION('id'));
+    if ($assignedby > 0) {
+        $assignedby = ',`assignedby`=' . $assignedby;
+    } else {
+        $assignedby = '';
+    }
+
+
+    $res = hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET `owner`={$owner} {$assignedby} WHERE `trackid`='" . hesk_dbEscape($trackingID) . "'");
 
     if ($owner == $_SESSION['id'] && $can_assign_self) {
         mfh_insert_audit_trail_record($ticket['id'], 'TICKET', 'audit_assigned_self', hesk_date(),

@@ -27,4 +27,7 @@ class SearchEventsFilter {
 
     /* @var $includeTicketsAssignedToOthers bool */
     public $includeTicketsAssignedToOthers;
+
+    /* @var $includeTicketsAssignedToMe bool */
+    public $includeTicketsAssignedToMe;
 }

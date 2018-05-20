@@ -199,6 +199,7 @@ Link::all(array(
     '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::clazz() . '::sort', array(RequestMethod::POST), SecurityHandler::INTERNAL),
     // Tickets
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::clazz(), RequestMethod::all(), SecurityHandler::OPEN),
+    '/v1/tickets/{i}/replies' => action(\Controllers\Tickets\CustomerReplyController::clazz(), array(RequestMethod::POST), SecurityHandler::OPEN),
     // Tickets - Staff
     '/v1/staff/tickets/{i}' => action(\Controllers\Tickets\StaffTicketController::clazz(), RequestMethod::all()),
     '/v1/staff/tickets/{i}/due-date' => action(\Controllers\Tickets\StaffTicketController::clazz() . '::updateDueDate', array(RequestMethod::PATCH), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),

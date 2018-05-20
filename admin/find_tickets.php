@@ -173,6 +173,9 @@ LEFT(`message`, 400) AS `message`,
                 	WHERE  `message` LIKE '%".hesk_dbEscape( hesk_dbLike($q) )."%' COLLATE '" . hesk_dbCollate() . "' )
                 	";
                                 break;
+                            case 'ip':
+                                $sql .= "`ip` LIKE '".preg_replace('/[^0-9\.\%]/', '', $q)."' ";
+                                break;
                             default:
                                 if (isset($hesk_settings['custom_fields'][$what]) && $hesk_settings['custom_fields'][$what]['use']) {
                                     $sql .= "`" . hesk_dbEscape($what) . "` LIKE '%" . hesk_dbEscape($q) . "%' COLLATE '" . hesk_dbCollate() . "' ";

@@ -9,6 +9,7 @@ use BusinessLogic\Emails\EmailTemplateRetriever;
 use BusinessLogic\Exceptions\ValidationException;
 use BusinessLogic\Statuses\DefaultStatusForAction;
 use DataAccess\AuditTrail\AuditTrailGateway;
+use DataAccess\Categories\CategoryGateway;
 use DataAccess\CustomFields\CustomFieldsGateway;
 use DataAccess\Security\UserGateway;
 use DataAccess\Settings\ModsForHeskSettingsGateway;
@@ -65,6 +66,8 @@ class TicketCreator extends \BaseClass {
     /* @var $customFieldsGateway CustomFieldsGateway */
     private $customFieldsGateway;
 
+    private $categoryGateway;
+
     function __construct(NewTicketValidator $newTicketValidator,
                          TrackingIdGenerator $trackingIdGenerator,
                          Autoassigner $autoassigner,
@@ -75,7 +78,8 @@ class TicketCreator extends \BaseClass {
                          UserGateway $userGateway,
                          ModsForHeskSettingsGateway $modsForHeskSettingsGateway,
                          AuditTrailGateway $auditTrailGateway,
-                         CustomFieldsGateway $customFieldsGateway) {
+                         CustomFieldsGateway $customFieldsGateway,
+                         CategoryGateway $categoryGateway) {
         $this->newTicketValidator = $newTicketValidator;
         $this->trackingIdGenerator = $trackingIdGenerator;
         $this->autoassigner = $autoassigner;
@@ -87,6 +91,7 @@ class TicketCreator extends \BaseClass {
         $this->modsForHeskSettingsGateway = $modsForHeskSettingsGateway;
         $this->auditTrailGateway = $auditTrailGateway;
         $this->customFieldsGateway = $customFieldsGateway;
+        $this->categoryGateway = $categoryGateway;
     }
 
     /**
@@ -120,8 +125,18 @@ class TicketCreator extends \BaseClass {
             : new StageTicket();
         $ticket->trackingId = $this->trackingIdGenerator->generateTrackingId($heskSettings);
 
-        if ($heskSettings['autoassign']) {
-            $ticket->ownerId = $this->autoassigner->getNextUserForTicket($ticketRequest->category, $heskSettings)->id;
+        $category = null;
+        $categories = $this->categoryGateway->getAllCategories($heskSettings, $modsForHeskSettings);
+        foreach ($categories as $innerCategory) {
+            if ($innerCategory->id === $ticketRequest->category) {
+                $category = $innerCategory;
+                break;
+            }
+        }
+        if ($heskSettings['autoassign'] && $category->autoAssign) {
+            $autoassignOwner = $this->autoassigner->getNextUserForTicket($ticketRequest->category, $heskSettings);
+            $ticket->ownerId = $autoassignOwner === null ? null : $autoassignOwner->id;
+            $ticket->assignedBy = -1;
         }
 
         // Transform one-to-one properties

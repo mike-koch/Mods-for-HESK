@@ -65,22 +65,7 @@ function do_login()
 
     if ($hesk_settings['secimg_use'] == 2 && !isset($_SESSION['img_a_verified'])) {
         // Using ReCaptcha?
-        if ($hesk_settings['recaptcha_use'] == 1) {
-            require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
-
-            $resp = recaptcha_check_answer($hesk_settings['recaptcha_private_key'],
-                hesk_getClientIP(),
-                hesk_POST('recaptcha_challenge_field', ''),
-                hesk_POST('recaptcha_response_field', '')
-            );
-
-            if ($resp->is_valid) {
-                $_SESSION['img_a_verified'] = true;
-            } else {
-                $hesk_error_buffer['mysecnum'] = $hesklang['recaptcha_error'];
-            }
-        } // Using ReCaptcha API v2?
-        elseif ($hesk_settings['recaptcha_use'] == 2) {
+        if ($hesk_settings['recaptcha_use']) {
             require(HESK_PATH . 'inc/recaptcha/recaptchalib_v2.php');
 
             $resp = null;
@@ -251,7 +236,7 @@ function print_login()
 	global $hesk_settings, $hesklang, $modsForHesk_settings;
 
     // Tell header to load reCaptcha API if needed
-    if ($hesk_settings['recaptcha_use'] == 2)
+    if ($hesk_settings['recaptcha_use'])
     {
         define('RECAPTCHA',1);
     }
@@ -297,7 +282,7 @@ function print_login()
             <h4 class="login-box-msg">
                 <?php echo $hesklang['staff_login_title']; ?>
             </h4>
-            <form class="form-horizontal" role="form" action="index.php" method="post" name="form1">
+            <form class="form-horizontal" role="form" action="index.php" method="post" name="form1" id="form1">
                 <?php
                 $has_error = '';
                 if (in_array('pass',$_SESSION['a_iserror'])) {
@@ -365,41 +350,13 @@ function print_login()
                     </div>
                 </div>
                 <?php
-                if ($hesk_settings['secimg_use'] == 2)
+                if ($hesk_settings['secimg_use'] == 2 && $hesk_settings['recaptcha_use'] != 1)
                 {
 
                     // SPAM prevention verified for this session
                     if (isset($_SESSION['img_a_verified']))
                     {
                         echo '<img src="'.HESK_PATH.'img/success.png" width="16" height="16" border="0" alt="" style="vertical-align:text-bottom" /> '.$hesklang['vrfy'];
-                    }
-                    // Not verified yet, should we use Recaptcha?
-                    elseif ($hesk_settings['recaptcha_use'] == 1)
-                    {
-                        ?>
-                        <script type="text/javascript">
-                            var RecaptchaOptions = {
-                                theme : '<?php echo ( isset($_SESSION['a_iserror']) && in_array('mysecnum',$_SESSION['a_iserror']) ) ? 'red' : 'white'; ?>',
-                                custom_translations : {
-                                    visual_challenge : "<?php echo hesk_slashJS($hesklang['visual_challenge']); ?>",
-                                    audio_challenge : "<?php echo hesk_slashJS($hesklang['audio_challenge']); ?>",
-                                    refresh_btn : "<?php echo hesk_slashJS($hesklang['refresh_btn']); ?>",
-                                    instructions_visual : "<?php echo hesk_slashJS($hesklang['instructions_visual']); ?>",
-                                    instructions_context : "<?php echo hesk_slashJS($hesklang['instructions_context']); ?>",
-                                    instructions_audio : "<?php echo hesk_slashJS($hesklang['instructions_audio']); ?>",
-                                    help_btn : "<?php echo hesk_slashJS($hesklang['help_btn']); ?>",
-                                    play_again : "<?php echo hesk_slashJS($hesklang['play_again']); ?>",
-                                    cant_hear_this : "<?php echo hesk_slashJS($hesklang['cant_hear_this']); ?>",
-                                    incorrect_try_again : "<?php echo hesk_slashJS($hesklang['incorrect_try_again']); ?>",
-                                    image_alt_text : "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>"
-                                }
-                            };
-                        </script>
-                    <?php
-                    require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
-                    echo '<div class="form-group"><div class="col-md-8 col-md-offset-4">';
-                    echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, true);
-                    echo '</div></div>';
                     }
                     // Use reCaptcha API v2?
                     elseif ($hesk_settings['recaptcha_use'] == 2)
@@ -458,7 +415,7 @@ function print_login()
                 ?>
                 <div class="form-group">
                     <div class="col-md-offset-4 col-md-8">
-                        <input type="submit" value="<?php echo $hesklang['click_login']; ?>" class="btn btn-default">
+                        <input type="submit" value="<?php echo $hesklang['click_login']; ?>" class="btn btn-default" id="recaptcha-submit">
                         <input type="hidden" name="a" value="do_login">
                         <?php
                         if ( hesk_isREQUEST('goto') && $url=hesk_REQUEST('goto') )
@@ -474,6 +431,15 @@ function print_login()
                         ?>
                     </div>
                 </div>
+
+                <?php
+                // Use Invisible reCAPTCHA?
+                if ($hesk_settings['secimg_use'] == 2 && $hesk_settings['recaptcha_use'] == 1 && ! isset($_SESSION['img_a_verified'])) {
+                ?>
+                <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>" data-bind="recaptcha-submit" data-callback="recaptcha_submitForm"></div>
+                <?php
+                }
+                ?>
             </form>
             <a class="btn btn-default" href="<?php echo $hesk_settings['hesk_url']; ?>">
                 <i class="fa fa-chevron-left"></i> <?php echo $hesklang['back']; ?>

@@ -100,6 +100,21 @@ class UserGateway extends CommonDao {
         return $users;
     }
 
+    function getUsersForUnassignedReplyNotification($heskSettings) {
+        $this->init();
+
+        $rs = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "users` WHERE `notify_reply_unassigned` = '1' AND `active` = '1'");
+
+        $users = array();
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            $users[] = UserContext::fromDataRow($row);
+        }
+
+        $this->close();
+
+        return $users;
+    }
+
     function getManagerForCategory($categoryId, $heskSettings) {
         $this->init();
 

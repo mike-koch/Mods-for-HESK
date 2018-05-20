@@ -47,22 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Verify security image
     if ($hesk_settings['secimg_use']) {
         // Using ReCaptcha?
-        if ($hesk_settings['recaptcha_use'] == 1) {
-            require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
-
-            $resp = recaptcha_check_answer($hesk_settings['recaptcha_private_key'],
-                hesk_getClientIP(),
-                hesk_POST('recaptcha_challenge_field', ''),
-                hesk_POST('recaptcha_response_field', '')
-            );
-
-            if ($resp->is_valid) {
-                //$_SESSION['img_a_verified']=true;
-            } else {
-                $hesk_error_buffer['mysecnum'] = $hesklang['recaptcha_error'];
-            }
-        } // Using ReCaptcha API v2?
-        elseif ($hesk_settings['recaptcha_use'] == 2) {
+        if ($hesk_settings['recaptcha_use']) {
             require(HESK_PATH . 'inc/recaptcha/recaptchalib_v2.php');
 
             $resp = null;
@@ -215,7 +200,7 @@ elseif (isset($_GET['h'])) {
 }
 
 // Tell header to load reCaptcha API if needed
-if ($hesk_settings['recaptcha_use'] == 2) {
+if ($hesk_settings['recaptcha_use']) {
     define('RECAPTCHA', 1);
 }
 
@@ -230,7 +215,7 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
         <h4 class="login-box-msg">
             <?php echo $hesklang['passr']; ?>
         </h4>
-        <form action="password.php" method="post" name="form1" class="form-horizontal" role="form">
+        <form action="password.php" method="post" name="form1" id="form1" class="form-horizontal" role="form">
             <?php
             /* This will handle error, success and notice messages */
             hesk_handle_messages();
@@ -255,38 +240,13 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
                 </div>
             </div>
             <?php
-            if ($hesk_settings['secimg_use']) {
+            if ($hesk_settings['secimg_use'] && $hesk_settings['recaptcha_use'] != 1) {
                 ?>
                 <div class="form-group">
                     <div class="col-sm-11 col-sm-offset-1">
                         <?php
-                        // Should we use Recaptcha?
-                        if ($hesk_settings['recaptcha_use'] == 1) {
-                            ?>
-                            <script type="text/javascript">
-                                var RecaptchaOptions = {
-                                    theme: '<?php echo ( isset($_SESSION['a_iserror']) && in_array('mysecnum',$_SESSION['a_iserror']) ) ? 'red' : 'white'; ?>',
-                                    custom_translations: {
-                                        visual_challenge: "<?php echo hesk_slashJS($hesklang['visual_challenge']); ?>",
-                                        audio_challenge: "<?php echo hesk_slashJS($hesklang['audio_challenge']); ?>",
-                                        refresh_btn: "<?php echo hesk_slashJS($hesklang['refresh_btn']); ?>",
-                                        instructions_visual: "<?php echo hesk_slashJS($hesklang['instructions_visual']); ?>",
-                                        instructions_context: "<?php echo hesk_slashJS($hesklang['instructions_context']); ?>",
-                                        instructions_audio: "<?php echo hesk_slashJS($hesklang['instructions_audio']); ?>",
-                                        help_btn: "<?php echo hesk_slashJS($hesklang['help_btn']); ?>",
-                                        play_again: "<?php echo hesk_slashJS($hesklang['play_again']); ?>",
-                                        cant_hear_this: "<?php echo hesk_slashJS($hesklang['cant_hear_this']); ?>",
-                                        incorrect_try_again: "<?php echo hesk_slashJS($hesklang['incorrect_try_again']); ?>",
-                                        image_alt_text: "<?php echo hesk_slashJS($hesklang['image_alt_text']); ?>"
-                                    }
-                                };
-                            </script>
-                        <?php
-                        require_once(HESK_PATH . 'inc/recaptcha/recaptchalib.php');
-                        echo recaptcha_get_html($hesk_settings['recaptcha_public_key'], null, true);
-                        }
                         // Use reCaptcha API v2?
-                        elseif ($hesk_settings['recaptcha_use'] == 2)
+                        if ($hesk_settings['recaptcha_use'] == 2)
                         {
                         ?>
                             <div class="g-recaptcha"
@@ -312,6 +272,14 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
                     <input type="submit" value="<?php echo $hesklang['passs']; ?>" class="btn btn-default">
                 </div>
             </div>
+            <?php
+            // Use Invisible reCAPTCHA?
+            if ($hesk_settings['secimg_use'] && $hesk_settings['recaptcha_use'] == 1) {
+            ?>
+                <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>" data-bind="recaptcha-submit" data-callback="recaptcha_submitForm"></div>
+            <?php
+            }
+            ?>
         </form>
     </div>
 </div>
