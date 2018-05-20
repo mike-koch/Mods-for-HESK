@@ -290,19 +290,19 @@ if ($action = hesk_REQUEST('a')) {
                     /* User online? */
                     if ($hesk_settings['online']) {
                         if (isset($hesk_settings['users_online'][$myuser['id']])) {
-                            $myuser['name'] = '<i class="fa fa-circle green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['online'] . '"></i> ' . $myuser['name'];
+                            $myuser['name'] = '<i class="fa fa-fw fa-circle green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['online'] . '"></i> ' . $myuser['name'];
                         } else {
-                            $myuser['name'] = '<i class="fa fa-circle gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['offline'] . '"></i> ' . $myuser['name'];
+                            $myuser['name'] = '<i class="fa fa-fw fa-circle gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['offline'] . '"></i> ' . $myuser['name'];
                         }
                     }
 
                     /* To edit yourself go to "Profile" page, not here. */
                     if ($myuser['id'] == $_SESSION['id']) {
-                        $edit_code = '<a name="Edit '.$myuser['user'].'" href="profile.php"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
+                        $edit_code = '<a name="Edit '.$myuser['user'].'" href="profile.php"><i class="fa fa-fw fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
                     } elseif ($myuser['id'] == 1) {
                         $edit_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                     } else {
-                        $edit_code = '<a name="Edit '.$myuser['user'].'" href="manage_users.php?a=edit&amp;id=' . $myuser['id'] . '"><i class="fa fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
+                        $edit_code = '<a name="Edit '.$myuser['user'].'" href="manage_users.php?a=edit&amp;id=' . $myuser['id'] . '"><i class="fa fa-fw fa-pencil icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['edit'] . '"></i></a>';
                     }
 
                     if ($myuser['isadmin']) {
@@ -315,15 +315,15 @@ if ($action = hesk_REQUEST('a')) {
                     if ($myuser['id'] == 1 || $myuser['id'] == $_SESSION['id']) {
                         $remove_code = ' <img src="../img/blank.gif" width="16" height="16" alt="" style="padding:3px;border:none;" />';
                     } else {
-                        $remove_code = ' <a name="Delete '.$myuser['user'].'" href="manage_users.php?a=remove&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete'] . '"></i></a>';
+                        $remove_code = ' <a name="Delete '.$myuser['user'].'" href="manage_users.php?a=remove&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-fw fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete'] . '"></i></a>';
                     }
 
                     /* Is auto assign enabled? */
                     if ($hesk_settings['autoassign']) {
                         if ($myuser['autoassign']) {
-                            $autoassign_code = '<a name="Unassign '.$myuser['user'].'" href="manage_users.php?a=autoassign&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaon'] . '"></i></a>';
+                            $autoassign_code = '<a name="Unassign '.$myuser['user'].'" href="manage_users.php?a=autoassign&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-fw fa-bolt icon-link orange" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaon'] . '"></i></a>';
                         } else {
-                            $autoassign_code = '<a name="Assign '.$myuser['user'].'" href="manage_users.php?a=autoassign&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-bolt icon-link gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaoff'] . '"></i></a>';
+                            $autoassign_code = '<a name="Assign '.$myuser['user'].'" href="manage_users.php?a=autoassign&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-fw fa-bolt icon-link gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['aaoff'] . '"></i></a>';
                         }
                     } else {
                         $autoassign_code = '';
@@ -333,9 +333,9 @@ if ($action = hesk_REQUEST('a')) {
                     if ($myuser['id'] != $_SESSION['id'] && $myuser['id'] != 1) {
                         /* Is the user active? */
                         if ($myuser['active']) {
-                            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-user icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['disable_user'] . '"></i></a>';
+                            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=0&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-fw fa-user icon-link green" data-toggle="tooltip" data-placement="top" title="' . $hesklang['disable_user'] . '"></i></a>';
                         } else {
-                            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-user icon-link gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['enable_user'] . '"></i></a>';
+                            $activeMarkup = '<a href="manage_users.php?a=active&amp;s=1&amp;id=' . $myuser['id'] . '&amp;token=' . hesk_token_echo(0) . '"><i class="fa fa-fw fa-user icon-link gray" data-toggle="tooltip" data-placement="top" title="' . $hesklang['enable_user'] . '"></i></a>';
                         }
                     }
 
@@ -358,7 +358,8 @@ EOC;
 
                     if ($hesk_settings['rating']) {
                         $alt = $myuser['rating'] ? sprintf($hesklang['rated'], sprintf("%01.1f", $myuser['rating']), ($myuser['ratingneg'] + $myuser['ratingpos'])) : $hesklang['not_rated'];
-                        echo '<td><img src="../img/star_' . (hesk_round_to_half($myuser['rating']) * 10) . '.png" width="85" height="16" alt="' . $alt . '" data-toggle="tooltip" data-placement="top" title="' . $alt . '" border="0" style="vertical-align:text-bottom" />&nbsp;</td>';
+
+                        echo '<td><span data-toggle="tooltip" title="' . $alt . '">'.mfh_get_stars(hesk_round_to_half($myuser['rating'])).'</span></td>';
                     }
 
                     echo <<<EOC
@@ -370,7 +371,7 @@ EOC;
                 ?>
             </table>
             <?php if ($hesk_settings['online']) {
-                echo '&nbsp;&nbsp;&nbsp;<i class="fa fa-circle green"></i> ' . $hesklang['online'] . ' &nbsp;&nbsp;&nbsp; <i class="fa fa-circle gray"></i> ' . $hesklang['offline'];
+                echo '&nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-circle green"></i> ' . $hesklang['online'] . ' &nbsp;&nbsp;&nbsp; <i class="fa fa-fw fa-circle gray"></i> ' . $hesklang['offline'];
             } ?>
         </div>
     </div>
