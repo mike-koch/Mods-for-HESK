@@ -95,7 +95,7 @@ $orderBy = $modsForHesk_settings['category_order_column'];
 $hesk_settings['categories'] = array();
 $res = hesk_dbQuery('SELECT `id`,`name` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` ORDER BY `' . $orderBy . '` ASC');
 while ($row = hesk_dbFetchAssoc($res)) {
-    if (hesk_okCategory($row['id'], 0)) {
+    if (hesk_checkPermission('can_man_cat', 0) || hesk_okCategory($row['id'], 0)) {
         $hesk_settings['categories'][$row['id']] = $row['name'];
     }
 }
@@ -404,6 +404,11 @@ function compare_user_permissions($compare_id, $compare_isadmin, $compare_catego
         return true;
     } elseif ($compare_isadmin) {
         return false;
+    }
+
+    // Users who can edit categories can see all of them
+    if (hesk_checkPermission('can_man_cat', 0)) {
+        return true;
     }
 
     /* Compare categories */

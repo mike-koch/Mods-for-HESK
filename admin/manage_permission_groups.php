@@ -189,8 +189,9 @@ function createEditModal($template, $features, $categories)
                                 <div class="footerWithBorder blankSpace"></div>
                                 <div class="form-group">
                                     <?php
-                                    foreach ($categories as $category): ?>
-                                        <?php
+                                    foreach ($categories as $category):
+                                        $can_man_categories = hesk_checkPermission('can_man_cat', 0);
+
                                         $checked = '';
                                         $disabled = '';
                                         if (in_array($category['id'], $enabledCategories) ||
@@ -198,12 +199,13 @@ function createEditModal($template, $features, $categories)
                                             $checked = 'checked ';
                                         }
                                         if ((!hesk_SESSION('isadmin') &&
-                                                !in_array($category['id'], $_SESSION['categories'])) ||
+                                                !in_array($category['id'], $_SESSION['categories']) &&
+                                                !$can_man_categories) ||
                                             $template['categories'] === 'ALL') {
                                             $disabled = ' disabled';
-                                        }?>
+                                        }
 
-                                        <?php if ($_SESSION['isadmin'] || in_array($category['id'], $_SESSION['categories']) || $checked): ?>
+                                        if ($_SESSION['isadmin'] || $can_man_categories || in_array($category['id'], $_SESSION['categories']) || $checked): ?>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="categories[]"

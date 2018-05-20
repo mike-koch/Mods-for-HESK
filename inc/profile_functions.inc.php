@@ -162,22 +162,34 @@ function hesk_profile_tab($session_array = 'new', $is_profile_page = true, $acti
             if (!$is_profile_page) {
                 ?>
                 <div role="tabpanel" class="tab-pane fade" id="permissions">
-                    <?php if ($_SESSION['isadmin']): ?>
+                    <?php if (hesk_checkPermission('can_man_permission_tpl', 0)): ?>
                     <div class="form-group">
                         <label for="administrator"
                                class="col-md-3 control-label"><?php echo $hesklang['permission_group']; ?></label>
 
                         <div class="col-md-9">
                             <?php
-                            // Get list of permission templates. If current user is not admin, exclude permission tpl 1
-                            $excludeSql = $_SESSION['isadmin'] ? '' : " WHERE `heskprivileges` <> 'ALL'";
+                            // Get list of permission templates. If current user is not admin, only allow permission templates that have equal or less access
+                            $excludeSql = $_SESSION['isadmin'] ? '' : " WHERE `id` <> 1";
                             $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "permission_templates`" . $excludeSql);
+
+                            $current_features = explode(',', $_SESSION['heskprivileges']);
                             $templates = array();
                             echo '<select name="template" id="permission-tpl" class="form-control" onchange="updateCheckboxes()">';
                             while ($row = hesk_dbFetchAssoc($res)) {
-                                array_push($templates, $row);
-                                $selected = $_SESSION[$session_array]['permission_template'] == $row['id'] ? 'selected' : '';
-                                echo '<option value="' . $row['id'] . '" ' . $selected . '>' . htmlspecialchars($row['name']) . '</option>';
+                                $categories = $row['id'] != 1 ? explode(',', $row['categories']) : array('ALL');
+                                $features = $row['id'] != 1 ? explode(',', $row['heskprivileges']) : array('ALL');
+
+                                if ($_SESSION['isadmin'] ||
+                                    $_SESSION['template'] == $row['id'] ||
+                                    $_SESSION[$session_array]['permission_template'] == $row['id'] ||
+                                    (count(array_diff($categories, $_SESSION['categories'])) == 0 &&
+                                     count(array_diff($features, $current_features)) == 0)) {
+                                    $templates[] = $row;
+
+                                    $selected = $_SESSION[$session_array]['permission_template'] == $row['id'] ? 'selected' : '';
+                                    echo '<option value="' . $row['id'] . '" ' . $selected . '>' . htmlspecialchars($row['name']) . '</option>';
+                                }
                             }
                             $selected = $_SESSION[$session_array]['permission_template'] == '-1' ? 'selected' : '';
                             echo '<option value="-1" ' . $selected . '>' . htmlspecialchars($hesklang['custom']) . '</option>';
