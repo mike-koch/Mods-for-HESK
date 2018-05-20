@@ -61,8 +61,19 @@ class ReplyCreator extends \BaseClass {
         }
 
         $validationModel = new ValidationModel();
+        if ($ticket->id !== $replyRequest->ticketId) {
+            $validationModel->errorKeys[] = 'TICKET_ID_TRACKING_NUMBER_MISMATCH';
+        }
         if ($replyRequest->replyMessage === null || trim($replyRequest->replyMessage) === '') {
             $validationModel->errorKeys[] = 'MESSAGE_REQUIRED';
+        }
+
+        if ($replyRequest->ipAddress === null || trim($replyRequest->ipAddress) === '') {
+            $validationModel->errorKeys[] = 'IP_REQUIRED';
+        }
+
+        if ($replyRequest->hasHtml === null) {
+            $validationModel->errorKeys[] = 'HAS_HTML_REQUIRED';
         }
 
         if ($heskSettings['email_view_ticket']) {
@@ -77,7 +88,7 @@ class ReplyCreator extends \BaseClass {
             throw new ValidationException($validationModel);
         }
 
-        if ($modsForHeskSettings['rich_text_for_tickets_for_customers']) {
+        if ($replyRequest->hasHtml) {
             $replyRequest->replyMessage = Helpers::heskMakeUrl($replyRequest->replyMessage);
             $replyRequest->replyMessage = nl2br($replyRequest->replyMessage);
         }

@@ -16,16 +16,13 @@ class CustomerReplyController extends \BaseClass {
         $jsonRequest = JsonRetriever::getJsonData();
 
         $createReplyByCustomerModel = new CreateReplyRequest();
-        $createReplyByCustomerModel->id = $ticketId;
+        $createReplyByCustomerModel->ticketId = intval($ticketId);
         $createReplyByCustomerModel->emailAddress = Helpers::safeArrayGet($jsonRequest, 'email');
         $createReplyByCustomerModel->trackingId = Helpers::safeArrayGet($jsonRequest, 'trackingId');
         $createReplyByCustomerModel->replyMessage = Helpers::safeArrayGet($jsonRequest, 'message');
-        $createReplyByCustomerModel->hasHtml = Helpers::safeArrayGet($jsonRequest, 'html');
+        $html = Helpers::safeArrayGet($jsonRequest, 'html');
+        $createReplyByCustomerModel->hasHtml = $html === null ? null : $html === true;
         $createReplyByCustomerModel->ipAddress = Helpers::safeArrayGet($jsonRequest, 'ip');
-
-        if ($createReplyByCustomerModel->ipAddress === null) {
-            $createReplyByCustomerModel->ipAddress = hesk_getClientIP();
-        }
 
         /* @var $modsForHeskSettingsGateway ModsForHeskSettingsGateway */
         $modsForHeskSettingsGateway = $applicationContext->get(ModsForHeskSettingsGateway::clazz());
