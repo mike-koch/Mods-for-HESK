@@ -571,7 +571,7 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
         "Return-Path: $hesk_settings[webmaster_mail]",
         "Subject: " . $subject,
         "Date: " . date(DATE_RFC2822),
-        "Message-ID: " . hesk_generateMessageID() . "\n",
+        "Message-ID: " . hesk_generateMessageID(),
     );
     array_push($headersArray, "MIME-Version: 1.0");
     array_push($headersArray, "Content-Type: multipart/mixed;boundary=\"" . $outerboundary . "\"");
