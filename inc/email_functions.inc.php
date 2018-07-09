@@ -1010,5 +1010,21 @@ function hesk_generateMessageID() {
         $id = uniqid('', true);
     }
 
-    return '<' . $id . '.' . gmdate('YmdHis') . '@' . $_SERVER['SERVER_NAME'] . '>';
+    // If run from CLI, set the Hesk URL as host name
+    if (isset($_SERVER['SERVER_NAME'])) {
+        $host = $_SERVER['SERVER_NAME'];
+    } else {
+        global $hesk_settings;
+
+        $parts = parse_url($hesk_settings['hesk_url']);
+
+        if (empty($parts['host'])) {
+            $host = gethostname();
+            $host = str_replace('>', '', $host);
+        } else {
+            $host = $parts['host'];
+        }
+    }
+
+    return '<' . $id . '.' . gmdate('YmdHis') . '@' . $host . '>';
 } // END hesk_generateMessageID()
