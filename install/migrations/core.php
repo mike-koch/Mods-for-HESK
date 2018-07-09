@@ -231,5 +231,8 @@ function getAllMigrations() {
         173 => new UpdateMigration('3.3.1', '3.3.0', 173),
         // 2018.1.0
         174 => new UpdateMigration('2018.1.0', '3.3.1', 174),
+        // 2018.1.1
+        175 => new \vv201811\MigrateServiceMessageLanguages(175),
+        176 => new UpdateMigration('2018.1.1', '2018.1.0', 176),
     );
 }
