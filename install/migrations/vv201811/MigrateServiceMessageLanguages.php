@@ -9,7 +9,7 @@ class MigrateServiceMessageLanguages extends \AbstractUpdatableMigration {
         $rs = hesk_dbQuery("SELECT `id`, `language` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages`
             WHERE `language` IS NOT NULL");
 
-        $languageMap = [];
+        $languageMap = array();
         while ($row = hesk_dbFetchAssoc($rs)) {
             // Get the MFH language
             if (count($languageMap) === 0) {
@@ -30,7 +30,7 @@ class MigrateServiceMessageLanguages extends \AbstractUpdatableMigration {
         // Get all service messages with non-null language (only HESK will populate this; MFH won't)
         $rs = hesk_dbQuery("SELECT `id`, `mfh_language` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "service_messages`");
 
-        $language_map = [];
+        $language_map = array();
         while ($row = hesk_dbFetchAssoc($rs)) {
             // Get the language
             if (count($language_map) === 0) {
