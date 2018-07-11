@@ -255,6 +255,7 @@ inc/zip/index.htm
 inc/zip/pclzip.lib.php
 install/hesk.png
 install/update.php
+language/en/help_files
 language/en/emails/category_moved.txt
 language/en/emails/forgot_ticket_id.txt
 language/en/emails/index.htm
