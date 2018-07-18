@@ -319,7 +319,6 @@ function print_add_ticket()
         <!-- START FORM -->
         <div class="form">
             <h2><?php hesk_showTopBar($hesklang['submit_ticket']); ?></h2>
-            <small><?php echo $hesklang['use_form_below']; ?></small>
             <div class="blankSpace"></div>
             <?php
             // Service messages
@@ -372,7 +371,7 @@ function print_add_ticket()
                         } ?> <?php if ($hesk_settings['detect_typos']) {
                             echo ' onblur="Javascript:hesk_suggestEmail(\'email\', \'email_suggestions\', 1, 0)"';
                         } ?> placeholder="<?php echo htmlspecialchars($hesklang['email']); ?>"
-                               data-error="<?php echo htmlspecialchars($hesklang['enter_valid_email']); ?>" required>
+                               <?php if ($hesk_settings['require_email']): ?>data-error="<?php echo htmlspecialchars($hesklang['enter_valid_email']); ?>" required<?php endif; ?>>
 
                         <div class="help-block with-errors"></div>
                     </div>
