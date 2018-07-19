@@ -208,6 +208,11 @@ header('X-UA-Compatible: IE=edge');
     // Use ReCaptcha API v2?
     if (defined('RECAPTCHA')) {
         echo '<script src="https://www.google.com/recaptcha/api.js?hl=' . $hesklang['RECAPTCHA'] . '" async defer></script>';
+        echo '<script language="Javascript" type="text/javascript">
+        function recaptcha_submitForm() {
+            document.getElementById("form1").submit();
+        }
+        </script>';
     }
 
     if (defined('VALIDATOR')) {
