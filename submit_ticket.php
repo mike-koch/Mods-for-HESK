@@ -91,7 +91,7 @@ if ($hesk_settings['secimg_use'] && !isset($_SESSION['img_verified'])) {
 
         // Was there a reCAPTCHA response?
         if (isset($_POST["g-recaptcha-response"])) {
-            $resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], hesk_POST("g-recaptcha-response"));
+            $resp = $reCaptcha->verifyResponse(hesk_getClientIP(), hesk_POST("g-recaptcha-response"));
         }
 
         if ($resp != null && $resp->success) {
