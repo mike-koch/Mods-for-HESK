@@ -1228,23 +1228,21 @@ function print_add_ticket()
                     <!-- >
                     <input type="text" name="phone" value="3" />
                     < -->
+
+                    <?php
+                    // Use Invisible reCAPTCHA?
+                    if ($hesk_settings['secimg_use'] && $hesk_settings['recaptcha_use'] == 1 && ! isset($_SESSION['img_verified'])) {
+                        ?>
+                        <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>" data-bind="recaptcha-submit" data-callback="recaptcha_submitForm"></div>
+                        <?php
+                    }
+                    ?>
             </form>
             <script>
                 buildValidatorForTicketSubmission("form1",
                     "<?php echo addslashes($hesklang['select_at_least_one_value']); ?>");
             </script>
         </div>
-
-        <?php
-        // Use Invisible reCAPTCHA?
-        if ($hesk_settings['secimg_use'] && $hesk_settings['recaptcha_use'] == 1 && ! isset($_SESSION['img_verified'])) {
-        ?>
-            <div class="g-recaptcha" data-sitekey="<?php echo $hesk_settings['recaptcha_public_key']; ?>" data-bind="recaptcha-submit" data-callback="recaptcha_submitForm"></div>
-        <?php
-        }
-        ?>
-
-    </form>
     <?php if ($columnWidth == 'col-md-10 col-md-offset-1'): ?>
     <div class="col-md-1">&nbsp;</div></div>
 <?php endif; ?>
