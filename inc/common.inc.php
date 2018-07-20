@@ -2083,6 +2083,7 @@ function hesk_getFeatureArray()
         'can_del_notes',        /* User can delete ticket notes posted by other staff members */
         'can_change_cat',		/* User can move ticket to any category/department */
         'can_change_own_cat',	/* User can move ticket to a category/department he/she has access to */
+        'can_change_due_date',  /* User can change a ticket's due date */
         'can_man_kb',            /* User can manage knowledgebase articles and categories */
         'can_man_users',        /* User can create and edit staff accounts */
         'can_man_cat',            /* User can manage categories/departments */
