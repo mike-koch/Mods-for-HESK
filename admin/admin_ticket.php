@@ -53,6 +53,7 @@ $can_resolve = hesk_checkPermission('can_resolve', 0);
 $can_view_ass_by = hesk_checkPermission('can_view_ass_by', 0);
 $can_privacy = hesk_checkPermission('can_privacy',0);
 $can_export = hesk_checkPermission('can_export',0);
+$can_change_due_date = hesk_checkPermission('can_change_due_date', 0);
 
 // Get ticket ID
 $trackingID = hesk_cleanID() or print_form();
@@ -172,7 +173,8 @@ if ($isManager) {
     $can_resolve =
     $can_view_ass_by =
     $can_privacy =
-    $can_export = true;
+    $can_export =
+    $can_change_due_date = true;
 }
 
 /* Is this user allowed to view tickets inside this category? */
@@ -757,7 +759,7 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                                     ?>
                                 </span>
                             </b><br>
-                            <?php if ($can_edit): ?>
+                            <?php if ($can_change_due_date): ?>
                             <button class="btn btn-default btn-sm" id="change-button">
                                 <?php echo $hesklang['chg']; ?>
                             </button>

@@ -19,4 +19,5 @@ class UserPrivilege extends \BaseClass {
     const CAN_VIEW_UNASSIGNED = 'can_view_unassigned';
     const CAN_VIEW_ASSIGNED_BY_ME = 'can_view_ass_by';
     const CAN_MANAGE_SERVICE_MESSAGES = 'can_service_msg';
+    const CAN_CHANGE_DUE_DATE = 'can_change_due_date';
 }

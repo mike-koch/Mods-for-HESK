@@ -683,13 +683,16 @@ $hesklang['emails_to_receive'] = 'Emails to receive';
 $hesklang['emails_sent_to_staff'] = 'Emails sent to staff';
 $hesklang['emails_sent_to_customer'] = 'Emails sent to customer';
 
-// Added or modified in Mods for HESK 4.0.0
+// Added or modified in Mods for HESK 2018.1.0
 $hesklang['audit_anonymized'] = '%s anonymized ticket';
 $hesklang['location_unavailable_6'] = "This ticket was anonymized, so location information has been removed.";
 $hesklang['anon_user_agent'] = '[User Agent]';
 $hesklang['anon_screen_resolution'] = '0';
 $hesklang['audit_submitted_via_imap']='Ticket submitted via IMAP fetching';
 $hesklang['thist'] = 'Audit Log'; // Overriding text.php's value
+
+// Added or modified in Mods for HESK 2018.2.0
+$hesklang['can_change_due_date'] = 'Can change ticket due dates';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

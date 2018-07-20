@@ -193,7 +193,7 @@ class TicketEditor extends \BaseClass {
             $validationModel->errorKeys[] = 'TICKET_MUST_EXIST_FOR_ID';
         }
 
-        if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings, array(UserPrivilege::CAN_EDIT_TICKETS))) {
+        if (!$this->userToTicketChecker->isTicketAccessibleToUser($userContext, $ticket, $heskSettings, array(UserPrivilege::CAN_CHANGE_DUE_DATE))) {
             $validationModel->errorKeys[] = 'TICKET_MUST_BE_ACCESSIBLE_TO_USER';
         }
 
