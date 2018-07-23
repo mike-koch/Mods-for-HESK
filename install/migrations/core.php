@@ -232,7 +232,7 @@ function getAllMigrations() {
         // 2018.1.0
         174 => new UpdateMigration('2018.1.0', '3.3.1', 174),
         // 2018.1.1
-        175 => new \vv201811\MigrateServiceMessageLanguages(175),
-        176 => new UpdateMigration('2018.1.1', '2018.1.0', 176),
+        175 => new \vv201820\MigrateServiceMessageLanguages(175),
+        176 => new UpdateMigration('2018.2.0', '2018.1.0', 176),
     );
 }

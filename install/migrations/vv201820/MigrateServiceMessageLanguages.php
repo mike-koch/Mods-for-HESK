@@ -1,6 +1,6 @@
 <?php
 
-namespace vv201811;
+namespace vv201820;
 
 
 class MigrateServiceMessageLanguages extends \AbstractUpdatableMigration {
