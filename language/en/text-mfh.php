@@ -694,5 +694,13 @@ $hesklang['thist'] = 'Audit Log'; // Overriding text.php's value
 // Added or modified in Mods for HESK 2018.2.0
 $hesklang['can_change_due_date'] = 'Can change ticket due dates';
 
+// Added or modified in Mods for HESK 2018.3.0
+$hesklang['manage_cat_groups'] = 'Manage Category Groups';
+$hesklang['cat_groups_intro'] = 'Here you can manage category groups. Category groups allow categories to be grouped under a common theme (such as "Account", "Billing", etc). You can also have category groups inside of other category groups.';
+$hesklang['category_group_name'] = 'Category Group Name';
+$hesklang['parent_category_group'] = 'Parent Category Group';
+$hesklang['error_retrieving_category_groups'] = 'An error occurred when retrieving category groups!';
+$hesklang['no_category_groups_found'] = 'No category groups found.';
+
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
