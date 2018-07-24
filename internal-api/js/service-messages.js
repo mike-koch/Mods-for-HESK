@@ -44,7 +44,9 @@ function loadTable() {
                 $template.find('[data-property="id"]').attr('data-value', this.id);
                 $template.find('span[data-property="title"]').html(
                     getFormattedTitle(this.icon, this.title, this.style));
-                $template.find('span[data-property="author"]').text(users[this.createdBy].name);
+
+                var createdBy = users[this.createdBy] === undefined ? mfhLang.text('e_udel') : users[this.createdBy].name;
+                $template.find('span[data-property="author"]').text(createdBy);
                 if (this.published) {
                     $template.find('span[data-property="type"]').text(mfhLang.text('sm_published'));
                 } else {

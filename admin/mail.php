@@ -450,10 +450,10 @@ function show_message()
                         $folder = '&amp;folder=outbox';
                         if ($pm['to'] == $_SESSION['id'])
                         {
-                            echo '<a class="btn btn-default" href="mail.php?a=mark_unread&amp;id='.$id.'&amp;token='.hesk_token_echo(0).'"><i class="fa fa-envelope-o icon-link"></i> '.$hesklang['mau'].'</a> ';
+                            echo '<a name="MAU '.$pm['subject'].'" class="btn btn-default" href="mail.php?a=mark_unread&amp;id='.$id.'&amp;token='.hesk_token_echo(0).'"><i class="fa fa-envelope-o icon-link"></i> '.$hesklang['mau'].'</a> ';
                             $folder = '';
                         }
-                        echo '<a class="btn btn-danger" href="mail.php?a=delete&amp;id='.$id.'&amp;token='.hesk_token_echo(0).$folder.'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['delm']).'?\');"><i class="fa fa-times icon-link"></i> '.$hesklang['delm'].'</a>';
+                        echo '<a name="Delete '.$pm['subject'].'" class="btn btn-danger" href="mail.php?a=delete&amp;id='.$id.'&amp;token='.hesk_token_echo(0).$folder.'" onclick="return hesk_confirmExecute(\''.hesk_makeJsString($hesklang['delm']).'?\');"><i class="fa fa-times icon-link"></i> '.$hesklang['delm'].'</a>';
                         ?>
                     </div>
                 </div>
@@ -571,7 +571,7 @@ function mail_list_messages()
                         $pm['dt'] = hesk_dateToString($pm['dt'], 0, 0, 0, true)
                     ?>
                     <tr>
-                        <td><input type="checkbox" name="id[]" value="<?php echo $pm['id']; ?>" />&nbsp;</td>
+                        <td><input type="checkbox" name="id[]" id="<?php echo $pm['id']; ?>" value="<?php echo $pm['id']; ?>" />&nbsp;</td>
                         <td><?php echo $pm['subject']; ?></td>
                         <td><?php echo $pm['name']; ?></td>
                         <td><?php echo $pm['dt']; ?></td>

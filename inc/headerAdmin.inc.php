@@ -34,9 +34,9 @@ header('X-UA-Compatible: IE=edge');
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-iconpicker.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
+    <link href="<?php echo HESK_PATH; ?>css/font-awesome.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/octicons.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
+    <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/leaflet.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/dropzone-basic.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
     <link rel="stylesheet" href="<?php echo HESK_PATH; ?>css/fullcalendar.min.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>">
@@ -67,7 +67,7 @@ header('X-UA-Compatible: IE=edge');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-fontawesome-4.3.0.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-iconpicker.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/leaflet.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/platform.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-validator.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-colorpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
@@ -208,6 +208,11 @@ header('X-UA-Compatible: IE=edge');
     // Use ReCaptcha API v2?
     if (defined('RECAPTCHA')) {
         echo '<script src="https://www.google.com/recaptcha/api.js?hl=' . $hesklang['RECAPTCHA'] . '" async defer></script>';
+        echo '<script language="Javascript" type="text/javascript">
+        function recaptcha_submitForm() {
+            document.getElementById("form1").submit();
+        }
+        </script>';
     }
 
     if (defined('VALIDATOR')) {

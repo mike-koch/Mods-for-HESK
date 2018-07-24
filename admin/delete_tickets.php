@@ -87,6 +87,124 @@ $priorities = array(
     'low' => array('value' => 3, 'lang' => 'low', 'text' => $hesklang['low'], 'formatted' => $hesklang['low']),
 );
 
+// Assign tickets to
+if ( isset($_POST['assign']) && $_POST['assign'] == $hesklang['assi']) {
+    if ( ! isset($_POST['owner']) || $_POST['owner'] == '') {
+        hesk_process_messages($hesklang['assign_no'], $referer, 'NOTICE');
+    }
+
+    $end_message = array();
+    $num_assigned = 0;
+
+    // Permissions
+    $can_assign_others = hesk_checkPermission('can_assign_others',0);
+    if ($can_assign_others) {
+        $can_assign_self = true;
+    } else {
+        $can_assign_self = hesk_checkPermission('can_assign_self',0);
+    }
+
+    $owner = intval( hesk_POST('owner') );
+
+    if ($owner == -1) {
+        foreach ($_POST['id'] as $this_id) {
+            if (is_array($this_id)) {
+                continue;
+            }
+
+            $this_id = intval($this_id) or hesk_error($hesklang['id_not_valid']);
+
+            $res = hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `owner`=0, `assignedby`=NULL WHERE `id`={$this_id} LIMIT 1");
+            mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_unassigned', hesk_date(), array(0 => $_SESSION['name'].' ('.$_SESSION['user'].')'));
+
+            $end_message[] = sprintf($hesklang['assign_2'], $this_id);
+            $i++;
+        }
+
+        hesk_process_messages($hesklang['assign_1'],$referer,'SUCCESS');
+    }
+
+	$res = hesk_dbQuery("SELECT `id`,`user`,`name`,`email`,`isadmin`,`categories`,`notify_assigned` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` WHERE `id`='{$owner}' LIMIT 1");
+	$owner_data = hesk_dbFetchAssoc($res);
+
+	if (!$owner_data['isadmin']) {
+        $owner_data['categories']=explode(',',$owner_data['categories']);
+    }
+
+	require(HESK_PATH . 'inc/email_functions.inc.php');
+
+	foreach ($_POST['id'] as $this_id) {
+        if (is_array($this_id)) {
+            continue;
+        }
+
+        $this_id = intval($this_id) or hesk_error($hesklang['id_not_valid']);
+
+        $result = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `id`={$this_id} LIMIT 1");
+        if (hesk_dbNumRows($result) != 1) {
+            continue;
+        }
+		$ticket = hesk_dbFetchAssoc($result);
+
+		if ($ticket['owner'] == $owner) {
+            $end_message[] = sprintf($hesklang['assign_3'], $ticket['trackid'], $owner_data['name']);
+            $i++;
+            continue;
+		}
+		if ($owner_data['isadmin'] || in_array($ticket['category'],$owner_data['categories'])) {
+            hesk_dbQuery("UPDATE `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` SET `owner`={$owner}, `assignedby`=".intval($_SESSION['id'])." WHERE `id`={$this_id} LIMIT 1");
+            mfh_insert_audit_trail_record($this_id, 'TICKET', 'audit_assigned', hesk_date(), array(0 => $_SESSION['name'].' ('.$_SESSION['user'].')',
+                1 => $owner_data['name'].' ('.$owner_data['user'].')'));
+
+            $end_message[] = sprintf($hesklang['assign_4'], $ticket['trackid'], $owner_data['name']);
+            $num_assigned++;
+
+            $ticket['owner'] = $owner;
+
+            /* --> Prepare message */
+
+            // 1. Generate the array with ticket info that can be used in emails
+            $info = array(
+                'email'			=> $ticket['email'],
+                'category'		=> $ticket['category'],
+                'priority'		=> $ticket['priority'],
+                'owner'			=> $ticket['owner'],
+                'trackid'		=> $ticket['trackid'],
+                'status'		=> $ticket['status'],
+                'name'			=> $ticket['name'],
+                'subject'		=> $ticket['subject'],
+                'message'		=> $ticket['message'],
+                'attachments'	=> $ticket['attachments'],
+                'dt'			=> hesk_date($ticket['dt'], true),
+                'lastchange'	=> hesk_date($ticket['lastchange'], true),
+                'id'			=> $ticket['id'],
+                'time_worked'   => $ticket['time_worked'],
+                'last_reply_by' => hesk_getReplierName($ticket),
+            );
+
+            // 2. Add custom fields to the array
+            foreach ($hesk_settings['custom_fields'] as $k => $v) {
+                $info[$k] = $v['use'] ? $ticket[$k] : '';
+            }
+
+            // 3. Make sure all values are properly formatted for email
+            $ticket = hesk_ticketToPlain($info, 1, 0);
+
+            /* Notify the new owner? */
+            if ($ticket['owner'] != intval($_SESSION['id'])) {
+                hesk_notifyAssignedStaff(false, 'ticket_assigned_to_you', $modsForHesk_settings);
+            }
+		} else {
+            $end_message[] = sprintf($hesklang['assign_5'], $ticket['trackid'], $owner_data['name']);
+        }
+
+		$i++;
+	}
+
+	hesk_process_messages(sprintf($hesklang['assign_log'], $num_assigned, ($i - $num_assigned), implode("\n", $end_message)),$referer,($num_assigned == 0) ? 'ERROR' : ($num_assigned < $i ? 'NOTICE' : 'SUCCESS'));
+}
+
+
 // Change priority
 if (array_key_exists($_POST['a'], $priorities)) {
     // A security check
@@ -211,7 +329,185 @@ elseif ($_POST['a'] == 'tag' || $_POST['a'] == 'untag') {
     }
 
     hesk_process_messages(sprintf($action, $i), $referer, 'SUCCESS');
-} /* JUST CLOSE */
+}
+/* EXPORT */
+elseif ($_POST['a']=='export') {
+    /* Check permissions for this feature */
+    hesk_checkPermission('can_export');
+
+    /* A security check */
+    hesk_token_check('POST');
+
+    $ids_to_export = array();
+
+    foreach ($_POST['id'] as $this_id) {
+        if ( is_array($this_id) ) {
+            continue;
+        }
+
+        $ids_to_export[] = intval($this_id) or hesk_error($hesklang['id_not_valid']);
+        $i++;
+    }
+
+    if ($i < 1) {
+        hesk_process_messages($hesklang['no_selected'], $referer, 'NOTICE');
+    }
+
+    // Start SQL statement for selecting tickets
+    $sql = "SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `id` IN (".implode(',', $ids_to_export).") ";
+    $sql .= " AND " . hesk_myCategories();
+    $sql .= " AND " . hesk_myOwnership();
+
+    require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+    require(HESK_PATH . 'inc/export_functions.inc.php');
+
+    list($success_msg, $tickets_exported) = hesk_export_to_XML($sql, true);
+
+    if ($tickets_exported > 0) {
+        hesk_process_messages($success_msg,$referer,'SUCCESS');
+    } else {
+        hesk_process_messages($hesklang['n2ex'],$referer,'NOTICE');
+    }
+}
+/* ANONYMIZE */
+elseif ($_POST['a']=='anonymize') {
+    /* Check permissions for this feature */
+    hesk_checkPermission('can_privacy');
+
+    /* A security check */
+    hesk_token_check('POST');
+
+    require(HESK_PATH . 'inc/privacy_functions.inc.php');
+
+    foreach ($_POST['id'] as $this_id) {
+        if (is_array($this_id)) {
+            continue;
+        }
+
+        $this_id = intval($this_id) or hesk_error($hesklang['id_not_valid']);
+        $result = hesk_dbQuery("SELECT `id`,`trackid`,`name`,`category` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."tickets` WHERE `id`='".intval($this_id)."' AND ".hesk_myOwnership()." LIMIT 1");
+        if (hesk_dbNumRows($result) != 1) {
+            continue;
+        }
+        $ticket = hesk_dbFetchAssoc($result);
+
+        hesk_okCategory($ticket['category']);
+
+        hesk_anonymizeTicket(null, null, true);
+        $i++;
+    }
+
+    hesk_process_messages(sprintf($hesklang['num_tickets_anon'],$i),$referer,'SUCCESS');
+}
+/* PRINT */
+elseif ($_POST['a']=='print') {
+    /* Check permissions for this feature */
+	hesk_checkPermission('can_view_tickets');
+
+	/* A security check */
+	hesk_token_check('POST');
+
+    // Load custom fields
+    require_once(HESK_PATH . 'inc/custom_fields.inc.php');
+
+	// List of staff
+	if (!isset($admins)) {
+        $admins = array();
+        $res2 = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."users` ORDER BY `id` ASC");
+        while ($row=hesk_dbFetchAssoc($res2)) {
+            $admins[$row['id']]=$row['name'];
+        }
+    }
+
+	// List of categories
+	$hesk_settings['categories'] = array();
+	$res2 = hesk_dbQuery('SELECT `id`, `name` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'categories` WHERE ' . hesk_myCategories('id') . ' ORDER BY `cat_order` ASC');
+	while ($row=hesk_dbFetchAssoc($res2)) {
+        $hesk_settings['categories'][$row['id']] = $row['name'];
+    }
+
+    // Print page head
+    header('Content-Type: text/html; charset=utf-8');
+    ?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+    <html>
+    <head>
+        <title><?php echo $hesk_settings['hesk_title']; ?></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $hesklang['ENCODING']; ?>">
+        <style type="text/css">
+            body, table, td, p {
+                color : black;
+                font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+                font-size : <?php echo $hesk_settings['print_font_size']; ?>px;
+            }
+            table {
+            	border-collapse:collapse;
+            }
+            hr {
+            	border: 0;
+            	color: #9e9e9e;
+            	background-color: #9e9e9e;
+            	height: 1px;
+            	width: 100%;
+            	text-align: left;
+            }
+            </style>
+    </head>
+    <body onload="window.print()">
+    <?php
+
+    // Loop through ticket IDs and print them
+    foreach ($_POST['id'] as $this_id) {
+        if (is_array($this_id)) {
+            continue;
+        }
+
+        $this_id = intval($this_id) or hesk_error($hesklang['id_not_valid']);
+        $result = hesk_dbQuery("SELECT `t1`.* , `ticketStatus`.`IsClosed` AS `isClosed`, `ticketStatus`.`Key` AS `statusKey`, `t2`.name AS `repliername`
+					FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` AS `t1` LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "users` AS `t2` ON `t1`.`replierid` = `t2`.`id`
+					INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` AS `ticketStatus` ON `t1`.`status` = `ticketStatus`.`ID`
+					WHERE `t1`.`id`='{$this_id}' LIMIT 1");
+        if (hesk_dbNumRows($result) != 1) {
+            continue;
+        }
+        $ticket = hesk_dbFetchAssoc($result);
+
+        // Check that we have proper permissions to view this ticket
+        hesk_okCategory($ticket['category']);
+
+        $can_view_ass_by     = hesk_checkPermission('can_view_ass_by', 0);
+        $can_view_unassigned = hesk_checkPermission('can_view_unassigned',0);
+
+        if ($ticket['owner'] && $ticket['owner'] != $_SESSION['id'] && ! hesk_checkPermission('can_view_ass_others',0)) {
+            // Maybe this user is allowed to view tickets he/she assigned?
+            if ( ! $can_view_ass_by || $ticket['assignedby'] != $_SESSION['id']) {
+                hesk_error($hesklang['ycvtao']);
+            }
+        }
+
+        if (!$ticket['owner'] && ! $can_view_unassigned) {
+            hesk_error($hesklang['ycovtay']);
+        }
+
+        // All good, continue...
+
+        $category['name'] = isset($hesk_settings['categories'][$ticket['category']]) ? $hesk_settings['categories'][$ticket['category']] : $hesklang['catd'];
+
+        // Get replies
+        $res  = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."replies` WHERE `replyto`='{$ticket['id']}' ORDER BY `id` ASC");
+        $replies = hesk_dbNumRows($res);
+
+        // Print ticket
+        require(HESK_PATH . 'inc/print_template.inc.php');
+		flush();
+    }
+    ?>
+    </body>
+    </html>
+    <?php
+    exit();
+}
+/* JUST CLOSE */
 else {
     /* Check permissions for this feature */
     hesk_checkPermission('can_view_tickets');

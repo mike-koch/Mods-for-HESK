@@ -190,7 +190,7 @@ $num = hesk_dbNumRows($result);
                     }
 
                     echo '
-                        <a href="manage_canned.php?a=remove&amp;id=' . $mysaved['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete'] . '"></i></a>&nbsp;</td>
+                        <a name="'.$mysaved['title'].'" href="manage_canned.php?a=remove&amp;id=' . $mysaved['id'] . '&amp;token=' . hesk_token_echo(0) . '" onclick="return confirm_delete();"><i class="fa fa-times icon-link red" data-toggle="tooltip" data-placement="top" title="' . $hesklang['delete'] . '"></i></a>&nbsp;</td>
                         </tr>
                         ';
                 } // End while
@@ -371,6 +371,8 @@ $num = hesk_dbNumRows($result);
                            onclick="hesk_insertTag('HESK_TRACK_ID')"><?php echo $hesklang['trackID']; ?></a> |
                         <a href="javascript:void(0)"
                            onclick="hesk_insertTag('HESK_NAME')"><?php echo $hesklang['name']; ?></a> |
+                        <a href="javascript:void(0)"
+                           onclick="hesk_insertTag('HESK_FIRST_NAME')"><?php echo $hesklang['fname']; ?></a> |
                         <a href="javascript:void(0)"
                            onclick="hesk_insertTag('HESK_EMAIL')"><?php echo $hesklang['email']; ?></a> |
                         <a href="javascript:void(0)"

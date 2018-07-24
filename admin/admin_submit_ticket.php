@@ -300,6 +300,11 @@ if (!$modsForHesk_settings['rich_text_for_tickets']) {
     $tmpvar['message'] = nl2br($tmpvar['message']);
 }
 
+// Track who assigned the ticket
+if ($tmpvar['owner'] > 0) {
+    $tmpvar['assignedby'] = !empty($autoassign_owner) ? -1 : $_SESSION['id'];
+}
+
 $tmpvar['latitude'] = hesk_POST('latitude', 'E-4');
 $tmpvar['longitude'] = hesk_POST('longitude', 'E-4');
 

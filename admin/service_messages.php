@@ -367,6 +367,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'error_sorting_categories',
     'error_retrieving_sm',
     'all',
+    'e_udel',
 ));
 
 echo '<script>var users = [];';
@@ -423,11 +424,11 @@ echo '</script>';
                    data-toggle="tooltip" title="<?php echo $hesklang['move_dn'] ?>"></i>
             </a>
         </span>
-        <a href="#" data-action="edit">
+        <a name="Edit Service Message" href="#" data-action="edit">
             <i class="fa fa-fw fa-pencil icon-link orange"
                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
         </a>
-        <a href="#" data-action="delete">
+        <a name="Delete Service Message" href="#" data-action="delete">
             <i class="fa fa-fw fa-times icon-link red"
                data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
         </a>

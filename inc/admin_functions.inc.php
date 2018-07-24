@@ -222,10 +222,10 @@ function hesk_mergeTickets($merge_these, $merge_into)
     $total = 0;
     $staffreplies = 0;
 
-    $res = hesk_dbQuery("SELECT COUNT(*) as `cnt`, `staffid` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` WHERE `replyto`=" . intval($ticket['id']) . " GROUP BY CASE WHEN `staffid` = 0 THEN 0 ELSE 1 END ASC");
+    $res = hesk_dbQuery("SELECT COUNT(*) as `cnt`, (CASE WHEN `staffid` = 0 THEN 0 ELSE 1 END) AS `staffcnt` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` WHERE `replyto`=" . intval($ticket['id']) . " GROUP BY CASE WHEN `staffid` = 0 THEN 0 ELSE 1 END ASC");
     while ($row = hesk_dbFetchAssoc($res)) {
         $total += $row['cnt'];
-        $staffreplies += ($row['staffid'] ? $row['cnt'] : 0);
+        $staffreplies += ($row['staffcnt'] ? $row['cnt'] : 0);
     }
 
     $replies_sql = " `replies`={$total}, `staffreplies`={$staffreplies} , ";
@@ -658,6 +658,39 @@ function hesk_jsString($str)
     $to = array("\\r\\n' + \r\n'", "$1", "$1");
     return preg_replace($from, $to, $str);
 } // END hesk_jsString()
+
+function hesk_myOwnership() {
+    if (!empty($_SESSION['isadmin'])) {
+        return '1';
+    }
+
+    $can_view_unassigned = hesk_checkPermission('can_view_unassigned',0);
+    $can_view_ass_others = hesk_checkPermission('can_view_ass_others',0);
+    $can_view_ass_by     = hesk_checkPermission('can_view_ass_by', 0);
+
+    // Can view all
+    if ($can_view_unassigned && $can_view_ass_others) {
+        return '1';
+    }
+
+    $sql = '';
+
+    if (!$can_view_unassigned && ! $can_view_ass_others) {
+        $sql .= "`owner`=" . intval($_SESSION['id']);
+    } elseif (!$can_view_unassigned) {
+        $sql .= "`owner` != 0 ";
+    } elseif ( ! $can_view_ass_others) {
+        $sql .= "`owner` IN (0, " . intval($_SESSION['id']) . ") ";
+    }
+
+    // Include tickets he/she assigned to others?
+    if ($can_view_ass_by) {
+        return "(" . $sql . " OR `assignedby`=" . intval($_SESSION['id']) . ")";
+    }
+
+    return $sql;
+
+} // END hesk_myOwnership()
 
 
 function hesk_myCategories($what = 'category')

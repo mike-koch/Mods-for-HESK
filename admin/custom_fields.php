@@ -849,10 +849,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 													}
 												}
 												?>
-												<a href="custom_fields.php?a=edit_cf&amp;id=<?php echo $tmp_id; ?>">
+												<a name="Edit <?php echo $cf['name']; ?>" href="custom_fields.php?a=edit_cf&amp;id=<?php echo $tmp_id; ?>">
 													<i class="fa fa-pencil fa-fw icon-link orange" data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
 												</a>
-												<a href="custom_fields.php?a=remove_cf&amp;id=<?php echo $tmp_id; ?>&amp;token=<?php hesk_token_echo(); ?>"
+												<a name="Delete <?php echo $cf['name']; ?>" href="custom_fields.php?a=remove_cf&amp;id=<?php echo $tmp_id; ?>&amp;token=<?php hesk_token_echo(); ?>"
 												   onclick="return hesk_confirmExecute('<?php echo hesk_makeJsString($hesklang['del_cf']); ?>');">
 													<i class="fa fa-times fa-fw icon-link red" data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
 												</a>

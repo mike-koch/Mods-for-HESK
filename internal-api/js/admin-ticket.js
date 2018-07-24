@@ -23,7 +23,7 @@ $(document).ready(function() {
         var ticketId = $('input[type="hidden"][name="orig_id"]').val();
         $.ajax({
             method: 'POST',
-            url: heskPath + 'api/v1/staff/tickets/' + ticketId + '/due-date',
+            url: heskPath + 'api/index.php/v1/staff/tickets/' + ticketId + '/due-date',
             headers: {
                 'X-Internal-Call': true,
                 'X-HTTP-Method-Override': 'PATCH'

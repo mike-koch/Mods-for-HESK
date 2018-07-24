@@ -13,7 +13,7 @@ class HeskVersionController extends \BaseClass {
     static function getModsForHeskVersion() {
         global $hesk_settings;
 
-        return self::getLatestVersion('__latest-mfh.txt', 'https://www.mods-for-hesk.com/latestversion.php', $hesk_settings);
+        return self::getLatestVersion('__latest-mfh.txt', 'https://www.mods-for-hesk.com/latest-version', $hesk_settings);
     }
 
     private static function getLatestVersion($fileName, $url, $hesk_settings) {

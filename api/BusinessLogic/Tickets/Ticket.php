@@ -42,6 +42,7 @@ class Ticket extends \BaseClass {
         $ticket->numberOfReplies = intval($row['replies']);
         $ticket->numberOfStaffReplies = intval($row['staffreplies']);
         $ticket->ownerId = intval($row['owner']);
+        $ticket->assignedBy = $row['assignedby'] === null ? null : intval($row['assignedby']);
         $ticket->timeWorked = $row['time_worked'];
         $ticket->lastReplyBy = intval($row['lastreplier']);
         $ticket->lastReplier = $row['replierid'] === null ? null : intval($row['replierid']);
@@ -257,6 +258,11 @@ class Ticket extends \BaseClass {
      * @var int|null
      */
     public $ownerId;
+
+    /**
+     * @var int|null
+     */
+    public $assignedBy;
 
     /**
      * @var string

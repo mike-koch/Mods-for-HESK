@@ -138,6 +138,10 @@ class CalendarGateway extends CommonDao {
                 $sql .= " OR `owner` = 0 ";
             }
 
+            if ($searchEventsFilter->includeTicketsAssignedToMe) {
+                $sql .= " OR `assignedby` = " . intval($searchEventsFilter->includeTicketsAssignedToMe);
+            }
+
             if ($searchEventsFilter->includeTicketsAssignedToOthers) {
                 $sql .= " OR `owner` NOT IN (0, " . $searchEventsFilter->reminderUserId . ") ";
             }

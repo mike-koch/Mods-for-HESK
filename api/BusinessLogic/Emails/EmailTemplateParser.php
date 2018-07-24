@@ -5,6 +5,7 @@ namespace BusinessLogic\Emails;
 
 use BusinessLogic\Exceptions\EmailTemplateNotFoundException;
 use BusinessLogic\Exceptions\InvalidEmailTemplateException;
+use BusinessLogic\Helpers;
 use BusinessLogic\Security\UserContext;
 use BusinessLogic\Statuses\DefaultStatusForAction;
 use BusinessLogic\Tickets\Ticket;
@@ -258,6 +259,7 @@ class EmailTemplateParser extends \BaseClass {
         $msg = str_replace('%%TRACK_URL%%', $trackingURL, $msg);
         $msg = str_replace('%%SITE_TITLE%%', $heskSettings['site_title'], $msg);
         $msg = str_replace('%%SITE_URL%%', $heskSettings['site_url'], $msg);
+        $msg = str_replace('%%FIRST_NAME%%', Helpers::fullNameToFirstName($ticket->name), $msg);
         $msg = str_replace('%%CATEGORY%%', $category, $msg);
         $msg = str_replace('%%PRIORITY%%', $priority, $msg);
         $msg = str_replace('%%OWNER%%', $ownerName, $msg);

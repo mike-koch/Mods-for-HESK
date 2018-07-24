@@ -531,6 +531,7 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
         $headers .= "Reply-To: $hesk_settings[from_header]\n";
         $headers .= "Return-Path: $hesk_settings[webmaster_mail]\n";
         $headers .= "Date: " . date(DATE_RFC2822) . "\n";
+        $headers .= "Message-ID: " . hesk_generateMessageID() . "\n";
         $headers .= "Content-Type: multipart/mixed;boundary=\"" . $outerboundary . "\"";
 
         // Add attachments if necessary
@@ -569,7 +570,8 @@ function hesk_mail($to, $subject, $message, $htmlMessage, $modsForHesk_settings,
         "Reply-To: $hesk_settings[from_header]",
         "Return-Path: $hesk_settings[webmaster_mail]",
         "Subject: " . $subject,
-        "Date: " . date(DATE_RFC2822)
+        "Date: " . date(DATE_RFC2822),
+        "Message-ID: " . hesk_generateMessageID(),
     );
     array_push($headersArray, "MIME-Version: 1.0");
     array_push($headersArray, "Content-Type: multipart/mixed;boundary=\"" . $outerboundary . "\"");
@@ -782,6 +784,7 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
         $msg = str_replace('%%TRACK_URL%%', $trackingURL, $msg);
         $msg = str_replace('%%SITE_TITLE%%', $hesk_settings['site_title'], $msg);
         $msg = str_replace('%%SITE_URL%%', $hesk_settings['site_url'], $msg);
+        $msg = str_replace('%%FIRST_NAME%%',hesk_full_name_to_first_name($ticket['name']),$msg);
 
         if (isset($ticket['message'])) {
             // If HTML is enabled, let's unescape everything, and call html2text.
@@ -863,6 +866,7 @@ function hesk_processMessage($msg, $ticket, $is_admin, $is_ticket, $just_message
     $msg = str_replace('%%ID%%', $ticket['id'], $msg);
     $msg = str_replace('%%TIME_WORKED%%',  $ticket['time_worked']   ,$msg);
     $msg = str_replace('%%LAST_REPLY_BY%%',$ticket['last_reply_by'] ,$msg);
+    $msg = str_replace('%%FIRST_NAME%%',hesk_full_name_to_first_name($ticket['name']),$msg);
 
     /* All custom fields */
     for ($i=1; $i<=50; $i++) {
@@ -998,3 +1002,29 @@ function checkForHtml($ticket) {
     $reply = hesk_dbFetchAssoc($repliesRs);
     return $reply['html'];
 }
+
+function hesk_generateMessageID() {
+    if (function_exists('openssl_random_pseudo_bytes')) {
+        $id = base_convert(bin2hex(openssl_random_pseudo_bytes(8)), 16, 36);
+    } else {
+        $id = uniqid('', true);
+    }
+
+    // If run from CLI, set the Hesk URL as host name
+    if (isset($_SERVER['SERVER_NAME'])) {
+        $host = $_SERVER['SERVER_NAME'];
+    } else {
+        global $hesk_settings;
+
+        $parts = parse_url($hesk_settings['hesk_url']);
+
+        if (empty($parts['host'])) {
+            $host = gethostname();
+            $host = str_replace('>', '', $host);
+        } else {
+            $host = $parts['host'];
+        }
+    }
+
+    return '<' . $id . '.' . gmdate('YmdHis') . '@' . $host . '>';
+} // END hesk_generateMessageID()

@@ -57,23 +57,14 @@ purchasing a HESK license is strictly prohibited.
 To purchase a HESK license and support future HESK development please visit:
 https://www.hesk.com/buy.php
 *******************************************************************************/
-$hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
-CdoZXNrX2xpY2Vuc2UucGhwJykpDQp7DQokaCA9ICghZW1wdHkoJF9TRVJWRVJbJ0hUVFBfSE9TVCddK
-SkgPyAkX1NFUlZFUlsnSFRUUF9IT1NUJ10gOiAoKCFlbXB0eSgkX1NFUlZFUlsnU0VSVkVSX05BTUUnX
-SkpID8gJF9TRVJWRVJbJ1NFUlZFUl9OQU1FJ10gOiBnZXRlbnYoJ1NFUlZFUl9OQU1FJykpOw0KJGggP
-SBzdHJfcmVwbGFjZSgnd3d3LicsJycsc3RydG9sb3dlcigkaCkpOw0KaW5jbHVkZShIRVNLX1BBVEggL
-iAnaGVza19saWNlbnNlLnBocCcpOw0KaWYgKGlzc2V0KCRoZXNrX3NldHRpbmdzWydsaWNlbnNlJ10pI
-CYmIHN0cnBvcygkaGVza19zZXR0aW5nc1snbGljZW5zZSddLHNoYTEoJGguJ2gzJkZwMiNMYUEmNTkhd
-yg4LlpjXSordVI1MTInKSkgIT09IGZhbHNlKQ0Kew0KJHMgPSAwOw0KfQ0KZWxzZQ0Kew0KZWNobyAnP
-HAgc3R5bGU9InRleHQtYWxpZ246Y2VudGVyO2NvbG9yOnJlZDsiPklOVkFMSUQgTElDRU5TRSAoTk9UI
-FJFR0lTVEVSRUQgRk9SICcuJGguJykhPC9wPic7DQp9DQp9DQppZiAoJHMpDQp7DQplY2hvICc8cCBzd
-HlsZT0idGV4dC1hbGlnbjpjZW50ZXIiPjxzcGFuIGNsYXNzPSJzbWFsbGVyIj4mbmJzcDs8YnIgLz5Qb
-3dlcmVkIGJ5IDxhIGhyZWY9Imh0dHBzOi8vd3d3Lmhlc2suY29tIiBjbGFzcz0ic21hbGxlciIgdGl0b
-GU9IkZyZWUgUEhQIEhlbHAgRGVzayBTb2Z0d2FyZSI+SGVscCBEZXNrIFNvZnR3YXJlPC9hPiA8Yj5IR
-VNLPC9iPiwgYnJvdWdodCB0byB5b3UgYnkgPGEgaHJlZj0iaHR0cHM6Ly93d3cuc3lzYWlkLmNvbS8/d
-XRtX3NvdXJjZT1IZXNrJmFtcDt1dG1fbWVkaXVtPWNwYyZhbXA7dXRtX2NhbXBhaWduPUhlc2tQcm9kd
-WN0X1RvX0hQIj5TeXNBaWQ8L2E+PC9zcGFuPjwvcD4nOw0KfQ0KZWNobyAnPC90ZD48L3RyPjwvdGFib
-GU+PC9kaXY+JzsNCmluY2x1ZGUoSEVTS19QQVRIIC4gJ2Zvb3Rlci50eHQnKTsNCmVjaG8gJzwvYm9ke
-T48L2h0bWw+Jzs=',"\112");
+$hesk_settings['hesk_license']('HAgc3R5bGU9InRleHQtYWxpZ246Y2VudGVyIj48c3BhbiBjb
+GFzcz0ic21hbGxlciI+Jm5ic3A7PGJyIC8+UG93ZXJlZCBieSA8YSBocmVmPSJodHRwczovL3d3dy5oZ
+XNrLmNvbSIgY2xhc3M9InNtYWxsZXIiIHRpdGxlPSJGcmVlIFBIUCBIZWxwIERlc2sgU29mdHdhcmUiP
+khlbHAgRGVzayBTb2Z0d2FyZTwvYT4gPGI+SEVTSzwvYj4sIGluIHBhcnRuZXJzaGlwIHdpdGggPGEga
+HJlZj0iaHR0cHM6Ly93d3cuc3lzYWlkLmNvbS8/dXRtX3NvdXJjZT1IZXNrJmFtcDt1dG1fbWVkaXVtP
+WNwYyZhbXA7dXRtX2NhbXBhaWduPUhlc2tQcm9kdWN0X1RvX0hQIj5TeXNBaWQgVGVjaG5vbG9naWVzP
+C9hPjwvc3Bhbj48L3A+',"\120");
 
-exit();
+include(HESK_PATH . 'footer.txt');
+
+$hesk_settings['security_cleanup']('exit');

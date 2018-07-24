@@ -108,23 +108,17 @@ else {
         </div>
     </div>
     <?php
-    $hesk_settings['hesk_license']('HMgPSAxOw0KaWYgKGZpbGVfZXhpc3RzKEhFU0tfUEFUSCAuI
-        CdoZXNrX2xpY2Vuc2UucGhwJykpDQp7DQokaCA9ICghZW1wdHkoJF9TRVJWRVJbJ0hUVFBfSE9TVCddK
-        SkgPyAkX1NFUlZFUlsnSFRUUF9IT1NUJ10gOiAoKCFlbXB0eSgkX1NFUlZFUlsnU0VSVkVSX05BTUUnX
-        SkpID8gJF9TRVJWRVJbJ1NFUlZFUl9OQU1FJ10gOiBnZXRlbnYoJ1NFUlZFUl9OQU1FJykpOw0KJGggP
-        SBzdHJfcmVwbGFjZSgnd3d3LicsJycsc3RydG9sb3dlcigkaCkpOw0KaW5jbHVkZShIRVNLX1BBVEggL
-        iAnaGVza19saWNlbnNlLnBocCcpOw0KaWYgKGlzc2V0KCRoZXNrX3NldHRpbmdzWydsaWNlbnNlJ10pI
-        CYmIHN0cnBvcygkaGVza19zZXR0aW5nc1snbGljZW5zZSddLHNoYTEoJGguJ2gzJkZwMiNMYUEmNTkhd
-        yg4LlpjXSordVI1MTInKSkgIT09IGZhbHNlKQ0Kew0KJHMgPSAwOw0KfQ0KZWxzZQ0Kew0KZWNobyAnP
-        HAgc3R5bGU9InRleHQtYWxpZ246Y2VudGVyO2NvbG9yOnJlZDsiPklOVkFMSUQgTElDRU5TRSAoTk9UI
-        FJFR0lTVEVSRUQgRk9SICcuJGguJykhPC9wPic7DQp9DQp9DQppZiAoJHMpDQp7DQplY2hvICc8aHIgL
-        z48dGFibGUgYm9yZGVyPSIwIiB3aWR0aD0iMTAwJSI+PHRyPjx0ZD48Yj4nLiRoZXNrbGFuZ1sncmVtb
-        3ZlX3N0YXRlbWVudCddLic8L2I+PC90ZD48dGQgc3R5bGU9InRleHQtYWxpZ246cmlnaHQiPjxhIGhyZ
-        WY9IkphdmFzY3JpcHQ6dm9pZCgwKSIgb25jbGljaz0iYWxlcnQoXCcnLiRoZXNrbGFuZ1snc3VwcG9yd
-        F9ub3RpY2UnXS4nXCcpIj4nLiRoZXNrbGFuZ1snc2gnXS4nPC9hPjwvdGQ+PC90cj48L3RhYmxlPjxwP
-        icuJGhlc2tsYW5nWydzdXBwb3J0X3JlbW92ZSddLicuIDxhIGhyZWY9Imh0dHBzOi8vd3d3Lmhlc2suY
-        29tL2J1eS5waHAiIHRhcmdldD0iX2JsYW5rIj4nLiRoZXNrbGFuZ1snY2xpY2tfaW5mbyddLic8L2E+P
-        C9wPjxociAvPic7DQp9DQo=', "\112");
+    /*******************************************************************************
+    The code below handles HESK licensing. Removing or modifying this code without
+    purchasing a HESK license is strictly prohibited.
+
+    To purchase a HESK license and support future HESK development please visit:
+    https://www.hesk.com/buy.php
+    *******************************************************************************/
+    $x1a="\142a".chr(0163).chr(847249408>>23)."\66\x34".chr(796917760>>23)."\x65\156\143".chr(0157)."\x64\145";$hesk_settings['hesk_license']($x1a("\x3c\150r\x20\57\76".chr(503316480>>23)."\x74\141\142l\x65\40".chr(0142).chr(0157).chr(0162)."\144\145r\x3d\42\60".chr(285212672>>23)."\x20\x77\x69".chr(0144)."th".chr(511705088>>23)."\x22".chr(061)."\60\60\x25\42".chr(520093696>>23)."\x3c\164".chr(0162).">\74t\x64\x3e\x3c".chr(0142).chr(076).$hesklang[chr(956301312>>23)."\145\155\157\x76e".chr(796917760>>23)."\x73ta\164e\x6d".chr(847249408>>23)."\156\x74"].chr(503316480>>23)."\x2f\142\x3e".chr(074)."\57t\x64\76".chr(074)."td".chr(268435456>>23)."\x73ty\154\x65\x3d\x22te".chr(1006632960>>23)."t\x2d\141\x6c\x69".chr(0147).chr(922746880>>23)."\x3ar\151\x67ht\"\76".chr(503316480>>23)."\141 \x68\162\145\146\x3d\42".chr(0112).chr(813694976>>23)."v\141".chr(0163).chr(830472192>>23)."\162\x69".chr(0160).chr(0164)."\x3a".chr(989855744>>23)."\157\151d\50\x30".chr(343932928>>23).chr(042)."\40onc\154\151\143\153\x3d".chr(042)."\x61\x6c\145\x72t(\x27".$hesklang["\163".chr(981467136>>23)."\x70".chr(939524096>>23).chr(0157)."\162\164\137n".chr(931135488>>23)."\x74\151".chr(0143)."\x65"].chr(047)."\51\42\x3e".$hesklang["\x73\x68"]."\74".chr(394264576>>23)."\x61\x3e\74\57\164d\76\x3c/\x74\162\76".chr(503316480>>23).chr(057)."t\x61\x62\x6ce\x3e\x3c\x70\x3e".$hesklang[chr(0163)."\x75ppo\x72\x74\137".chr(956301312>>23).chr(847249408>>23)."\155".chr(931135488>>23)."v\x65"]."\x2e\x20\x3c".chr(813694976>>23)."\40\x68re\x66\x3d".chr(285212672>>23)."\150".chr(973078528>>23).chr(973078528>>23)."\160\x73".chr(486539264>>23)."\57\x2f".chr(998244352>>23)."\x77\167".chr(056)."\150".chr(847249408>>23)."s\153\56\x63\157".chr(0155)."/".chr(0142)."\165\171.".chr(0160)."h\x70".chr(285212672>>23)."\x20\x74\141".chr(0162)."g".chr(847249408>>23)."\164\x3d".chr(042)."\137b\x6c".chr(813694976>>23)."\x6ek\x22\76".$hesklang["\x63\154\151\143\153\x5f".chr(880803840>>23)."\x6e".chr(855638016>>23).chr(0157)]."\x3c/\141\x3e\x3c\x2fp".chr(076)."<\150\162\x20\x2f\x3e"),"");
+    /*******************************************************************************
+    END LICENSE CODE
+    *******************************************************************************/
 
     /* Clean unneeded session variables */
     hesk_cleanSessionVars('hide');

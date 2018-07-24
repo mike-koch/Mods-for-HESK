@@ -446,7 +446,7 @@ echo '</script>';
                 <i class="fa fa-fw fa-pencil icon-link orange"
                    data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
             </a>
-            <a href="#" data-action="delete">
+            <a name="Delete Category" href="#" data-action="delete">
                 <i class="fa fa-fw fa-times icon-link red"
                    data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
             </a>
@@ -477,6 +477,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'geco',
     'cpric',
     'no_manager',
+    'e_udel',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');

@@ -45,6 +45,7 @@ class CalendarController extends \BaseClass {
             $searchEventsFilter->includeTicketsAssignedToOthers = false;
             $searchEventsFilter->includeUnassignedTickets = false;
             $searchEventsFilter->includeTickets = false;
+            $searchEventsFilter->includeTicketsAssignedToMe = false;
 
             /* @var $categoryHandler CategoryHandler */
             $categoryHandler = $applicationContext->get(CategoryHandler::clazz());
@@ -56,9 +57,10 @@ class CalendarController extends \BaseClass {
             }
             $searchEventsFilter->categories = $ids;
         } else {
-            $searchEventsFilter->includeTicketsAssignedToOthers = in_array(UserPrivilege::CAN_VIEW_ASSIGNED_TO_OTHER, $userContext->permissions);
-            $searchEventsFilter->includeUnassignedTickets = in_array(UserPrivilege::CAN_VIEW_UNASSIGNED, $userContext->permissions);
+            $searchEventsFilter->includeTicketsAssignedToOthers = $userContext->admin ? true : in_array(UserPrivilege::CAN_VIEW_ASSIGNED_TO_OTHER, $userContext->permissions);
+            $searchEventsFilter->includeUnassignedTickets = $userContext->admin ? true : in_array(UserPrivilege::CAN_VIEW_UNASSIGNED, $userContext->permissions);
             $searchEventsFilter->includeTickets = true;
+            $searchEventsFilter->includeTicketsAssignedToMe = $userContext->admin ? true : in_array(UserPrivilege::CAN_VIEW_ASSIGNED_BY_ME, $userContext->permissions);
             $searchEventsFilter->categories = $userContext->admin ? null : $userContext->categories;
         }
 
