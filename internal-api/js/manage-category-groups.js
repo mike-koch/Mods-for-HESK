@@ -5,9 +5,9 @@ $(document).ready(function() {
     /*bindEditModal();
     bindModalCancelCallback();
     bindFormSubmit();
-    bindDeleteButton();
+    bindDeleteButton();*/
     bindCreateModal();
-    bindSortButtons();*/
+    //bindSortButtons();*/
 });
 
 

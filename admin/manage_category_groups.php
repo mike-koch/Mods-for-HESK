@@ -100,13 +100,38 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <div class="modal-header" style="cursor: move">
                 <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">
-                    <span id="edit-label"><?php echo $hesklang['edit_category']; ?></span>
-                    <span id="create-label"><?php echo $hesklang['create_cat']; ?></span>
+                    <span id="edit-label"><?php echo $hesklang['create_category_group']; ?></span>
+                    <span id="create-label"><?php echo $hesklang['edit_category_group']; ?></span>
                 </h4>
             </div>
             <form id="manage-category" class="form-horizontal" data-toggle="validator" method="post">
                 <div class="modal-body">
-                    <p>//TODO</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4><?php echo $hesklang['category_group_name_header']; ?></h4>
+                            <?php foreach ($hesk_settings['languages'] as $name => $info): ?>
+                                <div class="form-group">
+                                    <label for="name-<?php echo $info['folder']; ?>" class="control-label col-sm-5"><?php echo $name; ?></label>
+                                    <div class="col-sm-7">
+                                        <input name="name-<?php echo $info['folder']; ?>" class="form-control" placeholder="<?php echo $name; ?>">
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="col-md-6">
+                            <h4><?php echo $hesklang['parent_category_group']; ?></h4>
+                            <div class="form-group">
+                                <label for="parent-category-group" class="col-sm-5 control-label">
+                                    <?php echo $hesklang['parent_category_group']; ?>
+                                </label>
+                                <div class="col-sm-7">
+                                    <select name="parent-category-group" class="selectpicker form-control">
+                                        <option value=""><?php echo $hesklang['none']; ?></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id">
