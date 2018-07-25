@@ -704,6 +704,9 @@ $hesklang['no_category_groups_found'] = 'No category groups found.';
 $hesklang['create_category_group'] = 'Create Category Group';
 $hesklang['edit_category_group'] = 'Edit Category Group';
 $hesklang['category_group_name_header'] = 'Name';
+$hesklang['category_group_created'] = 'Category group created!';
+$hesklang['category_group_updated'] = 'Category group updated!';
+$hesklang['error_saving_updating_category_group'] = 'An error occurred creating / saving the category group!';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

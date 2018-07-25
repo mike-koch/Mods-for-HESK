@@ -19,7 +19,7 @@ class CategoryGroupRetriever extends \BaseClass {
     }
 
     public function getAllCategoryGroups(array $heskSettings, UserContext $userContext) {
-        if (!in_array(UserPrivilege::CAN_MANAGE_CATEGORIES, $userContext->permissions)) {
+        if (!$userContext->admin && !in_array(UserPrivilege::CAN_MANAGE_CATEGORIES, $userContext->permissions)) {
             throw new \Exception("User {$userContext->id} does not have permission to manage categories!");
         }
 

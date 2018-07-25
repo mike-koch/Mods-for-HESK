@@ -3,13 +3,14 @@
 namespace Controllers\Categories;
 
 
+use BusinessLogic\Categories\CategoryGroup;
+use BusinessLogic\Categories\CategoryGroupHandler;
 use BusinessLogic\Categories\CategoryGroupRetriever;
 use BusinessLogic\Exceptions\ApiFriendlyException;
+use BusinessLogic\Helpers;
+use Controllers\JsonRetriever;
 
 class CategoryGroupController extends \BaseClass {
-    public static function getAll() {
-        return output(array());
-    }
 
     private static function getAllCategoryGroups() {
         global $hesk_settings, $applicationContext, $userContext;
@@ -20,20 +21,33 @@ class CategoryGroupController extends \BaseClass {
         return $categoryGroupRetriever->getAllCategoryGroups($hesk_settings, $userContext);
     }
 
-    public function get($id) {
-        $categoryGroups = self::getAllCategoryGroups();
-
-        foreach ($categoryGroups as $categoryGroup) {
-            if ($categoryGroup->id === $id) {
-                return output($categoryGroup);
-            }
-        }
-
-        throw new ApiFriendlyException("Category group {$id} not found!", "Category Group Not Found", 404);
+    public function get() {
+        output(self::getAllCategoryGroups());
     }
 
     public function post() {
+        global $hesk_settings, $applicationContext, $userContext;
 
+        $data = JsonRetriever::getJsonData();
+
+        /* @var $categoryGroupHandler CategoryGroupHandler */
+        $categoryGroupHandler = $applicationContext->get(CategoryGroupHandler::clazz());
+
+        return output($categoryGroupHandler->createCategory($this->buildCategoryGroupModel($data), $userContext, $hesk_settings));
+    }
+
+    private function buildCategoryGroupModel($json, $id = null) {
+        $categoryGroup = new CategoryGroup();
+        $categoryGroup->id = $id;
+        $categoryGroup->parentId = Helpers::safeArrayGet($json, 'parentId');
+
+        $names = $json['names'];
+
+        foreach ($names as $key => $value) {
+            $categoryGroup->names[$key] = $value;
+        }
+
+        return $categoryGroup;
     }
 
     public function put() {

@@ -45,6 +45,8 @@ class CategoryGroupGateway extends CommonDao {
 
         $this->close();
 
-        return $id;
+        $categoryGroup->id = $id;
+
+        return $categoryGroup;
     }
 }

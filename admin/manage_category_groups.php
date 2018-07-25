@@ -111,9 +111,9 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                             <h4><?php echo $hesklang['category_group_name_header']; ?></h4>
                             <?php foreach ($hesk_settings['languages'] as $name => $info): ?>
                                 <div class="form-group">
-                                    <label for="name-<?php echo $info['folder']; ?>" class="control-label col-sm-5"><?php echo $name; ?></label>
+                                    <label for="<?php echo $info['folder']; ?>" class="control-label col-sm-5"><?php echo $name; ?></label>
                                     <div class="col-sm-7">
-                                        <input name="name-<?php echo $info['folder']; ?>" class="form-control" placeholder="<?php echo $name; ?>">
+                                        <input data-type="name" name="<?php echo $info['folder']; ?>" class="form-control" placeholder="<?php echo $name; ?>">
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -184,6 +184,9 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
 echo mfh_get_hidden_fields_for_language(array(
     'error_retrieving_category_groups',
     'no_category_groups_found',
+    'category_group_created',
+    'category_group_updated',
+    'error_saving_updating_category_group',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
