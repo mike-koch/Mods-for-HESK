@@ -19,8 +19,31 @@ class CategoryGroupGateway extends CommonDao {
             GROUP BY `cat_group`.`id`, `i18n`.`language`, `i18n`.`text`
             ORDER BY `cat_group`.`sort` ASC";
 
-        // TODO Verify the query!
-        return array();
+        $rs = hesk_dbQuery($sql);
+
+        $categoryGroups = array();
+        $lastId = -1;
+        $categoryGroup = null;
+        while ($row = hesk_dbFetchAssoc($rs)) {
+            if ($lastId === -1 || $lastId !== $row['id']) {
+                if ($categoryGroup !== null) {
+                    $categoryGroups[] = $categoryGroup;
+                }
+                $categoryGroup = new CategoryGroup();
+                $categoryGroup->id = $row['id'];
+                $categoryGroup->parentId = $row['parent_id'];
+                $categoryGroup->numberOfCategories = $row['number_of_categories'];
+                $categoryGroup->sort = $row['sort'];
+                $categoryGroup->names = array();
+            }
+
+            $categoryGroup->names[$row['language']] = $row['text'];
+        }
+        if ($categoryGroup !== null) {
+            $categoryGroups[] = $categoryGroup;
+        }
+
+        return $categoryGroups;
     }
 
     public function createCategoryGroup($heskSettings, CategoryGroup $categoryGroup) {

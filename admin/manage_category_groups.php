@@ -180,6 +180,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         </td>
     </tr>
 </script>
+<input type="hidden" name="hesk_lang" value="<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder']; ?>">
 <?php
 echo mfh_get_hidden_fields_for_language(array(
     'error_retrieving_category_groups',

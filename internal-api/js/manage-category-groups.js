@@ -28,12 +28,13 @@ function loadTable() {
             }
 
             var lastElement = undefined;
+            var first = true;
             $.each(data, function() {
                 var $template = $($('#category-group-row-template').html());
 
                 $template.find('span[data-property="id"]').text(this.id).attr('data-value', this.id);
                 var $nameField = $template.find('td[data-property="name"]');
-                $nameField.text(this.name);
+                $nameField.text(this.names[$('input[name="hesk_lang"]').val()]);
 
                 $tableBody.append($template);
 
@@ -52,6 +53,14 @@ function loadTable() {
                 $('[data-value="' + lastElement.id + '"]').parent().parent()
                     .find('[data-direction="down"]').css('visibility', 'hidden');
             }
+
+            $.each(categoryGroups, function() {
+                var catId = this.id;
+                var parentId = this.parentId;
+
+                console.log(catId);
+                console.info(parentId);
+            });
         },
         error: function(data) {
             mfhAlert.errorWithLog(mfhLang.text('error_retrieving_category_groups'), data.responseJSON);
