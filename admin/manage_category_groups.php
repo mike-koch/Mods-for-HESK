@@ -188,6 +188,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'category_group_created',
     'category_group_updated',
     'error_saving_updating_category_group',
+    'none',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');

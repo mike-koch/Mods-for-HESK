@@ -2,8 +2,8 @@ var categoryGroups = [];
 
 $(document).ready(function() {
     loadTable();
-    /*bindEditModal();
-    bindModalCancelCallback();*/
+    bindEditModal();
+    //bindModalCancelCallback();
     bindFormSubmit();
     //bindDeleteButton();
     bindCreateModal();
@@ -35,6 +35,10 @@ function loadTable() {
                 $template.find('span[data-property="id"]').text(this.id).attr('data-value', this.id);
                 var $nameField = $template.find('td[data-property="name"]');
                 $nameField.text(this.names[$('input[name="hesk_lang"]').val()]);
+
+                $template.find('[data-property="parent-name"]').text(this.parentId === null ?
+                    mfhLang.text('none') :
+                    this.parentId);
 
                 $tableBody.append($template);
 
@@ -74,52 +78,31 @@ function loadTable() {
 
 function bindEditModal() {
     $(document).on('click', '[data-action="edit"]', function() {
-        var element = categories[$(this).parent().parent().find('[data-property="id"]').text()];
+        var element = categoryGroups[$(this).parent().parent().find('[data-property="id"]').text()];
         var $modal = $('#category-modal');
 
         $modal.find('#edit-label').show();
         $modal.find('#create-label').hide();
 
-        $modal.find('input[name="name"]').val(element.name).end()
-            .find('select[name="priority"]').val(element.priority).end()
-            .find('select[name="manager"]').val(element.manager === null ? 0 : element.manager).end()
-            .find('input[name="id"]').val(element.id).end()
-            .find('select[name="usage"]').val(element.usage).end()
-            .find('input[name="display-border"][value="' + (element.displayBorder ? 1 : 0) + '"]')
-                .prop('checked', 'checked').end();
-
-        var backgroundColor = element.backgroundColor;
-        var foregroundColor = element.foregroundColor;
-        var colorpickerOptions = {
-            format: 'hex',
-            color: backgroundColor
-        };
-        $modal.find('input[name="background-color"]')
-            .colorpicker(colorpickerOptions).end().modal('show');
-
-        colorpickerOptions = {
-            format: 'hex'
-        };
-        if (foregroundColor !== '' && foregroundColor !== 'AUTO') {
-            colorpickerOptions.color = foregroundColor;
+        for (var key in element.names) {
+            $modal.find('input[name="' + key + '"]').val(element.names[key]);
         }
 
-        $modal.find('input[name="foreground-color"]')
-            .colorpicker(colorpickerOptions).end().modal('show');
+        refreshParentCategoryGroups();
+        $modal.find('select[name="parent-category-group"]').val(element.parentId).selectpicker('refresh');
 
-        if (foregroundColor === '' || foregroundColor === 'AUTO') {
-            $modal.find('input[name="foreground-color"]').colorpicker('setValue', '#fff');
-            $modal.find('input[name="foreground-color"]').val('');
-        }
-
-        $modal.find('input[name="cat-order"]').val(element.catOrder);
-        $modal.find('input[name="autoassign"][value="' + (element.autoAssign ? 1 : 0) + '"]')
-            .prop('checked', 'checked');
-        $modal.find('input[name="type"][value="' + (element.type ? 1 : 0) + '"]')
-            .prop('checked', 'checked');
-        $modal.find('textarea[name="description"]').val(element.description === null ? '' : element.description);
-
+        console.info(element);
         $modal.modal('show');
+    });
+}
+
+function refreshParentCategoryGroups() {
+    //this.names[$('input[name="hesk_lang"]').val()
+    var $dropdown = $('#category-modal').find('select[name="parent-category-group"]');
+    $dropdown.html('');
+
+    $.each(categoryGroups, function() {
+        $dropdown.append('<option value="' + this.id + '">' + mfhStrings.escape(this.names[$('input[name="hesk_lang"]').val()]) + '</option>');
     });
 }
 
