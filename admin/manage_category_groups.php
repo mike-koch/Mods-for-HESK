@@ -100,8 +100,8 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <div class="modal-header" style="cursor: move">
                 <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">
-                    <span id="edit-label"><?php echo $hesklang['create_category_group']; ?></span>
-                    <span id="create-label"><?php echo $hesklang['edit_category_group']; ?></span>
+                    <span id="create-label"><?php echo $hesklang['create_category_group']; ?></span>
+                    <span id="edit-label"><?php echo $hesklang['edit_category_group']; ?></span>
                 </h4>
             </div>
             <form id="manage-category" class="form-horizontal" data-toggle="validator" method="post">
@@ -126,7 +126,6 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                                 </label>
                                 <div class="col-sm-7">
                                     <select name="parent-category-group" class="selectpicker form-control">
-                                        <option value=""><?php echo $hesklang['none']; ?></option>
                                     </select>
                                 </div>
                             </div>

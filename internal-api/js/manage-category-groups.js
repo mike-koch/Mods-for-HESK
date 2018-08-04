@@ -97,13 +97,16 @@ function bindEditModal() {
 }
 
 function refreshParentCategoryGroups() {
-    //this.names[$('input[name="hesk_lang"]').val()
     var $dropdown = $('#category-modal').find('select[name="parent-category-group"]');
     $dropdown.html('');
+    $dropdown.append('<option value="">' + mfhLang.text('none') + '</option>');
 
-    $.each(categoryGroups, function() {
-        $dropdown.append('<option value="' + this.id + '">' + mfhStrings.escape(this.names[$('input[name="hesk_lang"]').val()]) + '</option>');
-    });
+    for (var key in categoryGroups) {
+        var value = categoryGroups[key];
+
+        $dropdown.append('<option value="' + value.id + '">' + mfhStrings.escape(value.names[$('input[name="hesk_lang"]').val()]) + '</option>');
+    }
+    $dropdown.selectpicker('refresh');
 }
 
 function bindCreateModal() {
@@ -115,6 +118,7 @@ function bindCreateModal() {
         $modal.find('input[data-type="name"]').val('');
         $modal.find('select[name="parent-category-group"]').val('');
         $modal.find('input[name="id"]').val('-1');
+        refreshParentCategoryGroups();
 
         $modal.modal('show');
     });
