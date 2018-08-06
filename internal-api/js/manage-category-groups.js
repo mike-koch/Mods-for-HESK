@@ -88,7 +88,7 @@ function bindEditModal() {
             $modal.find('input[name="' + key + '"]').val(element.names[key]);
         }
 
-        refreshParentCategoryGroups();
+        refreshParentCategoryGroups(element.id);
         $modal.find('select[name="parent-category-group"]').val(element.parentId).selectpicker('refresh');
 
         console.info(element);
@@ -96,12 +96,28 @@ function bindEditModal() {
     });
 }
 
-function refreshParentCategoryGroups() {
+function refreshParentCategoryGroups(ignoreId) {
     var $dropdown = $('#category-modal').find('select[name="parent-category-group"]');
     $dropdown.html('');
     $dropdown.append('<option value="">' + mfhLang.text('none') + '</option>');
 
+    // Remove itself and any parents
+    var exclude = [];
+    if (ignoreId !== undefined) {
+        var element = categoryGroups[ignoreId];
+        exclude.push(element.id);
+
+        while (element.parentId !== null) {
+            element = categoryGroups[element.parentId];
+            exclude.push(element.id);
+        }
+    }
+
     for (var key in categoryGroups) {
+        if (exclude.indexOf(key) > -1) {
+            continue;
+        }
+
         var value = categoryGroups[key];
 
         $dropdown.append('<option value="' + value.id + '">' + mfhStrings.escape(value.names[$('input[name="hesk_lang"]').val()]) + '</option>');
@@ -118,7 +134,7 @@ function bindCreateModal() {
         $modal.find('input[data-type="name"]').val('');
         $modal.find('select[name="parent-category-group"]').val('');
         $modal.find('input[name="id"]').val('-1');
-        refreshParentCategoryGroups();
+        refreshParentCategoryGroups(undefined);
 
         $modal.modal('show');
     });
