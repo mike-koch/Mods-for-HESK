@@ -14,14 +14,20 @@ $(document).ready(function() {
 function loadTable() {
     $('#overlay').show();
     var heskUrl = $('p#hesk-path').text();
-    var $tableBody = $('#table-body');
+    //var $tableBody = $('#table-body');
 
     $.ajax({
         method: 'GET',
         url: heskUrl + 'api/index.php/v1/category-groups',
         headers: { 'X-Internal-Call': true },
         success: function(data) {
-            $tableBody.html('');
+            $('#tree').jstree({
+                'core': {
+                    'data': data
+                }
+            });
+
+            /*$tableBody.html('');
 
             if (data.length === 0) {
                 $tableBody.append('<td colspan="4">' + mfhLang.text('no_category_groups_found') + '</td>');
@@ -64,7 +70,7 @@ function loadTable() {
 
                 console.log(catId);
                 console.info(parentId);
-            });
+            });*/
         },
         error: function(data) {
             mfhAlert.errorWithLog(mfhLang.text('error_retrieving_category_groups'), data.responseJSON);

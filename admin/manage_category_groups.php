@@ -72,18 +72,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                         </button>
                     </div>
                     <div class="col-md-12">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th><?php echo $hesklang['id']; ?></th>
-                                <th><?php echo $hesklang['category_group_name']; ?></th>
-                                <th><?php echo $hesklang['parent_category_group']; ?></th>
-                                <th><?php echo $hesklang['opt']; ?></th>
-                            </tr>
-                            </thead>
-                            <tbody id="table-body">
-                            </tbody>
-                        </table>
+                        <div id="tree"></div>
                     </div>
                 </div>
             </div>
