@@ -139,34 +139,29 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         </div>
     </div>
 </div>
-<script type="text/html" id="category-group-row-template">
-    <tr>
-        <td><span data-property="id" data-value="x"></span></td>
-        <td data-property="name"></td>
-        <td data-property="parent-name"></td>
-        <td>
-            <span class="sort-arrows">
-                <a href="#" data-action="sort"
-                   data-direction="up">
-                    <i class="fa fa-fw fa-arrow-up icon-link green"
-                       data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
-                </a>
-                <a href="#" data-action="sort"
-                   data-direction="down">
-                    <i class="fa fa-fw fa-arrow-down icon-link green"
-                       data-toggle="tooltip" title="<?php echo $hesklang['move_dn'] ?>"></i>
-                </a>
-            </span>
-            <a name="Edit Category Group" href="#" data-action="edit">
-                <i class="fa fa-fw fa-pencil icon-link orange"
-                   data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
+<script type="text/html" id="category-group-options-template">
+    <span>
+        <span class="sort-arrows">
+            <a href="#" data-action="sort"
+               data-direction="up">
+                <i class="fa fa-fw fa-arrow-up icon-link green"
+                   data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
             </a>
-            <a name="Delete Category Group" href="#" data-action="delete">
-                <i class="fa fa-fw fa-times icon-link red"
-                   data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
+            <a href="#" data-action="sort"
+               data-direction="down">
+                <i class="fa fa-fw fa-arrow-down icon-link green"
+                   data-toggle="tooltip" title="<?php echo $hesklang['move_dn'] ?>"></i>
             </a>
-        </td>
-    </tr>
+        </span>
+        <a name="Edit Category Group" href="#" data-action="edit">
+            <i class="fa fa-fw fa-pencil icon-link orange"
+               data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
+        </a>
+        <a name="Delete Category Group" href="#" data-action="delete">
+            <i class="fa fa-fw fa-times icon-link red"
+               data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
+        </a>
+    </span>
 </script>
 <input type="hidden" name="hesk_lang" value="<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder']; ?>">
 <?php

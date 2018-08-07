@@ -21,11 +21,42 @@ function loadTable() {
         url: heskUrl + 'api/index.php/v1/category-groups',
         headers: { 'X-Internal-Call': true },
         success: function(data) {
-            $('#tree').jstree({
-                'core': {
-                    'data': data
-                }
+            var treeJson = [];
+            $.each(data, function() {
+                treeJson.push({
+                    id: this.id,
+                    text: this.names[$('input[name="hesk_lang"]').val()],
+                    parent: this.parentId === null ? '#' : this.parentId,
+                    icon: false,
+                    state: {
+                        opened: true
+                    }
+                });
+
+                categoryGroups[this.id] = this;
             });
+
+            $('#tree')
+                .bind('loaded.jstree', function() {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }).jstree({
+                    plugins: ['grid'],
+                    grid: {
+                        columns: [
+                            {
+                                header: 'Category Group Name',
+                                wideCellClass: 'tree-column'
+                            },
+                            {
+                                header: 'Options',
+                                value: buildOptions
+                            }
+                        ]
+                    },
+                    core: {
+                        data: treeJson
+                    }
+                });
 
             /*$tableBody.html('');
 
@@ -80,6 +111,10 @@ function loadTable() {
             $('#overlay').hide();
         }
     });
+}
+
+function buildOptions(node) {
+    return $('#category-group-options-template').html();
 }
 
 function bindEditModal() {
