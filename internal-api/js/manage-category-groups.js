@@ -39,8 +39,9 @@ function loadTable() {
             $('#tree')
                 .bind('loaded.jstree', function() {
                     $('[data-toggle="tooltip"]').tooltip();
-                }).jstree({
-                    plugins: ['grid'],
+                })
+                .jstree({
+                    plugins: ['grid', 'dnd'],
                     grid: {
                         columns: [
                             {
@@ -48,15 +49,38 @@ function loadTable() {
                                 wideCellClass: 'tree-column'
                             },
                             {
-                                header: 'Options',
-                                value: buildOptions
+                                header: 'Edit',
+                                value: function(node) { return $('#category-group-edit-template').html(); }
+                            },
+                            {
+                                header: 'Delete',
+                                value: function(node) { return $('#category-group-delete-template').html(); }
                             }
                         ]
                     },
                     core: {
+                        check_callback: true,
                         data: treeJson
+                    },
+                    dnd: {
+                        copy: false
                     }
                 });
+
+            $(document).on('dnd_stop.vakata', function(data, element, helper, event) {
+                $.ajax({
+                    method: 'POST',
+                    url: heskUrl + 'api/index.php/v1-internal/category-group-tree',
+                    headers: { 'X-Internal-Call': true },
+                    data: JSON.stringify($('#tree').jstree().get_json()),
+                    success: function(data) {
+                        console.log(data);
+                    },
+                    error: function(data) {
+                        console.error(data);
+                    }
+                })
+            });
 
             /*$tableBody.html('');
 

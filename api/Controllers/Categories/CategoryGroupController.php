@@ -50,6 +50,24 @@ class CategoryGroupController extends \BaseClass {
         return $categoryGroup;
     }
 
+    public static function updateTreeState() {
+        global $hesk_settings, $applicationContext, $userContext;
+
+        $data = JsonRetriever::getJsonData();
+
+        /*
+         * JSON Structure
+         *
+         * id: The id
+         * text: The name
+         * children: The children. Should have parentId == this id
+         */
+        foreach ($data as $entry) {
+            var_dump($entry);
+        }
+        die();
+    }
+
     public function put() {
 
     }

@@ -197,6 +197,7 @@ Link::all(array(
     '/v1/categories' => action(\Controllers\Categories\CategoryController::clazz(), array(RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::clazz(), array(RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1/category-groups' => action(\Controllers\Categories\CategoryGroupController::clazz(), array(RequestMethod::GET, RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1-internal/category-group-tree' => action(\Controllers\Categories\CategoryGroupController::clazz() . '::updateTreeState', array(RequestMethod::POST), SecurityHandler::INTERNAL),
     '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::clazz() . '::sort', array(RequestMethod::POST), SecurityHandler::INTERNAL),
     // Tickets
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::clazz(), RequestMethod::all(), SecurityHandler::OPEN),
