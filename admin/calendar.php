@@ -591,7 +591,8 @@ echo mfh_get_hidden_fields_for_language(array('error_loading_events',
     'medium',
     'low',
     'audit_event_created',
-    'audit_event_updated'));
+    'audit_event_updated',
+    'click_to_add_event'));
 ?>
 <div style="display: none">
     <p id="setting_first_day_of_week"><?php echo $modsForHesk_settings['first_day_of_week']; ?></p>

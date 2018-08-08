@@ -694,5 +694,8 @@ $hesklang['thist'] = 'Audit Log'; // Overriding text.php's value
 // Added or modified in Mods for HESK 2018.2.0
 $hesklang['can_change_due_date'] = 'Can change ticket due dates';
 
+// Added or modified in Mods for HESK 2018.3.0
+$hesklang['click_to_add_event'] = 'Click to add event';
+
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
