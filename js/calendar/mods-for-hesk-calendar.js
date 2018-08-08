@@ -162,7 +162,7 @@ $(document).ready(function() {
         },
         dayRender: function(date, cell) {
             var $cell = $(cell);
-            $cell.attr('title', 'Click to add event');
+            $cell.attr('title', mfhLang.text('click_to_add_event'));
         },
         eventRender: function(event, element) {
             if (event.type === 'TICKET' && moment(event.start).endOf("day").isBefore(moment())) {
