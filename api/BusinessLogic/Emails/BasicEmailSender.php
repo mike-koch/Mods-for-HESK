@@ -16,6 +16,7 @@ class BasicEmailSender extends \BaseClass implements EmailSender {
         }
 
         $mailer = new PHPMailer();
+        $mailer->CharSet = 'UTF-8';
 
         if ($heskSettings['smtp']) {
             $mailer->isSMTP();
