@@ -50,7 +50,7 @@ function loadTable() {
                             },
                             {
                                 header: 'Edit',
-                                value: function(node) { return $('#category-group-edit-template').html(); }
+                                value: function(node) { return $('#category-group-edit-template').html().replace('{{id}}', node.id); }
                             },
                             {
                                 header: 'Delete',
@@ -98,7 +98,7 @@ function buildOptions(node) {
 
 function bindEditModal() {
     $(document).on('click', '[data-action="edit"]', function() {
-        var element = categoryGroups[$(this).parent().parent().find('[data-property="id"]').text()];
+        var element = categoryGroups[$(this).attr('data-id')];
         var $modal = $('#category-modal');
 
         $modal.find('#edit-label').show();
@@ -108,36 +108,20 @@ function bindEditModal() {
             $modal.find('input[name="' + key + '"]').val(element.names[key]);
         }
 
-        refreshParentCategoryGroups(element.id);
-        $modal.find('select[name="parent-category-group"]').val(element.parentId).selectpicker('refresh');
+        $('.parent-dropdown').hide();
+        $('#use-tree-text').show();
 
         console.info(element);
         $modal.modal('show');
     });
 }
 
-function refreshParentCategoryGroups(ignoreId) {
+function refreshParentCategoryGroups() {
     var $dropdown = $('#category-modal').find('select[name="parent-category-group"]');
     $dropdown.html('');
     $dropdown.append('<option value="">' + mfhLang.text('none') + '</option>');
 
-    // Remove itself and any parents
-    var exclude = [];
-    if (ignoreId !== undefined) {
-        var element = categoryGroups[ignoreId];
-        exclude.push(element.id);
-
-        while (element.parentId !== null) {
-            element = categoryGroups[element.parentId];
-            exclude.push(element.id);
-        }
-    }
-
     for (var key in categoryGroups) {
-        if (exclude.indexOf(key) > -1) {
-            continue;
-        }
-
         var value = categoryGroups[key];
 
         $dropdown.append('<option value="' + value.id + '">' + mfhStrings.escape(value.names[$('input[name="hesk_lang"]').val()]) + '</option>');
@@ -154,7 +138,10 @@ function bindCreateModal() {
         $modal.find('input[data-type="name"]').val('');
         $modal.find('select[name="parent-category-group"]').val('');
         $modal.find('input[name="id"]').val('-1');
-        refreshParentCategoryGroups(undefined);
+        refreshParentCategoryGroups();
+
+        $('.parent-dropdown').show();
+        $('#use-tree-text').hide();
 
         $modal.modal('show');
     });

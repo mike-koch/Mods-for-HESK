@@ -109,14 +109,19 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                         </div>
                         <div class="col-md-6">
                             <h4><?php echo $hesklang['parent_category_group']; ?></h4>
-                            <div class="form-group">
-                                <label for="parent-category-group" class="col-sm-5 control-label">
-                                    <?php echo $hesklang['parent_category_group']; ?>
-                                </label>
-                                <div class="col-sm-7">
-                                    <select name="parent-category-group" class="selectpicker form-control">
-                                    </select>
+                            <div class="parent-dropdown">
+                                <div class="form-group">
+                                    <label for="parent-category-group" class="col-sm-5 control-label">
+                                        <?php echo $hesklang['parent_category_group']; ?>
+                                    </label>
+                                    <div class="col-sm-7">
+                                        <select name="parent-category-group" class="selectpicker form-control">
+                                        </select>
+                                    </div>
                                 </div>
+                            </div>
+                            <div id="use-tree-text">
+                                <p><?php echo $hesklang['category_group_use_drag_and_drop']; ?></p>
                             </div>
                         </div>
                     </div>
@@ -141,7 +146,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
 </div>
 <script type="text/html" id="category-group-edit-template">
     <span>
-        <a name="Edit Category Group" href="#" data-action="edit">
+        <a name="Edit Category Group" href="#" data-action="edit" data-id="{{id}}">
             <i class="fa fa-fw fa-pencil icon-link orange"
                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
         </a>
