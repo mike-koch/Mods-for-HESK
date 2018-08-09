@@ -706,6 +706,7 @@ $hesklang['edit_category_group'] = 'Edit Category Group';
 $hesklang['category_group_name_header'] = 'Name';
 $hesklang['category_group_created'] = 'Category group created!';
 $hesklang['category_group_updated'] = 'Category group updated!';
+$hesklang['category_group_hierarchy_updated'] = 'Category group hierarchy updated!';
 $hesklang['error_saving_updating_category_group'] = 'An error occurred creating / saving the category group!';
 
 // DO NOT CHANGE BELOW

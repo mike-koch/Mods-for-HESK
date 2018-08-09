@@ -72,4 +72,15 @@ class CategoryGroupGateway extends CommonDao {
 
         return $categoryGroup;
     }
+
+    public function updateCategorySortAndParent($id, $sort, $parent, $heskSettings) {
+        $this->init();
+
+        $parentString = $parent === null ? 'NULL' : intval($parent);
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups`
+            SET `parent_id` = {$parentString}, `sort` = {$sort} WHERE `id` = {$id}");
+
+        $this->close();
+    }
 }

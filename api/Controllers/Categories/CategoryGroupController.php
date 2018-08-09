@@ -55,17 +55,27 @@ class CategoryGroupController extends \BaseClass {
 
         $data = JsonRetriever::getJsonData();
 
-        /*
-         * JSON Structure
-         *
-         * id: The id
-         * text: The name
-         * children: The children. Should have parentId == this id
-         */
-        foreach ($data as $entry) {
-            var_dump($entry);
+        /* @var $categoryGroupHandler CategoryGroupHandler */
+        $categoryGroupHandler = $applicationContext->get(CategoryGroupHandler::clazz());
+        self::updateCategoryGroup($categoryGroupHandler, $data, 10, $hesk_settings, null);
+
+        return http_response_code(204);
+    }
+
+    /**
+     * @param $categoryGroupHandler CategoryGroupHandler
+     * @param $entries array[]
+     * @param $sort int
+     * @param null $parent
+     */
+    private static function updateCategoryGroup($categoryGroupHandler, $entries, $sort, $heskSettings, $parent) {
+        foreach ($entries as $entry) {
+            $categoryGroupHandler->updateCategorySortAndParent($entry['id'], $sort, $parent, $heskSettings);
+
+            self::updateCategoryGroup($categoryGroupHandler, $entry['children'], $sort, $heskSettings, $entry['id']);
+
+            $sort += 10;
         }
-        die();
     }
 
     public function put() {

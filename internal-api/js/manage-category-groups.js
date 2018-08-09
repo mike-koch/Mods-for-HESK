@@ -73,59 +73,14 @@ function loadTable() {
                     url: heskUrl + 'api/index.php/v1-internal/category-group-tree',
                     headers: { 'X-Internal-Call': true },
                     data: JSON.stringify($('#tree').jstree().get_json()),
-                    success: function(data) {
-                        console.log(data);
+                    success: function() {
+                        mfhAlert.success(mfhLang.text('category_group_hierarchy_updated'));
                     },
                     error: function(data) {
                         console.error(data);
                     }
                 })
             });
-
-            /*$tableBody.html('');
-
-            if (data.length === 0) {
-                $tableBody.append('<td colspan="4">' + mfhLang.text('no_category_groups_found') + '</td>');
-            }
-
-            var lastElement = undefined;
-            var first = true;
-            $.each(data, function() {
-                var $template = $($('#category-group-row-template').html());
-
-                $template.find('span[data-property="id"]').text(this.id).attr('data-value', this.id);
-                var $nameField = $template.find('td[data-property="name"]');
-                $nameField.text(this.names[$('input[name="hesk_lang"]').val()]);
-
-                $template.find('[data-property="parent-name"]').text(this.parentId === null ?
-                    mfhLang.text('none') :
-                    this.parentId);
-
-                $tableBody.append($template);
-
-                categoryGroups[this.id] = this;
-
-                lastElement = this;
-
-                if (first) {
-                    $template.find('[data-direction="up"]').css('visibility', 'hidden');
-                    first = false;
-                }
-            });
-
-            if (lastElement) {
-                //-- Hide the down arrow on the last element
-                $('[data-value="' + lastElement.id + '"]').parent().parent()
-                    .find('[data-direction="down"]').css('visibility', 'hidden');
-            }
-
-            $.each(categoryGroups, function() {
-                var catId = this.id;
-                var parentId = this.parentId;
-
-                console.log(catId);
-                console.info(parentId);
-            });*/
         },
         error: function(data) {
             mfhAlert.errorWithLog(mfhLang.text('error_retrieving_category_groups'), data.responseJSON);

@@ -23,4 +23,8 @@ class CategoryGroupHandler extends \BaseClass {
 
         return $this->categoryGroupGateway->createCategoryGroup($heskSettings, $categoryGroup);
     }
+
+    public function updateCategorySortAndParent($id, $sort, $parent, $heskSettings) {
+        $this->categoryGroupGateway->updateCategorySortAndParent(intval($id), intval($sort), $parent, $heskSettings);
+    }
 }
