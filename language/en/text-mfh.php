@@ -706,8 +706,10 @@ $hesklang['edit_category_group'] = 'Edit Category Group';
 $hesklang['category_group_name_header'] = 'Name';
 $hesklang['category_group_created'] = 'Category group created!';
 $hesklang['category_group_updated'] = 'Category group updated!';
+$hesklang['category_group_deleted'] = 'Category group deleted!';
 $hesklang['category_group_hierarchy_updated'] = 'Category group hierarchy updated!';
 $hesklang['error_saving_updating_category_group'] = 'An error occurred creating / saving the category group!';
+$hesklang['error_deleting_category_group'] = 'An error occurred when deleting the category group!';
 $hesklang['category_group_use_drag_and_drop'] = "Use the drag and drop interface to change this category group's parent";
 
 // DO NOT CHANGE BELOW

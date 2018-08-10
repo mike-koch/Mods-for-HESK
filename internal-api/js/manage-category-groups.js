@@ -3,18 +3,15 @@ var categoryGroups = [];
 $(document).ready(function() {
     loadTable();
     bindEditModal();
-    //bindModalCancelCallback();
     bindFormSubmit();
-    //bindDeleteButton();
+    bindDeleteButton();
     bindCreateModal();
-    //bindSortButtons();
 });
 
 
 function loadTable() {
     $('#overlay').show();
     var heskUrl = $('p#hesk-path').text();
-    //var $tableBody = $('#table-body');
 
     $.ajax({
         method: 'GET',
@@ -40,6 +37,7 @@ function loadTable() {
                 .bind('loaded.jstree', function() {
                     $('[data-toggle="tooltip"]').tooltip();
                 })
+                .jstree('destroy')
                 .jstree({
                     plugins: ['grid', 'dnd'],
                     grid: {
@@ -54,7 +52,7 @@ function loadTable() {
                             },
                             {
                                 header: 'Delete',
-                                value: function(node) { return $('#category-group-delete-template').html(); }
+                                value: function(node) { return $('#category-group-delete-template').html().replace('{{id}}', node.id); }
                             }
                         ]
                     },
@@ -196,7 +194,7 @@ function bindFormSubmit() {
                 } else {
                     mfhAlert.success(mfhLang.text('category_group_updated'));
                 }
-                resetModal();
+
                 $modal.modal('hide');
                 loadTable();
             },
@@ -217,22 +215,22 @@ function bindDeleteButton() {
         $('#overlay').show();
 
         var heskUrl = $('p#hesk-path').text();
-        var element = categories[$(this).parent().parent().find('[data-property="id"]').text()];
+        var element = categoryGroups[$(this).attr('data-id')];
 
         $.ajax({
             method: 'POST',
-            url: heskUrl + 'api/index.php/v1/categories/' + element.id,
+            url: heskUrl + 'api/index.php/v1/category-groups/' + element.id,
             headers: {
                 'X-Internal-Call': true,
                 'X-HTTP-Method-Override': 'DELETE'
             },
             success: function() {
-                mfhAlert.success(mfhLang.text('cat_removed'));
+                mfhAlert.success(mfhLang.text('category_group_deleted'));
                 loadTable();
             },
             error: function(data) {
                 $('#overlay').hide();
-                mfhAlert.errorWithLog(mfhLang.text('error_deleting_category'), data.responseJSON);
+                mfhAlert.errorWithLog(mfhLang.text('error_deleting_category_group'), data.responseJSON);
                 console.error(data);
             }
         });

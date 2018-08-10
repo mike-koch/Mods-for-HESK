@@ -83,4 +83,27 @@ class CategoryGroupGateway extends CommonDao {
 
         $this->close();
     }
+
+    public function deleteCategoryGroup($id, $heskSettings) {
+        $this->init();
+
+        $parentId = null;
+        $parentRs = hesk_dbQuery("SELECT `parent_id` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups`
+            WHERE `id` = " . intval($id));
+        if ($row = hesk_dbFetchAssoc($parentRs)) {
+            $parentId = $row['parent_id'] === null ? 'NULL' : $row['parent_id'];
+        }
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups_i18n`
+            WHERE `category_group_id` = " . intval($id));
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups`
+            WHERE `id` = " . intval($id));
+
+        // Any categories in this group will be moved to the "null" category group or its parent
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories`
+            SET `mfh_category_group_id` = {$parentId}
+            WHERE `mfh_category_group_id` = " . intval($id));
+
+        $this->close();
+    }
 }

@@ -154,7 +154,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
 </script>
 <script type="text/html" id="category-group-delete-template">
     <span>
-        <a name="Delete Category Group" href="#" data-action="delete">
+        <a name="Delete Category Group" href="#" data-action="delete" data-id="{{id}}">
             <i class="fa fa-fw fa-times icon-link red"
                data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
         </a>
@@ -167,8 +167,10 @@ echo mfh_get_hidden_fields_for_language(array(
     'no_category_groups_found',
     'category_group_created',
     'category_group_updated',
+    'category_group_deleted',
     'category_group_hierarchy_updated',
     'error_saving_updating_category_group',
+    'error_deleting_category_group',
     'none',
 ));
 

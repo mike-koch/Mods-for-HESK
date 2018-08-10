@@ -27,4 +27,8 @@ class CategoryGroupHandler extends \BaseClass {
     public function updateCategorySortAndParent($id, $sort, $parent, $heskSettings) {
         $this->categoryGroupGateway->updateCategorySortAndParent(intval($id), intval($sort), $parent, $heskSettings);
     }
+
+    public function deleteCategoryGroup($id, $heskSettings) {
+        $this->categoryGroupGateway->deleteCategoryGroup($id, $heskSettings);
+    }
 }

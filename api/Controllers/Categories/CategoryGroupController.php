@@ -83,6 +83,13 @@ class CategoryGroupController extends \BaseClass {
     }
 
     public function delete($id) {
+        global $hesk_settings, $applicationContext, $userContext;
 
+        /* @var $categoryGroupHandler CategoryGroupHandler */
+        $categoryGroupHandler = $applicationContext->get(CategoryGroupHandler::clazz());
+
+        $categoryGroupHandler->deleteCategoryGroup($id, $hesk_settings);
+
+        return http_response_code(204);
     }
 }
