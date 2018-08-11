@@ -1,4 +1,5 @@
 var categoryGroups = [];
+var languages = [];
 
 $(document).ready(function() {
     loadTable();
@@ -12,6 +13,8 @@ $(document).ready(function() {
 function loadTable() {
     $('#overlay').show();
     var heskUrl = $('p#hesk-path').text();
+    categoryGroups = [];
+    languages = [];
 
     $.ajax({
         method: 'GET',
@@ -20,9 +23,10 @@ function loadTable() {
         success: function(data) {
             var treeJson = [];
             $.each(data, function() {
+                var language = $('input[name="hesk_lang"]').val();
                 treeJson.push({
                     id: this.id,
-                    text: this.names[$('input[name="hesk_lang"]').val()],
+                    text: this.names[language],
                     parent: this.parentId === null ? '#' : this.parentId,
                     icon: false,
                     state: {
@@ -31,6 +35,12 @@ function loadTable() {
                 });
 
                 categoryGroups[this.id] = this;
+
+                for (var key in this.names) {
+                    if (key !== undefined && key !== language && languages.indexOf(key) === -1) {
+                        languages.push(key);
+                    }
+                }
             });
 
             $('#tree')
@@ -41,20 +51,7 @@ function loadTable() {
                 .jstree({
                     plugins: ['grid', 'dnd'],
                     grid: {
-                        columns: [
-                            {
-                                header: 'Category Group Name',
-                                wideCellClass: 'tree-column'
-                            },
-                            {
-                                header: 'Edit',
-                                value: function(node) { return $('#category-group-edit-template').html().replace('{{id}}', node.id); }
-                            },
-                            {
-                                header: 'Delete',
-                                value: function(node) { return $('#category-group-delete-template').html().replace('{{id}}', node.id); }
-                            }
-                        ]
+                        columns: buildColumns()
                     },
                     core: {
                         check_callback: true,
@@ -88,6 +85,34 @@ function loadTable() {
             $('#overlay').hide();
         }
     });
+}
+
+function buildColumns() {
+    var columns = [];
+    columns.push({
+        header: 'Category Group Name',
+        wideCellClass: 'tree-column'
+    });
+
+    for (var i in languages) {
+        columns.push({
+            header: languages[i],
+            wideCellClass: 'tree-column',
+            value: function(node) { return 'TODO'; }
+        })
+    }
+
+    columns.push({
+        header: 'Edit',
+        value: function(node) { return $('#category-group-edit-template').html().replace('{{id}}', node.id); }
+    });
+
+    columns.push({
+        header: 'Delete',
+        value: function(node) { return $('#category-group-delete-template').html().replace('{{id}}', node.id); }
+    });
+
+    return columns;
 }
 
 function buildOptions(node) {

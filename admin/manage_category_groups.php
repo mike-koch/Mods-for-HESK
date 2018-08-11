@@ -160,6 +160,12 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         </a>
     </span>
 </script>
+<script>
+    var languageKeyValues = [];
+    <?php foreach ($hesk_settings['languages'] as $key => $info): ?>
+    languageKeyValues[<?php echo json_encode($info['folder']); ?>] = <?php echo json_encode($key); ?>;
+    <?php endforeach; ?>
+</script>
 <input type="hidden" name="hesk_lang" value="<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder']; ?>">
 <?php
 echo mfh_get_hidden_fields_for_language(array(
