@@ -711,6 +711,7 @@ $hesklang['category_group_hierarchy_updated'] = 'Category group hierarchy update
 $hesklang['error_saving_updating_category_group'] = 'An error occurred creating / saving the category group!';
 $hesklang['error_deleting_category_group'] = 'An error occurred when deleting the category group!';
 $hesklang['category_group_use_drag_and_drop'] = "Use the drag and drop interface to change this category group's parent";
+$hesklang['delete_category_group_question'] = 'Delete Category Group?';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

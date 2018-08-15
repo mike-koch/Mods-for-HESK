@@ -82,7 +82,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         </div>
     </section>
 </div>
-<!-- Category modal -->
+<?php // Category Modal ?>
 <div class="modal fade" id="category-modal" tabindex="-1" role="dialog" style="overflow: hidden">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -144,6 +144,53 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
         </div>
     </div>
 </div>
+<?php // Delete Modal ?>
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" style="overflow: hidden">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="cursor: move">
+                <button type="button" class="close cancel-callback" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    <?php echo $hesklang['delete_category_group_question']; ?>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div id="with-children">
+                            <div class="alert alert-warning">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                You cannot undo this action!
+                            </div>
+                            <p>There are category groups that are children of this category group. What do you want to do with these child category groups?</p>
+                            <select name="subcategory-action" class="form-control selectpicker">
+                                <option value="DELETE">Delete Child Category Groups</option>
+                                <option value="KEEP">Keep Child Category Groups</option>
+                            </select>
+                        </div>
+                        <div id="without-children">
+                            <h4>You cannot undo this action!</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="id">
+                <input type="hidden" name="has-children">
+                <div id="action-buttons" class="btn-group">
+                    <button type="button" class="btn btn-default cancel-button cancel-callback" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i>
+                        <span><?php echo $hesklang['cancel']; ?></span>
+                    </button>
+                    <button type="submit" class="btn btn-danger delete-button">
+                        <i class="fa fa-times-circle"></i>
+                        <span><?php echo $hesklang['delete']; ?></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/html" id="category-group-edit-template">
     <span>
         <a name="Edit Category Group" href="#" data-action="edit" data-id="{{id}}">
@@ -154,7 +201,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
 </script>
 <script type="text/html" id="category-group-delete-template">
     <span>
-        <a name="Delete Category Group" href="#" data-action="delete" data-id="{{id}}">
+        <a name="Delete Category Group" data-action="delete" href="#" data-id="{{id}}">
             <i class="fa fa-fw fa-times icon-link red"
                data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
         </a>

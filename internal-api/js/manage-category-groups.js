@@ -31,7 +31,8 @@ function loadTable() {
                     icon: false,
                     state: {
                         opened: true
-                    }
+                    },
+                    data: this
                 });
 
                 categoryGroups[this.id] = this;
@@ -89,18 +90,28 @@ function loadTable() {
 
 function buildColumns() {
     var columns = [];
+    var language = $('input[name="hesk_lang"]').val();
     columns.push({
-        header: 'Category Group Name',
+        header: languageKeyValues[language],
         wideCellClass: 'tree-column'
     });
 
-    for (var i in languages) {
+    for (var i in languageKeyValues) {
+        if (i === language) {
+            continue;
+        }
+
         columns.push({
-            header: languages[i],
+            header: languageKeyValues[i],
             wideCellClass: 'tree-column',
-            value: function(node) { return 'TODO'; }
+            value: function(node) { return node.data.names[i]; }
         })
     }
+
+    columns.push({
+        header: 'Number of Categories',
+        value: function(node) { return node.data.numberOfCategories; }
+    });
 
     columns.push({
         header: 'Edit',
@@ -237,6 +248,24 @@ function bindFormSubmit() {
 
 function bindDeleteButton() {
     $(document).on('click', '[data-action="delete"]', function() {
+        var $modal = $('#delete-modal');
+        var id = $(this).attr('data-id');
+
+        if (categoryHasChildren(id)) {
+            $modal.find('#with-children').show()
+                .end().find('#without-children').hide()
+                .end().find('input[name="has-children"]').val(1);
+        } else {
+            $modal.find('#without-children').show()
+                .end().find('#with-children').hide()
+                .end().find('input[name="has-children"]').val(0);
+        }
+
+        $modal.find('input[name="id"]').val(id)
+            .end().modal('show');
+    });
+
+    /*$(document).on('click', '[data-action="delete"]', function() {
         $('#overlay').show();
 
         var heskUrl = $('p#hesk-path').text();
@@ -259,7 +288,12 @@ function bindDeleteButton() {
                 console.error(data);
             }
         });
-    });
+    });*/
+}
+
+function categoryHasChildren(id) {
+    var tree = $('#tree').jstree(true);
+    return tree.get_children_dom(tree.get_node(id)).length > 0;
 }
 
 function bindSortButtons() {

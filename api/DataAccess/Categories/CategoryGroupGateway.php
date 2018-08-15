@@ -17,7 +17,7 @@ class CategoryGroupGateway extends CommonDao {
             LEFT JOIN `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` `cat`
                 ON `cat_group`.`id` = `cat`.`mfh_category_group_id`
             GROUP BY `cat_group`.`id`, `i18n`.`language`, `i18n`.`text`
-            ORDER BY `cat_group`.`sort` ASC";
+            ORDER BY `cat_group`.`sort`, `cat_group`.`id` ASC";
 
         $rs = hesk_dbQuery($sql);
 
@@ -38,6 +38,8 @@ class CategoryGroupGateway extends CommonDao {
             }
 
             $categoryGroup->names[$row['language']] = $row['text'];
+
+            $lastId = $row['id'];
         }
         if ($categoryGroup !== null) {
             $categoryGroups[] = $categoryGroup;
@@ -54,7 +56,7 @@ class CategoryGroupGateway extends CommonDao {
         $newOrder = hesk_dbFetchAssoc($newOrderRs);
 
         $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups` (`parent_id`, `sort`)
-            VALUES (" . $parentId . ", " . intval($newOrder['sort']) . ")";
+            VALUES (" . $parentId . ", " . (intval($newOrder['sort']) + 10) . ")";
         hesk_dbQuery($sql);
 
         $id = hesk_dbInsertID();
