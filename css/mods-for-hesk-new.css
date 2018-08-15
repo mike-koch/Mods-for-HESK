@@ -377,6 +377,12 @@ div.ticket-info {
     border-radius: 0 !important;
 }
 
+.jstree-default .jstree-clicked {
+    background: #fff !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
 .jstree-grid-header-regular {
     background-color: #fff !important;
     font-weight: bolder !important;
