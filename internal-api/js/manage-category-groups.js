@@ -6,6 +6,7 @@ $(document).ready(function() {
     bindEditModal();
     bindFormSubmit();
     bindDeleteButton();
+    bindDeleteModal();
     bindCreateModal();
 });
 
@@ -64,6 +65,7 @@ function loadTable() {
                 });
 
             $(document).on('dnd_stop.vakata', function(data, element, helper, event) {
+                $('#overlay').show();
                 $.ajax({
                     method: 'POST',
                     url: heskUrl + 'api/index.php/v1-internal/category-group-tree',
@@ -74,6 +76,9 @@ function loadTable() {
                     },
                     error: function(data) {
                         console.error(data);
+                    },
+                    complete: function() {
+                        $('#overlay').hide();
                     }
                 })
             });
@@ -93,6 +98,7 @@ function buildColumns() {
     var language = $('input[name="hesk_lang"]').val();
     columns.push({
         header: languageKeyValues[language],
+        width: 200,
         wideCellClass: 'tree-column'
     });
 
@@ -103,6 +109,7 @@ function buildColumns() {
 
         columns.push({
             header: languageKeyValues[i],
+            width: 200,
             wideCellClass: 'tree-column',
             value: function(node) { return node.data.names[i]; }
         })
@@ -110,6 +117,7 @@ function buildColumns() {
 
     columns.push({
         header: 'Number of Categories',
+        width: 200,
         value: function(node) { return node.data.numberOfCategories; }
     });
 
@@ -124,10 +132,6 @@ function buildColumns() {
     });
 
     return columns;
-}
-
-function buildOptions(node) {
-    return $('#category-group-options-template').html();
 }
 
 function bindEditModal() {
@@ -246,34 +250,36 @@ function bindFormSubmit() {
     });
 }
 
-function bindDeleteButton() {
+function bindDeleteModal() {
     $(document).on('click', '[data-action="delete"]', function() {
         var $modal = $('#delete-modal');
         var id = $(this).attr('data-id');
 
         if (categoryHasChildren(id)) {
-            $modal.find('#with-children').show()
-                .end().find('#without-children').hide()
-                .end().find('input[name="has-children"]').val(1);
+            $modal.find('#with-children').show();
         } else {
-            $modal.find('#without-children').show()
-                .end().find('#with-children').hide()
-                .end().find('input[name="has-children"]').val(0);
+            $modal.find('#with-children').hide();
         }
 
         $modal.find('input[name="id"]').val(id)
             .end().modal('show');
     });
+}
 
-    /*$(document).on('click', '[data-action="delete"]', function() {
+function bindDeleteButton() {
+    $(document).on('click', '.delete-button', function() {
         $('#overlay').show();
 
         var heskUrl = $('p#hesk-path').text();
         var element = categoryGroups[$(this).attr('data-id')];
 
+        var $modal = $('#delete-modal');
+        $modal.find('#action-buttons').find('.cancel-button').attr('disabled', 'disabled');
+        $modal.find('#action-buttons').find('.delete-button').attr('disabled', 'disabled');
+
         $.ajax({
             method: 'POST',
-            url: heskUrl + 'api/index.php/v1/category-groups/' + element.id,
+            url: heskUrl + 'api/index.php/v1/category-groups/' + $modal.find('input[name="id"]').val(),
             headers: {
                 'X-Internal-Call': true,
                 'X-HTTP-Method-Override': 'DELETE'
@@ -286,35 +292,16 @@ function bindDeleteButton() {
                 $('#overlay').hide();
                 mfhAlert.errorWithLog(mfhLang.text('error_deleting_category_group'), data.responseJSON);
                 console.error(data);
+            },
+            complete: function(data) {
+                $modal.find('#action-buttons').find('.cancel-button').removeAttr('disabled');
+                $modal.find('#action-buttons').find('.delete-button').removeAttr('disabled');
             }
         });
-    });*/
+    });
 }
 
 function categoryHasChildren(id) {
     var tree = $('#tree').jstree(true);
     return tree.get_children_dom(tree.get_node(id)).length > 0;
-}
-
-function bindSortButtons() {
-    $(document).on('click', '[data-action="sort"]', function() {
-        $('#overlay').show();
-        var heskUrl = $('p#hesk-path').text();
-        var direction = $(this).data('direction');
-        var element = categories[$(this).parent().parent().parent().find('[data-property="id"]').text()];
-
-        $.ajax({
-            method: 'POST',
-            url: heskUrl + 'api/index.php/v1-internal/categories/' + element.id + '/sort/' + direction,
-            headers: { 'X-Internal-Call': true },
-            success: function() {
-                loadTable();
-            },
-            error: function(data) {
-                mfhAlert.errorWithLog(mfhLang.text('error_sorting_categories'), data.responseJSON);
-                console.error(data);
-                $('#overlay').hide();
-            }
-        })
-    });
 }

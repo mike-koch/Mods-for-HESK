@@ -86,6 +86,24 @@ class CategoryGroupGateway extends CommonDao {
         $this->close();
     }
 
+    public function moveCategoriesToParentsParent($id, $heskSettings) {
+        $this->init();
+
+        $parentRs = hesk_dbQuery("SELECT `parent_id` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups`
+            WHERE `id` = " . intval($id));
+
+        $newParent = 'NULL';
+        if ($row = hesk_dbFetchAssoc($parentRs)) {
+            $newParent = intval($row['parent_id']) === 0 ? 'NULL' : intval($row['parent_id']);
+        }
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups`
+            SET `parent_id` = " . $newParent . "
+            WHERE `parent_id` = " . intval($id));
+
+        $this->close();
+    }
+
     public function deleteCategoryGroup($id, $heskSettings) {
         $this->init();
 

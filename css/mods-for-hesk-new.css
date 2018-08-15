@@ -370,3 +370,21 @@ div.ticket-info {
     font-size: 12px;
     border-bottom: none;
 }
+
+.jstree-default .jstree-hovered {
+    background: #f5f5f5 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+.jstree-grid-header-regular {
+    background-color: #fff !important;
+    font-weight: bolder !important;
+    color: #333 !important;
+    border-bottom: 2px solid #f4f4f4;
+    font-size: 14px !important;
+}
+
+.jstree-grid-separator-regular {
+    visibility: hidden !important;
+}

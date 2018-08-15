@@ -29,6 +29,7 @@ class CategoryGroupHandler extends \BaseClass {
     }
 
     public function deleteCategoryGroup($id, $heskSettings) {
+        $this->categoryGroupGateway->moveCategoriesToParentsParent($id, $heskSettings);
         $this->categoryGroupGateway->deleteCategoryGroup($id, $heskSettings);
     }
 }

@@ -157,18 +157,11 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div id="with-children">
-                            <div class="alert alert-warning">
-                                <i class="fa fa-exclamation-triangle"></i>
-                                You cannot undo this action!
+                        <div>
+                            <div id="with-children" class="alert alert-info">
+                                <i class="fa fa-info-circle"></i>
+                                There are category groups that are children of this category group. The child category groups will be moved to this category group's parent.
                             </div>
-                            <p>There are category groups that are children of this category group. What do you want to do with these child category groups?</p>
-                            <select name="subcategory-action" class="form-control selectpicker">
-                                <option value="DELETE">Delete Child Category Groups</option>
-                                <option value="KEEP">Keep Child Category Groups</option>
-                            </select>
-                        </div>
-                        <div id="without-children">
                             <h4>You cannot undo this action!</h4>
                         </div>
                     </div>
@@ -176,7 +169,6 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="id">
-                <input type="hidden" name="has-children">
                 <div id="action-buttons" class="btn-group">
                     <button type="button" class="btn btn-default cancel-button cancel-callback" data-dismiss="modal">
                         <i class="fa fa-times-circle"></i>
