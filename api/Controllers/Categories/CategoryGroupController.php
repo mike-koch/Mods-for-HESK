@@ -33,7 +33,7 @@ class CategoryGroupController extends \BaseClass {
         /* @var $categoryGroupHandler CategoryGroupHandler */
         $categoryGroupHandler = $applicationContext->get(CategoryGroupHandler::clazz());
 
-        return output($categoryGroupHandler->createCategory($this->buildCategoryGroupModel($data), $userContext, $hesk_settings));
+        return output($categoryGroupHandler->updateCategory($this->buildCategoryGroupModel($data), $userContext, $hesk_settings));
     }
 
     private function buildCategoryGroupModel($json, $id = null) {
@@ -78,8 +78,15 @@ class CategoryGroupController extends \BaseClass {
         }
     }
 
-    public function put() {
+    public function put($id) {
+        global $hesk_settings, $applicationContext, $userContext;
 
+        $data = JsonRetriever::getJsonData();
+
+        /* @var $categoryGroupHandler CategoryGroupHandler */
+        $categoryGroupHandler = $applicationContext->get(CategoryGroupHandler::clazz());
+
+        return output($categoryGroupHandler->updateCategory($this->buildCategoryGroupModel($data, $id), $userContext, $hesk_settings));
     }
 
     public function delete($id) {

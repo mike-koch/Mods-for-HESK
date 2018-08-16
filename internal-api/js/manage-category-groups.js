@@ -145,6 +145,9 @@ function bindEditModal() {
         for (var key in element.names) {
             $modal.find('input[name="' + key + '"]').val(element.names[key]);
         }
+        $modal.find('input[name="id"]').val(element.id).end()
+            .find('input[name="cat-group-order"]').val(element.sort).end()
+            .find('input[name="parent"]').val(element.parentId).end();
 
         $('.parent-dropdown').hide();
         $('#use-tree-text').show();
@@ -200,16 +203,27 @@ function bindFormSubmit() {
             names[$(this).attr('name')] = $(this).val();
         });
 
-        var $parentCategoryGroupDropdown = $('select[name="parent-category-group"]');
-        var data = {
-            names: names,
-            parentId: $parentCategoryGroupDropdown.val() !== '' ? parseInt($parentCategoryGroupDropdown.val()) : null
-        };
+        var categoryId = parseInt($modal.find('input[name="id"]').val());
+        var data = {};
+
+        if (categoryId === -1) {
+            var $parentCategoryGroupDropdown = $('select[name="parent-category-group"]');
+            data = {
+                names: names,
+                parentId: $parentCategoryGroupDropdown.val() !== '' ? parseInt($parentCategoryGroupDropdown.val()) : null
+            };
+        } else {
+            data = {
+                names: names,
+                parentId: $modal.find('input[name="parent"]').val() === '' ? $modal.find('input[name="parent"]').val() : null,
+                sort: $modal.find('input[name="cat-group-order"]').val()
+            }
+        }
+
 
         var url = heskUrl + 'api/index.php/v1/category-groups/';
         var method = 'POST';
 
-        var categoryId = parseInt($modal.find('input[name="id"]').val());
         if (categoryId !== -1) {
             url += categoryId;
             method = 'PUT';

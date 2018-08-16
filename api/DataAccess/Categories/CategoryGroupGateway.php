@@ -104,6 +104,28 @@ class CategoryGroupGateway extends CommonDao {
         $this->close();
     }
 
+    public function updateCategoryGroup($heskSettings, CategoryGroup $categoryGroup) {
+        $this->init();
+
+        $parentId = $categoryGroup->parentId === null ? "NULL" : intval($categoryGroup->parentId);
+        $id = intval($categoryGroup->id);
+
+        hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups`
+            SET `parent_id` = " . $parentId . ",
+                `sort` = " . intval($categoryGroup->sort) . "
+            WHERE `id` = " . $id);
+
+        hesk_dbQuery("DELETE FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups_i18n`
+            WHERE `category_group_id` = " . $id);
+        foreach ($categoryGroup->names as $language => $name) {
+            $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups_i18n` (`category_group_id`, `language`, `text`)
+                VALUES (" . $id . ", '" . hesk_dbEscape($language) . "', '" . hesk_dbEscape($name) . "')";
+            hesk_dbQuery($sql);
+        }
+
+        $this->close();
+    }
+
     public function deleteCategoryGroup($id, $heskSettings) {
         $this->init();
 

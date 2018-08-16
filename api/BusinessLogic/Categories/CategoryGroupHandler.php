@@ -28,6 +28,16 @@ class CategoryGroupHandler extends \BaseClass {
         $this->categoryGroupGateway->updateCategorySortAndParent(intval($id), intval($sort), $parent, $heskSettings);
     }
 
+    public function updateCategory(CategoryGroup $categoryGroup,
+                                   UserContext $userContext,
+                                   $heskSettings) {
+        if (!$userContext->admin && !in_array(UserPrivilege::CAN_MANAGE_CATEGORIES, $userContext->permissions)) {
+            throw new \Exception("User {$userContext->id} does not have permission to update category groups!");
+        }
+
+        $this->categoryGroupGateway->updateCategoryGroup($heskSettings, $categoryGroup);
+    }
+
     public function deleteCategoryGroup($id, $heskSettings) {
         $this->categoryGroupGateway->moveCategoriesToParentsParent($id, $heskSettings);
         $this->categoryGroupGateway->deleteCategoryGroup($id, $heskSettings);

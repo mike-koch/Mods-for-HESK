@@ -129,6 +129,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                 <div class="modal-footer">
                     <input type="hidden" name="id">
                     <input type="hidden" name="cat-group-order">
+                    <input type="hidden" name="parent">
                     <div id="action-buttons" class="btn-group">
                         <button type="button" class="btn btn-default cancel-button cancel-callback" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i>
@@ -192,12 +193,12 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
     </span>
 </script>
 <script type="text/html" id="category-group-delete-template">
-    <span>
+    <div class="text-center">
         <a name="Delete Category Group" data-action="delete" href="#" data-id="{{id}}">
             <i class="fa fa-fw fa-times icon-link red"
                data-toggle="tooltip" title="<?php echo $hesklang['delete']; ?>"></i>
         </a>
-    </span>
+    </div>
 </script>
 <script>
     var languageKeyValues = [];
