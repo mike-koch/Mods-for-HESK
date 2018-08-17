@@ -42,10 +42,12 @@ class CategoryGroupController extends \BaseClass {
         $categoryGroup->parentId = Helpers::safeArrayGet($json, 'parentId');
         $categoryGroup->sort = Helpers::safeArrayGet($json, 'sort');
 
-        $names = $json['names'];
+        $names = Helpers::safeArrayGet($json, 'names');
 
-        foreach ($names as $key => $value) {
-            $categoryGroup->names[$key] = $value;
+        if ($names !== null) {
+            foreach ($names as $key => $value) {
+                $categoryGroup->names[$key] = $value;
+            }
         }
 
         return $categoryGroup;
@@ -96,7 +98,7 @@ class CategoryGroupController extends \BaseClass {
         /* @var $categoryGroupHandler CategoryGroupHandler */
         $categoryGroupHandler = $applicationContext->get(CategoryGroupHandler::clazz());
 
-        $categoryGroupHandler->deleteCategoryGroup($id, $hesk_settings);
+        $categoryGroupHandler->deleteCategoryGroup($id, $userContext, $hesk_settings);
 
         return http_response_code(204);
     }
