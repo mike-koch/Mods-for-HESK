@@ -107,7 +107,7 @@ class CategoryGroupGateway extends CommonDao {
     public function updateCategoryGroup($heskSettings, CategoryGroup $categoryGroup) {
         $this->init();
 
-        $parentId = $categoryGroup->parentId === null ? "NULL" : intval($categoryGroup->parentId);
+        $parentId = $categoryGroup->parentId === null ? 'NULL' : intval($categoryGroup->parentId);
         $id = intval($categoryGroup->id);
 
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "mfh_category_groups`

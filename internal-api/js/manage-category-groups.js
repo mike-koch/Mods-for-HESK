@@ -1,5 +1,6 @@
 var categoryGroups = [];
 var languages = [];
+var g_dragSaving = false;
 
 $(document).ready(function() {
     loadTable();
@@ -65,12 +66,20 @@ function loadTable() {
                 });
 
             $(document).on('dnd_stop.vakata', function(data, element, helper, event) {
+                if (g_dragSaving) {
+                    // Don't save if already saving
+                    return;
+                }
+
                 $('#overlay').show();
                 $.ajax({
                     method: 'POST',
                     url: heskUrl + 'api/index.php/v1-internal/category-group-tree',
                     headers: { 'X-Internal-Call': true },
                     data: JSON.stringify($('#tree').jstree().get_json()),
+                    beforeSend: function() {
+                        g_dragSaving = true;
+                    },
                     success: function() {
                         mfhAlert.success(mfhLang.text('category_group_hierarchy_updated'));
                     },
@@ -79,6 +88,7 @@ function loadTable() {
                     },
                     complete: function() {
                         $('#overlay').hide();
+                        g_dragSaving = false;
                     }
                 })
             });
@@ -152,7 +162,6 @@ function bindEditModal() {
         $('.parent-dropdown').hide();
         $('#use-tree-text').show();
 
-        console.info(element);
         $modal.modal('show');
     });
 }
@@ -162,12 +171,22 @@ function refreshParentCategoryGroups() {
     $dropdown.html('');
     $dropdown.append('<option value="">' + mfhLang.text('none') + '</option>');
 
-    for (var key in categoryGroups) {
-        var value = categoryGroups[key];
-
-        $dropdown.append('<option value="' + value.id + '">' + mfhStrings.escape(value.names[$('input[name="hesk_lang"]').val()]) + '</option>');
+    var tree = $('#tree').jstree(true).get_json();
+    for (var key in tree) {
+        buildDropdownFromTree(tree[key], 0);
     }
+
     $dropdown.selectpicker('refresh');
+}
+
+function buildDropdownFromTree(node, level) {
+    var margin = (level * 10 + 20) + 'px';
+    var $dropdown = $('#category-modal').find('select[name="parent-category-group"]');
+    $dropdown.append('<option style="padding-left: ' + margin  + '" value="' + node.data.id + '">' + mfhStrings.escape(node.data.names[$('input[name="hesk_lang"]').val()]) + '</option>');
+
+    for (var key in node.children) {
+        buildDropdownFromTree(node.children[key], level + 1);
+    }
 }
 
 function bindCreateModal() {
@@ -215,7 +234,7 @@ function bindFormSubmit() {
         } else {
             data = {
                 names: names,
-                parentId: $modal.find('input[name="parent"]').val() === '' ? $modal.find('input[name="parent"]').val() : null,
+                parentId: $modal.find('input[name="parent"]').val() !== '' ? parseInt($modal.find('input[name="parent"]').val()) : null,
                 sort: $modal.find('input[name="cat-group-order"]').val()
             }
         }
@@ -300,6 +319,7 @@ function bindDeleteButton() {
             },
             success: function() {
                 mfhAlert.success(mfhLang.text('category_group_deleted'));
+                $('#delete-modal').modal('hide');
                 loadTable();
             },
             error: function(data) {

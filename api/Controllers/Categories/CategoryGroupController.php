@@ -33,13 +33,14 @@ class CategoryGroupController extends \BaseClass {
         /* @var $categoryGroupHandler CategoryGroupHandler */
         $categoryGroupHandler = $applicationContext->get(CategoryGroupHandler::clazz());
 
-        return output($categoryGroupHandler->updateCategory($this->buildCategoryGroupModel($data), $userContext, $hesk_settings));
+        return output($categoryGroupHandler->createCategory($this->buildCategoryGroupModel($data), $userContext, $hesk_settings));
     }
 
     private function buildCategoryGroupModel($json, $id = null) {
         $categoryGroup = new CategoryGroup();
         $categoryGroup->id = $id;
         $categoryGroup->parentId = Helpers::safeArrayGet($json, 'parentId');
+        $categoryGroup->sort = Helpers::safeArrayGet($json, 'sort');
 
         $names = $json['names'];
 
