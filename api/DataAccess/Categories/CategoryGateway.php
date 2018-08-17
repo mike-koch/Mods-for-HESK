@@ -44,6 +44,7 @@ class CategoryGateway extends CommonDao {
             $category->manager = intval($row['manager']) == 0 ? NULL : intval($row['manager']);
             $category->description = $row['mfh_description'];
             $category->numberOfTickets = intval($row['number_of_tickets']);
+            $category->categoryGroupId = $row['mfh_category_group_id'] === null ? null : intval($row['mfh_category_group_id']);
             $results[] = $category;
         }
 
@@ -63,15 +64,18 @@ class CategoryGateway extends CommonDao {
         $newOrderRs = hesk_dbQuery("SELECT `cat_order` FROM `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` ORDER BY `cat_order` DESC LIMIT 1");
         $newOrder = hesk_dbFetchAssoc($newOrderRs);
 
+        $categoryGroup = $category->categoryGroupId === null ? 'NULL' : intval($category->categoryGroupId);
+
         $sql = "INSERT INTO `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` 
             (`name`, `cat_order`, `autoassign`, `type`, `priority`, `manager`, `background_color`, `usage`, 
-                `foreground_color`, `display_border_outline`, `mfh_description`)
+                `foreground_color`, `display_border_outline`, `mfh_description`, `mfh_category_group_id`)
             VALUES ('" . hesk_dbEscape($category->name) . "', " . intval($newOrder['cat_order']) . ",
                 '" . ($category->autoAssign ? 1 : 0) . "', '" . intval($category->type) . "',
                 '" . intval($category->priority) . "', " . ($category->manager === null ? 0 : intval($category->manager)) . ",
                 '" . hesk_dbEscape($category->backgroundColor)  . "', " . intval($category->usage) . ",
                 '" . hesk_dbEscape($category->foregroundColor) . "', '" . ($category->displayBorder ? 1 : 0) . "',
-                '" . hesk_dbEscape($category->description) . "')";
+                '" . hesk_dbEscape($category->description) . "',
+                {$categoryGroup})";
 
         hesk_dbQuery($sql);
 
@@ -89,6 +93,8 @@ class CategoryGateway extends CommonDao {
     function updateCategory($category, $heskSettings) {
         $this->init();
 
+        $categoryGroup = $category->categoryGroupId === null ? 'NULL' : intval($category->categoryGroupId);
+
         $sql = "UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories` SET 
             `name` = '" . hesk_dbEscape($category->name) . "',
             `cat_order` = " . intval($category->catOrder) . ",
@@ -100,7 +106,8 @@ class CategoryGateway extends CommonDao {
             `usage` = " . intval($category->usage) . ", 
             `foreground_color` = '" . hesk_dbEscape($category->foregroundColor) . "', 
             `display_border_outline` = '" . ($category->displayBorder ? 1 : 0) . "', 
-            `mfh_description` = '" . hesk_dbEscape($category->description) . "'
+            `mfh_description` = '" . hesk_dbEscape($category->description) . "',
+            `mfh_category_group_id` = {$categoryGroup}
             WHERE `id` = " . intval($category->id);
 
         hesk_dbQuery($sql);
