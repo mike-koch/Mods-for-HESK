@@ -123,6 +123,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                             <tr>
                                 <th><?php echo $hesklang['id']; ?></th>
                                 <th><?php echo $hesklang['cat_name']; ?></th>
+                                <th>Category Group</th>
                                 <th><?php echo $hesklang['visibility']; ?></th>
                                 <th><?php echo $hesklang['aass']; ?></th>
                                 <th><?php echo $hesklang['priority']; ?></th>
@@ -401,6 +402,7 @@ echo '</script>';
             </span>
             <i class="fa fa-info-circle" data-toggle="popover" title="<?php echo $hesklang['description']; ?>"></i>
         </td>
+        <td><span data-property="category-group-name"></span></td>
         <td>
             <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-lock icon-link gray"></i>
             <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-unlock-alt icon-link blue"></i>
@@ -454,6 +456,21 @@ echo '</script>';
     </tr>
 </script>
 <input type="hidden" name="show-tickets-path" value="show_tickets.php?category={0}&amp;s_all=1&amp;s_my=1&amp;s_ot=1&amp;s_un=1">
+<script>
+    var g_categoryGroups = {};
+<?php
+$categoryGroupsRs = hesk_dbQuery("SELECT `group`.`id` AS `id`, `i18n`.`text` AS `name` 
+    FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups` `group`
+    LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups_i18n` `i18n`
+        ON `group`.`id` = `i18n`.`category_group_id`
+        AND `i18n`.`language` = '" . hesk_dbEscape($hesk_settings['languages'][$hesk_settings['language']]['folder']) . "'");
+
+while ($row = hesk_dbFetchAssoc($categoryGroupsRs)): ?>
+    g_categoryGroups[<?php echo $row['id']; ?>] = <?php echo json_encode($row['name']); ?>;
+<?php
+endwhile;
+?>
+</script>
 <?php
 echo mfh_get_hidden_fields_for_language(array(
     'critical',
