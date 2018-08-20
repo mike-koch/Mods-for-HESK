@@ -714,6 +714,7 @@ $hesklang['category_group_use_drag_and_drop'] = "Use the drag and drop interface
 $hesklang['delete_category_group_question'] = 'Delete Category Group?';
 $hesklang['delete_category_group_children_notice'] = 'There are category groups that are children of this category group. The child category groups will be moved to this category group\'s parent.';
 $hesklang['you_cannot_undo_this_action'] = 'You cannot undo this action!';
+$hesklang['cat_group'] = 'Category Group';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
