@@ -1,6 +1,8 @@
 var categories = [];
+var g_categoryGroups = [];
 
 $(document).ready(function() {
+    loadCategoryGroups();
     loadTable();
     bindEditModal();
     bindModalCancelCallback();
@@ -56,7 +58,7 @@ function loadTable() {
                 var categoryGroup = g_categoryGroups[this.categoryGroupId];
 
                 if (categoryGroup !== undefined) {
-                    $template.find('span[data-property="category-group-name"]').text(categoryGroup);
+                    $template.find('span[data-property="category-group-name"]').text(getCategoryGroupWithParents(categoryGroup));
                 } else {
                     $template.find('span[data-property="category-group-name"]').text('None [!]');
                 }
@@ -171,6 +173,88 @@ function loadTable() {
     });
 }
 
+function getCategoryGroupWithParents(categoryGroup) {
+    var language = $('input[name="hesk_lang"]').val();
+    var output = categoryGroup.names[language];
+    var parentId = categoryGroup.parentId;
+    while (parentId !== null) {
+        var parent = g_categoryGroups[parentId];
+        output = parent.names[language] + " / " + output;
+        parentId = parent.parentId;
+    }
+
+    return output;
+}
+
+function loadCategoryGroups() {
+    $('#overlay').show();
+    var heskUrl = $('p#hesk-path').text();
+    g_categoryGroups = [];
+
+    $.ajax({
+        method: 'GET',
+        url: heskUrl + 'api/index.php/v1/category-groups',
+        headers: { 'X-Internal-Call': true },
+        success: function(data) {
+            var treeJson = [];
+            $.each(data, function() {
+                var language = $('input[name="hesk_lang"]').val();
+                treeJson.push({
+                    id: this.id,
+                    text: this.names[language],
+                    parent: this.parentId === null ? '#' : this.parentId,
+                    icon: false,
+                    state: {
+                        opened: true
+                    },
+                    data: this
+                });
+
+                g_categoryGroups[this.id] = this;
+            });
+
+            $('#category-group-tree')
+                .bind('loaded.jstree', function() {
+                    buildCategoryGroupDropdown();
+                })
+                .jstree('destroy')
+                .jstree({
+                    core: {
+                        check_callback: true,
+                        data: treeJson
+                    }
+                });
+        },
+        error: function(data) {
+            mfhAlert.errorWithLog(mfhLang.text('error_retrieving_category_groups'), data.responseJSON);
+            console.error(data);
+        }
+    });
+}
+
+function buildCategoryGroupDropdown() {
+    var $dropdown = $('#category-modal').find('select[name="category-group"]');
+    $dropdown.html('');
+    $dropdown.append('<option value="">' + mfhLang.text('none') + '</option>');
+
+    var tree = $('#category-group-tree').jstree(true).get_json();
+    for (var key in tree) {
+        buildDropdownFromTree(tree[key], 0);
+    }
+
+    $dropdown.selectpicker('refresh');
+}
+
+function buildDropdownFromTree(node, level) {
+    var margin = (level * 10 + 20) + 'px';
+    var $dropdown = $('#category-modal').find('select[name="category-group"]');
+    $dropdown.append('<option style="padding-left: ' + margin  + '" value="' + node.data.id + '">' + mfhStrings.escape(node.data.names[$('input[name="hesk_lang"]').val()]) + '</option>');
+
+    for (var key in node.children) {
+        buildDropdownFromTree(node.children[key], level + 1);
+    }
+}
+
 function bindEditModal() {
     $(document).on('click', '[data-action="edit"]', function() {
         var element = categories[$(this).parent().parent().find('[data-property="id"]').text()];
@@ -278,6 +362,7 @@ function bindFormSubmit() {
 
         var foregroundColor = $modal.find('input[name="foreground-color"]').val();
         var manager = parseInt($modal.find('select[name="manager"]').val());
+        var categoryGroupId = $modal.find('select[name="category-group"]').val();
         var data = {
             autoassign: $modal.find('input[name="autoassign"]:checked').val() === '1',
             backgroundColor: $modal.find('input[name="background-color"]').val(),
@@ -289,7 +374,8 @@ function bindFormSubmit() {
             manager: manager === 0 ? null : manager,
             type: parseInt($modal.find('input[name="type"]:checked').val()),
             usage: parseInt($modal.find('select[name="usage"]').val()),
-            catOrder: parseInt($modal.find('input[name="cat-order"]').val())
+            catOrder: parseInt($modal.find('input[name="cat-order"]').val()),
+            categoryGroupId: categoryGroupId === "" ? null : parseInt(categoryGroupId)
         };
 
         var url = heskUrl + 'api/index.php/v1/categories/';

@@ -462,25 +462,9 @@ echo '</script>';
         </td>
     </tr>
 </script>
+<input type="hidden" name="hesk_lang" value="<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder']; ?>">
 <input type="hidden" name="show-tickets-path" value="show_tickets.php?category={0}&amp;s_all=1&amp;s_my=1&amp;s_ot=1&amp;s_un=1">
-<script>
-    var g_categoryGroups = {};
-    var $categoryGroupDropdown = $('select[name="category-group"]');
-<?php
-$categoryGroupsRs = hesk_dbQuery("SELECT `group`.`id` AS `id`, `i18n`.`text` AS `name` 
-    FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups` `group`
-    LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups_i18n` `i18n`
-        ON `group`.`id` = `i18n`.`category_group_id`
-        AND `i18n`.`language` = '" . hesk_dbEscape($hesk_settings['languages'][$hesk_settings['language']]['folder']) . "'");
-
-while ($row = hesk_dbFetchAssoc($categoryGroupsRs)): ?>
-    g_categoryGroups[<?php echo $row['id']; ?>] = <?php echo json_encode($row['name']); ?>;
-    $categoryGroupDropdown.append('<option value="' + <?php echo json_encode($row['id']); ?> + '">' + <?php echo json_encode($row['name']); ?> + '</option>');
-<?php
-endwhile;
-?>
-    $categoryGroupDropdown.selectpicker('refresh');
-</script>
+<div id="category-group-tree" style="display: none"></div>
 <?php
 echo mfh_get_hidden_fields_for_language(array(
     'critical',
@@ -505,6 +489,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'cpric',
     'no_manager',
     'e_udel',
+    'none',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
