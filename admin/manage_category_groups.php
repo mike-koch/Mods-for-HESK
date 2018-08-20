@@ -161,9 +161,9 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                         <div>
                             <div id="with-children" class="alert alert-info">
                                 <i class="fa fa-info-circle"></i>
-                                There are category groups that are children of this category group. The child category groups will be moved to this category group's parent.
+                                <?php echo $hesklang['delete_category_group_children_notice']; ?>
                             </div>
-                            <h4>You cannot undo this action!</h4>
+                            <?php echo $hesklang['you_cannot_undo_this_action']; ?>
                         </div>
                     </div>
                 </div>

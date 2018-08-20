@@ -123,6 +123,7 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                             <tr>
                                 <th><?php echo $hesklang['id']; ?></th>
                                 <th><?php echo $hesklang['cat_name']; ?></th>
+                                <th>Category Group</th>
                                 <th><?php echo $hesklang['visibility']; ?></th>
                                 <th><?php echo $hesklang['aass']; ?></th>
                                 <th><?php echo $hesklang['priority']; ?></th>
@@ -181,6 +182,13 @@ echo '</script>';
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
                                     <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="category-group" class="col-sm-5 control-label"><?php echo $hesklang['cat_group']; ?></label>
+                                <div class="col-sm-7">
+                                    <select name="category-group" class="form-control selectpicker">
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -259,7 +267,7 @@ echo '</script>';
                                                 class="fa fa-question-circle settingsquestionmark"></i> </a>
                                 </label>
                                 <div class="col-sm-7">
-                                    <select name="priority" class="form-control">
+                                    <select name="priority" class="form-control selectpicker">
                                         <?php
                                         // List possible priorities
                                         foreach ($priorities as $value => $info) {
@@ -275,7 +283,7 @@ echo '</script>';
                                     <?php echo $hesklang['usage']; ?>
                                 </label>
                                 <div class="col-sm-7">
-                                    <select name="usage" class="form-control">
+                                    <select name="usage" class="form-control selectpicker">
                                         <option value="0"><?php echo $hesklang['tickets_and_events']; ?></option>
                                         <option value="1"><?php echo $hesklang['tickets_only']; ?></option>
                                         <option value="2"><?php echo $hesklang['events_only']; ?></option>
@@ -287,7 +295,7 @@ echo '</script>';
                                     <?php echo $hesklang['manager']; ?>
                                 </label>
                                 <div class="col-sm-7">
-                                    <select name="manager" class="form-control">
+                                    <select name="manager" class="form-control selectpicker">
                                         <option value="0"><?php echo $hesklang['no_manager']; ?></option>
                                         <?php foreach ($users as $user): ?>
                                             <option value="<?php echo $user['id']; ?>"><?php echo $user['name']; ?></option>
@@ -401,6 +409,7 @@ echo '</script>';
             </span>
             <i class="fa fa-info-circle" data-toggle="popover" title="<?php echo $hesklang['description']; ?>"></i>
         </td>
+        <td><span data-property="category-group-name"></span></td>
         <td>
             <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-lock icon-link gray"></i>
             <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-unlock-alt icon-link blue"></i>
@@ -454,6 +463,24 @@ echo '</script>';
     </tr>
 </script>
 <input type="hidden" name="show-tickets-path" value="show_tickets.php?category={0}&amp;s_all=1&amp;s_my=1&amp;s_ot=1&amp;s_un=1">
+<script>
+    var g_categoryGroups = {};
+    var $categoryGroupDropdown = $('select[name="category-group"]');
+<?php
+$categoryGroupsRs = hesk_dbQuery("SELECT `group`.`id` AS `id`, `i18n`.`text` AS `name` 
+    FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups` `group`
+    LEFT JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups_i18n` `i18n`
+        ON `group`.`id` = `i18n`.`category_group_id`
+        AND `i18n`.`language` = '" . hesk_dbEscape($hesk_settings['languages'][$hesk_settings['language']]['folder']) . "'");
+
+while ($row = hesk_dbFetchAssoc($categoryGroupsRs)): ?>
+    g_categoryGroups[<?php echo $row['id']; ?>] = <?php echo json_encode($row['name']); ?>;
+    $categoryGroupDropdown.append('<option value="' + <?php echo json_encode($row['id']); ?> + '">' + <?php echo json_encode($row['name']); ?> + '</option>');
+<?php
+endwhile;
+?>
+    $categoryGroupDropdown.selectpicker('refresh');
+</script>
 <?php
 echo mfh_get_hidden_fields_for_language(array(
     'critical',

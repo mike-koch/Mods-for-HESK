@@ -53,6 +53,14 @@ function loadTable() {
                 }
                 $nameField.html(this.name);
 
+                var categoryGroup = g_categoryGroups[this.categoryGroupId];
+
+                if (categoryGroup !== undefined) {
+                    $template.find('span[data-property="category-group-name"]').text(categoryGroup);
+                } else {
+                    $template.find('span[data-property="category-group-name"]').text('None [!]');
+                }
+
                 if (this.description === '' || this.description === null) {
                     $template.find('.fa-info-circle').hide();
                 } else {
