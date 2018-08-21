@@ -113,9 +113,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 $hesk_settings['categories'] = array();
 
 if (hesk_checkPermission('can_submit_any_cat', 0)) {
-    $res = hesk_dbQuery("SELECT `id`, `name`, `mfh_description` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `cat_order` ASC");
+    $res = hesk_dbQuery("SELECT `id`, `name`, `mfh_description`, `mfh_category_group_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `cat_order` ASC");
 } else {
-    $res = hesk_dbQuery("SELECT `id`, `name`, `mfh_description` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE ".hesk_myCategories('id')." ORDER BY `cat_order` ASC");
+    $res = hesk_dbQuery("SELECT `id`, `name`, `mfh_description`, `mfh_category_group_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE ".hesk_myCategories('id')." ORDER BY `cat_order` ASC");
 }
 
 while ($row = hesk_dbFetchAssoc($res)) {
@@ -1149,39 +1149,42 @@ function print_select_category($number_of_categories) {
                     // Otherwise print quick links
                     else
                     {
-                        $new_row = 1;
+                        $categoryGroups = mfh_get_category_group_tree();
 
-                        foreach ($hesk_settings['categories'] as $k=>$v):
-                            if ($new_row == 1) {
-                                echo '<div class="row">';
-                                $new_row = -1;
+                        // Remove category groups with 0 categories
+                        foreach ($categoryGroups as $categoryGroup) {
+                            if (count($categoryGroup['categories']) == 0) {
+                                unset($categoryGroups[$categoryGroup['id']]);
                             }
-                            ?>
-                            <div class="col-md-5 col-sm-12 <?php if ($new_row == -1) {echo 'col-md-offset-1';} ?>">
-                                <a href="new_ticket.php?a=add&category=<?php echo $k; ?>" class="button-link">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-xs-12">
-                                                    <?php
-                                                    echo $v['name'];
+                        }
+                        ?>
 
-                                                    if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== '') {
-                                                        echo '&nbsp;<i class="fa fa-info-circle" data-toggle="popover" 
-                                                        title="'. $hesklang['description'] .'" data-content="' . $v['mfh_description'] . '"></i>';
-                                                    }
-                                                    ?>
-                                                </div>
+                        <div class="row">
+                        <?php foreach ($categoryGroups as $categoryGroup): ?>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><?php echo $categoryGroup['name']; ?></div>
+                                    <div class="panel-body">
+                                        <?php foreach ($categoryGroup['categories'] as $k=>$v): ?>
+                                            <div class="col-md-6">
+                                                <a href="new_ticket.php?a=add&category=<?php echo $k; ?>" class="button-link">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <h4><?php echo $v['name']; ?></h4>
+                                                            <?php if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== ''): ?>
+                                                            <p><?php echo $v['mfh_description']; ?></p>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </a>
                                             </div>
-                                        </div>
+                                            <?php
+                                        endforeach;
+                                        ?>
                                     </div>
-                                </a>
+                                </div>
                             </div>
-                            <?php
-                            $new_row++;
-                            if ($new_row == 1) {
-                                echo '</div>';
-                            }
+                    <?php
                         endforeach;
                     }
                     ?>

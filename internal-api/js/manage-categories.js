@@ -171,7 +171,7 @@ function loadTable() {
                 trigger: 'hover',
                 container: 'body',
                 html: true
-            })
+            });
         },
         error: function(data) {
             mfhAlert.errorWithLog(mfhLang.text('error_retrieving_categories'), data.responseJSON);
@@ -194,11 +194,11 @@ function getCategoryGroupWithParents(categoryGroup) {
     var parentId = categoryGroup.parentId;
     while (parentId !== null) {
         var parent = g_categoryGroups[parentId];
-        output = mfhStrings.escape(parent.names[language]) + " <i class='fa fa-chevron-right'></i> " + mfhStrings.escape(output);
+        output = mfhStrings.escape(parent.names[language]) + " {{separator}} " + mfhStrings.escape(output);
         parentId = parent.parentId;
     }
 
-    return output;
+    return output.replace(/{{separator}}/g, '<i class="fa fa-chevron-right"></i>');
 }
 
 function loadCategoryGroups() {

@@ -411,7 +411,7 @@ echo '</script>';
         </td>
         <td>
             <span data-property="category-group-name"></span>
-            <i class="fa fa-info-circle" data-toggle="popover" data-property="complete-category-group" title="<?php echo $hesklang['complete_category_group_display']; ?>"></i>
+            <i class="fa fa-info-circle" data-toggle="popover" data-property="complete-category-group"></i>
         </td>
         <td>
             <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-lock icon-link gray"></i>

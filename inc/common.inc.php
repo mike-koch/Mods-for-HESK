@@ -2311,3 +2311,50 @@ function mfh_can_customer_change_status($status)
 
     return $row['Closable'] == 'yes' || $row['Closable'] == 'conly';
 } // END hesk_get_ticket_status()
+
+function mfh_get_category_group_tree() {
+    global $hesk_settings;
+
+    $categoryGroups = array();
+
+    $language = $hesk_settings['languages'][$hesk_settings['language']]['folder'];
+    $categoryGroupsRs = hesk_dbQuery("SELECT `group`.`id` AS `id`, `group`.`parent_id` AS `parent_id`, `i18n`.`text` AS `name`
+                            FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups` `group`
+                            INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups_i18n` `i18n`
+                                ON `group`.`id` = `i18n`.`category_group_id`
+                                AND `i18n`.`language` = '" . hesk_dbEscape($language) . "'");
+
+    while ($row = hesk_dbFetchAssoc($categoryGroupsRs)) {
+        $categoryGroup = array();
+        $categoryGroup['id'] = $row['id'];
+        $categoryGroup['parent_id'] = $row['parent_id'];
+        $categoryGroup['name'] = $row['name'];
+        $categoryGroup['categories'] = array();
+        $categoryGroup['children'] = array();
+
+        $categoryGroups[$row['id']] = $categoryGroup;
+    }
+
+    $none_group = array();
+    $none_group['categories'] = array();
+    $none_group['parent_id'] = null;
+    $none_group['name'] = 'None (Change this!)';
+
+    foreach ($hesk_settings['categories'] as $id => $category) {
+        if ($category['mfh_category_group_id'] != null) {
+            $categoryGroups[$category['mfh_category_group_id']]['categories'][] = $category;
+        } else {
+            $none_group['categories'][] = $category;
+        }
+    }
+    $categoryGroups['NONE'] = $none_group;
+
+    foreach ($categoryGroups as $categoryGroup) {
+        if ($categoryGroup['parent_id'] != null) {
+            $categoryGroups[$categoryGroup['parent_id']]['children'][] = $categoryGroup;
+            unset($categoryGroups[$categoryGroup]);
+        }
+    }
+
+    return $categoryGroups;
+}
