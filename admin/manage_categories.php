@@ -407,9 +407,12 @@ echo '</script>';
         <td>
             <span class="label category-label" data-property="category-name">
             </span>
-            <i class="fa fa-info-circle" data-toggle="popover" title="<?php echo $hesklang['description']; ?>"></i>
+            <i data-property="category-description" class="fa fa-info-circle" data-toggle="popover" title="<?php echo $hesklang['description']; ?>"></i>
         </td>
-        <td><span data-property="category-group-name"></span></td>
+        <td>
+            <span data-property="category-group-name"></span>
+            <i class="fa fa-info-circle" data-toggle="popover" data-property="complete-category-group" title="<?php echo $hesklang['complete_category_group_display']; ?>"></i>
+        </td>
         <td>
             <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-lock icon-link gray"></i>
             <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-unlock-alt icon-link blue"></i>

@@ -58,15 +58,24 @@ function loadTable() {
                 var categoryGroup = g_categoryGroups[this.categoryGroupId];
 
                 if (categoryGroup !== undefined) {
-                    $template.find('span[data-property="category-group-name"]').text(getCategoryGroupWithParents(categoryGroup));
+                    var name = categoryGroup.names[$('input[name="hesk_lang"]').val()];
+                    $template.find('span[data-property="category-group-name"]').text(name);
+
+                    var completeName = getCategoryGroupWithParents(categoryGroup);
+                    if (completeName !== name) {
+                        $template.find('i[data-property="complete-category-group"]').attr('data-content', getCategoryGroupWithParents(categoryGroup));
+                    } else {
+                        $template.find('i[data-property="complete-category-group"]').hide();
+                    }
                 } else {
-                    $template.find('span[data-property="category-group-name"]').text('None [!]');
+                    $template.find('span[data-property="category-group-name"]').text(mfhLang.text('none'));
+                    $template.find('i[data-property="complete-category-group"]').hide();
                 }
 
                 if (this.description === '' || this.description === null) {
-                    $template.find('.fa-info-circle').hide();
+                    $template.find('[data-property="category-description"]').hide();
                 } else {
-                    $template.find('.fa-info-circle').attr('data-content', this.description);
+                    $template.find('[data-property="category-description"]').attr('data-content', this.description);
                 }
                 var $priority = $template.find('span[data-property="priority"]');
                 if (this.priority === 0) {
@@ -157,6 +166,12 @@ function loadTable() {
                 $('[data-value="' + lastElement.id + '"]').parent().parent()
                     .find('[data-direction="down"]').css('visibility', 'hidden');
             }
+
+            $('i[data-toggle="popover"]').popover({
+                trigger: 'hover',
+                container: 'body',
+                html: true
+            })
         },
         error: function(data) {
             mfhAlert.errorWithLog(mfhLang.text('error_retrieving_categories'), data.responseJSON);
@@ -179,7 +194,7 @@ function getCategoryGroupWithParents(categoryGroup) {
     var parentId = categoryGroup.parentId;
     while (parentId !== null) {
         var parent = g_categoryGroups[parentId];
-        output = parent.names[language] + " / " + output;
+        output = mfhStrings.escape(parent.names[language]) + " <i class='fa fa-chevron-right'></i> " + mfhStrings.escape(output);
         parentId = parent.parentId;
     }
 
@@ -269,7 +284,8 @@ function bindEditModal() {
             .find('input[name="id"]').val(element.id).end()
             .find('select[name="usage"]').val(element.usage).end()
             .find('input[name="display-border"][value="' + (element.displayBorder ? 1 : 0) + '"]')
-                .prop('checked', 'checked').end();
+                .prop('checked', 'checked').end()
+            .find('select[name="category-group"]').val(element.categoryGroupId).selectpicker('refresh').end();
 
         var backgroundColor = element.backgroundColor;
         var foregroundColor = element.foregroundColor;
@@ -322,6 +338,7 @@ function bindCreateModal() {
         $modal.find('input[name="autoassign"][value="0"]').prop('checked', 'checked');
         $modal.find('input[name="display-border"][value="0"]')
             .prop('checked', 'checked');
+        $modal.find('select[name="category-group"]').val('').selectpicker('refresh').end();
 
         var colorpickerOptions = {
             format: 'hex',
