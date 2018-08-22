@@ -2338,7 +2338,7 @@ function mfh_get_category_group_tree() {
     $none_group = array();
     $none_group['categories'] = array();
     $none_group['parent_id'] = null;
-    $none_group['name'] = 'None (Change this!)';
+    $none_group['name'] = 'HESK_NONE';
 
     foreach ($hesk_settings['categories'] as $id => $category) {
         if ($category['mfh_category_group_id'] != null) {
@@ -2357,4 +2357,16 @@ function mfh_get_category_group_tree() {
     }
 
     return $categoryGroups;
+}
+
+function mfh_is_category_group_empty($category_group) {
+    if (count($category_group['categories']) > 0) {
+        return false;
+    }
+
+    foreach ($category_group['children'] as $child) {
+        return mfh_is_category_group_empty($child);
+    }
+
+    return true;
 }
