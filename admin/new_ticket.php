@@ -1149,74 +1149,28 @@ function print_select_category($number_of_categories) {
                     // Otherwise print quick links
                     else
                     {
-                        $categoryGroups = mfh_get_category_group_tree();
-
-                        // Remove category groups with 0 categories in any part of the tree
-                        foreach ($categoryGroups as $categoryGroup) {
-                            if (mfh_is_category_group_empty($categoryGroup)) {
-                                unset($categoryGroups[$categoryGroup['id']]);
+                        echo '<div id="category-tree"></div>';
+                        $category_groups = mfh_get_category_group_tree();
+                        echo "<script>$('#category-tree').jstree({
+                            plugins: ['grid'],
+                            core: {
+                                check_callback: true,
+                                data: " . json_encode($category_groups) . "
+                            },
+                            grid: {
+                                columns: [
+                                    {
+                                        header: 'Name',
+                                        wideCellClass: 'tree-column'
+                                    },
+                                    {
+                                        header: 'Description',
+                                        wideCellClass: 'tree-column',
+                                        value: function(node) { return node.data.description; }
+                                    }
+                                ]
                             }
-                        }
-                        ?>
-
-                        <div class="row">
-                        <?php foreach ($categoryGroups as $categoryGroup): ?>
-                            <?php if ($categoryGroup['name'] != 'HESK_NONE'): ?>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><?php echo $categoryGroup['name']; ?></div>
-                                    <div class="panel-body">
-                                        <?php foreach ($categoryGroup['categories'] as $k=>$v): ?>
-                                            <div class="col-md-6">
-                                                <a href="new_ticket.php?a=add&category=<?php echo $k; ?>" class="button-link">
-                                                    <div class="row">
-                                                        <div class="col-xs-12">
-                                                            <div class="panel panel-default">
-                                                                <div class="panel-body">
-                                                                    <span><?php echo $v['name']; ?></span>
-                                                                    <?php if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== ''): ?>
-                                                                        <i class="fa fa-info-circle" data-toggle="tooltip" title="<?php echo $v['mfh_description']; ?>"></i>
-                                                                    <?php endif; ?>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                            <?php
-                                        endforeach;
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php else: ?>
-                            <div class="col-md-12">
-                                <div class="row">
-                                <?php foreach ($categoryGroup['categories'] as $k=>$v): ?>
-                                    <div class="col-md-6">
-                                        <a href="new_ticket.php?a=add&category=<?php echo $k; ?>" class="button-link">
-                                            <div class="row">
-                                                <div class="col-xs-12">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-body">
-                                                            <span><?php echo $v['name']; ?></span>
-                                                            <?php if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== ''): ?>
-                                                                <i class="fa fa-info-circle" data-toggle="tooltip" title="<?php echo $v['mfh_description']; ?>"></i>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                <?php
-                                endforeach;
-                                ?>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                    <?php
-                        endforeach;
+                        });</script>";
                     }
                     ?>
                 </div>
