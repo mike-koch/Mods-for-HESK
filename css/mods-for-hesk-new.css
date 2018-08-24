@@ -394,3 +394,24 @@ div.ticket-info {
 .jstree-grid-separator-regular {
     visibility: hidden !important;
 }
+
+a.list-group-item:hover {
+    background: #eee;
+    color: #000;
+}
+
+.list-group-item {
+    color: #000;
+}
+
+.list-group-item > p.description {
+    color: #888;
+}
+
+a.list-group-item:hover > p.description {
+    color: #888;
+}
+
+.subcategory-group {
+    background: #f5f5f5;
+}
