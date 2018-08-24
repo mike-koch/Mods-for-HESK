@@ -2315,7 +2315,7 @@ function mfh_can_customer_change_status($status)
 function mfh_get_category_group_tree() {
     global $hesk_settings;
 
-    $tree = array();
+    $categoryGroups = array();
 
     $language = $hesk_settings['languages'][$hesk_settings['language']]['folder'];
     $categoryGroupsRs = hesk_dbQuery("SELECT `group`.`id` AS `id`, `group`.`parent_id` AS `parent_id`, `i18n`.`text` AS `name`
@@ -2326,41 +2326,37 @@ function mfh_get_category_group_tree() {
 
     while ($row = hesk_dbFetchAssoc($categoryGroupsRs)) {
         $categoryGroup = array();
-        $categoryGroup['id'] = 'GRP' . $row['id'];
-        $categoryGroup['parent'] = $row['parent_id'] == null ? '#' : 'GRP' . $row['parent_id'];
-        $categoryGroup['text'] = $row['name'];
-        $categoryGroup['data'] = array();
-        $categoryGroup['data']['description'] = '';
-        $categoryGroup['state'] = array();
-        $categoryGroup['state']['opened'] = true;
+        $categoryGroup['id'] = $row['id'];
+        $categoryGroup['parent_id'] = $row['parent_id'];
+        $categoryGroup['name'] = $row['name'];
+        $categoryGroup['categories'] = array();
+        $categoryGroup['children'] = array();
 
-        $tree[$row['id']] = $categoryGroup;
+        $categoryGroups[$row['id']] = $categoryGroup;
     }
+
+    $none_group = array();
+    $none_group['categories'] = array();
+    $none_group['parent_id'] = null;
+    $none_group['name'] = 'HESK_NONE';
 
     foreach ($hesk_settings['categories'] as $id => $category) {
-        $category['icon'] = 'fa fa-fw fa-pie-chart';
-        $category['parent'] = $category['mfh_category_group_id'] != null ? 'GRP' . $category['mfh_category_group_id'] : '#';
-        $category['text'] = $category['name'];
-        $category['data'] = array();
-        $category['data']['description'] = $category['mfh_description'];
-        $category['state'] = array();
-        $category['state']['opened'] = true;
-        $tree[] = $category;
+        if ($category['mfh_category_group_id'] != null) {
+            $categoryGroups[$category['mfh_category_group_id']]['categories'][] = $category;
+        } else {
+            $none_group['categories'][] = $category;
+        }
     }
+    $categoryGroups['NONE'] = $none_group;
 
-    foreach ($tree as $categoryGroup) {
+    foreach ($categoryGroups as $categoryGroup) {
         if ($categoryGroup['parent_id'] != null) {
-            $tree[$categoryGroup['parent_id']]['children'][] = $categoryGroup;
-            unset($tree[$categoryGroup]);
+            $categoryGroups[$categoryGroup['parent_id']]['children'][] = $categoryGroup;
+            unset($categoryGroups[$categoryGroup]);
         }
     }
 
-    $keyless_tree = array();
-    foreach ($tree as $row) {
-        $keyless_tree[] = $row;
-    }
-
-    return $keyless_tree;
+    return $categoryGroups;
 }
 
 function mfh_is_category_group_empty($category_group) {
