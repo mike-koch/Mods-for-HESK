@@ -2315,62 +2315,55 @@ function mfh_can_customer_change_status($status)
 function mfh_get_category_group_tree() {
     global $hesk_settings;
 
-    $categoryGroups = array();
-
     $language = $hesk_settings['languages'][$hesk_settings['language']]['folder'];
+
+    $category_groups = mfh_get_category_groups($language);
+
+    $none_group = array();
+    $none_group['name'] = 'CATEGORY_GROUP_NONE';
+    $none_group['categories'] = array();
+    foreach ($hesk_settings['categories'] as $k => $v) {
+        if ($v['mfh_category_group_id'] == null) {
+            $none_group['categories'][$k] = $v;
+        }
+    }
+    $category_groups[] = $none_group;
+
+    return $category_groups;
+}
+
+function mfh_get_category_groups($language, $parent_id = null) {
+    global $hesk_settings;
+
+    $parent = $parent_id === null ? 'IS NULL' : '= ' . intval($parent_id);
     $categoryGroupsRs = hesk_dbQuery("SELECT `group`.`id` AS `id`, `group`.`parent_id` AS `parent_id`, `i18n`.`text` AS `name`
                             FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups` `group`
                             INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups_i18n` `i18n`
                                 ON `group`.`id` = `i18n`.`category_group_id`
                                 AND `i18n`.`language` = '" . hesk_dbEscape($language) . "'
-                                AND `group`.`parent_id` IS NULL");
+                                AND `group`.`parent_id` {$parent}");
 
+    $categoryGroups = array();
+    $group_ids = array();
     while ($row = hesk_dbFetchAssoc($categoryGroupsRs)) {
         $categoryGroup = array();
         $categoryGroup['id'] = $row['id'];
+        $group_ids[] = $row['id'];
         $categoryGroup['parent_id'] = $row['parent_id'];
         $categoryGroup['name'] = $row['name'];
         $categoryGroup['categories'] = array();
-        $categoryGroup['children'] = mfh_get_category_groups($row['parent_id']);
-    }
-
-    /*while ($row = hesk_dbFetchAssoc($categoryGroupsRs)) {
-        $categoryGroup = array();
-        $categoryGroup['id'] = $row['id'];
-        $categoryGroup['parent_id'] = $row['parent_id'];
-        $categoryGroup['name'] = $row['name'];
-        $categoryGroup['categories'] = array();
-        $categoryGroup['children'] = array();
+        $categoryGroup['children'] = mfh_get_category_groups($language, $row['id']);
 
         $categoryGroups[$row['id']] = $categoryGroup;
     }
 
-    $none_group = array();
-    $none_group['categories'] = array();
-    $none_group['parent_id'] = null;
-    $none_group['name'] = 'HESK_NONE';
-
-    foreach ($hesk_settings['categories'] as $id => $category) {
-        if ($category['mfh_category_group_id'] != null) {
-            $categoryGroups[$category['mfh_category_group_id']]['categories'][] = $category;
-        } else {
-            $none_group['categories'][] = $category;
+    foreach ($hesk_settings['categories'] as $k => $v) {
+        if (in_array($v['mfh_category_group_id'], $group_ids)) {
+            $categoryGroups[$v['mfh_category_group_id']]['categories'][$k] = $v;
         }
     }
-    $categoryGroups['NONE'] = $none_group;
-
-    foreach ($categoryGroups as $categoryGroup) {
-        if ($categoryGroup['parent_id'] != null) {
-            $categoryGroups[$categoryGroup['parent_id']]['children'][] = $categoryGroup;
-            unset($categoryGroups[$categoryGroup['id']]);
-        }
-    }*/
 
     return $categoryGroups;
-}
-
-function mfh_get_category_groups($parent_id = null) {
-
 }
 
 function mfh_is_category_group_empty($category_group) {

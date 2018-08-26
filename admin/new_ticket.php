@@ -1149,11 +1149,7 @@ function print_select_category($number_of_categories) {
                     // Otherwise print quick links
                     else
                     {
-                        ini_set('xdebug.var_display_max_depth', 99999);
-                        ini_set('xdebug.var_display_max_children', 256);
-                        ini_set('xdebug.var_display_max_data', 1024);
                         $categoryGroups = mfh_get_category_group_tree();
-                        echo '<p>' . var_dump($categoryGroups) . '</p>';
 
                         // Remove category groups with 0 categories in any part of the tree
                         foreach ($categoryGroups as $categoryGroup) {
@@ -1165,24 +1161,12 @@ function print_select_category($number_of_categories) {
 
                         <div class="row">
                         <?php foreach ($categoryGroups as $categoryGroup): ?>
-                            <?php if ($categoryGroup['name'] != 'HESK_NONE'): ?>
+                            <?php if ($categoryGroup['name'] != 'CATEGORY_GROUP_NONE'): ?>
                             <div class="col-md-6 col-sm-12">
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><?php echo $categoryGroup['name']; ?></div>
                                     <ul class="list-group">
-                                        <?php
-                                        print_categories($categoryGroup, 0);
-                                        ?>
-                                        <?php /*foreach ($categoryGroup['categories'] as $k=>$v): */?><!--
-                                            <a class="list-group-item" href="new_ticket.php?a=add&category=<?php /*echo $k; */?>">
-                                                <p><?php /*echo $v['name']; */?></p>
-                                                <?php /*if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== ''): */?>
-                                                    <p class="description"><?php /*echo $v['mfh_description']; */?></p>
-                                                <?php /*endif; */?>
-                                            </a>
-                                            --><?php
-/*                                        endforeach;
-                                        */?>
+                                        <?php print_categories($categoryGroup, 0); ?>
                                     </ul>
                                 </div>
                             </div>
@@ -1195,11 +1179,12 @@ function print_select_category($number_of_categories) {
                                             <div class="row">
                                                 <div class="col-xs-12">
                                                     <div class="panel panel-default">
-                                                        <div class="panel-body">
-                                                            <span><?php echo $v['name']; ?></span>
+                                                        <div class="panel-body category">
+                                                            <p><?php echo $v['name']; ?></p>
                                                             <?php if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== ''): ?>
-                                                                <i class="fa fa-info-circle" data-toggle="popover" title="<?php echo $hesklang['description']; ?>" data-content="<?php echo $v['mfh_description']; ?>"></i>
-                                                            <?php endif; ?>
+                                                                <p class="description"><?php echo $v['mfh_description']; ?></p>
+                                                            <?php endif;
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1231,6 +1216,28 @@ function print_select_category($number_of_categories) {
 } // END print_select_category()
 
 function print_categories($category_group, $level) {
+    global $hesklang;
+
+    if ($category_group['name'] === 'CATEGORY_GROUP_NONE') {
+        foreach ($category_group['categories'] as $k => $v): ?>
+            <a href="new_ticket.php?a=add&category=<?php echo $k; ?>" class="button-link">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p><?php echo $v['name']; ?></p>
+                                <?php if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== ''): ?>
+                                    <p class="description"><?php echo $v['mfh_description']; ?></p>';
+                                <?php endif;
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        <?php endforeach;
+    }
+
     $margin = 15 * ($level + 1);
     if ($level > 0) : ?>
         <li style="padding-left: <?php echo $margin; ?>px" class="list-group-item subcategory-group"><?php echo $category_group['name']; ?></li>
