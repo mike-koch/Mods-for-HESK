@@ -1097,23 +1097,30 @@ function print_select_category($number_of_categories) {
                 <div class="select_category">
                     <?php
                     // Print a select box if number of categories is large
+                    $categoryGroups = mfh_get_category_group_tree();
+
+                    // Remove category groups with 0 categories in any part of the tree
+                    foreach ($categoryGroups as $categoryGroup) {
+                        if (mfh_is_category_group_empty($categoryGroup)) {
+                            unset($categoryGroups[$categoryGroup['id']]);
+                        }
+                    }
+
                     if ($number_of_categories > $hesk_settings['cat_show_select'])
                     {
                         $firstDescription = null;
                         ?>
                         <form action="new_ticket.php" method="get">
-                            <select name="category" id="select_category" class="form-control" onchange="showDescription()">
+                            <select name="category" id="select_category" class="form-control selectpicker" onchange="showDescription()">
                                 <?php
-                                if ($hesk_settings['select_cat'])
-                                {
-                                    echo '<option value="">'.$hesklang['select'].'</option>';
+                                if ($hesk_settings['select_cat']) {
+                                    echo '<option value="">' . $hesklang['select'] . ' </option>';
                                 }
-                                foreach ($hesk_settings['categories'] as $k=>$v)
-                                {
-                                    if ($firstDescription === null) {
-                                        $firstDescription = $v['mfh_description'];
+                                foreach ($categoryGroups as $categoryGroup) {
+                                    echo '<option class="header" disabled>' . $categoryGroup['name'] . '</option>';
+                                    foreach ($categoryGroup['categories'] as $k => $v) {
+                                        echo '<option data-description="' . $v['mfh_description'] . '" value="' . $k . '">' . $v['name'] . '</option>';
                                     }
-                                    echo '<option value="'.$k.'" data-description="'.$v['mfh_description'].'">'.$v['name'].'</option>';
                                 }
                                 ?>
                             </select>
@@ -1149,14 +1156,6 @@ function print_select_category($number_of_categories) {
                     // Otherwise print quick links
                     else
                     {
-                        $categoryGroups = mfh_get_category_group_tree();
-
-                        // Remove category groups with 0 categories in any part of the tree
-                        foreach ($categoryGroups as $categoryGroup) {
-                            if (mfh_is_category_group_empty($categoryGroup)) {
-                                unset($categoryGroups[$categoryGroup['id']]);
-                            }
-                        }
                         ?>
 
                         <div class="row">
