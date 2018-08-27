@@ -23,6 +23,7 @@ define('AUTOFOCUS', true);
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+require(HESK_PATH . 'inc/category_groups.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
 require(HESK_PATH . 'inc/mail_functions.inc.php');
@@ -1117,10 +1118,11 @@ function print_select_category($number_of_categories) {
                                     echo '<option value="">' . $hesklang['select'] . ' </option>';
                                 }
                                 foreach ($categoryGroups as $categoryGroup) {
-                                    echo '<option class="header" disabled>' . $categoryGroup['name'] . '</option>';
+                                    mfh_output_category_group_dropdown_options($categoryGroup, 0);
+                                    /*echo '<option class="header" disabled>' . $categoryGroup['name'] . '</option>';
                                     foreach ($categoryGroup['categories'] as $k => $v) {
                                         echo '<option data-description="' . $v['mfh_description'] . '" value="' . $k . '">' . $v['name'] . '</option>';
-                                    }
+                                    }*/
                                 }
                                 ?>
                             </select>

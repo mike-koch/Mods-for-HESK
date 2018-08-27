@@ -417,3 +417,8 @@ a.list-group-item:hover > p.description,
 .subcategory-group {
     background: #f5f5f5;
 }
+
+.dropdown-menu > .disabled > a.category-group-header {
+    font-weight: bolder;
+    color: #000;
+}
