@@ -85,7 +85,7 @@ function print_select_category($number_of_categories)
         <div class="select_category">
             <?php
             // Print a select box if number of categories is large
-            $categoryGroups = mfh_get_category_group_tree();
+            $categoryGroups = mfh_get_category_group_tree($hesk_settings['categories']);
 
             // Remove category groups with 0 categories in any part of the tree
             foreach ($categoryGroups as $categoryGroup) {

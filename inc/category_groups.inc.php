@@ -1,15 +1,15 @@
 <?php
-function mfh_get_category_group_tree() {
+function mfh_get_category_group_tree($categories) {
     global $hesk_settings;
 
     $language = $hesk_settings['languages'][$hesk_settings['language']]['folder'];
 
-    $category_groups = mfh_get_category_groups($language);
+    $category_groups = mfh_get_category_groups($language, $categories);
 
     $none_group = array();
     $none_group['name'] = 'CATEGORY_GROUP_NONE';
     $none_group['categories'] = array();
-    foreach ($hesk_settings['categories'] as $k => $v) {
+    foreach ($categories as $k => $v) {
         if ($v['mfh_category_group_id'] == null) {
             $none_group['categories'][$k] = $v;
         }
@@ -19,7 +19,7 @@ function mfh_get_category_group_tree() {
     return $category_groups;
 }
 
-function mfh_get_category_groups($language, $parent_id = null) {
+function mfh_get_category_groups($language, $categories, $parent_id = null) {
     global $hesk_settings;
 
     $parent = $parent_id === null ? 'IS NULL' : '= ' . intval($parent_id);
@@ -39,12 +39,12 @@ function mfh_get_category_groups($language, $parent_id = null) {
         $categoryGroup['parent_id'] = $row['parent_id'];
         $categoryGroup['name'] = $row['name'];
         $categoryGroup['categories'] = array();
-        $categoryGroup['children'] = mfh_get_category_groups($language, $row['id']);
+        $categoryGroup['children'] = mfh_get_category_groups($language, $categories, $row['id']);
 
         $categoryGroups[$row['id']] = $categoryGroup;
     }
 
-    foreach ($hesk_settings['categories'] as $k => $v) {
+    foreach ($categories as $k => $v) {
         if (in_array($v['mfh_category_group_id'], $group_ids)) {
             $categoryGroups[$v['mfh_category_group_id']]['categories'][$k] = $v;
         }
@@ -65,14 +65,36 @@ function mfh_is_category_group_empty($category_group) {
     return true;
 }
 
-function mfh_output_category_group_dropdown_options($category_group, $level) {
+function mfh_output_category_group_dropdown_options($category_group, $level, $trail = '', $selected = null) {
     $padding = ($level * 10 + 20) . 'px';
+    var_dump($padding);
     ?>
-    <option class="category-group-header" <?php if ($category_group['name'] == 'CATEGORY_GROUP_NONE'){echo 'data-divider="true"';} else { echo 'disabled'; } ?>><?php echo $category_group['name'] == 'CATEGORY_GROUP_NONE' ? '' : $category_group['name']; ?></option>
-    <?php foreach ($category_group['categories'] as $k => $v): ?>
-    <option style="padding-left: <?php echo $padding; ?>" data-description="<?php echo $v['mfh_description']; ?>" value="<?php echo $k; ?>"><?php echo $v['name']; ?></option>
+    <option class="category-group-header" style="padding-left: <?php echo $padding; ?>" <?php if ($category_group['name'] == 'CATEGORY_GROUP_NONE'){echo 'data-divider="true"';} else { echo 'disabled'; } ?>><?php echo $category_group['name'] == 'CATEGORY_GROUP_NONE' ? '' : $category_group['name']; ?></option>
+    <?php foreach ($category_group['categories'] as $k => $v):
+        $current_category_group = ' / ' . $category_group['name'];
+        if ($category_group['name'] == 'CATEGORY_GROUP_NONE') {
+            $current_category_group = '';
+        }
+        $slash_before = '/';
+        if ($current_category_group == '') {
+            $slash_before = '';
+        }
+        $display_trail = '<span style="font-size: .8em">' . $trail . $current_category_group . ' ' . $slash_before . '</span> ' . $v['name'];
+        ?>
+    <option style="padding-left: <?php echo $padding; ?>"
+            title="<?php echo hesk_htmlspecialchars($display_trail); ?>"
+            data-description="<?php echo $v['mfh_description']; ?>"
+            value="<?php echo $k; ?>"
+            <?php if ($selected == $k) { echo 'selected'; } ?>>
+        <?php echo $v['name']; ?>
+    </option>
     <?php endforeach;
     foreach ($category_group['children'] as $child) {
-        mfh_output_category_group_dropdown_options($child, $level + 1);
+        if ($trail != '') {
+            $trail .= ' / ';
+        }
+        $trail .= $category_group['name'];
+
+        mfh_output_category_group_dropdown_options($child, $level + 1, $trail, $selected);
     }
 }
