@@ -1112,20 +1112,23 @@ function print_select_category($number_of_categories) {
                         $firstDescription = null;
                         ?>
                         <form action="new_ticket.php" method="get">
-                            <select name="category" id="select_category" class="form-control selectpicker" onchange="showDescription()">
-                                <?php
-                                if ($hesk_settings['select_cat']) {
-                                    echo '<option value="">' . $hesklang['select'] . ' </option>';
-                                }
-                                foreach ($categoryGroups as $categoryGroup) {
-                                    mfh_output_category_group_dropdown_options($categoryGroup, 0);
-                                    /*echo '<option class="header" disabled>' . $categoryGroup['name'] . '</option>';
-                                    foreach ($categoryGroup['categories'] as $k => $v) {
-                                        echo '<option data-description="' . $v['mfh_description'] . '" value="' . $k . '">' . $v['name'] . '</option>';
-                                    }*/
-                                }
-                                ?>
-                            </select>
+                            <div class="row">
+                                <div class="col-sm-11">
+                                    <select name="category" id="select_category" class="form-control selectpicker" onchange="showDescription()">
+                                        <?php
+                                        if ($hesk_settings['select_cat']) {
+                                            echo '<option value="">' . $hesklang['select'] . ' </option>';
+                                        }
+                                        foreach ($categoryGroups as $categoryGroup) {
+                                            mfh_output_category_group_dropdown_options($categoryGroup, 0);
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-1">
+                                    <input type="submit" value="<?php echo $hesklang['c2c']; ?>" class="btn btn-default">
+                                </div>
+                            </div>
                             <?php
                             $display = ' style="display: none"';
 
@@ -1137,10 +1140,6 @@ function print_select_category($number_of_categories) {
                                 <b><?php echo $hesklang['description_colon']; ?></b>
                                 <span><?php echo $firstDescription; ?></span>
                             </span>
-                            <br>
-                            <div style="text-align:center">
-                                <input type="submit" value="<?php echo $hesklang['c2c']; ?>" class="btn btn-default">
-                            </div>
                         </form>
                         <script>
                             function showDescription() {
