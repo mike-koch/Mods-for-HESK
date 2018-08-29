@@ -18,6 +18,7 @@ define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+require(HESK_PATH . 'inc/category_groups.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/reporting_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
@@ -285,15 +286,15 @@ $can_view_ass_others = hesk_checkPermission('can_view_ass_others', 0);
 $can_view_unassigned = hesk_checkPermission('can_view_unassigned', 0);
 
 // Category options
-$category_options = '';
+$category_options = array();
 $my_cat = array();
 $orderBy = $modsForHesk_settings['category_order_column'];
-$res2 = hesk_dbQuery("SELECT `id`, `name` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE " . hesk_myCategories('id') . " ORDER BY `" . $orderBy . "` ASC");
+$res2 = hesk_dbQuery("SELECT `id`, `name`, `mfh_category_group_id` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "categories` WHERE " . hesk_myCategories('id') . " ORDER BY `" . $orderBy . "` ASC");
 while ($row = hesk_dbFetchAssoc($res2)) {
-    $my_cat[$row['id']] = hesk_msgToPlain($row['name'], 1);
+    $my_cat[$row['id']] = $row;
     $row['name'] = (hesk_mb_strlen($row['name']) > 50) ? hesk_mb_substr($row['name'],0,50) . '...' : $row['name'];
     $cat_selected = ($row['id'] == $category) ? 'selected="selected"' : '';
-    $category_options .= '<option value="' . $row['id'] . '" ' . $cat_selected . '>' . $row['name'] . '</option>';
+    $category_options[$row['id']] = $row;
 }
 
 // Generate export file
@@ -530,13 +531,28 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         </div>
                     </div>
                 </div>
+                <?php
+                $categoryGroups = mfh_get_category_group_tree($category_options);
+
+                // Remove category groups with 0 categories in any part of the tree
+                foreach ($categoryGroups as $categoryGroup) {
+                    if (mfh_is_category_group_empty($categoryGroup)) {
+                        unset($categoryGroups[$categoryGroup['id']]);
+                    }
+                }
+                ?>
                 <div class="form-group">
                     <label for="asc" class="col-sm-2 control-label"><?php echo $hesklang['category']; ?>:</label>
 
                     <div class="col-sm-10">
-                        <select name="category" class="form-control">
-                            <option value="0"><?php echo $hesklang['any_cat']; ?></option>
-                            <?php echo $category_options; ?>
+                        <select name="category" class="form-control selectpicker">
+                            <option value="0" style="font-weight: bolder"><?php echo $hesklang['any_cat']; ?></option>
+                            <option data-divider="true"></option>
+                            <?php
+                            foreach ($categoryGroups as $categoryGroup) {
+                                mfh_output_category_group_dropdown_options($categoryGroup, 0);
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>

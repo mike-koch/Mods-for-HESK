@@ -34,10 +34,10 @@ function hesk_export_to_XML($sql, $export_selected = false)
     if ( ! isset($my_cat))
     {
         $my_cat = array();
-        $res2 = hesk_dbQuery("SELECT `id`, `name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE " . hesk_myCategories('id') . " ORDER BY `cat_order` ASC");
+        $res2 = hesk_dbQuery("SELECT `id`, `name`, `mfh_category_group_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE " . hesk_myCategories('id') . " ORDER BY `cat_order` ASC");
         while ($row=hesk_dbFetchAssoc($res2))
         {
-            $my_cat[$row['id']] = hesk_msgToPlain($row['name'], 1);
+            $my_cat[$row['id']] = $row;
         }
     }
 
@@ -211,7 +211,7 @@ function hesk_export_to_XML($sql, $export_selected = false)
         $ticket['message'] = hesk_msgToPlain($ticket['message'], 1, 0);
         $ticket['subject'] = hesk_msgToPlain($ticket['subject'], 1, 0);
         $ticket['owner'] = isset($admins[$ticket['owner']]) ? $admins[$ticket['owner']] : '';
-        $ticket['category'] = isset($my_cat[$ticket['category']]) ? $my_cat[$ticket['category']] : '';
+        $ticket['category'] = isset($my_cat[$ticket['category']]) ? hesk_msgToPlain(get_formatted_category($my_cat[$ticket['category']]), 1) : '';
 
         // Format for export dates
         $hesk_settings['timeformat'] = "Y-m-d\TH:i:s\.000";
@@ -381,3 +381,30 @@ function hesk_export_to_XML($sql, $export_selected = false)
     return array($success_msg, $tickets_exported);
 
 } // END hesk_export_to_XML()
+
+function get_formatted_category($category_or_group, $trail = '') {
+    global $hesk_settings;
+
+    if ($trail == '') {
+        $trail = $category_or_group['name'];
+    }
+
+    if ($category_or_group['mfh_category_group_id'] == null || $category_or_group['mfh_category_group_id'] == 0) {
+        if ($trail == $category_or_group['name']) {
+            return $category_or_group['name'];
+        } else {
+            return $trail;
+        }
+    }
+
+    $res = hesk_dbQuery("SELECT `group`.`parent_id` AS `mfh_category_group_id`, `i18n`.`text` AS `name` 
+        FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups` AS `group`
+        INNER JOIN `" . hesk_dbEscape($hesk_settings['db_pfix']) . "mfh_category_groups_i18n` AS `i18n`
+            ON `group`.`id` = `i18n`.`category_group_id`
+            AND `i18n`.`language` = '" . hesk_dbEscape($hesk_settings['languages'][$hesk_settings['language']]['folder']) . "'
+        WHERE `group`.`id` = " . intval($category_or_group['mfh_category_group_id']));
+    if ($row = hesk_dbFetchAssoc($res)) {
+        $new_trail = $row['name'] . ' / ' . $trail;
+        return get_formatted_category($row, $new_trail);
+    }
+}
