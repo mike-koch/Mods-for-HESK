@@ -3666,6 +3666,27 @@ $modsForHesk_settings = mfh_getSettings();
                 <h4><?php echo $hesklang['customer_view']; ?></h4>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="custom-customer-color-scheme" class="control-label col-sm-7 col-xs-12">Use Custom Color Scheme?</label>
+                            <div class="col-sm-5 col-xs-12 form-inline">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="custom-customer-color-scheme" value="1">
+                                        <?php echo $hesklang['yes']; ?>
+                                    </label>
+                                </div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="custom-customer-color-scheme" value="0">
+                                        <?php echo $hesklang['no']; ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
                         <?php
                         buildColorSchemeColorpicker('navbarBackgroundColor', 'navbarBackgroundColor', $modsForHesk_settings['navbarBackgroundColor'], 'Help');
                         ?>
