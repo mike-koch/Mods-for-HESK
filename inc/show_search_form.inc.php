@@ -55,19 +55,27 @@ $can_view_unassigned = hesk_checkPermission('can_view_unassigned', 0);
 $can_view_ass_by     = hesk_checkPermission('can_view_ass_by', 0);
 
 /* Category options */
-$category_options = '';
+$category_options = array();
 if (isset($hesk_settings['categories']) && count($hesk_settings['categories'])) {
-    foreach ($hesk_settings['categories'] as $row['id'] => $row['name']) {
+    foreach ($hesk_settings['categories'] as $id => $row) {
         $row['name'] = (hesk_mb_strlen($row['name']) > 30) ? hesk_mb_substr($row['name'],0,30) . '...' : $row['name'];
-        $selected = ($row['id'] == $category) ? 'selected="selected"' : '';
-        $category_options .= '<option value="' . $row['id'] . '" ' . $selected . '>' . $row['name'] . '</option>';
+        $category_options[$id] = $row;
     }
 } else {
-    $res2 = hesk_dbQuery('SELECT `id`, `name` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` WHERE ' . hesk_myCategories('id') . ' ORDER BY `cat_order` ASC');
+    $res2 = hesk_dbQuery('SELECT `id`, `name`, `mfh_category_group_id` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` WHERE ' . hesk_myCategories('id') . ' ORDER BY `cat_order` ASC');
     while ($row = hesk_dbFetchAssoc($res2)) {
-        $row['name'] = (hesk_mb_strlen($row['name']) > 30) ? hesk_mb_substr($row['name'],0,30) . '...' : $row['name'];
-        $selected = ($row['id'] == $category) ? 'selected="selected"' : '';
-        $category_options .= '<option value="' . $row['id'] . '" ' . $selected . '>' . $row['name'] . '</option>';
+        $row['name'] = (hesk_mb_strlen($row['name']) > 30) ? hesk_mb_substr($row['name'], 0, 30) . '...' : $row['name'];
+        $category_options[$row['id']] = $row;
+    }
+}
+
+// Get the category groups
+$categoryGroups = mfh_get_category_group_tree($category_options);
+
+// Remove category groups with 0 categories in any part of the tree
+foreach ($categoryGroups as $categoryGroup) {
+    if (mfh_is_category_group_empty($categoryGroup)) {
+        unset($categoryGroups[$categoryGroup['id']]);
     }
 }
 
@@ -311,11 +319,16 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                 <tr>
                                     <td class="alignMiddle"><b><?php echo $hesklang['category']; ?></b>: &nbsp; </td>
                                     <td class="alignMiddle">
-                                        <div class="col-md-4" style="padding-left: 0px"><select class="form-control"
-                                                                                                name="category">
+                                        <div class="col-md-4" style="padding-left: 0px">
+                                            <select class="form-control selectpicker" name="category">
                                                 <option value="0"><?php echo $hesklang['any_cat']; ?></option>
-                                                <?php echo $category_options; ?>
-                                            </select></div>
+                                                <?php
+                                                foreach ($categoryGroups as $categoryGroup) {
+                                                    mfh_output_category_group_dropdown_options($categoryGroup, 0);
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -469,9 +482,13 @@ $more2 = empty($_GET['more2']) ? 0 : 1;
                                     <td class="alignMiddle" width="20%"><b><?php echo $hesklang['category']; ?></b>:
                                         &nbsp; </td>
                                     <td class="alignMiddle" width="80%">
-                                        <select class="form-control" name="category" id="categoryfind">
+                                        <select class="form-control selectpicker" name="category" id="categoryfind">
                                             <option value="0"><?php echo $hesklang['any_cat']; ?></option>
-                                            <?php echo $category_options; ?>
+                                            <?php
+                                            foreach ($categoryGroups as $categoryGroup) {
+                                                mfh_output_category_group_dropdown_options($categoryGroup, 0);
+                                            }
+                                            ?>
                                         </select>
                                     </td>
                                 </tr>

@@ -68,6 +68,7 @@ class CategoryController extends \BaseClass {
         $category->priority = Helpers::safeArrayGet($json, 'priority');
         $category->type = Helpers::safeArrayGet($json, 'type');
         $category->usage = Helpers::safeArrayGet($json, 'usage');
+        $category->categoryGroupId = Helpers::safeArrayGet($json, 'categoryGroupId');
 
         return $category;
     }

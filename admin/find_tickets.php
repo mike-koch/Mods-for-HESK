@@ -19,6 +19,7 @@ define('MFH_PAGE_LAYOUT', 'TOP_ONLY');
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+require(HESK_PATH . 'inc/category_groups.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
 require(HESK_PATH . 'inc/mail_functions.inc.php');

@@ -696,6 +696,26 @@ $hesklang['can_change_due_date'] = 'Can change ticket due dates';
 
 // Added or modified in Mods for HESK 2018.3.0
 $hesklang['click_to_add_event'] = 'Click to add event';
+$hesklang['manage_cat_groups'] = 'Manage Category Groups';
+$hesklang['cat_groups_intro'] = 'Here you can manage category groups. Category groups allow categories to be grouped under a common theme (such as "Account", "Billing", etc). You can also have category groups inside of other category groups.';
+$hesklang['category_group_name'] = 'Category Group Name';
+$hesklang['parent_category_group'] = 'Parent Category Group';
+$hesklang['error_retrieving_category_groups'] = 'An error occurred when retrieving category groups!';
+$hesklang['no_category_groups_found'] = 'No category groups found.';
+$hesklang['create_category_group'] = 'Create Category Group';
+$hesklang['edit_category_group'] = 'Edit Category Group';
+$hesklang['category_group_name_header'] = 'Name';
+$hesklang['category_group_created'] = 'Category group created!';
+$hesklang['category_group_updated'] = 'Category group updated!';
+$hesklang['category_group_deleted'] = 'Category group deleted!';
+$hesklang['category_group_hierarchy_updated'] = 'Category group hierarchy updated!';
+$hesklang['error_saving_updating_category_group'] = 'An error occurred creating / saving the category group!';
+$hesklang['error_deleting_category_group'] = 'An error occurred when deleting the category group!';
+$hesklang['category_group_use_drag_and_drop'] = "Use the drag and drop interface to change this category group's parent";
+$hesklang['delete_category_group_question'] = 'Delete Category Group?';
+$hesklang['delete_category_group_children_notice'] = 'There are category groups that are children of this category group. The child category groups will be moved to this category group\'s parent.';
+$hesklang['you_cannot_undo_this_action'] = 'You cannot undo this action!';
+$hesklang['cat_group'] = 'Category Group';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');

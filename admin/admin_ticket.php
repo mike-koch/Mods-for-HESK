@@ -22,6 +22,7 @@ define('EXTRA_JS', '<script src="'.HESK_PATH.'internal-api/js/admin-ticket.js"><
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+require(HESK_PATH . 'inc/category_groups.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/status_functions.inc.php');
 require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
@@ -618,17 +619,21 @@ require_once(HESK_PATH . 'inc/headerAdmin.inc.php');
 /* List of categories */
 $orderBy = $modsForHesk_settings['category_order_column'];
 if ($can_change_cat) {
-    $result = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `usage` <> 2 ORDER BY `cat_order` ASC");
+    $result = hesk_dbQuery("SELECT `id`,`name`,`mfh_description`,`mfh_category_group_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `usage` <> 2 ORDER BY `cat_order` ASC");
 } else {
-    $result = hesk_dbQuery("SELECT `id`,`name` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `usage` <> 2 AND ".hesk_myCategories('id')." ORDER BY `cat_order` ASC");
+    $result = hesk_dbQuery("SELECT `id`,`name`,`mfh_description`,`mfh_category_group_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE `usage` <> 2 AND ".hesk_myCategories('id')." ORDER BY `cat_order` ASC");
 }
-$categories_options = '';
+$categories_options = array();
 while ($row = hesk_dbFetchAssoc($result)) {
-    $selected = '';
-    if ($row['id'] == $ticket['category']) {
-        $selected = 'selected';
+    $categories_options[$row['id']] = $row;
+}
+$category_groups = mfh_get_category_group_tree($categories_options);
+
+// Remove category groups with 0 categories in any part of the tree
+foreach ($category_groups as $category_group) {
+    if (mfh_is_category_group_empty($category_group)) {
+        unset($category_groups[$category_group['id']]);
     }
-    $categories_options .= '<option value="' . $row['id'] . '" ' . $selected . '>' . $row['name'] . '</option>';
 }
 
 /* List of users */
@@ -1124,15 +1129,17 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                     }
                     echo '</div>';
                     echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticket-property-title">' . $hesklang['category'] . '</p>';
-                    if (strlen($categories_options) && ($can_change_cat || $can_change_own_cat)) {
+                    if (count($categories_options) > 0 && ($can_change_cat || $can_change_own_cat)) {
                         echo '
 
                         <form style="margin-bottom:0;" id="changeCategory" action="move_category.php" method="post">
 
-                            <span style="white-space:nowrap;">
-                            <select name="category" class="selectpicker form-control" onchange="document.getElementById(\'changeCategory\').submit();">
-                            ' . $categories_options . '
-                            </select>
+                            <span style="white-space:nowrap;">';
+                            echo '<select name="category" class="selectpicker form-control" onchange="document.getElementById(\'changeCategory\').submit();">';
+                            foreach ($category_groups as $category_group) {
+                                mfh_output_category_group_dropdown_options($category_group, 0, '', $ticket['category']);
+                            }
+                            echo '</select>
 
                             <input type="submit" style="display: none" value="' . $hesklang['go'] . '">
                             <input type="hidden" name="track" value="' . $trackingID . '">

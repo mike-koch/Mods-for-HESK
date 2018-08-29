@@ -370,3 +370,55 @@ div.ticket-info {
     font-size: 12px;
     border-bottom: none;
 }
+
+.jstree-default .jstree-hovered {
+    background: #f5f5f5 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+.jstree-default .jstree-clicked {
+    background: #fff !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.jstree-grid-header-regular {
+    background-color: #fff !important;
+    font-weight: bolder !important;
+    color: #333 !important;
+    border-bottom: 2px solid #f4f4f4;
+    font-size: 14px !important;
+}
+
+.jstree-grid-separator-regular {
+    visibility: hidden !important;
+}
+
+a.list-group-item:hover {
+    background: #eee;
+    color: #000;
+}
+
+.list-group-item,
+.panel-body.category {
+    color: #000;
+}
+
+.list-group-item > p.description {
+    color: #888;
+}
+
+a.list-group-item:hover > p.description,
+.panel-body.category p.description {
+    color: #888;
+}
+
+.subcategory-group {
+    background: #f5f5f5;
+}
+
+.dropdown-menu > .disabled > a.category-group-header {
+    font-weight: bolder;
+    color: #000;
+}
