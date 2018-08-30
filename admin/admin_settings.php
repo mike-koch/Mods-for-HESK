@@ -3671,13 +3671,13 @@ $modsForHesk_settings = mfh_getSettings();
                             <div class="col-sm-5 col-xs-12 form-inline">
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="custom-customer-color-scheme" value="1">
+                                        <input type="radio" name="custom-customer-color-scheme" value="1" data-show="bootswatch" data-hide="custom-colors">
                                         <?php echo $hesklang['yes']; ?>
                                     </label>
                                 </div>&nbsp;&nbsp;&nbsp;
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="custom-customer-color-scheme" value="0">
+                                        <input type="radio" name="custom-customer-color-scheme" value="0" data-show="custom-colors" data-hide="bootswatch">
                                         <?php echo $hesklang['no']; ?>
                                     </label>
                                 </div>
@@ -3685,7 +3685,50 @@ $modsForHesk_settings = mfh_getSettings();
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="bootswatch">
+                    <div class="col-sm-4 col-xs-12" style="display: none" id="bootswatch-template">
+                        <i class="fa fa-spinner fa-spin"></i>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <img src="{{0}}" alt="Theme Thumbnail">
+                            </div>
+                            <div class="panel-footer">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="{{1}}">
+                                        <span>{{2}}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $.ajax({
+                            url: 'https://bootswatch.com/api/3.json',
+                            method: 'GET',
+                            success: function(data) {
+                                var template = $('#bootswatch-template').html();
+                                for (var i in data.themes) {
+                                    var theme = data.themes[i];
+                                    template.replace('{{0}}', theme.thumbnail);
+                                    template.replace('{{1}}', theme.name);
+                                    template.replace('{{2}}', theme.name);
+
+                                    $('#bootswatch').append(template);
+                                }
+                            },
+                            error: function(data) {
+                                console.error(data);
+                                var template = $($('#bootswatch-template').html());
+                                template.html('Unable to retrieve themes from bootswatch.com');
+                            },
+                            complete: function() {
+                                $('#bootswatch').find('fa-spinner').hide();
+                            }
+                        });
+                    </script>
+                </div>
+                <div class="row" id="custom-colors">
                     <div class="col-sm-6 col-xs-12">
                         <?php
                         buildColorSchemeColorpicker('navbarBackgroundColor', 'navbarBackgroundColor', $modsForHesk_settings['navbarBackgroundColor'], 'Help');
