@@ -3770,6 +3770,11 @@ $modsForHesk_settings = mfh_getSettings();
                             buildColorSchemeColorpicker('dropdownItemTextHoverColor', 'dropdownItemTextHoverColor', $modsForHesk_settings['dropdownItemTextHoverColor'], 'Help');
                             ?>
                         </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('dropdownBackgroundColor', 'dropdownBackgroundColor', $modsForHesk_settings['dropdownBackgroundColor'], 'Help');
+                            ?>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6 col-xs-12">

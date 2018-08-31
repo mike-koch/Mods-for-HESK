@@ -123,6 +123,10 @@ header('X-UA-Compatible: IE=edge');
             background-color: transparent;
         }
 
+        .dropdown-menu {
+            background-color: <?php echo $modsForHesk_settings['dropdownBackgroundColor']; ?>;
+        }
+
         .dropdown-menu > li > a {
             color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>;
         }
@@ -131,6 +135,7 @@ header('X-UA-Compatible: IE=edge');
             color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
             text-decoration: none;
             background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
+            background-image: none;
         }
 
         .navbar-default .navbar-nav > .open > a,
@@ -151,6 +156,30 @@ header('X-UA-Compatible: IE=edge');
 
         .h3questionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
+        }
+
+        @media (max-width: 767px) {
+            .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+                color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>
+            }
+
+            .navbar-nav .open .dropdown-menu {
+                background-color: <?php echo $modsForHesk_settings['dropdownBackgroundColor']; ?>;
+            }
+
+            /*.navbar-nav .open .dropdown-menu > li > a:focus,
+            .navbar-nav .open .dropdown-menu > li > a:hover {
+                background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
+                color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>
+            }*/
+
+            .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+            .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+                color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
+                text-decoration: none;
+                background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
+                background-image: none;
+            }
         }
     </style>
     <?php

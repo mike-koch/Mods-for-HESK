@@ -239,5 +239,7 @@ function getAllMigrations() {
         178 => new \v340\CreateCategoryGroupsTable(178),
         179 => new \v340\CreateCategoryGroupsI18nTable(179),
         180 => new \v340\AddCategoryGroupIdToCategory(180),
+        181 => new \vv201830\AddBootswatchSettings(181),
+        182 => new \vv201830\AddDropdownBackgroundColorSetting(182),
     );
 }

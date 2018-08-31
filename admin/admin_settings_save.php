@@ -502,6 +502,7 @@ $set['dropdownItemTextColor'] = hesk_input(hesk_POST('dropdownItemTextColor'));
 $set['dropdownItemTextHoverColor'] = hesk_input(hesk_POST('dropdownItemTextHoverColor'));
 $set['questionMarkColor'] = hesk_input(hesk_POST('questionMarkColor'));
 $set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownItemTextHoverBackgroundColor'));
+$set['dropdownBackgroundColor'] = hesk_input(hesk_POST('dropdownBackgroundColor'));
 $set['admin_navbar_background'] = hesk_input(hesk_POST('admin-navbar-background-color'));
 $set['admin_navbar_background_hover'] = hesk_input(hesk_POST('admin-navbar-background-hover-color'));
 $set['admin_navbar_brand_background'] = hesk_input(hesk_POST('admin-navbar-brand-background-color'));
@@ -643,6 +644,7 @@ mfh_updateSetting('navbarItemTextHoverColor', $set['navbarItemTextHoverColor'], 
 mfh_updateSetting('navbarItemTextSelectedColor', $set['navbarItemTextSelectedColor'], true);
 mfh_updateSetting('navbarItemSelectedBackgroundColor', $set['navbarItemSelectedBackgroundColor'], true);
 mfh_updateSetting('dropdownItemTextColor', $set['dropdownItemTextColor'], true);
+mfh_updateSetting('dropdownBackgroundColor', $set['dropdownBackgroundColor'], true);
 mfh_updateSetting('dropdownItemTextHoverColor', $set['dropdownItemTextHoverColor'], true);
 mfh_updateSetting('questionMarkColor', $set['questionMarkColor'], true);
 mfh_updateSetting('dropdownItemTextHoverBackgroundColor', $set['dropdownItemTextHoverBackgroundColor'], true);

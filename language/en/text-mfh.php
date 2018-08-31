@@ -720,6 +720,8 @@ $hesklang['use_theme_from_bootswatch_dot_com'] = 'Use Theme From Bootswatch.com'
 $hesklang['use_theme_from_bootswatch_dot_com_help'] = 'Select whether to use pre-defined themes from bootswatch.com, or use custom colors. <b>Your helpdesk must be accessible to the internet to use Bootswatch themes.</b>';
 $hesklang['loading_themes_from_bootswatch_dot_com'] = 'Loading themes from bootswatch.com...';
 $hesklang['unable_to_load_themes_from_bootswatch_dot_com'] = 'Unable to load themes from bootswatch.com';
+$hesklang['dropdownBackgroundColor'] = 'Dropdown Background Color';
+$hesklang['dropdownBackgroundColorHelp'] = 'The background color of a dropdown';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
