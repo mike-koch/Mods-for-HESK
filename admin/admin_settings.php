@@ -3667,17 +3667,17 @@ $modsForHesk_settings = mfh_getSettings();
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label for="custom-customer-color-scheme" class="control-label col-sm-7 col-xs-12">Use Theme From Bootswatch.com?</label>
+                            <label for="custom-customer-color-scheme" class="control-label col-sm-7 col-xs-12">Use Theme From Bootswatch.com</label>
                             <div class="col-sm-5 col-xs-12 form-inline">
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="custom-customer-color-scheme" value="1" data-show="bootswatch" data-hide="custom-colors">
+                                        <input type="radio" name="use-bootswatch-theme" value="1" data-show="bootswatch" data-hide="custom-colors" <?php if ($modsForHesk_settings['use_bootswatch_theme']) { echo 'checked';} ?>>
                                         <?php echo $hesklang['yes']; ?>
                                     </label>
-                                </div>&nbsp;&nbsp;&nbsp;
+                                </div><br>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="custom-customer-color-scheme" value="0" data-show="custom-colors" data-hide="bootswatch">
+                                        <input type="radio" name="use-bootswatch-theme" value="0" data-show="custom-colors" data-hide="bootswatch" <?php if ($modsForHesk_settings['use_bootswatch_theme'] == 0) { echo 'checked';} ?>>
                                         <?php echo $hesklang['no']; ?>
                                     </label>
                                 </div>
@@ -3685,7 +3685,7 @@ $modsForHesk_settings = mfh_getSettings();
                         </div>
                     </div>
                 </div>
-                <div class="row" id="bootswatch">
+                <div class="row" id="bootswatch" <?php if ($modsForHesk_settings['use_bootswatch_theme'] == 0) { echo ' style="display:none"'; } ?>>
                     <div id="loading-block">
                         <i class="fa fa-spinner fa-spin"></i> Loading themes from Bootswatch.com...
                     </div>
@@ -3699,7 +3699,7 @@ $modsForHesk_settings = mfh_getSettings();
                                 <div class="panel-footer">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="{{1}}">
+                                            <input type="radio" name="bootswatch-theme" value="{{1}}">
                                             <span>{{2}}</span>
                                         </label>
                                     </div>
@@ -3707,9 +3707,9 @@ $modsForHesk_settings = mfh_getSettings();
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" name="current-bootswatch-theme" value="Cerulean">
+                    <input type="hidden" name="current-bootswatch-theme" value="<?php echo $modsForHesk_settings['bootswatch_theme']; ?>">
                 </div>
-                <div id="custom-colors">
+                <div id="custom-colors" <?php if ($modsForHesk_settings['use_bootswatch_theme']) { echo ' style="display:none"'; } ?>>
                     <div class="row">
                         <div class="col-sm-6 col-xs-12">
                             <?php
@@ -4096,9 +4096,9 @@ $modsForHesk_settings = mfh_getSettings();
                 $('#templates').append(template);
             }
 
-            if ($('input[name="current-bootswatch"]').val() !== '') {
-                var value = $('input[name="current-bootswatch"]').val();
-                $('input[name="' + value + '"]').attr('checked', true);
+            if ($('input[name="current-bootswatch-theme"]').val() !== '') {
+                var value = $('input[name="current-bootswatch-theme"]').val();
+                $('input[name="bootswatch-theme"][value="' + value + '"]').attr('checked', true);
             }
         },
         error: function(data) {

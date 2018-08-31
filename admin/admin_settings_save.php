@@ -488,6 +488,9 @@ if ($set['customer-email-verification-required']) {
     //-- Don't allow multiple emails if verification is required
     $set['multi_eml'] = 0;
 }
+
+$set['use_bootswatch_theme'] = hesk_input(hesk_POST('use-bootswatch-theme'));
+$set['bootswatch_theme'] = hesk_input(hesk_POST('bootswatch-theme'));
 $set['navbarBackgroundColor'] = hesk_input(hesk_POST('navbarBackgroundColor'));
 $set['navbarBrandColor'] = hesk_input(hesk_POST('navbarBrandColor'));
 $set['navbarBrandHoverColor'] = hesk_input(hesk_POST('navbarBrandHoverColor'));
@@ -630,6 +633,8 @@ mfh_updateSetting('rich_text_for_tickets', $set['rich_text_for_tickets']);
 mfh_updateSetting('rich_text_for_tickets_for_customers', $set['rich_text_for_tickets_for_customers']);
 mfh_updateSetting('statuses_order_column', $set['statuses_order_column'], true);
 mfh_updateSetting('kb_attach_dir', $set['kb_attach_dir'], true);
+mfh_updateSetting('use_bootswatch_theme', $set['use_bootswatch_theme']);
+mfh_updateSetting('bootswatch_theme', $set['bootswatch_theme'], true);
 mfh_updateSetting('navbarBackgroundColor', $set['navbarBackgroundColor'], true);
 mfh_updateSetting('navbarBrandColor', $set['navbarBrandColor'], true);
 mfh_updateSetting('navbarBrandHoverColor', $set['navbarBrandHoverColor'], true);
