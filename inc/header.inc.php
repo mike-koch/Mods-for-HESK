@@ -55,8 +55,10 @@ header('X-UA-Compatible: IE=edge');
     <link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
-    <?php if ($modsForHesk_settings['use_bootstrap_theme'] != 0) { ?>
+    <?php if ($modsForHesk_settings['use_bootstrap_theme'] != 0 && $modsForHesk_settings['use_bootswatch_theme'] == 0) { ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet" />
+    <?php } else if ($modsForHesk_settings['use_bootswatch_theme']) { ?>
+    <link href="<?php echo $modsForHesk_settings['bootswatch_theme']; ?>" type="text/css" rel="stylesheet" />
     <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
@@ -95,6 +97,7 @@ header('X-UA-Compatible: IE=edge');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.magnific-popup.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/alerts.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/lang.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <?php if (!$modsForHesk_settings['use_bootswatch_theme']): ?>
     <style>
         .navbar-default {
             background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
@@ -150,8 +153,8 @@ header('X-UA-Compatible: IE=edge');
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
         }
     </style>
-
     <?php
+    endif;
 
     /* Prepare Javascript that browser should load on page load */
     $onload = "javascript:var i=new Image();i.src='" . HESK_PATH . "img/orangebtnover.gif';var i2=new Image();i2.src='" . HESK_PATH . "img/greenbtnover.gif';";

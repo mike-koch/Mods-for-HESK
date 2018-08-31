@@ -3666,64 +3666,117 @@ $modsForHesk_settings = mfh_getSettings();
                 <h4><?php echo $hesklang['customer_view']; ?></h4>
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('navbarBackgroundColor', 'navbarBackgroundColor', $modsForHesk_settings['navbarBackgroundColor'], 'Help');
-                        ?>
-                    </div>
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('navbarBrandColor', 'navbarBrandColor', $modsForHesk_settings['navbarBrandColor'], 'Help');
-                        ?>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('navbarBrandHoverColor', 'navbarBrandHoverColor', $modsForHesk_settings['navbarBrandHoverColor'], 'Help');
-                        ?>
-                    </div>
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('navbarItemTextColor', 'navbarItemTextColor', $modsForHesk_settings['navbarItemTextColor'], 'Help');
-                        ?>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('navbarItemTextHoverColor', 'navbarItemTextHoverColor', $modsForHesk_settings['navbarItemTextHoverColor'], 'Help');
-                        ?>
-                    </div>
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('navbarItemTextSelectedColor', 'navbarItemTextSelectedColor', $modsForHesk_settings['navbarItemTextSelectedColor'], 'Help');
-                        ?>
+                        <div class="form-group">
+                            <label for="custom-customer-color-scheme" class="control-label col-sm-7 col-xs-12">
+                                <?php echo $hesklang['use_theme_from_bootswatch_dot_com']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                   data-placement="bottom"
+                                   title="<?php echo $hesklang['use_theme_from_bootswatch_dot_com']; ?>"
+                                   data-content="<?php echo $hesklang['use_theme_from_bootswatch_dot_com_help']; ?>"></i>
+                            </label>
+                            <div class="col-sm-5 col-xs-12 form-inline">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="use-bootswatch-theme" value="1" data-show="bootswatch" data-hide="custom-colors" <?php if ($modsForHesk_settings['use_bootswatch_theme']) { echo 'checked';} ?>>
+                                        <?php echo $hesklang['yes']; ?>
+                                    </label>
+                                </div><br>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="use-bootswatch-theme" value="0" data-show="custom-colors" data-hide="bootswatch" <?php if ($modsForHesk_settings['use_bootswatch_theme'] == 0) { echo 'checked';} ?>>
+                                        <?php echo $hesklang['no']; ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('navbarItemSelectedBackgroundColor', 'navbarItemSelectedBackgroundColor', $modsForHesk_settings['navbarItemSelectedBackgroundColor'], 'Help');
-                        ?>
+                <div class="row" id="bootswatch" <?php if ($modsForHesk_settings['use_bootswatch_theme'] == 0) { echo ' style="display:none"'; } ?>>
+                    <div id="loading-block">
+                        <i class="fa fa-spinner fa-spin"></i> <?php echo $hesklang['loading_themes_from_bootswatch_dot_com']; ?>
                     </div>
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('dropdownItemTextColor', 'dropdownItemTextColor', $modsForHesk_settings['dropdownItemTextColor'], 'Help');
-                        ?>
+                    <div id="templates"></div>
+                    <div id="bootswatch-template" style="display: none">
+                        <div class="col-sm-4 col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <img src="{{0}}" class="img-responsive" alt="Theme Thumbnail">
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="bootswatch-theme" value="{{1}}">
+                                            <span>{{2}}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <input type="hidden" name="current-bootswatch-theme" value="<?php echo $modsForHesk_settings['bootswatch_theme']; ?>">
                 </div>
-                <div class="row">
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('dropdownItemTextHoverColor', 'dropdownItemTextHoverColor', $modsForHesk_settings['dropdownItemTextHoverColor'], 'Help');
-                        ?>
+                <div id="custom-colors" <?php if ($modsForHesk_settings['use_bootswatch_theme']) { echo ' style="display:none"'; } ?>>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('navbarBackgroundColor', 'navbarBackgroundColor', $modsForHesk_settings['navbarBackgroundColor'], 'Help');
+                            ?>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('navbarBrandColor', 'navbarBrandColor', $modsForHesk_settings['navbarBrandColor'], 'Help');
+                            ?>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        buildColorSchemeColorpicker('dropdownItemTextHoverBackgroundColor', 'dropdownItemTextHoverBackgroundColor', $modsForHesk_settings['dropdownItemTextHoverBackgroundColor'], 'Help');
-                        ?>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('navbarBrandHoverColor', 'navbarBrandHoverColor', $modsForHesk_settings['navbarBrandHoverColor'], 'Help');
+                            ?>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('navbarItemTextColor', 'navbarItemTextColor', $modsForHesk_settings['navbarItemTextColor'], 'Help');
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('navbarItemTextHoverColor', 'navbarItemTextHoverColor', $modsForHesk_settings['navbarItemTextHoverColor'], 'Help');
+                            ?>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('navbarItemTextSelectedColor', 'navbarItemTextSelectedColor', $modsForHesk_settings['navbarItemTextSelectedColor'], 'Help');
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('navbarItemSelectedBackgroundColor', 'navbarItemSelectedBackgroundColor', $modsForHesk_settings['navbarItemSelectedBackgroundColor'], 'Help');
+                            ?>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('dropdownItemTextColor', 'dropdownItemTextColor', $modsForHesk_settings['dropdownItemTextColor'], 'Help');
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('dropdownItemTextHoverColor', 'dropdownItemTextHoverColor', $modsForHesk_settings['dropdownItemTextHoverColor'], 'Help');
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <?php
+                            buildColorSchemeColorpicker('dropdownItemTextHoverBackgroundColor', 'dropdownItemTextHoverBackgroundColor', $modsForHesk_settings['dropdownItemTextHoverBackgroundColor'], 'Help');
+                            ?>
+                        </div>
                     </div>
                 </div>
                 <h4><?php echo $hesklang['admin_panel']; ?></h4>
@@ -4034,6 +4087,37 @@ $modsForHesk_settings = mfh_getSettings();
     </form>
 </section>
 </div>
+<script>
+    $.ajax({
+        url: 'https://bootswatch.com/api/3.json',
+        method: 'GET',
+        success: function(data) {
+            for (var i in data.themes) {
+                var template = $('#bootswatch-template').html();
+                var theme = data.themes[i];
+                template = template.replace('{{0}}', theme.thumbnail);
+                template = template.replace('{{1}}', theme.cssCdn);
+                template = template.replace('{{2}}', theme.name);
+
+                $('#templates').append(template);
+            }
+
+            if ($('input[name="current-bootswatch-theme"]').val() !== '') {
+                var value = $('input[name="current-bootswatch-theme"]').val();
+                $('input[name="bootswatch-theme"][value="' + value + '"]').attr('checked', true);
+            }
+        },
+        error: function(data) {
+            console.error(data);
+            var template = $($('#bootswatch-template').html());
+            template.html(<?php echo json_encode($hesklang['unable_to_load_themes_from_bootswatch_dot_com']); ?>);
+            $('#templates').append(template.html());
+        },
+        complete: function() {
+            $('#bootswatch').find('#loading-block').hide();
+        }
+    });
+</script>
 
     <?php
     require_once(HESK_PATH . 'inc/footer.inc.php');

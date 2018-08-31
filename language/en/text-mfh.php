@@ -716,6 +716,10 @@ $hesklang['delete_category_group_question'] = 'Delete Category Group?';
 $hesklang['delete_category_group_children_notice'] = 'There are category groups that are children of this category group. The child category groups will be moved to this category group\'s parent.';
 $hesklang['you_cannot_undo_this_action'] = 'You cannot undo this action!';
 $hesklang['cat_group'] = 'Category Group';
+$hesklang['use_theme_from_bootswatch_dot_com'] = 'Use Theme From Bootswatch.com';
+$hesklang['use_theme_from_bootswatch_dot_com_help'] = 'Select whether to use pre-defined themes from bootswatch.com, or use custom colors. <b>Your helpdesk must be accessible to the internet to use Bootswatch themes.</b>';
+$hesklang['loading_themes_from_bootswatch_dot_com'] = 'Loading themes from bootswatch.com...';
+$hesklang['unable_to_load_themes_from_bootswatch_dot_com'] = 'Unable to load themes from bootswatch.com';
 
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
