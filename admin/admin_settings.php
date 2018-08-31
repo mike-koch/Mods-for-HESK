@@ -3667,7 +3667,13 @@ $modsForHesk_settings = mfh_getSettings();
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label for="custom-customer-color-scheme" class="control-label col-sm-7 col-xs-12">Use Theme From Bootswatch.com</label>
+                            <label for="custom-customer-color-scheme" class="control-label col-sm-7 col-xs-12">
+                                <?php echo $hesklang['use_theme_from_bootswatch_dot_com']; ?>
+                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="htmlpopover"
+                                   data-placement="bottom"
+                                   title="<?php echo $hesklang['use_theme_from_bootswatch_dot_com']; ?>"
+                                   data-content="<?php echo $hesklang['use_theme_from_bootswatch_dot_com_help']; ?>"></i>
+                            </label>
                             <div class="col-sm-5 col-xs-12 form-inline">
                                 <div class="radio">
                                     <label>
@@ -3687,7 +3693,7 @@ $modsForHesk_settings = mfh_getSettings();
                 </div>
                 <div class="row" id="bootswatch" <?php if ($modsForHesk_settings['use_bootswatch_theme'] == 0) { echo ' style="display:none"'; } ?>>
                     <div id="loading-block">
-                        <i class="fa fa-spinner fa-spin"></i> Loading themes from Bootswatch.com...
+                        <i class="fa fa-spinner fa-spin"></i> <?php echo $hesklang['loading_themes_from_bootswatch_dot_com']; ?>
                     </div>
                     <div id="templates"></div>
                     <div id="bootswatch-template" style="display: none">
@@ -4104,7 +4110,8 @@ $modsForHesk_settings = mfh_getSettings();
         error: function(data) {
             console.error(data);
             var template = $($('#bootswatch-template').html());
-            template.html('Unable to retrieve themes from bootswatch.com');
+            template.html(<?php echo json_encode($hesklang['unable_to_load_themes_from_bootswatch_dot_com']); ?>);
+            $('#templates').append(template.html());
         },
         complete: function() {
             $('#bootswatch').find('#loading-block').hide();
