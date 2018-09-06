@@ -49,7 +49,7 @@ The latest version available for download can be downloaded from https://mods-fo
 The `master` branch will always contain the latest release.
 
 ## Installation
-Visit [https://mods-for-hesk.mkochcs.com/download.php](https://mods-for-hesk.mkochcs.com/download.php) for installation instructions.
+Visit [https://mods-for-hesk.mkochcs.com/download.php](https://mods-for-hesk.mkochcs.com/download) for installation instructions.
 
 ## Languages / Support
 Please visit https://developers.phpjunkyard.com/viewforum.php?f=19 for translation instructions and support.  
