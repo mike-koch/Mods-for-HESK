@@ -1,4 +1,4 @@
-## [Mods for HESK](http://mods-for-hesk.mkochcs.com)  [![Number of Downloads](https://img.shields.io/github/downloads/mkoch227/Mods-for-HESK/latest/total.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases) [![Current Release](https://img.shields.io/github/release/mkoch227/Mods-for-HESK.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases) [![Project Status](https://img.shields.io/badge/status-maintained-brightgreen.svg)](https://www.github.com/mkoch227/Mods-for-HESK)
+## [Mods for HESK](https://mods-for-hesk.com)  [![Number of Downloads](https://img.shields.io/github/downloads/mkoch227/Mods-for-HESK/latest/total.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases) [![Current Release](https://img.shields.io/github/release/mkoch227/Mods-for-HESK.svg)](https://www.github.com/mkoch227/Mods-for-HESK/releases) [![Project Status](https://img.shields.io/badge/status-maintained-brightgreen.svg)](https://www.github.com/mkoch227/Mods-for-HESK)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mkoch227/Mods-for-HESK/blob/master/LICENSE)
 [![Join the chat at https://gitter.im/mkoch227/Mods-for-HESK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mkoch227/Mods-for-HESK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
 
@@ -49,7 +49,7 @@ The latest version available for download can be downloaded from https://mods-fo
 The `master` branch will always contain the latest release.
 
 ## Installation
-Visit [https://mods-for-hesk.mkochcs.com/download.php](https://mods-for-hesk.mkochcs.com/download) for installation instructions.
+Visit [https://mods-for-hesk.mkochcs.com/download.php](https://mods-for-hesk.com/download) for installation instructions.
 
 ## Languages / Support
 Please visit https://developers.phpjunkyard.com/viewforum.php?f=19 for translation instructions and support.  
