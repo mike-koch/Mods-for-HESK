@@ -723,5 +723,9 @@ $hesklang['unable_to_load_themes_from_bootswatch_dot_com'] = 'Unable to load the
 $hesklang['dropdownBackgroundColor'] = 'Dropdown Background Color';
 $hesklang['dropdownBackgroundColorHelp'] = 'The background color of a dropdown';
 
+// Datepicker language
+// Visit https://github.com/uxsolutions/bootstrap-datepicker/tree/master/dist/locales for a complete list (or 'en'). Provide the value between "-datepicker." and ".min.js" below.
+$hesklang['DATEPICKER_LOCALE'] = 'en';
+
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
