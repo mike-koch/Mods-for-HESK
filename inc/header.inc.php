@@ -84,6 +84,9 @@ header('X-UA-Compatible: IE=edge');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/dropzone.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <?php if ($hesklang['DATEPICKER_LOCALE'] != 'en'): ?>
+        <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>locales/bootstrap-datepicker.<?php echo $hesklang['DATEPICKER_LOCALE']; ?>.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>" charset="UTF-8"></script>
+    <?php endif; ?>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-clockpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-fontawesome-4.3.0.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
@@ -387,3 +390,4 @@ if ($modsForHesk_settings['show_icons']) {
     <?php // GLOBAL JAVASCRIPT IDs ?>
     <p style="display: none" id="hesk-path"><?php echo HESK_PATH; ?></p>
     <p style="display: none;" id="lang_CALENDAR_LANGUAGE"><?php echo $hesklang['CALENDAR_LANGUAGE']; ?></p>
+    <p style="display: none" id="lang_DATEPICKER_LOCALE"><?php echo $hesklang['DATEPICKER_LOCALE']; ?></p>
