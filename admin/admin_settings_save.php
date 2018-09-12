@@ -528,6 +528,9 @@ $set['business_hours_wednesday'] = hesk_POST_array('business-hours-wednesday');
 $set['business_hours_thursday'] = hesk_POST_array('business-hours-thursday');
 $set['business_hours_friday'] = hesk_POST_array('business-hours-friday');
 $set['business_hours_saturday'] = hesk_POST_array('business-hours-saturday');
+$set['use_ldap'] = hesk_checkMinMax(intval(hesk_POST('use_ldap')), 0, 1, 1);
+$set['ldap_server'] = hesk_input(hesk_POST('ldap_server'));
+$set['ldap_base_dn'] = hesk_input(hesk_POST('ldap_base_dn'));
 
 $changedBackground = false;
 $loadedAttachmentFuncs = false;
@@ -675,6 +678,9 @@ mfh_updateSetting('first_day_of_week', $set['first_day_of_week'], false);
 mfh_updateSetting('default_calendar_view', $set['default_view'], true);
 mfh_updateSetting('calendar_show_start_time', $set['calendar_show_start_time'], true);
 mfh_updateSetting('admin_color_scheme', $set['admin_color_scheme'], true);
+mfh_updateSetting('use_ldap', $set['use_ldap'], false);
+mfh_updateSetting('ldap_server', $set['ldap_server'], true);
+mfh_updateSetting('ldap_base_dn', $set['ldap_base_dn'], true);
 
 mfh_updateSetting('login_background_type', $set['login_background_type'], true);
 if ($changedBackground) {

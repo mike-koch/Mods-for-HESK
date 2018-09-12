@@ -722,10 +722,14 @@ $hesklang['loading_themes_from_bootswatch_dot_com'] = 'Loading themes from boots
 $hesklang['unable_to_load_themes_from_bootswatch_dot_com'] = 'Unable to load themes from bootswatch.com';
 $hesklang['dropdownBackgroundColor'] = 'Dropdown Background Color';
 $hesklang['dropdownBackgroundColorHelp'] = 'The background color of a dropdown';
+$hesklang['ldap_ad_settings'] = 'Active Directory / LDAP Settings';
 $hesklang['login_using_ldap'] = 'Authenticate using Active Directory / LDAP';
 $hesklang['login_using_ldap_help'] = 'Select "YES" to authenticate users against Active Directory / LDAP.';
-$hesklang['ldap_base_dn'] = 'Active Directory / LDAP Base Domain (DN)';
+$hesklang['ldap_server_address'] = 'Server';
+$hesklang['ldap_server_address_help'] = 'Enter your LDAP server address (i.e. localhost). If you use a non-standard port, enter it here as well (i.e. localhost:12345)';
+$hesklang['ldap_base_dn'] = 'Base Domain (DN)';
 $hesklang['ldap_base_dn_help'] = 'Enter the base domain (DN) as the default for lookups. (i.e. CN=Users,DC=modsforhesk,DC=local)';
+$hesklang['test_ldap_connection'] = 'Test Active Directory / LDAP Connection';
 
 // Datepicker language
 // Visit https://github.com/uxsolutions/bootstrap-datepicker/tree/master/dist/locales for a complete list (or 'en'). Provide the value between "-datepicker." and ".min.js" below.
