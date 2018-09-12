@@ -1692,6 +1692,40 @@ $modsForHesk_settings = mfh_getSettings();
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="use_ldap" class="col-sm-4 control-label">
+                                <span class="label label-primary"
+                                      data-toggle="tooltip"
+                                      title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                        <?php echo $hesklang['login_using_ldap']; ?>
+                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                           title="<?php echo $hesklang['login_using_ldap']; ?>"
+                           data-content="<?php echo hesk_htmlspecialchars($hesklang['login_using_ldap_help']); ?>"></i>
+                    </label>
+                    <div class="col-sm-8 form-inline">
+                        <?php
+                        $on = $modsForHesk_settings['use_ldap'] ? 'checked="checked"' : '';
+                        $off = $modsForHesk_settings['use_ldap'] ? '' : 'checked="checked"';
+                        echo '
+                                <div class="radio"><label><input onclick="$(\'#ldap_dn_group\').hide()" type="radio" name="use_ldap" value="0" ' . $off . '> ' . $hesklang['off'] . '</div>&nbsp;&nbsp;&nbsp;
+                                <div class="radio"><label><input onclick="$(\'#ldap_dn_group\').show()" type="radio" name="use_ldap" value="1" ' . $on . '> ' . $hesklang['on'] . '</div>';
+                        ?>
+                    </div>
+                </div>
+                <div class="form-group" id="ldap_dn_group">
+                    <label for="ldap_dn" class="col-sm-4 control-label">
+                                <span class="label label-primary"
+                                      data-toggle="tooltip"
+                                      title="<?php echo $hesklang['added_in_mods_for_hesk']; ?>"><?php echo $hesklang['mods_for_hesk_acronym']; ?></span>
+                        <?php echo $hesklang['ldap_base_dn']; ?>
+                        <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                           title="<?php echo $hesklang['ldap_base_dn']; ?>"
+                           data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_base_dn_help']); ?>"></i>
+                    </label>
+                    <div class="col-sm-3">
+                        <input type="text" name="ldap_dn" value="<?php echo $modsForHesk_settings['ldap_dn']; ?>" placeholder="<?php echo $hesklang['ldap_base_dn']; ?>" class="form-control">
+                    </div>
+                </div>
 
                 <h4 class="bold"><?php echo $hesklang['attachments']; ?></h4>
                 <div class="form-group">
