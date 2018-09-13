@@ -243,6 +243,7 @@ Link::all(array(
         action(\Controllers\Navigation\CustomNavElementController::clazz(), RequestMethod::all(), SecurityHandler::INTERNAL),
     '/v1-internal/custom-navigation/{i}/sort/{s}' =>
         action(\Controllers\Navigation\CustomNavElementController::clazz() . '::sort', RequestMethod::all(), SecurityHandler::INTERNAL),
+    '/v1-internal/ldap-test' => action(),
 
     '/v1-public/hesk-version' =>
         action(\Controllers\System\HeskVersionController::clazz() . '::getHeskVersion', RequestMethod::all(), SecurityHandler::OPEN),

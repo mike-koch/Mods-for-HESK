@@ -1740,6 +1740,58 @@ $modsForHesk_settings = mfh_getSettings();
                         </div>
                     </div>
                 </div>
+                <!-- START SMTP TEST -->
+                <div id="ldap_test" style="display:none">
+                </div>
+
+                <script language="Javascript" type="text/javascript"><!--
+                    function hesk_testLDAP() {
+                        var $element = $('#ldap-test');
+                        $element.html('<img src="<?php echo HESK_PATH; ?>img/loading.gif" width="24" height="24" alt="" border="0" style="vertical-align:text-bottom" /> <i><?php echo addslashes($hesklang['contest']); ?></i>');
+                        $element.show();
+
+                        var domain = $('input[name="ldap_server"]').val();
+                        var baseDn = $('input[name="ldap_base_dn"]').val();
+
+                        $.ajax({
+                            url: <?php echo json_encode(HESK_PATH); ?> + "api/index.php/v1-internal/ldap-test",
+                            method: 'POST',
+                            data: JSON.stringify({
+                                domain: domain,
+                                baseDn: baseDn
+                            }),
+                            success: function(result) {
+
+                            },
+                            error: function(data) {
+
+                            },
+                            complete: function() {
+
+                            }
+                        });
+
+                        xmlHttp = GetXmlHttpObject();
+                        if (xmlHttp == null) {
+                            return;
+                        }
+
+                        xmlHttp.open('POST', 'test_connection.php', true);
+                        xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xmlHttp.setRequestHeader("Content-length", params.length);
+                        xmlHttp.setRequestHeader("Connection", "close");
+
+                        xmlHttp.onreadystatechange = function () {
+                            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                                element.innerHTML = xmlHttp.responseText;
+                            }
+                        }
+
+                        xmlHttp.send(params);
+                    }
+                    //-->
+                </script>
+                <!-- END SMTP TEST -->
 
                 <h4 class="bold"><?php echo $hesklang['attachments']; ?></h4>
                 <div class="form-group">
