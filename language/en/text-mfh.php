@@ -729,6 +729,10 @@ $hesklang['ldap_server_address'] = 'Server';
 $hesklang['ldap_server_address_help'] = 'Enter your LDAP server address (i.e. localhost). If you use a non-standard port, enter it here as well (i.e. localhost:12345)';
 $hesklang['ldap_base_dn'] = 'Base Domain (DN)';
 $hesklang['ldap_base_dn_help'] = 'Enter the base domain (DN) as the default for lookups. (i.e. CN=Users,DC=modsforhesk,DC=local)';
+$hesklang['ldap_user'] = 'Search User';
+$hesklang['ldap_user_help'] = 'Enter a username that has lookup rights in Active Directory / LDAP. You must include the domain in front (i.e. EXAMPLEDOMAIN\myusername)';
+$hesklang['ldap_password'] = 'Password';
+$hesklang['ldap_password_help'] = 'The password for the user entered above';
 $hesklang['test_ldap_connection'] = 'Test Active Directory / LDAP Connection';
 
 // Datepicker language

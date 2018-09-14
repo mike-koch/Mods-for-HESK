@@ -1736,11 +1736,34 @@ $modsForHesk_settings = mfh_getSettings();
                         </label>
                         <div class="col-sm-3">
                             <input type="text" name="ldap_base_dn" value="<?php echo $modsForHesk_settings['ldap_base_dn']; ?>" placeholder="<?php echo $hesklang['ldap_base_dn']; ?>" class="form-control">
-                            <div class="btn btn-default push-down-10"><?php echo $hesklang['test_ldap_connection']; ?></div>
+                        </div>
+                    </div>
+                    <div class="form-group" id="ldap_user">
+                        <label for="ldap_user" class="col-sm-4 control-label">
+                            <?php echo $hesklang['ldap_user']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo $hesklang['ldap_user']; ?>"
+                               data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_user_help']); ?>"></i>
+                        </label>
+                        <div class="col-sm-3">
+                            <input type="text" name="ldap_user" value="<?php echo $modsForHesk_settings['ldap_user']; ?>" placeholder="<?php echo $hesklang['ldap_user']; ?>" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group" id="ldap_password">
+                        <label for="ldap_password" class="col-sm-4 control-label">
+                            <?php echo $hesklang['ldap_password']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo $hesklang['ldap_password']; ?>"
+                               data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_password_help']); ?>"></i>
+                        </label>
+                        <div class="col-sm-3">
+                            <input type="text" name="ldap_password" value="<?php echo $modsForHesk_settings['ldap_password']; ?>" placeholder="<?php echo $hesklang['ldap_password']; ?>" class="form-control">
+                            <div onclick="hesk_testLDAP()" class="btn btn-default push-down-10"><?php echo $hesklang['test_ldap_connection']; ?></div>
                         </div>
                     </div>
                 </div>
-                <!-- START SMTP TEST -->
+
+                <!-- START LDAP TEST -->
                 <div id="ldap_test" style="display:none">
                 </div>
 
@@ -1752,42 +1775,32 @@ $modsForHesk_settings = mfh_getSettings();
 
                         var domain = $('input[name="ldap_server"]').val();
                         var baseDn = $('input[name="ldap_base_dn"]').val();
+                        var username = $('input[name="ldap_user"]').val();
+                        var password = $('input[name="ldap_password"]').val();
+
+                        if (domain === '' || baseDn === '' || username === '' || password === '') {
+                            alert('missing required fields');
+                        }
 
                         $.ajax({
                             url: <?php echo json_encode(HESK_PATH); ?> + "api/index.php/v1-internal/ldap-test",
                             method: 'POST',
                             data: JSON.stringify({
                                 domain: domain,
-                                baseDn: baseDn
+                                baseDn: baseDn,
+                                username: username,
+                                password: password
                             }),
                             success: function(result) {
-
+                                console.log(result.message);
                             },
                             error: function(data) {
-
+                                console.log(data);
                             },
                             complete: function() {
 
                             }
                         });
-
-                        xmlHttp = GetXmlHttpObject();
-                        if (xmlHttp == null) {
-                            return;
-                        }
-
-                        xmlHttp.open('POST', 'test_connection.php', true);
-                        xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        xmlHttp.setRequestHeader("Content-length", params.length);
-                        xmlHttp.setRequestHeader("Connection", "close");
-
-                        xmlHttp.onreadystatechange = function () {
-                            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                                element.innerHTML = xmlHttp.responseText;
-                            }
-                        }
-
-                        xmlHttp.send(params);
                     }
                     //-->
                 </script>
