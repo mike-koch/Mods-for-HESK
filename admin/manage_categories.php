@@ -118,9 +118,10 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                         </button>
                     </div>
                     <div class="col-md-12">
-                        <table class="table table-striped">
+                        <table class="table table-striped" id="dnd-container">
                             <thead>
                             <tr>
+                                <th>&nbsp;</th>
                                 <th><?php echo $hesklang['id']; ?></th>
                                 <th><?php echo $hesklang['cat_name']; ?></th>
                                 <th>Category Group</th>
@@ -403,6 +404,7 @@ echo '</script>';
 </div>
 <script type="text/html" id="category-row-template">
     <tr>
+        <td><i class="fa fa-bars"></i></td>
         <td><span data-property="id" data-value="x"></span></td>
         <td>
             <span class="label category-label" data-property="category-name">

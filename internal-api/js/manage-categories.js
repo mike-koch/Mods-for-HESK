@@ -172,6 +172,17 @@ function loadTable() {
                 container: 'body',
                 html: true
             });
+
+            var el = $('#dnd-container')[0];
+            var dragger = tableDragger(el, {
+                mode: 'row',
+                onlyBody: true,
+                animation: 300
+            });
+            dragger.on('drop', function(from, to) {
+                console.log(from);
+                console.log(to);
+            });
         },
         error: function(data) {
             mfhAlert.errorWithLog(mfhLang.text('error_retrieving_categories'), data.responseJSON);
