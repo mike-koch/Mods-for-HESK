@@ -85,6 +85,18 @@ function installOrUpdate() {
 
             // Recursive call that will increment by 1 each time
             executeMigration(startingMigrationNumber, startingMigrationNumber, data.lastMigrationNumber, 'up');
+        },
+        error: function(response) {
+            try {
+                message = JSON.parse(response);
+            } catch (e) {
+                message = response.responseText;
+            }
+            $('[data-step="install-or-update"] > #spinner').hide();
+            $errorBlock = $('#error-block');
+            $errorBlock.html($errorBlock.html() + "<br><br>An error occurred! (Error Code: " + migrationNumber + ")<br>" + message).show();
+
+            console.error(message);
         }
     })
 }
