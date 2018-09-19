@@ -162,29 +162,8 @@ class CategoryHandler extends \BaseClass {
         $this->categoryGateway->resortAllCategories($heskSettings);
     }
 
-    function sortCategory($id, $direction, $heskSettings) {
-        $modsForHeskSettings = $this->modsForHeskSettingsGateway->getAllSettings($heskSettings);
-
-        $categories = $this->categoryGateway->getAllCategories($heskSettings, $modsForHeskSettings);
-        $category = null;
-        foreach ($categories as $innerCategory) {
-            if ($innerCategory->id === intval($id)) {
-                $category = $innerCategory;
-                break;
-            }
-        }
-
-        if ($category === null) {
-            throw new \BaseException("Could not find category with ID {$id}!");
-        }
-
-        if ($direction === Direction::UP) {
-            $category->catOrder -= 15;
-        } else {
-            $category->catOrder += 15;
-        }
-
-        $this->categoryGateway->updateCategory($category, $heskSettings);
+    function sortCategories($sortedCategories, $heskSettings) {
+        $this->categoryGateway->sortCategories($sortedCategories, $heskSettings);
         $this->categoryGateway->resortAllCategories($heskSettings);
     }
 

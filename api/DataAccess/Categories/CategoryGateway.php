@@ -133,6 +133,21 @@ class CategoryGateway extends CommonDao {
         $this->close();
     }
 
+    function sortCategories($sortedCategories, $heskSettings) {
+        $this->init();
+
+        $sortValue = 10;
+        foreach ($sortedCategories as $categoryId) {
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "categories`
+                SET `cat_order` = " . intval($sortValue) . "
+                WHERE `id` = " . intval($categoryId));
+
+            $sortValue += 10;
+        }
+
+        $this->close();
+    }
+
     function deleteCategory($id, $heskSettings) {
         $this->init();
 
