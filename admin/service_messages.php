@@ -91,9 +91,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <?php
                     }
                     ?>
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="dnd-container">
                         <thead>
                         <tr>
+                            <th>&nbsp;</th>
                             <th style="display: none"><?php echo $hesklang['id']; ?></th>
                             <th><?php echo $hesklang['sm_mtitle']; ?></th>
                             <th><?php echo $hesklang['sm_author']; ?></th>
@@ -406,6 +407,7 @@ echo '</script>';
 </script>
 <script type="text/html" id="service-message-template">
 <tr>
+    <td class="sort-bars"><i class="fa fa-bars"></i></td>
     <td style="display: none"><span data-property="id" data-value="x"></span></td>
     <td><span data-property="title"></span></td>
     <td><span data-property="author"></span></td>
