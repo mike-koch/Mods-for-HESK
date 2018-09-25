@@ -226,7 +226,7 @@ Link::all(array(
     '/v1/service-messages/{i}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
         array(RequestMethod::PUT, RequestMethod::DELETE),
         SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1-internal/service-messages/{i}/sort/{s}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz() . '::sort',
+    '/v1-internal/service-messages/sort' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz() . '::sort',
         array(RequestMethod::POST),
         SecurityHandler::INTERNAL),
 

@@ -369,6 +369,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'error_retrieving_sm',
     'all',
     'e_udel',
+    'sort_saved',
 ));
 
 echo '<script>var users = [];';
@@ -414,18 +415,6 @@ echo '</script>';
     <td><span data-property="language"></span></td>
     <td><span data-property="type"></span></td>
     <td>
-        <span class="sort-arrows">
-            <a href="#" data-action="sort"
-               data-direction="up">
-                <i class="fa fa-fw fa-arrow-up icon-link green"
-                   data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
-            </a>
-            <a href="#" data-action="sort"
-               data-direction="down">
-                <i class="fa fa-fw fa-arrow-down icon-link green"
-                   data-toggle="tooltip" title="<?php echo $hesklang['move_dn'] ?>"></i>
-            </a>
-        </span>
         <a name="Edit Service Message" href="#" data-action="edit">
             <i class="fa fa-fw fa-pencil icon-link orange"
                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>

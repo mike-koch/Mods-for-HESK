@@ -91,12 +91,12 @@ function loadTable() {
 
                 console.log(serviceMessages);
 
-                /*$.ajax({
+                $.ajax({
                     method: 'POST',
-                    url: heskUrl + 'api/index.php/v1-internal/categories/sort',
+                    url: heskUrl + 'api/index.php/v1-internal/service-messages/sort',
                     headers: { 'X-Internal-Call': true },
                     data: JSON.stringify({
-                        order: categories
+                        order: serviceMessages
                     }),
                     beforeSend: function() {
                         $('#overlay').show()
@@ -105,13 +105,13 @@ function loadTable() {
                         mfhAlert.success(mfhLang.text('sort_saved'));
                     },
                     error: function(data) {
-                        mfhAlert.errorWithLog(mfhLang.text('error_retrieving_category_groups'), data.responseJSON);
+                        mfhAlert.errorWithLog(mfhLang.text('error_retrieving_sm'), data.responseJSON);
                         console.error(data);
                     },
                     complete: function() {
                         $('#overlay').hide();
                     }
-                })*/
+                })
             });
         },
         error: function(data) {
