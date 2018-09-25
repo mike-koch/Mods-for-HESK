@@ -162,6 +162,21 @@ class ServiceMessagesGateway extends CommonDao {
         $this->close();
     }
 
+    function sortServiceMessages($sortedServiceMessages, $heskSettings) {
+        $this->init();
+
+        $sortValue = 10;
+        foreach ($sortedServiceMessages as $serviceMessageId) {
+            hesk_dbQuery("UPDATE `" . hesk_dbEscape($heskSettings['db_pfix']) . "service_messages`
+                SET `order` = " . intval($sortValue) . "
+                WHERE `id` = " . intval($serviceMessageId));
+
+            $sortValue += 10;
+        }
+
+        $this->close();
+    }
+
     function resortAllServiceMessages($heskSettings) {
         $this->init();
 

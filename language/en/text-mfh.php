@@ -722,6 +722,7 @@ $hesklang['loading_themes_from_bootswatch_dot_com'] = 'Loading themes from boots
 $hesklang['unable_to_load_themes_from_bootswatch_dot_com'] = 'Unable to load themes from bootswatch.com';
 $hesklang['dropdownBackgroundColor'] = 'Dropdown Background Color';
 $hesklang['dropdownBackgroundColorHelp'] = 'The background color of a dropdown';
+$hesklang['sort_saved'] = 'Sort saved successfully!';
 
 // Datepicker language
 // Visit https://github.com/uxsolutions/bootstrap-datepicker/tree/master/dist/locales for a complete list (or 'en'). Provide the value between "-datepicker." and ".min.js" below.

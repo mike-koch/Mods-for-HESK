@@ -73,6 +73,46 @@ function loadTable() {
                 $('[data-value="' + lastElement.id + '"]').parent().parent()
                     .find('[data-direction="down"]').css('visibility', 'hidden');
             }
+
+            var el = $('#dnd-container')[0];
+
+            var dragger = tableDragger(el, {
+                mode: 'row',
+                onlyBody: true,
+                animation: 300
+            });
+            dragger.on('drop', function(from, to, el) {
+                var $columns = $(el).find('tbody').find('tr').find('td:nth-child(2)');
+
+                var serviceMessages = [];
+                $.each($columns, function() {
+                    serviceMessages.push($(this).find('span').attr('data-value'));
+                });
+
+                console.log(serviceMessages);
+
+                $.ajax({
+                    method: 'POST',
+                    url: heskUrl + 'api/index.php/v1-internal/service-messages/sort',
+                    headers: { 'X-Internal-Call': true },
+                    data: JSON.stringify({
+                        order: serviceMessages
+                    }),
+                    beforeSend: function() {
+                        $('#overlay').show()
+                    },
+                    success: function() {
+                        mfhAlert.success(mfhLang.text('sort_saved'));
+                    },
+                    error: function(data) {
+                        mfhAlert.errorWithLog(mfhLang.text('error_retrieving_sm'), data.responseJSON);
+                        console.error(data);
+                    },
+                    complete: function() {
+                        $('#overlay').hide();
+                    }
+                })
+            });
         },
         error: function(data) {
             mfhAlert.errorWithLog(mfhLang.text('error_retrieving_sm'), data.responseJSON);

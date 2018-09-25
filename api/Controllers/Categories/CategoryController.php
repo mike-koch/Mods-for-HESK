@@ -100,12 +100,16 @@ class CategoryController extends \BaseClass {
         return http_response_code(204);
     }
 
-    static function sort($id, $direction) {
+    static function sort() {
         global $applicationContext, $hesk_settings;
+
+        $data = JsonRetriever::getJsonData();
+
+        $order = Helpers::safeArrayGet($data, 'order');
 
         /* @var $handler CategoryHandler */
         $handler = $applicationContext->get(CategoryHandler::clazz());
 
-        $handler->sortCategory(intval($id), $direction, $hesk_settings);
+        $handler->sortCategories($order, $hesk_settings);
     }
 }

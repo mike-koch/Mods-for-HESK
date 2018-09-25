@@ -10,7 +10,6 @@ $(document).ready(function() {
     bindDeleteButton();
     bindCreateModal();
     bindGenerateLinkModal();
-    bindSortButtons();
 });
 
 
@@ -171,6 +170,48 @@ function loadTable() {
                 trigger: 'hover',
                 container: 'body',
                 html: true
+            });
+
+            var el = $('#dnd-container')[0];
+
+            if (el === undefined) {
+                return;
+            }
+
+            var dragger = tableDragger(el, {
+                mode: 'row',
+                onlyBody: true,
+                animation: 300
+            });
+            dragger.on('drop', function(from, to, el) {
+                var $columns = $(el).find('tbody').find('tr').find('td:nth-child(2)');
+
+                var categories = [];
+                $.each($columns, function() {
+                    categories.push($(this).find('span').attr('data-value'));
+                });
+
+                $.ajax({
+                    method: 'POST',
+                    url: heskUrl + 'api/index.php/v1-internal/categories/sort',
+                    headers: { 'X-Internal-Call': true },
+                    data: JSON.stringify({
+                        order: categories
+                    }),
+                    beforeSend: function() {
+                        $('#overlay').show()
+                    },
+                    success: function() {
+                        mfhAlert.success(mfhLang.text('sort_saved'));
+                    },
+                    error: function(data) {
+                        mfhAlert.errorWithLog(mfhLang.text('error_retrieving_category_groups'), data.responseJSON);
+                        console.error(data);
+                    },
+                    complete: function() {
+                        $('#overlay').hide();
+                    }
+                })
             });
         },
         error: function(data) {
@@ -481,28 +522,5 @@ function bindGenerateLinkModal() {
         var url = heskUrl + '/index.php?a=add&catid=' + $(this).parent().data('category-id');
 
         $modal.find('input[type="text"]').val(url).end().modal('show');
-    });
-}
-
-function bindSortButtons() {
-    $(document).on('click', '[data-action="sort"]', function() {
-        $('#overlay').show();
-        var heskUrl = $('p#hesk-path').text();
-        var direction = $(this).data('direction');
-        var element = categories[$(this).parent().parent().parent().find('[data-property="id"]').text()];
-
-        $.ajax({
-            method: 'POST',
-            url: heskUrl + 'api/index.php/v1-internal/categories/' + element.id + '/sort/' + direction,
-            headers: { 'X-Internal-Call': true },
-            success: function() {
-                loadTable();
-            },
-            error: function(data) {
-                mfhAlert.errorWithLog(mfhLang.text('error_sorting_categories'), data.responseJSON);
-                console.error(data);
-                $('#overlay').hide();
-            }
-        })
     });
 }

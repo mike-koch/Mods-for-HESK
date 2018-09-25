@@ -118,9 +118,12 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                         </button>
                     </div>
                     <div class="col-md-12">
-                        <table class="table table-striped">
+                        <table class="table table-striped" <?php if ($orderBy != 'name'): ?>id="dnd-container"<?php endif; ?>>
                             <thead>
                             <tr>
+                                <?php if ($orderBy != 'name'): ?>
+                                    <th>&nbsp;</th>
+                                <?php endif; ?>
                                 <th><?php echo $hesklang['id']; ?></th>
                                 <th><?php echo $hesklang['cat_name']; ?></th>
                                 <th>Category Group</th>
@@ -403,6 +406,9 @@ echo '</script>';
 </div>
 <script type="text/html" id="category-row-template">
     <tr>
+        <?php if ($orderBy != 'name'): ?>
+            <td class="sort-bars"><i class="fa fa-bars"></i></td>
+        <?php endif; ?>
         <td><span data-property="id" data-value="x"></span></td>
         <td>
             <span class="label category-label" data-property="category-name">
@@ -442,18 +448,6 @@ echo '</script>';
                 <i class="fa fa-fw icon-link" data-toggle="tooltip"
                    data-placement="top"></i>
             </a>
-            <span class="sort-arrows">
-                <a href="#" data-action="sort"
-                   data-direction="up">
-                    <i class="fa fa-fw fa-arrow-up icon-link green"
-                       data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
-                </a>
-                <a href="#" data-action="sort"
-                   data-direction="down">
-                    <i class="fa fa-fw fa-arrow-down icon-link green"
-                       data-toggle="tooltip" title="<?php echo $hesklang['move_dn'] ?>"></i>
-                </a>
-            </span>
             <a href="#" data-action="edit">
                 <i class="fa fa-fw fa-pencil icon-link orange"
                    data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
@@ -493,6 +487,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'no_manager',
     'e_udel',
     'none',
+    'sort_saved',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');

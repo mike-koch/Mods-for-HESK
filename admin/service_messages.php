@@ -91,9 +91,10 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         <?php
                     }
                     ?>
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="dnd-container">
                         <thead>
                         <tr>
+                            <th>&nbsp;</th>
                             <th style="display: none"><?php echo $hesklang['id']; ?></th>
                             <th><?php echo $hesklang['sm_mtitle']; ?></th>
                             <th><?php echo $hesklang['sm_author']; ?></th>
@@ -368,6 +369,7 @@ echo mfh_get_hidden_fields_for_language(array(
     'error_retrieving_sm',
     'all',
     'e_udel',
+    'sort_saved',
 ));
 
 echo '<script>var users = [];';
@@ -406,24 +408,13 @@ echo '</script>';
 </script>
 <script type="text/html" id="service-message-template">
 <tr>
+    <td class="sort-bars"><i class="fa fa-bars"></i></td>
     <td style="display: none"><span data-property="id" data-value="x"></span></td>
     <td><span data-property="title"></span></td>
     <td><span data-property="author"></span></td>
     <td><span data-property="language"></span></td>
     <td><span data-property="type"></span></td>
     <td>
-        <span class="sort-arrows">
-            <a href="#" data-action="sort"
-               data-direction="up">
-                <i class="fa fa-fw fa-arrow-up icon-link green"
-                   data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
-            </a>
-            <a href="#" data-action="sort"
-               data-direction="down">
-                <i class="fa fa-fw fa-arrow-down icon-link green"
-                   data-toggle="tooltip" title="<?php echo $hesklang['move_dn'] ?>"></i>
-            </a>
-        </span>
         <a name="Edit Service Message" href="#" data-action="edit">
             <i class="fa fa-fw fa-pencil icon-link orange"
                data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
