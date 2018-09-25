@@ -287,13 +287,8 @@ class EmailTemplateParser extends \BaseClass {
             if (isset($heskSettings['custom_fields'][$k]) && isset($ticket->customFields[$i])) {
                 $v = $heskSettings['custom_fields'][$k];
 
-                switch ($v['type']) {
-                    case 'checkbox':
-                        $ticket->customFields[$i] = str_replace("<br>","\n",$ticket->customFields[$i]);
-                        break;
-                    case 'date':
-                        $ticket->customFields[$i] = hesk_custom_date_display_format($ticket->customFields[$i], $v['value']['date_format']);
-                        break;
+                if ($v['type'] === 'checkbox') {
+                    $ticket->customFields[$i] = str_replace("<br>","\n",$ticket->customFields[$i]);
                 }
 
                 $msg = str_replace('%%'.strtoupper($k).'%%',stripslashes($ticket->customFields[$i]),$msg);
