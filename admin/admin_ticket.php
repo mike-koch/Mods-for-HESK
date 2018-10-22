@@ -2350,7 +2350,7 @@ function hesk_printReplyForm()
 
 function hesk_printCanned()
 {
-    global $hesklang, $hesk_settings, $can_reply, $ticket, $modsForHesk_settings;
+    global $hesklang, $hesk_settings, $can_reply, $ticket, $modsForHesk_settings, $admins;
 
     /* Can user reply to tickets? */
     if (!$can_reply) {
