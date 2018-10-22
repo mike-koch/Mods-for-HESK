@@ -14,7 +14,7 @@ class ConvertPresetToIndividualColors extends \AbstractMigration {
             $theme = $theme_preset_row['Value'];
         }
 
-        $light_theme = preg_match_all('/.*-light/', $theme);
+        $light_theme = strpos($theme, '-light') !== false;
         $navbar = array(
             'background' => '',
             'text' => '#fff',
@@ -38,31 +38,31 @@ class ConvertPresetToIndividualColors extends \AbstractMigration {
             'background' => $light_theme ? '#f9fafc' : '#1a2226',
             'text' => $light_theme ? '#848484' : '#4b646f',
         );
-        if (preg_match('/skin-blue.*/', $theme)) {
+        if (strpos($theme, 'skin-blue') !== false) {
             $navbar['background'] = '#3c8dbc';
             $navbar['background_hover'] = '#367fa9';
 
             $navbar_brand['background'] = $light_theme ? '#3c8dbc' : '#367fa9';
             $navbar_brand['background_hover'] = $light_theme ? '#3b8ab8' : '#357ca5';
-        } elseif (preg_match('/skin-yellow.*/', $theme)) {
+        } elseif (strpos($theme, 'skin-yellow') !== false) {
             $navbar['background'] = '#f39c12';
             $navbar['background_hover'] = '#da8c10';
 
             $navbar_brand['background'] = $light_theme ? '#f39c12' : '#e08e0b';
             $navbar_brand['background_hover'] = $light_theme ? '#f39a0d' : '#db8b0b';
-        } elseif (preg_match('/skin-green.*/', $theme)) {
+        } elseif (strpos($theme, 'skin-green') !== false) {
             $navbar['background'] = '#00a65a';
             $navbar['background_hover'] = '#009551';
 
             $navbar_brand['background'] = $light_theme ? '#00a65a' : '#008d4c';
             $navbar_brand['background_hover'] = $light_theme ? '#00a157' : '#008749';
-        } elseif (preg_match('/skin-purple.*/', $theme)) {
+        } elseif (strpos($theme, 'skin-purple') !== false) {
             $navbar['background'] = '#605ca8';
             $navbar['background_hover'] = '#565397';
 
             $navbar_brand['background'] = $light_theme ? '#605ca8' : '#555299';
             $navbar_brand['background_hover'] = $light_theme ? '#5d59a6' : '#545096';
-        } elseif (preg_match('/skin-red.*/', $theme)) {
+        } elseif (strpos($theme, 'skin-red') !== false) {
             $navbar['background'] = '#dd4b39';
             $navbar['background_hover'] = '#c64333';
 
