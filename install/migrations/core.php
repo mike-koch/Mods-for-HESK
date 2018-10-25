@@ -242,7 +242,8 @@ function getAllMigrations() {
         181 => new \vv201830\AddBootswatchSettings(181),
         182 => new \vv201830\AddDropdownBackgroundColorSetting(182),
         183 => new \vv201830\AddUseLdapSetting(183),
-        184 => new \vv201830\AddLdapServerSetting(184),
-        185 => new \vv201830\AddLdapBaseDomainSetting(185),
+        184 => new \vv201830\AddActiveDirectorySettings(184),
+        185 => new \vv201830\AddGenericLdapSettings(185),
+        186 => new \vv201830\AddLdapConnectionSettings(186),
     );
 }

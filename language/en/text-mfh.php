@@ -723,22 +723,35 @@ $hesklang['unable_to_load_themes_from_bootswatch_dot_com'] = 'Unable to load the
 $hesklang['dropdownBackgroundColor'] = 'Dropdown Background Color';
 $hesklang['dropdownBackgroundColorHelp'] = 'The background color of a dropdown';
 $hesklang['ldap_ad_settings'] = 'Active Directory / LDAP Settings';
+$hesklang['msad'] = 'Microsoft® Active Directory Information';
+$hesklang['msad_help'] = 'This section should be all that is required for Active Directory domains';
 $hesklang['login_using_ldap'] = 'Authenticate using Active Directory / LDAP';
 $hesklang['login_using_ldap_help'] = 'Select "YES" to authenticate users against Active Directory / LDAP.';
 $hesklang['msad_default_domain'] = 'Default Domain';
 $hesklang['msad_default_domain_help'] = 'Default domain used in authentication and searches. Must be a fully-qualified domain.';
 $hesklang['msad_dns_servers'] = 'DNS Servers';
 $hesklang['msad_dns_servers_help'] = '(optional) DNS servers to query about AD servers. Useful if the AD server is not on the same network as this web server or does not have its DNS configured to point to the AD servers. Separate each DNS server with a semicolon (;)';
+$hesklang['ldap'] = 'Generic Configuration for LDAP';
 $hesklang['ldap_servers'] = 'LDAP Servers';
-$hesklang['ldap_servers_help'] = 'Use "server" or "server:port". Separate entries with a semicolon (;).';
+$hesklang['ldap_servers_help'] = 'Use "server" or "server:port". Place each server on a separate line.';
 $hesklang['ldap_use_tls'] = 'Use TLS';
 $hesklang['ldap_use_tls_help'] = 'Use TLS to communicate with the LDAP server';
+$hesklang['ldap_connection_information'] = 'Connection Information';
+$hesklang['ldap_connection_information_help'] = 'Useful only for information lookups. Not necessary for authentication. NOTE that this data is not necessary if your server allows anonymous searches';
 $hesklang['ldap_base_dn'] = 'Base Domain (DN)';
 $hesklang['ldap_base_dn_help'] = 'Enter the base domain (DN) as the default for lookups. (i.e. CN=Users,DC=modsforhesk,DC=local)';
 $hesklang['ldap_user'] = 'Search User';
 $hesklang['ldap_user_help'] = 'Enter a username that has lookup rights in Active Directory / LDAP. You must include the domain in front (i.e. EXAMPLEDOMAIN\myusername)';
 $hesklang['ldap_password'] = 'Password';
 $hesklang['ldap_password_help'] = 'The password for the user entered above';
+$hesklang['ldap_search_user'] = 'Search User';
+$hesklang['ldap_search_user_help'] = 'Bind DN (distinguished name) to bind to the LDAP server as in order to perform searches';
+$hesklang['ldap_password'] = 'Password';
+$hesklang['ldap_password_help'] = "Password associated with the DN's account";
+$hesklang['ldap_search_base'] = 'Search Base';
+$hesklang['ldap_search_base_help'] = 'Used when searching for users';
+$hesklang['ldap_schema'] = 'LDAP Schema';
+$hesklang['ldap_schema_help'] = 'Layout of the user data in the LDAP server';
 $hesklang['test_ldap_connection'] = 'Test Active Directory / LDAP Connection';
 
 // Datepicker language

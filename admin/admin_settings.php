@@ -1719,6 +1719,12 @@ $modsForHesk_settings = mfh_getSettings();
                 </div>
                 <div id="basic_dn_group" <?php if ($modsForHesk_settings['use_ldap'] == 'no'): ?>style="display: none"<?php endif; ?>>
                     <div id="msad_dn_group" <?php if ($modsForHesk_settings['use_ldap'] != 'msad'): ?>style="display: none"<?php endif; ?>>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-4">
+                                <p><b><?php echo $hesklang['msad']; ?></b></p>
+                                <?php echo $hesklang['msad_help']; ?>
+                            </div>
+                        </div>
                         <div class="form-group" id="msad-domain">
                             <label for="msad_default_domain" class="col-sm-4 control-label">
                                 <?php echo $hesklang['msad_default_domain']; ?>
@@ -1744,6 +1750,11 @@ $modsForHesk_settings = mfh_getSettings();
                     </div>
                     <div id="ldap_dn_group" <?php if (!$modsForHesk_settings['use_ldap'] != 'no'): ?>style="display:none"<?php endif; ?>>
                         <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-4">
+                                <b><?php echo $hesklang['ldap']; ?></b>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="ldap_servers" class="col-sm-4 control-label">
                                 <?php echo $hesklang['ldap_servers']; ?>
                                 <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
@@ -1751,7 +1762,8 @@ $modsForHesk_settings = mfh_getSettings();
                                    data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_servers_help']); ?>"></i>
                             </label>
                             <div class="col-sm-3">
-                                <input type="text" name="ldap_servers" value="<?php echo $modsForHesk_settings['ldap_servers']; ?>" placeholder="<?php echo $hesklang['ldap_servers']; ?>" class="form-control">
+                                <textarea class="form-control" name="ldap_servers"
+                                          placeholder="<?php echo $hesklang['ldap_servers']; ?>"><?php echo $modsForHesk_settings['ldap_servers']; ?></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -1765,45 +1777,64 @@ $modsForHesk_settings = mfh_getSettings();
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" name="ldap_use_tls">
-                                        USE TLS
+                                        <?php echo $hesklang['ldap_use_tls']; ?>
                                     </label>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" id="ldap_base_dn">
-                            <label for="ldap_base_dn" class="col-sm-4 control-label">
-                                <?php echo $hesklang['ldap_base_dn']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   title="<?php echo $hesklang['ldap_base_dn']; ?>"
-                                   data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_base_dn_help']); ?>"></i>
-                            </label>
-                            <div class="col-sm-3">
-                                <input type="text" name="ldap_base_dn" value="<?php echo $modsForHesk_settings['ldap_base_dn']; ?>" placeholder="<?php echo $hesklang['ldap_base_dn']; ?>" class="form-control">
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-4">
+                            <p><b><?php echo $hesklang['ldap_connection_information']; ?></b></p>
+                            <?php echo $hesklang['ldap_connection_information_help']; ?>
                         </div>
-                        <div class="form-group" id="ldap_user">
-                            <label for="ldap_user" class="col-sm-4 control-label">
-                                <?php echo $hesklang['ldap_user']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   title="<?php echo $hesklang['ldap_user']; ?>"
-                                   data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_user_help']); ?>"></i>
-                            </label>
-                            <div class="col-sm-3">
-                                <input type="text" name="ldap_user" value="<?php echo $modsForHesk_settings['ldap_user']; ?>" placeholder="<?php echo $hesklang['ldap_user']; ?>" class="form-control">
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ldap_search_user" class="col-sm-4 control-label">
+                            <?php echo $hesklang['ldap_search_user']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo $hesklang['ldap_search_user']; ?>"
+                               data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_search_user_help']); ?>"></i>
+                        </label>
+                        <div class="col-sm-3">
+                            <input type="text" name="ldap_search_user" value="<?php echo $modsForHesk_settings['ldap_search_user']; ?>" placeholder="<?php echo $hesklang['ldap_search_user']; ?>" class="form-control">
                         </div>
-                        <div class="form-group" id="ldap_password">
-                            <label for="ldap_password" class="col-sm-4 control-label">
-                                <?php echo $hesklang['ldap_password']; ?>
-                                <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
-                                   title="<?php echo $hesklang['ldap_password']; ?>"
-                                   data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_password_help']); ?>"></i>
-                            </label>
-                            <div class="col-sm-3">
-                                <input type="text" name="ldap_password" value="<?php echo $modsForHesk_settings['ldap_password']; ?>" placeholder="<?php echo $hesklang['ldap_password']; ?>" class="form-control">
-                                <div class="help-block">[xxx] Password will be stored in plain text!</div>
-                                <div onclick="hesk_testLDAP()" class="btn btn-default push-down-10"><?php echo $hesklang['test_ldap_connection']; ?></div>
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ldap_password" class="col-sm-4 control-label">
+                            <?php echo $hesklang['ldap_password']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo $hesklang['ldap_password']; ?>"
+                               data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_password_help']); ?>"></i>
+                        </label>
+                        <div class="col-sm-3">
+                            <input type="text" name="ldap_password" value="<?php echo $modsForHesk_settings['ldap_password']; ?>" placeholder="<?php echo $hesklang['ldap_password']; ?>" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ldap_search_base" class="col-sm-4 control-label">
+                            <?php echo $hesklang['ldap_search_base']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo $hesklang['ldap_search_base']; ?>"
+                               data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_search_base_help']); ?>"></i>
+                        </label>
+                        <div class="col-sm-3">
+                            <input type="text" name="ldap_search_base" value="<?php echo $modsForHesk_settings['ldap_search_base']; ?>" placeholder="<?php echo $hesklang['ldap_search_base']; ?>" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ldap_schema" class="col-sm-4 control-label">
+                            <?php echo $hesklang['ldap_schema']; ?>
+                            <i class="fa fa-question-circle settingsquestionmark" data-toggle="popover"
+                               title="<?php echo $hesklang['ldap_schema']; ?>"
+                               data-content="<?php echo hesk_htmlspecialchars($hesklang['ldap_schema_help']); ?>"></i>
+                        </label>
+                        <div class="col-sm-3">
+                            <select name="ldap_schema" class="form-control">
+                                <option value="auto">Automatically Detect</option>
+                                <option value="msad">Microsoft(r) Active Directory</option>
+                                <option value="2307">Posix Account (RFC-2307)</option>
+                            </select>
                         </div>
                     </div>
                 </div>
