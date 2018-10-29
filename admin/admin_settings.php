@@ -1744,7 +1744,7 @@ $modsForHesk_settings = mfh_getSettings();
                                    data-content="<?php echo hesk_htmlspecialchars($hesklang['msad_dns_servers_help']); ?>"></i>
                             </label>
                             <div class="col-sm-3">
-                                <input type="text" name="msad_dns_servers" value="<?php echo $modsForHesk_settings['msad_dns_servers']; ?>" placeholder="<?php echo $hesklang['msad_dns_servers']; ?>" class="form-control">
+                                <textarea name="msad_dns_servers" placeholder="<?php echo $hesklang['msad_dns_servers']; ?>" class="form-control"><?php echo $modsForHesk_settings['msad_dns_servers']; ?></textarea>
                             </div>
                         </div>
                     </div>

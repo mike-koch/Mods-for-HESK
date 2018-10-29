@@ -528,9 +528,6 @@ $set['business_hours_wednesday'] = hesk_POST_array('business-hours-wednesday');
 $set['business_hours_thursday'] = hesk_POST_array('business-hours-thursday');
 $set['business_hours_friday'] = hesk_POST_array('business-hours-friday');
 $set['business_hours_saturday'] = hesk_POST_array('business-hours-saturday');
-$set['use_ldap'] = hesk_checkMinMax(intval(hesk_POST('use_ldap')), 0, 1, 1);
-$set['ldap_server'] = hesk_input(hesk_POST('ldap_server'));
-$set['ldap_base_dn'] = hesk_input(hesk_POST('ldap_base_dn'));
 
 $changedBackground = false;
 $loadedAttachmentFuncs = false;
@@ -622,6 +619,30 @@ if ($set['login_box_header'] == 'image') {
     $changedLoginImage = true;
 }
 
+// LDAP Settings
+$set['use_ldap'] = hesk_input(hesk_POST('use_ldap'));
+if ($set['use_ldap'] == 'msad') {
+    $set['msad_default_domain'] = hesk_input(hesk_POST('msad_default_domain'));
+    $set['msad_dns_servers'] = hesk_input(hesk_POST('msad_dns_servers'));
+
+    mfh_updateSetting('msad_default_domain', $set['msad_default_domain'], true);
+    mfh_updateSetting('msad_dns_servers', $set['msad_dns_servers'], true);
+} elseif ($set['use_ldap'] == 'gldap') {
+    $set['ldap_servers'] = hesk_input(hesk_POST('ldap_servers'));
+    $set['ldap_use_tls'] = hesk_input(hesk_POST('ldap_use_tls'));
+
+    mfh_updateSetting('ldap_servers', $set['ldap_servers'], true);
+    mfh_updateSetting('ldap_use_tls', $set['ldap_use_tls']);
+}
+
+if ($set['use_ldap'] != 'no') {
+    mfh_updateSetting('ldap_search_user', hesk_input(hesk_POST('ldap_search_user')), true);
+    mfh_updateSetting('ldap_password', hesk_input(hesk_POST('ldap_password')), true);
+    mfh_updateSetting('ldap_search_base', hesk_input(hesk_POST('ldap_search_base')), true);
+    mfh_updateSetting('ldap_schema', hesk_input(hesk_POST('ldap_schema')), true);
+}
+mfh_updateSetting('use_ldap', $set['use_ldap'], true);
+
 mfh_updateSetting('show_icons', $set['show-icons']);
 mfh_updateSetting('custom_field_setting', $set['custom-field-setting']);
 mfh_updateSetting('customer_email_verification_required', $set['customer-email-verification-required']);
@@ -678,10 +699,6 @@ mfh_updateSetting('first_day_of_week', $set['first_day_of_week'], false);
 mfh_updateSetting('default_calendar_view', $set['default_view'], true);
 mfh_updateSetting('calendar_show_start_time', $set['calendar_show_start_time'], true);
 mfh_updateSetting('admin_color_scheme', $set['admin_color_scheme'], true);
-mfh_updateSetting('use_ldap', $set['use_ldap'], false);
-mfh_updateSetting('ldap_server', $set['ldap_server'], true);
-mfh_updateSetting('ldap_base_dn', $set['ldap_base_dn'], true);
-
 mfh_updateSetting('login_background_type', $set['login_background_type'], true);
 if ($changedBackground) {
     mfh_updateSetting('login_background', $set['login_background'], true);

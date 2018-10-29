@@ -6,7 +6,7 @@ namespace vv201830;
 class AddUseLdapSetting extends \AbstractUpdatableMigration {
     function innerUp($hesk_settings) {
         $this->executeQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "settings` (`Key`, `Value`)
-            VALUES ('use_ldap', '0')");
+            VALUES ('use_ldap', 'no')");
     }
 
     function innerDown($hesk_settings) {
