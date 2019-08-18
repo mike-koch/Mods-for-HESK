@@ -2,6 +2,9 @@
 api/vendor
 api/Tests/integration_test_mfh_settings.php
 
+# Mac Files
+.DS_Store
+
 # HESK Files
 admin/admin_suggest_articles.php
 admin/archive.php
