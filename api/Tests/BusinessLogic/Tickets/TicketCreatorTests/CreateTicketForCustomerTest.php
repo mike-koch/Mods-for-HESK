@@ -109,7 +109,7 @@ class CreateTicketTest extends TestCase {
     /* @var $categoryGateway \PHPUnit_Framework_MockObject_MockObject|CategoryGateway */
     private $categoryGateway;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->ticketGateway = $this->createMock(TicketGateway::clazz());
         $this->newTicketValidator = $this->createMock(NewTicketValidator::clazz());
         $this->trackingIdGenerator = $this->createMock(TrackingIdGenerator::clazz());

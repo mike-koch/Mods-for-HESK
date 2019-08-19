@@ -20,7 +20,7 @@ class TicketRetrieverTest extends TestCase {
     /* @var $heskSettings array */
     private $heskSettings;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->ticketGateway = $this->createMock(TicketGateway::clazz());
         $this->userToTicketChecker = $this->createMock(UserToTicketChecker::clazz());
         $this->heskSettings = array('email_view_ticket' => 0);
