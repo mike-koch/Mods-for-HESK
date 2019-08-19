@@ -488,6 +488,9 @@ if ($set['customer-email-verification-required']) {
     //-- Don't allow multiple emails if verification is required
     $set['multi_eml'] = 0;
 }
+
+$set['use_bootswatch_theme'] = hesk_input(hesk_POST('use-bootswatch-theme'));
+$set['bootswatch_theme'] = hesk_input(hesk_POST('bootswatch-theme'));
 $set['navbarBackgroundColor'] = hesk_input(hesk_POST('navbarBackgroundColor'));
 $set['navbarBrandColor'] = hesk_input(hesk_POST('navbarBrandColor'));
 $set['navbarBrandHoverColor'] = hesk_input(hesk_POST('navbarBrandHoverColor'));
@@ -499,6 +502,7 @@ $set['dropdownItemTextColor'] = hesk_input(hesk_POST('dropdownItemTextColor'));
 $set['dropdownItemTextHoverColor'] = hesk_input(hesk_POST('dropdownItemTextHoverColor'));
 $set['questionMarkColor'] = hesk_input(hesk_POST('questionMarkColor'));
 $set['dropdownItemTextHoverBackgroundColor'] = hesk_input(hesk_POST('dropdownItemTextHoverBackgroundColor'));
+$set['dropdownBackgroundColor'] = hesk_input(hesk_POST('dropdownBackgroundColor'));
 $set['admin_navbar_background'] = hesk_input(hesk_POST('admin-navbar-background-color'));
 $set['admin_navbar_background_hover'] = hesk_input(hesk_POST('admin-navbar-background-hover-color'));
 $set['admin_navbar_brand_background'] = hesk_input(hesk_POST('admin-navbar-brand-background-color'));
@@ -630,6 +634,8 @@ mfh_updateSetting('rich_text_for_tickets', $set['rich_text_for_tickets']);
 mfh_updateSetting('rich_text_for_tickets_for_customers', $set['rich_text_for_tickets_for_customers']);
 mfh_updateSetting('statuses_order_column', $set['statuses_order_column'], true);
 mfh_updateSetting('kb_attach_dir', $set['kb_attach_dir'], true);
+mfh_updateSetting('use_bootswatch_theme', $set['use_bootswatch_theme']);
+mfh_updateSetting('bootswatch_theme', $set['bootswatch_theme'], true);
 mfh_updateSetting('navbarBackgroundColor', $set['navbarBackgroundColor'], true);
 mfh_updateSetting('navbarBrandColor', $set['navbarBrandColor'], true);
 mfh_updateSetting('navbarBrandHoverColor', $set['navbarBrandHoverColor'], true);
@@ -638,6 +644,7 @@ mfh_updateSetting('navbarItemTextHoverColor', $set['navbarItemTextHoverColor'], 
 mfh_updateSetting('navbarItemTextSelectedColor', $set['navbarItemTextSelectedColor'], true);
 mfh_updateSetting('navbarItemSelectedBackgroundColor', $set['navbarItemSelectedBackgroundColor'], true);
 mfh_updateSetting('dropdownItemTextColor', $set['dropdownItemTextColor'], true);
+mfh_updateSetting('dropdownBackgroundColor', $set['dropdownBackgroundColor'], true);
 mfh_updateSetting('dropdownItemTextHoverColor', $set['dropdownItemTextHoverColor'], true);
 mfh_updateSetting('questionMarkColor', $set['questionMarkColor'], true);
 mfh_updateSetting('dropdownItemTextHoverBackgroundColor', $set['dropdownItemTextHoverBackgroundColor'], true);

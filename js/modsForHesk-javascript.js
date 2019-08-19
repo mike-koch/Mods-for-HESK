@@ -31,6 +31,7 @@ var loadJquery = function()
     //-- Activate Bootstrap Datepicker
     $(function() {
         $('.datepicker').datepicker({
+            language: $('#lang_DATEPICKER_LOCALE').text(),
             todayBtn: "linked",
             clearBtn: true,
             autoclose: true,

@@ -23,7 +23,10 @@ class AttachmentRetriever extends \BaseClass {
     /* @var $userToTicketChecker UserToTicketChecker */
     private $userToTicketChecker;
 
-    function __construct($attachmentGateway, $fileReader, $ticketGateway, $userToTicketChecker) {
+    function __construct(AttachmentGateway $attachmentGateway,
+                         FileReader $fileReader,
+                         TicketGateway $ticketGateway,
+                         UserToTicketChecker $userToTicketChecker) {
         $this->attachmentGateway = $attachmentGateway;
         $this->fileReader = $fileReader;
         $this->ticketGateway = $ticketGateway;

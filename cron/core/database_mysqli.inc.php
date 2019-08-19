@@ -116,8 +116,9 @@ function hesk_dbConnect()
 	// Do we need a special port? Check and connect to the database
 	if ( strpos($hesk_settings['db_host'], ':') )
 	{
-		list($hesk_settings['db_host'], $hesk_settings['db_port']) = explode(':', $hesk_settings['db_host']);
-		$hesk_db_link = @mysqli_connect($hesk_settings['db_host'], $hesk_settings['db_user'], $hesk_settings['db_pass'], $hesk_settings['db_name'], intval($hesk_settings['db_port']) );
+        $db_info = array('db_host' => '', 'db_port' => 3306);
+        list($db_info['db_host'], $db_info['db_port']) = explode(':', $hesk_settings['db_host']);
+        $hesk_db_link = @mysqli_connect($db_info['db_host'], $hesk_settings['db_user'], $hesk_settings['db_pass'], $hesk_settings['db_name'], intval($db_info['db_port']) );
 	}
 	else
 	{

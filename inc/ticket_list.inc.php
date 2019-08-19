@@ -32,9 +32,9 @@ while ($row = hesk_dbFetchAssoc($res2)) {
 if ( ! isset($hesk_settings['categories'])) {
     $orderBy = $modsForHesk_settings['category_order_column'];
     $hesk_settings['categories'] = array();
-    $res2 = hesk_dbQuery('SELECT `id`, `name` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` WHERE ' . hesk_myCategories('id') . ' ORDER BY `' . $orderBy . '` ASC');
+    $res2 = hesk_dbQuery('SELECT `id`, `name`, `mfh_category_group_id` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'categories` WHERE ' . hesk_myCategories('id') . ' ORDER BY `' . $orderBy . '` ASC');
     while ($row = hesk_dbFetchAssoc($res2)) {
-        $hesk_settings['categories'][$row['id']] = $row['name'];
+        $hesk_settings['categories'][$row['id']] = $row;
     }
 }
 
@@ -73,6 +73,7 @@ if ($total > 0) {
         $query = 'q=' . $q;
         $query .= '&amp;what=' . $what;
         $query .= '&amp;category=' . $category;
+        $query .= '&amp;owner='.$owner_input;
         $query .= '&amp;dt=' . urlencode($date_input);
         $query .= '&amp;sort=' . $sort;
         $query .= '&amp;asc=' . $asc;
@@ -177,6 +178,7 @@ if ($total > 0) {
         $query = 'q=' . $q;
         $query .= '&amp;what=' . $what;
         $query .= '&amp;category=' . $category;
+        $query .= '&amp;owner='.$owner_input;
         $query .= '&amp;dt=' . urlencode($date_input);
         #$query .= '&amp;asc='.$asc;
         $query .= '&amp;limit=' . $maxresults;
@@ -317,7 +319,7 @@ if ($total > 0) {
 
             // Print ticket category
             if (hesk_show_column('category')) {
-                $ticket['category'] = isset($hesk_settings['categories'][$ticket['category']]) ? $hesk_settings['categories'][$ticket['category']] : $hesklang['catd'];
+                $ticket['category'] = isset($hesk_settings['categories'][$ticket['category']]) ? $hesk_settings['categories'][$ticket['category']]['name'] : $hesklang['catd'];
                 echo '<td class="' . $color . '">' . $ticket['category'] . '</td>';
             }
 

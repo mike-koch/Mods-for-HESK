@@ -304,7 +304,7 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                         </li>';
                     }
                     if (hesk_checkPermission('can_man_cat', 0)) {
-                        $number_of_settings++;
+                        $number_of_settings += 2;
                         $active = '';
                         if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CATEGORIES') {
                             $active = 'active';
@@ -315,6 +315,19 @@ $mails = mfh_get_mail_headers_for_dropdown($_SESSION['id'], $hesk_settings, $hes
                             <a href="manage_categories.php">
                                 <i class="fa fa-fw fa-pie-chart" ' . $iconDisplay . '></i>
                                 <span>' . $hesklang['menu_cat'] . '</span>
+                            </a>
+                        </li>';
+
+                        $active = '';
+                        if (defined('PAGE_TITLE') && PAGE_TITLE == 'ADMIN_CATEGORY_GROUPS') {
+                            $active = 'active';
+                        }
+
+                        $markup .= '
+                        <li class="' . $active . '">
+                            <a href="manage_category_groups.php">
+                                <i class="fa fa-fw fa-sitemap" ' . $iconDisplay . '></i>
+                                <span>' . $hesklang['manage_cat_groups'] . '</span>
                             </a>
                         </li>';
                     }

@@ -14,12 +14,6 @@
 define('IN_SCRIPT', 1);
 define('HESK_PATH', './');
 
-// Try to detect some simple SPAM bots
-if (!isset($_POST['hx']) || $_POST['hx'] != 3 || !isset($_POST['hy']) || $_POST['hy'] != '' || isset($_POST['phone'])) {
-    header('HTTP/1.1 403 Forbidden');
-    exit();
-}
-
 // Get all the required files and functions
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
@@ -44,6 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 // Check for POST requests larger than what the server can handle
 if (empty($_POST) && !empty($_SERVER['CONTENT_LENGTH'])) {
     hesk_error($hesklang['maxpost']);
+}
+
+// Try to detect some simple SPAM bots
+if (!isset($_POST['hx']) || $_POST['hx'] != 3 || !isset($_POST['hy']) || $_POST['hy'] != '' || isset($_POST['phone'])) {
+    header('HTTP/1.1 403 Forbidden');
+    exit();
 }
 
 // Block obvious spammers trying to inject email headers

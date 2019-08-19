@@ -14,6 +14,6 @@ class AddMissingKeyToTickets extends \AbstractMigration {
     }
 
     function down($hesk_settings) {
-        $this->executeQuery("ALTER TABLE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` DROP INDEX `statuses`");
+        // HESK uses this key, so don't drop it.
     }
 }

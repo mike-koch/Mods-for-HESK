@@ -55,8 +55,10 @@ header('X-UA-Compatible: IE=edge');
     <link href="<?php echo HESK_PATH; ?>hesk_style.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/datepicker.css" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
-    <?php if ($modsForHesk_settings['use_bootstrap_theme'] != 0) { ?>
+    <?php if ($modsForHesk_settings['use_bootstrap_theme'] != 0 && $modsForHesk_settings['use_bootswatch_theme'] == 0) { ?>
     <link href="<?php echo HESK_PATH; ?>css/bootstrap-theme.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet" />
+    <?php } else if ($modsForHesk_settings['use_bootswatch_theme']) { ?>
+    <link href="<?php echo $modsForHesk_settings['bootswatch_theme']; ?>" type="text/css" rel="stylesheet" />
     <?php } ?>
     <link href="<?php echo HESK_PATH; ?>css/mods-for-hesk.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo HESK_PATH; ?>css/hesk_newStyle.css?v=<?php echo MODS_FOR_HESK_BUILD; ?>" type="text/css" rel="stylesheet"/>
@@ -82,6 +84,9 @@ header('X-UA-Compatible: IE=edge');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/dropzone.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script language="Javascript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/modsForHesk-javascript.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-datepicker.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <?php if ($hesklang['DATEPICKER_LOCALE'] != 'en'): ?>
+        <script language="JavaScript" type="text/javascript" src="<?php echo HESK_PATH; ?>locales/bootstrap-datepicker.<?php echo $hesklang['DATEPICKER_LOCALE']; ?>.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>" charset="UTF-8"></script>
+    <?php endif; ?>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/bootstrap-clockpicker.min.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-fontawesome-4.3.0.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/iconset-octicon-2.1.2.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
@@ -95,6 +100,7 @@ header('X-UA-Compatible: IE=edge');
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>js/jquery.magnific-popup.min.js?v=<?php echo MODS_FOR_HESK_BUILD ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/alerts.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
     <script type="text/javascript" src="<?php echo HESK_PATH; ?>internal-api/js/lang.js?v=<?php echo MODS_FOR_HESK_BUILD; ?>"></script>
+    <?php if (!$modsForHesk_settings['use_bootswatch_theme']): ?>
     <style>
         .navbar-default {
             background-color: <?php echo $modsForHesk_settings['navbarBackgroundColor']; ?>;
@@ -120,6 +126,10 @@ header('X-UA-Compatible: IE=edge');
             background-color: transparent;
         }
 
+        .dropdown-menu {
+            background-color: <?php echo $modsForHesk_settings['dropdownBackgroundColor']; ?>;
+        }
+
         .dropdown-menu > li > a {
             color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>;
         }
@@ -128,6 +138,7 @@ header('X-UA-Compatible: IE=edge');
             color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
             text-decoration: none;
             background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
+            background-image: none;
         }
 
         .navbar-default .navbar-nav > .open > a,
@@ -149,9 +160,33 @@ header('X-UA-Compatible: IE=edge');
         .h3questionmark {
             color: <?php echo $modsForHesk_settings['questionMarkColor']; ?>;
         }
-    </style>
 
+        @media (max-width: 767px) {
+            .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+                color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>
+            }
+
+            .navbar-nav .open .dropdown-menu {
+                background-color: <?php echo $modsForHesk_settings['dropdownBackgroundColor']; ?>;
+            }
+
+            /*.navbar-nav .open .dropdown-menu > li > a:focus,
+            .navbar-nav .open .dropdown-menu > li > a:hover {
+                background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
+                color: <?php echo $modsForHesk_settings['dropdownItemTextColor']; ?>
+            }*/
+
+            .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+            .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+                color: <?php echo $modsForHesk_settings['dropdownItemTextHoverColor']; ?>;
+                text-decoration: none;
+                background-color: <?php echo $modsForHesk_settings['dropdownItemTextHoverBackgroundColor']; ?>;
+                background-image: none;
+            }
+        }
+    </style>
     <?php
+    endif;
 
     /* Prepare Javascript that browser should load on page load */
     $onload = "javascript:var i=new Image();i.src='" . HESK_PATH . "img/orangebtnover.gif';var i2=new Image();i2.src='" . HESK_PATH . "img/greenbtnover.gif';";
@@ -355,3 +390,4 @@ if ($modsForHesk_settings['show_icons']) {
     <?php // GLOBAL JAVASCRIPT IDs ?>
     <p style="display: none" id="hesk-path"><?php echo HESK_PATH; ?></p>
     <p style="display: none;" id="lang_CALENDAR_LANGUAGE"><?php echo $hesklang['CALENDAR_LANGUAGE']; ?></p>
+    <p style="display: none" id="lang_DATEPICKER_LOCALE"><?php echo $hesklang['DATEPICKER_LOCALE']; ?></p>

@@ -286,9 +286,9 @@ if (isset($_POST['save'])) {
         $custom_SQL = rtrim($custom_SQL, ',');
 
         hesk_dbQuery("UPDATE `" . hesk_dbEscape($hesk_settings['db_pfix']) . "tickets` SET
-		`name`='" . hesk_dbEscape($tmpvar['name']) . "',
-		`email`='" . hesk_dbEscape($tmpvar['email']) . "',
-		`subject`='" . hesk_dbEscape($tmpvar['subject']) . "',
+		`name`='" . hesk_dbEscape(hesk_mb_substr($tmpvar['name'], 0, 255)) . "',
+		`email`='" . hesk_dbEscape(hesk_mb_substr($tmpvar['email'], 0, 1000)) . "',
+		`subject`='" . hesk_dbEscape(hesk_mb_substr($tmpvar['subject'], 0, 255)) . "',
 		`message`='" . hesk_dbEscape($tmpvar['message']) . "',
 		`attachments`=CONCAT(`attachments`, '".hesk_dbEscape($myattachments)."'),
 		`language`='" . hesk_dbEscape($tmpvar['language']) . "',

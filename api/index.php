@@ -196,7 +196,10 @@ Link::all(array(
     '/v1/categories/all' => action(\Controllers\Categories\CategoryController::clazz() . '::printAllCategories', array(RequestMethod::GET), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1/categories' => action(\Controllers\Categories\CategoryController::clazz(), array(RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     '/v1/categories/{i}' => action(\Controllers\Categories\CategoryController::clazz(), array(RequestMethod::GET, RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1-internal/categories/{i}/sort/{s}' => action(\Controllers\Categories\CategoryController::clazz() . '::sort', array(RequestMethod::POST), SecurityHandler::INTERNAL),
+    '/v1/category-groups' => action(\Controllers\Categories\CategoryGroupController::clazz(), array(RequestMethod::GET, RequestMethod::POST), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1/category-groups/{i}' => action(\Controllers\Categories\CategoryGroupController::clazz(), array(RequestMethod::PUT, RequestMethod::DELETE), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
+    '/v1-internal/category-group-tree' => action(\Controllers\Categories\CategoryGroupController::clazz() . '::updateTreeState', array(RequestMethod::POST), SecurityHandler::INTERNAL),
+    '/v1-internal/categories/sort' => action(\Controllers\Categories\CategoryController::clazz() . '::sort', array(RequestMethod::POST), SecurityHandler::INTERNAL),
     // Tickets
     '/v1/tickets' => action(\Controllers\Tickets\CustomerTicketController::clazz(), RequestMethod::all(), SecurityHandler::OPEN),
     '/v1/tickets/{i}/replies' => action(\Controllers\Tickets\CustomerReplyController::clazz(), array(RequestMethod::POST), SecurityHandler::OPEN),
@@ -204,7 +207,7 @@ Link::all(array(
     '/v1/staff/tickets/{i}' => action(\Controllers\Tickets\StaffTicketController::clazz(), RequestMethod::all()),
     '/v1/staff/tickets/{i}/due-date' => action(\Controllers\Tickets\StaffTicketController::clazz() . '::updateDueDate', array(RequestMethod::PATCH), SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
     // Attachments
-    '/v1/tickets/{a}/attachments/{i}' => action(\Controllers\Attachments\PublicAttachmentController::clazz() . '::getRaw', RequestMethod::all()),
+    '/v1/tickets/{a}/attachments/{i}' => action(\Controllers\Attachments\PublicAttachmentController::clazz() . '::getRaw', RequestMethod::all(), SecurityHandler::OPEN),
     '/v1/staff/tickets/{i}/attachments' => action(\Controllers\Attachments\StaffTicketAttachmentsController::clazz(), RequestMethod::all()),
     '/v1/staff/tickets/{i}/attachments/{i}' => action(\Controllers\Attachments\StaffTicketAttachmentsController::clazz(), RequestMethod::all()),
     // Statuses
@@ -223,7 +226,7 @@ Link::all(array(
     '/v1/service-messages/{i}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz(),
         array(RequestMethod::PUT, RequestMethod::DELETE),
         SecurityHandler::INTERNAL_OR_AUTH_TOKEN),
-    '/v1-internal/service-messages/{i}/sort/{s}' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz() . '::sort',
+    '/v1-internal/service-messages/sort' => action(\Controllers\ServiceMessages\ServiceMessagesController::clazz() . '::sort',
         array(RequestMethod::POST),
         SecurityHandler::INTERNAL),
 

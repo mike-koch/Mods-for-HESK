@@ -70,4 +70,9 @@ class Category extends \BaseClass {
      * @var int
      */
     public $numberOfTickets;
+
+    /**
+     * @var int
+     */
+    public $categoryGroupId;
 }

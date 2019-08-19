@@ -125,15 +125,19 @@ class ServiceMessagesController extends \BaseClass {
         return $serviceMessage;
     }
 
-    static function sort($id, $direction) {
+    static function sort() {
         /* @var $userContext UserContext */
         global $applicationContext, $hesk_settings, $userContext;
 
         self::staticCheckSecurity($userContext);
 
+        $data = JsonRetriever::getJsonData();
+
+        $order = Helpers::safeArrayGet($data, 'order');
+
         /* @var $handler ServiceMessageHandler */
         $handler = $applicationContext->get(ServiceMessageHandler::clazz());
 
-        $handler->sortServiceMessage(intval($id), $direction, $hesk_settings);
+        $handler->sortServiceMessages($order, $hesk_settings);
     }
 }

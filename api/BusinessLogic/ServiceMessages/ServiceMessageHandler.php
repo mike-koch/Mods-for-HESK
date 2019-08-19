@@ -77,28 +77,8 @@ class ServiceMessageHandler extends \BaseClass {
         $this->serviceMessageGateway->deleteServiceMessage($id, $heskSettings);
     }
 
-    function sortServiceMessage($id, $direction, $heskSettings) {
-        $serviceMessages = $this->serviceMessageGateway->getServiceMessages($heskSettings, new GetServiceMessagesFilter());
-        $serviceMessage = null;
-        foreach ($serviceMessages as $innerServiceMessage) {
-            if (intval($innerServiceMessage->id) === intval($id)) {
-                $serviceMessage = $innerServiceMessage;
-                break;
-            }
-        }
-
-        if ($serviceMessage === null) {
-            throw new \BaseException("Could not find service message with ID {$id}!");
-        }
-
-        if ($direction === Direction::UP) {
-            $serviceMessage->order -= 15;
-        } else {
-            $serviceMessage->order += 15;
-        }
-
-        $this->serviceMessageGateway->updateServiceMessage($serviceMessage, $heskSettings);
-        $this->serviceMessageGateway->resortAllServiceMessages($heskSettings);
+    function sortServiceMessages($order, $heskSettings) {
+        $this->serviceMessageGateway->sortServiceMessages($order, $heskSettings);
     }
 
     /**

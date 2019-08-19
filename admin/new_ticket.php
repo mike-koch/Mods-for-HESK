@@ -23,6 +23,7 @@ define('AUTOFOCUS', true);
 /* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
+require(HESK_PATH . 'inc/category_groups.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
 require(HESK_PATH . 'inc/view_attachment_functions.inc.php');
 require(HESK_PATH . 'inc/mail_functions.inc.php');
@@ -113,9 +114,9 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 $hesk_settings['categories'] = array();
 
 if (hesk_checkPermission('can_submit_any_cat', 0)) {
-    $res = hesk_dbQuery("SELECT `id`, `name`, `mfh_description` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `cat_order` ASC");
+    $res = hesk_dbQuery("SELECT `id`, `name`, `mfh_description`, `mfh_category_group_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` ORDER BY `cat_order` ASC");
 } else {
-    $res = hesk_dbQuery("SELECT `id`, `name`, `mfh_description` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE ".hesk_myCategories('id')." ORDER BY `cat_order` ASC");
+    $res = hesk_dbQuery("SELECT `id`, `name`, `mfh_description`, `mfh_category_group_id` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."categories` WHERE ".hesk_myCategories('id')." ORDER BY `cat_order` ASC");
 }
 
 while ($row = hesk_dbFetchAssoc($res)) {
@@ -1097,26 +1098,37 @@ function print_select_category($number_of_categories) {
                 <div class="select_category">
                     <?php
                     // Print a select box if number of categories is large
+                    $categoryGroups = mfh_get_category_group_tree($hesk_settings['categories']);
+
+                    // Remove category groups with 0 categories in any part of the tree
+                    foreach ($categoryGroups as $categoryGroup) {
+                        if (mfh_is_category_group_empty($categoryGroup)) {
+                            unset($categoryGroups[$categoryGroup['id']]);
+                        }
+                    }
+
                     if ($number_of_categories > $hesk_settings['cat_show_select'])
                     {
                         $firstDescription = null;
                         ?>
                         <form action="new_ticket.php" method="get">
-                            <select name="category" id="select_category" class="form-control" onchange="showDescription()">
-                                <?php
-                                if ($hesk_settings['select_cat'])
-                                {
-                                    echo '<option value="">'.$hesklang['select'].'</option>';
-                                }
-                                foreach ($hesk_settings['categories'] as $k=>$v)
-                                {
-                                    if ($firstDescription === null) {
-                                        $firstDescription = $v['mfh_description'];
-                                    }
-                                    echo '<option value="'.$k.'" data-description="'.$v['mfh_description'].'">'.$v['name'].'</option>';
-                                }
-                                ?>
-                            </select>
+                            <div class="row">
+                                <div class="col-sm-11">
+                                    <select name="category" id="select_category" class="form-control selectpicker" onchange="showDescription()">
+                                        <?php
+                                        if ($hesk_settings['select_cat']) {
+                                            echo '<option value="">' . $hesklang['select'] . ' </option>';
+                                        }
+                                        foreach ($categoryGroups as $categoryGroup) {
+                                            mfh_output_category_group_dropdown_options($categoryGroup, 0);
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-1">
+                                    <input type="submit" value="<?php echo $hesklang['c2c']; ?>" class="btn btn-default">
+                                </div>
+                            </div>
                             <?php
                             $display = ' style="display: none"';
 
@@ -1128,10 +1140,6 @@ function print_select_category($number_of_categories) {
                                 <b><?php echo $hesklang['description_colon']; ?></b>
                                 <span><?php echo $firstDescription; ?></span>
                             </span>
-                            <br>
-                            <div style="text-align:center">
-                                <input type="submit" value="<?php echo $hesklang['c2c']; ?>" class="btn btn-default">
-                            </div>
                         </form>
                         <script>
                             function showDescription() {
@@ -1149,39 +1157,47 @@ function print_select_category($number_of_categories) {
                     // Otherwise print quick links
                     else
                     {
-                        $new_row = 1;
+                        ?>
 
-                        foreach ($hesk_settings['categories'] as $k=>$v):
-                            if ($new_row == 1) {
-                                echo '<div class="row">';
-                                $new_row = -1;
-                            }
-                            ?>
-                            <div class="col-md-5 col-sm-12 <?php if ($new_row == -1) {echo 'col-md-offset-1';} ?>">
-                                <a href="new_ticket.php?a=add&category=<?php echo $k; ?>" class="button-link">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
+                        <div class="row">
+                        <?php foreach ($categoryGroups as $categoryGroup): ?>
+                            <?php if ($categoryGroup['name'] != 'CATEGORY_GROUP_NONE'): ?>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><?php echo $categoryGroup['name']; ?></div>
+                                    <ul class="list-group">
+                                        <?php print_categories($categoryGroup, 0); ?>
+                                    </ul>
+                                </div>
+                            </div>
+                            <?php else: ?>
+                            <div class="col-md-12">
+                                <div class="row">
+                                <?php foreach ($categoryGroup['categories'] as $k=>$v): ?>
+                                    <div class="col-md-6">
+                                        <a href="new_ticket.php?a=add&category=<?php echo $k; ?>" class="button-link">
                                             <div class="row">
                                                 <div class="col-xs-12">
-                                                    <?php
-                                                    echo $v['name'];
-
-                                                    if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== '') {
-                                                        echo '&nbsp;<i class="fa fa-info-circle" data-toggle="popover" 
-                                                        title="'. $hesklang['description'] .'" data-content="' . $v['mfh_description'] . '"></i>';
-                                                    }
-                                                    ?>
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body category">
+                                                            <p><?php echo $v['name']; ?></p>
+                                                            <?php if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== ''): ?>
+                                                                <p class="description"><?php echo $v['mfh_description']; ?></p>
+                                                            <?php endif;
+                                                            ?>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
-                                </a>
+                                <?php
+                                endforeach;
+                                ?>
+                                </div>
                             </div>
-                            <?php
-                            $new_row++;
-                            if ($new_row == 1) {
-                                echo '</div>';
-                            }
+                            <?php endif; ?>
+                    <?php
                         endforeach;
                     }
                     ?>
@@ -1190,8 +1206,7 @@ function print_select_category($number_of_categories) {
         </div>
     </section>
 </div>
-
-    <?php
+<?php
 
     hesk_cleanSessionVars('iserror');
     hesk_cleanSessionVars('isnotice');
@@ -1199,3 +1214,46 @@ function print_select_category($number_of_categories) {
     require_once(HESK_PATH . 'inc/footer.inc.php');
     exit();
 } // END print_select_category()
+
+function print_categories($category_group, $level) {
+    global $hesklang;
+
+    if ($category_group['name'] === 'CATEGORY_GROUP_NONE') {
+        foreach ($category_group['categories'] as $k => $v): ?>
+            <a href="new_ticket.php?a=add&category=<?php echo $k; ?>" class="button-link">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p><?php echo $v['name']; ?></p>
+                                <?php if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== ''): ?>
+                                    <p class="description"><?php echo $v['mfh_description']; ?></p>';
+                                <?php endif;
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        <?php endforeach;
+    }
+
+    $margin = 15 * ($level + 1);
+    if ($level > 0) : ?>
+        <li style="padding-left: <?php echo $margin; ?>px" class="list-group-item subcategory-group"><?php echo $category_group['name']; ?></li>
+    <?php endif;
+    foreach ($category_group['categories'] as $k=>$v): ?>
+        <a style="padding-left: <?php echo $margin; ?>px" class="list-group-item" href="new_ticket.php?a=add&category=<?php echo $k; ?>">
+            <p><?php echo $v['name']; ?></p>
+            <?php if ($v['mfh_description'] !== null && trim($v['mfh_description']) !== ''): ?>
+                <p class="description"><?php echo $v['mfh_description']; ?></p>
+            <?php endif; ?>
+        </a>
+        <?php
+    endforeach;
+    if (count($category_group['children']) > 0) {
+        foreach ($category_group['children'] as $child_category_group) {
+            print_categories($child_category_group, $level + 1);
+        }
+    }
+}

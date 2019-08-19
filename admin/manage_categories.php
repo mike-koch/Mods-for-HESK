@@ -118,11 +118,15 @@ $res = hesk_dbQuery("SELECT * FROM `" . hesk_dbEscape($hesk_settings['db_pfix'])
                         </button>
                     </div>
                     <div class="col-md-12">
-                        <table class="table table-striped">
+                        <table class="table table-striped" <?php if ($orderBy != 'name'): ?>id="dnd-container"<?php endif; ?>>
                             <thead>
                             <tr>
+                                <?php if ($orderBy != 'name'): ?>
+                                    <th>&nbsp;</th>
+                                <?php endif; ?>
                                 <th><?php echo $hesklang['id']; ?></th>
                                 <th><?php echo $hesklang['cat_name']; ?></th>
+                                <th>Category Group</th>
                                 <th><?php echo $hesklang['visibility']; ?></th>
                                 <th><?php echo $hesklang['aass']; ?></th>
                                 <th><?php echo $hesklang['priority']; ?></th>
@@ -181,6 +185,13 @@ echo '</script>';
                                            data-error="<?php echo htmlspecialchars($hesklang['this_field_is_required']); ?>"
                                            required>
                                     <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="category-group" class="col-sm-5 control-label"><?php echo $hesklang['cat_group']; ?></label>
+                                <div class="col-sm-7">
+                                    <select name="category-group" class="form-control selectpicker">
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -259,7 +270,7 @@ echo '</script>';
                                                 class="fa fa-question-circle settingsquestionmark"></i> </a>
                                 </label>
                                 <div class="col-sm-7">
-                                    <select name="priority" class="form-control">
+                                    <select name="priority" class="form-control selectpicker">
                                         <?php
                                         // List possible priorities
                                         foreach ($priorities as $value => $info) {
@@ -275,7 +286,7 @@ echo '</script>';
                                     <?php echo $hesklang['usage']; ?>
                                 </label>
                                 <div class="col-sm-7">
-                                    <select name="usage" class="form-control">
+                                    <select name="usage" class="form-control selectpicker">
                                         <option value="0"><?php echo $hesklang['tickets_and_events']; ?></option>
                                         <option value="1"><?php echo $hesklang['tickets_only']; ?></option>
                                         <option value="2"><?php echo $hesklang['events_only']; ?></option>
@@ -287,7 +298,7 @@ echo '</script>';
                                     <?php echo $hesklang['manager']; ?>
                                 </label>
                                 <div class="col-sm-7">
-                                    <select name="manager" class="form-control">
+                                    <select name="manager" class="form-control selectpicker">
                                         <option value="0"><?php echo $hesklang['no_manager']; ?></option>
                                         <?php foreach ($users as $user): ?>
                                             <option value="<?php echo $user['id']; ?>"><?php echo $user['name']; ?></option>
@@ -395,11 +406,18 @@ echo '</script>';
 </div>
 <script type="text/html" id="category-row-template">
     <tr>
+        <?php if ($orderBy != 'name'): ?>
+            <td class="sort-bars"><i class="fa fa-bars"></i></td>
+        <?php endif; ?>
         <td><span data-property="id" data-value="x"></span></td>
         <td>
             <span class="label category-label" data-property="category-name">
             </span>
-            <i class="fa fa-info-circle" data-toggle="popover" title="<?php echo $hesklang['description']; ?>"></i>
+            <i data-property="category-description" class="fa fa-info-circle" data-toggle="popover" title="<?php echo $hesklang['description']; ?>"></i>
+        </td>
+        <td>
+            <span data-property="category-group-name"></span>
+            <i class="fa fa-info-circle" data-toggle="popover" data-property="complete-category-group"></i>
         </td>
         <td>
             <i style="display: none; padding-right: 8px;" class="fa fa-fw fa-lock icon-link gray"></i>
@@ -430,18 +448,6 @@ echo '</script>';
                 <i class="fa fa-fw icon-link" data-toggle="tooltip"
                    data-placement="top"></i>
             </a>
-            <span class="sort-arrows">
-                <a href="#" data-action="sort"
-                   data-direction="up">
-                    <i class="fa fa-fw fa-arrow-up icon-link green"
-                       data-toggle="tooltip" title="<?php echo $hesklang['move_up']; ?>"></i>
-                </a>
-                <a href="#" data-action="sort"
-                   data-direction="down">
-                    <i class="fa fa-fw fa-arrow-down icon-link green"
-                       data-toggle="tooltip" title="<?php echo $hesklang['move_dn'] ?>"></i>
-                </a>
-            </span>
             <a href="#" data-action="edit">
                 <i class="fa fa-fw fa-pencil icon-link orange"
                    data-toggle="tooltip" title="<?php echo $hesklang['edit']; ?>"></i>
@@ -453,7 +459,9 @@ echo '</script>';
         </td>
     </tr>
 </script>
+<input type="hidden" name="hesk_lang" value="<?php echo $hesk_settings['languages'][$hesk_settings['language']]['folder']; ?>">
 <input type="hidden" name="show-tickets-path" value="show_tickets.php?category={0}&amp;s_all=1&amp;s_my=1&amp;s_ot=1&amp;s_un=1">
+<div id="category-group-tree" style="display: none"></div>
 <?php
 echo mfh_get_hidden_fields_for_language(array(
     'critical',
@@ -478,6 +486,8 @@ echo mfh_get_hidden_fields_for_language(array(
     'cpric',
     'no_manager',
     'e_udel',
+    'none',
+    'sort_saved',
 ));
 
 require_once(HESK_PATH . 'inc/footer.inc.php');

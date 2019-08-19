@@ -103,11 +103,11 @@ function hesk_newTicket($ticket, $isVerified = true)
 	VALUES
 	(
 		'" . hesk_dbEscape($ticket['trackid']) . "',
-		'" . hesk_dbEscape($ticket['name']) . "',
-		'" . hesk_dbEscape($ticket['email']) . "',
+		'" . hesk_dbEscape(hesk_mb_substr($ticket['name'], 0, 255)) . "',
+		'" . hesk_dbEscape(hesk_mb_substr($ticket['email'], 0, 1000)) . "',
 		'" . intval($ticket['category']) . "',
 		'" . intval($ticket['priority']) . "',
-		'" . hesk_dbEscape($ticket['subject']) . "',
+		'" . hesk_dbEscape(hesk_mb_substr($ticket['subject'], 0, 255)) . "',
 		'" . hesk_dbEscape($ticket['message']) . "',
 		NOW(),
 		NOW(),
