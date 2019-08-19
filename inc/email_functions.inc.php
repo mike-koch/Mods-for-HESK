@@ -96,13 +96,11 @@ function hesk_notifyCustomer($modsForHesk_settings, $email_template = 'new_ticke
 
     foreach ($hesk_settings['custom_fields'] as $k => $v) {
         if ($v['use']) {
-            if ($v['type'] == 'email' && !empty($ticket[$k]) && isset($v['value']['emails_to_receive'])) {
+            if ($v['type'] == 'email' && !empty($ticket[$k])) {
                 if ($v['value']['email_type'] == 'cc') {
-                    $emails = explode(',', $ticket[$k]);
-                    array_push($ccEmails, $emails);
+                    $ccEmails = explode(',', $ticket[$k]);
                 } elseif ($v['value']['email_type'] == 'bcc') {
-                    $emails = explode(',', $ticket[$k]);
-                    array_push($bccEmails, $emails);
+                    $bccEmails = explode(',', $ticket[$k]);
                 }
             }
         }
