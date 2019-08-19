@@ -18,7 +18,7 @@ class TrackingIdGeneratorTest extends TestCase {
      */
     private $trackingIdGenerator;
 
-    function setUp() {
+    function setUp(): void {
         $this->ticketGateway = $this->createMock(TicketGateway::clazz());
 
         $this->trackingIdGenerator = new TrackingIdGenerator($this->ticketGateway);
