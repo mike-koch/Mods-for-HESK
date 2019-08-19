@@ -42,12 +42,6 @@ validate:5.4:
   script:
     - bash ci/php_lint.sh ./
 
-validate:5.3:
-  image: php:5.3
-  stage: validate
-  script:
-    - bash ci/php_lint.sh ./
-
 test:7.1:
   image: php:7.1
   stage: test

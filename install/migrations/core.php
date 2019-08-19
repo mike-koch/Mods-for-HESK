@@ -234,12 +234,13 @@ function getAllMigrations() {
         // 2018.2.0
         175 => new \vv201820\MigrateServiceMessageLanguages(175),
         176 => new UpdateMigration('2018.2.0', '2018.1.0', 176),
-        // 2018.3.0
+        // 2019.1.0
         177 => new \vv201830\ReallyMakeSureCustom21Thru50AreOnStageTickets(177),
         178 => new \v340\CreateCategoryGroupsTable(178),
         179 => new \v340\CreateCategoryGroupsI18nTable(179),
         180 => new \v340\AddCategoryGroupIdToCategory(180),
         181 => new \vv201830\AddBootswatchSettings(181),
         182 => new \vv201830\AddDropdownBackgroundColorSetting(182),
+        183 => new UpdateMigration('2019.1.0', '2018.2.0', 183)
     );
 }
