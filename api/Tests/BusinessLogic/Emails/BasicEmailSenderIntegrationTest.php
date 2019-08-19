@@ -26,7 +26,7 @@ class BasicEmailSenderIntegrationTest extends IntegrationTestCaseBase {
      */
     private $attachmentsToPurge;
 
-    protected function setUp() {
+    protected function setUp(): void {
         global $hesk_settings, $modsForHesk_settings;
 
         $this->skip();

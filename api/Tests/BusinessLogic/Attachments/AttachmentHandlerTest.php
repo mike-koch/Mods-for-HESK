@@ -45,7 +45,7 @@ class AttachmentHandlerTest extends TestCase {
     /* @var $heskSettings array */
     private $heskSettings;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->ticketGateway = $this->createMock(TicketGateway::clazz());
         $this->attachmentGateway = $this->createMock(AttachmentGateway::clazz());
         $this->fileWriter = $this->createMock(FileWriter::clazz());

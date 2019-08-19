@@ -37,7 +37,7 @@ class EmailSenderHelperTest extends TestCase {
      */
     private $modsForHeskSettings;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->emailTemplateParser = $this->createMock(EmailTemplateParser::clazz());
         $this->basicEmailSender = $this->createMock(BasicEmailSender::clazz());
         $this->mailgunEmailSender = $this->createMock(MailgunEmailSender::clazz());

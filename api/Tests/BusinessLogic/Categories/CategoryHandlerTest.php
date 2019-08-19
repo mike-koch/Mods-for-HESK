@@ -31,7 +31,7 @@ class CategoryHandlerTest extends TestCase {
     /* @var $heskSettings array */
     private $heskSettings;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->categoryGateway = $this->createMock(CategoryGateway::clazz());
         $this->ticketGateway = $this->createMock(TicketGateway::clazz());
         $this->permissionChecker = $this->createMock(PermissionChecker::clazz());

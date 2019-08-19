@@ -31,7 +31,7 @@ class AttachmentRetrieverTest extends TestCase {
     /* @var $heskSettings array */
     private $heskSettings;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->attachmentGateway = $this->createMock(AttachmentGateway::clazz());
         $this->fileReader = $this->createMock(FileReader::clazz());
         $this->ticketGateway = $this->createMock(TicketGateway::clazz());

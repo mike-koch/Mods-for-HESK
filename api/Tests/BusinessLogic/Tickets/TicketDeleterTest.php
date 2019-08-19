@@ -29,7 +29,7 @@ class TicketDeleterTest extends TestCase {
     /* @var $userToTicketChecker \PHPUnit_Framework_MockObject_MockObject */
     private $userToTicketChecker;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->userToTicketChecker = $this->createMock(UserToTicketChecker::clazz());
         $this->ticketGateway = $this->createMock(TicketGateway::clazz());
         $this->attachmentHandler = $this->createMock(AttachmentHandler::clazz());

@@ -21,7 +21,7 @@ class BanRetrieverTests extends TestCase {
      */
     private $banRetriever;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->banGateway = $this->createMock(BanGateway::clazz());
         $this->banRetriever = new BanRetriever($this->banGateway);
     }
