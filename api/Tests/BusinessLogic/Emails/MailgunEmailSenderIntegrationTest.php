@@ -43,7 +43,7 @@ class MailgunEmailSenderIntegrationTest extends IntegrationTestCaseBase {
         $this->attachmentsToPurge = array();
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         foreach ($this->attachmentsToPurge as $file) {
             unlink($file);
         }
