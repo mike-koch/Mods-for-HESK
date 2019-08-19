@@ -73,6 +73,7 @@ if ($total > 0) {
         $query = 'q=' . $q;
         $query .= '&amp;what=' . $what;
         $query .= '&amp;category=' . $category;
+        $query .= '&amp;owner='.$owner_input;
         $query .= '&amp;dt=' . urlencode($date_input);
         $query .= '&amp;sort=' . $sort;
         $query .= '&amp;asc=' . $asc;
@@ -177,6 +178,7 @@ if ($total > 0) {
         $query = 'q=' . $q;
         $query .= '&amp;what=' . $what;
         $query .= '&amp;category=' . $category;
+        $query .= '&amp;owner='.$owner_input;
         $query .= '&amp;dt=' . urlencode($date_input);
         #$query .= '&amp;asc='.$asc;
         $query .= '&amp;limit=' . $maxresults;
