@@ -102,6 +102,10 @@ function errorHandler($errorNumber, $errorMessage, $errorFile, $errorLine) {
 function exceptionHandler($exception) {
     global $userContext, $hesk_settings;
 
+    if (error_reporting() === 0) {
+        return;
+    }
+
     if (strpos($exception->getTraceAsString(), 'LoggingGateway') !== false) {
         //-- Suppress these for now, as it would cause issues to output two JSONs at one time.
         return;
