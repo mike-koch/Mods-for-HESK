@@ -87,7 +87,7 @@ class Link
 
             foreach ( $routes as $routePath => $routeDesc ){
                 $routePath = preg_replace( $regex, $replacements, $routePath );
-                if( preg_match( '#^/?' . $routePath . '/?$#', $path, $matches ) ){
+                if( preg_match( '#^/?' . $routePath . '/?#', $path, $matches ) ){
                     if( is_array( $routeDesc ) ) {
                         $handler = $routeDesc[0];
                         if( isset( $routeDesc[2] )) {
