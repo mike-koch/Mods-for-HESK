@@ -1052,24 +1052,30 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
                     echo '<p class="ticket-property-title">' . $hesklang['priority'] . '</p>';
 
-                    echo '<form style="margin-bottom:0;" id="changePriorityForm" action="priority.php" method="post">
+                    if ($can_reply) {
+                        echo '<form style="margin-bottom:0;" id="changePriorityForm" action="priority.php" method="post">
 
-                    <span style="white-space:nowrap;">
-                    <select class="selectpicker form-control" name="priority" onchange="document.getElementById(\'changePriorityForm\').submit();">';
-                    echo implode('', $options);
-                    echo '
-                    </select>
-
-                    <input type="submit" style="display: none" value="' . $hesklang['go'] . '" /><input type="hidden" name="track" value="' . $trackingID . '" />
-                    <input type="hidden" name="token" value="' . hesk_token_echo(0) . '" />';
-                    if ($isManager) {
-                        echo '<input type="hidden" name="isManager" value="1">';
+                        <span style="white-space:nowrap;">
+                        <select class="selectpicker form-control" name="priority" onchange="document.getElementById(\'changePriorityForm\').submit();">';
+                        echo implode('', $options);
+                        echo '
+                        </select>
+    
+                        <input type="submit" style="display: none" value="' . $hesklang['go'] . '" /><input type="hidden" name="track" value="' . $trackingID . '" />
+                        <input type="hidden" name="token" value="' . hesk_token_echo(0) . '" />';
+                        if ($isManager) {
+                            echo '<input type="hidden" name="isManager" value="1">';
+                        }
+                        echo '</span>
+                        </form>';
+                    } else {
+                        echo '<p class="ticket-property-text">';
+                        echo $priorityLanguages[$ticket['priority']];
+                        echo '</p>';
                     }
-                    echo '</span>
 
-                    </form>
 
-                   </div>';
+                    echo '</div>';
 
                     echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticket-property-title">' . $hesklang['status'] . '</p>';
                     $status_options = array();
@@ -1079,21 +1085,28 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                         $status_options[$row['ID']] = '<option style="color: ' . $row['TextColor'] . '" value="' . $row['ID'] . '" ' . $selected . '>' . mfh_getDisplayTextForStatusId($row['ID']) . '</option>';
                     }
 
-                    echo '
-                    <form role="form" id="changeStatusForm" style="margin-bottom:0;" action="change_status.php" method="post">
-                        <span style="white-space:nowrap;">
-                            <select class="selectpicker form-control" onchange="document.getElementById(\'changeStatusForm\').submit();" name="s">
-                                ' . implode('', $status_options) . '
-                            </select>
-
-                            <input type="submit" style="display:none;" value="' . $hesklang['go'] . '" class="btn btn-default" /><input type="hidden" name="track" value="' . $trackingID . '" />
-                            <input type="hidden" name="token" value="' . hesk_token_echo(0) . '" />';
-                    if ($isManager) {
-                        echo '<input type="hidden" name="isManager" value="1">';
+                    if ($can_reply) {
+                        echo '
+                        <form role="form" id="changeStatusForm" style="margin-bottom:0;" action="change_status.php" method="post">
+                            <span style="white-space:nowrap;">
+                                <select class="selectpicker form-control" onchange="document.getElementById(\'changeStatusForm\').submit();" name="s">
+                                    ' . implode('', $status_options) . '
+                                </select>
+    
+                                <input type="submit" style="display:none;" value="' . $hesklang['go'] . '" class="btn btn-default" /><input type="hidden" name="track" value="' . $trackingID . '" />
+                                <input type="hidden" name="token" value="' . hesk_token_echo(0) . '" />';
+                        if ($isManager) {
+                            echo '<input type="hidden" name="isManager" value="1">';
+                        }
+                        echo '</span>
+                        </form>';
+                    } else {
+                        echo '<p class="ticket-property-text">';
+                        echo mfh_getDisplayTextForStatusId($ticket['status']);
+                        echo '</p>';
                     }
-                    echo '</span>
-                    </form>
-                    </div>';
+
+                    echo '</div>';
                     echo '<div class="col-md-3 col-sm-12 ticket-cell-admin"><p class="ticket-property-title">' . $hesklang['owner'] . '</p>';
 
                     if (hesk_checkPermission('can_assign_others', 0) || $isManager) {
@@ -1271,13 +1284,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </form>
             </div>
         </div>
-        <?php if ($can_reply): ?>
         <div class="box-footer" id="note-footer">
             <button class="btn btn-default pull-right" data-show="noteform" data-hide="note-footer">
                 <i class="fa fa-plus-circle"></i> <?php echo $hesklang['addnote']; ?>
             </button>
         </div>
-        <?php endif; ?>
     </div>
     <?php
     /* Do we need or have any canned responses? */
@@ -1341,7 +1352,7 @@ require_once(HESK_PATH . 'inc/footer.inc.php');
 
 function hesk_getAdminButtons($category_id)
 {
-    global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $can_resolve, $can_privacy, $can_export, $isManager;
+    global $hesk_settings, $hesklang, $modsForHesk_settings, $ticket, $reply, $trackingID, $can_edit, $can_archive, $can_delete, $can_resolve, $can_reply, $can_privacy, $can_export, $isManager;
 
     $options = '';
 
@@ -1400,7 +1411,7 @@ function hesk_getAdminButtons($category_id)
     {
         $options .= '<a class="btn btn-default" href="change_status.php?track=' . $trackingID . $mgr . '&amp;s=' . $staffClosedOptionStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
                     <i class="fa fa-check-circle green"></i> ' . $hesklang['close_action'] . '</a> ';
-    } elseif ($isTicketClosed == 1) {
+    } elseif ($isTicketClosed == 1 && $can_reply) {
         $options .= '<a class="btn btn-default" href="change_status.php?track=' . $trackingID . $mgr . '&amp;s=' . $staffReopenedStatus['ID'] . '&amp;Refresh=' . $random . '&amp;token=' . hesk_token_echo(0) . '">
                     <i class="fa fa-folder-open-o green"></i> ' . $hesklang['open_action'] . '</a> ';
     }
