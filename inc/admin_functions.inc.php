@@ -222,7 +222,7 @@ function hesk_mergeTickets($merge_these, $merge_into)
     $total = 0;
     $staffreplies = 0;
 
-    $res = hesk_dbQuery("SELECT COUNT(*) as `cnt`, (CASE WHEN `staffid` = 0 THEN 0 ELSE 1 END) AS `staffcnt` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` WHERE `replyto`=" . intval($ticket['id']) . " GROUP BY CASE WHEN `staffid` = 0 THEN 0 ELSE 1 END ASC");
+    $res = hesk_dbQuery("SELECT COUNT(*) as `cnt`, (CASE WHEN `staffid` = 0 THEN 0 ELSE 1 END) AS `staffcnt` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "replies` WHERE `replyto`=" . intval($ticket['id']) . " GROUP BY `staffcnt`");
     while ($row = hesk_dbFetchAssoc($res)) {
         $total += $row['cnt'];
         $staffreplies += ($row['staffcnt'] ? $row['cnt'] : 0);

@@ -1952,7 +1952,7 @@ function new_category() {
 	/* Get the latest reply_order */
 	$res = hesk_dbQuery('SELECT `cat_order` FROM `'.hesk_dbEscape($hesk_settings['db_pfix']).'kb_categories` ORDER BY `cat_order` DESC LIMIT 1');
 	$row = hesk_dbFetchRow($res);
-	$my_order = $row[0]+10;
+    $my_order = isset($row[0]) ? intval($row[0]) + 10 : 10;
 
 	$result = hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_categories` (`name`,`parent`,`cat_order`,`type`) VALUES ('".hesk_dbEscape($title)."','".intval($parent)."','".intval($my_order)."','".intval($type)."')");
 
@@ -2100,7 +2100,7 @@ function new_article()
 	/* Get the latest reply_order */
 	$res = hesk_dbQuery("SELECT `art_order` FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` WHERE `catid`='".intval($catid)."' AND `sticky` = '" . intval($sticky) . "' ORDER BY `art_order` DESC LIMIT 1");
 	$row = hesk_dbFetchRow($res);
-	$my_order = $row[0]+10;
+    $my_order = isset($row[0]) ? intval($row[0]) + 10 : 10;
 
     /* Insert article into database */
 	hesk_dbQuery("INSERT INTO `".hesk_dbEscape($hesk_settings['db_pfix'])."kb_articles` (`catid`,`dt`,`author`,`subject`,`content`,`keywords`,`type`,`html`,`sticky`,`art_order`,`history`,`attachments`) VALUES (

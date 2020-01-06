@@ -35,7 +35,7 @@ if (defined('NO_HTTP_HEADER')) {
 }
 
 // Set backslash options
-if (get_magic_quotes_gpc()) {
+if (version_compare(PHP_VERSION, '5.4.0', '<') && get_magic_quotes_gpc()) {
     define('HESK_SLASH', false);
 } else {
     define('HESK_SLASH', true);

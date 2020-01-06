@@ -458,7 +458,7 @@ if (!$show['show']) {
 
                             /* Print most popular/sticky articles */
                             if ($hesk_settings['kb_numshow'] && $cat['articles']) {
-                                $res = hesk_dbQuery("SELECT `id`,`subject`, `sticky` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_articles` WHERE `catid`='{$cat['id']}' AND `type`='0' ORDER BY `sticky` DESC, `views` DESC, `art_order` ASC LIMIT " . (intval($hesk_settings['kb_numshow']) + 1));
+                                $res = hesk_dbQuery("SELECT `id`,`subject`, `sticky` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "kb_articles` WHERE `catid`='{$cat['id']}' AND `type`='0' ORDER BY `sticky` DESC, `art_order` ASC LIMIT " . (intval($hesk_settings['kb_numshow']) + 1));
                                 $num = 1;
                                 while ($art = hesk_dbFetchAssoc($res)) {
                                     $icon = 'glyphicon glyphicon-file';

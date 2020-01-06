@@ -55,7 +55,7 @@ function hesk_uploadFile($i, $isTicket = true)
     $useChars = 'AEUYBDGHJLMNPQRSTVWXZ123456789';
     $tmp = uniqid();
     for ($j = 1; $j < 10; $j++) {
-        $tmp .= $useChars{mt_rand(0, 29)};
+        $tmp .= $useChars[mt_rand(0, 29)];
     }
 
 
