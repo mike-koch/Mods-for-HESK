@@ -414,8 +414,12 @@ $tmpvar['longitude'] = hesk_POST('longitude');
 $tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets_for_customers'];
 
 // Set screen res and user agent
-$tmpvar['screen_resolution_height'] = hesk_POST('screen_resolution_height', "NULL");
-$tmpvar['screen_resolution_width'] = hesk_POST('screen_resolution_width', "NULL");
+$tmpvar['screen_resolution_height'] = hesk_POST('screen_resolution_height');
+$tmpvar['screen_resolution_height'] = ($tmpvar['screen_resolution_height'] === '') ? 'NULL' : intval($tmpvar['screen_resolution_height']);
+
+$tmpvar['screen_resolution_width'] = hesk_POST('screen_resolution_width');
+$tmpvar['screen_resolution_width'] = ($tmpvar['screen_resolution_width'] === '') ? 'NULL' : intval($tmpvar['screen_resolution_width']);
+
 $tmpvar['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
 // Tickets from customers never have a due date
