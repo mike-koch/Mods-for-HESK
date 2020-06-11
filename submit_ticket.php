@@ -407,8 +407,8 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
 }
 
 // Set latitude and longitude
-$tmpvar['latitude'] = hesk_POST('latitude');
-$tmpvar['longitude'] = hesk_POST('longitude');
+$tmpvar['latitude'] = hesk_input(hesk_POST('latitude'));
+$tmpvar['longitude'] = hesk_input(hesk_POST('longitude'));
 
 // Set html
 $tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets_for_customers'];
