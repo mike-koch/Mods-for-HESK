@@ -28,7 +28,6 @@ $modsForHesk_settings = mfh_getSettings();
 /* Check permissions for this feature */
 if (!isset($_REQUEST['isManager']) || !$_REQUEST['isManager']) {
     hesk_checkPermission('can_view_tickets');
-    hesk_checkPermission('can_reply_tickets');
 }
 
 /* A security check */
@@ -64,6 +63,12 @@ $audit_status = null;
 $audit_opened = null;
 
 $statusRow = hesk_dbFetchAssoc(hesk_dbQuery("SELECT `ID`, `IsClosed` FROM `" . hesk_dbEscape($hesk_settings['db_pfix']) . "statuses` WHERE ID = " . $status));
+
+// We need can_reply_tickets permission unless we are closing a ticket
+if (!$statusRow['IsClosed']) {
+    hesk_checkPermission('can_reply_tickets');
+}
+
 if ($statusRow['IsClosed']) // Closed
 {
     if ( ! hesk_checkPermission('can_resolve', 0)) {
