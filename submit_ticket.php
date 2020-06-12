@@ -408,7 +408,13 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
 
 // Set latitude and longitude
 $tmpvar['latitude'] = hesk_input(hesk_POST('latitude'));
+if (!is_numeric($tmpvar['latitude'])) {
+    $tmpvar['latitude'] = 'E-4'; // Unknown error
+}
 $tmpvar['longitude'] = hesk_input(hesk_POST('longitude'));
+if (!is_numeric($tmpvar['longitude'])) {
+    $tmpvar['longitude'] = 'E-4'; // Unknown error
+}
 
 // Set html
 $tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets_for_customers'];
