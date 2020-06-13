@@ -1279,13 +1279,11 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
                 </form>
             </div>
         </div>
-        <?php if ($can_reply): ?>
         <div class="box-footer" id="note-footer">
             <button class="btn btn-default pull-right" data-show="noteform" data-hide="note-footer">
                 <i class="fa fa-plus-circle"></i> <?php echo $hesklang['addnote']; ?>
             </button>
         </div>
-        <?php endif; ?>
     </div>
     <?php
     /* Do we need or have any canned responses? */

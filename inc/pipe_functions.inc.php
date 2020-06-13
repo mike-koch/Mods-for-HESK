@@ -173,9 +173,9 @@ function hesk_email2ticket($results, $protocol = 0, $set_category = 1, $set_prio
 
             // Generate a random file name
             $useChars = 'AEUYBDGHJLMNPQRSTVWXZ123456789';
-            $tmp = $useChars{mt_rand(0, 29)};
+            $tmp = $useChars[mt_rand(0, 29)];
             for ($j = 1; $j < 10; $j++) {
-                $tmp .= $useChars{mt_rand(0, 29)};
+                $tmp .= $useChars[mt_rand(0, 29)];
             }
             $myatt['saved_name'] = substr($tmpvar['trackid'] . '_' . md5($tmp . $myatt['real_name']), 0, 200) . $ext;
 
