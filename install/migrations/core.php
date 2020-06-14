@@ -241,6 +241,8 @@ function getAllMigrations() {
         180 => new \v340\AddCategoryGroupIdToCategory(180),
         181 => new \vv201830\AddBootswatchSettings(181),
         182 => new \vv201830\AddDropdownBackgroundColorSetting(182),
-        183 => new UpdateMigration('2019.1.0', '2018.2.0', 183)
+        183 => new UpdateMigration('2019.1.0', '2018.2.0', 183),
+        // 2020.1.0
+        184 => new UpdateMigration('2020.1.0', '2019.1.0', 184),
     );
 }
