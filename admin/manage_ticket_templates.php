@@ -433,7 +433,7 @@ function new_saved()
     /* Get the latest tpl_order */
     $result = hesk_dbQuery('SELECT `tpl_order` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'ticket_templates` ORDER BY `tpl_order` DESC LIMIT 1');
     $row = hesk_dbFetchRow($result);
-    $my_order = $row[0] + 10;
+    $my_order = isset($row[0]) ? intval($row[0]) + 10 : 10;
 
     hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "ticket_templates` (`title`,`message`,`tpl_order`) VALUES ('" . hesk_dbEscape($savename) . "','" . hesk_dbEscape($msg) . "','" . intval($my_order) . "')");
 

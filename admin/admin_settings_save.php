@@ -557,8 +557,12 @@ if ($set['login_background_type'] == 'color') {
         if ($file_size > $hesk_settings['attachments']['max_size']) {
             return hesk_fileError(sprintf($hesklang['file_too_large'], $file_name));
         }
-        $ext = strtolower(strrchr($file_name, "."));
 
+        /* Check file extension */
+        $ext = strtolower(strrchr($file_name, "."));
+        if (!in_array($ext, array('png','jpg','gif','bmp','webp'))) {
+            return hesk_fileError(sprintf($hesklang['type_not_allowed'], $ext, $file_name));
+        }
         if (file_exists($hesk_settings['cache_dir'] . '/lb_' . $modsForHesk_settings['login_background'])) {
             unlink($hesk_settings['cache_dir'] . '/lb_' . $modsForHesk_settings['login_background']);
         }
@@ -592,8 +596,12 @@ if ($set['login_box_header'] == 'image') {
         if ($file_size > $hesk_settings['attachments']['max_size']) {
             return hesk_fileError(sprintf($hesklang['file_too_large'], $file_name));
         }
-        $ext = strtolower(strrchr($file_name, "."));
 
+        /* Check file extension */
+        $ext = strtolower(strrchr($file_name, "."));
+        if (!in_array($ext, array('png','jpg','gif','bmp','webp'))) {
+            return hesk_fileError(sprintf($hesklang['type_not_allowed'], $ext, $file_name));
+        }
         if (file_exists($hesk_settings['cache_dir'] . '/lbh_' . $modsForHesk_settings['login_box_header_image'])) {
             unlink($hesk_settings['cache_dir'] . '/lbh_' . $modsForHesk_settings['login_box_header_image']);
         }

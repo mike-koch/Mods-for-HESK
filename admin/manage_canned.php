@@ -471,7 +471,7 @@ function new_saved()
     /* Get the latest reply_order */
     $result = hesk_dbQuery('SELECT `reply_order` FROM `' . hesk_dbEscape($hesk_settings['db_pfix']) . 'std_replies` ORDER BY `reply_order` DESC LIMIT 1');
     $row = hesk_dbFetchRow($result);
-    $my_order = $row[0] + 10;
+    $my_order = isset($row[0]) ? intval($row[0]) + 10 : 10;
 
     hesk_dbQuery("INSERT INTO `" . hesk_dbEscape($hesk_settings['db_pfix']) . "std_replies` (`title`,`message`,`reply_order`) VALUES ('" . hesk_dbEscape($savename) . "','" . hesk_dbEscape($msg) . "','" . intval($my_order) . "')");
 

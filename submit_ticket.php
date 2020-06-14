@@ -407,15 +407,25 @@ if ($hesk_settings['attachments']['use'] && !empty($attachments)) {
 }
 
 // Set latitude and longitude
-$tmpvar['latitude'] = hesk_POST('latitude');
-$tmpvar['longitude'] = hesk_POST('longitude');
+$tmpvar['latitude'] = hesk_input(hesk_POST('latitude'));
+if (!is_numeric($tmpvar['latitude'])) {
+    $tmpvar['latitude'] = 'E-4'; // Unknown error
+}
+$tmpvar['longitude'] = hesk_input(hesk_POST('longitude'));
+if (!is_numeric($tmpvar['longitude'])) {
+    $tmpvar['longitude'] = 'E-4'; // Unknown error
+}
 
 // Set html
 $tmpvar['html'] = $modsForHesk_settings['rich_text_for_tickets_for_customers'];
 
 // Set screen res and user agent
-$tmpvar['screen_resolution_height'] = hesk_POST('screen_resolution_height', "NULL");
-$tmpvar['screen_resolution_width'] = hesk_POST('screen_resolution_width', "NULL");
+$tmpvar['screen_resolution_height'] = hesk_POST('screen_resolution_height');
+$tmpvar['screen_resolution_height'] = ($tmpvar['screen_resolution_height'] === '') ? 'NULL' : intval($tmpvar['screen_resolution_height']);
+
+$tmpvar['screen_resolution_width'] = hesk_POST('screen_resolution_width');
+$tmpvar['screen_resolution_width'] = ($tmpvar['screen_resolution_width'] === '') ? 'NULL' : intval($tmpvar['screen_resolution_width']);
+
 $tmpvar['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
 // Tickets from customers never have a due date
