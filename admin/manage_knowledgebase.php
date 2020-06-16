@@ -1117,6 +1117,10 @@ function save_article()
     $old_type  = ($old_type < 0 || $old_type > 2) ? 0 : $old_type;
     $from = hesk_POST('from');
 
+    if (!in_array($from, array('draft', 'private'))) {
+        $from = 'manage_cat';
+    }
+
     $subject = hesk_input( hesk_POST('subject') ) or $hesk_error_buffer[] = $hesklang['kb_e_subj'];
 
     if ($html)
@@ -1265,6 +1269,7 @@ function save_article()
             break;
         default:
             $redirect_action = 'a=manage_cat&catid='.$catid;
+            $from = 'manage_cat';
             break;
     }
 
