@@ -40,8 +40,8 @@ class TicketRetriever extends \BaseClass {
         return $ticket;
     }
 
-    function getTicketByTrackingIdAndEmail($trackingId, $emailAddress, $heskSettings) {
-        $this->validate($trackingId, $emailAddress, $heskSettings);
+    function getTicketByTrackingIdAndEmail($trackingId, $emailAddress, $heskSettings, $userContext) {
+        $this->validate($trackingId, $emailAddress, $heskSettings, $userContext);
 
         $ticket = $this->ticketGateway->getTicketByTrackingId($trackingId, $heskSettings);
         if ($ticket === null) {
@@ -52,7 +52,7 @@ class TicketRetriever extends \BaseClass {
             }
         }
 
-        if ($heskSettings['email_view_ticket'] && !in_array($emailAddress, $ticket->email)) {
+        if ($heskSettings['email_view_ticket'] && !in_array($emailAddress, $ticket->email) && $userContext->id === -1) {
             throw new ApiFriendlyException("Email '{$emailAddress}' entered in for ticket '{$trackingId}' does not match!",
                 "Email Does Not Match", 400);
         }
@@ -60,14 +60,14 @@ class TicketRetriever extends \BaseClass {
         return $ticket;
     }
 
-    private function validate($trackingId, $emailAddress, $heskSettings) {
+    private function validate($trackingId, $emailAddress, $heskSettings, $userContext) {
         $validationModel = new ValidationModel();
 
         if ($trackingId === null || trim($trackingId) === '') {
             $validationModel->errorKeys[] = 'MISSING_TRACKING_ID';
         }
 
-        if ($heskSettings['email_view_ticket'] && ($emailAddress === null || trim($emailAddress) === '')) {
+        if ($heskSettings['email_view_ticket'] && ($emailAddress === null || trim($emailAddress) === '') && $userContext->id === -1) {
             $validationModel->errorKeys[] = 'EMAIL_REQUIRED_AND_MISSING';
         }
 

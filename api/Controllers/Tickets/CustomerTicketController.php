@@ -12,7 +12,7 @@ use Controllers\JsonRetriever;
 
 class CustomerTicketController extends \BaseClass {
     function get() {
-        global $applicationContext, $hesk_settings;
+        global $applicationContext, $userContext, $hesk_settings;
 
         $trackingId = isset($_GET['trackingId']) ? $_GET['trackingId'] : null;
         $emailAddress = isset($_GET['email']) ? $_GET['email'] : null;
@@ -20,7 +20,7 @@ class CustomerTicketController extends \BaseClass {
         /* @var $ticketRetriever TicketRetriever */
         $ticketRetriever = $applicationContext->get(TicketRetriever::clazz());
 
-        output($ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, $emailAddress, $hesk_settings));
+        output($ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, $emailAddress, $hesk_settings, $userContext));
     }
 
     function post() {
