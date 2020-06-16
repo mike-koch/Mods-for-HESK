@@ -560,7 +560,7 @@ if ($set['login_background_type'] == 'color') {
 
         /* Check file extension */
         $ext = strtolower(strrchr($file_name, "."));
-        if (!in_array($ext, array('png','jpg','gif','bmp','webp'))) {
+        if (!in_array($ext, array('.png','.jpg','.gif','.bmp','.webp'))) {
             return hesk_fileError(sprintf($hesklang['type_not_allowed'], $ext, $file_name));
         }
         if (file_exists($hesk_settings['cache_dir'] . '/lb_' . $modsForHesk_settings['login_background'])) {
@@ -599,7 +599,7 @@ if ($set['login_box_header'] == 'image') {
 
         /* Check file extension */
         $ext = strtolower(strrchr($file_name, "."));
-        if (!in_array($ext, array('png','jpg','gif','bmp','webp'))) {
+        if (!in_array($ext, array('.png','.jpg','.gif','.bmp','.webp'))) {
             return hesk_fileError(sprintf($hesklang['type_not_allowed'], $ext, $file_name));
         }
         if (file_exists($hesk_settings['cache_dir'] . '/lbh_' . $modsForHesk_settings['login_box_header_image'])) {
