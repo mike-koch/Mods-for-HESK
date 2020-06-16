@@ -3,6 +3,7 @@
 namespace BusinessLogic\Tickets;
 
 
+use BusinessLogic\Security\UserContext;
 use BusinessLogic\Security\UserToTicketChecker;
 use DataAccess\Tickets\TicketGateway;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +36,7 @@ class TicketRetrieverTest extends TestCase {
         $this->ticketGateway->method('getTicketByTrackingId')->with($trackingId, $this->heskSettings)->willReturn($ticket);
 
         //-- Act
-        $actual = $this->ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, null, $this->heskSettings);
+        $actual = $this->ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, null, $this->heskSettings, UserContext::buildAnonymousUser());
 
         //-- Assert
         self::assertThat($actual, self::equalTo($ticket));
@@ -49,7 +50,7 @@ class TicketRetrieverTest extends TestCase {
         $this->ticketGateway->method('getTicketByMergedTrackingId')->with($trackingId, $this->heskSettings)->willReturn($ticket);
 
         //-- Act
-        $actual = $this->ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, null, $this->heskSettings);
+        $actual = $this->ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, null, $this->heskSettings, UserContext::buildAnonymousUser());
 
         //-- Assert
         self::assertThat($actual, self::equalTo($ticket));
@@ -69,7 +70,7 @@ class TicketRetrieverTest extends TestCase {
         $this->expectExceptionMessage("Email 'email@example.com' entered in for ticket '12345' does not match!");
 
         //-- Act
-        $this->ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, $email, $this->heskSettings);
+        $this->ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, $email, $this->heskSettings, UserContext::buildAnonymousUser());
     }
 
     function testItCanHandleTicketsWithMultipleEmails() {
@@ -82,7 +83,7 @@ class TicketRetrieverTest extends TestCase {
         $this->ticketGateway->method('getTicketByTrackingId')->with($trackingId, $this->heskSettings)->willReturn($ticket);
 
         //-- Act
-        $actual = $this->ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, $email, $this->heskSettings);
+        $actual = $this->ticketRetriever->getTicketByTrackingIdAndEmail($trackingId, $email, $this->heskSettings, UserContext::buildAnonymousUser());
 
         //-- Assert
         self::assertThat($actual, self::equalTo($ticket));
