@@ -426,7 +426,7 @@ $tmpvar['screen_resolution_height'] = ($tmpvar['screen_resolution_height'] === '
 $tmpvar['screen_resolution_width'] = hesk_POST('screen_resolution_width');
 $tmpvar['screen_resolution_width'] = ($tmpvar['screen_resolution_width'] === '') ? 'NULL' : intval($tmpvar['screen_resolution_width']);
 
-$tmpvar['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+$tmpvar['user_agent'] = hesk_input($_SERVER['HTTP_USER_AGENT']);
 
 // Tickets from customers never have a due date
 $tmpvar['due_date'] = '';
