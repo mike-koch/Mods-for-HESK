@@ -244,5 +244,7 @@ function getAllMigrations() {
         183 => new UpdateMigration('2019.1.0', '2018.2.0', 183),
         // 2020.1.0
         184 => new UpdateMigration('2020.1.0', '2019.1.0', 184),
+        // 2020.1.1
+        185 => new UpdateMigration('2020.1.1', '2020.1.0', 185),
     );
 }
